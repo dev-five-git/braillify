@@ -40,7 +40,7 @@ fn run_repl() -> Result<()> {
     let mut stdout = io::stdout();
     writeln!(
         stdout,
-        "braillify REPL - 입력을 점자로 변환합니다. 종료: Ctrl+C or Ctrl+D"
+        "braillify REPL - 입력을 점자로 변환합니다. 종료: Ctrl+C or Ctrl+D or Crtl+Z"
     )?;
     stdout.flush()?;
 

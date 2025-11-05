@@ -1,4 +1,5 @@
 use std::io::{self, IsTerminal, Read, Write};
+use std::env::consts;
 
 use anyhow::{Result, bail};
 use clap::Parser;
@@ -38,9 +39,14 @@ fn run_one_shot(text: &str) -> Result<()> {
 fn run_repl() -> Result<()> {
     let mut rl = DefaultEditor::new()?;
     let mut stdout = io::stdout();
+
+    let intro  = if consts::OS == "windows" {
+         "braillify REPL - 입력을 점자로 변환합니다. 종료: Ctrl+C or Ctrl+Z" }  else {
+            "braillify REPL - 입력을 점자로 변환합니다. 종료: Ctrl+C or Ctrl+D"};
+
     writeln!(
         stdout,
-        "braillify REPL - 입력을 점자로 변환합니다. 종료: Ctrl+C or Ctrl+D"
+        "{}", intro 
     )?;
     stdout.flush()?;
 

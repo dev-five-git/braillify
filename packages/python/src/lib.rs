@@ -6,17 +6,17 @@ use pyo3::prelude::*;
 
 #[pyfunction]
 fn encode(text: &str) -> PyResult<Vec<u8>> {
-    braillify_core::encode(text).map_err(PyErr::new::<PyValueError, _>)
+    braillify_core::encode(text).map_err(|e| PyValueError::new_err(format!("{:?}", e)))
 }
 
 #[pyfunction]
 fn translate_to_unicode(text: &str) -> PyResult<String> {
-    braillify_core::encode_to_unicode(text).map_err(PyErr::new::<PyValueError, _>)
+    braillify_core::encode_to_unicode(text).map_err(|e| PyValueError::new_err(format!("{:?}", e)))
 }
 
 #[pyfunction]
 fn translate_to_braille_font(text: &str) -> PyResult<String> {
-    braillify_core::encode_to_braille_font(text).map_err(PyErr::new::<PyValueError, _>)
+    braillify_core::encode_to_braille_font(text).map_err(|e| PyValueError::new_err(format!("{:?}", e)))
 }
 
 #[pyfunction]

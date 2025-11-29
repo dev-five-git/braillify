@@ -1,4 +1,4 @@
-name: Publish Package to npm
+name: Publish
 
 on:
   push:
@@ -133,22 +133,22 @@ jobs:
       fail-fast: false
       matrix:
         settings:
-          - host: macos-latest
-            target: x86_64-apple-darwin
-            build: bun run build --target x86_64-apple-darwin
-          - host: windows-latest
-            build: bun run build --target x86_64-pc-windows-msvc
-            target: x86_64-pc-windows-msvc
+          # - host: macos-latest
+          #   target: x86_64-apple-darwin
+          #   build: bun run build --target x86_64-apple-darwin
+          # - host: windows-latest
+          #   build: bun run build --target x86_64-pc-windows-msvc
+          #   target: x86_64-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            build: bun run build --target x86_64-unknown-linux-gnu --use-napi-cross
-          - host: macos-latest
-            target: aarch64-apple-darwin
-            build: bun run build --target aarch64-apple-darwin
+            build: bun run build
+          # - host: macos-latest
+          #   target: aarch64-apple-darwin
+          #   build: bun run build --target aarch64-apple-darwin
     name: Node Build - ${{ matrix.settings.target }}
     runs-on: ${{ matrix.settings.host }}
     env:
-      DEBUG: napi:*
+      # DEBUG: napi:*
       MACOSX_DEPLOYMENT_TARGET: '10.13'
       CARGO_INCREMENTAL: '1'
     steps:
@@ -197,9 +197,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: bindings-${{ matrix.settings.target }}
+          name: pkg-${{ matrix.settings.target }}
           path: |
-            packages/node/braillify.*.node
+            packages/node/pkg/*
           if-no-files-found: error
   
   # python
@@ -257,9 +257,11 @@ jobs:
           - runner: windows-latest
             target: x64
             os: windows
+            python-target: x64
           - runner: windows-latest
             target: x86
             os: windows
+            python-target: x86
 
           # macOS
           - runner: macos-13
@@ -270,11 +272,15 @@ jobs:
             os: macos
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+          architecture: ${{ matrix.python-target || '' }}
       - name: Build wheels
         uses: PyO3/maturin-action@main
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist
+          args: --release --out dist --find-interpreter
           working-directory: packages/python
           manylinux: ${{ matrix.manylinux || '' }}
       - name: Upload wheels
@@ -299,38 +305,51 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install maturin
+        run: uv pip install maturin --system
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
       - name: Install dependencies
         run: bun install
       - name: Build
         run: bun run build
         working-directory: packages/node
-      - name: create npm dirs
-        run: bunx napi create-npm-dirs
-        working-directory: packages/node
+      # - name: create npm dirs
+      #   run: bunx napi create-npm-dirs
+      #   working-directory: packages/node
       - name: Download all artifacts
         uses: actions/download-artifact@v5
         with:
-          path: packages/node/artifacts
-      - name: Move artifacts
-        run: bun run artifacts
-        working-directory: packages/node
-      - name: List packages
-        run: ls -R ./npm
-        working-directory: packages/node
+          path: packages/node/pkg/*
+      # - name: Move artifacts
+      #   run: bun run artifacts
+      #   working-directory: packages/node
+      # - name: List packages
+      #   run: ls -R ./npm
+      #   working-directory: packages/node
       - name: Publish
         run: |
-            bun install -g @napi-rs/cli
+            # bun install -g @napi-rs/cli
+            bun run build
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
             npm publish --access public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node
-      - name: Upload Asset
-        uses: owjs3901/upload-github-release-asset@main
-        with:
-          upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/node/package.json'] }}
-          asset_path: packages/node/npm/*/braillify.*.node
+      # - name: Upload Asset
+      #   uses: owjs3901/upload-github-release-asset@main
+      #   with:
+      #     upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/node/package.json'] }}
+      #     asset_path: packages/node/pkg/*
 
 
   python-publish:
@@ -356,7 +375,7 @@ jobs:
       - name: Publish to PyPI
         uses: PyO3/maturin-action@main
         env:
-          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         with:
           command: upload
           args: --non-interactive --skip-existing wheels-*/*

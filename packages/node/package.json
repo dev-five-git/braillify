@@ -17,7 +17,7 @@
     "text-to-braille",
     "wasm"
   ],
-  "version": "1.0.4",
+  "version": "1.0.10",
   "scripts": {
     "build": "wasm-pack build --target bundler --out-dir ./pkg --out-name index",
     "test": "wasm-pack test --node"

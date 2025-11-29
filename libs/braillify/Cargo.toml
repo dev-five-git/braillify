@@ -1,6 +1,6 @@
 [package]
 name = "braillify"
-version = "1.0.4"
+version = "1.0.11"
 edition = "2024"
 authors = ["JeongMin Oh <owjs39@gmail.com>"]
 description = "Rust 기반 크로스플랫폼 한국어 점역 라이브러리"
@@ -28,6 +28,9 @@ proptest = "1.9"
 assert_cmd = "2"
 predicates = "3"
 escargot = "0.5.15"
+
+[target.'cfg(windows)'.build-dependencies]
+embed-manifest = "1.0"
 
 [features]
 default = ["cli"]

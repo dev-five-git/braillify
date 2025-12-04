@@ -17,7 +17,7 @@
     "@types/mdx": "^2.0.13",
     "braillify": "workspace:*",
     "katex": "^0.16.25",
-    "next": "16.0.3",
+    "next": "16.0.7",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-latex-next": "^3.0.0",

@@ -19,8 +19,8 @@ export function Thead(props: ComponentProps<typeof Box<'thead'>>) {
   return (
     <Box
       as="thead"
-      bg="#2B2B2B"
-      borderRight="solid 1px #EFEEEB"
+      bg="$tableHeaderBg"
+      borderRight="solid 1px $tableHeaderBorder"
       justifyContent="center"
       px="20px"
       py="8px"
@@ -42,17 +42,17 @@ export function Th(props: ComponentProps<typeof Box<'th'>>) {
   return (
     <Box
       as="th"
-      bg="#2B2B2B"
-      borderBottom="solid 1px #2B2B2B"
-      borderRight="solid 1px #EFEEEB"
-      borderTop="solid 1px #2B2B2B"
+      bg="$tableHeaderBg"
+      borderBottom="solid 1px $tableBorder"
+      borderRight="solid 1px $tableHeaderBorder"
+      borderTop="solid 1px $tableBorder"
       color="$base"
       justifyContent="center"
       px="20px"
       py="8px"
       selectors={{
         '&:last-child': {
-          borderRight: 'solid 1px #2B2B2B',
+          borderRight: 'solid 1px $tableBorder',
           borderTopRightRadius: '10px',
         },
         '&:first-child': {
@@ -73,18 +73,18 @@ export function Td({
   return (
     <Box
       as="td"
-      borderBottom="solid 1px #2B2B2B"
-      borderRight="solid 1px #2B2B2B"
+      borderBottom="solid 1px $tableBorder"
+      borderRight="solid 1px $tableBorder"
       justifyContent="center"
       px={[null, null, null, '20px']}
       py="8px"
       selectors={{
         '&:first-child': {
-          borderLeft: 'solid 1px #2B2B2B',
+          borderLeft: 'solid 1px $tableBorder',
         },
         'tr[data-responsive="desktop"]:first-of-type &, tr[data-responsive="mobile"]:nth-of-type(2) &':
           {
-            borderTop: 'solid 1px #2B2B2B',
+            borderTop: 'solid 1px $tableBorder',
           },
       }}
       styleOrder={1}

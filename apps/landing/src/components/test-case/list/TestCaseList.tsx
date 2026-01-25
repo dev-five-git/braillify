@@ -20,7 +20,7 @@ export function TestCaseList({ results }: { results: TestStatus[2] }) {
           >
             <TestCaseCircle key={text + idx} isSuccess={isSuccess}>
               <Box minW="50vw" w="100%" whiteSpace="pre-wrap">
-                <Text color="#FFF" typography="body">
+                <Text color="$testCaseText" typography="body">
                   {textParts.map((part, partIdx) =>
                     part.type === 'latex' ? (
                       <Latex key={partIdx}>${part.content}$</Latex>

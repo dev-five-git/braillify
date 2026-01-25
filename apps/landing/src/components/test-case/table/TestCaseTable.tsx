@@ -30,7 +30,7 @@ export function TestCaseTable({ results }: { results: TestStatus[2] }) {
             <Tr
               key={index + 'desktop'}
               className={css({
-                bg: isSuccess ? 'unset' : '#D8D8D8',
+                bg: isSuccess ? 'unset' : '$testCaseFailedBg',
                 display: ['none', null, null, 'table-row'],
               })}
               data-responsive="desktop"
@@ -62,7 +62,7 @@ export function TestCaseTable({ results }: { results: TestStatus[2] }) {
             <Tr
               key={index + 'mobile'}
               className={css({
-                bg: isSuccess ? 'unset' : '#D8D8D8',
+                bg: isSuccess ? 'unset' : '$testCaseFailedBg',
                 display: ['table-row', null, null, 'none'],
               })}
               data-responsive="mobile"

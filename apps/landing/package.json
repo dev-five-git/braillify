@@ -18,7 +18,7 @@
     "braillify": "workspace:*",
     "clsx": "^2.1.1",
     "katex": "^0.16.45",
-    "next": "16.2.4",
+    "next": "16.2.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-latex-next": "^3.0.0",

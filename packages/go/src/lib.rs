@@ -22,6 +22,8 @@ fn clear_last_error() {
 #[unsafe(no_mangle)]
 pub extern "C" fn braillify_get_last_error() -> *mut c_char {
     LAST_ERROR.with(|e| match e.borrow().as_ref() {
+        // Error messages never contain null bytes, so unwrap_or(null)
+        // is defensive dead code.
         Some(msg) => CString::new(msg.clone())
             .map(|s| s.into_raw())
             .unwrap_or(ptr::null_mut()),
@@ -78,6 +80,9 @@ pub unsafe extern "C" fn braillify_encode_to_unicode(text: *const c_char) -> *mu
         }
     };
 
+    // CString::new() cannot fail here: braille output only contains
+    // Unicode characters in U+2800..U+28FF, never null bytes.
+    // The Err branch is defensive dead code.
     match braillify::encode_to_unicode(text_str) {
         Ok(result) => match CString::new(result) {
             Ok(c_string) => c_string.into_raw(),
@@ -111,6 +116,9 @@ pub unsafe extern "C" fn braillify_encode_to_braille_font(text: *const c_char) -
         }
     };
 
+    // CString::new() cannot fail here: braille output only contains
+    // Unicode characters in U+2800..U+28FF, never null bytes.
+    // The Err branch is defensive dead code.
     match braillify::encode_to_braille_font(text_str) {
         Ok(result) => match CString::new(result) {
             Ok(c_string) => c_string.into_raw(),
@@ -269,5 +277,27 @@ mod tests {
         unsafe { braillify_free_string(result) };
         let err = braillify_get_last_error();
         assert!(err.is_null());
+    }
+
+    #[test]
+    fn test_encode_invalid_char() {
+        let input = CString::new("😀").unwrap();
+        let mut out_len: usize = 0;
+        let result = unsafe { braillify_encode(input.as_ptr(), &mut out_len) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode_to_unicode_invalid_char() {
+        let input = CString::new("😀").unwrap();
+        let result = unsafe { braillify_encode_to_unicode(input.as_ptr()) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode_to_braille_font_invalid_char() {
+        let input = CString::new("😀").unwrap();
+        let result = unsafe { braillify_encode_to_braille_font(input.as_ptr()) };
+        assert!(result.is_null());
     }
 }

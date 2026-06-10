@@ -231,4 +231,43 @@ mod tests {
     fn test_free_bytes_null() {
         unsafe { braillify_free_bytes(ptr::null_mut(), 0) };
     }
+
+    #[test]
+    fn test_encode_invalid_utf8() {
+        let input = unsafe { CString::from_vec_unchecked(vec![0xFF, 0xFE]) };
+        let mut out_len: usize = 0;
+        let result = unsafe { braillify_encode(input.as_ptr(), &mut out_len) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode_to_unicode_invalid_utf8() {
+        let input = unsafe { CString::from_vec_unchecked(vec![0xFF, 0xFE]) };
+        let result = unsafe { braillify_encode_to_unicode(input.as_ptr()) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode_to_braille_font_invalid_utf8() {
+        let input = unsafe { CString::from_vec_unchecked(vec![0xFF, 0xFE]) };
+        let result = unsafe { braillify_encode_to_braille_font(input.as_ptr()) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_free_string_non_null() {
+        let s = CString::new("test").unwrap();
+        let ptr = s.into_raw();
+        unsafe { braillify_free_string(ptr) };
+    }
+
+    #[test]
+    fn test_get_last_error_none() {
+        let input = CString::new("a").unwrap();
+        let result = unsafe { braillify_encode_to_unicode(input.as_ptr()) };
+        assert!(!result.is_null());
+        unsafe { braillify_free_string(result) };
+        let err = braillify_get_last_error();
+        assert!(err.is_null());
+    }
 }

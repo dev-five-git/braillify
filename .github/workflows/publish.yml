@@ -723,3 +723,65 @@ jobs:
         with:
           name: nuget-packages
           path: packages/dotnet/**/nupkg/*.nupkg
+
+  # go
+  go-test:
+    name: Go Test - ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x64
+          - runner: windows-latest
+            target: x86_64-pc-windows-gnu
+            platform: windows-amd64
+          # Linux x64
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            platform: linux-amd64
+          # Linux ARM64
+          - runner: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            platform: linux-arm64
+          # macOS ARM64
+          - runner: macos-14
+            target: aarch64-apple-darwin
+            platform: darwin-arm64
+          # macOS x64
+          - runner: macos-13
+            target: x86_64-apple-darwin
+            platform: darwin-amd64
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - name: Install cross-compilation tools (Linux ARM64)
+        if: matrix.platform == 'linux-arm64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Build native library
+        run: cargo build --release --target ${{ matrix.target }} -p braillify-go
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Copy native library
+        run: |
+          mkdir -p packages/go/libs/${{ matrix.platform }}
+          cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+        shell: bash
+
+      - name: Test
+        run: go test -v ./...
+        working-directory: packages/go

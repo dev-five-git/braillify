@@ -143,3 +143,92 @@ pub unsafe extern "C" fn braillify_free_bytes(ptr: *mut u8, len: usize) {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::ffi::CString;
+    use std::ptr;
+
+    #[test]
+    fn test_encode_to_unicode() {
+        let input = CString::new("안녕하세요").unwrap();
+        let result = unsafe { braillify_encode_to_unicode(input.as_ptr()) };
+        assert!(!result.is_null());
+        let c_str = unsafe { CString::from_raw(result) };
+        assert_eq!(c_str.to_str().unwrap(), "⠣⠒⠉⠻⠚⠠⠝⠬");
+    }
+
+    #[test]
+    fn test_encode_to_unicode_empty() {
+        let input = CString::new("").unwrap();
+        let result = unsafe { braillify_encode_to_unicode(input.as_ptr()) };
+        assert!(!result.is_null());
+        let c_str = unsafe { CString::from_raw(result) };
+        assert_eq!(c_str.to_str().unwrap(), "");
+    }
+
+    #[test]
+    fn test_encode_to_unicode_null() {
+        let result = unsafe { braillify_encode_to_unicode(ptr::null()) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode_to_braille_font() {
+        let input = CString::new("안녕하세요").unwrap();
+        let result = unsafe { braillify_encode_to_braille_font(input.as_ptr()) };
+        assert!(!result.is_null());
+        let c_str = unsafe { CString::from_raw(result) };
+        assert_eq!(c_str.to_str().unwrap(), "⠣⠒⠉⠻⠚⠠⠝⠬");
+    }
+
+    #[test]
+    fn test_encode_to_braille_font_null() {
+        let result = unsafe { braillify_encode_to_braille_font(ptr::null()) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode() {
+        let input = CString::new("안녕").unwrap();
+        let mut out_len: usize = 0;
+        let result = unsafe { braillify_encode(input.as_ptr(), &mut out_len) };
+        assert!(!result.is_null());
+        assert!(out_len > 0);
+        unsafe { braillify_free_bytes(result, out_len) };
+    }
+
+    #[test]
+    fn test_encode_null_text() {
+        let mut out_len: usize = 0;
+        let result = unsafe { braillify_encode(ptr::null(), &mut out_len) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_encode_null_out_len() {
+        let input = CString::new("test").unwrap();
+        let result = unsafe { braillify_encode(input.as_ptr(), ptr::null_mut()) };
+        assert!(result.is_null());
+    }
+
+    #[test]
+    fn test_get_last_error_after_null() {
+        let _ = unsafe { braillify_encode_to_unicode(ptr::null()) };
+        let err = braillify_get_last_error();
+        assert!(!err.is_null());
+        let err_str = unsafe { CString::from_raw(err) };
+        assert!(err_str.to_str().unwrap().contains("Null pointer"));
+    }
+
+    #[test]
+    fn test_free_string_null() {
+        unsafe { braillify_free_string(ptr::null_mut()) };
+    }
+
+    #[test]
+    fn test_free_bytes_null() {
+        unsafe { braillify_free_bytes(ptr::null_mut(), 0) };
+    }
+}

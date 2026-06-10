@@ -1,3 +1,4 @@
 *.test
 *.exe
 *.out
+libs/

@@ -18,16 +18,20 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - '3.11'
-          - '3.12'
-          - '3.13'
-          - '3.14'
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
         platform:
           - ubuntu-latest
           - windows-latest
           - macos-latest
     steps:
-      - uses: actions/checkout@v5
+      # pull_request_target는 보안상 기본적으로 base branch(main)를 체크아웃한다.
+      # PR 코드의 커버리지를 측정하려면 PR head를 명시적으로 지정해야 한다.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -36,7 +40,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v8.1.0
       - name: Install maturin
         run: uv pip install maturin --system
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -55,10 +59,27 @@ jobs:
         run: bun run build
       - name: Lint
         run: bun run lint
+      - name: reformat
+        shell: bash
+        run: |
+          echo 'max_width = 100000' > .rustfmt.toml
+          echo 'tab_spaces = 4' >> .rustfmt.toml
+          echo 'newline_style = "Unix"' >> .rustfmt.toml
+          echo 'fn_call_width = 100000' >> .rustfmt.toml
+          echo 'fn_params_layout = "Compressed"' >> .rustfmt.toml
+          echo 'chain_width = 100000' >> .rustfmt.toml
+          echo 'merge_derives = true' >> .rustfmt.toml
+          echo 'use_small_heuristics = "Default"' >> .rustfmt.toml
+          cargo fmt
       - name: Test
         run: bun run test
+      - name: Format Rollback
+        shell: bash
+        run: |
+          rm -rf .rustfmt.toml
+          cargo fmt
       - name: Upload to codecov.io
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
@@ -98,7 +119,10 @@ jobs:
             rid: osx-x64
             lib_name: libbraillify_native.dylib
     steps:
-      - uses: actions/checkout@v5
+      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -111,7 +135,7 @@ jobs:
 
       - name: Setup .NET
         if: matrix.dotnet_arch != 'x86' && matrix.rid != 'osx-x64'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             9.0.x
@@ -170,16 +194,16 @@ jobs:
       - test
       - dotnet-test
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v8.1.0
       - name: Install maturin
         run: uv pip install maturin --system
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -196,10 +220,10 @@ jobs:
       - name: Build Landing
         run: bun run build:landing
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./apps/landing/out
-      - uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v5
 
   # publish
   changepacks:
@@ -215,8 +239,9 @@ jobs:
     needs:
       - test
       - dotnet-test
+      - go-test
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: changepacks/action@main
         id: changepacks
         with:
@@ -252,12 +277,12 @@ jobs:
     runs-on: ${{ matrix.settings.host }}
     env:
       # DEBUG: napi:*
-      MACOSX_DEPLOYMENT_TARGET: '10.13'
-      CARGO_INCREMENTAL: '1'
+      MACOSX_DEPLOYMENT_TARGET: "10.13"
+      CARGO_INCREMENTAL: "1"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 22
       - uses: oven-sh/setup-bun@v2
@@ -266,9 +291,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v8.1.0
       - name: Install maturin
         run: uv pip install maturin --system
       - name: Install
@@ -298,13 +323,13 @@ jobs:
         shell: bash
         working-directory: packages/node
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pkg-${{ matrix.settings.target }}
           path: |
             packages/node/pkg/*
           if-no-files-found: error
-  
+
   # python
   python-build:
     runs-on: ${{ matrix.runner }}
@@ -375,24 +400,23 @@ jobs:
             target: aarch64
             os: macos
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: 3.x
           architecture: ${{ matrix.python-target || '' }}
       - name: Build wheels
-        uses: PyO3/maturin-action@main
+        uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
           args: --release --out dist --find-interpreter
           working-directory: packages/python
           manylinux: ${{ matrix.manylinux || '' }}
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.os }}-${{ matrix.target }}
           path: packages/python/dist
-
 
   node-publish:
     name: Node Publish
@@ -405,16 +429,16 @@ jobs:
       - node-build
     if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/node/package.json') }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v8.1.0
       - name: Install maturin
         run: uv pip install maturin --system
       - name: Install
@@ -430,7 +454,7 @@ jobs:
       #   run: bunx napi create-npm-dirs
       #   working-directory: packages/node
       - name: Download all artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: packages/node/pkg/*
       # - name: Move artifacts
@@ -441,10 +465,10 @@ jobs:
       #   working-directory: packages/node
       - name: Publish
         run: |
-            # bun install -g @napi-rs/cli
-            bun run build
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            npm publish --access public
+          # bun install -g @napi-rs/cli
+          bun run build
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          npm publish --access public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -454,7 +478,6 @@ jobs:
       #   with:
       #     upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/node/package.json'] }}
       #     asset_path: packages/node/pkg/*
-
 
   python-publish:
     name: Python Publish
@@ -471,13 +494,13 @@ jobs:
       # Used to generate artifact attestation
       attestations: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
+        uses: actions/attest-build-provenance@v4
         with:
-          subject-path: 'wheels-*/*'
+          subject-path: "wheels-*/*"
       - name: Publish to PyPI
-        uses: PyO3/maturin-action@main
+        uses: PyO3/maturin-action@v1
         env:
           MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         with:
@@ -489,7 +512,7 @@ jobs:
         uses: owjs3901/upload-github-release-asset@main
         with:
           upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/python/pyproject.toml'] }}
-          asset_path: '*/*.whl'
+          asset_path: "*/*.whl"
 
   upload-assets:
     needs: changepacks
@@ -521,7 +544,7 @@ jobs:
             binary_name: braillify-darwin-arm64
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -548,7 +571,7 @@ jobs:
     needs:
       - changepacks
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Publish to Cargo
         run: cargo publish -p braillify
         env:
@@ -561,7 +584,7 @@ jobs:
     needs:
       - changepacks
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -575,7 +598,7 @@ jobs:
         run: |
           echo "version=$(cargo pkgid -p braillify | sed -E 's/.*#([0-9]+\.[0-9]+\.[0-9]+).*/\1/')" >> $GITHUB_OUTPUT
         id: version
-      - uses: vedantmgoyal9/winget-releaser@main
+      - uses: vedantmgoyal9/winget-releaser@v2
         with:
           identifier: Braillify.Braillify
           installers-regex: '\.exe$' # Only .exe files
@@ -626,7 +649,7 @@ jobs:
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -646,7 +669,7 @@ jobs:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dotnet-native-${{ matrix.rid }}
           path: target/${{ matrix.target }}/release/${{ matrix.lib_name }}
@@ -663,15 +686,15 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: "9.0.x"
 
       - name: Download all native artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: native-artifacts
           pattern: dotnet-native-*
@@ -719,7 +742,7 @@ jobs:
           dotnet nuget push packages/dotnet/Braillify/nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Upload NuGet packages as artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nuget-packages
           path: packages/dotnet/**/nupkg/*.nupkg
@@ -753,7 +776,10 @@ jobs:
             target: x86_64-apple-darwin
             platform: darwin-amd64
     steps:
-      - uses: actions/checkout@v5
+      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -769,7 +795,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: stable
 
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
@@ -785,3 +811,124 @@ jobs:
       - name: Test
         run: go test -v ./...
         working-directory: packages/go
+
+  go-build:
+    name: Go Build - ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - test
+      - changepacks
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      contains(needs.changepacks.outputs.changepacks, 'packages/go/Cargo.toml')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x64
+          - runner: windows-latest
+            target: x86_64-pc-windows-gnu
+            platform: windows-amd64
+          # Linux x64
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            platform: linux-amd64
+          # Linux ARM64
+          - runner: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            platform: linux-arm64
+          # macOS ARM64
+          - runner: macos-14
+            target: aarch64-apple-darwin
+            platform: darwin-arm64
+          # macOS x64
+          - runner: macos-13
+            target: x86_64-apple-darwin
+            platform: darwin-amd64
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - name: Install cross-compilation tools (Linux ARM64)
+        if: matrix.platform == 'linux-arm64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build native library
+        run: cargo build --release --target ${{ matrix.target }} -p braillify-go
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: go-lib-${{ matrix.platform }}
+          path: target/${{ matrix.target }}/release/libbraillify_go.a
+          if-no-files-found: error
+
+  go-publish:
+    name: Go Publish
+    runs-on: ubuntu-latest
+    needs:
+      - changepacks
+      - go-build
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      contains(needs.changepacks.outputs.changepacks, 'packages/go/Cargo.toml')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        working-directory: packages/go
+        run: |
+          v=$(grep -m1 '^version' Cargo.toml | sed -E 's/.*"([0-9.]+)".*/\1/')
+          echo "version=$v" >> $GITHUB_OUTPUT
+          echo "Resolved version: $v"
+
+      - name: Download platform libs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: go-lib-*
+          path: libs-raw
+          merge-multiple: false
+
+      - name: Place libs
+        run: |
+          for d in libs-raw/go-lib-*; do
+            [ -d "$d" ] || continue
+            plat="${d##*go-lib-}"
+            mkdir -p "packages/go/libs/$plat"
+            cp "$d/libbraillify_go.a" "packages/go/libs/$plat/"
+          done
+          echo "=== Placed libs ==="
+          find packages/go/libs -type f
+
+      - name: Commit libs + new module tag
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          TAG="packages/go/v${{ steps.version.outputs.version }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists — skip (no force-move)."
+            exit 0
+          fi
+          git add -f packages/go/libs/
+          git commit -m "chore(go): publish static libs v${{ steps.version.outputs.version }} [skip ci]"
+          git pull --rebase origin main
+          git tag "$TAG"
+          git push origin main
+          git push origin "$TAG"

@@ -50,10 +50,12 @@ jobs:
           components: clippy, rustfmt
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       # packages/ruby(rb-sys) 컴파일에 libruby가 필요하다.
-      # Windows는 MSVC Rust 툴체인과 링크가 맞는 mswin Ruby를 사용한다.
-      - uses: ruby/setup-ruby@v1
+      # setup-ruby-and-rust가 Ruby 플랫폼(Windows ucrt 등)에 맞는
+      # Rust 타겟/bindgen 환경을 함께 구성한다.
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
-          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
+          ruby-version: "3.4"
+          cargo-cache: true
       - name: Cargo tarpaulin and fmt
         run: |
           cargo install cargo-tarpaulin
@@ -207,16 +209,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+      # Ruby 플랫폼(Windows ucrt 등)에 맞는 Rust 타겟/bindgen 환경까지 구성하는
+      # rb-sys 공식 셋업 액션.
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
-          toolchain: stable
-
-      # Windows는 MSVC Rust 툴체인과 링크가 맞는 mswin Ruby를 사용한다.
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
+          ruby-version: "3.4"
           bundler-cache: true
+          cargo-cache: true
           working-directory: packages/ruby
 
       - name: Compile

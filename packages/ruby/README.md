@@ -31,3 +31,14 @@ bundle exec rake test      # minitest 실행
 ```
 
 Rust 쪽 단위 테스트는 저장소 루트에서 `cargo test -p braillify_rb`로 실행합니다 (Ruby 3.x 필요).
+
+### Windows 개발 환경
+
+RubyInstaller(ucrt) + DevKit(MSYS2) + **GNU Rust 툴체인**(`x86_64-pc-windows-gnu`) 조합을 사용합니다. bindgen이 libclang을 요구하므로 LLVM 설치 후 아래 환경변수가 필요합니다 (`<N>`은 LLVM 메이저 버전):
+
+```powershell
+$env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
+$env:BINDGEN_EXTRA_CLANG_ARGS = '--target=x86_64-w64-mingw32 -I"C:/Program Files/LLVM/lib/clang/<N>/include" -I<Ruby설치경로>/msys64/ucrt64/include'
+```
+
+`rake compile`은 `ridk exec` (MSYS2 환경) 안에서 실행합니다.

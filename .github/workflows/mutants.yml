@@ -112,4 +112,4 @@ jobs:
         with:
           name: mutants-${{ matrix.shard.label }}
           path: target/mutants-${{ matrix.shard.label }}/mutants.out/
-          retention-days: 7
+          retention-days: 1

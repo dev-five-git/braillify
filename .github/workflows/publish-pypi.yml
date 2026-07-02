@@ -100,6 +100,7 @@ jobs:
         with:
           name: wheels-linux-${{ matrix.platform.target }}
           path: packages/python/dist
+          retention-days: 1
 
   musllinux:
     runs-on: ${{ matrix.platform.runner }}
@@ -132,6 +133,7 @@ jobs:
         with:
           name: wheels-musllinux-${{ matrix.platform.target }}
           path: packages/python/dist
+          retention-days: 1
 
   windows:
     runs-on: ${{ matrix.platform.runner }}
@@ -160,6 +162,7 @@ jobs:
         with:
           name: wheels-windows-${{ matrix.platform.target }}
           path: packages/python/dist
+          retention-days: 1
 
   macos:
     runs-on: ${{ matrix.platform.runner }}
@@ -187,6 +190,7 @@ jobs:
         with:
           name: wheels-macos-${{ matrix.platform.target }}
           path: packages/python/dist
+          retention-days: 1
 
   sdist:
     runs-on: ubuntu-latest
@@ -203,6 +207,7 @@ jobs:
         with:
           name: wheels-sdist
           path: packages/python/dist
+          retention-days: 1
 
   release:
     name: Release

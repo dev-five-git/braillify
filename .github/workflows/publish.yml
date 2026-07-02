@@ -50,11 +50,12 @@ jobs:
           components: clippy, rustfmt
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       # packages/ruby(rb-sys) 컴파일에 libruby가 필요하다.
-      # setup-ruby-and-rust가 Ruby 플랫폼(Windows ucrt 등)에 맞는
-      # Rust 타겟/bindgen 환경을 함께 구성한다.
+      # Windows는 pyo3/maturin(MSVC Python)과 ABI를 맞추기 위해 MSVC 빌드(mswin) Ruby를 쓴다.
+      # (ucrt Ruby는 GNU 툴체인을 요구해 한 번의 workspace-wide cargo 호출에서 pyo3와 공존 불가)
+      # mswin은 ruby master dev 빌드만 제공된다 — 실배포 플랫폼(ucrt) 검증은 ruby-test 잡이 담당.
       - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
-          ruby-version: "3.4"
+          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
           cargo-cache: true
       - name: Cargo tarpaulin and fmt
         run: |
@@ -217,6 +218,11 @@ jobs:
           bundler-cache: true
           cargo-cache: true
           working-directory: packages/ruby
+
+      # 실배포 gem 플랫폼(stable Ruby, Windows는 ucrt+GNU)에서의 lint.
+      # 루트 워크스페이스에서 실행해 [patch.crates-io]로 로컬 libs/braillify를 사용한다.
+      - name: Lint
+        run: cargo clippy -p braillify_rb --all-targets -- -D warnings
 
       - name: Compile
         run: bundle exec rake compile

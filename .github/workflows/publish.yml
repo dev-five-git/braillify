@@ -49,6 +49,11 @@ jobs:
         with:
           components: clippy, rustfmt
       - uses: actions-rust-lang/setup-rust-toolchain@v1
+      # packages/ruby(rb-sys) 컴파일에 libruby가 필요하다.
+      # Windows는 MSVC Rust 툴체인과 링크가 맞는 mswin Ruby를 사용한다.
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
       - name: Cargo tarpaulin and fmt
         run: |
           cargo install cargo-tarpaulin
@@ -186,6 +191,42 @@ jobs:
         run: dotnet test --no-build -c Release --verbosity normal --framework net9.0 Braillify.Tests/Braillify.Tests.csproj
         working-directory: packages/dotnet
 
+  ruby-test:
+    name: Ruby Test - ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      # Windows는 MSVC Rust 툴체인과 링크가 맞는 mswin Ruby를 사용한다.
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
+          bundler-cache: true
+          working-directory: packages/ruby
+
+      - name: Compile
+        run: bundle exec rake compile
+        working-directory: packages/ruby
+
+      - name: Test
+        run: bundle exec rake test
+        working-directory: packages/ruby
+
   deploy-landing:
     name: Deploy Landing
     runs-on: ubuntu-latest
@@ -193,6 +234,7 @@ jobs:
     needs:
       - test
       - dotnet-test
+      - ruby-test
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
@@ -239,6 +281,7 @@ jobs:
     needs:
       - test
       - dotnet-test
+      - ruby-test
     steps:
       - uses: actions/checkout@v6
       - uses: changepacks/action@main
@@ -798,3 +841,101 @@ jobs:
         with:
           name: nuget-packages
           path: packages/dotnet/**/nupkg/*.nupkg
+
+  # ruby
+  ruby-build:
+    name: Ruby Build - ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/ruby/Cargo.toml') }}
+    needs:
+      - test
+      - dotnet-test
+      - ruby-test
+      - changepacks
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - x86_64-linux
+          - aarch64-linux
+          - x86_64-darwin
+          - arm64-darwin
+          - x64-mingw-ucrt
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+          working-directory: packages/ruby
+
+      # rb-sys-dock은 repo 루트를 마운트하므로 루트 워크스페이스의
+      # [patch.crates-io]가 적용되어 로컬 libs/braillify로 빌드된다.
+      - uses: oxidize-rb/actions/cross-gem@v1
+        id: cross-gem
+        with:
+          platform: ${{ matrix.platform }}
+          ruby-versions: "3.1,3.2,3.3,3.4"
+          working-directory: packages/ruby
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ruby-gem-${{ matrix.platform }}
+          path: ${{ steps.cross-gem.outputs.gem-path }}
+          if-no-files-found: error
+
+  ruby-publish:
+    name: Ruby Publish
+    runs-on: ubuntu-latest
+    if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/ruby/Cargo.toml') }}
+    needs:
+      - changepacks
+      - ruby-build
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      - name: Download platform gems
+        uses: actions/download-artifact@v8
+        with:
+          pattern: ruby-gem-*
+          path: gems
+
+      # 소스 gem (Rust 툴체인으로 설치하는 fallback)
+      - name: Build source gem
+        run: |
+          gem build braillify.gemspec
+          mkdir -p ../../gems/source
+          mv braillify-*.gem ../../gems/source/
+        working-directory: packages/ruby
+
+      - name: Publish
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+        run: |
+          VERSION=$(ruby -e 'print File.read("packages/ruby/Cargo.toml")[/^version = "([^"]+)"/, 1]')
+
+          # 이미 publish된 버전/플랫폼 조합은 건너뛴다 (idempotent re-run).
+          # 최초 배포 시 versions 엔드포인트는 404를 반환하므로 빈 배열로 대체한다.
+          EXISTING=$(curl -fsSL "https://rubygems.org/api/v1/versions/braillify.json" || echo "[]")
+
+          for GEM in $(find gems -name '*.gem' -type f); do
+            BASE=$(basename "$GEM" .gem)
+            PLATFORM=${BASE#braillify-$VERSION}
+            PLATFORM=${PLATFORM#-}
+            PLATFORM=${PLATFORM:-ruby}
+            if echo "$EXISTING" | jq -e --arg v "$VERSION" --arg p "$PLATFORM" \
+              'any(.[]; .number == $v and .platform == $p)' > /dev/null; then
+              echo "::notice::braillify-$VERSION ($PLATFORM) is already on rubygems.org. Skipping."
+              continue
+            fi
+            gem push "$GEM"
+          done

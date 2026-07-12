@@ -203,6 +203,14 @@ pub(super) fn normalize_math_alphanumeric(c: char) -> char {
 mod tests {
     use super::*;
 
+    #[rstest::rstest]
+    #[case::hangul_syllable('가', true)]
+    #[case::compat_jamo('ㄱ', true)]
+    #[case::latin('a', false)]
+    fn detects_korean_char_ranges(#[case] ch: char, #[case] expected: bool) {
+        assert_eq!(is_korean_char(ch), expected);
+    }
+
     /// `normalize_superscript` returns None for non-superscript chars.
     #[rstest::rstest]
     #[case('a')]
@@ -232,6 +240,9 @@ mod tests {
     #[case('\u{1D7CE}', '0')]
     #[case('\u{1D7D8}', '0')]
     fn normalize_math_alphanumeric_table(#[case] input: char, #[case] expected: char) {
-        assert_eq!(normalize_math_alphanumeric(input), expected);
+        assert_eq!(
+            normalize_math_alphanumeric(std::hint::black_box(input)),
+            expected
+        );
     }
 }

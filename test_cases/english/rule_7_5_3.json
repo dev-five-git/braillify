@@ -1,0 +1,9 @@
+[
+  {
+    "input": "[?]",
+    "context": "english",
+    "internal": ".<;8.>",
+    "expected": "403548384028",
+    "unicode": "⠨⠣⠰⠦⠨⠜"
+  }
+]

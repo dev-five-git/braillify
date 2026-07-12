@@ -149,26 +149,31 @@ mod tests {
         crate::encode(input).unwrap_or_default()
     }
 
-    /// Comprehensive LaTeX matrix variants — every Begin/End matrix env.
+    #[rstest::rstest]
+    #[case::bare_matrix("$\\begin{matrix} 1 & 2 \\\\ 3 & 4 \\end{matrix}$", '⠦', '⠴')]
+    #[case::parenthesized("$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$", '⠦', '⠴')]
+    #[case::bracketed("$\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}$", '⠦', '⠴')]
+    #[case::braced("$\\begin{Bmatrix} x & y \\\\ z & w \\end{Bmatrix}$", '⠦', '⠴')]
+    #[case::determinant("$\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$", '⠳', '⠳')]
+    #[case::norm("$\\begin{Vmatrix} 1 & 0 \\\\ 0 & 1 \\end{Vmatrix}$", '⠳', '⠳')]
+    #[case::generic_array("$\\begin{array}{cc} x & y \\\\ z & w \\end{array}$", '⠦', '⠴')]
+    fn latex_matrix_environments(#[case] input: &str, #[case] open: char, #[case] close: char) {
+        let output = crate::encode_to_unicode(input).unwrap();
+
+        assert!(output.contains(open));
+        assert!(output.contains(close));
+        assert!(output.contains('⠜'));
+    }
+
     #[test]
-    fn latex_matrix_environments() {
-        let inputs: &[&str] = &[
-            // matrix family
-            "$\\begin{matrix} 1 & 2 \\\\ 3 & 4 \\end{matrix}$",
-            "$\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$",
-            "$\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}$",
-            "$\\begin{Bmatrix} x & y \\end{Bmatrix}$",
-            "$\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$",
-            "$\\begin{Vmatrix} 1 & 0 \\\\ 0 & 1 \\end{Vmatrix}$",
-            // arrays
-            "$\\begin{array}{cc} x & y \\\\ z & w \\end{array}$",
-            "$\\begin{array}{ll} a & b \\\\ c & d \\end{array}$",
-            // determinant
-            "$\\begin{vmatrix} a & b \\\\ c & d \\end{vmatrix}$",
-        ];
-        for input in inputs {
-            let _ = enc(input);
-        }
+    fn latex_variation_table_array_uses_box_borders() {
+        let output = crate::encode_to_unicode(
+            "$\\begin{array}{|c|c|c|c|}\\hline x & y & z & w \\\\ \\hline\\end{array}$",
+        )
+        .unwrap();
+
+        assert!(output.starts_with('⠖'));
+        assert!(output.contains('⠓'));
     }
 
     /// Various LaTeX command stripping cases.

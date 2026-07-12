@@ -29,7 +29,7 @@ jobs:
     steps:
       # pull_request_target는 보안상 기본적으로 base branch(main)를 체크아웃한다.
       # PR 코드의 커버리지를 측정하려면 PR head를 명시적으로 지정해야 한다.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: oven-sh/setup-bun@v2
@@ -40,7 +40,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@v8.3.2
       - name: Install maturin
         run: uv pip install maturin --system
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -87,7 +87,7 @@ jobs:
           rm -rf .rustfmt.toml
           cargo fmt
       - name: Upload to codecov.io
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
@@ -128,7 +128,7 @@ jobs:
             lib_name: libbraillify_native.dylib
     steps:
       # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -241,7 +241,7 @@ jobs:
       - dotnet-test
       - ruby-test
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -250,7 +250,7 @@ jobs:
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@v8.3.2
       - name: Install maturin
         run: uv pip install maturin --system
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -289,7 +289,7 @@ jobs:
       - dotnet-test
       - ruby-test
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: changepacks/action@main
         id: changepacks
         with:
@@ -328,7 +328,7 @@ jobs:
       MACOSX_DEPLOYMENT_TARGET: "10.13"
       CARGO_INCREMENTAL: "1"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -341,7 +341,7 @@ jobs:
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@v8.3.2
       - name: Install maturin
         run: uv pip install maturin --system
       - name: Install
@@ -449,7 +449,7 @@ jobs:
             target: aarch64
             os: macos
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -479,7 +479,7 @@ jobs:
       - node-build
     if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/node/package.json') }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -488,7 +488,7 @@ jobs:
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@v8.3.2
       - name: Install maturin
         run: uv pip install maturin --system
       - name: Install
@@ -621,7 +621,7 @@ jobs:
             binary_name: braillify-darwin-arm64
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -663,7 +663,7 @@ jobs:
     needs:
       - changepacks
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Publish to Cargo
         run: |
           # Cargo.toml 의 현재 버전이 이미 crates.io 에 publish 되어 있으면 nothing to do.
@@ -685,7 +685,7 @@ jobs:
     needs:
       - changepacks
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -752,7 +752,7 @@ jobs:
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -790,7 +790,7 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5

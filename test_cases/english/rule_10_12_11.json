@@ -1,0 +1,26 @@
+[
+  {
+    "input": "thecond thentury",
+    "internal": "!cond !ntury",
+    "expected": "4692129250462930372361",
+    "unicode": "⠮⠉⠕⠝⠙⠀⠮⠝⠞⠥⠗⠽"
+  },
+  {
+    "input": "thenotaph",
+    "internal": "!notaph",
+    "expected": "4629213011519",
+    "unicode": "⠮⠝⠕⠞⠁⠏⠓"
+  },
+  {
+    "input": "sisther or thithter",
+    "internal": "sis!r or ?i?t]",
+    "expected": "14101446230212305710573059",
+    "unicode": "⠎⠊⠎⠮⠗⠀⠕⠗⠀⠹⠊⠹⠞⠻"
+  },
+  {
+    "input": "thuthpenthe",
+    "internal": "?u?p5!",
+    "expected": "573757153446",
+    "unicode": "⠹⠥⠹⠏⠢⠮"
+  }
+]

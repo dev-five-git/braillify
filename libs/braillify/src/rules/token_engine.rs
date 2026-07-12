@@ -231,6 +231,18 @@ mod tests {
     }
 
     #[test]
+    fn ensure_sorted_orders_registered_rules_by_phase_then_priority() {
+        let mut engine = TokenRuleEngine::new();
+        engine.register(Box::new(InsertSpaceBeforeSecond));
+        engine.register(Box::new(ReplaceWordAt0));
+
+        engine.ensure_sorted();
+
+        assert_eq!(engine.rules[0].phase(), TokenPhase::Normalization);
+        assert_eq!(engine.rules[1].phase(), TokenPhase::PostWord);
+    }
+
+    #[test]
     fn token_engine_insert_replace_remove_index_handling() {
         let mut engine = TokenRuleEngine::new();
         engine.register(Box::new(ReplaceWordAt0));
@@ -331,6 +343,86 @@ mod tests {
         engine.apply_all(&mut tokens, &mut state).unwrap();
         // AlwaysNoop returns Noop → fall through to ReplaceWordAt0 which fires at index 0.
         assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![9]));
+    }
+
+    #[test]
+    fn token_engine_runtime_noop_normalization_continues_to_next_rule() {
+        struct RuntimeNoop;
+        impl TokenRule for RuntimeNoop {
+            fn phase(&self) -> TokenPhase {
+                std::hint::black_box(TokenPhase::Normalization)
+            }
+            fn priority(&self) -> u16 {
+                std::hint::black_box(10)
+            }
+            fn apply<'a>(
+                &self,
+                _tokens: &[Token<'a>],
+                _index: usize,
+                _state: &mut EncoderState,
+            ) -> Result<TokenAction<'a>, String> {
+                Ok(std::hint::black_box(TokenAction::Noop))
+            }
+        }
+
+        let mut engine = TokenRuleEngine::new();
+        engine.register(Box::new(RuntimeNoop));
+        engine.register(Box::new(ReplaceWordAt0));
+        let mut tokens = vec![word_token("a")];
+        let mut state = EncoderState::new(false);
+
+        engine.apply_all(&mut tokens, &mut state).unwrap();
+
+        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![9]));
+    }
+
+    #[test]
+    fn token_engine_noop_wordshortcut_stops_current_index_rules() {
+        struct WordShortcutNoop;
+        impl TokenRule for WordShortcutNoop {
+            fn phase(&self) -> TokenPhase {
+                TokenPhase::WordShortcut
+            }
+            fn priority(&self) -> u16 {
+                10
+            }
+            fn apply<'a>(
+                &self,
+                _tokens: &[Token<'a>],
+                _index: usize,
+                _state: &mut EncoderState,
+            ) -> Result<TokenAction<'a>, String> {
+                Ok(TokenAction::Noop)
+            }
+        }
+
+        struct WordShortcutReplace;
+        impl TokenRule for WordShortcutReplace {
+            fn phase(&self) -> TokenPhase {
+                TokenPhase::WordShortcut
+            }
+            fn priority(&self) -> u16 {
+                20
+            }
+            fn apply<'a>(
+                &self,
+                _tokens: &[Token<'a>],
+                _index: usize,
+                _state: &mut EncoderState,
+            ) -> Result<TokenAction<'a>, String> {
+                Ok(TokenAction::Replace(Token::PreEncoded(vec![7])))
+            }
+        }
+
+        let mut engine = TokenRuleEngine::new();
+        engine.register(Box::new(WordShortcutNoop));
+        engine.register(Box::new(WordShortcutReplace));
+
+        let mut tokens = vec![word_token("a")];
+        let mut state = EncoderState::new(false);
+        engine.apply_all(&mut tokens, &mut state).unwrap();
+
+        assert!(matches!(&tokens[0], Token::Word(w) if w.text == "a"));
     }
 
     /// token_engine.rs lines 95-96 - `impl Default::default()` body.

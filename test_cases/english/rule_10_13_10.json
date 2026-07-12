@@ -1,0 +1,26 @@
+[
+  {
+    "input": "egg\nnog",
+    "internal": "egg-\nnog",
+    "expected": "17272736\n292127",
+    "unicode": "⠑⠛⠛⠤\n⠝⠕⠛"
+  },
+  {
+    "input": "moth\neaten",
+    "internal": "mo?-\neat5",
+    "expected": "13215736\n1713034",
+    "unicode": "⠍⠕⠹⠤\n⠑⠁⠞⠢"
+  },
+  {
+    "input": "pea\nnut",
+    "internal": "pea-\nnut",
+    "expected": "1517136\n293730",
+    "unicode": "⠏⠑⠁⠤\n⠝⠥⠞"
+  },
+  {
+    "input": "stiff\nly",
+    "internal": "/iff-\nly",
+    "expected": "1210111136\n761",
+    "unicode": "⠌⠊⠋⠋⠤\n⠇⠽"
+  }
+]

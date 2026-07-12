@@ -1,0 +1,74 @@
+[
+  {
+    "input": "Cunnyngham",
+    "internal": ",cunnyngham",
+    "expected": "32937292961292719113",
+    "unicode": "⠠⠉⠥⠝⠝⠽⠝⠛⠓⠁⠍"
+  },
+  {
+    "input": "knighthood",
+    "internal": "kni<thood",
+    "expected": "52910353019212125",
+    "unicode": "⠅⠝⠊⠣⠞⠓⠕⠕⠙"
+  },
+  {
+    "input": "mishandle",
+    "internal": "mish&le",
+    "expected": "1310141947717",
+    "unicode": "⠍⠊⠎⠓⠯⠇⠑"
+  },
+  {
+    "input": "mishap",
+    "internal": "mishap",
+    "expected": "13101419115",
+    "unicode": "⠍⠊⠎⠓⠁⠏"
+  },
+  {
+    "input": "mishear",
+    "internal": "mishe>",
+    "expected": "131014191728",
+    "unicode": "⠍⠊⠎⠓⠑⠜"
+  },
+  {
+    "input": "Newhaven",
+    "internal": ",newhav5",
+    "expected": "322917581913934",
+    "unicode": "⠠⠝⠑⠺⠓⠁⠧⠢"
+  },
+  {
+    "input": "shanghaied",
+    "internal": "%anghai$",
+    "expected": "41129271911043",
+    "unicode": "⠩⠁⠝⠛⠓⠁⠊⠫"
+  },
+  {
+    "input": "Sontheim",
+    "internal": ",sontheim",
+    "expected": "321421293019171013",
+    "unicode": "⠠⠎⠕⠝⠞⠓⠑⠊⠍"
+  },
+  {
+    "input": "stronghold",
+    "internal": "/r;ghold",
+    "expected": "122348271921725",
+    "unicode": "⠌⠗⠰⠛⠓⠕⠇⠙"
+  },
+  {
+    "input": "Brigham",
+    "internal": ",bri<am",
+    "expected": "323231035113",
+    "unicode": "⠠⠃⠗⠊⠣⠁⠍"
+  },
+  {
+    "input": "Chatham",
+    "internal": ",*a?am",
+    "expected": "3233157113",
+    "unicode": "⠠⠡⠁⠹⠁⠍"
+  },
+  {
+    "input": "Higham",
+    "internal": ",hi<am",
+    "expected": "32191035113",
+    "unicode": "⠠⠓⠊⠣⠁⠍"
+  }
+]

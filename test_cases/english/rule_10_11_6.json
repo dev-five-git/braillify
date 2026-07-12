@@ -1,0 +1,122 @@
+[
+  {
+    "input": "anteater",
+    "internal": "ant1t]",
+    "expected": "1293023059",
+    "unicode": "⠁⠝⠞⠂⠞⠻"
+  },
+  {
+    "input": "contradistinction",
+    "internal": "3tradi/9c;n",
+    "expected": "18302312510122094829",
+    "unicode": "⠒⠞⠗⠁⠙⠊⠌⠔⠉⠰⠝"
+  },
+  {
+    "input": "disease",
+    "internal": "41se",
+    "expected": "5021417",
+    "unicode": "⠲⠂⠎⠑"
+  },
+  {
+    "input": "extramental",
+    "internal": "extra;tal",
+    "expected": "174530231483017",
+    "unicode": "⠑⠭⠞⠗⠁⠰⠞⠁⠇"
+  },
+  {
+    "input": "heartsease",
+    "internal": "he>ts1se",
+    "expected": "191728301421417",
+    "unicode": "⠓⠑⠜⠞⠎⠂⠎⠑"
+  },
+  {
+    "input": "incongruity",
+    "internal": "9c;gru;y",
+    "expected": "209482723374861",
+    "unicode": "⠔⠉⠰⠛⠗⠥⠰⠽"
+  },
+  {
+    "input": "incongruous",
+    "internal": "9c;gru\\s",
+    "expected": "209482723375114",
+    "unicode": "⠔⠉⠰⠛⠗⠥⠳⠎"
+  },
+  {
+    "input": "indistinct",
+    "internal": "9di/9ct",
+    "expected": "2025101220930",
+    "unicode": "⠔⠙⠊⠌⠔⠉⠞"
+  },
+  {
+    "input": "indistinguishable",
+    "internal": "9di/+ui%able",
+    "expected": "202510124437104113717",
+    "unicode": "⠔⠙⠊⠌⠬⠥⠊⠩⠁⠃⠇⠑"
+  },
+  {
+    "input": "motheaten",
+    "internal": "mo?1t5",
+    "expected": "13215723034",
+    "unicode": "⠍⠕⠹⠂⠞⠢"
+  },
+  {
+    "input": "northeast",
+    "internal": "nor?1/",
+    "expected": "29212357212",
+    "unicode": "⠝⠕⠗⠹⠂⠌"
+  },
+  {
+    "input": "redistribution",
+    "internal": "r$i/ribu;n",
+    "expected": "2343101223103374829",
+    "unicode": "⠗⠫⠊⠌⠗⠊⠃⠥⠰⠝"
+  },
+  {
+    "input": "speakeasy",
+    "internal": "sp1k1sy",
+    "expected": "14152521461",
+    "unicode": "⠎⠏⠂⠅⠂⠎⠽"
+  },
+  {
+    "input": "spreadeagle",
+    "internal": "spr1d1gle",
+    "expected": "141523225227717",
+    "unicode": "⠎⠏⠗⠂⠙⠂⠛⠇⠑"
+  },
+  {
+    "input": "uncongenial",
+    "internal": "unc;g5ial",
+    "expected": "372994827341017",
+    "unicode": "⠥⠝⠉⠰⠛⠢⠊⠁⠇"
+  },
+  {
+    "input": "undisturbed",
+    "internal": "undi/urb$",
+    "expected": "37292510123723343",
+    "unicode": "⠥⠝⠙⠊⠌⠥⠗⠃⠫"
+  },
+  {
+    "input": "unfulfilled",
+    "internal": "un;lfill$",
+    "expected": "372948711107743",
+    "unicode": "⠥⠝⠰⠇⠋⠊⠇⠇⠫"
+  },
+  {
+    "input": "unlessoned",
+    "internal": "un.son$",
+    "expected": "37294014212943",
+    "unicode": "⠥⠝⠨⠎⠕⠝⠫"
+  },
+  {
+    "input": "disingenuous",
+    "internal": "49g5u\\s",
+    "expected": "50202734375114",
+    "unicode": "⠲⠔⠛⠢⠥⠳⠎"
+  },
+  {
+    "input": "electroencephalogram",
+    "internal": "electro5cephalogram",
+    "expected": "17717930232134917151917212723113",
+    "unicode": "⠑⠇⠑⠉⠞⠗⠕⠢⠉⠑⠏⠓⠁⠇⠕⠛⠗⠁⠍"
+  }
+]

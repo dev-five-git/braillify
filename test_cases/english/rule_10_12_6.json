@@ -1,0 +1,62 @@
+[
+  {
+    "input": "Bighorn",
+    "internal": ",bighorn",
+    "expected": "323102719212329",
+    "unicode": "⠠⠃⠊⠛⠓⠕⠗⠝"
+  },
+  {
+    "input": "chemotherapy",
+    "internal": "*emo!rapy",
+    "expected": "33171321462311561",
+    "unicode": "⠡⠑⠍⠕⠮⠗⠁⠏⠽"
+  },
+  {
+    "input": "Hades",
+    "internal": ",hades",
+    "expected": "32191251714",
+    "unicode": "⠠⠓⠁⠙⠑⠎"
+  },
+  {
+    "input": "Hermione",
+    "internal": ",h]mione",
+    "expected": "3219591310212917",
+    "unicode": "⠠⠓⠻⠍⠊⠕⠝⠑"
+  },
+  {
+    "input": "Mortimer",
+    "internal": ",mortim]",
+    "expected": "3213212330101359",
+    "unicode": "⠠⠍⠕⠗⠞⠊⠍⠻"
+  },
+  {
+    "input": "Newhaven",
+    "internal": ",newhav5",
+    "expected": "322917581913934",
+    "unicode": "⠠⠝⠑⠺⠓⠁⠧⠢"
+  },
+  {
+    "input": "OED",
+    "internal": ",,oed",
+    "expected": "3232211725",
+    "unicode": "⠠⠠⠕⠑⠙"
+  },
+  {
+    "input": "Stalingrad",
+    "internal": ",/al9grad",
+    "expected": "321217202723125",
+    "unicode": "⠠⠌⠁⠇⠔⠛⠗⠁⠙"
+  },
+  {
+    "input": "US",
+    "internal": ",,us",
+    "expected": "32323714",
+    "unicode": "⠠⠠⠥⠎"
+  },
+  {
+    "input": "Vietnamese",
+    "internal": ",vietnamese",
+    "expected": "323910173029113171417",
+    "unicode": "⠠⠧⠊⠑⠞⠝⠁⠍⠑⠎⠑"
+  }
+]

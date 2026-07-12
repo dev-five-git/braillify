@@ -117,6 +117,27 @@ mod tests {
     }
 
     #[test]
+    fn unsupported_currency_symbol_rejects_at_boundary() {
+        assert_eq!(currency_letter('£'), None);
+        assert!(!is_currency_symbol('£'));
+        assert!(encode_currency_symbol('£').is_err());
+    }
+
+    #[test]
+    fn apply_currency_symbol_emits_space_before_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("$가", false);
+        let mut ctx = owned.ctx_at(0);
+
+        let outcome = Rule65.apply(&mut ctx).unwrap();
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(
+            owned.result,
+            vec![LETTER_MARKER, CURRENCY_MARKER, decode_unicode('⠎'), 0]
+        );
+    }
+
+    #[test]
     fn apply_skips_non_korean() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let mut ctx = owned.ctx_at(0);

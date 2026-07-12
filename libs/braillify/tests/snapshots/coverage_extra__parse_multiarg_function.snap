@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
 expression: rendered
 ---
 input  = "f(x, y, z)"
-unicode = ok: "⠋⠦⠭⠐⠀⠽⠂⠀⠵⠠⠴"
-bytes   = ok: [11, 38, 45, 16, 0, 61, 2, 0, 53, 32, 52]
+unicode = ok: "⠋⠐⠣⠭⠂⠀⠰⠽⠂⠀⠰⠵⠐⠜"
+bytes   = ok: [11, 16, 35, 45, 2, 0, 48, 61, 2, 0, 48, 53, 16, 28]

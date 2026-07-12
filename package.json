@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "oxlint . && cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings",
-    "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings",
+    "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings && cargo clippy --workspace --all-targets -- -D warnings",
     "test": "cargo tarpaulin --engine llvm --out xml --out stdout -- --skip test_by_testcase && bun test --coverage && cd py-test && uv run pytest",
     "test:testcase": "cargo test -p braillify test_by_testcase -- --nocapture",
     "preinstall": "uv sync && (cargo install wasm-pack || node -e \"process.exit(0)\") && (pip install maturin || \"process.exit(0)\")",
@@ -21,10 +21,10 @@
   ],
   "devDependencies": {
     "@types/bun": "^1.3.14",
-    "@types/node": "^25.9.1",
+    "@types/node": "^26.1.1",
     "braillify": "workspace:*",
     "eslint-plugin-devup": "^2.0.19",
-    "oxlint": "^1.66.0"
+    "oxlint": "^1.73.0"
   },
   "author": "devfive"
 }

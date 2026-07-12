@@ -1,0 +1,116 @@
+[
+  {
+    "input": "beatitude",
+    "internal": "2atitude",
+    "expected": "61301030372517",
+    "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑"
+  },
+  {
+    "input": "Beatrix",
+    "internal": ",2atrix",
+    "expected": "326130231045",
+    "unicode": "⠠⠆⠁⠞⠗⠊⠭"
+  },
+  {
+    "input": "bedraggled",
+    "internal": "2dra7l$",
+    "expected": "62523154743",
+    "unicode": "⠆⠙⠗⠁⠶⠇⠫"
+  },
+  {
+    "input": "benevolence",
+    "internal": "2nevol;e",
+    "expected": "62917392174817",
+    "unicode": "⠆⠝⠑⠧⠕⠇⠰⠑"
+  },
+  {
+    "input": "benighted",
+    "internal": "2ni<t$",
+    "expected": "62910353043",
+    "unicode": "⠆⠝⠊⠣⠞⠫"
+  },
+  {
+    "input": "benign",
+    "internal": "2nign",
+    "expected": "629102729",
+    "unicode": "⠆⠝⠊⠛⠝"
+  },
+  {
+    "input": "berated",
+    "internal": "2rat$",
+    "expected": "62313043",
+    "unicode": "⠆⠗⠁⠞⠫"
+  },
+  {
+    "input": "congee",
+    "internal": "3gee",
+    "expected": "18271717",
+    "unicode": "⠒⠛⠑⠑"
+  },
+  {
+    "input": "congenial",
+    "internal": "3g5ial",
+    "expected": "1827341017",
+    "unicode": "⠒⠛⠢⠊⠁⠇"
+  },
+  {
+    "input": "dishonesty",
+    "internal": "4h\"o/y",
+    "expected": "501916211261",
+    "unicode": "⠲⠓⠐⠕⠌⠽"
+  },
+  {
+    "input": "distance",
+    "internal": "4t.e",
+    "expected": "50304017",
+    "unicode": "⠲⠞⠨⠑"
+  },
+  {
+    "input": "beach",
+    "internal": "b1*",
+    "expected": "3233",
+    "unicode": "⠃⠂⠡"
+  },
+  {
+    "input": "beautiful",
+    "internal": "b1uti;l",
+    "expected": "32373010487",
+    "unicode": "⠃⠂⠥⠞⠊⠰⠇"
+  },
+  {
+    "input": "bed",
+    "internal": "b$",
+    "expected": "343",
+    "unicode": "⠃⠫"
+  },
+  {
+    "input": "benefit",
+    "internal": "b5efit",
+    "expected": "33417111030",
+    "unicode": "⠃⠢⠑⠋⠊⠞"
+  },
+  {
+    "input": "benzene",
+    "internal": "b5z5e",
+    "expected": "334533417",
+    "unicode": "⠃⠢⠵⠢⠑"
+  },
+  {
+    "input": "berth",
+    "internal": "b]?",
+    "expected": "35957",
+    "unicode": "⠃⠻⠹"
+  },
+  {
+    "input": "dish",
+    "internal": "di%",
+    "expected": "251041",
+    "unicode": "⠙⠊⠩"
+  },
+  {
+    "input": "dishevelled",
+    "internal": "di%evell$",
+    "expected": "2510411739177743",
+    "unicode": "⠙⠊⠩⠑⠧⠑⠇⠇⠫"
+  }
+]

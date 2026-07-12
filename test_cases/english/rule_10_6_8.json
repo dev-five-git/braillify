@@ -1,0 +1,362 @@
+[
+  {
+    "input": "antinode",
+    "internal": "ant9ode",
+    "expected": "1293020212517",
+    "unicode": "⠁⠝⠞⠔⠕⠙⠑"
+  },
+  {
+    "input": "arena",
+    "internal": ">5a",
+    "expected": "28341",
+    "unicode": "⠜⠢⠁"
+  },
+  {
+    "input": "been",
+    "internal": "be5",
+    "expected": "31734",
+    "unicode": "⠃⠑⠢"
+  },
+  {
+    "input": "begin",
+    "internal": "2g9",
+    "expected": "62720",
+    "unicode": "⠆⠛⠔"
+  },
+  {
+    "input": "be'ind",
+    "internal": "be'9d",
+    "expected": "31742025",
+    "unicode": "⠃⠑⠄⠔⠙"
+  },
+  {
+    "input": "benefit",
+    "internal": "b5efit",
+    "expected": "33417111030",
+    "unicode": "⠃⠢⠑⠋⠊⠞"
+  },
+  {
+    "input": "binary",
+    "internal": "b9>y",
+    "expected": "3202861",
+    "unicode": "⠃⠔⠜⠽"
+  },
+  {
+    "input": "binomial",
+    "internal": "b9omial",
+    "expected": "32021131017",
+    "unicode": "⠃⠔⠕⠍⠊⠁⠇"
+  },
+  {
+    "input": "Blakeney",
+    "internal": ",blak5ey",
+    "expected": "323715341761",
+    "unicode": "⠠⠃⠇⠁⠅⠢⠑⠽"
+  },
+  {
+    "input": "Caen",
+    "internal": ",ca5",
+    "expected": "329134",
+    "unicode": "⠠⠉⠁⠢"
+  },
+  {
+    "input": "casino",
+    "internal": "cas9o",
+    "expected": "91142021",
+    "unicode": "⠉⠁⠎⠔⠕"
+  },
+  {
+    "input": "china",
+    "internal": "*9a",
+    "expected": "33201",
+    "unicode": "⠡⠔⠁"
+  },
+  {
+    "input": "Chopin",
+    "internal": ",*op9",
+    "expected": "3233211520",
+    "unicode": "⠠⠡⠕⠏⠔"
+  },
+  {
+    "input": "citizeness",
+    "internal": "citiz5ess",
+    "expected": "91030105334171414",
+    "unicode": "⠉⠊⠞⠊⠵⠢⠑⠎⠎"
+  },
+  {
+    "input": "deafen",
+    "internal": "d1f5",
+    "expected": "2521134",
+    "unicode": "⠙⠂⠋⠢"
+  },
+  {
+    "input": "denote",
+    "internal": "d5ote",
+    "expected": "2534213017",
+    "unicode": "⠙⠢⠕⠞⠑"
+  },
+  {
+    "input": "deny",
+    "internal": "d5y",
+    "expected": "253461",
+    "unicode": "⠙⠢⠽"
+  },
+  {
+    "input": "disingenuous",
+    "internal": "49g5u\\s",
+    "expected": "50202734375114",
+    "unicode": "⠲⠔⠛⠢⠥⠳⠎"
+  },
+  {
+    "input": "double-entendre",
+    "internal": "d\\ble-5t5dre",
+    "expected": "2551371736343034252317",
+    "unicode": "⠙⠳⠃⠇⠑⠤⠢⠞⠢⠙⠗⠑"
+  },
+  {
+    "input": "e'en",
+    "internal": "e'5",
+    "expected": "17434",
+    "unicode": "⠑⠄⠢"
+  },
+  {
+    "input": "Einstein",
+    "internal": ",e9/e9",
+    "expected": "321720121720",
+    "unicode": "⠠⠑⠔⠌⠑⠔"
+  },
+  {
+    "input": "enceinte",
+    "internal": "5ce9te",
+    "expected": "34917203017",
+    "unicode": "⠢⠉⠑⠔⠞⠑"
+  },
+  {
+    "input": "engine",
+    "internal": "5g9e",
+    "expected": "34272017",
+    "unicode": "⠢⠛⠔⠑"
+  },
+  {
+    "input": "Enid",
+    "internal": ",5id",
+    "expected": "32341025",
+    "unicode": "⠠⠢⠊⠙"
+  },
+  {
+    "input": "enormous",
+    "internal": "5orm\\s",
+    "expected": "342123135114",
+    "unicode": "⠢⠕⠗⠍⠳⠎"
+  },
+  {
+    "input": "equinox",
+    "internal": "equ9ox",
+    "expected": "173137202145",
+    "unicode": "⠑⠟⠥⠔⠕⠭"
+  },
+  {
+    "input": "faint",
+    "internal": "fa9t",
+    "expected": "1112030",
+    "unicode": "⠋⠁⠔⠞"
+  },
+  {
+    "input": "feminine",
+    "internal": "fem99e",
+    "expected": "111713202017",
+    "unicode": "⠋⠑⠍⠔⠔⠑"
+  },
+  {
+    "input": "goin'",
+    "internal": "go9'",
+    "expected": "2721204",
+    "unicode": "⠛⠕⠔⠄"
+  },
+  {
+    "input": "haven't",
+    "internal": "hav5't",
+    "expected": "1913934430",
+    "unicode": "⠓⠁⠧⠢⠄⠞"
+  },
+  {
+    "input": "henna",
+    "internal": "h5na",
+    "expected": "1934291",
+    "unicode": "⠓⠢⠝⠁"
+  },
+  {
+    "input": "Inc.",
+    "internal": ",9c4",
+    "expected": "3220950",
+    "unicode": "⠠⠔⠉⠲"
+  },
+  {
+    "input": "incline",
+    "internal": "9cl9e",
+    "expected": "20972017",
+    "unicode": "⠔⠉⠇⠔⠑"
+  },
+  {
+    "input": "ingot",
+    "internal": "9got",
+    "expected": "20272130",
+    "unicode": "⠔⠛⠕⠞"
+  },
+  {
+    "input": "in's",
+    "internal": "9's",
+    "expected": "20414",
+    "unicode": "⠔⠄⠎"
+  },
+  {
+    "input": "into",
+    "internal": "9to",
+    "expected": "203021",
+    "unicode": "⠔⠞⠕"
+  },
+  {
+    "input": "maenad",
+    "internal": "ma5ad",
+    "expected": "13134125",
+    "unicode": "⠍⠁⠢⠁⠙"
+  },
+  {
+    "input": "Montenegro",
+    "internal": ",mont5egro",
+    "expected": "32132129303417272321",
+    "unicode": "⠠⠍⠕⠝⠞⠢⠑⠛⠗⠕"
+  },
+  {
+    "input": "phoenix",
+    "internal": "pho5ix",
+    "expected": "151921341045",
+    "unicode": "⠏⠓⠕⠢⠊⠭"
+  },
+  {
+    "input": "p(en)",
+    "internal": "p\"<5\">",
+    "expected": "151635341628",
+    "unicode": "⠏⠐⠣⠢⠐⠜"
+  },
+  {
+    "input": "p(in)",
+    "internal": "p\"<9\">",
+    "expected": "151635201628",
+    "unicode": "⠏⠐⠣⠔⠐⠜"
+  },
+  {
+    "input": "prenatal",
+    "internal": "pr5atal",
+    "expected": "15233413017",
+    "unicode": "⠏⠗⠢⠁⠞⠁⠇"
+  },
+  {
+    "input": "queen",
+    "internal": "que5",
+    "expected": "31371734",
+    "unicode": "⠟⠥⠑⠢"
+  },
+  {
+    "input": "renew",
+    "internal": "r5ew",
+    "expected": "23341758",
+    "unicode": "⠗⠢⠑⠺"
+  },
+  {
+    "input": "self-induced",
+    "internal": "self-9duc$",
+    "expected": "141771136202537943",
+    "unicode": "⠎⠑⠇⠋⠤⠔⠙⠥⠉⠫"
+  },
+  {
+    "input": "shut-ins",
+    "internal": "%ut-9s",
+    "expected": "413730362014",
+    "unicode": "⠩⠥⠞⠤⠔⠎"
+  },
+  {
+    "input": "to-ing",
+    "internal": "to-9g",
+    "expected": "3021362027",
+    "unicode": "⠞⠕⠤⠔⠛"
+  },
+  {
+    "input": "within",
+    "internal": ")9",
+    "expected": "6220",
+    "unicode": "⠾⠔"
+  },
+  {
+    "input": "Athens",
+    "internal": ",a!ns",
+    "expected": "321462914",
+    "unicode": "⠠⠁⠮⠝⠎"
+  },
+  {
+    "input": "benign",
+    "internal": "2nign",
+    "expected": "629102729",
+    "unicode": "⠆⠝⠊⠛⠝"
+  },
+  {
+    "input": "business",
+    "internal": "busi;s",
+    "expected": "33714104814",
+    "unicode": "⠃⠥⠎⠊⠰⠎"
+  },
+  {
+    "input": "cringed",
+    "internal": "cr+$",
+    "expected": "9234443",
+    "unicode": "⠉⠗⠬⠫"
+  },
+  {
+    "input": "fenced",
+    "internal": "f;ed",
+    "expected": "11481725",
+    "unicode": "⠋⠰⠑⠙"
+  },
+  {
+    "input": "filename",
+    "internal": "file\"n",
+    "expected": "11107171629",
+    "unicode": "⠋⠊⠇⠑⠐⠝"
+  },
+  {
+    "input": "forenoon",
+    "internal": "=enoon",
+    "expected": "631729212129",
+    "unicode": "⠿⠑⠝⠕⠕⠝"
+  },
+  {
+    "input": "Francene",
+    "internal": ",fr.ene",
+    "expected": "32112340172917",
+    "unicode": "⠠⠋⠗⠨⠑⠝⠑"
+  },
+  {
+    "input": "lament",
+    "internal": "la;t",
+    "expected": "714830",
+    "unicode": "⠇⠁⠰⠞"
+  },
+  {
+    "input": "ménage",
+    "internal": "m^/enage",
+    "expected": "132412172912717",
+    "unicode": "⠍⠘⠌⠑⠝⠁⠛⠑"
+  },
+  {
+    "input": "señor",
+    "internal": "se^]nor",
+    "expected": "14172459292123",
+    "unicode": "⠎⠑⠘⠻⠝⠕⠗"
+  },
+  {
+    "input": "toenail",
+    "internal": "toenail",
+    "expected": "302117291107",
+    "unicode": "⠞⠕⠑⠝⠁⠊⠇"
+  }
+]

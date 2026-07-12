@@ -1,0 +1,26 @@
+[
+  {
+    "input": "What???",
+    "internal": ",:at888",
+    "expected": "3249130383838",
+    "unicode": "⠠⠱⠁⠞⠦⠦⠦"
+  },
+  {
+    "input": "\"What?!\"",
+    "internal": "8,:at860",
+    "expected": "383249130382252",
+    "unicode": "⠦⠠⠱⠁⠞⠦⠖⠴"
+  },
+  {
+    "input": "...?\"",
+    "internal": "44480",
+    "expected": "5050503852",
+    "unicode": "⠲⠲⠲⠦⠴"
+  },
+  {
+    "input": "persons?/people?",
+    "internal": "p]sons8_/people8",
+    "expected": "1559142129143856121517211571738",
+    "unicode": "⠏⠻⠎⠕⠝⠎⠦⠸⠌⠏⠑⠕⠏⠇⠑⠦"
+  }
+]

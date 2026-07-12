@@ -138,4 +138,11 @@ mod tests {
         // Function expects already-uppercase but should still match if lowercase given.
         assert!(requires_grade1_indicator("cd"));
     }
+
+    #[test]
+    fn runtime_shortform_lookup_uses_lowercase_key() {
+        let word = std::hint::black_box("CD");
+
+        assert!(requires_grade1_indicator(word));
+    }
 }

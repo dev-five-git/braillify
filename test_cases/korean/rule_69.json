@@ -1,6 +1,7 @@
 [
   {
     "input": "180cm",
+    "context": "korean",
     "internal": "#ahj0cm4",
     "expected": "60119265291350",
     "unicode": "⠼⠁⠓⠚⠴⠉⠍⠲",
@@ -90,6 +91,7 @@
   },
   {
     "input": "%p",
+    "context": "korean",
     "note": "퍼센트포인트",
     "internal": "0pp",
     "expected": "521515",
@@ -108,6 +110,7 @@
   },
   {
     "input": "%ile",
+    "context": "korean",
     "note": "퍼센타일",
     "internal": "0pt",
     "expected": "521530",

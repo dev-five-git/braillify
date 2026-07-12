@@ -1,0 +1,8 @@
+[
+  {
+    "input": "3/8 of the class are girls.",
+    "internal": "#c_/#h ( ! class >e girls4",
+    "expected": "609561260190550460971141402817027102371450",
+    "unicode": "⠼⠉⠸⠌⠼⠓⠀⠷⠀⠮⠀⠉⠇⠁⠎⠎⠀⠜⠑⠀⠛⠊⠗⠇⠎⠲"
+  }
+]

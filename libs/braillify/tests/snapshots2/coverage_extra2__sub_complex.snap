@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "x_{i+1}"
-unicode = ok: "⠭⠰⠷⠊⠢⠼⠁⠾"
-bytes   = ok: [45, 48, 55, 10, 34, 60, 1, 62]
+unicode = ok: "⠭⠨⠤⠸⠣⠊⠐⠖⠼⠁⠸⠜"
+bytes   = ok: [45, 40, 36, 56, 35, 10, 16, 22, 60, 1, 56, 28]

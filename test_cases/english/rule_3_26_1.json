@@ -1,0 +1,75 @@
+[
+  {
+    "input": "‰",
+    "context": "english",
+    "internal": "?",
+    "expected": "57",
+    "unicode": "⠹"
+  },
+  {
+    "input": "฿",
+    "internal": "#?",
+    "expected": "6057",
+    "unicode": "⠼⠹"
+  },
+  {
+    "input": "❀",
+    "internal": "@#?",
+    "expected": "86057",
+    "unicode": "⠈⠼⠹"
+  },
+  {
+    "input": "The average salinity of seawater is 35‰.",
+    "internal": ",! av]age sal9;y ( s1wat] is #ce?4",
+    "expected": "3246013959127170141720486105501425813059010140609175750",
+    "unicode": "⠠⠮⠀⠁⠧⠻⠁⠛⠑⠀⠎⠁⠇⠔⠰⠽⠀⠷⠀⠎⠂⠺⠁⠞⠻⠀⠊⠎⠀⠼⠉⠑⠹⠲"
+  },
+  {
+    "input": "The baht was floated and halved in value, reaching its lowest rate of ฿56 to the dollar in January 1998.",
+    "internal": ",! baht 0 float$ & halv$ 9 value1 r1*+ xs l[e/ rate ( #?#ef to ! doll> 9 ,janu>y #aiih4",
+    "expected": "3246031193005201172113043047019173943020039173717202323344045140742171202313017055060576017110302104602521772802003226129372861060110101950",
+    "unicode": "⠠⠮⠀⠃⠁⠓⠞⠀⠴⠀⠋⠇⠕⠁⠞⠫⠀⠯⠀⠓⠁⠇⠧⠫⠀⠔⠀⠧⠁⠇⠥⠑⠂⠀⠗⠂⠡⠬⠀⠭⠎⠀⠇⠪⠑⠌⠀⠗⠁⠞⠑⠀⠷⠀⠼⠹⠼⠑⠋⠀⠞⠕⠀⠮⠀⠙⠕⠇⠇⠜⠀⠔⠀⠠⠚⠁⠝⠥⠜⠽⠀⠼⠁⠊⠊⠓⠲"
+  },
+  {
+    "input": "A list of items in which those that can be recycled are marked with a flower symbol:",
+    "internal": ",a li/ ( items 9 : ^? t c 2 recycl$ >e m>k$ ) a fl[] symbol3",
+    "expected": "32107101205501030171314020049024570300906023179619743028170132854306201011742590146113321718",
+    "unicode": "⠠⠁⠀⠇⠊⠌⠀⠷⠀⠊⠞⠑⠍⠎⠀⠔⠀⠱⠀⠘⠹⠀⠞⠀⠉⠀⠆⠀⠗⠑⠉⠽⠉⠇⠫⠀⠜⠑⠀⠍⠜⠅⠫⠀⠾⠀⠁⠀⠋⠇⠪⠻⠀⠎⠽⠍⠃⠕⠇⠒"
+  },
+  {
+    "input": "A list of items in which those that can be recycled are marked with a flower symbol:",
+    "internal": ",a li/ ( items 9 : ^? t c 2 recycl$ >e m>k$ ) a fl[] symbol3",
+    "expected": "32107101205501030171314020049024570300906023179619743028170132854306201011742590146113321718",
+    "unicode": "⠠⠁⠀⠇⠊⠌⠀⠷⠀⠊⠞⠑⠍⠎⠀⠔⠀⠱⠀⠘⠹⠀⠞⠀⠉⠀⠆⠀⠗⠑⠉⠽⠉⠇⠫⠀⠜⠑⠀⠍⠜⠅⠫⠀⠾⠀⠁⠀⠋⠇⠪⠻⠀⠎⠽⠍⠃⠕⠇⠒"
+  },
+  {
+    "input": "aerosol cans ❀",
+    "internal": "a]osol cans @#?",
+    "expected": "15921142170912914086057",
+    "unicode": "⠁⠻⠕⠎⠕⠇⠀⠉⠁⠝⠎⠀⠈⠼⠹"
+  },
+  {
+    "input": "balloons",
+    "internal": "balloons",
+    "expected": "317721212914",
+    "unicode": "⠃⠁⠇⠇⠕⠕⠝⠎"
+  },
+  {
+    "input": "books, magazines ❀",
+    "internal": "books1 magaz9es @#?",
+    "expected": "321215142013127153201714086057",
+    "unicode": "⠃⠕⠕⠅⠎⠂⠀⠍⠁⠛⠁⠵⠔⠑⠎⠀⠈⠼⠹"
+  },
+  {
+    "input": "cans ❀",
+    "internal": "cans @#?",
+    "expected": "912914086057",
+    "unicode": "⠉⠁⠝⠎⠀⠈⠼⠹"
+  },
+  {
+    "input": "ceramics",
+    "internal": "c]amics",
+    "expected": "95911310914",
+    "unicode": "⠉⠻⠁⠍⠊⠉⠎"
+  }
+]

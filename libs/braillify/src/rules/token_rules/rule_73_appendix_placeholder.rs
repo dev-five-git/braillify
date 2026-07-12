@@ -114,6 +114,14 @@ mod tests {
         assert!(matches!(action, TokenAction::Noop));
     }
 
+    #[test]
+    fn rule_metadata_reports_phase_and_priority() {
+        let rule = std::hint::black_box(Rule73AppendixPlaceholderRule);
+
+        assert!(matches!(rule.phase(), TokenPhase::Normalization));
+        assert_eq!(rule.priority(), 5);
+    }
+
     /// U+F000 placeholder Word with extra chars (U+F000 + 'A') followed by Space
     /// + Word("은/는...") — drives lines 71-78 (rest_after_f000 push).
     #[test]

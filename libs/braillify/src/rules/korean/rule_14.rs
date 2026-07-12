@@ -192,25 +192,6 @@ mod tests {
         assert!(!should_suppress_abbreviation('곤', true));
     }
 
-    #[test]
-    fn golden_test_alignment() {
-        // 나이: 나 + 이(ㅇ-initial) → no abbreviation for 나
-        // 다음: 다 + 음(ㅇ-initial) → no abbreviation for 다
-        let cases = vec![
-            ("나이", "⠉⠣⠕"),  // full decomposition: ㄴ+ㅏ+ㅇ+ㅣ
-            ("다음", "⠊⠣⠪⠢"), // full decomposition: ㄷ+ㅏ+ㅇ+ㅡ+ㅁ
-            ("하얀", "⠚⠣⠜⠒"), // full decomposition: ㅎ+ㅏ+ㅇ+ㅑ+ㄴ
-        ];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 14 golden test failed for: {}",
-                input
-            );
-        }
-    }
-
     use rstest::rstest;
 
     /// Rule14 detects no-abbreviation target syllables followed by ㅇ-initial syllable.

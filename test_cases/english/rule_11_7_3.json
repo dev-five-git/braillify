@@ -1,0 +1,9 @@
+[
+  {
+    "input": "⊕",
+    "context": "english",
+    "internal": ";$=[\"6",
+    "expected": "484363421622",
+    "unicode": "⠰⠫⠿⠪⠐⠖"
+  }
+]

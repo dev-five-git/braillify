@@ -1,0 +1,44 @@
+[
+  {
+    "input": "ante\nroom",
+    "internal": "ante-\nroom",
+    "expected": "129301736\n23212113",
+    "unicode": "⠁⠝⠞⠑⠤\n⠗⠕⠕⠍"
+  },
+  {
+    "input": "ban\ndanna",
+    "internal": "ban-\ndanna",
+    "expected": "312936\n25129291",
+    "unicode": "⠃⠁⠝⠤\n⠙⠁⠝⠝⠁"
+  },
+  {
+    "input": "Cath\nerine",
+    "internal": ",ca?-\n]9e",
+    "expected": "32915736\n592017",
+    "unicode": "⠠⠉⠁⠹⠤\n⠻⠔⠑"
+  },
+  {
+    "input": "\"Free\ndom!\"",
+    "internal": "8,free-\ndom60",
+    "expected": "38321123171736\n2521132252",
+    "unicode": "⠦⠠⠋⠗⠑⠑⠤\n⠙⠕⠍⠖⠴"
+  },
+  {
+    "input": "his\ntory",
+    "internal": "his-\ntory",
+    "expected": "19101436\n30212361",
+    "unicode": "⠓⠊⠎⠤\n⠞⠕⠗⠽"
+  },
+  {
+    "input": "nightin\ngale",
+    "internal": "ni<t9-\ngale",
+    "expected": "291035302036\n271717",
+    "unicode": "⠝⠊⠣⠞⠔⠤\n⠛⠁⠇⠑"
+  },
+  {
+    "input": "pro\nfound.)",
+    "internal": "pro-\nf.d4\">",
+    "expected": "15232136\n114025501628",
+    "unicode": "⠏⠗⠕⠤\n⠋⠨⠙⠲⠐⠜"
+  }
+]

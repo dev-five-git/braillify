@@ -1,0 +1,50 @@
+[
+  {
+    "input": "it was enough",
+    "internal": "x 0 5",
+    "expected": "45052034",
+    "unicode": "⠭⠀⠴⠀⠢"
+  },
+  {
+    "input": "GIVE MORE THAN ENOUGH",
+    "internal": ",,,give m ?an 5,'",
+    "expected": "32323227103917013057129034324",
+    "unicode": "⠠⠠⠠⠛⠊⠧⠑⠀⠍⠀⠹⠁⠝⠀⠢⠠⠄"
+  },
+  {
+    "input": "Buy meat (enough for 2).",
+    "internal": ",buy m1t \"<5 = #b\">4",
+    "expected": "323376101323001635340630603162850",
+    "unicode": "⠠⠃⠥⠽⠀⠍⠂⠞⠀⠐⠣⠢⠀⠿⠀⠼⠃⠐⠜⠲"
+  },
+  {
+    "input": "(Did you have 𝑒𝑛𝑜𝑢𝑔ℎ help? Just enough.)",
+    "internal": "\"<,did y h .15 help8 ,j 54\">",
+    "expected": "163532251025061019040234019177153803226034501628",
+    "unicode": "⠐⠣⠠⠙⠊⠙⠀⠽⠀⠓⠀⠨⠂⠢⠀⠓⠑⠇⠏⠦⠀⠠⠚⠀⠢⠲⠐⠜"
+  },
+  {
+    "input": "Enough's happened.",
+    "internal": ",5's happ5$4",
+    "expected": "323441401911515344350",
+    "unicode": "⠠⠢⠄⠎⠀⠓⠁⠏⠏⠢⠫⠲"
+  },
+  {
+    "input": "Mum's had-enough mood",
+    "internal": ",mum's _h-5 mood",
+    "expected": "32133713414056193634013212125",
+    "unicode": "⠠⠍⠥⠍⠄⠎⠀⠸⠓⠤⠢⠀⠍⠕⠕⠙"
+  },
+  {
+    "input": "www.enoughforall.org",
+    "internal": "www45\\<=all4org",
+    "expected": "585858503451356317750212327",
+    "unicode": "⠺⠺⠺⠲⠢⠳⠣⠿⠁⠇⠇⠲⠕⠗⠛"
+  },
+  {
+    "input": "enough/sufficient",
+    "internal": "5\\<_/su6ici5t",
+    "expected": "3451355612143722109103430",
+    "unicode": "⠢⠳⠣⠸⠌⠎⠥⠖⠊⠉⠊⠢⠞"
+  }
+]

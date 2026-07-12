@@ -8,7 +8,14 @@ use crate::unicode::decode_unicode;
 
 use super::strip_latex_to_math;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+mod parser;
+mod suffix;
+
+#[cfg(test)]
+pub(super) use suffix::subscript_digit_to_ascii;
+use suffix::{encode_matrix_letter_with_numeric_subscripts, encode_matrix_suffix};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum MatrixDelimiter {
     Parentheses,
     VerticalBars,
@@ -25,8 +32,8 @@ impl MatrixDelimiter {
             // PDF 제6항 1 — 연립식(`\begin{cases}`)은 `⠶⠄`로 시작한다.
             MatrixDelimiter::Cases => vec![decode_unicode('⠶'), decode_unicode('⠄')],
             // PDF 제10항 — Array는 `encode_latex_array`로 분기되므로 호출자는
-            // 이 함수에 Array variant를 절대 전달하지 않는다 (encode_latex_matrix:221
-            // 의 early return 참조). 따라서 이 arm은 호출 컨트랙트상 도달 불가능.
+            // 이 함수에 Array variant를 절대 전달하지 않는다. 따라서 이 arm은
+            // 호출 컨트랙트상 도달 불가능.
             MatrixDelimiter::Array => unreachable!(
                 "MatrixDelimiter::Array is dispatched to encode_latex_array; \
                  open_bytes must never be called for the Array variant"
@@ -58,53 +65,7 @@ pub(super) struct LatexMatrix<'a> {
 }
 
 pub(super) fn find_latex_matrix(latex_inner: &str) -> Option<LatexMatrix<'_>> {
-    let begin_pos = latex_inner.find("\\begin{")?;
-    let env_start = begin_pos + "\\begin{".len();
-    let env_end = latex_inner[env_start..].find('}')? + env_start;
-    let env = &latex_inner[env_start..env_end];
-    let delimiter = match env {
-        "pmatrix" => MatrixDelimiter::Parentheses,
-        "vmatrix" => MatrixDelimiter::VerticalBars,
-        "cases" => MatrixDelimiter::Cases,
-        "array" => MatrixDelimiter::Array,
-        _ => return None,
-    };
-
-    // `\begin{array}{|c|c|c|}` 형태에서 column spec(`{...}`)을 건너뛴다.
-    let mut body_start = env_end + 1;
-    if delimiter == MatrixDelimiter::Array && latex_inner.as_bytes().get(body_start) == Some(&b'{')
-    {
-        let mut depth = 1usize;
-        let mut idx = body_start + 1;
-        while idx < latex_inner.len() {
-            let b = latex_inner.as_bytes()[idx];
-            match b {
-                b'{' => depth += 1,
-                b'}' => {
-                    depth -= 1;
-                    if depth == 0 {
-                        idx += 1;
-                        break;
-                    }
-                }
-                _ => {}
-            }
-            idx += 1;
-        }
-        body_start = idx;
-    }
-
-    let end_marker = format!("\\end{{{env}}}");
-    let relative_end = latex_inner[body_start..].find(&end_marker)?;
-    let body_end = body_start + relative_end;
-    let suffix_start = body_end + end_marker.len();
-
-    Some(LatexMatrix {
-        delimiter,
-        prefix: &latex_inner[..begin_pos],
-        body: &latex_inner[body_start..body_end],
-        suffix: &latex_inner[suffix_start..],
-    })
+    parser::find_latex_matrix(latex_inner)
 }
 
 fn split_matrix_body(body: &str) -> Vec<Vec<String>> {
@@ -170,57 +131,6 @@ fn encode_matrix_cell(cell: &str, math_context: MathContext) -> Result<Vec<u8>, 
         return Ok(bytes);
     }
     math::encoder::encode_math_expression_with_context(&matrix_text, math_context)
-}
-
-pub(super) fn subscript_digit_to_ascii(ch: char) -> Option<char> {
-    match ch {
-        '₀' => Some('0'),
-        '₁' => Some('1'),
-        '₂' => Some('2'),
-        '₃' => Some('3'),
-        '₄' => Some('4'),
-        '₅' => Some('5'),
-        '₆' => Some('6'),
-        '₇' => Some('7'),
-        '₈' => Some('8'),
-        '₉' => Some('9'),
-        _ => None,
-    }
-}
-
-fn encode_matrix_letter_with_numeric_subscripts(
-    text: &str,
-    math_context: MathContext,
-) -> Result<Option<Vec<u8>>, String> {
-    let mut chars = text.chars();
-    let Some(variable) = chars.next() else {
-        return Ok(None);
-    };
-    if !variable.is_ascii_alphabetic() {
-        return Ok(None);
-    }
-
-    let subscripts: Vec<char> = chars.collect();
-    if subscripts.is_empty()
-        || !subscripts
-            .iter()
-            .all(|ch| subscript_digit_to_ascii(*ch).is_some())
-    {
-        return Ok(None);
-    }
-
-    let mut out =
-        math::encoder::encode_math_expression_with_context(&variable.to_string(), math_context)?;
-    out.push(decode_unicode('⠰'));
-    for subscript in subscripts {
-        if let Some(digit) = subscript_digit_to_ascii(subscript) {
-            out.extend(math::encoder::encode_math_expression_with_context(
-                &digit.to_string(),
-                math_context,
-            )?);
-        }
-    }
-    Ok(Some(out))
 }
 
 pub(super) fn encode_latex_matrix(
@@ -330,199 +240,8 @@ pub(super) fn encode_latex_array(
     Ok(out)
 }
 
-pub(super) fn parse_latex_letter_numeric_subscript(term: &str) -> Option<(char, Vec<char>)> {
-    let mut chars = term.chars();
-    let variable = chars.next()?;
-    if !variable.is_ascii_alphabetic() || chars.next()? != '_' || chars.next()? != '{' {
-        return None;
-    }
-
-    let mut digits = Vec::new();
-    for ch in chars {
-        if ch == '}' {
-            return Some((variable, digits));
-        }
-        if ch.is_ascii_digit() {
-            digits.push(ch);
-        } else {
-            return None;
-        }
-    }
-    None
-}
-
-pub(super) fn encode_latex_letter_numeric_subscript(
-    variable: char,
-    digits: &[char],
-    math_context: MathContext,
-) -> Result<Vec<u8>, String> {
-    let mut out =
-        math::encoder::encode_math_expression_with_context(&variable.to_string(), math_context)?;
-    out.push(decode_unicode('⠰'));
-    for digit in digits {
-        out.extend(math::encoder::encode_math_expression_with_context(
-            &digit.to_string(),
-            math_context,
-        )?);
-    }
-    Ok(out)
-}
-
-pub(super) fn encode_matrix_suffix(
-    suffix: &str,
-    math_context: MathContext,
-) -> Result<Vec<u8>, String> {
-    let parts: Vec<&str> = suffix.split_whitespace().collect();
-    if parts.is_empty() {
-        return Ok(Vec::new());
-    }
-    if !parts
-        .iter()
-        .any(|part| parse_latex_letter_numeric_subscript(part).is_some())
-    {
-        return encode_trimmed_math(suffix, math_context);
-    }
-
-    let mut out = Vec::new();
-    let mut previous_was_operand = false;
-    for part in parts {
-        if let Some((variable, digits)) = parse_latex_letter_numeric_subscript(part) {
-            if previous_was_operand {
-                out.push(decode_unicode('⠐'));
-            }
-            out.extend(encode_latex_letter_numeric_subscript(
-                variable,
-                &digits,
-                math_context,
-            )?);
-            previous_was_operand = true;
-            continue;
-        }
-
-        out.extend(encode_trimmed_math(part, math_context)?);
-        // PDF — 행렬 suffix 식에서 `-`는 인접한 단위(예: `a_{11}a_{22} - a_{12}a_{21}`)에
-        // 공백 없이 결합된다. 점역기는 `⠔` 단독으로 emit하고 다음 피연산자가 곧 이어진다.
-        previous_was_operand = false;
-    }
-    Ok(out)
-}
-
 #[cfg(test)]
 mod tests {
-    use super::*;
-
-    fn ctx() -> MathContext {
-        MathContext::default()
-    }
-
-    /// 제10항 — `\begin{array}{|c|c|c|}` column spec with nested `{}` braces
-    /// drives line 82 (`b'{' => depth += 1`). Use a column spec that contains
-    /// internal `{}` to force the depth tracker into the nested-open arm.
-    #[test]
-    fn array_column_spec_nested_braces() {
-        // Trigger via crate::encode() with a real \begin{array}{p{2cm}|c|} input.
-        // The {2cm} inside the column spec exercises the depth tracking.
-        let result = crate::encode_to_unicode(
-            "$\\begin{array}{p{2cm}|c|c|c|}\\hline x & y & z & w \\\\\\hline\\end{array}$",
-        );
-        // Either succeeds or returns reasonable error; either way line 82 runs.
-        assert!(result.is_ok() || result.is_err());
-    }
-
-    /// `encode_matrix_letter_with_numeric_subscripts("")` returns Ok(None) at line 197.
-    /// Empty input: `chars.next()` returns None → early Ok(None).
-    #[test]
-    fn matrix_letter_subscripts_empty_text() {
-        let result = encode_matrix_letter_with_numeric_subscripts("", ctx()).unwrap();
-        assert!(result.is_none());
-    }
-
-    /// Non-alphabetic first char returns Ok(None) at line 200.
-    #[test]
-    fn matrix_letter_subscripts_non_alpha_first() {
-        let result = encode_matrix_letter_with_numeric_subscripts("1₂", ctx()).unwrap();
-        assert!(result.is_none());
-    }
-
-    /// Empty subscripts after alphabetic var returns Ok(None) at line 209.
-    #[test]
-    fn matrix_letter_subscripts_no_subscripts() {
-        let result = encode_matrix_letter_with_numeric_subscripts("a", ctx()).unwrap();
-        assert!(result.is_none());
-    }
-
-    /// Subscripts with non-digit unicode char returns Ok(None) at line 209.
-    #[test]
-    fn matrix_letter_subscripts_non_digit_subscript() {
-        // 'ₐ' is unicode subscript-a, not a digit
-        let result = encode_matrix_letter_with_numeric_subscripts("aₐ", ctx()).unwrap();
-        assert!(result.is_none());
-    }
-
-    /// Valid letter+subscripts produces Some output.
-    #[test]
-    fn matrix_letter_subscripts_valid() {
-        let result = encode_matrix_letter_with_numeric_subscripts("x₁₂", ctx()).unwrap();
-        assert!(result.is_some());
-        assert!(!result.unwrap().is_empty());
-    }
-
-    /// `parse_latex_letter_numeric_subscript`: invalid char (non-digit) returns None at line 351.
-    #[test]
-    fn parse_letter_subscript_invalid_char() {
-        // a_{1x} — 'x' is not a digit, triggers line 351.
-        assert!(parse_latex_letter_numeric_subscript("a_{1x}").is_none());
-    }
-
-    /// `parse_latex_letter_numeric_subscript`: missing closing `}` returns None at line 354.
-    #[test]
-    fn parse_letter_subscript_missing_closing_brace() {
-        assert!(parse_latex_letter_numeric_subscript("a_{12").is_none());
-    }
-
-    /// `parse_latex_letter_numeric_subscript`: non-alphabetic first char.
-    #[test]
-    fn parse_letter_subscript_non_alpha_first() {
-        assert!(parse_latex_letter_numeric_subscript("1_{2}").is_none());
-    }
-
-    /// `parse_latex_letter_numeric_subscript`: missing underscore.
-    #[test]
-    fn parse_letter_subscript_no_underscore() {
-        assert!(parse_latex_letter_numeric_subscript("ab{2}").is_none());
-    }
-
-    /// `parse_latex_letter_numeric_subscript`: valid case.
-    #[test]
-    fn parse_letter_subscript_valid() {
-        let result = parse_latex_letter_numeric_subscript("a_{12}").unwrap();
-        assert_eq!(result.0, 'a');
-        assert_eq!(result.1, vec!['1', '2']);
-    }
-
-    /// `encode_matrix_suffix`: empty suffix returns empty Vec.
-    #[test]
-    fn matrix_suffix_empty() {
-        let result = encode_matrix_suffix("", ctx()).unwrap();
-        assert!(result.is_empty());
-    }
-
-    /// `encode_matrix_suffix` with parts but NO subscript pattern triggers line 386.
-    /// All parts are simple math expressions, none match `parse_latex_letter_numeric_subscript`.
-    #[test]
-    fn matrix_suffix_no_subscript_pattern() {
-        // "+ x" — parts: ["+", "x"], neither matches `a_{NN}` pattern.
-        let result = encode_matrix_suffix("+ x", ctx()).unwrap();
-        assert!(!result.is_empty());
-    }
-
-    /// `encode_matrix_suffix` with subscript parts mixed with operators.
-    #[test]
-    fn matrix_suffix_with_subscript_parts() {
-        let result = encode_matrix_suffix("a_{11} a_{22} - a_{12} a_{21}", ctx()).unwrap();
-        assert!(!result.is_empty());
-    }
-
     /// `\begin{array}` with empty rows/cells drives lines 286, 294.
     /// Row entirely empty → `continue` at 286; specific empty cell → `continue` at 294.
     #[test]
@@ -532,6 +251,8 @@ mod tests {
         let result = crate::encode_to_unicode(
             "$\\begin{array}{c|c|c|c}\\hline x & & y &\\\\\\hline\\end{array}$",
         );
-        assert!(result.is_ok() || result.is_err());
+        let unicode = result.unwrap();
+        assert!(unicode.starts_with('⠖'));
+        assert!(unicode.contains('⠓'));
     }
 }

@@ -1,0 +1,16 @@
+[
+  {
+    "input": "$\\sqrt{9} = 3$",
+    "context": "english",
+    "internal": ";;%#i+ \"7 #c",
+    "expected": "484841601044016540609",
+    "unicode": "⠰⠰⠩⠼⠊⠬⠀⠐⠶⠀⠼⠉"
+  },
+  {
+    "input": "$\\sqrt{x^{2} + y^{2}}$",
+    "context": "english",
+    "internal": ";;%x9#b\"6y9#b+",
+    "expected": "48484145206031622612060344",
+    "unicode": "⠰⠰⠩⠭⠔⠼⠃⠐⠖⠽⠔⠼⠃⠬"
+  }
+]

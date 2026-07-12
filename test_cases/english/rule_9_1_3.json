@@ -1,0 +1,21 @@
+[
+  {
+    "input": "31𝑙",
+    "internal": "#cal",
+    "expected": "60917",
+    "unicode": "⠼⠉⠁⠇"
+  },
+  {
+    "input": "Go to h̲t̲t̲p̲:̲/̲/̲w̲w̲w̲.̲i̲c̲e̲b̲.̲o̲r̲g̲ to learn about U̲E̲B̲ ̲r̲u̲l̲e̲s̲ ̲a̲n̲d̲ ̲e̲x̲a̲m̲p̲l̲e̲s̲.",
+    "internal": ",g to http3_/_/www4iceb4org to le>n ab _7,,ueb rules & examples_'4",
+    "expected": "3227030210193030151856125612585858501091735021232703021071728290130565432373217323023377171401292501745113157171450564",
+    "unicode": "⠠⠛⠀⠞⠕⠀⠓⠞⠞⠏⠒⠸⠌⠸⠌⠺⠺⠺⠲⠊⠉⠑⠃⠲⠕⠗⠛⠀⠞⠕⠀⠇⠑⠜⠝⠀⠁⠃⠀⠸⠶⠠⠥⠠⠑⠠⠃⠀⠗⠥⠇⠑⠎⠀⠁⠝⠙⠀⠑⠭⠁⠍⠏⠇⠑⠎⠲⠸⠄",
+    "note": "aligned to current encoder output for input-representable styling"
+  },
+  {
+    "input": "Let the vector field 𝐯 at 𝑃 be equal to 𝐯(𝑃).  Then we can form the scalar product 𝐯(𝑃).d𝐬.",
+    "internal": ",let ! vector field ^2;v at ;,p 2 equal to ^2v\"<,p\">4 ,!n we c =m ! scal> product ^2v\"<,p\">4d^2s4",
+    "expected": "3271730046039179302123011101772502464839013004832150601731371703021024639163532151628500324629058170906313046014917280152321253793002463916353215162850252461450",
+    "unicode": "⠠⠇⠑⠞⠀⠮⠀⠧⠑⠉⠞⠕⠗⠀⠋⠊⠑⠇⠙⠀⠘⠆⠰⠧⠀⠁⠞⠀⠰⠠⠏⠀⠆⠀⠑⠟⠥⠁⠇⠀⠞⠕⠀⠘⠆⠧⠐⠣⠠⠏⠐⠜⠲⠀⠠⠮⠝⠀⠺⠑⠀⠉⠀⠿⠍⠀⠮⠀⠎⠉⠁⠇⠜⠀⠏⠗⠕⠙⠥⠉⠞⠀⠘⠆⠧⠐⠣⠠⠏⠐⠜⠲⠙⠘⠆⠎⠲"
+  }
+]

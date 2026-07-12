@@ -1,0 +1,177 @@
+[
+  {
+    "input": "(c",
+    "internal": "\"<;c",
+    "expected": "1635489",
+    "unicode": "⠐⠣⠰⠉"
+  },
+  {
+    "input": "[can",
+    "internal": ".<c",
+    "expected": "40359",
+    "unicode": "⠨⠣⠉"
+  },
+  {
+    "input": "{af",
+    "internal": "_<;af",
+    "expected": "563548111",
+    "unicode": "⠸⠣⠰⠁⠋"
+  },
+  {
+    "input": "–(after",
+    "internal": ",-\"<af",
+    "expected": "32361635111",
+    "unicode": "⠠⠤⠐⠣⠁⠋"
+  },
+  {
+    "input": "“do",
+    "internal": "8d",
+    "expected": "3825",
+    "unicode": "⠦⠙"
+  },
+  {
+    "input": "‘your",
+    "internal": ",8yr",
+    "expected": "32386123",
+    "unicode": "⠠⠦⠽⠗"
+  },
+  {
+    "input": "\"yr-123",
+    "internal": ",7;yr-#abc",
+    "expected": "32544861233660139",
+    "unicode": "⠠⠶⠰⠽⠗⠤⠼⠁⠃⠉"
+  },
+  {
+    "input": "'e 'as",
+    "internal": "';e 'z",
+    "expected": "448170453",
+    "unicode": "⠄⠰⠑⠀⠄⠵"
+  },
+  {
+    "input": "𝑝",
+    "note": "이탤릭 p",
+    "internal": ".2;p",
+    "expected": "4064815",
+    "unicode": "⠨⠆⠰⠏"
+  },
+  {
+    "input": "𝐩𝐞𝐨𝐩𝐥𝐞",
+    "note": "볼드 people",
+    "internal": "^1p",
+    "expected": "24215",
+    "unicode": "⠘⠂⠏"
+  },
+  {
+    "input": "e̲n̲o̲u̲g̲h̲",
+    "note": "밑줄 enough",
+    "internal": "_15",
+    "expected": "56234",
+    "unicode": "⠸⠂⠢"
+  },
+  {
+    "input": "𝑐ℎ𝑖𝑙𝑑-𝑠𝑎𝑓𝑒",
+    "note": "이탤릭 child-safe",
+    "internal": ".1*-safe",
+    "expected": "40233361411117",
+    "unicode": "⠨⠂⠡⠤⠎⠁⠋⠑"
+  },
+  {
+    "input": "N",
+    "context": "english",
+    "internal": ";,n",
+    "expected": "483229",
+    "unicode": "⠰⠠⠝"
+  },
+  {
+    "input": "Not Like That",
+    "internal": ",n ,l ,t",
+    "expected": "3229032703230",
+    "unicode": "⠠⠝⠀⠠⠇⠀⠠⠞"
+  },
+  {
+    "input": "LITTLE CHILD",
+    "internal": ",,ll ,,*",
+    "expected": "3232770323233",
+    "unicode": "⠠⠠⠇⠇⠀⠠⠠⠡"
+  },
+  {
+    "input": "–GREAT",
+    "internal": ",-,,grt",
+    "expected": "32363232272330",
+    "unicode": "⠠⠤⠠⠠⠛⠗⠞"
+  },
+  {
+    "input": "OUT OF TOWN",
+    "internal": ",,,\\ ( t[n,'",
+    "expected": "323232510550304229324",
+    "unicode": "⠠⠠⠠⠳⠀⠷⠀⠞⠪⠝⠠⠄"
+  },
+  {
+    "input": "–“[Be true.]”",
+    "internal": ",-8.<,2 true4.>0",
+    "expected": "323638403532603023371750402852",
+    "unicode": "⠠⠤⠦⠨⠣⠠⠆⠀⠞⠗⠥⠑⠲⠨⠜⠴"
+  },
+  {
+    "input": "<x, y>",
+    "internal": "@<x1 y@>",
+    "expected": "835452061828",
+    "unicode": "⠈⠣⠭⠂⠀⠽⠈⠜"
+  },
+  {
+    "input": "this/that",
+    "internal": "?is_/?at",
+    "expected": "571014561257130",
+    "unicode": "⠹⠊⠎⠸⠌⠹⠁⠞"
+  },
+  {
+    "input": "*from",
+    "internal": "\"9from",
+    "expected": "162011232113",
+    "unicode": "⠐⠔⠋⠗⠕⠍"
+  },
+  {
+    "input": "&c",
+    "internal": "@&c",
+    "expected": "8479",
+    "unicode": "⠈⠯⠉"
+  },
+  {
+    "input": "Apt. #B",
+    "internal": ",apt4 _?,b",
+    "expected": "32115305005657323",
+    "unicode": "⠠⠁⠏⠞⠲⠀⠸⠹⠠⠃"
+  },
+  {
+    "input": "¶d",
+    "internal": "^pd",
+    "expected": "241525",
+    "unicode": "⠘⠏⠙"
+  },
+  {
+    "input": "é",
+    "context": "english",
+    "internal": "^/e",
+    "expected": "241217",
+    "unicode": "⠘⠌⠑"
+  },
+  {
+    "input": "ū",
+    "context": "english",
+    "internal": "@-u",
+    "expected": "83637",
+    "unicode": "⠈⠤⠥"
+  },
+  {
+    "input": "~s",
+    "internal": "@9s",
+    "expected": "82014",
+    "unicode": "⠈⠔⠎"
+  },
+  {
+    "input": "~st",
+    "internal": "@9/",
+    "expected": "82012",
+    "unicode": "⠈⠔⠌"
+  }
+]

@@ -138,16 +138,6 @@ mod tests {
         assert!(apply(input).is_none());
     }
 
-    /// Rule 18 golden test — testcase JSON 정답과 byte-identical.
-    #[rstest::rstest]
-    #[case::geuraeseo("그래서", "⠁⠎")]
-    #[case::geureona("그러나", "⠁⠉")]
-    #[case::geurigo("그리고", "⠁⠥")]
-    fn golden_test_alignment(#[case] input: &str, #[case] expected: &str) {
-        let result = crate::encode_to_unicode(input).unwrap();
-        assert_eq!(result, expected, "Rule 18 golden test failed for: {input}");
-    }
-
     /// Direct tests for `match_word_shortcut` — covers lines 31-55.
     #[rstest::rstest]
     #[case("그래서")]

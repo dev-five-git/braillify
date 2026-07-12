@@ -1,0 +1,56 @@
+[
+  {
+    "input": "bacchanal",
+    "internal": "bac*anal",
+    "expected": "3193312917",
+    "unicode": "⠃⠁⠉⠡⠁⠝⠁⠇"
+  },
+  {
+    "input": "bear",
+    "internal": "be>",
+    "expected": "31728",
+    "unicode": "⠃⠑⠜"
+  },
+  {
+    "input": "fear",
+    "internal": "fe>",
+    "expected": "111728",
+    "unicode": "⠋⠑⠜"
+  },
+  {
+    "input": "heart",
+    "internal": "he>t",
+    "expected": "19172830",
+    "unicode": "⠓⠑⠜⠞"
+  },
+  {
+    "input": "nearly",
+    "internal": "ne>ly",
+    "expected": "291728761",
+    "unicode": "⠝⠑⠜⠇⠽"
+  },
+  {
+    "input": "nuclear",
+    "internal": "nucle>",
+    "expected": "2937971728",
+    "unicode": "⠝⠥⠉⠇⠑⠜"
+  },
+  {
+    "input": "saccharine",
+    "internal": "sac*>9e",
+    "expected": "141933282017",
+    "unicode": "⠎⠁⠉⠡⠜⠔⠑"
+  },
+  {
+    "input": "sting",
+    "internal": "/+",
+    "expected": "1244",
+    "unicode": "⠌⠬"
+  },
+  {
+    "input": "egghead",
+    "internal": "e7h1d",
+    "expected": "175419225",
+    "unicode": "⠑⠶⠓⠂⠙"
+  }
+]

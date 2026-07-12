@@ -1,0 +1,47 @@
+[
+  {
+    "input": "H₂O",
+    "context": "english",
+    "internal": ",h;5#b,o",
+    "expected": "321948346033221",
+    "unicode": "⠠⠓⠰⠢⠼⠃⠠⠕"
+  },
+  {
+    "input": "O",
+    "internal": ",o",
+    "expected": "3221",
+    "unicode": "⠠⠕"
+  },
+  {
+    "input": "H",
+    "context": "english",
+    "internal": ";,h",
+    "expected": "483219",
+    "unicode": "⠰⠠⠓"
+  },
+  {
+    "input": "OH",
+    "internal": ",o,h",
+    "expected": "32213219",
+    "unicode": "⠠⠕⠠⠓"
+  },
+  {
+    "input": "KCl",
+    "internal": ",k,cl",
+    "expected": "3253297",
+    "unicode": "⠠⠅⠠⠉⠇"
+  },
+  {
+    "input": "CH₂OH",
+    "context": "english",
+    "internal": ",c,h;5#b,o,h",
+    "expected": "3293219483460332213219",
+    "unicode": "⠠⠉⠠⠓⠰⠢⠼⠃⠠⠕⠠⠓"
+  },
+  {
+    "input": "HOCH₂",
+    "internal": ",h,o,c,h;5#b",
+    "expected": "3219322132932194834603",
+    "unicode": "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃"
+  }
+]

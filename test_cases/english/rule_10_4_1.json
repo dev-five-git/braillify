@@ -1,0 +1,440 @@
+[
+  {
+    "input": "aerial",
+    "internal": "a]ial",
+    "expected": "1591017",
+    "unicode": "⠁⠻⠊⠁⠇"
+  },
+  {
+    "input": "aghast",
+    "internal": "a<a/",
+    "expected": "135112",
+    "unicode": "⠁⠣⠁⠌"
+  },
+  {
+    "input": "anteroom",
+    "internal": "ant]oom",
+    "expected": "1293059212113",
+    "unicode": "⠁⠝⠞⠻⠕⠕⠍"
+  },
+  {
+    "input": "argh!",
+    "internal": "><6",
+    "expected": "283522",
+    "unicode": "⠜⠣⠖"
+  },
+  {
+    "input": "bear",
+    "internal": "be>",
+    "expected": "31728",
+    "unicode": "⠃⠑⠜"
+  },
+  {
+    "input": "boredom",
+    "internal": "bor$om",
+    "expected": "32123432113",
+    "unicode": "⠃⠕⠗⠫⠕⠍"
+  },
+  {
+    "input": "brougham",
+    "internal": "br\\<am",
+    "expected": "3235135113",
+    "unicode": "⠃⠗⠳⠣⠁⠍"
+  },
+  {
+    "input": "cheddar",
+    "internal": "*$d>",
+    "expected": "33432528",
+    "unicode": "⠡⠫⠙⠜"
+  },
+  {
+    "input": "cherished",
+    "internal": "*]i%$",
+    "expected": "3359104143",
+    "unicode": "⠡⠻⠊⠩⠫"
+  },
+  {
+    "input": "cough",
+    "internal": "c\\<",
+    "expected": "95135",
+    "unicode": "⠉⠳⠣"
+  },
+  {
+    "input": "coupon",
+    "internal": "c\\pon",
+    "expected": "951152129",
+    "unicode": "⠉⠳⠏⠕⠝"
+  },
+  {
+    "input": "cringed",
+    "internal": "cr+$",
+    "expected": "9234443",
+    "unicode": "⠉⠗⠬⠫"
+  },
+  {
+    "input": "derailed",
+    "internal": "d]ail$",
+    "expected": "2559110743",
+    "unicode": "⠙⠻⠁⠊⠇⠫"
+  },
+  {
+    "input": "dingy",
+    "internal": "d+y",
+    "expected": "254461",
+    "unicode": "⠙⠬⠽"
+  },
+  {
+    "input": "dough",
+    "internal": "d\\<",
+    "expected": "255135",
+    "unicode": "⠙⠳⠣"
+  },
+  {
+    "input": "ed.",
+    "internal": "$4",
+    "expected": "4350",
+    "unicode": "⠫⠲"
+  },
+  {
+    "input": "Edith",
+    "internal": ",$i?",
+    "expected": "32431057",
+    "unicode": "⠠⠫⠊⠹"
+  },
+  {
+    "input": "e'er",
+    "internal": "e']",
+    "expected": "17459",
+    "unicode": "⠑⠄⠻"
+  },
+  {
+    "input": "er–",
+    "internal": "],-",
+    "expected": "593236",
+    "unicode": "⠻⠠⠤"
+  },
+  {
+    "input": "erase",
+    "internal": "]ase",
+    "expected": "5911417",
+    "unicode": "⠻⠁⠎⠑"
+  },
+  {
+    "input": "Erie",
+    "internal": ",]ie",
+    "expected": "32591017",
+    "unicode": "⠠⠻⠊⠑"
+  },
+  {
+    "input": "error",
+    "internal": "]ror",
+    "expected": "59232123",
+    "unicode": "⠻⠗⠕⠗"
+  },
+  {
+    "input": "freedom",
+    "internal": "fre$om",
+    "expected": "112317432113",
+    "unicode": "⠋⠗⠑⠫⠕⠍"
+  },
+  {
+    "input": "ginger",
+    "internal": "g+]",
+    "expected": "274459",
+    "unicode": "⠛⠬⠻"
+  },
+  {
+    "input": "gingham",
+    "internal": "g+ham",
+    "expected": "274419113",
+    "unicode": "⠛⠬⠓⠁⠍"
+  },
+  {
+    "input": "Goering",
+    "internal": ",go]+",
+    "expected": "3227215944",
+    "unicode": "⠠⠛⠕⠻⠬"
+  },
+  {
+    "input": "hierarchy",
+    "internal": "hi]>*y",
+    "expected": "191059283361",
+    "unicode": "⠓⠊⠻⠜⠡⠽"
+  },
+  {
+    "input": "laugh",
+    "internal": "lau<",
+    "expected": "713735",
+    "unicode": "⠇⠁⠥⠣"
+  },
+  {
+    "input": "lingerie",
+    "internal": "l+]ie",
+    "expected": "744591017",
+    "unicode": "⠇⠬⠻⠊⠑"
+  },
+  {
+    "input": "lowdown",
+    "internal": "l[d[n",
+    "expected": "742254229",
+    "unicode": "⠇⠪⠙⠪⠝"
+  },
+  {
+    "input": "malediction",
+    "internal": "mal$ic;n",
+    "expected": "1317431094829",
+    "unicode": "⠍⠁⠇⠫⠊⠉⠰⠝"
+  },
+  {
+    "input": "meningitis",
+    "internal": "m5+itis",
+    "expected": "13344410301014",
+    "unicode": "⠍⠢⠬⠊⠞⠊⠎"
+  },
+  {
+    "input": "merchandising",
+    "internal": "m]*&is+",
+    "expected": "13593347101444",
+    "unicode": "⠍⠻⠡⠯⠊⠎⠬"
+  },
+  {
+    "input": "meringue",
+    "internal": "m]+ue",
+    "expected": "1359443717",
+    "unicode": "⠍⠻⠬⠥⠑"
+  },
+  {
+    "input": "mistake",
+    "internal": "mi/ake",
+    "expected": "1310121517",
+    "unicode": "⠍⠊⠌⠁⠅⠑"
+  },
+  {
+    "input": "monowheel",
+    "internal": "mono:eel",
+    "expected": "132129214917177",
+    "unicode": "⠍⠕⠝⠕⠱⠑⠑⠇"
+  },
+  {
+    "input": "nightingale",
+    "internal": "ni<t+ale",
+    "expected": "29103530441717",
+    "unicode": "⠝⠊⠣⠞⠬⠁⠇⠑"
+  },
+  {
+    "input": "nth",
+    "internal": "n?",
+    "expected": "2957",
+    "unicode": "⠝⠹"
+  },
+  {
+    "input": "oedema",
+    "internal": "o$ema",
+    "expected": "214317131",
+    "unicode": "⠕⠫⠑⠍⠁"
+  },
+  {
+    "input": "'ounds",
+    "internal": "'\\nds",
+    "expected": "451292514",
+    "unicode": "⠄⠳⠝⠙⠎"
+  },
+  {
+    "input": "\"Ow!\"",
+    "internal": "8,[60",
+    "expected": "3832422252",
+    "unicode": "⠦⠠⠪⠖⠴"
+  },
+  {
+    "input": "(par)",
+    "internal": "\"<p>\">",
+    "expected": "163515281628",
+    "unicode": "⠐⠣⠏⠜⠐⠜"
+  },
+  {
+    "input": "predated",
+    "internal": "pr$at$",
+    "expected": "15234313043",
+    "unicode": "⠏⠗⠫⠁⠞⠫"
+  },
+  {
+    "input": "psst",
+    "internal": "ps/",
+    "expected": "151412",
+    "unicode": "⠏⠎⠌"
+  },
+  {
+    "input": "redistribute",
+    "internal": "r$i/ribute",
+    "expected": "2343101223103373017",
+    "unicode": "⠗⠫⠊⠌⠗⠊⠃⠥⠞⠑"
+  },
+  {
+    "input": "reroute",
+    "internal": "r]\\te",
+    "expected": "2359513017",
+    "unicode": "⠗⠻⠳⠞⠑"
+  },
+  {
+    "input": "riflery",
+    "internal": "rifl]y",
+    "expected": "23101175961",
+    "unicode": "⠗⠊⠋⠇⠻⠽"
+  },
+  {
+    "input": "sheer",
+    "internal": "%e]",
+    "expected": "411759",
+    "unicode": "⠩⠑⠻"
+  },
+  {
+    "input": "Singh",
+    "internal": ",s+h",
+    "expected": "32144419",
+    "unicode": "⠠⠎⠬⠓"
+  },
+  {
+    "input": "sou'east",
+    "internal": "s\\'ea/",
+    "expected": "1451417112",
+    "unicode": "⠎⠳⠄⠑⠁⠌"
+  },
+  {
+    "input": "'struth",
+    "internal": "'/ru?",
+    "expected": "412233757",
+    "unicode": "⠄⠌⠗⠥⠹"
+  },
+  {
+    "input": "Thomas",
+    "internal": ",?omas",
+    "expected": "32572113114",
+    "unicode": "⠠⠹⠕⠍⠁⠎"
+  },
+  {
+    "input": "thorough",
+    "internal": "?or\\<",
+    "expected": "5721235135",
+    "unicode": "⠹⠕⠗⠳⠣"
+  },
+  {
+    "input": "thou",
+    "internal": "?\\",
+    "expected": "5751",
+    "unicode": "⠹⠳"
+  },
+  {
+    "input": "toward",
+    "internal": "t[>d",
+    "expected": "30422825",
+    "unicode": "⠞⠪⠜⠙"
+  },
+  {
+    "input": "trebled",
+    "internal": "trebl$",
+    "expected": "3023173743",
+    "unicode": "⠞⠗⠑⠃⠇⠫"
+  },
+  {
+    "input": "wharf",
+    "internal": ":>f",
+    "expected": "492811",
+    "unicode": "⠱⠜⠋"
+  },
+  {
+    "input": "whistle",
+    "internal": ":i/le",
+    "expected": "491012717",
+    "unicode": "⠱⠊⠌⠇⠑"
+  },
+  {
+    "input": "Xth",
+    "internal": ",x?",
+    "expected": "324557",
+    "unicode": "⠠⠭⠹"
+  },
+  {
+    "input": "xxist",
+    "internal": "xxi/",
+    "expected": "45451012",
+    "unicode": "⠭⠭⠊⠌"
+  },
+  {
+    "input": "ædile",
+    "internal": "a^6edile",
+    "expected": "12422172510717",
+    "unicode": "⠁⠘⠖⠑⠙⠊⠇⠑"
+  },
+  {
+    "input": "anthill",
+    "internal": "anthill",
+    "expected": "12930191077",
+    "unicode": "⠁⠝⠞⠓⠊⠇⠇"
+  },
+  {
+    "input": "blessèd",
+    "internal": "b.s^*ed",
+    "expected": "3401424331725",
+    "unicode": "⠃⠨⠎⠘⠡⠑⠙"
+  },
+  {
+    "input": "deshabille",
+    "internal": "deshabille",
+    "expected": "2517141913107717",
+    "unicode": "⠙⠑⠎⠓⠁⠃⠊⠇⠇⠑"
+  },
+  {
+    "input": "foghorn",
+    "internal": "foghorn",
+    "expected": "11212719212329",
+    "unicode": "⠋⠕⠛⠓⠕⠗⠝"
+  },
+  {
+    "input": "kilowatt",
+    "internal": "kilowatt",
+    "expected": "5107215813030",
+    "unicode": "⠅⠊⠇⠕⠺⠁⠞⠞"
+  },
+  {
+    "input": "noway",
+    "internal": "noway",
+    "expected": "292158161",
+    "unicode": "⠝⠕⠺⠁⠽"
+  },
+  {
+    "input": "painstaking",
+    "internal": "pa9stak+",
+    "expected": "1512014301544",
+    "unicode": "⠏⠁⠔⠎⠞⠁⠅⠬"
+  },
+  {
+    "input": "parenthood",
+    "internal": "p>5thood",
+    "expected": "1528343019212125",
+    "unicode": "⠏⠜⠢⠞⠓⠕⠕⠙"
+  },
+  {
+    "input": "rawhide",
+    "internal": "rawhide",
+    "expected": "2315819102517",
+    "unicode": "⠗⠁⠺⠓⠊⠙⠑"
+  },
+  {
+    "input": "shanghai",
+    "internal": "%anghai",
+    "expected": "411292719110",
+    "unicode": "⠩⠁⠝⠛⠓⠁⠊"
+  },
+  {
+    "input": "Stalingrad",
+    "internal": ",/al9grad",
+    "expected": "321217202723125",
+    "unicode": "⠠⠌⠁⠇⠔⠛⠗⠁⠙"
+  },
+  {
+    "input": "viceregal",
+    "internal": "viceregal",
+    "expected": "391091723172717",
+    "unicode": "⠧⠊⠉⠑⠗⠑⠛⠁⠇"
+  }
+]

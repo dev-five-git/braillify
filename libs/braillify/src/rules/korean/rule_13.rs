@@ -106,17 +106,4 @@ mod tests {
     fn non_abbreviated_char_returns_error() {
         assert!(apply('곤').is_err());
     }
-
-    #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("가지", "⠫⠨⠕"), ("나비", "⠉⠘⠕"), ("것이다", "⠸⠎⠕⠊")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 13 golden test failed for: {}",
-                input
-            );
-        }
-    }
 }

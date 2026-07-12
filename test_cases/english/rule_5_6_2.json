@@ -1,0 +1,32 @@
+[
+  {
+    "input": "I'll go 3rd–you go 4th.",
+    "internal": ",i'll g #crd,-y g #dth4",
+    "expected": "32104770270609232532366102706025301950",
+    "unicode": "⠠⠊⠄⠇⠇⠀⠛⠀⠼⠉⠗⠙⠠⠤⠽⠀⠛⠀⠼⠙⠞⠓⠲"
+  },
+  {
+    "input": "3-D",
+    "internal": "#c-;,d",
+    "expected": "60936483225",
+    "unicode": "⠼⠉⠤⠰⠠⠙"
+  },
+  {
+    "input": "3-dimensional",
+    "internal": "#c-dim5.nal",
+    "expected": "6093625101334402917",
+    "unicode": "⠼⠉⠤⠙⠊⠍⠢⠨⠝⠁⠇"
+  },
+  {
+    "input": "5-CD set",
+    "internal": "#e-;,,cd set",
+    "expected": "6017364832329250141730",
+    "unicode": "⠼⠑⠤⠰⠠⠠⠉⠙⠀⠎⠑⠞"
+  },
+  {
+    "input": "c:\\personal\\2009finances",
+    "internal": "c3_*p]sonal_*#bjji;'f9.es",
+    "expected": "918563315591421291756336032626104841120401714",
+    "unicode": "⠉⠒⠸⠡⠏⠻⠎⠕⠝⠁⠇⠸⠡⠼⠃⠚⠚⠊⠰⠄⠋⠔⠨⠑⠎"
+  }
+]

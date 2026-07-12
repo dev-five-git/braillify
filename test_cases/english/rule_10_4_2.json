@@ -1,0 +1,56 @@
+[
+  {
+    "input": "Sh!",
+    "internal": ",sh6",
+    "expected": "32141922",
+    "unicode": "⠠⠎⠓⠖"
+  },
+  {
+    "input": "th'",
+    "internal": "th'",
+    "expected": "30194",
+    "unicode": "⠞⠓⠄"
+  },
+  {
+    "input": "St.",
+    "internal": ",st4",
+    "expected": "32143050",
+    "unicode": "⠠⠎⠞⠲"
+  },
+  {
+    "input": "Wh–?",
+    "internal": ",wh,-;8",
+    "expected": "32581932364838",
+    "unicode": "⠠⠺⠓⠠⠤⠰⠦"
+  },
+  {
+    "input": "St Stephen",
+    "internal": ",st ,/eph5",
+    "expected": "3214300321217151934",
+    "unicode": "⠠⠎⠞⠀⠠⠌⠑⠏⠓⠢"
+  },
+  {
+    "input": "ch-ch-chilly",
+    "internal": "ch-ch-*illy",
+    "expected": "919369193633107761",
+    "unicode": "⠉⠓⠤⠉⠓⠤⠡⠊⠇⠇⠽"
+  },
+  {
+    "input": "Shhh!",
+    "internal": ",%hh6",
+    "expected": "3241191922",
+    "unicode": "⠠⠩⠓⠓⠖"
+  },
+  {
+    "input": "th'n",
+    "internal": "?'n",
+    "expected": "57429",
+    "unicode": "⠹⠄⠝"
+  },
+  {
+    "input": "Ste Anne",
+    "internal": ",/e ,anne",
+    "expected": "3212170321292917",
+    "unicode": "⠠⠌⠑⠀⠠⠁⠝⠝⠑"
+  }
+]

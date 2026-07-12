@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "Jones 2020b"
-unicode = ok: "⠠⠚⠕⠝⠑⠎⠀⠼⠃⠚⠃⠚⠃"
-bytes   = ok: [32, 26, 21, 29, 17, 14, 0, 60, 3, 26, 3, 26, 3]
+unicode = ok: "⠠⠚⠕⠝⠑⠎⠀⠼⠃⠚⠃⠚⠰⠃"
+bytes   = ok: [32, 26, 21, 29, 17, 14, 0, 60, 3, 26, 3, 26, 48, 3]

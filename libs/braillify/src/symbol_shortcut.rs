@@ -53,6 +53,10 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '》' => &[decode_unicode('⠶'), decode_unicode('⠆')],
     '―' => &[decode_unicode('⠤'), decode_unicode('⠤')],
     '-' => &[decode_unicode('⠤')],
+    // En-dash / em-dash → the dash sign `⠠⠤` (distinct from the hyphen `⠤`); a tight
+    // number range (`1914–18`, `4—7`) reaches this table for the dash glyph.
+    '\u{2013}' => &[decode_unicode('⠠'), decode_unicode('⠤')],
+    '\u{2014}' => &[decode_unicode('⠠'), decode_unicode('⠤')],
     '∼' => &[decode_unicode('⠈'), decode_unicode('⠔')],
     '‘' => &[decode_unicode('⠠'), decode_unicode('⠦')],
     '’' => &[decode_unicode('⠴'), decode_unicode('⠄')],
@@ -70,16 +74,14 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '※' => &[decode_unicode('⠸'), decode_unicode('⠔')],
 };
 
-static ENGLISH_SYMBOL_MAP: phf::Map<char, &'static [u8]> = phf_map! {
-    '(' => &[decode_unicode('⠐'), decode_unicode('⠣')],
-    ')' => &[decode_unicode('⠐'), decode_unicode('⠜')],
-    ',' => &[decode_unicode('⠂')],
-    '-' => &[decode_unicode('⠤')],
-    // 제39항 영-한 wrap context의 단어 끝 ':' 영어 점자 (⠒).
-    // 일반 영어 단어 끝 ':'은 이 매핑이 있어도 should_render_symbol_as_english가
-    // 영어 점자 변환을 결정하므로, 영어 컨텍스트가 끊긴 경우엔 적용되지 않는다.
-    ':' => &[decode_unicode('⠒')],
-};
+/// Symbols that take UEB English (로마자) point shapes inside a Korean Roman
+/// section (제28/33-39항): parentheses, comma, hyphen, colon. Their cells are
+/// produced by the UEB §7 punctuation rule — a single source —
+/// ([`crate::rules::english_ueb::rule_7::encode_punctuation`]), so this set only
+/// gates *which* symbols are English-eligible and does NOT duplicate the point
+/// shapes. (Whether a given `:`/`,` is actually rendered English in 제39항 영-한
+/// wrap context is decided by `english_logic::should_render_symbol_as_english`.)
+const ENGLISH_SYMBOL_CHARS: [char; 5] = ['(', ')', ',', '-', ':'];
 
 pub fn encode_char_symbol_shortcut(text: char) -> Result<&'static [u8], String> {
     if let Some(code) = SHORTCUT_MAP.get(&text) {
@@ -103,12 +105,17 @@ pub fn is_symbol_char(text: char) -> bool {
         || crate::rules::korean::rule_72::is_rule_72_symbol(text)
 }
 
-pub fn encode_english_char_symbol_shortcut(text: char) -> Option<&'static [u8]> {
-    ENGLISH_SYMBOL_MAP.get(&text).copied()
+pub fn encode_english_char_symbol_shortcut(text: char) -> Option<Vec<u8>> {
+    if !is_english_symbol_char(text) {
+        return None;
+    }
+    // Single source: the §7 UEB punctuation cell. The gate above keeps Korean
+    // context to the 제28/33-39항 subset (`( ) , - :`).
+    crate::rules::english_ueb::rule_7::encode_punctuation(text)
 }
 
 pub fn is_english_symbol_char(text: char) -> bool {
-    ENGLISH_SYMBOL_MAP.contains_key(&text)
+    ENGLISH_SYMBOL_CHARS.contains(&text)
 }
 
 #[cfg(test)]
@@ -140,6 +147,21 @@ mod test {
         assert!(is_symbol_char(ch));
     }
 
+    #[rstest::rstest]
+    #[case::enclosed_jamo('㉠')]
+    #[case::currency_dollar('$')]
+    #[case::historical_letter('ㅸ')]
+    #[case::middle_korean_vowel('ㆍ')]
+    #[case::greek_delta('Δ')]
+    #[case::rule_68_square_meter('㎡')]
+    #[case::rule_69_micro('μ')]
+    #[case::arrow_right('→')]
+    #[case::information_at('@')]
+    #[case::placeholder_double_circle('◎')]
+    fn delegated_symbol_predicates_are_symbols(#[case] ch: char) {
+        assert!(is_symbol_char(std::hint::black_box(ch)));
+    }
+
     /// `encode_char_symbol_shortcut` — 기호별 점역 점형 매핑.
     #[rstest::rstest]
     #[case::double_quote('"', vec!['⠦'])]
@@ -169,11 +191,11 @@ mod test {
     fn test_encode_english_char_symbol_shortcut_variants() {
         assert_eq!(
             encode_english_char_symbol_shortcut('(').unwrap(),
-            &[decode_unicode('⠐'), decode_unicode('⠣')]
+            vec![decode_unicode('⠐'), decode_unicode('⠣')]
         );
         assert_eq!(
             encode_english_char_symbol_shortcut(')').unwrap(),
-            &[decode_unicode('⠐'), decode_unicode('⠜')]
+            vec![decode_unicode('⠐'), decode_unicode('⠜')]
         );
         assert_eq!(encode_english_char_symbol_shortcut('?'), None);
     }

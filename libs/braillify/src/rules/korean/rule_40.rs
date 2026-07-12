@@ -120,16 +120,6 @@ mod tests {
         assert_eq!(is_number_continuation(ch), expected);
     }
 
-    /// Rule 40 golden test — testcase JSON 정답과 byte-identical.
-    #[rstest::rstest]
-    #[case::single_digit("1", "⠼⠁")]
-    #[case::two_digit("10", "⠼⠁⠚")]
-    #[case::decimal("0.48", "⠼⠚⠲⠙⠓")]
-    fn golden_test_alignment(#[case] input: &str, #[case] expected: &str) {
-        let result = crate::encode_to_unicode(input).unwrap();
-        assert_eq!(result, expected, "Rule 40 golden test failed for: {input}");
-    }
-
     /// PDF 제40항 + 제69항 — numeric prefix followed by ASCII unit (kg, cm, etc.)
     /// is handled by Rule69 (priority=90) BEFORE Rule40 (priority=100). This test
     /// verifies the integration path works (not Rule40's apply specifically).

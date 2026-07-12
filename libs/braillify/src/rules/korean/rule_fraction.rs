@@ -47,17 +47,41 @@ mod tests {
     use super::*;
 
     #[test]
-    fn apply_exercise() {
-        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+    fn unicode_fraction_emits_denominator_first_cells() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("½", false);
         let mut ctx = owned.ctx_at(0);
-        // Just exercise apply() for coverage; either Skip or Continue/Consumed is OK
-        let _ = RuleFraction.apply(&mut ctx);
+
+        let result = RuleFraction.apply(&mut ctx);
+
+        assert!(matches!(result, Ok(RuleResult::Consumed)));
+        assert_eq!(ctx.result, &[60, 3, 12, 60, 1]);
+        assert!(ctx.state.is_number);
     }
 
     #[test]
-    fn matches_does_not_panic() {
+    fn ascii_letter_does_not_match_fraction_rule() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let ctx = owned.ctx_at(0);
-        let _ = RuleFraction.matches(&ctx);
+
+        assert!(!RuleFraction.matches(&ctx));
+    }
+
+    #[test]
+    fn ascii_letter_apply_skips_fraction_rule() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+
+        let result = RuleFraction.apply(&mut ctx);
+
+        assert!(matches!(result, Ok(RuleResult::Skip)));
+        assert!(ctx.result.is_empty());
+    }
+
+    #[test]
+    fn rule_metadata_reports_phase() {
+        let rule = RuleFraction;
+
+        assert_eq!(rule.meta().section, "fraction");
+        assert!(matches!(rule.phase(), Phase::CoreEncoding));
     }
 }

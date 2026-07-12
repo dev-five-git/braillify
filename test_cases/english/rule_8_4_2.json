@@ -1,0 +1,201 @@
+[
+  {
+    "input": "PARLIAMENT",
+    "internal": ",,p>lia;t",
+    "expected": "3232152871014830",
+    "unicode": "⠠⠠⠏⠜⠇⠊⠁⠰⠞"
+  },
+  {
+    "input": "FRANÇOIS",
+    "internal": ",,fran^&cois",
+    "expected": "3232112312924479211014",
+    "unicode": "⠠⠠⠋⠗⠁⠝⠘⠯⠉⠕⠊⠎"
+  },
+  {
+    "input": "ΠΒΦ",
+    "context": "english",
+    "internal": ",,.p.b.f",
+    "expected": "323240154034011",
+    "unicode": "⠠⠠⠨⠏⠨⠃⠨⠋"
+  },
+  {
+    "input": "DipTP",
+    "internal": ",dip,,tp",
+    "expected": "3225101532323015",
+    "unicode": "⠠⠙⠊⠏⠠⠠⠞⠏"
+  },
+  {
+    "input": "NEW YORK",
+    "internal": ",,new ,,york",
+    "expected": "3232291758032326121235",
+    "unicode": "⠠⠠⠝⠑⠺⠀⠠⠠⠽⠕⠗⠅"
+  },
+  {
+    "input": "TVOntario",
+    "internal": ",,tv,ont>io",
+    "expected": "3232303932212930281021",
+    "unicode": "⠠⠠⠞⠧⠠⠕⠝⠞⠜⠊⠕"
+  },
+  {
+    "input": "\"GO quickly and TAKE CARE!\"",
+    "internal": "8,,g qkly & ,,take ,,c>e60",
+    "expected": "3832322703157610470323230151703232928172252",
+    "unicode": "⠦⠠⠠⠛⠀⠟⠅⠇⠽⠀⠯⠀⠠⠠⠞⠁⠅⠑⠀⠠⠠⠉⠜⠑⠖⠴"
+  },
+  {
+    "input": "ANGLO-SAXON",
+    "internal": ",,anglo-,,saxon",
+    "expected": "323212927721363232141452129",
+    "unicode": "⠠⠠⠁⠝⠛⠇⠕⠤⠠⠠⠎⠁⠭⠕⠝"
+  },
+  {
+    "input": "McGRAW-HILL",
+    "internal": ",mc,,graw-,,hill",
+    "expected": "3213932322723158363232191077",
+    "unicode": "⠠⠍⠉⠠⠠⠛⠗⠁⠺⠤⠠⠠⠓⠊⠇⠇"
+  },
+  {
+    "input": "MERRY-GO-ROUND",
+    "internal": ",,m]ry-,,g-,,r.d",
+    "expected": "32321359236136323227363232234025",
+    "unicode": "⠠⠠⠍⠻⠗⠽⠤⠠⠠⠛⠤⠠⠠⠗⠨⠙"
+  },
+  {
+    "input": "UPPERCASE-lowercase",
+    "internal": ",,upp]case-l[]case",
+    "expected": "3232371515599114173674259911417",
+    "unicode": "⠠⠠⠥⠏⠏⠻⠉⠁⠎⠑⠤⠇⠪⠻⠉⠁⠎⠑"
+  },
+  {
+    "input": "LITTLE-RED-RIDING-HOOD-type tales",
+    "internal": ",,ll-,,r$-,,rid+-,,hood-type tales",
+    "expected": "323277363232234336323223102544363232192121253630611517030171714",
+    "unicode": "⠠⠠⠇⠇⠤⠠⠠⠗⠫⠤⠠⠠⠗⠊⠙⠬⠤⠠⠠⠓⠕⠕⠙⠤⠞⠽⠏⠑⠀⠞⠁⠇⠑⠎"
+  },
+  {
+    "input": "The d'ARTAGNAN Romances",
+    "internal": ",! d',,>tagnan ,rom.es",
+    "expected": "324602543232283012729129032232113401714",
+    "unicode": "⠠⠮⠀⠙⠄⠠⠠⠜⠞⠁⠛⠝⠁⠝⠀⠠⠗⠕⠍⠨⠑⠎"
+  },
+  {
+    "input": "O'SULLIVAN",
+    "internal": ",o',,sullivan",
+    "expected": "3221432321437771039129",
+    "unicode": "⠠⠕⠄⠠⠠⠎⠥⠇⠇⠊⠧⠁⠝"
+  },
+  {
+    "input": "DON'T",
+    "internal": ",,don',t",
+    "expected": "323225212943230",
+    "unicode": "⠠⠠⠙⠕⠝⠄⠠⠞"
+  },
+  {
+    "input": "THAT'S",
+    "internal": ",,t',s",
+    "expected": "32323043214",
+    "unicode": "⠠⠠⠞⠄⠠⠎"
+  },
+  {
+    "input": "SHE'LL",
+    "internal": ",,%e',,ll",
+    "expected": "323241174323277",
+    "unicode": "⠠⠠⠩⠑⠄⠠⠠⠇⠇"
+  },
+  {
+    "input": "JACK'S FO'C'S'LE",
+    "internal": ",,jack',s ,,fo',c',s',,le",
+    "expected": "3232261954321403232112143294321443232717",
+    "unicode": "⠠⠠⠚⠁⠉⠅⠄⠠⠎⠀⠠⠠⠋⠕⠄⠠⠉⠄⠠⠎⠄⠠⠠⠇⠑"
+  },
+  {
+    "input": "WELCOME TO McDONALD'S",
+    "internal": ",,welcome ,,to ,mc,,donald',s",
+    "expected": "32325817792113170323230210321393232252129172543214",
+    "unicode": "⠠⠠⠺⠑⠇⠉⠕⠍⠑⠀⠠⠠⠞⠕⠀⠠⠍⠉⠠⠠⠙⠕⠝⠁⠇⠙⠄⠠⠎"
+  },
+  {
+    "input": "OK'd",
+    "internal": ",,ok'd",
+    "expected": "3232215425",
+    "unicode": "⠠⠠⠕⠅⠄⠙"
+  },
+  {
+    "input": "RSVP or R.S.V.P.",
+    "internal": ",,rsvp or ,r4,s4,v4,p4",
+    "expected": "323223143915021230322350321450323950321550",
+    "unicode": "⠠⠠⠗⠎⠧⠏⠀⠕⠗⠀⠠⠗⠲⠠⠎⠲⠠⠧⠲⠠⠏⠲"
+  },
+  {
+    "input": "HOTELS.COM",
+    "internal": ",,hotels4,,com",
+    "expected": "32321921301771450323292113",
+    "unicode": "⠠⠠⠓⠕⠞⠑⠇⠎⠲⠠⠠⠉⠕⠍"
+  },
+  {
+    "input": "The N.A.S.D.A.Q. News",
+    "internal": ",! ,n4,a4,s4,d4,a4,q4 ,news",
+    "expected": "32460322950321503214503225503215032315003229175814",
+    "unicode": "⠠⠮⠀⠠⠝⠲⠠⠁⠲⠠⠎⠲⠠⠙⠲⠠⠁⠲⠠⠟⠲⠀⠠⠝⠑⠺⠎"
+  },
+  {
+    "input": "BA(Oxon)",
+    "internal": ",,ba\"<,oxon\">",
+    "expected": "323231163532214521291628",
+    "unicode": "⠠⠠⠃⠁⠐⠣⠠⠕⠭⠕⠝⠐⠜"
+  },
+  {
+    "input": "(R)AC",
+    "internal": "\"<,r\">,,ac",
+    "expected": "163532231628323219",
+    "unicode": "⠐⠣⠠⠗⠐⠜⠠⠠⠁⠉"
+  },
+  {
+    "input": "WIND(ward)",
+    "internal": ",,w9d\"<w>d\">",
+    "expected": "323258202516355828251628",
+    "unicode": "⠠⠠⠺⠔⠙⠐⠣⠺⠜⠙⠐⠜"
+  },
+  {
+    "input": "I/O",
+    "internal": ",i_/,o",
+    "expected": "321056123221",
+    "unicode": "⠠⠊⠸⠌⠠⠕"
+  },
+  {
+    "input": "B&B",
+    "internal": ",b@&,b",
+    "expected": "323847323",
+    "unicode": "⠠⠃⠈⠯⠠⠃"
+  },
+  {
+    "input": "AT&T",
+    "internal": ",,at@&,t",
+    "expected": "32321308473230",
+    "unicode": "⠠⠠⠁⠞⠈⠯⠠⠞"
+  },
+  {
+    "input": "McDONALD@xyz.com",
+    "internal": ",mc,,donald@axyz4com",
+    "expected": "3213932322521291725814561535092113",
+    "unicode": "⠠⠍⠉⠠⠠⠙⠕⠝⠁⠇⠙⠈⠁⠭⠽⠵⠲⠉⠕⠍"
+  },
+  {
+    "input": "SWIFT & CO.",
+    "internal": ",,swift @& ,,co4",
+    "expected": "3232145810113008470323292150",
+    "unicode": "⠠⠠⠎⠺⠊⠋⠞⠀⠈⠯⠀⠠⠠⠉⠕⠲"
+  },
+  {
+    "input": "FREE𝐅𝐎𝐑𝐌",
+    "internal": ",,free^1=m",
+    "expected": "3232112317172426313",
+    "unicode": "⠠⠠⠋⠗⠑⠑⠘⠂⠿⠍"
+  },
+  {
+    "input": "EXAMINE",
+    "internal": ",e.2,,xam9e",
+    "expected": "323217451132017",
+    "unicode": "⠠⠠⠑⠭⠁⠍⠔⠑"
+  }
+]

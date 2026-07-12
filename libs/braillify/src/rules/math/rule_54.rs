@@ -129,4 +129,11 @@ mod tests {
             vec![43, 45, 12, 43, 53]
         );
     }
+
+    #[test]
+    fn next_non_space_returns_current_index_when_token_present() {
+        let tokens = [MathToken::Variable('x')];
+
+        assert_eq!(next_non_space(&tokens, 0), Some(0));
+    }
 }

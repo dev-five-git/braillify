@@ -1,0 +1,53 @@
+[
+  {
+    "input": "¶3",
+    "context": "english",
+    "internal": "^p#c",
+    "expected": "2415609",
+    "unicode": "⠘⠏⠼⠉"
+  },
+  {
+    "input": "¶C",
+    "internal": "^p,c",
+    "expected": "2415329",
+    "unicode": "⠘⠏⠠⠉"
+  },
+  {
+    "input": "¶g",
+    "internal": "^pg",
+    "expected": "241527",
+    "unicode": "⠘⠏⠛"
+  },
+  {
+    "input": "Click on the ¶ icon on the toolbar.",
+    "internal": ",click on ! ^p icon on ! toolb>4",
+    "expected": "32971095021290460241501092129021290460302121732850",
+    "unicode": "⠠⠉⠇⠊⠉⠅⠀⠕⠝⠀⠮⠀⠘⠏⠀⠊⠉⠕⠝⠀⠕⠝⠀⠮⠀⠞⠕⠕⠇⠃⠜⠲"
+  },
+  {
+    "input": "§5",
+    "context": "english",
+    "internal": "^s#e",
+    "expected": "24146017",
+    "unicode": "⠘⠎⠼⠑"
+  },
+  {
+    "input": "§K",
+    "internal": "^s,k",
+    "expected": "2414325",
+    "unicode": "⠘⠎⠠⠅"
+  },
+  {
+    "input": "§d",
+    "internal": "^sd",
+    "expected": "241425",
+    "unicode": "⠘⠎⠙"
+  },
+  {
+    "input": "§§ 5-15",
+    "context": "english",
+    "internal": "^s^s #e-#ae",
+    "expected": "24142414060173660117",
+    "unicode": "⠘⠎⠘⠎⠀⠼⠑⠤⠼⠁⠑"
+  }
+]

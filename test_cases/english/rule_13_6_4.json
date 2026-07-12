@@ -1,0 +1,146 @@
+[
+  {
+    "input": "To indicate profession or vocation:",
+    "internal": ",to 9dicate pr(es.n or voca;n3",
+    "expected": "3230210202510913017015235517144029021230392191482918",
+    "unicode": "⠠⠞⠕⠀⠔⠙⠊⠉⠁⠞⠑⠀⠏⠗⠷⠑⠎⠨⠝⠀⠕⠗⠀⠧⠕⠉⠁⠰⠝⠒"
+  },
+  {
+    "input": "Carlos Fuentes 𝐞𝐬 escritor.",
+    "internal": ",carlos ,fuentes ^1es escritor4",
+    "expected": "329123721140321137172930171402421714017149231030212350",
+    "unicode": "⠠⠉⠁⠗⠇⠕⠎⠀⠠⠋⠥⠑⠝⠞⠑⠎⠀⠘⠂⠑⠎⠀⠑⠎⠉⠗⠊⠞⠕⠗⠲"
+  },
+  {
+    "input": "𝐶𝑎𝑟𝑙𝑜𝑠 𝐹𝑢𝑒𝑛𝑡𝑒𝑠 𝑖𝑠 𝑎 𝑤𝑟𝑖𝑡𝑒𝑟.",
+    "internal": ".7,c>los ,fu5tes is a writ]4.'",
+    "expected": "4054329287211403211373430171401014010582310305950404",
+    "unicode": "⠨⠶⠠⠉⠜⠇⠕⠎⠀⠠⠋⠥⠢⠞⠑⠎⠀⠊⠎⠀⠁⠀⠺⠗⠊⠞⠻⠲⠨⠄"
+  },
+  {
+    "input": "Yo 𝐬𝐨𝐲 músico.",
+    "internal": ",yo ^1soy m)sico4",
+    "expected": "326121024214216101362141092150",
+    "unicode": "⠠⠽⠕⠀⠘⠂⠎⠕⠽⠀⠍⠾⠎⠊⠉⠕⠲"
+  },
+  {
+    "input": "𝐼 𝑎𝑚 𝑎 𝑚𝑢𝑠𝑖𝑐𝑖𝑎𝑛.",
+    "internal": ".7,i am a musician4.'",
+    "expected": "4054321001130101337141091012950404",
+    "unicode": "⠨⠶⠠⠊⠀⠁⠍⠀⠁⠀⠍⠥⠎⠊⠉⠊⠁⠝⠲⠨⠄"
+  },
+  {
+    "input": "Tú 𝐞𝐫𝐞𝐬 doctora.",
+    "internal": ",t) ^1eres doctora4",
+    "expected": "323062024217231714025219302123150",
+    "unicode": "⠠⠞⠾⠀⠘⠂⠑⠗⠑⠎⠀⠙⠕⠉⠞⠕⠗⠁⠲"
+  },
+  {
+    "input": "𝑌𝑜𝑢 𝑎𝑟𝑒 𝑎 𝑑𝑜𝑐𝑡𝑜𝑟.",
+    "internal": ".7,y >e a doctor4.'",
+    "expected": "40543261028170102521930212350404",
+    "unicode": "⠨⠶⠠⠽⠀⠜⠑⠀⠁⠀⠙⠕⠉⠞⠕⠗⠲⠨⠄"
+  },
+  {
+    "input": "𝐈𝐥 𝐲 𝐚 𝐝𝐞𝐮𝐱 𝐜𝐫𝐞̀𝐜𝐡𝐞𝐬 𝐞𝐧 𝐯𝐢𝐥𝐥𝐞.",
+    "internal": "^7,il y a deux cr!ches en ville4^'",
+    "expected": "2454321070610102517374509234691917140172903910771750244",
+    "unicode": "⠘⠶⠠⠊⠇⠀⠽⠀⠁⠀⠙⠑⠥⠭⠀⠉⠗⠮⠉⠓⠑⠎⠀⠑⠝⠀⠧⠊⠇⠇⠑⠲⠘⠄"
+  },
+  {
+    "input": "There are two day-care centers in the city.",
+    "internal": ",\"! >e two \"d-c>e c5t]s 9 ! c;y4",
+    "expected": "321646028170305821016253692817093430591402004609486150",
+    "unicode": "⠠⠐⠮⠀⠜⠑⠀⠞⠺⠕⠀⠐⠙⠤⠉⠜⠑⠀⠉⠢⠞⠻⠎⠀⠔⠀⠮⠀⠉⠰⠽⠲"
+  },
+  {
+    "input": "𝐈𝐥𝐬 𝐬𝐞 𝐬𝐨𝐧𝐭 𝐦𝐚𝐫𝐢𝐞́𝐬 𝐢𝐥 𝐲 𝐚 𝐝𝐞𝐮𝐱 𝐚𝐧𝐬.",
+    "internal": "^7,ils se sont mari=s il y a deux ans4^'",
+    "expected": "245432107140141701421293001312310631401070610102517374501291450244",
+    "unicode": "⠘⠶⠠⠊⠇⠎⠀⠎⠑⠀⠎⠕⠝⠞⠀⠍⠁⠗⠊⠿⠎⠀⠊⠇⠀⠽⠀⠁⠀⠙⠑⠥⠭⠀⠁⠝⠎⠲⠘⠄"
+  },
+  {
+    "input": "They got married two years ago.",
+    "internal": ",!y got m>ri$ two ye>s ago4",
+    "expected": "324661027213001328231043030582106117281401272150",
+    "unicode": "⠠⠮⠽⠀⠛⠕⠞⠀⠍⠜⠗⠊⠫⠀⠞⠺⠕⠀⠽⠑⠜⠎⠀⠁⠛⠕⠲"
+  },
+  {
+    "input": "It was delicious.",
+    "internal": ",x 0 delici\\s4",
+    "expected": "324505202517710910511450",
+    "unicode": "⠠⠭⠀⠴⠀⠙⠑⠇⠊⠉⠊⠳⠎⠲"
+  },
+  {
+    "input": "Ọ tọrọ ụtọ.",
+    "internal": ",[ t[r[ \\t[4",
+    "expected": "3242030422342051304250",
+    "unicode": "⠠⠪⠀⠞⠪⠗⠪⠀⠳⠞⠪⠲"
+  },
+  {
+    "input": "Answer the following questions using «𝑖𝑙 𝑦 𝑎 ... (𝑞𝑢𝑒), 𝑐̧𝑎 𝑓𝑎𝑖̂𝑡 ... (𝑞𝑢𝑒), 𝑑𝑒𝑝𝑢𝑖𝑠» (sometimes there are several possibilities).",
+    "internal": ",answ] ! foll[+ \"qs us+ .7_8il y a 444 \"<que\">1 &a fa%t 444 \"<que\">1 depuis_0.' \"<\"s\"ts \"! >e s\"eal possibilities\">4",
+    "expected": "3212914585904601121774244016311403714440405456381070610105050500163531371716282047101114130050505001635313717162820251715371014565240401635161416301401646028170141617170152114141031071030101714162850",
+    "unicode": "⠠⠁⠝⠎⠺⠻⠀⠮⠀⠋⠕⠇⠇⠪⠬⠀⠐⠟⠎⠀⠥⠎⠬⠀⠨⠶⠸⠦⠊⠇⠀⠽⠀⠁⠀⠲⠲⠲⠀⠐⠣⠟⠥⠑⠐⠜⠂⠀⠯⠁⠀⠋⠁⠩⠞⠀⠲⠲⠲⠀⠐⠣⠟⠥⠑⠐⠜⠂⠀⠙⠑⠏⠥⠊⠎⠸⠴⠨⠄⠀⠐⠣⠐⠎⠐⠞⠎⠀⠐⠮⠀⠜⠑⠀⠎⠐⠑⠁⠇⠀⠏⠕⠎⠎⠊⠃⠊⠇⠊⠞⠊⠑⠎⠐⠜⠲"
+  },
+  {
+    "input": "Il y a combien de temps que tu vas dans ce collège? (deux ans)",
+    "internal": ",il y a combien de temps que tu vas dans ce coll!ge8 \"<deux ans\">",
+    "expected": "3210706101092113310172902517030171315140313717030370391140251291409170921774627173801635251737450129141628",
+    "unicode": "⠠⠊⠇⠀⠽⠀⠁⠀⠉⠕⠍⠃⠊⠑⠝⠀⠙⠑⠀⠞⠑⠍⠏⠎⠀⠟⠥⠑⠀⠞⠥⠀⠧⠁⠎⠀⠙⠁⠝⠎⠀⠉⠑⠀⠉⠕⠇⠇⠮⠛⠑⠦⠀⠐⠣⠙⠑⠥⠭⠀⠁⠝⠎⠐⠜"
+  },
+  {
+    "input": "Asking Questions:",
+    "internal": ",ask+ ,\"qs3",
+    "expected": "3211454403216311418",
+    "unicode": "⠠⠁⠎⠅⠬⠀⠠⠐⠟⠎⠒"
+  },
+  {
+    "input": "¿𝐞𝐬𝐭𝐚́ 𝐚𝐪𝐮𝐢́ 𝐭𝐮 𝐡𝐞𝐫𝐦𝐚𝐧𝐨?",
+    "internal": "^75est( aqu/ tu hermano5^'",
+    "expected": "2454341714305501313712030370191723131292134244",
+    "unicode": "⠘⠶⠢⠑⠎⠞⠷⠀⠁⠟⠥⠌⠀⠞⠥⠀⠓⠑⠗⠍⠁⠝⠕⠢⠘⠄"
+  },
+  {
+    "input": "is your brother here?",
+    "internal": "is yr bro!r \"h8",
+    "expected": "10140612303232146230161938",
+    "unicode": "⠊⠎⠀⠽⠗⠀⠃⠗⠕⠮⠗⠀⠐⠓⠦"
+  },
+  {
+    "input": "¿𝐞𝐥 𝐚𝐠𝐮𝐚 𝐞𝐬𝐭𝐚́ 𝐟𝐫𝐢́𝐚?",
+    "internal": "^75el agua est( fr/a5^'",
+    "expected": "24543417701273710171430550112312134244",
+    "unicode": "⠘⠶⠢⠑⠇⠀⠁⠛⠥⠁⠀⠑⠎⠞⠷⠀⠋⠗⠌⠁⠢⠘⠄"
+  },
+  {
+    "input": "is the water cold?",
+    "internal": "is ! wat] cold8",
+    "expected": "101404605813059092172538",
+    "unicode": "⠊⠎⠀⠮⠀⠺⠁⠞⠻⠀⠉⠕⠇⠙⠦"
+  },
+  {
+    "input": "𝐭𝐮́ 𝐥𝐞 𝐝𝐢𝐬𝐭𝐞 𝐞𝐥 𝐝𝐢𝐧𝐞𝐫𝐨, ¿𝐯𝐞𝐫𝐝𝐚𝐝?",
+    "internal": "^7t) le diste el dinero1 5verdad5^'",
+    "expected": "245430620717025101430170177025102917232120343917232512534244",
+    "unicode": "⠘⠶⠞⠾⠀⠇⠑⠀⠙⠊⠎⠞⠑⠀⠑⠇⠀⠙⠊⠝⠑⠗⠕⠂⠀⠢⠧⠑⠗⠙⠁⠙⠢⠘⠄"
+  },
+  {
+    "input": "you gave him the money, didn't you?",
+    "internal": "y gave hm ! m\"oy1 didn't y8",
+    "expected": "610271391701913046013162161202510252943006138",
+    "unicode": "⠽⠀⠛⠁⠧⠑⠀⠓⠍⠀⠮⠀⠍⠐⠕⠽⠂⠀⠙⠊⠙⠝⠄⠞⠀⠽⠦"
+  },
+  {
+    "input": "Make the certified cheque or money order (𝑓𝑜𝑟 𝐿𝑖𝑐𝑒𝑛𝑐𝑒 𝑅𝑒𝑛𝑒𝑤𝑎𝑙 𝐹𝑒𝑒 𝑜𝑛𝑙𝑦) payable to the Minister of Finance.",
+    "internal": ",make ! c]tifi$ *eque or m\"oy ord] \"<.7= ,lic;e ,r5ewal ,fee only.'\"> payable to ! ,m9i/] ( ,f9.e4",
+    "expected": "3213151704609593010111043033173137170212301316216102123255901635405463032710948170322334175817032111717021297614041628015161137170302104603213201012590550321120401750",
+    "unicode": "⠠⠍⠁⠅⠑⠀⠮⠀⠉⠻⠞⠊⠋⠊⠫⠀⠡⠑⠟⠥⠑⠀⠕⠗⠀⠍⠐⠕⠽⠀⠕⠗⠙⠻⠀⠐⠣⠨⠶⠿⠀⠠⠇⠊⠉⠰⠑⠀⠠⠗⠢⠑⠺⠁⠇⠀⠠⠋⠑⠑⠀⠕⠝⠇⠽⠨⠄⠐⠜⠀⠏⠁⠽⠁⠃⠇⠑⠀⠞⠕⠀⠮⠀⠠⠍⠔⠊⠌⠻⠀⠷⠀⠠⠋⠔⠨⠑⠲"
+  },
+  {
+    "input": "𝑙ibellez le chèque certifié ou le mandat (c̲oncernant le droit de renouvellement du permis s̲eulement) à l'ordre du ministre des 𝑓inances.",
+    "internal": ".libellez le ch!que certifi= ou le mandat 73_concernant le droit de renouvellement du permis _seulement7 ( l'ordre du ministre des .finances4",
+    "expected": "4071031777175307170919463137170917233010111063021370717013129251300541856921299172329129300717025232110300251702317292137391777171317293002537015172313101405614173771713172930540550742123252317025370131029101430231702517140401110291299171450",
+    "unicode": "⠨⠇⠊⠃⠑⠇⠇⠑⠵⠀⠇⠑⠀⠉⠓⠮⠟⠥⠑⠀⠉⠑⠗⠞⠊⠋⠊⠿⠀⠕⠥⠀⠇⠑⠀⠍⠁⠝⠙⠁⠞⠀⠶⠒⠸⠉⠕⠝⠉⠑⠗⠝⠁⠝⠞⠀⠇⠑⠀⠙⠗⠕⠊⠞⠀⠙⠑⠀⠗⠑⠝⠕⠥⠧⠑⠇⠇⠑⠍⠑⠝⠞⠀⠙⠥⠀⠏⠑⠗⠍⠊⠎⠀⠸⠎⠑⠥⠇⠑⠍⠑⠝⠞⠶⠀⠷⠀⠇⠄⠕⠗⠙⠗⠑⠀⠙⠥⠀⠍⠊⠝⠊⠎⠞⠗⠑⠀⠙⠑⠎⠀⠨⠋⠊⠝⠁⠝⠉⠑⠎⠲"
+  }
+]

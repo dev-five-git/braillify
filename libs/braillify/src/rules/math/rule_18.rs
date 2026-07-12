@@ -434,7 +434,7 @@ mod tests {
     fn left_superscript_position_blocked_by_partial_derivative() {
         let toks = vec![
             MathToken::MathSymbol('\u{2202}'),
-            MathToken::Superscript(vec![MathToken::Number("2".into())]),
+            MathToken::Superscript(Vec::new()),
             MathToken::Variable('z'),
         ];
         assert!(!is_left_superscript_position(&toks, 1));
@@ -445,7 +445,7 @@ mod tests {
     fn left_superscript_position_blocked_by_sum() {
         let toks = vec![
             MathToken::MathSymbol('\u{2211}'),
-            MathToken::Subscript(vec![MathToken::Variable('i')]),
+            MathToken::Space,
             MathToken::Superscript(vec![MathToken::MathSymbol('\u{221E}')]),
             MathToken::Variable('x'),
         ];

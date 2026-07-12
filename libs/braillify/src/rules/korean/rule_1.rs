@@ -118,16 +118,6 @@ mod tests {
         assert!(apply('가').is_err());
     }
 
-    #[test]
-    fn golden_test_alignment() {
-        // From test_cases/rule_1.json — encoding full syllables that start with each consonant
-        let cases = vec![("거리", "⠈⠎⠐⠕"), ("너비", "⠉⠎⠘⠕"), ("호수", "⠚⠥⠠⠍")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(result, expected, "Rule 1 golden test failed for: {}", input);
-        }
-    }
-
     use rstest::rstest;
 
     /// matches() must return true iff the current char is a Korean syllable.
@@ -175,8 +165,10 @@ mod tests {
 
     #[test]
     fn rule1_meta_phase_priority() {
-        assert_eq!(Rule1.meta().section, "1");
-        assert!(matches!(Rule1.phase(), Phase::CoreEncoding));
-        assert_eq!(Rule1.priority(), 200);
+        let rule: &dyn BrailleRule = std::hint::black_box(&Rule1);
+
+        assert_eq!(rule.meta().section, "1");
+        assert!(matches!(rule.phase(), Phase::CoreEncoding));
+        assert_eq!(rule.priority(), 200);
     }
 }

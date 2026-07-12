@@ -340,6 +340,22 @@ mod tests {
         assert_eq!(consumed, 2);
     }
 
+    #[rstest::rstest]
+    #[case::zero('₀')]
+    #[case::one('₁')]
+    #[case::two('₂')]
+    #[case::four('₄')]
+    #[case::five('₅')]
+    #[case::seven('₇')]
+    #[case::eight('₈')]
+    fn encode_compact_ascii_notation_subscript_digit_arms(#[case] digit: char) {
+        let word: Vec<char> = format!("B{digit}").chars().collect();
+
+        let result = encode_compact_ascii_notation(&word, 0, false).unwrap();
+
+        assert!(matches!(result, Some((_, 2))));
+    }
+
     #[test]
     fn encode_compact_ascii_notation_non_ascii_returns_none() {
         let word: Vec<char> = "가".chars().collect();
@@ -556,5 +572,12 @@ mod tests {
         };
         let outcome = Rule68.apply(&mut ctx).unwrap();
         assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    #[rstest::rstest]
+    #[case::known_square_meter('㎡', true)]
+    #[case::plain_ascii('x', false)]
+    fn detects_rule_68_symbols(#[case] ch: char, #[case] expected: bool) {
+        assert_eq!(is_rule_68_symbol(std::hint::black_box(ch)), expected);
     }
 }

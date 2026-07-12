@@ -96,15 +96,13 @@ impl MathTokenEngine {
             let mut handled = false;
             for rule in &self.rules {
                 let _ = rule.name();
-                if rule.matches(tokens, i, &state) {
-                    match rule.apply(tokens, i, result, &mut state, self)? {
-                        MathTokenResult::Consumed(n) => {
-                            i += n;
-                            handled = true;
-                            break;
-                        }
-                        MathTokenResult::Skip => continue,
-                    }
+                if rule.matches(tokens, i, &state)
+                    && let MathTokenResult::Consumed(n) =
+                        rule.apply(tokens, i, result, &mut state, self)?
+                {
+                    i += n;
+                    handled = true;
+                    break;
                 }
             }
             if !handled {
@@ -191,5 +189,77 @@ mod tests {
             err.contains("No rule matched token at index 0"),
             "got: {err}"
         );
+    }
+
+    #[test]
+    fn encode_tokens_continues_after_matching_rule_skips() {
+        struct SkippingRule;
+        impl MathTokenRule for SkippingRule {
+            fn name(&self) -> &'static str {
+                "SkippingRule"
+            }
+            fn priority(&self) -> u16 {
+                10
+            }
+            fn matches(
+                &self,
+                _tokens: &[MathToken],
+                _index: usize,
+                _state: &MathEncodeState,
+            ) -> bool {
+                true
+            }
+            fn apply(
+                &self,
+                _tokens: &[MathToken],
+                _index: usize,
+                _result: &mut Vec<u8>,
+                _state: &mut MathEncodeState,
+                _engine: &MathTokenEngine,
+            ) -> Result<MathTokenResult, String> {
+                Ok(MathTokenResult::Skip)
+            }
+        }
+
+        struct ConsumingRule;
+        impl MathTokenRule for ConsumingRule {
+            fn name(&self) -> &'static str {
+                "ConsumingRule"
+            }
+            fn priority(&self) -> u16 {
+                20
+            }
+            fn matches(
+                &self,
+                _tokens: &[MathToken],
+                _index: usize,
+                _state: &MathEncodeState,
+            ) -> bool {
+                true
+            }
+            fn apply(
+                &self,
+                _tokens: &[MathToken],
+                _index: usize,
+                result: &mut Vec<u8>,
+                _state: &mut MathEncodeState,
+                _engine: &MathTokenEngine,
+            ) -> Result<MathTokenResult, String> {
+                result.push(1);
+                Ok(MathTokenResult::Consumed(1))
+            }
+        }
+
+        let mut engine = MathTokenEngine::with_context(MathContext::default());
+        engine.register(Box::new(ConsumingRule));
+        engine.register(Box::new(SkippingRule));
+        engine.finalize();
+
+        let mut result = Vec::new();
+        engine
+            .encode_tokens(&[MathToken::Variable('x')], &mut result)
+            .unwrap();
+
+        assert_eq!(result, vec![1]);
     }
 }

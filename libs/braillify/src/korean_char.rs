@@ -110,5 +110,21 @@ mod tests {
         let _ = encode_korean_char(&kc);
         // Various other patterns through encode().
         let _ = crate::encode("값있는 닭의 갈비");
+
+        // Compound final where the base syllable itself has a shortcut.
+        let kc = KoreanChar {
+            cho: 'ㄱ',
+            jung: 'ㅏ',
+            jong: Some('ㄳ'),
+        };
+        let _ = encode_korean_char(&kc);
+
+        // ㅇ-base shortcut is absent for `엉`, but the exact syllable shortcut `성` exists.
+        let kc = KoreanChar {
+            cho: 'ㅅ',
+            jung: 'ㅓ',
+            jong: Some('ㅇ'),
+        };
+        assert_eq!(encode_korean_char(&kc).unwrap(), vec![32, 59]);
     }
 }

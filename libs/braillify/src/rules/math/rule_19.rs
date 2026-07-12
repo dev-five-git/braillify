@@ -14,15 +14,19 @@ fn single_numeric(content: &[MathToken]) -> Option<String> {
     }
 }
 
-fn prev_non_space(tokens: &[MathToken], mut idx: usize) -> Option<&MathToken> {
+fn prev_non_space_index(tokens: &[MathToken], mut idx: usize) -> Option<(usize, &MathToken)> {
     while idx > 0 {
         idx -= 1;
         let token = tokens.get(idx)?;
         if !matches!(token, MathToken::Space) {
-            return Some(token);
+            return Some((idx, token));
         }
     }
     None
+}
+
+fn prev_non_space(tokens: &[MathToken], idx: usize) -> Option<&MathToken> {
+    prev_non_space_index(tokens, idx).map(|(_, token)| token)
 }
 
 fn is_plain_numeric_subscript(content: &[MathToken]) -> bool {
@@ -32,19 +36,15 @@ fn is_plain_numeric_subscript(content: &[MathToken]) -> bool {
 }
 
 pub fn should_group_subscript(content: &[MathToken]) -> bool {
-    if content.len() <= 1 {
-        return false;
-    }
-    if matches!(
-        (content.first(), content.last()),
-        (
-            Some(MathToken::OpenParen(BracketKind::MathParen)),
-            Some(MathToken::CloseParen(BracketKind::MathParen))
+    content.len() > 1
+        && !matches!(
+            (content.first(), content.last()),
+            (
+                Some(MathToken::OpenParen(BracketKind::MathParen)),
+                Some(MathToken::CloseParen(BracketKind::MathParen))
+            )
         )
-    ) {
-        return false;
-    }
-    !is_plain_numeric_subscript(content)
+        && !is_plain_numeric_subscript(content)
 }
 
 /// PDF 수학 제62항 — 순열/조합 묶음 안의 첨자 내용을 인코딩한다.
@@ -173,35 +173,24 @@ pub fn encode_subscript(
     // 적분/합/곱(∫ ∑ ∏ 등) 한정자 뒤 첨자는 묶음 없이 본문 그대로 출력한다.
     // PDF 제51항 [붙임] — `\substack`로 펼쳐진 두 번째 이상 첨자도 동일한 한정자
     // 컨텍스트에 속하므로 묶음 없이 출력한다. (이전 첨자를 거슬러 올라가 한정자를 찾는다.)
-    let prev_is_quantifier_op = {
-        let mut cursor = *i;
-        let mut result: Option<bool> = None;
-        while result.is_none() {
-            match prev_non_space(tokens, cursor) {
-                Some(MathToken::MathSymbol(
+    let mut cursor = *i;
+    let prev_is_quantifier_op = loop {
+        match prev_non_space_index(tokens, cursor) {
+            Some((
+                _,
+                MathToken::MathSymbol(
                     '\u{222B}' | '\u{222C}' | '\u{222D}' | '\u{222E}' | '\u{2211}' | '\u{220F}'
                     | '\u{2200}' | '\u{2203}',
-                ))
-                | Some(MathToken::FunctionName(_)) => {
-                    result = Some(true);
-                }
-                Some(MathToken::Subscript(_)) => {
-                    // 이전 토큰이 첨자이면 한 단계 더 거슬러 본다 (substack 펼침 케이스).
-                    // prev_non_space로 Space를 건너뛰며 가장 가까운 non-Space 위치를 찾는다.
-                    // 진전 없으면(cursor==0) result=false로 종료, 그 외엔 cursor 업데이트.
-                    // 진전 없으면(cursor 그대로) result=Some(false)로 종료, 그 외엔 cursor 업데이트.
-                    let progress = (0..cursor)
-                        .rev()
-                        .find(|&pc| !matches!(tokens.get(pc), Some(MathToken::Space)));
-                    cursor = progress.unwrap_or(cursor);
-                    result = progress.is_none().then_some(false);
-                }
-                _ => {
-                    result = Some(false);
-                }
+                ),
+            ))
+            | Some((_, MathToken::FunctionName(_))) => break true,
+            Some((progress, MathToken::Subscript(_))) => {
+                // 이전 토큰이 첨자이면 한 단계 더 거슬러 본다 (substack 펼침 케이스).
+                // prev_non_space로 Space를 건너뛰며 가장 가까운 non-Space 위치를 찾는다.
+                cursor = progress;
             }
+            _ => break false,
         }
-        result.unwrap_or(false)
     };
     if prev_is_quantifier_op {
         engine.encode_tokens(content, result)?;
@@ -439,6 +428,60 @@ mod tests {
         let _ = bytes;
     }
 
+    #[test]
+    fn subscript_after_quantifier_encodes_content_without_grouping() {
+        let tokens = vec![
+            MathToken::MathSymbol('\u{2211}'),
+            MathToken::Subscript(vec![MathToken::Variable('i')]),
+        ];
+        let mut i = 1;
+        let mut result = Vec::new();
+        let engine = super::super::encoder::math_engine_for_context(
+            super::super::math_token_rule::MathContext::default(),
+        );
+
+        let grouped = encode_subscript(
+            &tokens,
+            &mut i,
+            &[MathToken::Variable('i')],
+            &mut result,
+            engine,
+        )
+        .expect("quantifier subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 2);
+        assert_eq!(
+            result,
+            vec![48, crate::english::encode_english('i').unwrap()]
+        );
+    }
+
+    #[test]
+    fn subscript_after_subscript_without_quantifier_scans_back_to_false() {
+        let tokens = vec![
+            MathToken::Variable('x'),
+            MathToken::Subscript(vec![MathToken::Variable('i')]),
+            MathToken::Subscript(Vec::new()),
+        ];
+        let mut i = 2;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 3);
+    }
+
+    #[test]
+    fn plain_variable_subscript_uses_group_path_without_quantifier_context() {
+        let bytes = enc("$a_{bc}$");
+        assert!(!bytes.is_empty());
+    }
+
     /// 제19항 — Number + UpperVariable subscript content drives lines 219-222.
     #[test]
     fn subscript_with_number_upper_var_content() {
@@ -474,6 +517,39 @@ mod tests {
         #[case] expected: bool,
     ) {
         assert_eq!(should_group_subscript(&content), expected);
+    }
+
+    #[test]
+    fn single_numeric_extracts_number_content() {
+        assert_eq!(
+            single_numeric(&[MathToken::Number("7".into())]),
+            Some("7".into())
+        );
+    }
+
+    #[test]
+    fn numeric_subscript_after_number_uses_plain_numeric_subscript_path() {
+        let tokens = vec![
+            MathToken::Number("2".into()),
+            MathToken::Subscript(vec![MathToken::Number("3".into())]),
+        ];
+        let mut i = 1;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(
+            &tokens,
+            &mut i,
+            &[MathToken::Number("3".into())],
+            &mut result,
+            &engine,
+        )
+        .expect("numeric subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 2);
+        assert_eq!(result, vec![48, 38, 60, 9, 52]);
     }
 
     /// 제19항 — encode_combo_subscript_content via _nP_r pattern drives line 303.
@@ -521,5 +597,165 @@ mod tests {
             MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
         let res = r.apply(&toks, 0, &mut result, &mut state, &engine);
         assert!(matches!(res, Ok(MathTokenResult::Skip)));
+    }
+
+    #[test]
+    fn subscript_after_subscript_without_quantifier_uses_regular_group_path() {
+        let tokens = vec![
+            MathToken::Subscript(vec![MathToken::Variable('i')]),
+            MathToken::Subscript(Vec::new()),
+        ];
+        let mut i = 1;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 2);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn leading_subscript_without_previous_token_is_regular_group() {
+        let tokens = vec![MathToken::Subscript(Vec::new())];
+        let mut i = 0;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 1);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn subscript_after_only_space_scans_to_false() {
+        let tokens = vec![MathToken::Space, MathToken::Subscript(Vec::new())];
+        let mut i = 1;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 2);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn subscript_after_empty_prefix_scans_to_false() {
+        let tokens = vec![MathToken::Subscript(Vec::new())];
+        let mut i = 0;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 1);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn variable_subscript_without_quantifier_emits_regular_group() {
+        let tokens = vec![MathToken::Variable('x'), MathToken::Subscript(Vec::new())];
+        let mut i = 1;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 2);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn subscript_after_previous_subscript_at_start_scans_to_false() {
+        let tokens = vec![
+            MathToken::Subscript(Vec::new()),
+            MathToken::Subscript(Vec::new()),
+        ];
+        let mut i = 1;
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 2);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn subscript_after_runtime_previous_subscript_without_progress_scans_false() {
+        let tokens = vec![
+            MathToken::Subscript(Vec::new()),
+            MathToken::Subscript(Vec::new()),
+        ];
+        let mut i = std::hint::black_box(1);
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+    }
+
+    #[test]
+    fn subscript_after_space_then_prior_subscript_at_start_scans_to_false() {
+        let tokens = vec![
+            MathToken::Subscript(Vec::new()),
+            MathToken::Space,
+            MathToken::Subscript(Vec::new()),
+        ];
+        let mut i = std::hint::black_box(2);
+        let mut result = Vec::new();
+        let engine =
+            MathTokenEngine::with_context(super::super::math_token_rule::MathContext::default());
+
+        let grouped = encode_subscript(&tokens, &mut i, &[], &mut result, &engine)
+            .expect("subscript should encode");
+
+        assert!(!grouped);
+        assert_eq!(i, 3);
+        assert_eq!(result, vec![48]);
+    }
+
+    #[test]
+    fn prev_non_space_index_skips_space_to_previous_token() {
+        let tokens = vec![
+            MathToken::Variable('x'),
+            MathToken::Space,
+            MathToken::Subscript(Vec::new()),
+        ];
+
+        let found = prev_non_space_index(&tokens, 2);
+
+        assert!(matches!(found, Some((0, MathToken::Variable('x')))));
+    }
+
+    #[test]
+    fn should_group_subscript_rejects_runtime_single_token_content() {
+        let content = vec![MathToken::Number(std::hint::black_box("1".to_string()))];
+
+        assert!(!should_group_subscript(&content));
+        assert!(!should_group_subscript(&[]));
     }
 }

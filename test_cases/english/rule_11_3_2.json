@@ -1,0 +1,14 @@
+[
+  {
+    "input": "2½ cups of sugar",
+    "internal": "#b#a/b cups ( sug>",
+    "expected": "60360112309371514055014372728",
+    "unicode": "⠼⠃⠼⠁⠌⠃⠀⠉⠥⠏⠎⠀⠷⠀⠎⠥⠛⠜"
+  },
+  {
+    "input": "175 cm = 1¾ m",
+    "internal": "#age cm \"7 #a#c/d ;m",
+    "expected": "60127170913016540601609122504813",
+    "unicode": "⠼⠁⠛⠑⠀⠉⠍⠀⠐⠶⠀⠼⠁⠼⠉⠌⠙⠀⠰⠍"
+  }
+]

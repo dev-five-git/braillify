@@ -66,11 +66,29 @@ impl BrailleRule for Rule70 {
 mod tests {
     use super::*;
 
+    #[rstest::rstest]
+    #[case::right_arrow('→', "⠒⠕")]
+    #[case::left_arrow('←', "⠪⠒")]
+    #[case::left_right_arrow('↔', "⠪⠒⠕")]
+    #[case::down_arrow('↓', "⠘⠒⠕")]
+    #[case::up_arrow('↑', "⠰⠒⠕")]
+    fn encode_arrow_symbol_table(#[case] input: char, #[case] expected: &str) {
+        assert_eq!(encode_unicode_cells(expected), encode_enclosed_arrow(input));
+    }
+
     #[test]
     fn apply_skips_non_korean() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let mut ctx = owned.ctx_at(0);
         let outcome = Rule70.apply(&mut ctx).unwrap();
         assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    fn encode_enclosed_arrow(input: char) -> Vec<u8> {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(&input.to_string(), false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule70.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        ctx.result.clone()
     }
 }

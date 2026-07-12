@@ -1,0 +1,110 @@
+[
+  {
+    "input": "it'd",
+    "internal": "x'd",
+    "expected": "45425",
+    "unicode": "⠭⠄⠙"
+  },
+  {
+    "input": "you'd",
+    "internal": "y'd",
+    "expected": "61425",
+    "unicode": "⠽⠄⠙"
+  },
+  {
+    "input": "it'll",
+    "internal": "x'll",
+    "expected": "45477",
+    "unicode": "⠭⠄⠇⠇"
+  },
+  {
+    "input": "that'll",
+    "internal": "t'll",
+    "expected": "30477",
+    "unicode": "⠞⠄⠇⠇"
+  },
+  {
+    "input": "you'll",
+    "internal": "y'll",
+    "expected": "61477",
+    "unicode": "⠽⠄⠇⠇"
+  },
+  {
+    "input": "you're",
+    "internal": "y're",
+    "expected": "6142317",
+    "unicode": "⠽⠄⠗⠑"
+  },
+  {
+    "input": "people's",
+    "internal": "p's",
+    "expected": "15414",
+    "unicode": "⠏⠄⠎"
+  },
+  {
+    "input": "so's",
+    "internal": "s's",
+    "expected": "14414",
+    "unicode": "⠎⠄⠎"
+  },
+  {
+    "input": "you's",
+    "internal": "y's",
+    "expected": "61414",
+    "unicode": "⠽⠄⠎"
+  },
+  {
+    "input": "can't",
+    "internal": "c't",
+    "expected": "9430",
+    "unicode": "⠉⠄⠞"
+  },
+  {
+    "input": "you've",
+    "internal": "y've",
+    "expected": "6143917",
+    "unicode": "⠽⠄⠧⠑"
+  },
+  {
+    "input": "𝐼𝑡'𝑠 𝑛𝑜𝑡 \"𝑖𝑡𝑠\"",
+    "internal": ".7,x's n 8xs0.'",
+    "expected": "40543245414029038451452404",
+    "unicode": "⠨⠶⠠⠭⠄⠎⠀⠝⠀⠦⠭⠎⠴⠨⠄"
+  },
+  {
+    "input": "Thomas More's life",
+    "internal": ",?omas ,m's life",
+    "expected": "325721131140321341407101117",
+    "unicode": "⠠⠹⠕⠍⠁⠎⠀⠠⠍⠄⠎⠀⠇⠊⠋⠑"
+  },
+  {
+    "input": "Mr Just's house",
+    "internal": ",mr ,j's h\\se",
+    "expected": "32132303226414019511417",
+    "unicode": "⠠⠍⠗⠀⠠⠚⠄⠎⠀⠓⠳⠎⠑"
+  },
+  {
+    "input": "I can–you can't!",
+    "internal": ",i c,-y c't6",
+    "expected": "3210093236610943022",
+    "unicode": "⠠⠊⠀⠉⠠⠤⠽⠀⠉⠄⠞⠖"
+  },
+  {
+    "input": "\"You've done it!\"",
+    "internal": "8,y've d\"o x60",
+    "expected": "3832614391702516210452252",
+    "unicode": "⠦⠠⠽⠄⠧⠑⠀⠙⠐⠕⠀⠭⠖⠴"
+  },
+  {
+    "input": "more'n",
+    "internal": "more'n",
+    "expected": "13212317429",
+    "unicode": "⠍⠕⠗⠑⠄⠝"
+  },
+  {
+    "input": "you'm",
+    "internal": "y\\'m",
+    "expected": "6151413",
+    "unicode": "⠽⠳⠄⠍"
+  }
+]

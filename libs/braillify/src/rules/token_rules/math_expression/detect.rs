@@ -219,15 +219,6 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
         return true;
     }
 
-    // Signed numeric/math tokens (e.g. -3, -1<x) should be handled as math.
-    if has_digits && chars.iter().any(|c| matches!(*c, '-' | '\u{2212}')) {
-        panic!("PROBE: line 169 reached chars={:?}", chars);
-    }
-
-    // Bracket-containing words with digits are math.
-    if has_brackets && has_digits {
-        panic!("PROBE: line 174 reached chars={:?}", chars);
-    }
     // Bracket-containing words with letters + other math indicators are math.
     if has_brackets
         && has_letters

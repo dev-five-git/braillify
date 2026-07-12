@@ -1,0 +1,14 @@
+[
+  {
+    "input": "houses4lease",
+    "internal": "h\\ses#dlease",
+    "expected": "1951141714602571711417",
+    "unicode": "⠓⠳⠎⠑⠎⠼⠙⠇⠑⠁⠎⠑"
+  },
+  {
+    "input": "He came 4th in the race.",
+    "internal": ",he came #dth 9 ! race4",
+    "expected": "3219170911317060253019020046023191750",
+    "unicode": "⠠⠓⠑⠀⠉⠁⠍⠑⠀⠼⠙⠞⠓⠀⠔⠀⠮⠀⠗⠁⠉⠑⠲"
+  }
+]

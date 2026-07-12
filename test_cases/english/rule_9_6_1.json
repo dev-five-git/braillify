@@ -1,0 +1,14 @@
+[
+  {
+    "input": "King Henry ᴠɪɪɪ",
+    "internal": ",k+ ,h5ry ,,viii",
+    "expected": "32544032193423610323239101010",
+    "unicode": "⠠⠅⠬⠀⠠⠓⠢⠗⠽⠀⠠⠠⠧⠊⠊⠊"
+  },
+  {
+    "input": "ᴘᴛ109",
+    "internal": ",,pt#aji",
+    "expected": "323215306012610",
+    "unicode": "⠠⠠⠏⠞⠼⠁⠚⠊"
+  }
+]

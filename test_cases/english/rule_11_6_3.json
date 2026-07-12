@@ -1,0 +1,9 @@
+[
+  {
+    "input": "↔",
+    "context": "english",
+    "internal": ";\\wro",
+    "expected": "4851582321",
+    "unicode": "⠰⠳⠺⠗⠕"
+  }
+]

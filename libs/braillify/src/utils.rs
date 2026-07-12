@@ -50,4 +50,17 @@ mod test {
         assert!(!has_choseong_o('가'));
         assert!(has_choseong_o('앙'));
     }
+
+    #[rstest::rstest]
+    #[case::first_jamo('ㄱ', true)]
+    #[case::last_jamo('ㆎ', true)]
+    #[case::before_jamo('㄰', false)]
+    #[case::after_jamo('㆏', false)]
+    #[case::first_hangul_syllable('가', true)]
+    #[case::last_hangul_syllable('힣', true)]
+    #[case::before_hangul_syllable('꯿', false)]
+    #[case::after_hangul_syllable('힤', false)]
+    fn test_is_korean_char(#[case] input: char, #[case] expected: bool) {
+        assert_eq!(is_korean_char(input), expected);
+    }
 }

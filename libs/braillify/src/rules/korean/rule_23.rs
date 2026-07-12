@@ -211,10 +211,12 @@ mod tests {
         assert!(encode_historical_letter_symbol('A').is_none());
     }
 
-    #[test]
-    fn should_skip_hanja_in_context_paths() {
-        let word_chars = ['君', '군'];
-        let char_type = CharType::Symbol('君');
+    #[rstest]
+    #[case::gun('君', '군')]
+    #[case::chim('侵', '침')]
+    fn should_skip_hanja_in_context_paths(#[case] hanja: char, #[case] hangul: char) {
+        let word_chars = [hanja, hangul];
+        let char_type = CharType::Symbol(hanja);
         let mut skip_count = 0usize;
         let mut state = EncoderState::new(false);
         let mut result = Vec::new();

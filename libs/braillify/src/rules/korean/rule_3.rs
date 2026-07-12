@@ -135,15 +135,6 @@ mod tests {
         assert!(apply(ch).is_err());
     }
 
-    #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("국보", "⠈⠍⠁⠘⠥"), ("놋그릇", "⠉⠥⠄⠈⠪⠐⠪⠄")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(result, expected, "Rule 3 golden test failed for: {}", input);
-        }
-    }
-
     use rstest::rstest;
 
     /// matches() must be true only for syllables that have a jongseong (받침).
@@ -190,8 +181,10 @@ mod tests {
 
     #[test]
     fn rule3_meta_phase_priority() {
-        assert_eq!(Rule3.meta().section, "3");
-        assert!(matches!(Rule3.phase(), Phase::CoreEncoding));
-        assert_eq!(Rule3.priority(), 210);
+        let rule: &dyn BrailleRule = std::hint::black_box(&Rule3);
+
+        assert_eq!(rule.meta().section, "3");
+        assert!(matches!(rule.phase(), Phase::CoreEncoding));
+        assert_eq!(rule.priority(), 210);
     }
 }

@@ -259,12 +259,13 @@ mod tests {
     // Mutation-testing reinforcements (kill 35+ missed mutants in parse.rs)
     // ============================================================
 
-    /// `1̲/(...)` underline-fraction with parenthesised denominator.
-    /// Lines 51 (`&&` joining starts_with/ends_with) and 52 (`-` in slice).
-    /// Expected token shape: (Grouping, ...inner..., Grouping_close, /, Number "1").
-    #[test]
-    fn underline_fraction_with_parenthesised_body() {
-        let tokens = parse_math_expression("1\u{0332}/(x+y)").unwrap();
+    /// Underline-fraction notation with a parenthesised denominator is numerator-agnostic.
+    /// Expected token shape: (Grouping, ...inner..., Grouping_close, /, numerator).
+    #[rstest::rstest]
+    #[case::one_numerator("1\u{0332}/(x+y)", "1")]
+    #[case::two_numerator("2\u{0332}/(x+y)", "2")]
+    fn underline_fraction_with_parenthesised_body(#[case] input: &str, #[case] numerator: &str) {
+        let tokens = parse_math_expression(input).unwrap();
         // First token must be Grouping open (denominator-first ordering).
         assert!(
             matches!(tokens[0], MathToken::OpenParen(BracketKind::Grouping)),
@@ -280,7 +281,7 @@ mod tests {
             MathToken::CloseParen(BracketKind::Grouping)
         ));
         assert!(matches!(tokens[5], MathToken::Operator('/')));
-        assert!(matches!(tokens[6], MathToken::Number(ref n) if n == "1"));
+        assert!(matches!(tokens[6], MathToken::Number(ref n) if n == numerator));
     }
 
     /// `1̲/x` (no parens) — falls through to generic `̲/` denominator handling.

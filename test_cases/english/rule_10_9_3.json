@@ -1,0 +1,134 @@
+[
+  {
+    "input": "Braillette board",
+    "internal": ",brltte bo>d",
+    "expected": "32323730301703212825",
+    "unicode": "⠠⠃⠗⠇⠞⠞⠑⠀⠃⠕⠜⠙"
+  },
+  {
+    "input": "Marcillat-en-Combraille, France",
+    "internal": ",m>cillat-en-,combrl1 ,fr.e",
+    "expected": "321328910771303617293632921133237203211234017",
+    "unicode": "⠠⠍⠜⠉⠊⠇⠇⠁⠞⠤⠑⠝⠤⠠⠉⠕⠍⠃⠗⠇⠂⠀⠠⠋⠗⠨⠑"
+  },
+  {
+    "input": "Greatford Hall",
+    "internal": ",grt=d ,hall",
+    "expected": "32272330632503219177",
+    "unicode": "⠠⠛⠗⠞⠿⠙⠀⠠⠓⠁⠇⠇"
+  },
+  {
+    "input": "greatgreatgreatgrandchildren",
+    "internal": "grtgrtgrtgr&*n",
+    "expected": "2723302723302723302723473329",
+    "unicode": "⠛⠗⠞⠛⠗⠞⠛⠗⠞⠛⠗⠯⠡⠝"
+  },
+  {
+    "input": "Greatorex",
+    "internal": ",grtorex",
+    "expected": "3227233021231745",
+    "unicode": "⠠⠛⠗⠞⠕⠗⠑⠭"
+  },
+  {
+    "input": "Blindcraft",
+    "internal": ",blcraft",
+    "expected": "323792311130",
+    "unicode": "⠠⠃⠇⠉⠗⠁⠋⠞"
+  },
+  {
+    "input": "Blindheim",
+    "internal": ",blheim",
+    "expected": "323719171013",
+    "unicode": "⠠⠃⠇⠓⠑⠊⠍"
+  },
+  {
+    "input": "Firstchoice",
+    "internal": ",f/*oice",
+    "expected": "321112332110917",
+    "unicode": "⠠⠋⠌⠡⠕⠊⠉⠑"
+  },
+  {
+    "input": "Goodcafé",
+    "internal": ",gdcaf^/e",
+    "expected": "3227259111241217",
+    "unicode": "⠠⠛⠙⠉⠁⠋⠘⠌⠑"
+  },
+  {
+    "input": "\"goodz\"",
+    "internal": "8gdz0",
+    "expected": "3827255352",
+    "unicode": "⠦⠛⠙⠵⠴"
+  },
+  {
+    "input": "Mr Feelgreat from Goodge Street",
+    "internal": ",mr ,feelgrt f ,gdge ,/reet",
+    "expected": "3213230321117177272330011032272527170321223171730",
+    "unicode": "⠠⠍⠗⠀⠠⠋⠑⠑⠇⠛⠗⠞⠀⠋⠀⠠⠛⠙⠛⠑⠀⠠⠌⠗⠑⠑⠞"
+  },
+  {
+    "input": "Ms Letterkenny's Littleport home.",
+    "internal": ",ms ,lrk5ny's ,llport home4",
+    "expected": "3213140327235342961414032771521233001921131750",
+    "unicode": "⠠⠍⠎⠀⠠⠇⠗⠅⠢⠝⠽⠄⠎⠀⠠⠇⠇⠏⠕⠗⠞⠀⠓⠕⠍⠑⠲"
+  },
+  {
+    "input": "Quicksburg, Virginia",
+    "internal": ",qksburg1 ,virg9ia",
+    "expected": "3231514337232720323910232720101",
+    "unicode": "⠠⠟⠅⠎⠃⠥⠗⠛⠂⠀⠠⠧⠊⠗⠛⠔⠊⠁"
+  },
+  {
+    "input": "Blindoc",
+    "internal": ",bl9doc",
+    "expected": "32372025219",
+    "unicode": "⠠⠃⠇⠔⠙⠕⠉"
+  },
+  {
+    "input": "www.braillex.com",
+    "internal": "www4braillex4com",
+    "expected": "585858503231107717455092113",
+    "unicode": "⠺⠺⠺⠲⠃⠗⠁⠊⠇⠇⠑⠭⠲⠉⠕⠍"
+  },
+  {
+    "input": "Goodacre",
+    "internal": ",goodacre",
+    "expected": "3227212125192317",
+    "unicode": "⠠⠛⠕⠕⠙⠁⠉⠗⠑"
+  },
+  {
+    "input": "Littlearm",
+    "internal": ",little>m",
+    "expected": "3271030307172813",
+    "unicode": "⠠⠇⠊⠞⠞⠇⠑⠜⠍"
+  },
+  {
+    "input": "Letterewe Estate",
+    "internal": ",lett]ewe ,e/ate",
+    "expected": "32717303059175817032171213017",
+    "unicode": "⠠⠇⠑⠞⠞⠻⠑⠺⠑⠀⠠⠑⠌⠁⠞⠑"
+  },
+  {
+    "input": "Mr Linkletter of Portlittle",
+    "internal": ",mr ,l9klett] ( ,portlittle",
+    "expected": "3213230327205717303059055032152123307103030717",
+    "unicode": "⠠⠍⠗⠀⠠⠇⠔⠅⠇⠑⠞⠞⠻⠀⠷⠀⠠⠏⠕⠗⠞⠇⠊⠞⠞⠇⠑"
+  },
+  {
+    "input": "Bisquick Pancake Mix",
+    "internal": ",bisquick ,pancake ,mix",
+    "expected": "3231014313710950321512991517032131045",
+    "unicode": "⠠⠃⠊⠎⠟⠥⠊⠉⠅⠀⠠⠏⠁⠝⠉⠁⠅⠑⠀⠠⠍⠊⠭"
+  },
+  {
+    "input": "Ted Makegood of Goodena",
+    "internal": ",t$ ,makegood ( ,good5a",
+    "expected": "3230430321315172721212505503227212125341",
+    "unicode": "⠠⠞⠫⠀⠠⠍⠁⠅⠑⠛⠕⠕⠙⠀⠷⠀⠠⠛⠕⠕⠙⠢⠁"
+  },
+  {
+    "input": "Quick𝑏𝑟𝑎𝑖𝑙𝑙𝑒",
+    "internal": ",quick.1braille",
+    "expected": "32313710954023231107717",
+    "unicode": "⠠⠟⠥⠊⠉⠅⠨⠂⠃⠗⠁⠊⠇⠇⠑"
+  }
+]

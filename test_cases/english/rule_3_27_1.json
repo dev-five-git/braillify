@@ -1,0 +1,62 @@
+[
+  {
+    "input": "an examination of the tabular information will [open tn]Text continues on page 78.[close tn]",
+    "internal": "an exam9a;n ( ! tabul> 9=ma;n w @.<,text 3t9ues on page #gh4@.>",
+    "expected": "129017451132014829055046030133772802063131482905808403532301745300183020371714021290151271706027195084028",
+    "unicode": "⠁⠝⠀⠑⠭⠁⠍⠔⠁⠰⠝⠀⠷⠀⠮⠀⠞⠁⠃⠥⠇⠜⠀⠔⠿⠍⠁⠰⠝⠀⠺⠀⠈⠨⠣⠠⠞⠑⠭⠞⠀⠒⠞⠔⠥⠑⠎⠀⠕⠝⠀⠏⠁⠛⠑⠀⠼⠛⠓⠲⠈⠨⠜"
+  },
+  {
+    "input": "[open tn]The number after each question gives the number of answers needed.[close tn]",
+    "internal": "@.<,! numb] af ea* \"q gives ! numb] ( answ]s ne$$4@.>",
+    "expected": "84035324602937133590111017133016310271039171404602937133590550129145859140291743435084028",
+    "unicode": "⠈⠨⠣⠠⠮⠀⠝⠥⠍⠃⠻⠀⠁⠋⠀⠑⠁⠡⠀⠐⠟⠀⠛⠊⠧⠑⠎⠀⠮⠀⠝⠥⠍⠃⠻⠀⠷⠀⠁⠝⠎⠺⠻⠎⠀⠝⠑⠫⠫⠲⠈⠨⠜"
+  },
+  {
+    "input": "[open tn]All the punctuation marks are underlined in the paragraph below.[close tn]",
+    "internal": "@.<,all ! punctua;n m>ks >e \"ul9$ 9 ! p>agraph 2l4@.>",
+    "expected": "840353217704601537299303714829013285140281701637720430200460152812723115190675084028",
+    "unicode": "⠈⠨⠣⠠⠁⠇⠇⠀⠮⠀⠏⠥⠝⠉⠞⠥⠁⠰⠝⠀⠍⠜⠅⠎⠀⠜⠑⠀⠐⠥⠇⠔⠫⠀⠔⠀⠮⠀⠏⠜⠁⠛⠗⠁⠏⠓⠀⠆⠇⠲⠈⠨⠜"
+  },
+  {
+    "input": "[open tn]The following three tables appear side by side in the print.[close tn]",
+    "internal": "@.<,! foll[+ ?ree tables appe> side by side 9 ! pr9t4@.>",
+    "expected": "840353246011217742440572317170301371714011515172801410251703610141025170200460152320305084028",
+    "unicode": "⠈⠨⠣⠠⠮⠀⠋⠕⠇⠇⠪⠬⠀⠹⠗⠑⠑⠀⠞⠁⠃⠇⠑⠎⠀⠁⠏⠏⠑⠜⠀⠎⠊⠙⠑⠀⠃⠽⠀⠎⠊⠙⠑⠀⠔⠀⠮⠀⠏⠗⠔⠞⠲⠈⠨⠜"
+  },
+  {
+    "input": "[open tn]Braille symbols used on the following page are ⠘⠝ for eng and ⠸⠢ for schwa.[close tn]",
+    "internal": "@.<,brl symbols us$ on ! foll[+ page >e .=^n = 5g & .=_5 = s*wa4@.>",
+    "expected": "84035323237014611332171403714430212904601121774244015127170281704063242906303427047040635634063014335815084028",
+    "unicode": "⠈⠨⠣⠠⠃⠗⠇⠀⠎⠽⠍⠃⠕⠇⠎⠀⠥⠎⠫⠀⠕⠝⠀⠮⠀⠋⠕⠇⠇⠪⠬⠀⠏⠁⠛⠑⠀⠜⠑⠀⠨⠿⠘⠝⠀⠿⠀⠢⠛⠀⠯⠀⠨⠿⠸⠢⠀⠿⠀⠎⠡⠺⠁⠲⠈⠨⠜"
+  },
+  {
+    "input": "[open tn]In the table below, the column headings are abbreviated as follows:",
+    "internal": "@.<,9 ! table 2l1 ! column h1d+s >e a2reviat$ z foll[s3",
+    "expected": "8403532200460301371706720460921737132901922544140281701623173910130430530112177421418",
+    "unicode": "⠈⠨⠣⠠⠔⠀⠮⠀⠞⠁⠃⠇⠑⠀⠆⠇⠂⠀⠮⠀⠉⠕⠇⠥⠍⠝⠀⠓⠂⠙⠬⠎⠀⠜⠑⠀⠁⠆⠗⠑⠧⠊⠁⠞⠫⠀⠵⠀⠋⠕⠇⠇⠪⠎⠒"
+  },
+  {
+    "input": "emp inc: Employment Income",
+    "internal": "emp 9c3 ,employ;t ,9come",
+    "expected": "171315020918032171315721614830032209211317",
+    "unicode": "⠑⠍⠏⠀⠔⠉⠒⠀⠠⠑⠍⠏⠇⠕⠽⠰⠞⠀⠠⠔⠉⠕⠍⠑"
+  },
+  {
+    "input": "payable: Approximate Tax Payable",
+    "internal": "payable3 ,approximate ,tax ,payable",
+    "expected": "15161137171803211515232145101313017032301450321516113717",
+    "unicode": "⠏⠁⠽⠁⠃⠇⠑⠒⠀⠠⠁⠏⠏⠗⠕⠭⠊⠍⠁⠞⠑⠀⠠⠞⠁⠭⠀⠠⠏⠁⠽⠁⠃⠇⠑"
+  },
+  {
+    "input": "aver: Average Tax Rate",
+    "internal": "av]3 ,av]age ,tax ,rate",
+    "expected": "13959180321395912717032301450322313017",
+    "unicode": "⠁⠧⠻⠒⠀⠠⠁⠧⠻⠁⠛⠑⠀⠠⠞⠁⠭⠀⠠⠗⠁⠞⠑"
+  },
+  {
+    "input": "marg: Marginal Tax Rate[close tn]",
+    "internal": "m>g3 ,m>g9al ,tax ,rate@.>",
+    "expected": "13282718032132827201703230145032231301784028",
+    "unicode": "⠍⠜⠛⠒⠀⠠⠍⠜⠛⠔⠁⠇⠀⠠⠞⠁⠭⠀⠠⠗⠁⠞⠑⠈⠨⠜"
+  }
+]

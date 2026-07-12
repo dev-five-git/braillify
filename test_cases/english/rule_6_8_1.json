@@ -1,0 +1,35 @@
+[
+  {
+    "input": "$ 4.50",
+    "internal": "@s# d4ej",
+    "expected": "81460025501726",
+    "unicode": "⠈⠎⠼⠀⠙⠲⠑⠚"
+  },
+  {
+    "input": "10.00",
+    "internal": "#aj4jj",
+    "expected": "60126502626",
+    "unicode": "⠼⠁⠚⠲⠚⠚"
+  },
+  {
+    "input": ".50",
+    "context": "english",
+    "internal": "#  4ej",
+    "expected": "6000501726",
+    "unicode": "⠼⠀⠀⠲⠑⠚"
+  },
+  {
+    "input": "------",
+    "context": "english",
+    "internal": "\"3333333",
+    "expected": "1618181818181818",
+    "unicode": "⠐⠒⠒⠒⠒⠒⠒⠒"
+  },
+  {
+    "input": "$15.00",
+    "context": "english",
+    "internal": "@s#ae4jj",
+    "expected": "81460117502626",
+    "unicode": "⠈⠎⠼⠁⠑⠲⠚⠚"
+  }
+]

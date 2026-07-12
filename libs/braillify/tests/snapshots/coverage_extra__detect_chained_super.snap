@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
 expression: rendered
 ---
 input  = "a^b^c"
-unicode = ok: "⠁⠈⠢⠃⠈⠢⠉"
-bytes   = ok: [1, 8, 34, 3, 8, 34, 9]
+unicode = ok: "⠈⠶⠁⠈⠢⠃⠈⠢⠉⠈⠄"
+bytes   = ok: [8, 54, 1, 8, 34, 3, 8, 34, 9, 8, 4]

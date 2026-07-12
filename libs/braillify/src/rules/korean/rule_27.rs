@@ -163,6 +163,15 @@ mod tests {
         assert!(has_historical_context(&ctx));
     }
 
+    #[rstest::rstest]
+    #[case::private_use('\u{E000}')]
+    #[case::hanja('君')]
+    #[case::gloss_open('〔')]
+    #[case::gloss_close('〕')]
+    fn historical_context_word_detects_marker_chars(#[case] marker: char) {
+        assert!(is_historical_context_word(&marker.to_string()));
+    }
+
     /// 제27항 — `has_historical_context` returns true when prev_word contains
     /// a hanja. Exercises lines 36-38 (prev_word branch).
     #[test]

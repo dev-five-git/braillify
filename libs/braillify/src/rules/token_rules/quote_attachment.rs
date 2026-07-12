@@ -149,6 +149,32 @@ mod tests {
     }
 
     #[test]
+    fn attaches_space_next_to_quote_boundary() {
+        let tokens = vec![
+            word("열림\""),
+            Token::Space(SpaceKind::Regular),
+            word("다음"),
+        ];
+        let mut state = EncoderState::new(false);
+        let action = QuoteAttachmentRule.apply(&tokens, 1, &mut state).unwrap();
+
+        assert!(
+            matches!(action, TokenAction::Replace(Token::PreEncoded(bytes)) if bytes == vec![8])
+        );
+    }
+
+    #[test]
+    fn rule_metadata_reports_phase_and_priority() {
+        let rule = std::hint::black_box(QuoteAttachmentRule);
+
+        assert!(matches!(
+            rule.phase(),
+            crate::rules::token_rule::TokenPhase::Normalization
+        ));
+        assert_eq!(rule.priority(), 130);
+    }
+
+    #[test]
     fn pipeline_keeps_attachment_for_ascii_quote_sentence() {
         let mut ir = crate::rules::token::DocumentIR::parse("\"빨리 말해!\"", true);
         let mut engine = crate::rules::token_engine::TokenRuleEngine::new();
@@ -198,6 +224,17 @@ mod tests {
         assert_eq!(super::quote_delta("\"text\""), 0);
         // Input ends with single ascii quote → starts at 0, line 31 fires.
         assert!(super::quote_delta("text'") <= 0);
+    }
+
+    #[test]
+    fn quote_balance_before_accumulates_prior_word_quotes() {
+        let tokens = vec![
+            word("\"열림"),
+            Token::Space(SpaceKind::Regular),
+            word("중간"),
+        ];
+
+        assert_eq!(super::quote_balance_before(&tokens, 2), 1);
     }
 
     /// quote_attachment:81 — `apply` with Space token at index where next token

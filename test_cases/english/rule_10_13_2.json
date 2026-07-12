@@ -1,0 +1,170 @@
+[
+  {
+    "input": "about-\nface",
+    "internal": "ab-\nface",
+    "expected": "1336\n111917",
+    "unicode": "⠁⠃⠤\n⠋⠁⠉⠑"
+  },
+  {
+    "input": "air-\nconditioned",
+    "internal": "air-\n3di;n$",
+    "expected": "1102336\n182510482943",
+    "unicode": "⠁⠊⠗⠤\n⠒⠙⠊⠰⠝⠫"
+  },
+  {
+    "input": "Aix-en-\nProvence",
+    "internal": ",aix-en-\n,prov;e",
+    "expected": "321104536172936\n32152321394817",
+    "unicode": "⠠⠁⠊⠭⠤⠑⠝⠤\n⠠⠏⠗⠕⠧⠰⠑"
+  },
+  {
+    "input": "Al-\nAzar",
+    "internal": ";,al-\n,az>",
+    "expected": "48321736\n3215328",
+    "unicode": "⠰⠠⠁⠇⠤\n⠠⠁⠵⠜"
+  },
+  {
+    "input": "channel-\nless",
+    "internal": "*annel-\nless",
+    "expected": "331292917736\n7171414",
+    "unicode": "⠡⠁⠝⠝⠑⠇⠤\n⠇⠑⠎⠎"
+  },
+  {
+    "input": "CHILD-\nLIKE",
+    "internal": ",,*-\n,,l",
+    "expected": "32323336\n32327",
+    "unicode": "⠠⠠⠡⠤\n⠠⠠⠇"
+  },
+  {
+    "input": "ebb-\ntide",
+    "internal": "ebb-\ntide",
+    "expected": "173336\n30102517",
+    "unicode": "⠑⠃⠃⠤\n⠞⠊⠙⠑"
+  },
+  {
+    "input": "father-\nin-law",
+    "internal": "\"f-\n9-law",
+    "expected": "161136\n20367158",
+    "unicode": "⠐⠋⠤\n⠔⠤⠇⠁⠺"
+  },
+  {
+    "input": "first-\nbegotten",
+    "internal": "f/-\n2gott5",
+    "expected": "111236\n62721303034",
+    "unicode": "⠋⠌⠤\n⠆⠛⠕⠞⠞⠢"
+  },
+  {
+    "input": "𝑓𝑜𝑟 𝑡ℎ𝑒 𝑡𝑒𝑎𝑐ℎ-\n𝑖𝑛.",
+    "internal": ".7= ! t1*-\n94.'",
+    "expected": "40546304603023336\n2050404",
+    "unicode": "⠨⠶⠿⠀⠮⠀⠞⠂⠡⠤\n⠔⠲⠨⠄"
+  },
+  {
+    "input": "go-\nbetween",
+    "internal": "g-\n2t",
+    "expected": "2736\n630",
+    "unicode": "⠛⠤\n⠆⠞"
+  },
+  {
+    "input": "had-\nenough mood",
+    "internal": "_h-\n5 mood",
+    "expected": "561936\n34013212125",
+    "unicode": "⠸⠓⠤\n⠢⠀⠍⠕⠕⠙"
+  },
+  {
+    "input": "his-\nand-hers",
+    "internal": "his-\n&-h]s",
+    "expected": "19101436\n4736195914",
+    "unicode": "⠓⠊⠎⠤\n⠯⠤⠓⠻⠎"
+  },
+  {
+    "input": "(in-\ndepth)",
+    "internal": "\"<9-\ndep?\">",
+    "expected": "16352036\n251715571628",
+    "unicode": "⠐⠣⠔⠤\n⠙⠑⠏⠹⠐⠜"
+  },
+  {
+    "input": "𝑖𝑛-\n𝑑𝑒𝑝𝑡ℎ",
+    "internal": ".19-\ndep?",
+    "expected": "4022036\n25171557",
+    "unicode": "⠨⠂⠔⠤\n⠙⠑⠏⠹"
+  },
+  {
+    "input": "man-\neater",
+    "internal": "man-\neat]",
+    "expected": "1312936\n1713059",
+    "unicode": "⠍⠁⠝⠤\n⠑⠁⠞⠻"
+  },
+  {
+    "input": "mother-in-\nlaw",
+    "internal": "\"m-9-\nlaw",
+    "expected": "1613362036\n7158",
+    "unicode": "⠐⠍⠤⠔⠤\n⠇⠁⠺"
+  },
+  {
+    "input": "out-of-\nthe-way",
+    "internal": "\\-(-\n!-way",
+    "expected": "51365536\n463658161",
+    "unicode": "⠳⠤⠷⠤\n⠮⠤⠺⠁⠽"
+  },
+  {
+    "input": "part-\ntime",
+    "internal": "\"p-\n\"t",
+    "expected": "161536\n1630",
+    "unicode": "⠐⠏⠤\n⠐⠞"
+  },
+  {
+    "input": "self-\ncontrol",
+    "internal": "self-\n3trol",
+    "expected": "141771136\n183023217",
+    "unicode": "⠎⠑⠇⠋⠤\n⠒⠞⠗⠕⠇"
+  },
+  {
+    "input": "shut-\nins",
+    "internal": "%ut-\n9s",
+    "expected": "41373036\n2014",
+    "unicode": "⠩⠥⠞⠤\n⠔⠎"
+  },
+  {
+    "input": "teach-\nin.)",
+    "internal": "t1*-\n94\">",
+    "expected": "3023336\n20501628",
+    "unicode": "⠞⠂⠡⠤\n⠔⠲⠐⠜"
+  },
+  {
+    "input": "\"to-ing and fro-\ning\"",
+    "internal": "8to-9g & fro-\n9g0",
+    "expected": "383021362027047011232136\n202752",
+    "unicode": "⠦⠞⠕⠤⠔⠛⠀⠯⠀⠋⠗⠕⠤\n⠔⠛⠴"
+  },
+  {
+    "input": "word-\nfor-word",
+    "internal": "^w-\n=-^w",
+    "expected": "245836\n63362458",
+    "unicode": "⠘⠺⠤\n⠿⠤⠘⠺"
+  },
+  {
+    "input": "would-\nbe",
+    "internal": "wd-\nbe",
+    "expected": "582536\n317",
+    "unicode": "⠺⠙⠤\n⠃⠑"
+  },
+  {
+    "input": "\"had-\nenough\" mood",
+    "internal": "8_h-\n5\\<0 mood",
+    "expected": "38561936\n34513552013212125",
+    "unicode": "⠦⠸⠓⠤\n⠢⠳⠣⠴⠀⠍⠕⠕⠙"
+  },
+  {
+    "input": "\"In-\ndepth",
+    "internal": "8,in-\ndep?",
+    "expected": "3832102936\n25171557",
+    "unicode": "⠦⠠⠊⠝⠤\n⠙⠑⠏⠹"
+  },
+  {
+    "input": "teach-\nin.",
+    "internal": "t1*-\nin4",
+    "expected": "3023336\n102950",
+    "unicode": "⠞⠂⠡⠤\n⠊⠝⠲"
+  }
+]

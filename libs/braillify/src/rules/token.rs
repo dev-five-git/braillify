@@ -33,25 +33,12 @@ pub struct WordMeta {
 
 impl WordMeta {
     pub fn from_chars(chars: &[char]) -> WordMeta {
-        let mut has_korean = false;
-        let mut has_ascii_alphabetic = false;
-        let mut ascii_letter_count = 0u16;
-        let mut uppercase_count = 0u16;
-
-        for ch in chars {
-            let code = *ch as u32;
-            if (0xAC00..=0xD7A3).contains(&code) {
-                has_korean = true;
-            }
-
-            if ch.is_ascii_alphabetic() {
-                has_ascii_alphabetic = true;
-                ascii_letter_count = ascii_letter_count.saturating_add(1);
-                if ch.is_ascii_uppercase() {
-                    uppercase_count = uppercase_count.saturating_add(1);
-                }
-            }
-        }
+        let has_korean = chars
+            .iter()
+            .any(|ch| (0xAC00..=0xD7A3).contains(&(*ch as u32)));
+        let ascii_letter_count = chars.iter().filter(|ch| ch.is_ascii_alphabetic()).count();
+        let uppercase_count = chars.iter().filter(|ch| ch.is_ascii_uppercase()).count();
+        let has_ascii_alphabetic = ascii_letter_count > 0;
 
         let starts_with_ascii = chars.first().is_some_and(char::is_ascii_alphabetic);
         let is_all_uppercase = ascii_letter_count >= 2 && ascii_letter_count == uppercase_count;

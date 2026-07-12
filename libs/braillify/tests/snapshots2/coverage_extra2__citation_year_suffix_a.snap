@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "Smith 1998a"
-unicode = ok: "⠠⠎⠍⠊⠹⠀⠼⠁⠊⠊⠓⠁"
-bytes   = ok: [32, 14, 13, 10, 57, 0, 60, 1, 10, 10, 19, 1]
+unicode = ok: "⠠⠎⠍⠊⠞⠓⠀⠼⠁⠊⠊⠓⠰⠁"
+bytes   = ok: [32, 14, 13, 10, 30, 19, 0, 60, 1, 10, 10, 19, 48, 1]

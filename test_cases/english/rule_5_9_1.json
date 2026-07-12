@@ -1,0 +1,56 @@
+[
+  {
+    "input": "un-e-mo-tion-al",
+    "internal": ";;un-e-mo-tion-al",
+    "expected": "48483729361736132136301021293617",
+    "unicode": "⠰⠰⠥⠝⠤⠑⠤⠍⠕⠤⠞⠊⠕⠝⠤⠁⠇"
+  },
+  {
+    "input": "c-h-e-e-s-e",
+    "internal": ";;c-h-e-e-s-e",
+    "expected": "4848936193617361736143617",
+    "unicode": "⠰⠰⠉⠤⠓⠤⠑⠤⠑⠤⠎⠤⠑"
+  },
+  {
+    "input": "br-r-r-r",
+    "internal": ";;br-r-r-r",
+    "expected": "4848323362336233623",
+    "unicode": "⠰⠰⠃⠗⠤⠗⠤⠗⠤⠗"
+  },
+  {
+    "input": "d-don’t",
+    "internal": ";d-don't",
+    "expected": "482536252129430",
+    "unicode": "⠰⠙⠤⠙⠕⠝⠄⠞"
+  },
+  {
+    "input": "d-d-d-don’t",
+    "internal": ";;d-d-d-don't",
+    "expected": "4848253625362536252129430",
+    "unicode": "⠰⠰⠙⠤⠙⠤⠙⠤⠙⠕⠝⠄⠞"
+  },
+  {
+    "input": "about-f-f-f-face",
+    "internal": "ab-;;f-f-f-face",
+    "expected": "13364848113611361136111917",
+    "unicode": "⠁⠃⠤⠰⠰⠋⠤⠋⠤⠋⠤⠋⠁⠉⠑"
+  },
+  {
+    "input": "d-d-d-dictionary",
+    "internal": ";d-;d-;d-dic;n>y",
+    "expected": "4825364825364825362510948292861",
+    "unicode": "⠰⠙⠤⠰⠙⠤⠰⠙⠤⠙⠊⠉⠰⠝⠜⠽"
+  },
+  {
+    "input": "p-p-please",
+    "internal": ";p-;p-pl1se",
+    "expected": "48153648153615721417",
+    "unicode": "⠰⠏⠤⠰⠏⠤⠏⠇⠂⠎⠑"
+  },
+  {
+    "input": "s-s-s-s-super-st-stition",
+    "internal": ";;s-s-s-s-;'sup]-st-/i;n",
+    "expected": "48481436143614361436484143715593614303612104829",
+    "unicode": "⠰⠰⠎⠤⠎⠤⠎⠤⠎⠤⠰⠄⠎⠥⠏⠻⠤⠎⠞⠤⠌⠊⠰⠝"
+  }
+]

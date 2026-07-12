@@ -96,6 +96,54 @@ fn word_is_math_letter_context(w: &crate::rules::token::WordToken<'_>) -> bool {
     has_super_sub || plain_letter_list
 }
 
+/// Uppercase prose abbreviations (`FM의`, `SNS는`) and uppercase math products
+/// share the same surface shape. For product notation in this branch, accept
+/// ordered Roman variable runs such as `AB`, `ABC`, `CD`; leave non-sequential
+/// acronyms to the English/Korean prose rules.
+fn is_consecutive_ascii_letter_run(chars: &[char]) -> bool {
+    chars.len() >= 2
+        && chars
+            .windows(2)
+            .all(|pair| u32::from(pair[1]) == u32::from(pair[0]) + 1)
+}
+
+fn has_ascii_letter_korean_math_suffix(chars: &[char]) -> bool {
+    if chars.len() < 3 {
+        return false;
+    }
+
+    let ascii_prefix_len = chars.iter().take_while(|c| c.is_ascii_alphabetic()).count();
+    (2..=3).contains(&ascii_prefix_len)
+        && chars[ascii_prefix_len..]
+            .first()
+            .is_some_and(|c| matches!(*c, '의' | '와' | '과'))
+        && chars[ascii_prefix_len..]
+            .iter()
+            .all(|c| is_korean_suffix_char(*c))
+}
+
+fn next_word_starts_with_math_value_cue(tokens: &[Token<'_>], index: usize) -> bool {
+    let mut cursor = index + 1;
+    while let Some(token) = tokens.get(cursor) {
+        match token {
+            Token::Space(_) => cursor += 1,
+            Token::Word(word) => {
+                let text = word.text.as_ref();
+                return text.starts_with('값') || text.starts_with('곱');
+            }
+            _ => return false,
+        }
+    }
+    false
+}
+
+fn prev_word_is_math_product_cue(tokens: &[Token<'_>], index: usize) -> bool {
+    index
+        .checked_sub(1)
+        .and_then(|start| prev_word_skip_space(tokens, start))
+        .is_some_and(|word| word.text.as_ref() == "곱")
+}
+
 /// Walks backward from `index - 1`, skipping `Space`, returning whether the
 /// preceding content is a math-letter Word or a math-context PreEncoded.
 fn prev_is_math_context_for_ellipsis(tokens: &[Token<'_>], index: usize) -> bool {
@@ -322,10 +370,10 @@ pub(super) fn run<'a>(
     }
 
     // PDF 제12항 [붙임 2] — 한국어 prose 내 multi-letter math identifier 처리.
-    // Word가 2~3개 ASCII letter로 시작하고 곧장 한국어가 따라오는 패턴 (예: `ab의 값을`,
-    // `AB의 값을`)에서 산문 영어 wrap(`⠴...⠲`)이 아닌 math letter 처리.
-    // 추가 컨텍스트: 같은 문장 안에 `값` (value), `구하` (find), `곱` (product) 같은
-    // 수학 키워드가 등장해야 한다 (일반 약어 `SNS는`, `MP3을` 등과 구분).
+    // Word가 2~3개 ASCII letter로 시작하고 곧장 수식 나열/소유 조사 `의/와/과`가
+    // 붙는 패턴(예: `ab의`, `AB와`)에서 산문 영어 wrap(`⠴...⠲`)이 아닌 math letter
+    // 처리. 대문자(`AB의`, `ABC의`)는 순차 변수열일 때만 같은 구조로 처리해
+    // 일반 약어(`FM의`, `SNS는` 등)를 이 경로에서 제외한다.
     if word.chars.len() >= 3 {
         let ascii_prefix_len = word
             .chars
@@ -334,26 +382,17 @@ pub(super) fn run<'a>(
             .count();
         if (2..=3).contains(&ascii_prefix_len) {
             let suffix_chars = &word.chars[ascii_prefix_len..];
-            let suffix_all_korean = suffix_chars
-                .iter()
-                .all(|c| crate::utils::is_korean_char(*c));
+            let suffix_is_math_identifier_particle =
+                has_ascii_letter_korean_math_suffix(&word.chars);
             let prefix_letters: Vec<char> = word.chars[..ascii_prefix_len].to_vec();
             let all_lower = prefix_letters.iter().all(|c| c.is_ascii_lowercase());
             let all_upper = prefix_letters.iter().all(|c| c.is_ascii_uppercase());
 
-            // 후속 토큰들에서 math-context 키워드 발견 여부.
-            let has_math_context_keyword = tokens[index + 1..].iter().take(8).any(|t| match t {
-                Token::Word(w) => {
-                    let t = w.text.as_ref();
-                    t.contains('값')
-                        || t.contains("구하")
-                        || t.contains('곱')
-                        || t.contains("값을")
-                        || t.contains("값은")
-                }
-                _ => false,
-            });
-            if suffix_all_korean && (all_lower || all_upper) && has_math_context_keyword {
+            let case_allowed = (all_lower
+                && (next_word_starts_with_math_value_cue(tokens, index)
+                    || prev_word_is_math_product_cue(tokens, index)))
+                || (all_upper && is_consecutive_ascii_letter_run(&prefix_letters));
+            if suffix_is_math_identifier_particle && case_allowed {
                 let prev_is_korean_or_first = index == 0
                     || index
                         .checked_sub(1)
@@ -892,6 +931,14 @@ mod tests {
         );
     }
 
+    #[test]
+    fn math_suffix_and_next_value_cue_helpers_reject_short_or_non_word_inputs() {
+        assert!(!has_ascii_letter_korean_math_suffix(&['a', '의']));
+
+        let tokens = vec![word_tok("ab의"), Token::PreEncoded(vec![1])];
+        assert!(!next_word_starts_with_math_value_cue(&tokens, 0));
+    }
+
     /// `is_logic_symbol_word` — XOR(⊻) 단독 토큰만 true, 그 외는 false.
     /// Kills: `-> false`, `!=` mutations.
     #[rstest::rstest]
@@ -963,33 +1010,76 @@ mod tests {
 
     // ----- Lines 155-236: Multi-letter Korean math identifier -----
 
-    /// `ab의 값을 구하라` — `ab` is a 2-letter math identifier glued to Korean.
-    /// The math-context-keyword check (`값을`/`구하`) gates this path.
-    /// Lines 171 (`take(8)`), 175-178 (keyword OR checks), 183/188 (prev korean).
+    /// Lowercase ASCII prose abbreviations should not become math identifiers merely
+    /// because they carry a Korean genitive/conjunctive suffix.
     #[test]
-    fn multiletter_lower_identifier_with_math_keyword() {
-        let with_kw = enc_str("ab의 값을 구하라");
-        // Bytes must include leading space (0) and math letter marks.
-        assert!(!with_kw.is_empty());
-        // WITHOUT the keyword `값`/`구하`, the multi-letter path should NOT
-        // trigger — leading to a different encoding.
-        let without_kw = enc_str("ab의 친구");
-        assert_ne!(
-            with_kw, without_kw,
-            "math-keyword presence must change ab의 encoding"
-        );
+    fn multiletter_lower_prose_identifier_is_not_math() {
+        for (prefix, suffix) in [
+            ("ab의", "친구"),
+            ("id의", "친구"),
+            ("ai와", "서비스"),
+            ("api의", "응답"),
+        ] {
+            let tokens = vec![word_tok(prefix), space_tok(), word_tok(suffix)];
+            let mut state = EncoderState::new(false);
+            let action = run(&tokens, 0, &mut state).expect("ok");
+            assert!(
+                matches!(action, TokenAction::Noop),
+                "input={prefix} {suffix}"
+            );
+        }
     }
 
-    /// `AB의 값을` — uppercase variant. Matrix context emits different marks
-    /// per letter vs. lowercase variant.
+    /// `ab의 값을` — lowercase identifiers are accepted when nearby Korean prose
+    /// supplies a math value cue.
     #[test]
-    fn multiletter_upper_identifier_with_math_keyword() {
-        let upper = enc_str("AB의 값을 구하라");
-        let lower = enc_str("ab의 값을 구하라");
-        assert_ne!(
-            upper, lower,
-            "uppercase vs lowercase identifier paths must differ"
-        );
+    fn multiletter_lower_identifier_requires_math_value_cue() {
+        let tokens = vec![word_tok("ab의"), space_tok(), word_tok("값을")];
+        let mut state = EncoderState::new(false);
+        let action = run(&tokens, 0, &mut state).expect("ok");
+        assert!(matches!(action, TokenAction::ReplaceMany(_)));
+    }
+
+    /// `곱 abc의` — product cue before a lowercase multi-letter identifier is also
+    /// math context.
+    #[test]
+    fn multiletter_lower_identifier_allows_previous_product_cue() {
+        let tokens = vec![word_tok("곱"), space_tok(), word_tok("abc의")];
+        let mut state = EncoderState::new(false);
+        let action = run(&tokens, 2, &mut state).expect("ok");
+        assert!(matches!(action, TokenAction::ReplaceMany(_)));
+    }
+
+    /// `AB의` — uppercase multi-letter identifiers use the same suffix structure
+    /// when they are ordered variable runs. Acronym forms such as `FM의`/`SNS는`
+    /// stay prose.
+    #[test]
+    fn multiletter_upper_identifier_uses_genitive_suffix() {
+        let tokens = vec![word_tok("AB의")];
+
+        let mut plain_state = EncoderState::new(false);
+        let plain = run(&tokens, 0, &mut plain_state).expect("ok");
+        assert!(matches!(plain, TokenAction::ReplaceMany(_)));
+
+        let acronym_tokens = vec![word_tok("FM의")];
+        let mut acronym_state = EncoderState::new(false);
+        let acronym = run(&acronym_tokens, 0, &mut acronym_state).expect("ok");
+        assert!(matches!(acronym, TokenAction::Noop));
+
+        let topic_acronym_tokens = vec![word_tok("SNS는")];
+        let mut topic_acronym_state = EncoderState::new(false);
+        let topic_acronym = run(&topic_acronym_tokens, 0, &mut topic_acronym_state).expect("ok");
+        assert!(matches!(topic_acronym, TokenAction::Noop));
+    }
+
+    /// `AB와 CD의` — product lists use conjunctive suffixes structurally, without
+    /// searching for fixture-specific prompt words later in the sentence.
+    #[test]
+    fn multiletter_identifier_allows_conjunctive_suffix() {
+        let tokens = vec![word_tok("AB와"), space_tok(), word_tok("CD의")];
+        let mut state = EncoderState::new(false);
+        let action = run(&tokens, 0, &mut state).expect("ok");
+        assert!(matches!(action, TokenAction::ReplaceMany(_)));
     }
 
     // ----- Lines 242-302: Greek letter list `α, β에` -----
@@ -1517,22 +1607,14 @@ mod tests {
         let _ = action;
     }
 
-    /// Multi-letter Korean identifier with prev Word DIRECTLY (no Space in
-    /// between) — exercises apply.rs lines 187 / 197 (Token::Word arm of
-    /// prev_is_korean_or_first walk-back). The tokenizer never produces this
-    /// shape; only synthetic Token slices can.
+    /// Lowercase multi-letter Korean identifier with prev Word DIRECTLY (no Space
+    /// in between) still needs a math cue; prose falls through.
     #[test]
     fn multi_letter_korean_ident_prev_direct_korean_word() {
-        let tokens = vec![
-            word_tok("문제"),
-            word_tok("ab의"),
-            word_tok("값을"),
-            word_tok("구하라"),
-        ];
+        let tokens = vec![word_tok("문제"), word_tok("ab의"), word_tok("친구")];
         let mut state = EncoderState::new(false);
         let action = run(&tokens, 1, &mut state).expect("ok");
-        // Must enter the multi-letter math identifier branch (ReplaceMany).
-        assert!(matches!(action, TokenAction::ReplaceMany(_)));
+        assert!(matches!(action, TokenAction::Noop));
     }
 
     /// Multi-letter Korean identifier with prev Token being neither Word nor
@@ -1546,13 +1628,39 @@ mod tests {
                 denominator: "2".to_string(),
             }),
             word_tok("ab의"),
-            word_tok("값을"),
-            word_tok("구하라"),
+            word_tok("친구"),
         ];
         let mut state = EncoderState::new(false);
         let action = run(&tokens, 1, &mut state).expect("ok");
         // prev is Fraction → not Korean → prev_is_korean_or_first false → Noop.
         let _ = action;
+    }
+
+    #[test]
+    fn uppercase_identifier_after_korean_word_uses_math_letter_path() {
+        let tokens = vec![word_tok("문제"), word_tok("AB의")];
+        let mut state = EncoderState::new(false);
+
+        let action = run(&tokens, 1, &mut state).expect("ok");
+
+        assert!(matches!(action, TokenAction::ReplaceMany(_)));
+    }
+
+    #[test]
+    fn uppercase_identifier_after_non_word_falls_through_prev_check() {
+        let tokens = vec![
+            Token::Fraction(crate::rules::token::FractionToken {
+                whole: None,
+                numerator: "1".to_string(),
+                denominator: "2".to_string(),
+            }),
+            word_tok("AB의"),
+        ];
+        let mut state = EncoderState::new(false);
+
+        let action = run(&tokens, 1, &mut state).expect("ok");
+
+        assert!(matches!(action, TokenAction::Noop));
     }
 
     /// `$X$<korean>` with prev Token being Fraction directly (non-Word non-Space)
@@ -1839,6 +1947,13 @@ mod tests {
         if let Token::Word(w) = &korean {
             assert!(!word_is_math_letter_context(w));
         }
+    }
+
+    #[test]
+    fn consecutive_ascii_letter_run_paths() {
+        assert!(is_consecutive_ascii_letter_run(&['A', 'B', 'C']));
+        assert!(!is_consecutive_ascii_letter_run(&['A']));
+        assert!(!is_consecutive_ascii_letter_run(&['A', 'C']));
     }
 
     /// Greek list path where Space prev-prev is missing (line 261 returns

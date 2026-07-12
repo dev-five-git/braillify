@@ -32,15 +32,22 @@ const API_URL = 'https://www.braillekorea.org/braille/brailleProcAjax.do'
 const CONCURRENCY = 8
 /** 각 batch 종료 후 대기 시간 (ms). 0 이면 batch 간 지연 없음. */
 const BATCH_DELAY_MS = 50
-const TEST_CASES_DIR = join(import.meta.dirname!, '..', 'test_cases')
+const TEST_CASES_DIR = join(import.meta.dirname, '..', 'test_cases')
 
 interface TestCaseEntry {
   input: string
+  internal?: string
+  expected?: string
+  unicode?: string
+  alternatives?: TestAlternative[]
+  note?: string
+  world?: string
+}
+
+interface TestAlternative {
   internal: string
   expected: string
   unicode: string
-  note?: string
-  world?: string
 }
 
 interface Session {
@@ -223,7 +230,7 @@ async function processFile(
     }
   }
 
-  await writeFile(filePath, JSON.stringify(entries, null, 2) + '\n', 'utf-8')
+  await writeFile(filePath, `${JSON.stringify(entries, null, 2)}\n`, 'utf-8')
   return stats
 }
 

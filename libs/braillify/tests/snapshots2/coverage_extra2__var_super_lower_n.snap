@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "x^n"
-unicode = ok: "⠭⠈⠢⠝"
-bytes   = ok: [45, 8, 34, 29]
+unicode = ok: "⠈⠶⠭⠈⠢⠝⠈⠄"
+bytes   = ok: [8, 54, 45, 8, 34, 29, 8, 4]

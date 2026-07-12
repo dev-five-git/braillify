@@ -1,0 +1,14 @@
+[
+  {
+    "input": "ice → water",
+    "internal": "ice ;\\o wat]",
+    "expected": "10917048512105813059",
+    "unicode": "⠊⠉⠑⠀⠰⠳⠕⠀⠺⠁⠞⠻"
+  },
+  {
+    "input": "step 1\n↓\nstep 2",
+    "internal": "/ep #a ;\\% /ep #b",
+    "expected": "1217150601048514101217150603",
+    "unicode": "⠌⠑⠏⠀⠼⠁\n⠰⠳⠩\n⠌⠑⠏⠀⠼⠃"
+  }
+]

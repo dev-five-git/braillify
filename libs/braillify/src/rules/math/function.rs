@@ -9,7 +9,7 @@ use crate::unicode::decode_unicode;
 
 /// Function name → braille encoding map.
 ///
-/// Encodings derived from test_cases/math/*.json internal notation:
+/// Encodings follow the 2024 Korean Math Braille function-name notation:
 /// - sin → 6s → ⠖⠎
 /// - cos → 6c → ⠖⠉
 /// - tan → 6t → ⠖⠞

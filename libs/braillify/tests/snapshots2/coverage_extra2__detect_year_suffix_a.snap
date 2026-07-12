@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "1998a"
-unicode = ok: "⠼⠁⠊⠊⠓⠁"
-bytes   = ok: [60, 1, 10, 10, 19, 1]
+unicode = ok: "⠼⠁⠊⠊⠓⠰⠁"
+bytes   = ok: [60, 1, 10, 10, 19, 48, 1]

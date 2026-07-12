@@ -160,15 +160,6 @@ mod tests {
         assert_eq!(is_jamo_numbering(0, &chars), expected);
     }
 
-    /// 제8항 golden test — 단독 자모는 `⠿` 접두 + 자모 점형.
-    #[rstest::rstest]
-    #[case::giyeok_alone("ㄱ", "⠿⠁")]
-    #[case::ah_alone("ㅏ", "⠿⠣")]
-    fn golden_test_alignment(#[case] input: &str, #[case] expected: &str) {
-        let result = crate::encode_to_unicode(input).unwrap();
-        assert_eq!(result, expected, "Rule 8 golden test failed for: {input}");
-    }
-
     use rstest::rstest;
 
     #[rstest]

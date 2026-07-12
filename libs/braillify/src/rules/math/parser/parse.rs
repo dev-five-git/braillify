@@ -94,9 +94,9 @@ pub(crate) fn parse_math_expression_with_math_mode(
             return parse_math_expression_with_math_mode(&format!("{prefix}/1"), math_mode_active);
         }
 
-        if let Some(rest) = input.strip_prefix("1̲/") {
-            let body = rest.trim();
-            if body.starts_with('(') && body.ends_with(')') {
+        if let Some((numerator, denominator)) = input.split_once("̲/") {
+            let body = denominator.trim();
+            if !numerator.is_empty() && body.starts_with('(') && body.ends_with(')') {
                 let inner = &body[1..body.len() - 1];
                 let mut tokens = Vec::new();
                 tokens.push(MathToken::OpenParen(BracketKind::Grouping));
@@ -106,7 +106,10 @@ pub(crate) fn parse_math_expression_with_math_mode(
                 )?);
                 tokens.push(MathToken::CloseParen(BracketKind::Grouping));
                 tokens.push(MathToken::Operator('/'));
-                tokens.push(MathToken::Number("1".to_string()));
+                tokens.extend(parse_math_expression_with_math_mode(
+                    numerator,
+                    math_mode_active,
+                )?);
                 return Ok(tokens);
             }
         }
@@ -1020,6 +1023,35 @@ mod coverage_tests {
         );
     }
 
+    #[test]
+    fn repeating_decimal_with_marked_span_splits_prefix_repetend_suffix() {
+        let tokens = parse("12\u{0307}34\u{0307}5");
+
+        assert!(matches!(tokens.as_slice(), [
+            MathToken::Number(prefix),
+            MathToken::MathSymbol('\u{0307}'),
+            MathToken::Number(repetend),
+            MathToken::Number(suffix),
+        ] if prefix == "1" && repetend == "234" && suffix == "5"));
+    }
+
+    #[test]
+    fn plain_runtime_digits_parse_as_single_number() {
+        let input = std::hint::black_box("12345");
+        let tokens = parse(input);
+
+        assert!(matches!(tokens.as_slice(), [MathToken::Number(num)] if num == "12345"));
+    }
+
+    #[rstest::rstest]
+    #[case::unicode_prime("x′")]
+    #[case::ascii_prime("x'")]
+    fn prime_marks_parse_as_prime_token(#[case] input: &str) {
+        let tokens = parse(input);
+
+        assert!(tokens.iter().any(|t| matches!(t, MathToken::Prime)));
+    }
+
     /// Superscript followed by paren with prev FunctionName (line 485
     /// `Some(MathToken::Superscript(_))` after a FunctionName triggers
     /// Grouping bracket kind).
@@ -1038,6 +1070,16 @@ mod coverage_tests {
             Some(BracketKind::Grouping),
             "after fn^n the paren must be Grouping, got {open_kind:?}"
         );
+    }
+
+    #[test]
+    fn open_paren_followed_by_function_checks_nested_function_name() {
+        let tokens = parse("(cos(x))");
+
+        assert!(matches!(
+            tokens.first(),
+            Some(MathToken::OpenParen(BracketKind::MathParen))
+        ));
     }
 
     /// Close-paren `promote_grouping && contains_arithmetic && !contains_comma`
@@ -1091,6 +1133,17 @@ mod coverage_tests {
                 .any(|t| matches!(t, MathToken::MathSymbol('\u{03B1}'))),
             "α must be parsed as MathSymbol; tokens={tokens:?}"
         );
+    }
+
+    #[test]
+    fn runtime_shortcut_symbol_parses_as_math_symbol() {
+        let input = std::hint::black_box("∞");
+        let tokens = parse(input);
+
+        assert!(matches!(
+            tokens.as_slice(),
+            [MathToken::MathSymbol('\u{221E}')]
+        ));
     }
 
     /// Combining math mark NOT consumed by overline-prefix (line 674-682).
@@ -1298,5 +1351,53 @@ mod coverage_tests {
         let tokens = parse_math_expression(".x").unwrap();
         let has_raw_dot = tokens.iter().any(|t| matches!(t, MathToken::Raw('.')));
         assert!(has_raw_dot, "expected Raw(.) for '.x': {tokens:?}");
+    }
+
+    #[test]
+    fn parse_curly_group_pushes_curly_bracket_state() {
+        let tokens = parse_math_expression("{x}").unwrap();
+
+        assert!(matches!(
+            tokens.first(),
+            Some(MathToken::OpenParen(BracketKind::Curly))
+        ));
+        assert!(matches!(
+            tokens.last(),
+            Some(MathToken::CloseParen(BracketKind::Curly))
+        ));
+    }
+
+    #[test]
+    fn open_paren_detects_nested_function_start() {
+        let tokens = parse_math_expression("(sin(x))").unwrap();
+
+        assert!(matches!(
+            tokens.first(),
+            Some(MathToken::OpenParen(BracketKind::MathParen))
+        ));
+    }
+
+    #[test]
+    fn open_paren_checks_runtime_function_prefix() {
+        let input = std::hint::black_box("(cos(x))");
+        let tokens = parse_math_expression(input).unwrap();
+
+        assert!(matches!(
+            tokens.first(),
+            Some(MathToken::OpenParen(BracketKind::MathParen))
+        ));
+    }
+
+    #[test]
+    fn factorial_ratio_reorders_denominator_before_numerator() {
+        let tokens = parse_math_expression("5!/3!").unwrap();
+
+        assert!(matches!(tokens.as_slice(), [
+            MathToken::Number(denominator),
+            MathToken::Operator('!'),
+            MathToken::Operator('/'),
+            MathToken::Number(numerator),
+            MathToken::Operator('!'),
+        ] if denominator == "3" && numerator == "5"));
     }
 }

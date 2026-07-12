@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "_emphasized_"
-unicode = ok: "⠸⠤⠑⠍⠏⠓⠁⠎⠊⠵⠫⠸⠤"
-bytes   = ok: [56, 36, 17, 13, 15, 19, 1, 14, 10, 53, 43, 56, 36]
+unicode = ok: "⠨⠤⠑⠍⠏⠓⠁⠎⠊⠵⠫⠨⠤"
+bytes   = ok: [40, 36, 17, 13, 15, 19, 1, 14, 10, 53, 43, 40, 36]

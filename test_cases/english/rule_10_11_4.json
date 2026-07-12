@@ -1,0 +1,26 @@
+[
+  {
+    "input": "preamplifier",
+    "internal": "preamplifi]",
+    "expected": "15231711315710111059",
+    "unicode": "⠏⠗⠑⠁⠍⠏⠇⠊⠋⠊⠻"
+  },
+  {
+    "input": "readjust",
+    "internal": "readju/",
+    "expected": "2317125263712",
+    "unicode": "⠗⠑⠁⠙⠚⠥⠌"
+  },
+  {
+    "input": "reappoint",
+    "internal": "reappo9t",
+    "expected": "231711515212030",
+    "unicode": "⠗⠑⠁⠏⠏⠕⠔⠞"
+  },
+  {
+    "input": "reassure",
+    "internal": "reassure",
+    "expected": "231711414372317",
+    "unicode": "⠗⠑⠁⠎⠎⠥⠗⠑"
+  }
+]

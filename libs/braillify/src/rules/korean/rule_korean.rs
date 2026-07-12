@@ -61,20 +61,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn golden_test_basic_syllables() {
-        // These go through encode_korean_char's full pipeline
-        let cases = vec![("안녕", "⠣⠒⠉⠻"), ("고마워", "⠈⠥⠑⠣⠏"), ("사랑", "⠇⠐⠣⠶")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Korean syllable golden test failed for: {}",
-                input
-            );
-        }
-    }
-
-    #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "1");
         assert_eq!(META.subsection, Some("general"));

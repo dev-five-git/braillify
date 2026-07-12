@@ -1,0 +1,14 @@
+[
+  {
+    "input": "FLASH@lightning.net",
+    "internal": ",,fla%@ali<tn+4net",
+    "expected": "3232117141817103530294450291730",
+    "unicode": "⠠⠠⠋⠇⠁⠩⠈⠁⠇⠊⠣⠞⠝⠬⠲⠝⠑⠞"
+  },
+  {
+    "input": "Sell the candies @ 10¢ each.",
+    "internal": ",sell ! c&ies @a #aj@c ea*4",
+    "expected": "3214177704609471017140810601268901713350",
+    "unicode": "⠠⠎⠑⠇⠇⠀⠮⠀⠉⠯⠊⠑⠎⠀⠈⠁⠀⠼⠁⠚⠈⠉⠀⠑⠁⠡⠲"
+  }
+]

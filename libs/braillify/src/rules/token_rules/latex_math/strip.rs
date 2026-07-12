@@ -7,13 +7,8 @@ use super::grouping::{needs_grouping_in_fraction, to_subscript_sequence, to_supe
 use super::read_braced_content;
 
 pub(crate) fn strip_latex_to_math(latex_inner: &str) -> String {
-    // Normalize known irregular log-base notations from testcase corpus.
-    let normalized = latex_inner
-        .replace("\\log_{(3}/_{1)}", "log₍₃/₁₎")
-        .replace("\\log_{(0}._{2)}", "log₍₀.₂₎");
-
     let mut result = String::new();
-    let mut chars = normalized.chars().peekable();
+    let mut chars = latex_inner.chars().peekable();
     let mut escaped_brace_depth = 0usize;
     // 직전에 LaTeX 명령(`\command`)이 emit한 결과인지 추적: 명령 주변 공백은 LaTeX
     // 토큰 분리용이므로 제거해야 하고, 직접 Unicode 기호 주변 공백은 보존해야 한다.
@@ -1095,5 +1090,39 @@ mod tests {
     fn escaped_open_brace_then_plain_close() {
         let _ = strip_latex_to_math("\\{x}");
         let _ = strip_latex_to_math("\\{abc}");
+    }
+
+    #[rstest::rstest]
+    #[case::plain_xrightleftharpoons("\\xrightleftharpoons{f}", "f\u{21C4}\u{00A0}")]
+    #[case::prefixed_xrightleftharpoons("A\\xrightleftharpoons{f}", "A\u{00A0}f\u{21C4}\u{00A0}")]
+    #[case::one_sided_right_delimiter("\\left.x\\right.", "x\u{2E29}")]
+    #[case::overset_frown_arc("\\overset{\\frown}{AB}", "\u{2322}AB")]
+    #[case::overset_plain_base("\\overset{x}{AB}", "AB")]
+    #[case::single_letter_command("\\q", "q")]
+    fn structural_commands_strip_to_math_text(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(strip_latex_to_math(input), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::single_zero("x^0", "x⁰")]
+    #[case::single_five("x^5", "x⁵")]
+    #[case::single_six("x^6", "x⁶")]
+    #[case::single_seven("x^7", "x⁷")]
+    #[case::single_eight("x^8", "x⁸")]
+    #[case::single_nine("x^9", "x⁹")]
+    #[case::latex_inside_braced_exponent("x^{\\frac{1}{2}}", "x^{2⁄1}")]
+    #[case::plain_complex_braced_exponent("x^{n+1}", "xⁿ⁺¹")]
+    #[case::nested_braced_exponent("x^{a{b}}", "x^{a{b}}")]
+    #[case::symbol_exponent_fallback("x^*", "x^*")]
+    fn superscript_forms_strip_to_math_text(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(strip_latex_to_math(input), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::integer_ratio_base("\\log_{(3}/_{1)}x", "log₍₃/₁₎x")]
+    #[case::decimal_base("\\log_{(0}._{2)}x", "log₍₀.₂₎x")]
+    #[case::multi_digit_ratio_base("\\log_{(12}/_{34)}x", "log₍₁₂/₃₄₎x")]
+    fn split_subscript_log_base_is_structural(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(strip_latex_to_math(input), expected);
     }
 }

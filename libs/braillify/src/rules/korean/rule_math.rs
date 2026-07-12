@@ -108,4 +108,16 @@ mod tests {
         let ctx = owned.ctx_at(0);
         let _ = RuleMath.matches(&ctx);
     }
+
+    #[test]
+    fn apply_pads_math_symbol_between_korean_quantity_words() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("5개=2개3", false);
+        let mut ctx = owned.ctx_at(2);
+
+        let outcome = RuleMath.apply(&mut ctx).expect("math rule should apply");
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(owned.result.starts_with(&[0]));
+        assert!(owned.result.ends_with(&[0]));
+    }
 }

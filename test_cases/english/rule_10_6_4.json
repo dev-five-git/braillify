@@ -1,0 +1,56 @@
+[
+  {
+    "input": "Conn.",
+    "internal": ",3n4",
+    "expected": "32182950",
+    "unicode": "⠠⠒⠝⠲"
+  },
+  {
+    "input": "cont",
+    "internal": "3t",
+    "expected": "1830",
+    "unicode": "⠒⠞"
+  },
+  {
+    "input": "dist.",
+    "internal": "4t4",
+    "expected": "503050",
+    "unicode": "⠲⠞⠲"
+  },
+  {
+    "input": "mod cons",
+    "internal": "mod 3s",
+    "expected": "13212501814",
+    "unicode": "⠍⠕⠙⠀⠒⠎"
+  },
+  {
+    "input": "BEd",
+    "internal": ",b,$",
+    "expected": "3233243",
+    "unicode": "⠠⠃⠠⠫"
+  },
+  {
+    "input": "Belg",
+    "internal": ",belg",
+    "expected": "32317727",
+    "unicode": "⠠⠃⠑⠇⠛"
+  },
+  {
+    "input": "bet",
+    "internal": "bet",
+    "expected": "31730",
+    "unicode": "⠃⠑⠞"
+  },
+  {
+    "input": "Bev",
+    "internal": ",bev",
+    "expected": "3231739",
+    "unicode": "⠠⠃⠑⠧"
+  },
+  {
+    "input": "Con.",
+    "internal": ",con4",
+    "expected": "329212950",
+    "unicode": "⠠⠉⠕⠝⠲"
+  }
+]

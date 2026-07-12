@@ -1,0 +1,75 @@
+[
+  {
+    "input": "braille_it_better@learn.org",
+    "internal": "braille.-it.-bett]@ale>n4org",
+    "expected": "323110771740361030403631730305981717282950212327",
+    "unicode": "⠃⠗⠁⠊⠇⠇⠑⠨⠤⠊⠞⠨⠤⠃⠑⠞⠞⠻⠈⠁⠇⠑⠜⠝⠲⠕⠗⠛"
+  },
+  {
+    "input": "children-do-great@teach.net",
+    "internal": "*n-d-gr1t@at1*4net",
+    "expected": "33293625362723230813023350291730",
+    "unicode": "⠡⠝⠤⠙⠤⠛⠗⠂⠞⠈⠁⠞⠂⠡⠲⠝⠑⠞"
+  },
+  {
+    "input": "world@large.com",
+    "internal": "_w@al>ge4com",
+    "expected": "56588172827175092113",
+    "unicode": "⠸⠺⠈⠁⠇⠜⠛⠑⠲⠉⠕⠍"
+  },
+  {
+    "input": "www.rubberchicken.com/menus",
+    "internal": "www4ru2]*ick54com_/m5us",
+    "expected": "585858502337659331095345092113561213343714",
+    "unicode": "⠺⠺⠺⠲⠗⠥⠆⠻⠡⠊⠉⠅⠢⠲⠉⠕⠍⠸⠌⠍⠢⠥⠎"
+  },
+  {
+    "input": "www.one.in.a.hundred.org",
+    "internal": "www4\"o494a4hundr$4org",
+    "expected": "58585850162150205015019372925234350212327",
+    "unicode": "⠺⠺⠺⠲⠐⠕⠲⠔⠲⠁⠲⠓⠥⠝⠙⠗⠫⠲⠕⠗⠛"
+  },
+  {
+    "input": "http://www.99chances.com",
+    "internal": "http3_/_/www4#ii;'*.es4com",
+    "expected": "19303015185612561258585850601010484334017145092113",
+    "unicode": "⠓⠞⠞⠏⠒⠸⠌⠸⠌⠺⠺⠺⠲⠼⠊⠊⠰⠄⠡⠨⠑⠎⠲⠉⠕⠍"
+  },
+  {
+    "input": "c:\\brailledocuments\\letters.txt",
+    "internal": "c3_*brailledocu;ts_*lett]s4txt",
+    "expected": "91856333231107717252193748301456337173030591450304530",
+    "unicode": "⠉⠒⠸⠡⠃⠗⠁⠊⠇⠇⠑⠙⠕⠉⠥⠰⠞⠎⠸⠡⠇⠑⠞⠞⠻⠎⠲⠞⠭⠞"
+  },
+  {
+    "input": "c:\\contractions\\wordsigns.doc",
+    "internal": "c3_*contrac;ns_*^wsigns4doc",
+    "expected": "9185633921293023194829145633245814102729145025219",
+    "unicode": "⠉⠒⠸⠡⠉⠕⠝⠞⠗⠁⠉⠰⠝⠎⠸⠡⠘⠺⠎⠊⠛⠝⠎⠲⠙⠕⠉"
+  },
+  {
+    "input": "c:\\InfoForSteven\\PhoneNumbers.xls",
+    "internal": "c3_*,9fo,=,/ev5_*,ph\"o,numb]s4xls",
+    "expected": "918563332201121326332121739345633321519162132293713359145045714",
+    "unicode": "⠉⠒⠸⠡⠠⠔⠋⠕⠠⠿⠠⠌⠑⠧⠢⠸⠡⠠⠏⠓⠐⠕⠠⠝⠥⠍⠃⠻⠎⠲⠭⠇⠎"
+  },
+  {
+    "input": "c:\\ideas\\child-of-the-sea.doc",
+    "internal": "c3_*id1s_**ild-(-!-sea4doc",
+    "expected": "91856331025214563333107253655364636141715025219",
+    "unicode": "⠉⠒⠸⠡⠊⠙⠂⠎⠸⠡⠡⠊⠇⠙⠤⠷⠤⠮⠤⠎⠑⠁⠲⠙⠕⠉"
+  },
+  {
+    "input": "c:\\poem ideas\\my child's smile.doc",
+    "context": "english",
+    "internal": "c3_*poem id1s_*my *'s smile4doc",
+    "expected": "918563315211713010252145633136103341401413107175025219",
+    "unicode": "⠉⠒⠸⠡⠏⠕⠑⠍⠀⠊⠙⠂⠎⠸⠡⠍⠽⠀⠡⠄⠎⠀⠎⠍⠊⠇⠑⠲⠙⠕⠉"
+  },
+  {
+    "input": "c:\\2010DIARY\\March.txt",
+    "internal": "c3_*#bjaj;',,di>y_*,m>*4txt",
+    "expected": "91856336032612648432322510286156333213283350304530",
+    "unicode": "⠉⠒⠸⠡⠼⠃⠚⠁⠚⠰⠄⠠⠠⠙⠊⠜⠽⠸⠡⠠⠍⠜⠡⠲⠞⠭⠞"
+  }
+]

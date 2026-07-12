@@ -1,9 +1,21 @@
 use crate::english::encode_english;
 use crate::number::encode_number;
 use crate::rules::context::EncoderState;
+use crate::rules::english_ueb::contraction::{ContractionMatch, ContractionRule};
+use crate::rules::english_ueb::pronunciation::cmudict::{CmuDictProvider, is_recorded_word};
+use crate::rules::english_ueb::rule_10_3::StrongContractionRule;
+use crate::rules::english_ueb::rule_10_4::StrongGroupsignRule;
+use crate::rules::english_ueb::rule_10_6::{LowerGroupsignRule, middle_lower_groupsign};
+use crate::rules::english_ueb::rule_10_7::InitialContractionRule;
+use crate::rules::english_ueb::rule_10_7_pron::InitialContractionPronunciationRule;
+use crate::rules::english_ueb::rule_10_8::FinalGroupsignRule;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::unicode::decode_unicode;
+use std::sync::LazyLock;
+
+static DIGITAL_INITIAL_PRON_RULE: LazyLock<InitialContractionPronunciationRule> =
+    LazyLock::new(|| InitialContractionPronunciationRule::new(Box::new(CmuDictProvider::new())));
 
 pub struct DigitalNotationRule;
 
@@ -26,16 +38,20 @@ impl TokenRule for DigitalNotationRule {
             return Ok(TokenAction::Noop);
         };
 
-        if !has_digital_signature(word.text.as_ref()) {
+        if !(has_digital_signature(word.text.as_ref())
+            || _state.english_indicator
+                && !word.meta.has_korean
+                && has_english_www_signature(word.text.as_ref()))
+        {
             return Ok(TokenAction::Noop);
         }
 
-        let bytes = encode_digital_word(word.text.as_ref())?;
+        let bytes = encode_digital_word(word.text.as_ref(), _state.english_indicator)?;
         Ok(TokenAction::Replace(Token::PreEncoded(bytes)))
     }
 }
 
-fn has_digital_signature(text: &str) -> bool {
+pub(crate) fn has_digital_signature(text: &str) -> bool {
     if !text
         .chars()
         .next()
@@ -43,7 +59,11 @@ fn has_digital_signature(text: &str) -> bool {
     {
         return false;
     }
-    if text.contains("//") || text.contains('@') || text.contains('#') {
+    // NOTE: a bare `www.` host (no `//`) is NOT a context-free digital signature:
+    // Korean 제39/74항 URLs without a scheme keep ordinary english-in-korean
+    // encoding. English UEB §10.12.3 opts such hosts into this path through
+    // `has_english_www_signature` in `apply`, using the encoder-state flag.
+    if text.contains("//") || text.contains('@') || text.contains('#') || text.contains('\\') {
         return true;
     }
     // 단독 `_`는 일반 부호로 처리. 디지털 표기는 `_`와 다른 디지털 표지(`. / :`)
@@ -51,7 +71,15 @@ fn has_digital_signature(text: &str) -> bool {
     text.contains('_') && (text.contains('.') || text.contains('/') || text.contains(':'))
 }
 
-fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
+fn has_english_www_signature(text: &str) -> bool {
+    text.strip_prefix("www.")
+        .is_some_and(|rest| rest.chars().any(|ch| ch == '.'))
+}
+
+pub(crate) fn encode_digital_word(
+    text: &str,
+    needs_roman_markers: bool,
+) -> Result<Vec<u8>, String> {
     let mut result = Vec::new();
     let chars: Vec<char> = text.chars().collect();
     let mut i = 0usize;
@@ -60,7 +88,7 @@ fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
     let prefix_len = chars
         .iter()
         .take_while(|ch| {
-            ch.is_ascii_alphanumeric() || matches!(**ch, '/' | '#' | '@' | '.' | ':' | '_')
+            ch.is_ascii_alphanumeric() || matches!(**ch, '/' | '\\' | '#' | '@' | '.' | ':' | '_')
         })
         .count();
 
@@ -74,25 +102,35 @@ fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
             while i < digital_chars.len() && digital_chars[i].is_ascii_alphabetic() {
                 i += 1;
             }
-            if !english_started {
+            if start > 0 && digital_chars[start - 1].is_ascii_digit() {
+                result.extend([decode_unicode('⠰'), decode_unicode('⠄')]);
+            }
+            if needs_roman_markers && !english_started {
                 result.push(decode_unicode('⠴'));
                 english_started = true;
             }
-            encode_digital_english_segment(&digital_chars[start..i], &mut result)?;
+            encode_digital_english_segment(
+                &digital_chars[start..i],
+                &mut result,
+                digital_segment_stands_alone(&chars, start, i),
+            )?;
             continue;
         }
 
-        if ch.is_ascii_digit() {
-            if i > 0 && digital_chars[i - 1].is_ascii_alphabetic() {
-                result.push(decode_unicode('⠐'));
-                result.push(0);
+        match ch {
+            digit if digit.is_ascii_digit() => {
+                if i > 0 && digital_chars[i - 1].is_ascii_alphabetic() {
+                    result.push(decode_unicode('⠐'));
+                    result.push(0);
+                }
+                result.push(decode_unicode('⠼'));
+                while i < digital_chars.len() && digital_chars[i].is_ascii_digit() {
+                    result.push(encode_number(digital_chars[i])?);
+                    i += 1;
+                }
+                continue;
             }
-            result.push(decode_unicode('⠼'));
-            while i < digital_chars.len() && digital_chars[i].is_ascii_digit() {
-                result.push(encode_number(digital_chars[i])?);
-                i += 1;
-            }
-            continue;
+            _ => {}
         }
 
         // line 51 filter restricts ch to alphanumeric + `/#@.:_`. Alphanumerics
@@ -102,6 +140,9 @@ fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
         if ch == '/' {
             result.push(decode_unicode('⠸'));
             result.push(decode_unicode('⠌'));
+        } else if ch == '\\' {
+            result.push(decode_unicode('⠸'));
+            result.push(decode_unicode('⠡'));
         } else if ch == '#' {
             result.push(decode_unicode('⠸'));
             result.push(decode_unicode('⠹'));
@@ -123,7 +164,10 @@ fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
         i += 1;
     }
 
-    if prefix_len == chars.len() && chars.last().is_some_and(|ch| ch.is_ascii_alphabetic()) {
+    if needs_roman_markers
+        && prefix_len == chars.len()
+        && chars.last().is_some_and(|ch| ch.is_ascii_alphabetic())
+    {
         result.push(decode_unicode('⠲'));
     }
 
@@ -131,6 +175,7 @@ fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
         if digital_chars
             .last()
             .is_some_and(|ch| ch.is_ascii_alphabetic())
+            && needs_roman_markers
         {
             result.push(decode_unicode('⠲'));
         }
@@ -141,66 +186,114 @@ fn encode_digital_word(text: &str) -> Result<Vec<u8>, String> {
     Ok(result)
 }
 
-fn encode_digital_english_segment(chars: &[char], result: &mut Vec<u8>) -> Result<(), String> {
-    let mut i = 0usize;
-    while i < chars.len() {
-        let rest: String = chars[i..].iter().collect();
-        if rest.starts_with("ment") {
-            result.push(decode_unicode('⠰'));
-            result.push(decode_unicode('⠞'));
-            i += 4;
+/// Best UEB contraction at `pos` for digital-notation English, reusing the shared
+/// contraction rules — §10.3 strong contractions; §10.4 strong groupsigns;
+/// §10.7 initial-letter contractions (spelling-only plus pronunciation-gated);
+/// §10.8 final groupsigns; §10.6 unrestricted lower groupsigns; and §10.6.5
+/// middle lower groupsigns. Longest match wins, ties by lower priority (§10.10).
+/// A middle lower sign yields to a strong/final sign claiming its second letter
+/// (§10.10.5 preference, [`outranked_at`]): `learn` → `l e ar n`, while `korean`
+/// → `kor⠂n` keeps the medial `ea`.
+fn best_digital_groupsign(chars: &[char], pos: usize) -> Option<ContractionMatch> {
+    [
+        StrongContractionRule.try_match(chars, pos),
+        StrongGroupsignRule.try_match(chars, pos),
+        InitialContractionRule.try_match(chars, pos),
+        DIGITAL_INITIAL_PRON_RULE.try_match(chars, pos),
+        FinalGroupsignRule.try_match(chars, pos),
+        LowerGroupsignRule.try_match(chars, pos),
+        middle_lower_groupsign(chars, pos)
+            .filter(|_| !crate::rules::english_ueb::rule_10_6_middle::outranked_at(chars, pos + 1)),
+    ]
+    .into_iter()
+    .flatten()
+    .filter(|m| {
+        // §10.12.3 computer material uses ordinary contractions, but §10.11 still
+        // bars a groupsign that bridges a component seam: `braille|documents`
+        // spells `ed`, while run-initial `edu...` and final `hundred` keep `ed`.
+        m.cells.as_slice() != [decode_unicode('⠫')] || !ed_bridges_digital_component(chars, pos)
+    })
+    .max_by_key(|m| (m.consumed, u16::MAX - m.priority))
+}
+
+fn encode_digital_english_segment(
+    chars: &[char],
+    result: &mut Vec<u8>,
+    whole_shortforms_allowed: bool,
+) -> Result<(), String> {
+    if let Some(bounds) = camel_component_bounds(chars)
+        && bounds.len() > 2
+    {
+        for window in bounds.windows(2) {
+            encode_digital_english_segment(&chars[window[0]..window[1]], result, false)?;
+        }
+        return Ok(());
+    }
+
+    if chars.len() > 1 && chars.iter().all(|ch| ch.is_ascii_uppercase()) {
+        result.extend([decode_unicode('⠠'), decode_unicode('⠠')]);
+    } else if chars.first().is_some_and(|ch| ch.is_ascii_uppercase()) {
+        result.push(decode_unicode('⠠'));
+    }
+    let lower: Vec<char> = chars.iter().map(|ch| ch.to_ascii_lowercase()).collect();
+    if whole_shortforms_allowed
+        && let Some(cells) = crate::rules::english_ueb::rule_10_9::whole_word_cells(
+            &lower.iter().collect::<String>(),
+        )
+    {
+        result.extend(cells);
+        return Ok(());
+    }
+    let mut i = lower.len() - lower.len();
+    loop {
+        if i >= lower.len() {
+            break;
+        }
+        if let Some(m) = best_digital_groupsign(&lower, i) {
+            result.extend_from_slice(&m.cells);
+            i += m.consumed;
             continue;
         }
-        if rest.starts_with("ing") {
-            result.push(decode_unicode('⠬'));
-            i += 3;
-            continue;
-        }
-        if rest.starts_with("con") {
-            result.push(decode_unicode('⠒'));
-            i += 3;
-            continue;
-        }
-        if rest.starts_with("ea") && chars.get(i + 2).is_some_and(|ch| ch.is_ascii_alphabetic()) {
-            result.push(decode_unicode('⠂'));
-            i += 2;
-            continue;
-        }
-        if rest.starts_with("en") {
-            result.push(decode_unicode('⠢'));
-            i += 2;
-            continue;
-        }
-        if rest.starts_with("ar") {
-            result.push(decode_unicode('⠜'));
-            i += 2;
-            continue;
-        }
-        if rest.starts_with("er") {
-            result.push(decode_unicode('⠻'));
-            i += 2;
-            continue;
-        }
-        if rest.starts_with("ou") {
-            result.push(decode_unicode('⠳'));
-            i += 2;
-            continue;
-        }
-        if rest.starts_with("ow") {
-            result.push(decode_unicode('⠪'));
-            i += 2;
-            continue;
-        }
-        if rest.starts_with("th") {
-            result.push(decode_unicode('⠹'));
-            i += 2;
-            continue;
-        }
-        let encoded_letter = encode_english(chars[i])?;
-        result.push(encoded_letter);
+        result.push(encode_english(lower[i])?);
         i += 1;
     }
     Ok(())
+}
+
+fn ed_bridges_digital_component(chars: &[char], pos: usize) -> bool {
+    let seam = pos + 1;
+    if pos == 0 || pos + 2 >= chars.len() {
+        return false;
+    }
+    let word: String = chars.iter().collect();
+    if crate::rules::english_ueb::compound::compound_seams(&word).contains(&seam) {
+        return true;
+    }
+    let left: String = chars[..seam].iter().collect();
+    let right: String = chars[seam..].iter().collect();
+    left.len() >= 3 && right.len() >= 3 && is_recorded_word(&left) && is_recorded_word(&right)
+}
+
+fn digital_segment_stands_alone(chars: &[char], start: usize, end: usize) -> bool {
+    (start == 0 || is_standing_alone_delimiter(chars[start - 1]))
+        && (end == chars.len() || is_standing_alone_delimiter(chars[end]))
+}
+
+fn is_standing_alone_delimiter(ch: char) -> bool {
+    matches!(ch, ' ' | '-' | '\u{2013}' | '\u{2014}')
+}
+
+fn camel_component_bounds(chars: &[char]) -> Option<Vec<usize>> {
+    let mut bounds = vec![0];
+    for i in 1..chars.len() {
+        if chars[i].is_ascii_uppercase() && chars[i - 1].is_ascii_lowercase() {
+            bounds.push(i);
+        }
+    }
+    (bounds.len() > 1).then(|| {
+        bounds.push(chars.len());
+        bounds
+    })
 }
 
 #[cfg(test)]
@@ -208,6 +301,13 @@ mod tests {
     use super::*;
     use crate::rules::token::{SpaceKind, WordMeta, WordToken};
     use std::borrow::Cow;
+
+    fn encode_segment(text: &str, whole_shortforms_allowed: bool) -> Vec<u8> {
+        let chars: Vec<char> = text.chars().collect();
+        let mut buf = Vec::new();
+        encode_digital_english_segment(&chars, &mut buf, whole_shortforms_allowed).unwrap();
+        buf
+    }
 
     fn word_token<'a>(text: &str) -> Token<'a> {
         let chars: Vec<char> = text.chars().collect();
@@ -273,46 +373,64 @@ mod tests {
     }
 
     #[test]
+    fn apply_bare_www_host_replaces_only_in_english_mode() {
+        let r = DigitalNotationRule;
+        let tokens = vec![word_token("www.example.org")];
+
+        let mut english_state = EncoderState::new(true);
+        assert!(matches!(
+            r.apply(&tokens, 0, &mut english_state).unwrap(),
+            TokenAction::Replace(Token::PreEncoded(_))
+        ));
+
+        let mut korean_state = EncoderState::new(false);
+        assert!(matches!(
+            r.apply(&tokens, 0, &mut korean_state).unwrap(),
+            TokenAction::Noop
+        ));
+    }
+
+    #[test]
     fn encode_digital_word_email() {
-        let result = encode_digital_word("a@b").unwrap();
+        let result = encode_digital_word("a@b", false).unwrap();
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_digital_word_hashtag() {
-        let result = encode_digital_word("a#b").unwrap();
+        let result = encode_digital_word("a#b", false).unwrap();
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_digital_word_underscore_dot() {
-        let result = encode_digital_word("a_b.c").unwrap();
+        let result = encode_digital_word("a_b.c", false).unwrap();
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_digital_word_colon_path() {
-        let result = encode_digital_word("foo:bar").unwrap();
+        let result = encode_digital_word("foo:bar", false).unwrap();
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_digital_word_mixed_alpha_digit_transitions() {
         // English then digit → triggers ⠐ + space prefix logic (line 71-74)
-        let result = encode_digital_word("abc123").unwrap();
+        let result = encode_digital_word("abc123", false).unwrap();
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_digital_word_pure_digit_starts() {
-        let result = encode_digital_word("123#abc").unwrap();
+        let result = encode_digital_word("123#abc", false).unwrap();
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_digital_word_ends_with_alpha_appends_terminator() {
         // Pure URL ending with alpha; line 107-109 path
-        let result = encode_digital_word("a#b").unwrap();
+        let result = encode_digital_word("a#b", true).unwrap();
         // last alpha + appended terminator
         assert!(result.last().copied().is_some());
     }
@@ -321,7 +439,7 @@ mod tests {
     fn encode_digital_word_with_korean_suffix() {
         // prefix_len < chars.len() → lines 111-117
         // "a@b가" — `a@b` is digital prefix, `가` is Korean suffix
-        let result = encode_digital_word("a@b가").unwrap();
+        let result = encode_digital_word("a@b가", true).unwrap();
         assert!(!result.is_empty());
     }
 
@@ -340,8 +458,43 @@ mod tests {
     fn encode_digital_english_segment_all_abbreviations(#[case] case: &str) {
         let chars: Vec<char> = case.chars().collect();
         let mut buf = Vec::new();
-        encode_digital_english_segment(&chars, &mut buf).unwrap();
+        encode_digital_english_segment(&chars, &mut buf, false).unwrap();
         assert!(!buf.is_empty(), "{case} should encode");
+    }
+
+    /// §10.12.3 computer material reuses the shared contraction rules instead of
+    /// direct word literals: §10.3 `for`, §10.7 initial-letter signs, §10.9.1
+    /// standing-alone shortforms, and the §10.11 `ed` bridge filter.
+    #[rstest::rstest]
+    #[case::initial_one("one", false, "⠐⠕")]
+    #[case::strong_for("for", false, "⠿")]
+    #[case::run_initial_ed("edu", false, "⠫⠥")]
+    #[case::shortform_children("children", true, "⠡⠝")]
+    #[case::friend_not_standing_alone("friend", false, "⠋⠗⠊⠢⠙")]
+    #[case::initial_world("world", false, "⠸⠺")]
+    #[case::initial_word_prefix("wordsigns", false, "⠘⠺⠎⠊⠛⠝⠎")]
+    #[case::compound_internal_ed("brailledocuments", false, "⠃⠗⠁⠊⠇⠇⠑⠙⠕⠉⠥⠰⠞⠎")]
+    fn digital_segment_uses_shared_ueb_rules(
+        #[case] text: &str,
+        #[case] whole_shortforms_allowed: bool,
+        #[case] expected: &str,
+    ) {
+        let expected_cells: Vec<u8> = expected.chars().map(decode_unicode).collect();
+        assert_eq!(
+            encode_segment(text, whole_shortforms_allowed),
+            expected_cells
+        );
+    }
+
+    #[test]
+    fn digital_segment_standing_alone_accepts_runtime_right_delimiter() {
+        let chars: Vec<char> = std::hint::black_box("x-y").chars().collect();
+
+        assert!(digital_segment_stands_alone(
+            &chars,
+            std::hint::black_box(0),
+            std::hint::black_box(1)
+        ));
     }
 
     #[test]
@@ -349,7 +502,7 @@ mod tests {
         // Single letter — no digraph match → falls to single-letter encode (line 177)
         let chars: Vec<char> = "z".chars().collect();
         let mut buf = Vec::new();
-        encode_digital_english_segment(&chars, &mut buf).unwrap();
+        encode_digital_english_segment(&chars, &mut buf, false).unwrap();
         assert!(!buf.is_empty());
     }
 
@@ -422,5 +575,72 @@ mod tests {
         let _ = crate::encode("e//f");
         let _ = crate::encode("g_h.i");
         let _ = crate::encode("x_y:z");
+    }
+
+    #[test]
+    fn digital_word_digit_after_letter_inserts_numeric_separator() {
+        let encoded = encode_digital_word("a1", false).expect("a1 should encode");
+        let expected: Vec<u8> = "⠁⠐⠀⠼⠁".chars().map(decode_unicode).collect();
+
+        assert_eq!(encoded, expected);
+    }
+
+    #[test]
+    fn digital_word_starting_digit_enters_digit_branch() {
+        let encoded = encode_digital_word("1a", false).expect("1a should encode");
+        let expected: Vec<u8> = "⠼⠁⠰⠄⠁".chars().map(decode_unicode).collect();
+
+        assert_eq!(encoded, expected);
+    }
+
+    #[test]
+    fn digital_word_digit_after_symbol_enters_digit_branch_without_separator() {
+        let encoded = encode_digital_word("a.1", false).expect("a.1 should encode");
+        let expected: Vec<u8> = "⠁⠲⠼⠁".chars().map(decode_unicode).collect();
+
+        assert_eq!(encoded, expected);
+    }
+
+    #[test]
+    fn digital_word_letters_without_shortform_walk_per_characters() {
+        let encoded = encode_digital_word("abc@def", false).expect("digital word should encode");
+
+        assert!(!encoded.is_empty());
+    }
+
+    #[test]
+    fn digital_english_segment_allows_shortforms_but_walks_non_shortform_letters() {
+        let chars: Vec<char> = std::hint::black_box("xyz").chars().collect();
+        let mut result = Vec::new();
+
+        encode_digital_english_segment(&chars, &mut result, std::hint::black_box(true)).unwrap();
+
+        assert_eq!(
+            result,
+            vec![
+                encode_english('x').unwrap(),
+                encode_english('y').unwrap(),
+                encode_english('z').unwrap()
+            ]
+        );
+    }
+
+    #[test]
+    fn digital_english_segment_without_shortform_walks_from_start() {
+        let chars: Vec<char> = std::hint::black_box("word").chars().collect();
+        let mut result = Vec::new();
+
+        encode_digital_english_segment(&chars, &mut result, false).unwrap();
+
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn digital_english_segment_accepts_empty_component() {
+        let mut result = Vec::new();
+
+        encode_digital_english_segment(&[], &mut result, false).unwrap();
+
+        assert!(result.is_empty());
     }
 }

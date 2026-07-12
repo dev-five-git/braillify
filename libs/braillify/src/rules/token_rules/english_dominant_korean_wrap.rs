@@ -476,6 +476,19 @@ mod tests {
         assert!(!same_token_right_is_english(&[]));
     }
 
+    #[test]
+    fn find_korean_segments_collects_embedded_korean_runs() {
+        let chars: Vec<char> = "A한글.B국".chars().collect();
+
+        let segments = find_korean_segments(&chars);
+
+        assert_eq!(segments.len(), 2);
+        assert_eq!(segments[0].char_start, 1);
+        assert_eq!(segments[0].char_end, 3);
+        assert_eq!(segments[1].char_start, 5);
+        assert_eq!(segments[1].char_end, 6);
+    }
+
     /// english_dominant_korean_wrap:257 — `count_script_words` `_ => {}` arm:
     /// `first_script_char` returns Some non-alpha non-Korean OR None.
     /// Build a token slice that exercises this arm directly via the function.
@@ -484,7 +497,13 @@ mod tests {
         // First-script-char for a pure-digit/symbol word → not Korean, not alpha.
         // WordMeta marks it as starts_with_ascii=true for ascii digits,
         // so first_script_char returns Some('1') which is not alpha and not Korean.
-        let tokens = vec![word("english"), word("한국"), word("123"), word("more")];
+        let tokens = vec![
+            word("english"),
+            word("한국"),
+            word("123"),
+            word("..."),
+            word("more"),
+        ];
         let (eng, kor) = count_script_words(&tokens);
         assert_eq!(eng, 2);
         assert_eq!(kor, 1);

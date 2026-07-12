@@ -84,13 +84,6 @@ mod tests {
     }
 
     #[test]
-    fn golden_test_alignment() {
-        // "5운6기" → ⠼⠑ + space + 운 + ⠼⠋ + 기
-        let result = crate::encode_to_unicode("5운6기").unwrap();
-        assert_eq!(result, "⠼⠑⠀⠛⠼⠋⠈⠕");
-    }
-
-    #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "44");
         assert_eq!(META.name, "number_korean_spacing");

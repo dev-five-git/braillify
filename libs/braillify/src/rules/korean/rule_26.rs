@@ -103,6 +103,7 @@ mod tests {
     fn apply_standalone_i_after_hanja() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("火ㅣ", false);
         let mut ctx = owned.ctx_at(1);
+        assert!(Rule26.matches(&ctx));
         let outcome = Rule26.apply(&mut ctx).unwrap();
         assert!(matches!(outcome, RuleResult::Consumed));
         assert!(!owned.result.is_empty());
@@ -114,6 +115,7 @@ mod tests {
     fn apply_emits_for_legacy_symbol_in_mappings() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("烽", false);
         let mut ctx = owned.ctx_at(0);
+        assert!(Rule26.matches(&ctx));
         let outcome = Rule26.apply(&mut ctx).unwrap();
         assert!(matches!(outcome, RuleResult::Consumed));
         assert!(!owned.result.is_empty());

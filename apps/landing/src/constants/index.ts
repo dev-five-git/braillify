@@ -1,4 +1,4 @@
-import { TestCaseFilter } from '@/components/test-case/TestCaseProvider'
+import type { TestCaseFilter } from '@/components/test-case/TestCaseProvider'
 
 export const TEST_CASE_FILTERS: { label: string; value: TestCaseFilter }[] = [
   { label: '한글', value: 'korean' },
@@ -12,8 +12,8 @@ export const TEST_CASE_FILTERS: { label: string; value: TestCaseFilter }[] = [
     value: 'music',
   },
   {
-    label: '서양',
-    value: 'western',
+    label: '영어 표준 점자',
+    value: 'english',
   },
   {
     label: '외국어',
@@ -38,7 +38,7 @@ export const CATEGORY_PREFIX_MAP: Record<string, TestCaseFilter> = {
   'math/': 'math',
   'science/': 'science',
   'music/': 'music',
-  'western/': 'western',
+  'english/': 'english',
   'foreign-language/': 'foreign-language',
   'ipa/': 'ipa',
   'corpus/': 'corpus',
@@ -58,7 +58,7 @@ export function createFilterMap(
     math: [],
     science: [],
     music: [],
-    western: [],
+    english: [],
     'foreign-language': [],
     ipa: [],
     corpus: [],
@@ -87,7 +87,7 @@ export const FILTER_MAP: Record<TestCaseFilter, string[]> = {
   math: [],
   science: [],
   music: [],
-  western: [],
+  english: [],
   'foreign-language': [],
   ipa: [],
   corpus: [],

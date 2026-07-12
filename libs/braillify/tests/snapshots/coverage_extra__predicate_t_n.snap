@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
 expression: rendered
 ---
 input  = "T(n)"
-unicode = ok: "⠞⠦⠝⠴"
-bytes   = ok: [30, 38, 29, 52]
+unicode = ok: "⠠⠞⠐⠣⠝⠐⠜"
+bytes   = ok: [32, 30, 16, 35, 29, 16, 28]

@@ -1,0 +1,50 @@
+[
+  {
+    "input": "living room:  pioneer blue",
+    "internal": "liv+ room3 pione] blue",
+    "expected": "71039440232121131801510212917590373717",
+    "unicode": "⠇⠊⠧⠬⠀⠗⠕⠕⠍⠒⠀⠏⠊⠕⠝⠑⠻⠀⠃⠇⠥⠑"
+  },
+  {
+    "input": "dining room:    〃    〃",
+    "internal": "d9+ room3    \"1    \"1",
+    "expected": "2520440232121131800001620000162",
+    "unicode": "⠙⠔⠬⠀⠗⠕⠕⠍⠒⠀⠀⠀⠀⠐⠂⠀⠀⠀⠀⠐⠂"
+  },
+  {
+    "input": "kitchen:       〃   yellow",
+    "internal": "kit*53       \"1   yell[",
+    "expected": "51030333418000000016200061177742",
+    "unicode": "⠅⠊⠞⠡⠢⠒⠀⠀⠀⠀⠀⠀⠀⠐⠂⠀⠀⠀⠽⠑⠇⠇⠪"
+  },
+  {
+    "input": "Mon 10-12 study 2-4 Eng",
+    "internal": ",mon #aj-#ab /udy #b-#d ,5g",
+    "expected": "3213212906012636601301237256106033660250323427",
+    "unicode": "⠠⠍⠕⠝⠀⠼⠁⠚⠤⠼⠁⠃⠀⠌⠥⠙⠽⠀⠼⠃⠤⠼⠙⠀⠠⠢⠛"
+  },
+  {
+    "input": "Tues  〃     〃   〃    〃",
+    "internal": ",tues  \"1     \"1   \"1    \"1",
+    "expected": "323037171400162000001620001620000162",
+    "unicode": "⠠⠞⠥⠑⠎⠀⠀⠐⠂⠀⠀⠀⠀⠀⠐⠂⠀⠀⠀⠐⠂⠀⠀⠀⠀⠐⠂"
+  },
+  {
+    "input": "Wed    〃   Science 〃   Art",
+    "internal": ",w$    \"1   ,sci;e \"1   ,>t",
+    "expected": "3258430000162000321491048170162000322830",
+    "unicode": "⠠⠺⠫⠀⠀⠀⠀⠐⠂⠀⠀⠀⠠⠎⠉⠊⠰⠑⠀⠐⠂⠀⠀⠀⠠⠜⠞"
+  },
+  {
+    "input": "Anne – village girl",
+    "internal": ",anne ,- village girl",
+    "expected": "3212929170323603910771271702710237",
+    "unicode": "⠠⠁⠝⠝⠑⠀⠠⠤⠀⠧⠊⠇⠇⠁⠛⠑⠀⠛⠊⠗⠇"
+  },
+  {
+    "input": "Joan – 〃      〃",
+    "internal": ",joan ,- \"1      \"1",
+    "expected": "322621129032360162000000162",
+    "unicode": "⠠⠚⠕⠁⠝⠀⠠⠤⠀⠐⠂⠀⠀⠀⠀⠀⠀⠐⠂"
+  }
+]

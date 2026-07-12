@@ -125,4 +125,12 @@ mod tests {
         let ctx = owned.ctx_at(0);
         let _ = Rule21.matches(&ctx);
     }
+
+    #[test]
+    fn matches_old_consonant_body_symbol() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("ㅥ", false);
+        let ctx = owned.ctx_at(0);
+
+        assert!(Rule21.matches(&ctx));
+    }
 }

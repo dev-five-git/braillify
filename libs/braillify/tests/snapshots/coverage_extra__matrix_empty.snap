@@ -3,5 +3,5 @@ source: libs/braillify/tests/coverage_extra.rs
 expression: rendered
 ---
 input  = "$\\begin{matrix} \\end{matrix}$"
-unicode = ok: "⠍⠁⠞⠗⠊⠭⠍⠁⠞⠗⠊⠭"
-bytes   = ok: [13, 1, 30, 23, 10, 45, 13, 1, 30, 23, 10, 45]
+unicode = ok: "⠦⠴"
+bytes   = ok: [38, 52]

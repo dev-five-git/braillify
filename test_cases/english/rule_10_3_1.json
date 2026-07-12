@@ -1,0 +1,320 @@
+[
+  {
+    "input": "afford",
+    "internal": "af=d",
+    "expected": "1116325",
+    "unicode": "⠁⠋⠿⠙"
+  },
+  {
+    "input": "andante",
+    "internal": "&ante",
+    "expected": "471293017",
+    "unicode": "⠯⠁⠝⠞⠑"
+  },
+  {
+    "input": "Athens",
+    "internal": ",a!ns",
+    "expected": "321462914",
+    "unicode": "⠠⠁⠮⠝⠎"
+  },
+  {
+    "input": "bathed",
+    "internal": "ba!d",
+    "expected": "314625",
+    "unicode": "⠃⠁⠮⠙"
+  },
+  {
+    "input": "bother",
+    "internal": "bo!r",
+    "expected": "3214623",
+    "unicode": "⠃⠕⠮⠗"
+  },
+  {
+    "input": "coffee",
+    "internal": "c(fee",
+    "expected": "955111717",
+    "unicode": "⠉⠷⠋⠑⠑"
+  },
+  {
+    "input": "comfort",
+    "internal": "com=t",
+    "expected": "921136330",
+    "unicode": "⠉⠕⠍⠿⠞"
+  },
+  {
+    "input": "England",
+    "internal": ",5gl&",
+    "expected": "323427747",
+    "unicode": "⠠⠢⠛⠇⠯"
+  },
+  {
+    "input": "Esther",
+    "internal": ",es!r",
+    "expected": "3217144623",
+    "unicode": "⠠⠑⠎⠮⠗"
+  },
+  {
+    "input": "forgo",
+    "internal": "=go",
+    "expected": "632721",
+    "unicode": "⠿⠛⠕"
+  },
+  {
+    "input": "forthwith",
+    "internal": "=?)",
+    "expected": "635762",
+    "unicode": "⠿⠹⠾"
+  },
+  {
+    "input": "Fortran",
+    "internal": ",=tran",
+    "expected": "32633023129",
+    "unicode": "⠠⠿⠞⠗⠁⠝"
+  },
+  {
+    "input": "furthest",
+    "internal": "fur!/",
+    "expected": "1137234612",
+    "unicode": "⠋⠥⠗⠮⠌"
+  },
+  {
+    "input": "Geoffrey",
+    "internal": ",ge(frey",
+    "expected": "3227175511231761",
+    "unicode": "⠠⠛⠑⠷⠋⠗⠑⠽"
+  },
+  {
+    "input": "grandad",
+    "internal": "gr&ad",
+    "expected": "272347125",
+    "unicode": "⠛⠗⠯⠁⠙"
+  },
+  {
+    "input": "grandmother",
+    "internal": "gr&\"m",
+    "expected": "2723471613",
+    "unicode": "⠛⠗⠯⠐⠍"
+  },
+  {
+    "input": "lofty",
+    "internal": "l(ty",
+    "expected": "7553061",
+    "unicode": "⠇⠷⠞⠽"
+  },
+  {
+    "input": "Matthew",
+    "internal": ",mat!w",
+    "expected": "32131304658",
+    "unicode": "⠠⠍⠁⠞⠮⠺"
+  },
+  {
+    "input": "meander",
+    "internal": "me&]",
+    "expected": "13174759",
+    "unicode": "⠍⠑⠯⠻"
+  },
+  {
+    "input": "merchandise",
+    "internal": "m]*&ise",
+    "expected": "13593347101417",
+    "unicode": "⠍⠻⠡⠯⠊⠎⠑"
+  },
+  {
+    "input": "nevertheless",
+    "internal": "n\"e!.s",
+    "expected": "291617464014",
+    "unicode": "⠝⠐⠑⠮⠨⠎"
+  },
+  {
+    "input": "often",
+    "internal": "(t5",
+    "expected": "553034",
+    "unicode": "⠷⠞⠢"
+  },
+  {
+    "input": "pandemic",
+    "internal": "p&emic",
+    "expected": "15471713109",
+    "unicode": "⠏⠯⠑⠍⠊⠉"
+  },
+  {
+    "input": "pandowdy",
+    "internal": "p&[dy",
+    "expected": "1547422561",
+    "unicode": "⠏⠯⠪⠙⠽"
+  },
+  {
+    "input": "Parthenon",
+    "internal": ",p>!non",
+    "expected": "32152846292129",
+    "unicode": "⠠⠏⠜⠮⠝⠕⠝"
+  },
+  {
+    "input": "Pforzheimer",
+    "internal": ",p=zheim]",
+    "expected": "321563531917101359",
+    "unicode": "⠠⠏⠿⠵⠓⠑⠊⠍⠻"
+  },
+  {
+    "input": "pianoforte",
+    "internal": "piano=te",
+    "expected": "151012921633017",
+    "unicode": "⠏⠊⠁⠝⠕⠿⠞⠑"
+  },
+  {
+    "input": "profane",
+    "internal": "pr(ane",
+    "expected": "15235512917",
+    "unicode": "⠏⠗⠷⠁⠝⠑"
+  },
+  {
+    "input": "roof",
+    "internal": "ro(",
+    "expected": "232155",
+    "unicode": "⠗⠕⠷"
+  },
+  {
+    "input": "scythe",
+    "internal": "scy!",
+    "expected": "1496146",
+    "unicode": "⠎⠉⠽⠮"
+  },
+  {
+    "input": "sofa",
+    "internal": "s(a",
+    "expected": "14551",
+    "unicode": "⠎⠷⠁"
+  },
+  {
+    "input": "Swithin",
+    "internal": ",s)9",
+    "expected": "32146220",
+    "unicode": "⠠⠎⠾⠔"
+  },
+  {
+    "input": "theatre",
+    "internal": "!atre",
+    "expected": "461302317",
+    "unicode": "⠮⠁⠞⠗⠑"
+  },
+  {
+    "input": "thee",
+    "internal": "!e",
+    "expected": "4617",
+    "unicode": "⠮⠑"
+  },
+  {
+    "input": "Theresa",
+    "internal": ",!resa",
+    "expected": "32462317141",
+    "unicode": "⠠⠮⠗⠑⠎⠁"
+  },
+  {
+    "input": "tofu",
+    "internal": "t(u",
+    "expected": "305537",
+    "unicode": "⠞⠷⠥"
+  },
+  {
+    "input": "whereof",
+    "internal": "\":(",
+    "expected": "164955",
+    "unicode": "⠐⠱⠷"
+  },
+  {
+    "input": "withe",
+    "internal": ")e",
+    "expected": "6217",
+    "unicode": "⠾⠑"
+  },
+  {
+    "input": "without",
+    "internal": ")\\t",
+    "expected": "625130",
+    "unicode": "⠾⠳⠞"
+  },
+  {
+    "input": "with a knowledge of and respect for the rules",
+    "internal": ") a k ( & respect = ! rules",
+    "expected": "620105055047023171415179300630460233771714",
+    "unicode": "⠾⠀⠁⠀⠅⠀⠷⠀⠯⠀⠗⠑⠎⠏⠑⠉⠞⠀⠿⠀⠮⠀⠗⠥⠇⠑⠎"
+  },
+  {
+    "input": "Thelma's roof will withstand the force of the wind and/or the rain.",
+    "internal": ",!lma's ro( w )/& ! =ce ( ! w9d &_/or ! ra94",
+    "expected": "324671314140232155058062124704606391705504605820250475612212304602312050",
+    "unicode": "⠠⠮⠇⠍⠁⠄⠎⠀⠗⠕⠷⠀⠺⠀⠾⠌⠯⠀⠮⠀⠿⠉⠑⠀⠷⠀⠮⠀⠺⠔⠙⠀⠯⠸⠌⠕⠗⠀⠮⠀⠗⠁⠔⠲"
+  },
+  {
+    "input": "Andy Vandyke proofread the profile.",
+    "internal": ",&y ,v&yke pro(r1d ! pr(ile4",
+    "expected": "3247610323947615170152321552322504601523551071750",
+    "unicode": "⠠⠯⠽⠀⠠⠧⠯⠽⠅⠑⠀⠏⠗⠕⠷⠗⠂⠙⠀⠮⠀⠏⠗⠷⠊⠇⠑⠲"
+  },
+  {
+    "input": "out-of-the-way",
+    "internal": "\\-(-!-way",
+    "expected": "51365536463658161",
+    "unicode": "⠳⠤⠷⠤⠮⠤⠺⠁⠽"
+  },
+  {
+    "input": "apartheid",
+    "internal": "a\"pheid",
+    "expected": "1161519171025",
+    "unicode": "⠁⠐⠏⠓⠑⠊⠙"
+  },
+  {
+    "input": "biofeedback",
+    "internal": "biofe$back",
+    "expected": "310211117433195",
+    "unicode": "⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅"
+  },
+  {
+    "input": "chifforobe",
+    "internal": "*i6orobe",
+    "expected": "331022212321317",
+    "unicode": "⠡⠊⠖⠕⠗⠕⠃⠑"
+  },
+  {
+    "input": "insofar",
+    "internal": "9sof>",
+    "expected": "2014211128",
+    "unicode": "⠔⠎⠕⠋⠜"
+  },
+  {
+    "input": "microfilm",
+    "internal": "microfilm",
+    "expected": "1310923211110713",
+    "unicode": "⠍⠊⠉⠗⠕⠋⠊⠇⠍"
+  },
+  {
+    "input": "northeast",
+    "internal": "nor?1/",
+    "expected": "29212357212",
+    "unicode": "⠝⠕⠗⠹⠂⠌"
+  },
+  {
+    "input": "Sontheimer",
+    "internal": ",sontheim]",
+    "expected": "32142129301917101359",
+    "unicode": "⠠⠎⠕⠝⠞⠓⠑⠊⠍⠻"
+  },
+  {
+    "input": "sweetheart",
+    "internal": "sweethe>t",
+    "expected": "145817173019172830",
+    "unicode": "⠎⠺⠑⠑⠞⠓⠑⠜⠞"
+  },
+  {
+    "input": "thence",
+    "internal": "?;e",
+    "expected": "574817",
+    "unicode": "⠹⠰⠑"
+  },
+  {
+    "input": "twofold",
+    "internal": "twofold",
+    "expected": "3058211121725",
+    "unicode": "⠞⠺⠕⠋⠕⠇⠙"
+  }
+]

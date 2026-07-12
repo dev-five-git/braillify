@@ -259,4 +259,16 @@ mod tests {
         assert!(EncodingMode::from_str("").is_err());
         assert!(EncodingMode::from_str("KOREAN").is_err());
     }
+
+    #[test]
+    fn encoder_state_mode_stack_pushes_and_pops_runtime_mode() {
+        let mut state = EncoderState::new(false);
+        let mode = std::hint::black_box(EncodingMode::English);
+
+        assert_eq!(state.current_mode(), EncodingMode::Korean);
+        state.push_mode(mode);
+        assert_eq!(state.current_mode(), EncodingMode::English);
+        assert_eq!(state.pop_mode(), Some(EncodingMode::English));
+        assert_eq!(state.pop_mode(), None);
+    }
 }

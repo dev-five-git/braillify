@@ -1,0 +1,38 @@
+[
+  {
+    "input": "child\nlike",
+    "internal": "*ild-\nlike",
+    "expected": "331072536\n710517",
+    "unicode": "⠡⠊⠇⠙⠤\n⠇⠊⠅⠑"
+  },
+  {
+    "input": "every\nthing",
+    "internal": "\"ey-\n?+",
+    "expected": "16176136\n5744",
+    "unicode": "⠐⠑⠽⠤\n⠹⠬"
+  },
+  {
+    "input": "further\nmore",
+    "internal": "fur!r-\nmore",
+    "expected": "113723462336\n13212317",
+    "unicode": "⠋⠥⠗⠮⠗⠤\n⠍⠕⠗⠑"
+  },
+  {
+    "input": "out\ncome",
+    "internal": "\\t-\ncome",
+    "expected": "513036\n9211317",
+    "unicode": "⠳⠞⠤\n⠉⠕⠍⠑"
+  },
+  {
+    "input": "stand\nstill",
+    "internal": "/&-\n/ill",
+    "expected": "124736\n121077",
+    "unicode": "⠌⠯⠤\n⠌⠊⠇⠇"
+  },
+  {
+    "input": "which\never",
+    "internal": ":i*-\n\"e",
+    "expected": "49103336\n1617",
+    "unicode": "⠱⠊⠡⠤\n⠐⠑"
+  }
+]

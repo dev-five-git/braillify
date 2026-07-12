@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "F(x+y)"
-unicode = ok: "⠋⠦⠭⠢⠽⠴"
-bytes   = ok: [11, 38, 45, 34, 61, 52]
+unicode = ok: "⠠⠋⠐⠣⠭⠐⠖⠽⠐⠜"
+bytes   = ok: [32, 11, 16, 35, 45, 16, 22, 61, 16, 28]

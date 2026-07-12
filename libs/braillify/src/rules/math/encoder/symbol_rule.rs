@@ -130,7 +130,6 @@ impl MathTokenRule for MathSymbolRule {
             if !matches!(tokens.get(i), Some(MathToken::OpenParen(_))) {
                 // fall through to default handling
             } else {
-                let open_idx = i;
                 i += 1;
                 while matches!(tokens.get(i), Some(MathToken::Space)) {
                     i += 1;
@@ -153,7 +152,6 @@ impl MathTokenRule for MathSymbolRule {
                         result.push(52); // ⠴ (MathParen close)
                         state.prev_was_number = false;
                         let consumed = i + 1 - index;
-                        let _ = open_idx;
                         return Ok(MathTokenResult::Consumed(consumed));
                     }
                 }
@@ -266,14 +264,13 @@ impl MathTokenRule for MathSymbolRule {
             return Ok(MathTokenResult::Consumed(1));
         }
 
+        let next_for_padding = Self::next_non_space(tokens, index + 1);
+        let next_is_pad_neighbor = rule_2::is_algebraic_neighbor(next_for_padding)
+            || matches!(next_for_padding, Some(MathToken::MathSymbol('\u{00AC}')));
         let should_pad = rule_2::needs_binary_spacing(*c)
             && index > 0
             && rule_2::is_algebraic_neighbor(rule_12::prev_non_space(tokens, index))
-            && (rule_2::is_algebraic_neighbor(Self::next_non_space(tokens, index + 1))
-                || matches!(
-                    Self::next_non_space(tokens, index + 1),
-                    Some(MathToken::MathSymbol('\u{00AC}'))
-                ));
+            && next_is_pad_neighbor;
 
         // PDF 수학 제65항 2~3 — ∴/∵는 앞뒤 두 칸씩 띄어 쓴다.
         // 입력에 Space 토큰이 있으면 +1, 없으면 +2 출력해 합계 2를 맞춘다.
@@ -396,7 +393,7 @@ impl MathTokenRule for MathSymbolRule {
             rule_55::encode_nabla_symbol(*c, result)?;
         } else if rule_56::is_integral_symbol(*c) {
             rule_56::encode_integral_symbol(*c, result)?;
-        } else if rule_58::is_double_integral(*c) {
+        } else if *c == '\u{222C}' {
             rule_58::encode_double_integral(*c, result)?;
         } else if rule_59::is_contour_integral(*c) {
             rule_59::encode_contour_integral(*c, result)?;
@@ -1012,6 +1009,151 @@ mod tests {
         let _ = result;
     }
 
+    #[test]
+    fn fullwidth_hash_parenthesized_upper_variable_dispatch() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::{BracketKind, MathToken};
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::UpperVariable('A'),
+            MathToken::CloseParen(BracketKind::MathParen),
+        ];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default()).expect("#(A) should encode");
+
+        assert_eq!(result, vec![56, 57, 38, 32, 1, 52]);
+    }
+
+    #[test]
+    fn fullwidth_hash_spaced_parenthesized_upper_variable_dispatch() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::{BracketKind, MathToken};
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::Space,
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::Space,
+            MathToken::UpperVariable('B'),
+            MathToken::Space,
+            MathToken::CloseParen(BracketKind::MathParen),
+        ];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default()).expect("# (B) should encode");
+
+        assert_eq!(result, vec![56, 57, 38, 32, 3, 52]);
+    }
+
+    #[test]
+    fn fullwidth_hash_followed_by_upper_variable_dispatch() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::MathToken;
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::Space,
+            MathToken::UpperVariable('A'),
+        ];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default()).expect("# A should encode");
+
+        assert_eq!(result, vec![56, 57, 38, 32, 1, 52]);
+    }
+
+    #[test]
+    fn fullwidth_hash_immediately_followed_by_upper_variable_dispatch() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::MathToken;
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::UpperVariable('C'),
+        ];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default()).expect("#C should encode");
+
+        assert_eq!(result, vec![56, 57, 38, 32, 9, 52]);
+    }
+
+    #[test]
+    fn quantifier_before_upper_variable_adds_capital_marker_and_spacing() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::MathToken;
+        let tokens = vec![
+            MathToken::MathSymbol('\u{2200}'),
+            MathToken::UpperVariable('A'),
+            MathToken::Number("1".to_string()),
+        ];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default()).expect("∀A1 should encode");
+
+        assert!(result.windows(2).any(|window| window == [32, 1]));
+        assert_eq!(result.last().copied(), Some(0));
+    }
+
+    #[test]
+    fn binary_operator_pads_before_negated_upper_variable() {
+        use super::super::super::encoder::math_engine_for_context;
+        use super::super::super::math_token_rule::{
+            MathContext, MathEncodeState, MathTokenResult, MathTokenRule,
+        };
+        use super::super::super::parser::MathToken;
+
+        let tokens = vec![
+            MathToken::Variable('a'),
+            MathToken::MathSymbol('\u{2227}'),
+            MathToken::MathSymbol('\u{00AC}'),
+            MathToken::UpperVariable('B'),
+        ];
+        let ctx = MathContext::default();
+        let mut state = MathEncodeState::with_context(false, ctx);
+        let engine = math_engine_for_context(ctx);
+        let mut result = Vec::new();
+
+        let action = super::MathSymbolRule
+            .apply(&tokens, 1, &mut result, &mut state, engine)
+            .expect("operator should encode");
+
+        assert!(matches!(action, MathTokenResult::Consumed(1)));
+        assert_eq!(result.first().copied(), Some(0));
+        assert!(!state.prev_was_number);
+    }
+
+    #[test]
+    fn fullwidth_hash_before_paren_requires_upper_variable_inside() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::{BracketKind, MathToken};
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::Variable('x'),
+            MathToken::CloseParen(BracketKind::MathParen),
+        ];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default())
+            .expect("fullwidth hash should fall through");
+
+        assert!(!result.is_empty());
+
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::UpperVariable('X'),
+        ];
+        let result = enc_ctx_attempt(&tokens, MathContext::default())
+            .expect("fullwidth hash should fall through without close paren");
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn double_integral_dispatch_uses_rule_58() {
+        use super::super::super::math_token_rule::MathContext;
+        use super::super::super::parser::MathToken;
+        let tokens = vec![MathToken::MathSymbol('\u{222C}')];
+
+        let result = enc_ctx_attempt(&tokens, MathContext::default()).expect("∬ should encode");
+
+        assert!(!result.is_empty());
+    }
+
     /// Direct caller for MathSymbolRule.apply over a hand-built token slice.
     fn enc_ctx_attempt(
         tokens: &[super::super::super::parser::MathToken],
@@ -1094,5 +1236,31 @@ mod tests {
         use super::super::super::parser::MathToken;
         let tokens = vec![MathToken::Variable('x')];
         let _ = enc_ctx_attempt(&tokens, MathContext::default());
+    }
+
+    #[test]
+    fn fullwidth_hash_cardinality_allows_spaces_before_paren() {
+        use super::super::super::parser::{BracketKind, MathToken};
+        let tokens = vec![
+            MathToken::MathSymbol(std::hint::black_box('\u{FF03}')),
+            MathToken::Space,
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::UpperVariable('A'),
+            MathToken::CloseParen(BracketKind::MathParen),
+        ];
+
+        assert!(enc_ctx_attempt(&tokens, MathContext::default()).is_ok());
+    }
+
+    #[test]
+    fn fullwidth_hash_cardinality_before_upper_variable() {
+        use super::super::super::parser::MathToken;
+        let tokens = vec![
+            MathToken::MathSymbol('\u{FF03}'),
+            MathToken::Space,
+            MathToken::UpperVariable('A'),
+        ];
+
+        assert!(enc_ctx_attempt(&tokens, MathContext::default()).is_ok());
     }
 }

@@ -2,14 +2,14 @@
 
 import { createContext, useContext, useState } from 'react'
 
-import { TestStatusMap } from '@/types'
+import type { TestStatusMap } from '@/types'
 
 export type TestCaseFilter =
   | 'korean'
   | 'math'
   | 'science'
   | 'music'
-  | 'western'
+  | 'english'
   | 'foreign-language'
   | 'ipa'
   | 'corpus'

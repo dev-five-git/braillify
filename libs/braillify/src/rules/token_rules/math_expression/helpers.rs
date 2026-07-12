@@ -410,6 +410,7 @@ pub(super) fn split_mixed_math_word(
 mod tests {
     use super::*;
     use crate::rules::math::math_token_rule::MathContext;
+    use crate::rules::token::SpaceKind;
 
     /// helpers:235 — `try_encode_math_slice` fallback to `crate::encode` when
     /// math encoder fails. Use `f(~)`: passes `has_function_call` candidacy
@@ -428,6 +429,46 @@ mod tests {
     fn try_encode_mixed_math_slice_empty_returns_none() {
         let result = try_encode_mixed_math_slice(&[], MathContext::default());
         assert!(result.is_none());
+    }
+
+    #[test]
+    fn try_encode_mixed_math_prefix_encodes_math_prefix_before_korean_suffix() {
+        let prefix: Vec<char> = "x²".chars().collect();
+        let suffix: Vec<char> = "는".chars().collect();
+
+        let result = try_encode_mixed_math_prefix(&prefix, &suffix, MathContext::default());
+
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn adjacent_korean_word_flags_skips_previous_spaces() {
+        let tokens = vec![
+            build_word_token("한글".to_string()),
+            Token::Space(SpaceKind::Regular),
+            Token::PreEncoded(vec![1]),
+        ];
+
+        assert_eq!(adjacent_korean_word_flags(&tokens, 2), (true, false));
+    }
+
+    #[test]
+    fn strong_mixed_math_candidate_accepts_runtime_root() {
+        let text = std::hint::black_box("√x");
+        let chars: Vec<char> = text.chars().collect();
+
+        assert!(is_strong_mixed_math_candidate(&chars, text));
+    }
+
+    #[test]
+    fn middle_dot_numeric_word_counts_runtime_middle_dot() {
+        let chars = [
+            std::hint::black_box('1'),
+            std::hint::black_box('·'),
+            std::hint::black_box('2'),
+        ];
+
+        assert!(is_middle_dot_numeric_word(&chars));
     }
 
     /// helpers:298 — `split_mixed_math_word` early `end == len` None branch.
@@ -461,6 +502,23 @@ mod tests {
             meta: WordMeta::from_chars(&chars),
         };
         let _ = split_mixed_math_word(&word, 0, MathContext::default());
+    }
+
+    #[test]
+    fn split_mixed_math_word_math_prefix_korean_suffix_replaces() {
+        use crate::rules::token::{WordMeta, WordToken};
+        use std::borrow::Cow;
+
+        let chars: Vec<char> = "x²는".chars().collect();
+        let word = WordToken {
+            text: Cow::Owned("x²는".to_string()),
+            chars: chars.clone(),
+            meta: WordMeta::from_chars(&chars),
+        };
+
+        let replacement = split_mixed_math_word(&word, 1, MathContext::default());
+
+        assert!(replacement.is_some());
     }
 
     /// helpers:328 — `try_korean_prefix_math_suffix` math encoding fails (continue).

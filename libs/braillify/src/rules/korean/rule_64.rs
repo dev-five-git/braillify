@@ -317,25 +317,21 @@ mod tests {
 
     #[test]
     fn square_wraps_digit() {
-        // testcase #75 — "1\u{20DE}"
         assert_eq!(encode_to_unicode("1\u{20DE}"), "⠸⠦⠼⠁⠴⠇");
     }
 
     #[test]
     fn square_wraps_korean_syllable() {
-        // testcase #76 — "가\u{20DE}"
         assert_eq!(encode_to_unicode("가\u{20DE}"), "⠸⠦⠫⠴⠇");
     }
 
     #[test]
     fn square_wraps_korean_jamo() {
-        // testcase #77 — "ㄱ\u{20DE}"
         assert_eq!(encode_to_unicode("ㄱ\u{20DE}"), "⠸⠦⠿⠁⠴⠇");
     }
 
     #[test]
     fn square_wraps_latin_letter() {
-        // testcase #78 — "a\u{20DE}"
         let bytes = crate::encode("a\u{20DE}").expect("encode failed");
         assert_eq!(
             bytes,
@@ -347,8 +343,8 @@ mod tests {
 
     #[test]
     fn square_wraps_first_syllable_of_word() {
-        // testcase #81 prefix — "가\u{20DE}에" wraps only the leading 가
-        // and continues with regular syllable encoding for 에.
+        // The square wraps only the leading syllable and leaves the suffix to the
+        // regular Korean syllable path.
         assert_eq!(encode_to_unicode("가\u{20DE}에"), "⠸⠦⠫⠴⠇⠝");
     }
 
@@ -419,5 +415,6 @@ mod tests {
         assert_eq!(Rule64Square.priority(), 49);
         // Rule64::priority is the default 350.
         assert_eq!(Rule64.priority(), 350);
+        assert_eq!(BrailleRule::priority(&Rule64), 350);
     }
 }

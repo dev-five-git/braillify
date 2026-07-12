@@ -1,0 +1,101 @@
+[
+  {
+    "input": "62",
+    "internal": "#fb",
+    "expected": "60113",
+    "unicode": "⠼⠋⠃"
+  },
+  {
+    "input": "1959",
+    "internal": "#aiei",
+    "expected": "601101710",
+    "unicode": "⠼⠁⠊⠑⠊"
+  },
+  {
+    "input": "3,500",
+    "internal": "#c1ejj",
+    "expected": "6092172626",
+    "unicode": "⠼⠉⠂⠑⠚⠚"
+  },
+  {
+    "input": "8.93",
+    "internal": "#h4ic",
+    "expected": "601950109",
+    "unicode": "⠼⠓⠲⠊⠉"
+  },
+  {
+    "input": ".7",
+    "internal": "#4g",
+    "expected": "605027",
+    "unicode": "⠼⠲⠛"
+  },
+  {
+    "input": "0.7",
+    "internal": "#j4g",
+    "expected": "60265027",
+    "unicode": "⠼⠚⠲⠛"
+  },
+  {
+    "input": "8,93",
+    "internal": "#h1ic",
+    "expected": "60192109",
+    "unicode": "⠼⠓⠂⠊⠉"
+  },
+  {
+    "input": ",7",
+    "context": "english",
+    "internal": "#1g",
+    "expected": "60227",
+    "unicode": "⠼⠂⠛"
+  },
+  {
+    "input": "0,7",
+    "internal": "#j1g",
+    "expected": "6026227",
+    "unicode": "⠼⠚⠂⠛"
+  },
+  {
+    "input": "par. 4.2.2",
+    "internal": "p>4 #d4b4b",
+    "expected": "15285006025503503",
+    "unicode": "⠏⠜⠲⠀⠼⠙⠲⠃⠲⠃"
+  },
+  {
+    "input": "4 500 000",
+    "internal": "#d\"ejj\"jjj",
+    "expected": "60251617262616262626",
+    "unicode": "⠼⠙⠐⠑⠚⠚⠐⠚⠚⠚"
+  },
+  {
+    "input": "The temperature of the universe was 100,000,000,000,000,000,000,000,000,000,000°C.",
+    "internal": ",! temp]ature ( ! univ]se 0 #ajj1jjj1jjj1jjj1jjj1jjj1\" jjj1jjj1jjj1jjj1jjj^j,c4",
+    "expected": "324603017131559130372317055046037291039591417052060126262262626226262622626262262626226262621602626262262626226262622626262262626242632950",
+    "unicode": "⠠⠮⠀⠞⠑⠍⠏⠻⠁⠞⠥⠗⠑⠀⠷⠀⠮⠀⠥⠝⠊⠧⠻⠎⠑⠀⠴⠀⠼⠁⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠂⠐⠀⠚⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠂⠚⠚⠚⠘⠚⠠⠉⠲"
+  },
+  {
+    "input": "The temperature of the universe was 100 000 000 000 000 000 000 000 000 000 000°C.",
+    "internal": ",! temp]ature ( ! univ]se 0 #ajj\"jjj\"jjj\"jjj\"jjj\"jjj\"\" jjj\"jjj\"jjj\"jjj\"jjj^j,c4",
+    "expected": "3246030171315591303723170550460372910395914170520601262616262626162626261626262616262626162626261616026262616262626162626261626262616262626242632950",
+    "unicode": "⠠⠮⠀⠞⠑⠍⠏⠻⠁⠞⠥⠗⠑⠀⠷⠀⠮⠀⠥⠝⠊⠧⠻⠎⠑⠀⠴⠀⠼⠁⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠐⠐⠀⠚⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠐⠚⠚⠚⠘⠚⠠⠉⠲"
+  },
+  {
+    "input": "pi = 3.⎵⎵159",
+    "internal": "pi \"7 #c4++aei",
+    "expected": "151001654060950444411710",
+    "unicode": "⠏⠊⠀⠐⠶⠀⠼⠉⠲⠬⠬⠁⠑⠊"
+  },
+  {
+    "input": "⅜",
+    "context": "english",
+    "internal": "#c/h",
+    "expected": "6091219",
+    "unicode": "⠼⠉⠌⠓"
+  },
+  {
+    "input": "5⅜",
+    "context": "english",
+    "internal": "#e#c/h",
+    "expected": "60176091219",
+    "unicode": "⠼⠑⠼⠉⠌⠓"
+  }
+]

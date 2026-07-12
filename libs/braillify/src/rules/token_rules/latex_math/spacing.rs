@@ -176,6 +176,7 @@ pub(crate) fn wrap_latex_math_tokens_with_inner<'a>(
 mod tests {
     use super::*;
     use crate::rules::token::{SpaceKind, WordMeta, WordToken};
+    use crate::unicode::decode_unicode;
     use std::borrow::Cow;
 
     fn word(text: &str) -> Token<'static> {
@@ -246,5 +247,33 @@ mod tests {
     fn next_content_needs_math_spacing_word_or_preencoded_returns_2() {
         let tokens: Vec<Token<'_>> = vec![Token::PreEncoded(vec![]), Token::PreEncoded(vec![])];
         assert_eq!(next_content_needs_math_spacing(&tokens, 0), 2);
+    }
+
+    #[test]
+    fn wraps_comma_separated_letters_inside_korean_prose() {
+        let tokens = vec![word("값"), Token::PreEncoded(vec![]), word("이다")];
+
+        let replacement = wrap_latex_math_tokens_with_inner(&tokens, 1, vec![], "a, B, c");
+
+        let [Token::PreEncoded(cells)] = replacement.as_slice() else {
+            panic!("expected one pre-encoded wrapped token: {replacement:?}");
+        };
+        assert_eq!(
+            cells,
+            &vec![
+                52,
+                decode_unicode('⠁'),
+                16,
+                0,
+                48,
+                32,
+                decode_unicode('⠃'),
+                16,
+                0,
+                48,
+                decode_unicode('⠉'),
+                50,
+            ]
+        );
     }
 }

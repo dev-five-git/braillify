@@ -11,4 +11,4 @@ dependencies = ["braillify"]
 braillify = { workspace = true }
 
 [dependency-groups]
-dev = ["pytest>=9.0.3"]
+dev = ["pytest>=9.1.1"]

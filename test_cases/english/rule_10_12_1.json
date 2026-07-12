@@ -1,0 +1,80 @@
+[
+  {
+    "input": "WHO",
+    "internal": ",,who",
+    "expected": "3232581921",
+    "unicode": "⠠⠠⠺⠓⠕"
+  },
+  {
+    "input": "OED",
+    "internal": ",,oed",
+    "expected": "3232211725",
+    "unicode": "⠠⠠⠕⠑⠙"
+  },
+  {
+    "input": "kwh or kWh",
+    "internal": "kwh or k,wh",
+    "expected": "558190212305325819",
+    "unicode": "⠅⠺⠓⠀⠕⠗⠀⠅⠠⠺⠓"
+  },
+  {
+    "input": "CH6-1234",
+    "internal": ",,ch#f-#abcd",
+    "expected": "32329196011366013925",
+    "unicode": "⠠⠠⠉⠓⠼⠋⠤⠼⠁⠃⠉⠙"
+  },
+  {
+    "input": "W2N 6CH",
+    "internal": ",w#b,n #f,,ch",
+    "expected": "32586033229060113232919",
+    "unicode": "⠠⠺⠼⠃⠠⠝⠀⠼⠋⠠⠠⠉⠓"
+  },
+  {
+    "input": "US",
+    "internal": ",,us",
+    "expected": "32323714",
+    "unicode": "⠠⠠⠥⠎"
+  },
+  {
+    "input": "MSH",
+    "internal": ",,msh",
+    "expected": "3232131419",
+    "unicode": "⠠⠠⠍⠎⠓"
+  },
+  {
+    "input": "DAR",
+    "internal": ",,dar",
+    "expected": "323225123",
+    "unicode": "⠠⠠⠙⠁⠗"
+  },
+  {
+    "input": "EST",
+    "internal": ",,est",
+    "expected": "3232171430",
+    "unicode": "⠠⠠⠑⠎⠞"
+  },
+  {
+    "input": "TEN/gh",
+    "internal": ",,ten_/gh",
+    "expected": "323230172956122719",
+    "unicode": "⠠⠠⠞⠑⠝⠸⠌⠛⠓"
+  },
+  {
+    "input": "ChE",
+    "internal": ",ch,e",
+    "expected": "329193217",
+    "unicode": "⠠⠉⠓⠠⠑"
+  },
+  {
+    "input": "MCh",
+    "internal": ",m,ch",
+    "expected": "321332919",
+    "unicode": "⠠⠍⠠⠉⠓"
+  },
+  {
+    "input": "POW",
+    "internal": ",,pow",
+    "expected": "3232152158",
+    "unicode": "⠠⠠⠏⠕⠺"
+  }
+]

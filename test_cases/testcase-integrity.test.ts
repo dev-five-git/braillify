@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'bun:test'
-import { readdirSync, readFileSync } from 'fs'
-import { join } from 'path'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
-// @ts-ignore — WASM loaded via plugin.ts preload
 import { translateToUnicode } from '../packages/node/pkg/index.js'
 
 /**
@@ -53,9 +52,28 @@ function convert(internal: string): { expected: string; unicode: string } {
 interface TestEntry {
   input: string
   note?: string
+  internal?: string
+  expected?: string
+  unicode?: string
+  alternatives?: TestAlternative[]
+}
+
+interface TestAlternative {
   internal: string
   expected: string
   unicode: string
+}
+
+function alternativeTriples(entry: TestEntry) {
+  if (entry.alternatives) return entry.alternatives
+  if (!entry.internal || !entry.expected || !entry.unicode) return []
+  return [
+    {
+      internal: entry.internal,
+      expected: entry.expected,
+      unicode: entry.unicode,
+    },
+  ]
 }
 
 function loadTestCases(dir: string): { file: string; entries: TestEntry[] }[] {
@@ -69,6 +87,24 @@ function loadTestCases(dir: string): { file: string; entries: TestEntry[] }[] {
   })
 }
 
+describe('alternative answer integrity', () => {
+  test('alternatives objects are validated together', () => {
+    const entry: TestEntry = {
+      input: 'Berea',
+      alternatives: [
+        { internal: ',2rea', expected: '32623171', unicode: '⠠⠆⠗⠑⠁' },
+        { internal: ',b]ea', expected: '32359171', unicode: '⠠⠃⠻⠑⠁' },
+      ],
+    }
+
+    for (const { internal, expected, unicode } of alternativeTriples(entry)) {
+      const converted = convert(internal)
+      expect(converted.expected).toBe(expected)
+      expect(converted.unicode).toBe(unicode)
+    }
+  })
+})
+
 function runIntegrityTests(dir: string, label: string) {
   const testFiles = loadTestCases(dir)
 
@@ -79,31 +115,39 @@ function runIntegrityTests(dir: string, label: string) {
           const entry = entries[i]
           const inputPreview =
             entry.input.length > 30
-              ? entry.input.slice(0, 30) + '…'
+              ? `${entry.input.slice(0, 30)}…`
               : entry.input
 
           test(`[${i}] "${inputPreview}" has non-empty internal`, () => {
-            expect(entry.internal).not.toBe('')
+            for (const { internal } of alternativeTriples(entry)) {
+              expect(internal).not.toBe('')
+            }
           })
 
-          if (!entry.internal) continue
+          if (!entry.internal && !entry.alternatives) continue
 
           test(`[${i}] "${inputPreview}" has non-empty expected`, () => {
-            expect(entry.expected).not.toBe('')
+            for (const { expected } of alternativeTriples(entry)) {
+              expect(expected).not.toBe('')
+            }
           })
 
           test(`[${i}] "${inputPreview}" has non-empty unicode`, () => {
-            expect(entry.unicode).not.toBe('')
+            for (const { unicode } of alternativeTriples(entry)) {
+              expect(unicode).not.toBe('')
+            }
           })
 
           test(`[${i}] "${inputPreview}" expected matches internal`, () => {
-            const { expected } = convert(entry.internal)
-            expect(expected).toBe(entry.expected)
+            for (const { internal, expected } of alternativeTriples(entry)) {
+              expect(convert(internal).expected).toBe(expected)
+            }
           })
 
           test(`[${i}] "${inputPreview}" unicode matches internal`, () => {
-            const { unicode } = convert(entry.internal)
-            expect(unicode).toBe(entry.unicode)
+            for (const { internal, unicode } of alternativeTriples(entry)) {
+              expect(convert(internal).unicode).toBe(unicode)
+            }
           })
         }
       })
@@ -121,18 +165,19 @@ function runConversionTests(dir: string, label: string) {
           const entry = entries[i]
 
           // Skip entries with empty input, empty unicode, or LaTeX note (engine may not support yet)
-          if (!entry.input || !entry.unicode) continue
+          const alternatives = alternativeTriples(entry)
+          if (!entry.input || alternatives.length === 0) continue
           if (entry.note === 'LaTeX') continue
 
           const inputPreview =
             entry.input.length > 30
-              ? entry.input.slice(0, 30) + '…'
+              ? `${entry.input.slice(0, 30)}…`
               : entry.input
 
           test(`[${i}] "${inputPreview}" → unicode`, () => {
             try {
               const result = translateToUnicode(entry.input)
-              expect(result).toBe(entry.unicode)
+              expect(alternatives.map(({ unicode }) => unicode)).toContain(result)
             } catch {
               // Engine doesn't support this input yet — skip gracefully
             }

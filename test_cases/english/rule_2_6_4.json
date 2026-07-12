@@ -1,0 +1,81 @@
+[
+  {
+    "input": "‘It'll",
+    "internal": ",8,x'll",
+    "expected": "32383245477",
+    "unicode": "⠠⠦⠠⠭⠄⠇⠇"
+  },
+  {
+    "input": "[X'll",
+    "internal": ".<;,x'll",
+    "expected": "4035483245477",
+    "unicode": "⠨⠣⠰⠠⠭⠄⠇⠇"
+  },
+  {
+    "input": "child's?)",
+    "internal": "*'s8\">",
+    "expected": "33414381628",
+    "unicode": "⠡⠄⠎⠦⠐⠜"
+  },
+  {
+    "input": "“p's and q's”",
+    "internal": "8;p's & ;q's0",
+    "expected": "3848154140470483141452",
+    "unicode": "⠦⠰⠏⠄⠎⠀⠯⠀⠰⠟⠄⠎⠴"
+  },
+  {
+    "input": "“That's Mr. 𝐿𝑖𝑡𝑡𝑙𝑒'𝑠!”",
+    "note": "이탤릭 Little's",
+    "internal": "8,t's ,mr4 .1,ll's60",
+    "expected": "383230414032132350040232774142252",
+    "unicode": "⠦⠠⠞⠄⠎⠀⠠⠍⠗⠲⠀⠨⠂⠠⠇⠇⠄⠎⠖⠴"
+  },
+  {
+    "input": "(Wouldn't)",
+    "internal": "\"<,wdn't\">",
+    "expected": "1635325825294301628",
+    "unicode": "⠐⠣⠠⠺⠙⠝⠄⠞⠐⠜"
+  },
+  {
+    "input": "(greatGREATgrandmother)",
+    "internal": "\"<grt,,grt,'gr&\"m\">",
+    "expected": "1635272330323227233032427234716131628",
+    "unicode": "⠐⠣⠛⠗⠞⠠⠠⠛⠗⠞⠠⠄⠛⠗⠯⠐⠍⠐⠜"
+  },
+  {
+    "input": "SimBraille",
+    "internal": ",sim,brl",
+    "expected": "32141013323237",
+    "unicode": "⠠⠎⠊⠍⠠⠃⠗⠇"
+  },
+  {
+    "input": "StepChildren",
+    "internal": ",/ep,*n",
+    "expected": "32121715323329",
+    "unicode": "⠠⠌⠑⠏⠠⠡⠝"
+  },
+  {
+    "input": "FirstBank",
+    "internal": ",f/,bank",
+    "expected": "3211123231295",
+    "unicode": "⠠⠋⠌⠠⠃⠁⠝⠅"
+  },
+  {
+    "input": "\"DeafBlind\"",
+    "internal": "8,d1f,bl0",
+    "expected": "383225211323752",
+    "unicode": "⠦⠠⠙⠂⠋⠠⠃⠇⠴"
+  },
+  {
+    "input": "Deaf/DeafBlind",
+    "internal": ",d1f_/,d1f,bl9d",
+    "expected": "32252115612322521132372025",
+    "unicode": "⠠⠙⠂⠋⠸⠌⠠⠙⠂⠋⠠⠃⠇⠔⠙"
+  },
+  {
+    "input": "StepChildren.org",
+    "internal": ",/ep,*ildr54org",
+    "expected": "32121715323310725233450212327",
+    "unicode": "⠠⠌⠑⠏⠠⠡⠊⠇⠙⠗⠢⠲⠕⠗⠛"
+  }
+]

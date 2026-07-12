@@ -93,16 +93,6 @@ mod tests {
         assert!(!is_exception(ch));
     }
 
-    /// Rule 16 golden test — testcase JSON 정답과 byte-identical.
-    #[rstest::rstest]
-    #[case::kkeot_double_ss("껐", "⠠⠈⠎⠌")]
-    #[case::geot_variant("겄", "⠈⠎⠌")]
-    #[case::kkeot_eoyo("껐어요", "⠠⠈⠎⠌⠎⠬")]
-    fn golden_test_alignment(#[case] input: &str, #[case] expected: &str) {
-        let result = crate::encode_to_unicode(input).unwrap();
-        assert_eq!(result, expected, "Rule 16 golden test failed for: {input}");
-    }
-
     #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "16");

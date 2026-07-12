@@ -1212,6 +1212,24 @@ mod tests {
         assert!(matches!(outcome, MathTokenResult::Skip));
     }
 
+    #[test]
+    fn space_rule_reports_name() {
+        assert_eq!(SpaceRule.name(), "SpaceRule");
+    }
+
+    #[test]
+    fn digit_separator_rule_reports_name() {
+        assert_eq!(DigitSeparatorRule.name(), "DigitSeparatorRule");
+    }
+
+    #[test]
+    fn space_rule_matches_only_space_tokens() {
+        let state = MathEncodeState::with_context(false, MathContext::default());
+
+        assert!(SpaceRule.matches(&[MathToken::Space], 0, &state));
+        assert!(!SpaceRule.matches(&[MathToken::Variable('x')], 0, &state));
+    }
+
     /// Drive `is_mixed_times_context` through enough inputs to exercise its
     /// plain-Korean-both-sides early-return path (lines 228, 231) — the goal
     /// is branch coverage, not behavioural assertions on a function that is
@@ -1243,6 +1261,21 @@ mod tests {
             res,
             Ok(crate::rules::math::math_token_rule::MathTokenResult::Skip)
         ));
+    }
+
+    #[test]
+    fn raw_token_rule_rejects_unrecognized_raw_character() {
+        use crate::rules::math::math_token_rule::{MathContext, MathEncodeState, MathTokenRule};
+        let r = super::RawTokenRule;
+        let toks = vec![MathToken::Raw(std::hint::black_box('€'))];
+        let mut state = MathEncodeState::with_context(false, MathContext::default());
+        let mut result = Vec::new();
+        let engine = super::MathTokenEngine::with_context(MathContext::default());
+
+        let res = r.apply(&toks, 0, &mut result, &mut state, &engine);
+
+        assert!(res.is_err());
+        assert!(result.is_empty());
     }
 
     /// encoder.rs line 348 — `encode_math_expression_with_context` Roman numeral fast-path

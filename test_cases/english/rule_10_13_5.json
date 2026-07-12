@@ -1,0 +1,38 @@
+[
+  {
+    "input": "\"Com\nin'?\"",
+    "internal": "8,com-\nin'80",
+    "expected": "38329211336\n102943852",
+    "unicode": "⠦⠠⠉⠕⠍⠤\n⠊⠝⠄⠦⠴"
+  },
+  {
+    "input": "(Disen\ntangle",
+    "internal": "\"<,45-\ntangle",
+    "expected": "163532503436\n3012927717",
+    "unicode": "⠐⠣⠠⠲⠢⠤\n⠞⠁⠝⠛⠇⠑"
+  },
+  {
+    "input": "disin\nherit",
+    "internal": "4in-\nh]it",
+    "expected": "50102936\n19591030",
+    "unicode": "⠲⠊⠝⠤\n⠓⠻⠊⠞"
+  },
+  {
+    "input": "en\njoy",
+    "internal": "en-\njoy",
+    "expected": "172936\n262161",
+    "unicode": "⠑⠝⠤\n⠚⠕⠽"
+  },
+  {
+    "input": "lin\nen...",
+    "internal": "l9-\nen444",
+    "expected": "72036\n1729505050",
+    "unicode": "⠇⠔⠤\n⠑⠝⠲⠲⠲"
+  },
+  {
+    "input": "short\nenin'",
+    "internal": "%ort-\n5in'",
+    "expected": "4121233036\n3410294",
+    "unicode": "⠩⠕⠗⠞⠤\n⠢⠊⠝⠄"
+  }
+]

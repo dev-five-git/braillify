@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
 expression: rendered
 ---
 input  = "$x + 1 missing close"
-unicode = ok: "⠴⠈⠎⠭⠀⠢⠀⠼⠁⠀⠍⠊⠎⠎⠔⠛⠀⠉⠇⠕⠎⠑"
-bytes   = ok: [52, 8, 14, 45, 0, 34, 0, 60, 1, 0, 13, 10, 14, 14, 20, 27, 0, 9, 7, 21, 14, 17]
+unicode = ok: "⠈⠎⠭⠀⠐⠖⠀⠼⠁⠀⠍⠊⠎⠎⠬⠀⠉⠇⠕⠎⠑"
+bytes   = ok: [8, 14, 45, 0, 16, 22, 0, 60, 1, 0, 13, 10, 14, 14, 44, 0, 9, 7, 21, 14, 17]

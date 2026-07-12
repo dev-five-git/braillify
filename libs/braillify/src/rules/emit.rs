@@ -4,6 +4,7 @@ use crate::fraction;
 use crate::rules::context::{EncoderState, RuleContext};
 use crate::rules::engine::RuleEngine;
 use crate::rules::korean::rule_69::parse_numeric_ascii_unit_prefix;
+use crate::rules::roman_mode;
 use crate::rules::traits::Phase;
 
 use super::token::{DocumentIR, ModeEvent, SpaceKind, Token, WordToken};
@@ -337,34 +338,6 @@ fn apply_inter_character_rules(
     Ok(())
 }
 
-fn exit_english(state: &mut EncoderState, needs_continuation: bool) {
-    state.is_english = false;
-    state.needs_english_continuation = needs_continuation;
-    state.roman_number_chain = false;
-}
-
-fn enter_english(state: &mut EncoderState, result: &mut Vec<u8>) {
-    if state.needs_english_continuation {
-        result.push(48);
-    } else {
-        result.push(52);
-    }
-    state.is_english = true;
-    state.needs_english_continuation = false;
-    state.roman_number_chain = false;
-}
-
-fn exit_english_for_roman_number_chain(state: &mut EncoderState) {
-    exit_english(state, false);
-    state.roman_number_chain = true;
-}
-
-fn resume_english_from_roman_number_chain(state: &mut EncoderState) {
-    state.is_english = true;
-    state.needs_english_continuation = false;
-    state.roman_number_chain = false;
-}
-
 fn emit_word(
     word: &WordToken,
     token_index: usize,
@@ -402,23 +375,8 @@ fn emit_word(
             return Ok(());
         }
 
-        // English entry (encoder.rs:216-223)
-        if state.english_indicator
-            && !state.is_english
-            && has_ascii_alphabetic
-            && word_chars[0].is_ascii_alphabetic()
-        {
-            if state.roman_number_chain {
-                resume_english_from_roman_number_chain(state);
-            } else if state.english_dominant_no_indicator {
-                // 영어 주도 문서: 영자표시 ⠴ 생략, state만 영어 모드로 전환.
-                state.is_english = true;
-                state.needs_english_continuation = false;
-                state.roman_number_chain = false;
-            } else {
-                enter_english(state, result);
-            }
-        }
+        // English entry (제28/35/39항) — 로마자표/연속표 emit + 영어 모드 전환.
+        roman_mode::enter_english_if_starting(state, word_chars, has_ascii_alphabetic, result);
 
         let first_ascii_index = word_chars.iter().position(|c| c.is_ascii_alphabetic());
         let ascii_starts_at_beginning = matches!(first_ascii_index, Some(0));
@@ -441,7 +399,7 @@ fn emit_word(
                 match &char_type {
                     CharType::English(_) => {}
                     CharType::Number(_) => {
-                        exit_english_for_roman_number_chain(state);
+                        roman_mode::exit_english_for_roman_number_chain(state);
                     }
                     CharType::Symbol(sym) => {
                         // 한글 wrap 직후의 첫 디지털 표기 기호(. / @ # _ : -)는
@@ -486,14 +444,17 @@ fn emit_word(
                             || !english_logic::should_skip_terminator_for_symbol(*sym)
                         {
                             result.push(50);
-                            exit_english(state, false);
+                            roman_mode::exit_english(state, false);
                         } else {
-                            exit_english(state, english_logic::should_request_continuation(*sym));
+                            roman_mode::exit_english(
+                                state,
+                                english_logic::should_request_continuation(*sym),
+                            );
                         }
                     }
                     _ => {
                         result.push(50);
-                        exit_english(state, false);
+                        roman_mode::exit_english(state, false);
                     }
                 }
             }
@@ -505,7 +466,7 @@ fn emit_word(
                         // PDF — roman_number_chain 안 digit 뒤 letter는 영어 연속 표지(⠰)를
                         // 부착해 letter임을 명시한다 (digit과 혼동 방지).
                         result.push(48);
-                        resume_english_from_roman_number_chain(state);
+                        roman_mode::resume_english_from_roman_number_chain(state);
                     }
                     CharType::Number(_) => {}
                     _ => {
@@ -592,7 +553,7 @@ fn emit_word(
     } else if state.english_indicator && state.is_english {
         if remaining_words.is_empty() {
             result.push(50);
-            exit_english(state, false);
+            roman_mode::exit_english(state, false);
         } else if let Some(next_word) = remaining_words.first() {
             let ascii_letters = next_word
                 .chars()
@@ -611,7 +572,7 @@ fn emit_word(
             if is_single_letter_word
                 && english_logic::requires_single_letter_continuation(ascii_letters[0])
             {
-                exit_english(state, true);
+                roman_mode::exit_english(state, true);
             } else if let Some(next_char) = next_word.chars().next() {
                 if let Ok(next_type) = CharType::new(next_char) {
                     match next_type {
@@ -627,9 +588,9 @@ fn emit_word(
                                 || !english_logic::should_skip_terminator_for_symbol(sym)
                             {
                                 result.push(50);
-                                exit_english(state, false);
+                                roman_mode::exit_english(state, false);
                             } else {
-                                exit_english(
+                                roman_mode::exit_english(
                                     state,
                                     english_logic::should_request_continuation(sym),
                                 );
@@ -637,12 +598,12 @@ fn emit_word(
                         }
                         _ => {
                             result.push(50);
-                            exit_english(state, false);
+                            roman_mode::exit_english(state, false);
                         }
                     }
                 } else {
                     result.push(50);
-                    exit_english(state, false);
+                    roman_mode::exit_english(state, false);
                 }
             }
         }
@@ -676,7 +637,6 @@ mod tests {
         let mut engine = RuleEngine::new();
         engine.register(Box::new(crate::rules::korean::rule_53::Rule53));
         engine.register(Box::new(crate::rules::korean::rule_18::Rule18));
-        engine.register(Box::new(crate::rules::korean::rule_29::Rule29));
         engine.register(Box::new(crate::rules::korean::rule_44::Rule44));
         engine.register(Box::new(crate::rules::korean::rule_16::Rule16));
         engine.register(Box::new(crate::rules::korean::rule_14::Rule14));
@@ -764,14 +724,14 @@ mod tests {
     /// 경로를 통과한다 — 한글/영어/대문자/숫자/약어/LaTeX/전화번호/괄호 등.
     #[rstest::rstest]
     #[case::korean_greeting("안녕하세요")]
-    #[case::english_words("hello world")]
+    #[case::english_words("hello world는")]
     #[case::triple_uppercase_passage("WELCOME TO KOREA")]
     #[case::english_indicator_sns("SNS에서")]
     #[case::english_indicator_atm("ATM 기기")]
     #[case::english_indicator_bmi_paren("BMI(지수)")]
     #[case::mixed_upper_atm("ATM")]
-    #[case::mixed_upper_capitalized("Contents")]
-    #[case::mixed_upper_title("Table of Contents")]
+    #[case::mixed_upper_capitalized("Contents는")]
+    #[case::mixed_upper_title("Table of Contents는")]
     #[case::number_with_comma("1,000")]
     #[case::number_decimal("0.48")]
     #[case::multi_word_korean("상상이상의 ")]
@@ -784,7 +744,7 @@ mod tests {
     #[case::parenthesized_english_bmi("지수(BMI)")]
     #[case::parenthesized_english_chejilryang_bmi("체질량 지수(BMI)")]
     #[case::standalone_jamo("삼각형 ㄱㄴㄷ")]
-    #[case::kg_parenthesized("(kg)")]
+    #[case::kg_parenthesized("(kg)는")]
     #[case::kg_bare("kg")]
     #[case::roma_bracket("Roma [ㄹㄹ로마]")]
     fn emit_round_trip(#[case] text: &str) {

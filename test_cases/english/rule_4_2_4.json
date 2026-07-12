@@ -1,0 +1,56 @@
+[
+  {
+    "input": "blessèd",
+    "internal": "b.s^*ed",
+    "expected": "3401424331725",
+    "unicode": "⠃⠨⠎⠘⠡⠑⠙"
+  },
+  {
+    "input": "Général de Gaulle",
+    "internal": ",g^/en^/eral de ,gaulle",
+    "expected": "322724121729241217231702517032271377717",
+    "unicode": "⠠⠛⠘⠌⠑⠝⠘⠌⠑⠗⠁⠇⠀⠙⠑⠀⠠⠛⠁⠥⠇⠇⠑"
+  },
+  {
+    "input": "Prométhée enchaîné",
+    "internal": ",prom^/e?^/ee 5*a^%in^/e",
+    "expected": "3215232113241217572412171703433124411029241217",
+    "unicode": "⠠⠏⠗⠕⠍⠘⠌⠑⠹⠘⠌⠑⠑⠀⠢⠡⠁⠘⠩⠊⠝⠘⠌⠑"
+  },
+  {
+    "input": "beau idéal",
+    "internal": "b1u id^/eal",
+    "expected": "32370102524121717",
+    "unicode": "⠃⠂⠥⠀⠊⠙⠘⠌⠑⠁⠇"
+  },
+  {
+    "input": "théâtre",
+    "internal": "?^/e^%atre",
+    "expected": "5724121724411302317",
+    "unicode": "⠹⠘⠌⠑⠘⠩⠁⠞⠗⠑"
+  },
+  {
+    "input": "Löwenthal",
+    "internal": ",l^3ow5?al",
+    "expected": "32724182158345717",
+    "unicode": "⠠⠇⠘⠒⠕⠺⠢⠹⠁⠇"
+  },
+  {
+    "input": "señor",
+    "internal": "se^]nor",
+    "expected": "14172459292123",
+    "unicode": "⠎⠑⠘⠻⠝⠕⠗"
+  },
+  {
+    "input": "Märchen",
+    "internal": ",m^3ar*5",
+    "expected": "321324181233334",
+    "unicode": "⠠⠍⠘⠒⠁⠗⠡⠢"
+  },
+  {
+    "input": "Händel",
+    "internal": ",h^3andel",
+    "expected": "3219241812925177",
+    "unicode": "⠠⠓⠘⠒⠁⠝⠙⠑⠇"
+  }
+]

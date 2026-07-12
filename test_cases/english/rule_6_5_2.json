@@ -1,0 +1,68 @@
+[
+  {
+    "input": "32",
+    "internal": "#cb",
+    "expected": "6093",
+    "unicode": "⠼⠉⠃"
+  },
+  {
+    "input": "3b",
+    "internal": "#c;b",
+    "expected": "609483",
+    "unicode": "⠼⠉⠰⠃"
+  },
+  {
+    "input": "3B",
+    "internal": "#c,b",
+    "expected": "609323",
+    "unicode": "⠼⠉⠠⠃"
+  },
+  {
+    "input": "3m",
+    "internal": "#cm",
+    "expected": "60913",
+    "unicode": "⠼⠉⠍"
+  },
+  {
+    "input": "4.2",
+    "internal": "#d4b",
+    "expected": "6025503",
+    "unicode": "⠼⠙⠲⠃"
+  },
+  {
+    "input": "4.b",
+    "internal": "#d4;b",
+    "expected": "602550483",
+    "unicode": "⠼⠙⠲⠰⠃"
+  },
+  {
+    "input": "4.B",
+    "internal": "#d4,b",
+    "expected": "602550323",
+    "unicode": "⠼⠙⠲⠠⠃"
+  },
+  {
+    "input": "4.m",
+    "internal": "#d4m",
+    "expected": "60255013",
+    "unicode": "⠼⠙⠲⠍"
+  },
+  {
+    "input": "report3.doc",
+    "internal": "report#c4;doc",
+    "expected": "231715212330609504825219",
+    "unicode": "⠗⠑⠏⠕⠗⠞⠼⠉⠲⠰⠙⠕⠉"
+  },
+  {
+    "input": "report3.xls",
+    "internal": "report#c4xls",
+    "expected": "2317152123306095045714",
+    "unicode": "⠗⠑⠏⠕⠗⠞⠼⠉⠲⠭⠇⠎"
+  },
+  {
+    "input": "… in the Second World War² 1939–1945.³",
+    "internal": "444 9 ! ,second ,_w ,w>;9#b #aici,-#aide49#c",
+    "expected": "5050500200460321417921292503256580325828482060306011091032366011025175020609",
+    "unicode": "⠲⠲⠲⠀⠔⠀⠮⠀⠠⠎⠑⠉⠕⠝⠙⠀⠠⠸⠺⠀⠠⠺⠜⠰⠔⠼⠃⠀⠼⠁⠊⠉⠊⠠⠤⠼⠁⠊⠙⠑⠲⠔⠼⠉"
+  }
+]

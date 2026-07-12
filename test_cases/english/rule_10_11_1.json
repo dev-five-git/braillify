@@ -1,0 +1,182 @@
+[
+  {
+    "input": "Airedale",
+    "internal": ",airedale",
+    "expected": "321102317251717",
+    "unicode": "⠠⠁⠊⠗⠑⠙⠁⠇⠑"
+  },
+  {
+    "input": "Bighorn",
+    "internal": ",bighorn",
+    "expected": "323102719212329",
+    "unicode": "⠠⠃⠊⠛⠓⠕⠗⠝"
+  },
+  {
+    "input": "blowhard",
+    "internal": "bl[h>d",
+    "expected": "3742192825",
+    "unicode": "⠃⠇⠪⠓⠜⠙"
+  },
+  {
+    "input": "bottleneck",
+    "internal": "bottleneck",
+    "expected": "3213030717291795",
+    "unicode": "⠃⠕⠞⠞⠇⠑⠝⠑⠉⠅"
+  },
+  {
+    "input": "carthorse",
+    "internal": "c>thorse",
+    "expected": "928301921231417",
+    "unicode": "⠉⠜⠞⠓⠕⠗⠎⠑"
+  },
+  {
+    "input": "cowherd",
+    "internal": "c[h]d",
+    "expected": "942195925",
+    "unicode": "⠉⠪⠓⠻⠙"
+  },
+  {
+    "input": "dumbbell",
+    "internal": "dumbbell",
+    "expected": "253713331777",
+    "unicode": "⠙⠥⠍⠃⠃⠑⠇⠇"
+  },
+  {
+    "input": "egghead",
+    "internal": "e7h1d",
+    "expected": "175419225",
+    "unicode": "⠑⠶⠓⠂⠙"
+  },
+  {
+    "input": "fathead",
+    "internal": "fath1d",
+    "expected": "1113019225",
+    "unicode": "⠋⠁⠞⠓⠂⠙"
+  },
+  {
+    "input": "flearidden",
+    "internal": "fl1ridd5",
+    "expected": "11722310252534",
+    "unicode": "⠋⠇⠂⠗⠊⠙⠙⠢"
+  },
+  {
+    "input": "grasshopper",
+    "internal": "grasshopp]",
+    "expected": "2723114141921151559",
+    "unicode": "⠛⠗⠁⠎⠎⠓⠕⠏⠏⠻"
+  },
+  {
+    "input": "hideaway",
+    "internal": "hideaway",
+    "expected": "19102517158161",
+    "unicode": "⠓⠊⠙⠑⠁⠺⠁⠽"
+  },
+  {
+    "input": "indiarubber",
+    "internal": "9diaru2]",
+    "expected": "20251012337659",
+    "unicode": "⠔⠙⠊⠁⠗⠥⠆⠻"
+  },
+  {
+    "input": "insofar",
+    "internal": "9sof>",
+    "expected": "2014211128",
+    "unicode": "⠔⠎⠕⠋⠜"
+  },
+  {
+    "input": "Jamestown",
+    "internal": ",jamest[n",
+    "expected": "32261131714304229",
+    "unicode": "⠠⠚⠁⠍⠑⠎⠞⠪⠝"
+  },
+  {
+    "input": "kettledrum",
+    "internal": "kettledrum",
+    "expected": "517303071725233713",
+    "unicode": "⠅⠑⠞⠞⠇⠑⠙⠗⠥⠍"
+  },
+  {
+    "input": "longhand",
+    "internal": "l;gh&",
+    "expected": "748271947",
+    "unicode": "⠇⠰⠛⠓⠯"
+  },
+  {
+    "input": "northeast",
+    "internal": "nor?1/",
+    "expected": "29212357212",
+    "unicode": "⠝⠕⠗⠹⠂⠌"
+  },
+  {
+    "input": "painstaking",
+    "internal": "pa9stak+",
+    "expected": "1512014301544",
+    "unicode": "⠏⠁⠔⠎⠞⠁⠅⠬"
+  },
+  {
+    "input": "photoflash",
+    "internal": "photofla%",
+    "expected": "1519213021117141",
+    "unicode": "⠏⠓⠕⠞⠕⠋⠇⠁⠩"
+  },
+  {
+    "input": "pineapple",
+    "internal": "p9eapple",
+    "expected": "15201711515717",
+    "unicode": "⠏⠔⠑⠁⠏⠏⠇⠑"
+  },
+  {
+    "input": "rawhide",
+    "internal": "rawhide",
+    "expected": "2315819102517",
+    "unicode": "⠗⠁⠺⠓⠊⠙⠑"
+  },
+  {
+    "input": "Southend",
+    "internal": ",s\\?5d",
+    "expected": "321451573425",
+    "unicode": "⠠⠎⠳⠹⠢⠙"
+  },
+  {
+    "input": "stateroom",
+    "internal": "/ateroom",
+    "expected": "121301723212113",
+    "unicode": "⠌⠁⠞⠑⠗⠕⠕⠍"
+  },
+  {
+    "input": "storeroom",
+    "internal": "/oreroom",
+    "expected": "1221231723212113",
+    "unicode": "⠌⠕⠗⠑⠗⠕⠕⠍"
+  },
+  {
+    "input": "stronghold",
+    "internal": "/r;ghold",
+    "expected": "122348271921725",
+    "unicode": "⠌⠗⠰⠛⠓⠕⠇⠙"
+  },
+  {
+    "input": "sweetheart",
+    "internal": "sweethe>t",
+    "expected": "145817173019172830",
+    "unicode": "⠎⠺⠑⠑⠞⠓⠑⠜⠞"
+  },
+  {
+    "input": "tearoom",
+    "internal": "t1room",
+    "expected": "30223212113",
+    "unicode": "⠞⠂⠗⠕⠕⠍"
+  },
+  {
+    "input": "toenail",
+    "internal": "toenail",
+    "expected": "302117291107",
+    "unicode": "⠞⠕⠑⠝⠁⠊⠇"
+  },
+  {
+    "input": "wiseacre",
+    "internal": "wiseacre",
+    "expected": "58101417192317",
+    "unicode": "⠺⠊⠎⠑⠁⠉⠗⠑"
+  }
+]

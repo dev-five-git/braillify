@@ -114,22 +114,6 @@ impl BrailleRule for Rule57 {
 
 #[cfg(test)]
 mod tests {
-    /// 제57항 — 반복 기호 그룹화 (`○○`, `△△` 등).
-    #[rstest::rstest]
-    #[case::kim_circle_circle_ssi("김○○ 씨", "⠈⠕⠢⠸⠴⠴⠇⠀⠠⠠⠕")]
-    #[case::triangle_triangle_doseogwan("△△도서관", "⠸⠬⠬⠇⠊⠥⠠⠎⠈⠧⠒")]
-    fn groups_repeated_symbols(#[case] input: &str, #[case] expected: &str) {
-        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
-    }
-
-    /// 제57항 — `×` 가 수학 곱셈 vs 일반 기호 문맥에 따라 다르게 점역.
-    #[rstest::rstest]
-    #[case::math_multiplication("5×3", "⠼⠑⠡⠼⠉")]
-    #[case::general_times_symbol("×란", "⠸⠭⠇⠐⠣⠒")]
-    fn handles_times_dual_context(#[case] input: &str, #[case] expected: &str) {
-        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
-    }
-
     use super::*;
 
     /// 제57항 — `is_math_times_context` short-circuits when current char is not `×`

@@ -131,16 +131,15 @@ impl RuleEngine {
                 continue;
             }
             let meta = rule.meta();
-            if !self.is_enabled(meta.section) {
-                continue;
-            }
-            if !rule.matches(ctx) {
-                continue;
-            }
-            match rule.apply(ctx)? {
-                RuleResult::Consumed => return Ok(RuleResult::Consumed),
-                RuleResult::Continue => {}
-                RuleResult::Skip => {}
+            if self.is_enabled(meta.section) {
+                if !rule.matches(ctx) {
+                    continue;
+                }
+                match rule.apply(ctx)? {
+                    RuleResult::Consumed => return Ok(RuleResult::Consumed),
+                    RuleResult::Continue => {}
+                    RuleResult::Skip => {}
+                }
             }
         }
         Ok(RuleResult::Skip)

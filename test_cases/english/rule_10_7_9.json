@@ -1,0 +1,68 @@
+[
+  {
+    "input": "blunder",
+    "internal": "bl\"u",
+    "expected": "371637",
+    "unicode": "⠃⠇⠐⠥"
+  },
+  {
+    "input": "misunderstand",
+    "internal": "mis\"u/&",
+    "expected": "13101416371247",
+    "unicode": "⠍⠊⠎⠐⠥⠌⠯"
+  },
+  {
+    "input": "thundered",
+    "internal": "?\"u$",
+    "expected": "57163743",
+    "unicode": "⠹⠐⠥⠫"
+  },
+  {
+    "input": "undergo",
+    "internal": "\"ugo",
+    "expected": "16372721",
+    "unicode": "⠐⠥⠛⠕"
+  },
+  {
+    "input": "underpaid",
+    "internal": "\"upd",
+    "expected": "16371525",
+    "unicode": "⠐⠥⠏⠙"
+  },
+  {
+    "input": "Wunderhorn",
+    "internal": ",w\"uhorn",
+    "expected": "3258163719212329",
+    "unicode": "⠠⠺⠐⠥⠓⠕⠗⠝"
+  },
+  {
+    "input": "flounder",
+    "internal": "fl.d]",
+    "expected": "117402559",
+    "unicode": "⠋⠇⠨⠙⠻"
+  },
+  {
+    "input": "laundering",
+    "internal": "laund]+",
+    "expected": "713729255944",
+    "unicode": "⠇⠁⠥⠝⠙⠻⠬"
+  },
+  {
+    "input": "Saunders",
+    "internal": ",saund]s",
+    "expected": "321413729255914",
+    "unicode": "⠠⠎⠁⠥⠝⠙⠻⠎"
+  },
+  {
+    "input": "underived",
+    "internal": "und]iv$",
+    "expected": "37292559103943",
+    "unicode": "⠥⠝⠙⠻⠊⠧⠫"
+  },
+  {
+    "input": "underogatory",
+    "internal": "und]ogatory",
+    "expected": "372925592127130212361",
+    "unicode": "⠥⠝⠙⠻⠕⠛⠁⠞⠕⠗⠽"
+  }
+]

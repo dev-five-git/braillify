@@ -24,6 +24,7 @@ pub mod context;
 pub mod emit;
 pub mod engine;
 pub mod english_shortform;
+pub(crate) mod roman_mode;
 pub mod token;
 pub mod token_engine;
 pub mod token_rule;
@@ -31,6 +32,7 @@ pub mod token_rules;
 pub mod traits;
 
 // ── Rule domains ────────────────────────────────────────
+pub mod english_ueb; // 통일영어점자 규정 (Unified English Braille)
 pub mod korean; // 한글 점자 규정 (Korean Braille rules)
 pub mod math; // 수학 점자 규정 (Math Braille rules)
 

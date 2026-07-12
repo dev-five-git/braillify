@@ -1,0 +1,8 @@
+[
+  {
+    "input": "𝑠ouvent précédé d'une conjonction de subordination telle que \"quand\", \"dès que\" (immediately), \"aussitôt que\".",
+    "internal": ".souvent pr=c=d= d'une conjonction de subordination telle que 8quand01 8d!s que0 ^(\"<immly\">1 8aussit?t que04",
+    "expected": "401421373917293001523639632563025437291709212926212993010212902517014373212325102913010212903017771703137170383137129255220382546140313717520245516351013137611628203813714141030573003137175250",
+    "unicode": "⠨⠎⠕⠥⠧⠑⠝⠞⠀⠏⠗⠿⠉⠿⠙⠿⠀⠙⠄⠥⠝⠑⠀⠉⠕⠝⠚⠕⠝⠉⠞⠊⠕⠝⠀⠙⠑⠀⠎⠥⠃⠕⠗⠙⠊⠝⠁⠞⠊⠕⠝⠀⠞⠑⠇⠇⠑⠀⠟⠥⠑⠀⠦⠟⠥⠁⠝⠙⠴⠂⠀⠦⠙⠮⠎⠀⠟⠥⠑⠴⠀⠘⠷⠐⠣⠊⠍⠍⠇⠽⠐⠜⠂⠀⠦⠁⠥⠎⠎⠊⠞⠹⠞⠀⠟⠥⠑⠴⠲"
+  }
+]

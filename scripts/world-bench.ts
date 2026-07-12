@@ -21,18 +21,25 @@
  *   - 표준 출력 요약
  */
 
-import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises'
-import { join, dirname } from 'node:path'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 
 interface TestCaseEntry {
   input: string
   internal?: string
   expected?: string
   unicode?: string
+  alternatives?: TestAlternative[]
   world?: string
   jeomsarang?: string
   note?: string
   context?: string
+}
+
+interface TestAlternative {
+  internal: string
+  expected: string
+  unicode: string
 }
 
 interface CategoryStats {
@@ -53,9 +60,10 @@ interface CategoryStats {
   }>
 }
 
-const TEST_CASES_DIR = join(import.meta.dirname!, '..', 'test_cases')
-const REPORT_PATH = join(import.meta.dirname!, '..', 'bench', 'WORLD_BENCH.md')
-const MISMATCH_PATH = join(import.meta.dirname!, '..', 'bench', 'WORLD_MISMATCHES.md')
+const SCRIPT_DIR = import.meta.dirname
+const TEST_CASES_DIR = join(SCRIPT_DIR, '..', 'test_cases')
+const REPORT_PATH = join(SCRIPT_DIR, '..', 'bench', 'WORLD_BENCH.md')
+const MISMATCH_PATH = join(SCRIPT_DIR, '..', 'bench', 'WORLD_MISMATCHES.md')
 
 function newStats(): CategoryStats {
   return {
@@ -88,6 +96,11 @@ function pct(num: number, denom: number): string {
   return `${((num / denom) * 100).toFixed(2)}%`
 }
 
+function unicodeForms(entry: TestCaseEntry): string[] {
+  if (entry.alternatives) return entry.alternatives.map(({ unicode }) => unicode)
+  return entry.unicode ? [entry.unicode] : []
+}
+
 async function processFile(
   filePath: string,
   relPath: string,
@@ -111,13 +124,14 @@ async function processFile(
       s.skipped_no_world++
       return
     }
-    if (!entry.unicode || entry.unicode === '') {
+    const pdfForms = unicodeForms(entry)
+    if (pdfForms.length === 0 || pdfForms.every((unicode) => unicode === '')) {
       s.skipped_no_unicode++
       return
     }
 
     s.measured++
-    if (entry.world === entry.unicode) {
+    if (pdfForms.includes(entry.world)) {
       s.match++
     } else {
       s.mismatch++
@@ -126,7 +140,7 @@ async function processFile(
           file: relPath,
           line: lineNumber,
           input: entry.input,
-          pdf: entry.unicode,
+          pdf: pdfForms.join(' / '),
           world: entry.world,
         })
       }
@@ -200,7 +214,8 @@ async function main() {
   lines.push('|---|---:|---:|---:|---:|---:|')
   const catKeys = [...perCategory.keys()].sort()
   for (const k of catKeys) {
-    const s = perCategory.get(k)!
+    const s = perCategory.get(k)
+    if (!s) continue
     lines.push(`| ${k}/ | ${s.total} | ${s.measured} | ${s.match} | ${s.mismatch} | ${pct(s.match, s.measured)} |`)
   }
   lines.push('')
@@ -258,10 +273,10 @@ async function main() {
   console.log(`일치:     ${grand.match} (${pct(grand.match, grand.measured)})`)
   console.log(`불일치:   ${grand.mismatch} (${pct(grand.mismatch, grand.measured)})`)
   console.log(`Skip:     ${grand.skipped_latex + grand.skipped_empty_input + grand.skipped_no_world + grand.skipped_no_unicode}`)
-  console.log('  - LaTeX:           ' + grand.skipped_latex)
-  console.log('  - 빈 input:        ' + grand.skipped_empty_input)
-  console.log('  - world 미수집:    ' + grand.skipped_no_world)
-  console.log('  - unicode 없음:    ' + grand.skipped_no_unicode)
+  console.log(`  - LaTeX:           ${grand.skipped_latex}`)
+  console.log(`  - 빈 input:        ${grand.skipped_empty_input}`)
+  console.log(`  - world 미수집:    ${grand.skipped_no_world}`)
+  console.log(`  - unicode 없음:    ${grand.skipped_no_unicode}`)
   console.log('')
   console.log(`보고서: bench/WORLD_BENCH.md`)
   console.log(`미스매치: bench/WORLD_MISMATCHES.md`)

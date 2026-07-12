@@ -67,24 +67,15 @@ impl BrailleRule for Rule41 {
 
 /// Scan backwards from index to find if preceded by a digit or ASCII letter.
 fn scan_prefix(word_chars: &[char], index: usize) -> (bool, bool) {
-    let mut has_numeric_prefix = false;
-    let mut has_ascii_prefix = false;
-    let mut j = index;
-    while j > 0 {
-        let prev = word_chars[j - 1];
-        if prev.is_ascii_digit() {
-            has_numeric_prefix = true;
-            break;
-        } else if prev.is_ascii_alphabetic() {
-            has_ascii_prefix = true;
-            break;
-        } else if prev == ' ' {
-            j -= 1;
-        } else {
-            break;
-        }
+    match word_chars[..index]
+        .iter()
+        .rev()
+        .copied()
+        .find(|prev| *prev != ' ')
+    {
+        Some(prev) => (prev.is_ascii_digit(), prev.is_ascii_alphabetic()),
+        None => (false, false),
     }
-    (has_numeric_prefix, has_ascii_prefix)
 }
 
 /// Get the next character (within word or from next word).
@@ -116,15 +107,6 @@ mod tests {
         assert_eq!(ascii, expect_ascii);
     }
 
-    /// Rule 41 golden test — testcase JSON 정답과 byte-identical.
-    #[rstest::rstest]
-    #[case::thousand_with_comma("1,000", "⠼⠁⠂⠚⠚⠚")]
-    #[case::decimal_with_period("0.48", "⠼⠚⠲⠙⠓")]
-    fn golden_test_alignment(#[case] input: &str, #[case] expected: &str) {
-        let result = crate::encode_to_unicode(input).unwrap();
-        assert_eq!(result, expected, "Rule 41 golden test failed for: {input}");
-    }
-
     #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "41");
@@ -137,6 +119,18 @@ mod tests {
         let mut owned = crate::test_helpers::CtxOwned::for_text("ab", false);
         let ctx = owned.ctx_at(0);
         assert!(!Rule41.matches(&ctx));
+    }
+
+    /// 제41항 — 숫자/로마자 구간 안의 쉼표는 숫자 쉼표 규칙이 잡는다.
+    #[rstest::rstest]
+    #[case::between_digits("1,000", 1)]
+    #[case::between_ascii_letters("A,B", 1)]
+    #[case::ascii_before_digit("A,1", 1)]
+    fn rule41_matches_numeric_or_ascii_comma_context(#[case] input: &str, #[case] index: usize) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(index);
+
+        assert!(Rule41.matches(&ctx));
     }
 
     /// rule_41 line 75 — `j -= 1;` when prev char is a space (continues backward scan).

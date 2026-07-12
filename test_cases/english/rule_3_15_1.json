@@ -1,0 +1,35 @@
+[
+  {
+    "input": "6′",
+    "context": "english",
+    "internal": "#f7",
+    "expected": "601154",
+    "unicode": "⠼⠋⠶"
+  },
+  {
+    "input": "9″",
+    "context": "english",
+    "internal": "#i77",
+    "expected": "60105454",
+    "unicode": "⠼⠊⠶⠶"
+  },
+  {
+    "input": "5′10″",
+    "context": "english",
+    "internal": "#e7#aj77",
+    "expected": "601754601265454",
+    "unicode": "⠼⠑⠶⠼⠁⠚⠶⠶"
+  },
+  {
+    "input": "4' 11\"",
+    "internal": "#d' #aa,7",
+    "expected": "60254060113254",
+    "unicode": "⠼⠙⠄⠀⠼⠁⠁⠠⠶"
+  },
+  {
+    "input": "X″ long",
+    "internal": ",x77 l;g",
+    "expected": "32455454074827",
+    "unicode": "⠠⠭⠶⠶⠀⠇⠰⠛"
+  }
+]

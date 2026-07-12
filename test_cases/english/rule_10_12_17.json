@@ -1,0 +1,80 @@
+[
+  {
+    "input": "for-ev-er-more",
+    "internal": "=-ev-]-more",
+    "expected": "6336173936593613212317",
+    "unicode": "⠿⠤⠑⠧⠤⠻⠤⠍⠕⠗⠑"
+  },
+  {
+    "input": "not-with-stand-ing",
+    "internal": "not-)-/&-9g",
+    "expected": "2921303662361247362027",
+    "unicode": "⠝⠕⠞⠤⠾⠤⠌⠯⠤⠔⠛"
+  },
+  {
+    "input": "some-one",
+    "internal": "\"s-\"o",
+    "expected": "1614361621",
+    "unicode": "⠐⠎⠤⠐⠕"
+  },
+  {
+    "input": "en-chant-ment",
+    "internal": "en-*ant-m5t",
+    "expected": "172936331293036133430",
+    "unicode": "⠑⠝⠤⠡⠁⠝⠞⠤⠍⠢⠞"
+  },
+  {
+    "input": "in-fea-si-ble",
+    "internal": "9-fea-si-ble",
+    "expected": "203611171361410363717",
+    "unicode": "⠔⠤⠋⠑⠁⠤⠎⠊⠤⠃⠇⠑"
+  },
+  {
+    "input": "child-ish-ly",
+    "internal": "*-i%-ly",
+    "expected": "3336104136761",
+    "unicode": "⠡⠤⠊⠩⠤⠇⠽"
+  },
+  {
+    "input": "dis-in-ter-est",
+    "internal": "dis-9-t]-e/",
+    "expected": "2510143620363059361712",
+    "unicode": "⠙⠊⠎⠤⠔⠤⠞⠻⠤⠑⠌"
+  },
+  {
+    "input": "al-be-it",
+    "internal": ";al-be-it",
+    "expected": "481736317361030",
+    "unicode": "⠰⠁⠇⠤⠃⠑⠤⠊⠞"
+  },
+  {
+    "input": "friend-li-ness",
+    "internal": "fr-li-ness",
+    "expected": "1123367103629171414",
+    "unicode": "⠋⠗⠤⠇⠊⠤⠝⠑⠎⠎"
+  },
+  {
+    "input": "for-get-ting",
+    "internal": "=-get-t+",
+    "expected": "6336271730363044",
+    "unicode": "⠿⠤⠛⠑⠞⠤⠞⠬"
+  },
+  {
+    "input": "bless-ed",
+    "internal": "b.s-$",
+    "expected": "340143643",
+    "unicode": "⠃⠨⠎⠤⠫"
+  },
+  {
+    "input": "out-side",
+    "internal": "\\-side",
+    "expected": "513614102517",
+    "unicode": "⠳⠤⠎⠊⠙⠑"
+  },
+  {
+    "input": "be-low",
+    "internal": "be-l[",
+    "expected": "31736742",
+    "unicode": "⠃⠑⠤⠇⠪"
+  }
+]

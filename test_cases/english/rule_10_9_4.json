@@ -1,0 +1,68 @@
+[
+  {
+    "input": "DeafBlind",
+    "internal": ",d1f,bl",
+    "expected": "32252113237",
+    "unicode": "⠠⠙⠂⠋⠠⠃⠇"
+  },
+  {
+    "input": "QuickTime",
+    "internal": ",qk,\"t",
+    "expected": "32315321630",
+    "unicode": "⠠⠟⠅⠠⠐⠞"
+  },
+  {
+    "input": "GREATgreatGrandChildren",
+    "internal": ",,grt,'grt,gr&,*n",
+    "expected": "323227233032427233032272347323329",
+    "unicode": "⠠⠠⠛⠗⠞⠠⠄⠛⠗⠞⠠⠛⠗⠯⠠⠡⠝"
+  },
+  {
+    "input": "BrailleResumés",
+    "internal": ",brl,resum^/es",
+    "expected": "32323732231714371324121714",
+    "unicode": "⠠⠃⠗⠇⠠⠗⠑⠎⠥⠍⠘⠌⠑⠎"
+  },
+  {
+    "input": "LetterWriter",
+    "internal": ",lr,writ]",
+    "expected": "32723325823103059",
+    "unicode": "⠠⠇⠗⠠⠺⠗⠊⠞⠻"
+  },
+  {
+    "input": "ABOUTface!",
+    "internal": ",,ab\\t,'face6",
+    "expected": "323213513032411191722",
+    "unicode": "⠠⠠⠁⠃⠳⠞⠠⠄⠋⠁⠉⠑⠖"
+  },
+  {
+    "input": "AfterHours",
+    "internal": ",aft],h\\rs",
+    "expected": "3211130593219512314",
+    "unicode": "⠠⠁⠋⠞⠻⠠⠓⠳⠗⠎"
+  },
+  {
+    "input": "FirstAmerica",
+    "internal": ",fir/,am]ica",
+    "expected": "321110231232113591091",
+    "unicode": "⠠⠋⠊⠗⠌⠠⠁⠍⠻⠊⠉⠁"
+  },
+  {
+    "input": "𝐆𝐫𝐞𝐚𝐭GrandChild",
+    "internal": "^1,gr1t^',gr&,*ild",
+    "expected": "24232272323024432272347323310725",
+    "unicode": "⠘⠂⠠⠛⠗⠂⠞⠘⠄⠠⠛⠗⠯⠠⠡⠊⠇⠙"
+  },
+  {
+    "input": "PenFriend",
+    "internal": ",p5,fri5d",
+    "expected": "321534321123103425",
+    "unicode": "⠠⠏⠢⠠⠋⠗⠊⠢⠙"
+  },
+  {
+    "input": "Super𝐵𝑟𝑎𝑖𝑙𝑙𝑒",
+    "internal": ",sup].1,braille",
+    "expected": "3214371559402323231107717",
+    "unicode": "⠠⠎⠥⠏⠻⠨⠂⠠⠃⠗⠁⠊⠇⠇⠑"
+  }
+]

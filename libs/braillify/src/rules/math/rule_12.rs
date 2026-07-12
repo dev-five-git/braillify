@@ -91,30 +91,27 @@ pub fn encode_variable(
     result: &mut Vec<u8>,
     engine: &MathTokenEngine,
 ) -> Result<bool, String> {
-    if c == 'y'
-        && matches!(tokens.get(*i + 1), Some(MathToken::Superscript(_)))
+    // PDF 수학 제53항 4 — `<var>^{(n)} =` 도함수 차수 표기. 종속변수는 어느 문자든
+    // (y, f, g …) 같은 규칙이고, 위첨자의 `(n)` 괄호가 도함수 차수 표지이므로,
+    // 일반 지수(`x^2 =`)와 구별하기 위해 괄호로 감싼 위첨자만 도함수로 처리한다.
+    if c.is_ascii_alphabetic()
         && matches!(tokens.get(*i + 2), Some(MathToken::Operator('=')))
         && let Some(MathToken::Superscript(content)) = tokens.get(*i + 1)
+        && content.len() >= 2
+        && is_math_paren_open(content.first())
+        && is_math_paren_close(content.last())
     {
-        // PDF 수학 제53항 4 — `y^{(n)}` 형태의 도함수 차수 표기.
-        // content가 이미 `(...)` 형태면 본문 그대로 emit해 중복 괄호화를 피한다.
-        let content_already_wrapped = content.len() >= 2
-            && is_math_paren_open(content.first())
-            && is_math_paren_close(content.last());
-        result.push(crate::english::encode_english('y')?);
+        result.push(crate::english::encode_english(c)?);
         result.push(24);
-        if content_already_wrapped {
-            engine.encode_tokens(content, result)?;
-        } else {
-            result.push(38);
-            engine.encode_tokens(content, result)?;
-            result.push(52);
-        }
+        engine.encode_tokens(content, result)?;
         *prev_was_number = false;
         *i += 2;
         return Ok(true);
     }
 
+    // PDF 수학 제53항 — `= d<num>/d<den>` 도함수 표기. 분자·분모 변수는 어느
+    // 문자든 동일한 규칙으로 점역되므로(dy/dx, dz/dt, dx/du …) 변수값을 고정하지
+    // 않고 토큰에서 읽어 그대로 분모 먼저 emit 한다.
     if c == 'd'
         && matches!(
             tokens.get(i.saturating_sub(1)),
@@ -126,8 +123,6 @@ pub fn encode_variable(
         && matches!(tokens.get(*i + 4), Some(MathToken::Variable(_)))
         && let (Some(MathToken::Variable(num_var)), Some(MathToken::Variable(den_var))) =
             (tokens.get(*i + 1), tokens.get(*i + 4))
-        && *num_var == 'y'
-        && *den_var == 'x'
     {
         result.push(crate::english::encode_english('d')?);
         result.push(crate::english::encode_english(
@@ -294,13 +289,15 @@ pub fn encode_upper_variable(
 
     let omit_uppercase_indicator = *i == 0 && next_is_membership_symbol(tokens, *i);
 
-    let overline_suffix_single = matches!(
+    let next_is_overline_suffix = matches!(
         tokens.get(*i + 1),
         Some(MathToken::MathSymbol('\u{0304}' | '\u{0305}'))
-    ) && !matches!(
+    );
+    let overline_suffix_continues = matches!(
         tokens.get(*i + 2),
         Some(MathToken::UpperVariable(_) | MathToken::Prime)
     );
+    let overline_suffix_single = next_is_overline_suffix && !overline_suffix_continues;
 
     let logical_upper = logic_context
         && !matches!(
@@ -428,7 +425,9 @@ impl MathTokenRule for VariableRule {
     }
 
     fn matches(&self, tokens: &[MathToken], index: usize, _state: &MathEncodeState) -> bool {
-        matches!(tokens.get(index), Some(MathToken::Variable(_)))
+        tokens
+            .get(index)
+            .is_some_and(|token| matches!(token, MathToken::Variable(_)))
     }
 
     fn apply(
@@ -736,6 +735,21 @@ mod tests {
         assert_eq!(i, 1);
     }
 
+    #[test]
+    fn upper_variable_sequence_counts_consecutive_upper_variables() {
+        let toks = vec![MathToken::UpperVariable('A'), MathToken::UpperVariable('B')];
+        let mut prev = false;
+        let mut i = 0usize;
+        let mut result = Vec::new();
+
+        let handled =
+            encode_upper_variable('A', &toks, &mut i, &mut prev, false, false, &mut result)
+                .expect("encode_upper_variable");
+
+        assert!(handled);
+        assert_eq!(i, 2);
+    }
+
     /// encode_upper_variable: A∨¬B logic pattern (lines 310-328).
     #[test]
     fn upper_variable_logic_or_not_pattern() {
@@ -833,6 +847,15 @@ mod tests {
         let engine = dummy_engine();
         let res = r.apply(&toks, 0, &mut result, &mut state, &engine);
         assert!(matches!(res, Ok(MathTokenResult::Skip)));
+    }
+
+    #[test]
+    fn variable_rule_matches_only_variable_tokens() {
+        let r = VariableRule;
+        let state = MathEncodeState::with_context(false, MathContext::default());
+
+        assert!(r.matches(&[MathToken::Variable('x')], 0, &state));
+        assert!(!r.matches(&[MathToken::Number("1".to_string())], 0, &state));
     }
 
     /// rule_12 line 355 - UpperVariableRule.apply let-else Skip when token isn't UpperVariable.

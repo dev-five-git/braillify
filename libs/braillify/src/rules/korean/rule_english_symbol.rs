@@ -89,7 +89,7 @@ impl BrailleRule for RuleEnglishSymbol {
                 ctx.state.needs_english_continuation = false;
             }
             if let Some(encoded) = symbol_shortcut::encode_english_char_symbol_shortcut(*sym) {
-                ctx.emit_slice(encoded);
+                ctx.emit_slice(&encoded);
                 if *sym == '-' && ctx.state.is_english {
                     // 다음 글자가 숫자이면 수표(⠼)가 emit되므로 연속표(⠰)는
                     // 불필요하다 (제35항 D-100 같은 영문-숫자 인접 패턴).
@@ -136,5 +136,34 @@ mod tests {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let ctx = owned.ctx_at(0);
         let _ = RuleEnglishSymbol.matches(&ctx);
+    }
+
+    #[test]
+    fn opening_parenthesis_pushes_symbol_mode() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("(", false);
+        let mut ctx = owned.ctx_at(0);
+
+        let _ = RuleEnglishSymbol.apply(&mut ctx);
+
+        assert!(!ctx.state.parenthesis_stack.is_empty());
+    }
+
+    #[test]
+    fn closing_parenthesis_reuses_opening_parenthesis_symbol_mode() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("()", true);
+        {
+            let mut ctx = owned.ctx_at(0);
+            ctx.state.is_english = true;
+
+            let _ = RuleEnglishSymbol.apply(&mut ctx);
+            assert_eq!(ctx.state.parenthesis_stack.len(), 1);
+        }
+
+        let mut ctx = owned.ctx_at(1);
+        ctx.state.is_english = true;
+
+        let _ = RuleEnglishSymbol.apply(&mut ctx);
+
+        assert!(ctx.state.parenthesis_stack.is_empty());
     }
 }

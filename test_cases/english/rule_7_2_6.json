@@ -1,0 +1,20 @@
+[
+  {
+    "input": "an expression--such as this--set apart",
+    "internal": "an expres.n,-s* z ?,-set a\"p",
+    "expected": "12901745152317144029323614330530573236141730011615",
+    "unicode": "⠁⠝⠀⠑⠭⠏⠗⠑⠎⠨⠝⠠⠤⠎⠡⠀⠵⠀⠹⠠⠤⠎⠑⠞⠀⠁⠐⠏"
+  },
+  {
+    "input": "rec--ve",
+    "internal": "rec--ve",
+    "expected": "2317936363917",
+    "unicode": "⠗⠑⠉⠤⠤⠧⠑"
+  },
+  {
+    "input": "B--",
+    "internal": ";,b--",
+    "expected": "483233636",
+    "unicode": "⠰⠠⠃⠤⠤"
+  }
+]

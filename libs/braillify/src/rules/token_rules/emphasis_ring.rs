@@ -50,13 +50,11 @@ impl TokenRule for EmphasisRingRule {
         index: usize,
         _state: &mut crate::rules::context::EncoderState,
     ) -> Result<TokenAction<'a>, String> {
-        if let Some(Token::Word(word)) = tokens.get(index) {
-            return apply_word_arm(word);
+        match tokens.get(index) {
+            Some(Token::Word(word)) => apply_word_arm(word),
+            Some(Token::Space(_)) => Ok(apply_space_arm(tokens, index)),
+            _ => Ok(TokenAction::Noop),
         }
-        if matches!(tokens.get(index), Some(Token::Space(_))) {
-            return Ok(apply_space_arm(tokens, index));
-        }
-        Ok(TokenAction::Noop)
     }
 }
 
@@ -239,6 +237,18 @@ mod tests {
         let mut state = EncoderState::new(false);
         let action = EmphasisRingRule.apply(&tokens, 1, &mut state).unwrap();
         assert!(matches!(action, TokenAction::ReplaceMany(_)));
+    }
+
+    #[test]
+    fn apply_space_after_ring_mark_only_removes_spacing() {
+        let tokens = vec![
+            word("\u{030A}"),
+            Token::Space(SpaceKind::Regular),
+            word("훈민정음"),
+        ];
+        let mut state = EncoderState::new(false);
+        let action = EmphasisRingRule.apply(&tokens, 1, &mut state).unwrap();
+        assert!(matches!(action, TokenAction::ReplaceMany(replacement) if replacement.is_empty()));
     }
 
     /// Non-Word non-Space token → trailing default arm.

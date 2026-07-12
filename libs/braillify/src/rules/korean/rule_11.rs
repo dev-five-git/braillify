@@ -65,13 +65,12 @@ impl BrailleRule for Rule11 {
         if korean.jong.is_some() {
             return false;
         }
-        let Some(next) = ctx.next_char() else {
-            return false;
-        };
-        let Ok(CharType::Korean(next_k)) = CharType::new(next) else {
-            return false;
-        };
-        next_k.cho == 'ㅇ' && next_k.jung == 'ㅖ'
+        ctx.next_char().is_some_and(|next| {
+            matches!(
+                CharType::new(next),
+                Ok(CharType::Korean(next_k)) if next_k.cho == 'ㅇ' && next_k.jung == 'ㅖ'
+            )
+        })
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
@@ -144,25 +143,6 @@ mod tests {
         let mut result = Vec::new();
         apply(&current, 'A', &mut result).unwrap();
         assert!(result.is_empty());
-    }
-
-    #[test]
-    fn golden_test_alignment() {
-        // From test_cases/rule_11.json
-        let cases = vec![
-            ("아예", "⠣⠤⠌"),
-            ("도예", "⠊⠥⠤⠌"),
-            ("뭐예요", "⠑⠏⠤⠌⠬"),
-            ("서예", "⠠⠎⠤⠌"),
-        ];
-        for (input, expected_unicode) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected_unicode,
-                "Rule 11 golden test failed for input: {}",
-                input
-            );
-        }
     }
 
     #[test]

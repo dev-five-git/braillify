@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
 expression: rendered
 ---
 input  = "A'B'C'"
-unicode = ok: "⠠⠠⠁⠠⠦⠃⠴⠄⠉⠠⠦"
-bytes   = ok: [32, 32, 1, 32, 38, 3, 52, 4, 9, 32, 38]
+unicode = ok: "⠠⠁⠄⠠⠃⠄⠠⠉⠠⠴"
+bytes   = ok: [32, 1, 4, 32, 3, 4, 32, 9, 32, 52]

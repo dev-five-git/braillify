@@ -1,0 +1,128 @@
+[
+  {
+    "input": "hereupon",
+    "internal": "\"h^u",
+    "expected": "16192437",
+    "unicode": "⠐⠓⠘⠥"
+  },
+  {
+    "input": "thereby",
+    "internal": "\"!by",
+    "expected": "1646361",
+    "unicode": "⠐⠮⠃⠽"
+  },
+  {
+    "input": "therefore",
+    "internal": "\"!=e",
+    "expected": "16466317",
+    "unicode": "⠐⠮⠿⠑"
+  },
+  {
+    "input": "therein",
+    "internal": "\"!9",
+    "expected": "164620",
+    "unicode": "⠐⠮⠔"
+  },
+  {
+    "input": "thereupon",
+    "internal": "\"!^u",
+    "expected": "16462437",
+    "unicode": "⠐⠮⠘⠥"
+  },
+  {
+    "input": "whereupon",
+    "internal": "\":^u",
+    "expected": "16492437",
+    "unicode": "⠐⠱⠘⠥"
+  },
+  {
+    "input": "whosesoever",
+    "internal": "^:so\"e",
+    "expected": "244914211617",
+    "unicode": "⠘⠱⠎⠕⠐⠑"
+  },
+  {
+    "input": "upon these shores",
+    "internal": "^u ^! %ores",
+    "expected": "24370244604121231714",
+    "unicode": "⠘⠥⠀⠘⠮⠀⠩⠕⠗⠑⠎"
+  },
+  {
+    "input": "Whose are those?",
+    "internal": ",^: >e ^?8",
+    "expected": "322449028170245738",
+    "unicode": "⠠⠘⠱⠀⠜⠑⠀⠘⠹⠦"
+  },
+  {
+    "input": "bothered",
+    "internal": "bo!r$",
+    "expected": "321462343",
+    "unicode": "⠃⠕⠮⠗⠫"
+  },
+  {
+    "input": "coupon",
+    "internal": "c\\pon",
+    "expected": "951152129",
+    "unicode": "⠉⠳⠏⠕⠝"
+  },
+  {
+    "input": "Dupont",
+    "internal": ",dupont",
+    "expected": "32253715212930",
+    "unicode": "⠠⠙⠥⠏⠕⠝⠞"
+  },
+  {
+    "input": "ethereal",
+    "internal": "e!r1l",
+    "expected": "17462327",
+    "unicode": "⠑⠮⠗⠂⠇"
+  },
+  {
+    "input": "hypotheses",
+    "internal": "hypo!ses",
+    "expected": "1961152146141714",
+    "unicode": "⠓⠽⠏⠕⠮⠎⠑⠎"
+  },
+  {
+    "input": "isothere",
+    "internal": "iso!re",
+    "expected": "101421462317",
+    "unicode": "⠊⠎⠕⠮⠗⠑"
+  },
+  {
+    "input": "smithereens",
+    "internal": "smi!re5s",
+    "expected": "1413104623173414",
+    "unicode": "⠎⠍⠊⠮⠗⠑⠢⠎"
+  },
+  {
+    "input": "spathose",
+    "internal": "spa?ose",
+    "expected": "1415157211417",
+    "unicode": "⠎⠏⠁⠹⠕⠎⠑"
+  },
+  {
+    "input": "Theresa",
+    "internal": ",!resa",
+    "expected": "32462317141",
+    "unicode": "⠠⠮⠗⠑⠎⠁"
+  },
+  {
+    "input": "Theseus",
+    "internal": ",!seus",
+    "expected": "324614173714",
+    "unicode": "⠠⠮⠎⠑⠥⠎"
+  },
+  {
+    "input": "Thoseby",
+    "internal": ",?oseby",
+    "expected": "3257211417361",
+    "unicode": "⠠⠹⠕⠎⠑⠃⠽"
+  },
+  {
+    "input": "withered",
+    "internal": ")]$",
+    "expected": "625943",
+    "unicode": "⠾⠻⠫"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "input": "Herf gun",
+    "internal": ",herf gun",
+    "expected": "32191723110273729",
+    "unicode": "⠠⠓⠑⠗⠋⠀⠛⠥⠝"
+  },
+  {
+    "input": "\"mst\" files",
+    "internal": "8mst0 files",
+    "expected": "38131430520111071714",
+    "unicode": "⠦⠍⠎⠞⠴⠀⠋⠊⠇⠑⠎"
+  },
+  {
+    "input": "𝑆𝑂𝑀𝐸𝑆𝐶𝐻 RIVER",
+    "internal": ".1,,somesch ,,riv]",
+    "expected": "402323214211317149190323223103959",
+    "unicode": "⠨⠂⠠⠠⠎⠕⠍⠑⠎⠉⠓⠀⠠⠠⠗⠊⠧⠻"
+  },
+  {
+    "input": "www.sch.edu.au",
+    "internal": "www4s*4$u4au",
+    "expected": "58585850143350433750137",
+    "unicode": "⠺⠺⠺⠲⠎⠡⠲⠫⠥⠲⠁⠥"
+  }
+]

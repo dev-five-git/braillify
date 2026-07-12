@@ -5,7 +5,7 @@
 use crate::math_symbol_shortcut;
 
 pub fn is_integral_symbol(c: char) -> bool {
-    c == '\u{222B}'
+    matches!(c, '\u{222B}')
 }
 
 pub fn encode_integral_symbol(c: char, result: &mut Vec<u8>) -> Result<(), String> {
@@ -21,5 +21,17 @@ mod tests {
     #[test]
     fn test_is_integral_symbol() {
         assert!(is_integral_symbol('\u{222B}'));
+    }
+
+    #[test]
+    fn integral_symbol_paths_use_runtime_input() {
+        let integral = std::hint::black_box('\u{222B}');
+        let plain = std::hint::black_box('x');
+        let mut result = Vec::new();
+
+        assert!(is_integral_symbol(integral));
+        assert!(!is_integral_symbol(plain));
+        encode_integral_symbol(integral, &mut result).unwrap();
+        assert!(!result.is_empty());
     }
 }

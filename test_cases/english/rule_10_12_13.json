@@ -1,0 +1,44 @@
+[
+  {
+    "input": "t-n",
+    "internal": ";t-;n",
+    "expected": "4830364829",
+    "unicode": "⠰⠞⠤⠰⠝"
+  },
+  {
+    "input": "J----y",
+    "internal": ";,j----;y",
+    "expected": "483226363636364861",
+    "unicode": "⠰⠠⠚⠤⠤⠤⠤⠰⠽"
+  },
+  {
+    "input": "s–",
+    "internal": ";s,-",
+    "expected": "48143236",
+    "unicode": "⠰⠎⠠⠤"
+  },
+  {
+    "input": "S—",
+    "internal": ";,s\",-",
+    "expected": "483214163236",
+    "unicode": "⠰⠠⠎⠐⠠⠤"
+  },
+  {
+    "input": "n...ce",
+    "internal": "n444ce",
+    "expected": "29505050917",
+    "unicode": "⠝⠲⠲⠲⠉⠑"
+  },
+  {
+    "input": "fr...nd",
+    "internal": "fr444nd",
+    "expected": "11235050502925",
+    "unicode": "⠋⠗⠲⠲⠲⠝⠙"
+  },
+  {
+    "input": "w...ghed",
+    "internal": "w444<$",
+    "expected": "585050503543",
+    "unicode": "⠺⠲⠲⠲⠣⠫"
+  }
+]

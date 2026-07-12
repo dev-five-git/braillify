@@ -74,14 +74,11 @@ impl BrailleRule for Rule31 {
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
-        let mut run = Vec::new();
-        for ch in &ctx.word_chars[ctx.index..] {
-            if is_greek_letter(*ch) {
-                run.push(*ch);
-            } else {
-                break;
-            }
-        }
+        let run: Vec<char> = ctx.word_chars[ctx.index..]
+            .iter()
+            .copied()
+            .take_while(|ch| is_greek_letter(*ch))
+            .collect();
 
         if run.is_empty() {
             return Ok(RuleResult::Skip);
@@ -103,10 +100,7 @@ impl BrailleRule for Rule31 {
             ctx.emit(crate::unicode::decode_unicode('⠠'));
         }
 
-        // `run` only contains chars where `is_greek_letter` (= `greek_braille.is_some()`)
-        // is true, so `greek_braille` always returns Some here.
-        for ch in &run {
-            let unicode = greek_braille(*ch).expect("run filtered by is_greek_letter");
+        for unicode in run.iter().filter_map(|ch| greek_braille(*ch)) {
             ctx.emit_slice(&encode_unicode_cells(unicode));
         }
         if korean_context {
@@ -138,6 +132,14 @@ mod tests {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let ctx = owned.ctx_at(0);
         let _ = Rule31.matches(&ctx);
+    }
+
+    #[test]
+    fn rule_metadata_reports_phase_and_priority() {
+        let rule = std::hint::black_box(Rule31);
+
+        assert!(matches!(rule.phase(), Phase::CoreEncoding));
+        assert_eq!(rule.priority(), 145);
     }
 
     /// 제31항 — 그리스 문자가 한국어 문맥에서 단일 대문자로 나올 때

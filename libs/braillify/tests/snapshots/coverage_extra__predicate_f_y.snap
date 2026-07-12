@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
 expression: rendered
 ---
 input  = "F(y)"
-unicode = ok: "⠋⠦⠽⠴"
-bytes   = ok: [11, 38, 61, 52]
+unicode = ok: "⠠⠋⠐⠣⠽⠐⠜"
+bytes   = ok: [32, 11, 16, 35, 61, 16, 28]

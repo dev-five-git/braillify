@@ -1,7 +1,8 @@
 ---
 source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
 expression: rendered
 ---
 input  = "a/b"
-unicode = ok: "⠃⠌⠁"
-bytes   = ok: [3, 12, 1]
+unicode = ok: "⠁⠸⠌⠃"
+bytes   = ok: [1, 56, 12, 3]

@@ -48,7 +48,7 @@ jobs:
             file: libs/braillify/src/rules/token_rules/math_expression/apply.rs
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -56,7 +56,7 @@ jobs:
           toolchain: stable
 
       - name: Cache cargo-mutants binary
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cargo/bin/cargo-mutants
           key: cargo-mutants-bin-v27-${{ runner.os }}

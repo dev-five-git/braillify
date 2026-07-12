@@ -1,0 +1,80 @@
+[
+  {
+    "input": "\"Belinda!\"",
+    "internal": "8,2l9da60",
+    "expected": "383267202512252",
+    "unicode": "⠦⠠⠆⠇⠔⠙⠁⠖⠴"
+  },
+  {
+    "input": "(Contact the 𝑑𝑖𝑠𝑡𝑟𝑖𝑐𝑡𝑠)",
+    "internal": "\"<,3tact ! .14tricts\">",
+    "expected": "16353218301930046040250302310930141628",
+    "unicode": "⠐⠣⠠⠒⠞⠁⠉⠞⠀⠮⠀⠨⠂⠲⠞⠗⠊⠉⠞⠎⠐⠜"
+  },
+  {
+    "input": "'display will minimise'",
+    "internal": "'4play w m9imise'",
+    "expected": "4501571610580132010131014174",
+    "unicode": "⠄⠲⠏⠇⠁⠽⠀⠺⠀⠍⠔⠊⠍⠊⠎⠑⠄"
+  },
+  {
+    "input": "concave/convex",
+    "internal": "3cave_/convex",
+    "expected": "18913917561292129391745",
+    "unicode": "⠒⠉⠁⠧⠑⠸⠌⠉⠕⠝⠧⠑⠭"
+  },
+  {
+    "input": "McConnell",
+    "internal": ",mc,connell",
+    "expected": "321393292129291777",
+    "unicode": "⠠⠍⠉⠠⠉⠕⠝⠝⠑⠇⠇"
+  },
+  {
+    "input": "O'Connor",
+    "internal": ",o',connor",
+    "expected": "322143292129292123",
+    "unicode": "⠠⠕⠄⠠⠉⠕⠝⠝⠕⠗"
+  },
+  {
+    "input": "MetroDisco",
+    "internal": ",metro,disco",
+    "expected": "32131730232132251014921",
+    "unicode": "⠠⠍⠑⠞⠗⠕⠠⠙⠊⠎⠉⠕"
+  },
+  {
+    "input": "be'ave",
+    "internal": "be'ave",
+    "expected": "317413917",
+    "unicode": "⠃⠑⠄⠁⠧⠑"
+  },
+  {
+    "input": "be-stow",
+    "internal": "be-/[",
+    "expected": "317361242",
+    "unicode": "⠃⠑⠤⠌⠪"
+  },
+  {
+    "input": "[be]hold",
+    "internal": ".<be.>hold",
+    "expected": "403531740281921725",
+    "unicode": "⠨⠣⠃⠑⠨⠜⠓⠕⠇⠙"
+  },
+  {
+    "input": "con(vey)",
+    "internal": "con\"<vey\">",
+    "expected": "9212916353917611628",
+    "unicode": "⠉⠕⠝⠐⠣⠧⠑⠽⠐⠜"
+  },
+  {
+    "input": "dis'armony",
+    "internal": "dis'>mony",
+    "expected": "25101442813212961",
+    "unicode": "⠙⠊⠎⠄⠜⠍⠕⠝⠽"
+  },
+  {
+    "input": "dis𝑡𝑢𝑟𝑏",
+    "internal": "dis.1turb",
+    "expected": "2510144023037233",
+    "unicode": "⠙⠊⠎⠨⠂⠞⠥⠗⠃"
+  }
+]

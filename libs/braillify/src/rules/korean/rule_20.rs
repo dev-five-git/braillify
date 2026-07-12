@@ -136,4 +136,12 @@ mod tests {
         let ctx = owned.ctx_at(0);
         let _ = Rule20.matches(&ctx);
     }
+
+    #[test]
+    fn legacy_symbol_lookup_encodes_pua_mapping() {
+        assert_eq!(
+            legacy_symbol_bytes(''),
+            Some(vec![crate::unicode::decode_unicode('⠸')])
+        );
+    }
 }

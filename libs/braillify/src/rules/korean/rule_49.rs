@@ -30,7 +30,7 @@ fn apply(ch: char) -> Result<&'static [u8], String> {
 
 /// Encode a punctuation/symbol in English context (different dot patterns for (, ), ,).
 #[cfg(test)]
-fn apply_english(ch: char) -> Option<&'static [u8]> {
+fn apply_english(ch: char) -> Option<Vec<u8>> {
     symbol_shortcut::encode_english_char_symbol_shortcut(ch)
 }
 
@@ -189,7 +189,11 @@ mod tests {
     fn english_parentheses_different() {
         let eng = apply_english('(').unwrap();
         let kor = apply('(').unwrap();
-        assert_ne!(eng, kor, "English and Korean parentheses should differ");
+        assert_ne!(
+            eng.as_slice(),
+            kor,
+            "English and Korean parentheses should differ"
+        );
     }
 
     /// `is_symbol` — 문장부호 / 괄호는 true, 영문/한글은 false.

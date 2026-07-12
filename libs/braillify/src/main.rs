@@ -59,6 +59,10 @@ mod tests {
         )
     }
 
+    fn build_backoff_ms(attempt: u32) -> u64 {
+        200 * u64::from(attempt)
+    }
+
     fn get_built_binary() -> &'static escargot::CargoRun {
         // 재시도 로직: 첫 번째 테스트에서 빌드가 실패할 수 있으므로 재시도
         BUILT_BINARY.get_or_init(|| {
@@ -71,7 +75,7 @@ mod tests {
                         .current_target()
                         .run()
                 },
-                |attempt| 200 * u64::from(attempt),
+                build_backoff_ms,
             )
             .unwrap_or_else(|e| panic_build_failed(&e))
         })
@@ -147,6 +151,11 @@ mod tests {
         // For max_attempts=3, backoff is called at attempt=1 and attempt=2,
         // not at attempt=3 (the last one).
         assert_eq!(*backoffs.borrow(), vec![1, 2]);
+    }
+
+    #[test]
+    fn build_backoff_scales_by_attempt() {
+        assert_eq!(build_backoff_ms(3), 600);
     }
 
     // assert_cmd를 사용한 통합 테스트들

@@ -45,9 +45,6 @@ impl Encoder {
         // ── WordShortcut ─────────────────────────────────
         rule_engine.register(Box::new(rules::korean::rule_18::Rule18));
 
-        // ── ModeManagement ───────────────────────────────
-        rule_engine.register(Box::new(rules::korean::rule_29::Rule29));
-
         // ── CoreEncoding ─────────────────────────────────
         rule_engine.register(Box::new(rules::korean::rule_44::Rule44));
         rule_engine.register(Box::new(rules::korean::rule_66::Rule66));
@@ -260,6 +257,28 @@ impl Encoder {
     }
 
     pub fn encode(&mut self, text: &str, result: &mut Vec<u8>) -> Result<(), String> {
+        // UEB Grade-2 path: pure-English input (no Korean, UEB-eligible, no
+        // explicit mode) is encoded by the unified English engine. It returns
+        // `Some` only when it fully handles the input; otherwise we fall through
+        // to the legacy path so math and mixed Korean contexts keep their routing.
+        // Eligibility is an ASCII letter or a §9 typeform signal, so a letterless
+        // but emphasised input (`27.̲9`, `83%̲`) is still UEB's (`is_ueb_eligible`).
+        if self.default_mode.is_none()
+            && !text.is_empty()
+            && !text.chars().any(crate::utils::is_korean_char)
+            && crate::rules::english_ueb::is_ueb_eligible(text)
+            // Preflight (Phase 7): do NOT intercept inputs the legacy math
+            // pipeline owns by an *unambiguous* math signal — a function name
+            // (`sin`, `log2`) or a letter/digit run with no spaces or English
+            // punctuation (`3ab`, `sin3x`, `f(x-1)`). English prose that merely
+            // contains `-`, `(`, `,`, `.` is NOT blocked (that over-broad reading
+            // of the math detector would swallow `child-ish-ly`, `with(er)`, …).
+            && !crate::rules::english_ueb::is_math_owned(text)
+            && let Some(bytes) = crate::rules::english_ueb::try_encode(text)
+        {
+            result.extend(bytes);
+            return Ok(());
+        }
         self.encode_via_ir(text, result)
     }
 

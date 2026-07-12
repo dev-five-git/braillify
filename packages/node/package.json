@@ -46,6 +46,6 @@
   "type": "module",
   "types": "./pkg/index.d.ts",
   "devDependencies": {
-    "binaryen": "^129.0.0"
+    "binaryen": "^130.0.0"
   }
 }

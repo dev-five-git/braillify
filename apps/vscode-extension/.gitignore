@@ -1,0 +1,15 @@
+# 빌드 산출물 (bun run build 로 생성 — extension host + webview 번들, 인라인 WASM 포함)
+out/
+
+# 의존성
+node_modules/
+
+# VS Code 확장 테스트 실행 데이터
+.vscode-test/
+.vscode/test-user-data/
+
+# 패키징 산출물
+*.vsix
+
+# OS
+.DS_Store

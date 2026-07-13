@@ -1,0 +1,85 @@
+{
+  "name": "vscode-extension",
+  "publisher": "devfive",
+  "displayName": "Braillify",
+  "description": "2024 개정 한국 점자 규정 기반 점역기 확장 프로그램",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "braillify-explorer",
+          "title": "Braillify",
+          "icon": "assets/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "braillify-explorer": [
+        {
+          "type": "webview",
+          "id": "braillify.sidebarView",
+          "name": "점역기",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "braillify.translateSelection",
+        "title": "선택한 텍스트 점역하기"
+      },
+      {
+        "command": "braillify.reverseTranslateSelection",
+        "title": "선택한 점자 역점역하기"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "braillify.translateSelection",
+          "when": "editorHasSelection",
+          "group": "braillify@1"
+        },
+        {
+          "command": "braillify.reverseTranslateSelection",
+          "when": "editorHasSelection",
+          "group": "braillify@2"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "bun run build",
+    "build": "tsc -p ./ && bun run build:webview",
+    "build:webview": "vite build --config vite.webview.config.ts",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "@braillify/shared": "workspace:*",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "@devup-ui/react": "^1.0.37",
+    "@devup-ui/components": "^0.1.46"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "vite": "^6.0.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite-plugin-wasm": "^3.0.0",
+    "vite-plugin-top-level-await": "^1.4.0",
+    "@devup-ui/vite-plugin": "^1.0.61"
+  }
+}

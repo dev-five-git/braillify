@@ -1,18 +1,18 @@
 'use client'
 
-import { Input, Toggle } from '@devup-ui/components'
-import { Box, Flex, Text } from '@devup-ui/react'
-import { useMemo, useState } from 'react'
-
-import { EditableBrailleCell } from '../components/EditableBrailleCell'
 import {
   type DotNumber,
   masksToString,
   mirrorMask,
   parseBrailleString,
   toggleDot,
-} from '../lib/braille'
-import { copyText } from '../lib/clipboard'
+} from '@braillify/shared'
+import { copyText } from '@braillify/shared'
+import { Input, Toggle } from '@devup-ui/components'
+import { Box, Flex, Text } from '@devup-ui/react'
+import { useMemo, useState } from 'react'
+
+import { EditableBrailleCell } from '../components/EditableBrailleCell'
 
 export function EditorView() {
   const [cells, setCells] = useState<number[]>([0])

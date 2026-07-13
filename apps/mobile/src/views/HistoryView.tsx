@@ -1,17 +1,16 @@
 'use client'
 
-import { Input } from '@devup-ui/components'
-import { Box, Flex, Text } from '@devup-ui/react'
-import { useEffect, useMemo, useState } from 'react'
-
-import { copyText } from '../lib/clipboard'
+import { copyText } from '@braillify/shared'
 import {
   type HistoryItem,
   listHistory,
   removeHistory,
   subscribeHistory,
   toggleFavorite,
-} from '../lib/history'
+} from '@braillify/shared'
+import { Input } from '@devup-ui/components'
+import { Box, Flex, Text } from '@devup-ui/react'
+import { useEffect, useMemo, useState } from 'react'
 
 type Tab = 'recent' | 'favorites'
 

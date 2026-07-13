@@ -1,6 +1,5 @@
+import { type DotNumber } from '@braillify/shared'
 import { Box, Flex, Text } from '@devup-ui/react'
-
-import { type DotNumber } from '../lib/braille'
 
 type Props = {
   mask: number

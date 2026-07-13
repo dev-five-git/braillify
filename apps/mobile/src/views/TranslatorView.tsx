@@ -1,14 +1,14 @@
 'use client'
 
+import { masksToString } from '@braillify/shared'
+import { copyText } from '@braillify/shared'
+import { pushHistory } from '@braillify/shared'
+import { translate, translateReverse } from '@braillify/shared'
 import { Textarea } from '@devup-ui/components'
 import { Box, Flex, Text } from '@devup-ui/react'
 import { useState } from 'react'
 
 import { BrailleInput } from '../components/BrailleInput'
-import { masksToString } from '../lib/braille'
-import { copyText } from '../lib/clipboard'
-import { pushHistory } from '../lib/history'
-import { translate, translateReverse } from '../lib/translate'
 
 // 3가지 모드를 하나의 타입으로 통합
 type PageMode = 'general' | 'math' | 'reverse'

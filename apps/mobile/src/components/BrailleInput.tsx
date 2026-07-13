@@ -1,9 +1,9 @@
 'use client'
 
+import { type DotNumber, masksToString, toggleDot } from '@braillify/shared'
 import { Box, Flex, Text } from '@devup-ui/react'
 import { useEffect, useRef, useState } from 'react'
 
-import { type DotNumber, masksToString, toggleDot } from '../lib/braille'
 import { EditableBrailleCell } from './EditableBrailleCell'
 
 interface BrailleInputProps {

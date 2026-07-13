@@ -1,4 +1,4 @@
-import type { TranslateMode } from './history'
+export type TranslateMode = 'general' | 'math'
 
 export type TranslateResult =
   | { ok: true; braille: string }

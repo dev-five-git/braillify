@@ -1,4 +1,4 @@
-export type TranslateMode = 'general' | 'math'
+import { TranslateMode } from './translate.js'
 
 export type HistoryItem = {
   id: string
@@ -9,7 +9,31 @@ export type HistoryItem = {
   createdAt: number
 }
 
+export interface HistoryAdapter {
+  getItem(key: string): string | null
+  setItem(key: string, value: string): void
+}
+
+class LocalStorageAdapter implements HistoryAdapter {
+  getItem(key: string): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return window.localStorage.getItem(key)
+    }
+    return null
+  }
+  setItem(key: string, value: string): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(key, value)
+    }
+  }
+}
+
 const KEY = 'braillify.history.v1'
+let currentAdapter: HistoryAdapter = new LocalStorageAdapter()
+
+export function setHistoryAdapter(adapter: HistoryAdapter) {
+  currentAdapter = adapter
+}
 
 type Listener = () => void
 const listeners = new Set<Listener>()
@@ -20,7 +44,7 @@ function emit() {
 
 function read(): HistoryItem[] {
   try {
-    const raw = localStorage.getItem(KEY)
+    const raw = currentAdapter.getItem(KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw)
     return Array.isArray(parsed) ? parsed : []
@@ -30,7 +54,7 @@ function read(): HistoryItem[] {
 }
 
 function write(items: HistoryItem[]): void {
-  localStorage.setItem(KEY, JSON.stringify(items))
+  currentAdapter.setItem(KEY, JSON.stringify(items))
   emit()
 }
 
@@ -49,7 +73,10 @@ export function pushHistory(input: {
   mode: TranslateMode
 }): HistoryItem {
   const item: HistoryItem = {
-    id: crypto.randomUUID(),
+    id:
+      typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Math.random().toString(36).substring(2, 15),
     source: input.source,
     braille: input.braille,
     mode: input.mode,

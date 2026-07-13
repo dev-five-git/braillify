@@ -1,5 +1,6 @@
 [workspace]
 members = ["libs/*", "packages/*"]
+exclude = ["packages/shared"]
 resolver = "3"
 
 [workspace.package]

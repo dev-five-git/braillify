@@ -16,6 +16,22 @@
         "accent": "#3FB6A8",
         "star": "#F5C518",
         "tabBar": "#2A2A2A"
+      },
+      "dark": {
+        "bg": "#121212",
+        "surface": "#1E1E1E",
+        "text": "#FFFFFF",
+        "textMuted": "#A0A0A0",
+        "textSubtle": "#666666",
+        "border": "#2D2D2D",
+        "primary": "#FFFFFF",
+        "primaryText": "#121212",
+        "danger": "#E03E5C",
+        "dangerSoft": "#2E1B1D",
+        "dangerSoftBorder": "#62232B",
+        "accent": "#3FB6A8",
+        "star": "#F5C518",
+        "tabBar": "#1A1A1A"
       }
     }
   }

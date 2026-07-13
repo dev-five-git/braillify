@@ -9,7 +9,7 @@
     "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings",
     "test": "cargo tarpaulin --engine llvm --out xml --out stdout -- --skip test_by_testcase && bun test --coverage && cd py-test && uv run pytest",
     "test:testcase": "cargo test -p braillify test_by_testcase -- --nocapture",
-    "preinstall": "uv sync && (cargo install wasm-pack || node -e \"process.exit(0)\") && (pip install maturin || \"process.exit(0)\")",
+    "preinstall": "uv sync && (which wasm-pack || cargo install wasm-pack || node -e \"process.exit(0)\") && (which maturin || pip3 install maturin || uv pip install maturin || node -e \"process.exit(0)\")",
     "build": "cargo build --release -p braillify && bun -F braillify build && cd packages/python && maturin build --release --out dist",
     "build:landing": "bun run build && (cargo test test_by_testcase || node -e \"process.exit(0)\") && bun -F landing build",
     "changepacks": "bunx @changepacks/cli",
@@ -17,7 +17,10 @@
   },
   "workspaces": [
     "packages/node",
+    "packages/shared",
     "apps/landing",
+    "apps/web-extension",
+    "apps/vscode-extension",
     "apps/mobile"
   ],
   "devDependencies": {
@@ -27,5 +30,8 @@
     "eslint-plugin-devup": "^2.0.19",
     "oxlint": "^1.66.0"
   },
-  "author": "devfive"
+  "author": "devfive",
+  "overrides": {
+    "@vitejs/plugin-react": "4.4.1"
+  }
 }

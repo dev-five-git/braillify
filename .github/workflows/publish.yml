@@ -79,8 +79,16 @@ jobs:
           echo 'merge_derives = true' >> .rustfmt.toml
           echo 'use_small_heuristics = "Default"' >> .rustfmt.toml
           cargo fmt
-      - name: Test
-        run: bun run test
+      - name: Test (Rust coverage)
+        timeout-minutes: 20
+        run: bun run test:rust
+      - name: Test (Node)
+        timeout-minutes: 10
+        # Windows에서 중첩된 `bun run`이 테스트 완료 후 간헐적으로 멈추므로 직접 실행한다.
+        run: bun test
+      - name: Test (Python)
+        timeout-minutes: 10
+        run: bun run test:python
       - name: Format Rollback
         shell: bash
         run: |
@@ -206,7 +214,7 @@ jobs:
           - macos-latest
     steps:
       # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -872,7 +880,7 @@ jobs:
           - arm64-darwin
           - x64-mingw-ucrt
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -907,7 +915,7 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: ruby/setup-ruby@v1
         with:

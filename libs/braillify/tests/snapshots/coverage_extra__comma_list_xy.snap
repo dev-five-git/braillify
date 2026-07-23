@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "변수 $x, y$ 와 상수"
+unicode = ok: "⠘⠡⠠⠍⠀⠴⠭⠐⠀⠰⠽⠲⠀⠧⠀⠇⠶⠠⠍"
+bytes   = ok: [24, 33, 32, 13, 0, 52, 45, 16, 0, 48, 61, 50, 0, 39, 0, 7, 54, 32, 13]

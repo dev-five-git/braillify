@@ -1,0 +1,44 @@
+[
+  {
+    "input": "𝐩𝐞𝐧𝐬𝐢𝐨́𝐧 𝐜𝐨𝐦𝐩𝐥𝐞𝐭𝐚",
+    "internal": "pensi+n completa",
+    "expected": "1517291410442909211315717301",
+    "unicode": "⠏⠑⠝⠎⠊⠬⠝⠀⠉⠕⠍⠏⠇⠑⠞⠁"
+  },
+  {
+    "input": "full board",
+    "internal": "full bo>d",
+    "expected": "11377703212825",
+    "unicode": "⠋⠥⠇⠇⠀⠃⠕⠜⠙"
+  },
+  {
+    "input": "¿𝐩𝐮𝐞𝐝𝐨 𝐯𝐞𝐫𝐥𝐨?",
+    "internal": "5puedo verlo5",
+    "expected": "341537172521039172372134",
+    "unicode": "⠢⠏⠥⠑⠙⠕⠀⠧⠑⠗⠇⠕⠢"
+  },
+  {
+    "input": "may I see it?",
+    "internal": "may ,i see x8",
+    "expected": "1316103210014171704538",
+    "unicode": "⠍⠁⠽⠀⠠⠊⠀⠎⠑⠑⠀⠭⠦"
+  },
+  {
+    "input": "𝐛𝐚𝐧̃𝐨 𝐜𝐨𝐦𝐩𝐚𝐫𝐭𝐢𝐝𝐨",
+    "internal": "ba]o compartido",
+    "expected": "3159210921131512330102521",
+    "unicode": "⠃⠁⠻⠕⠀⠉⠕⠍⠏⠁⠗⠞⠊⠙⠕"
+  },
+  {
+    "input": "private bath",
+    "internal": "private ba?",
+    "expected": "152310391301703157",
+    "unicode": "⠏⠗⠊⠧⠁⠞⠑⠀⠃⠁⠹"
+  },
+  {
+    "input": "No article is used after 𝐪𝐮𝐞́ and 𝐯𝐚𝐲𝐚 in exclamations.",
+    "internal": ",no >ticle is us$ af ^1qu! & ^1vaya 9 exclama;ns4",
+    "expected": "322921028301097170101403714430111024231374604702423916110200174597113148291450",
+    "unicode": "⠠⠝⠕⠀⠜⠞⠊⠉⠇⠑⠀⠊⠎⠀⠥⠎⠫⠀⠁⠋⠀⠘⠂⠟⠥⠮⠀⠯⠀⠘⠂⠧⠁⠽⠁⠀⠔⠀⠑⠭⠉⠇⠁⠍⠁⠰⠝⠎⠲"
+  }
+]

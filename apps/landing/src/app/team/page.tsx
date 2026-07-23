@@ -4,8 +4,32 @@ import { Metadata } from 'next'
 import TeamMemberCard from '@/components/team/TeamMemberCard'
 
 export const metadata: Metadata = {
+  title: '팀 소개',
+  description:
+    'Braillify를 만들어가는 팀원들을 소개합니다. 데브파이브(Devfive)와 오픈소스 기여자들이 함께 한국 점자 변환 라이브러리를 개발합니다.',
   alternates: {
     canonical: '/team',
+  },
+  // Next.js does not deep-merge openGraph from the parent layout, so the
+  // shared fields (siteName, locale, image) must be repeated to keep
+  // social previews consistent across pages.
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: 'https://braillify.kr/team',
+    siteName: 'Braillify',
+    title: '팀 소개 | Braillify',
+    description:
+      'Braillify를 만들어가는 팀원들을 소개합니다. 데브파이브와 오픈소스 기여자들이 함께 한국 점자 변환 라이브러리를 개발합니다.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Braillify - 한국어 점자 변환 라이브러리',
+        type: 'image/png',
+      },
+    ],
   },
 }
 
@@ -22,7 +46,7 @@ export default function TeamPage() {
       w="100%"
     >
       <VStack gap="20px">
-        <Text color="$title" typography="docsTitle">
+        <Text as="h1" color="$title" m="0" typography="docsTitle">
           팀 소개
         </Text>
         <Text color="$text" typography="body">

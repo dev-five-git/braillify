@@ -1,0 +1,138 @@
+[
+  {
+    "input": "7/11/59",
+    "internal": "#g_/#aa_/#ei",
+    "expected": "6027561260115612601710",
+    "unicode": "⠼⠛⠸⠌⠼⠁⠁⠸⠌⠼⠑⠊"
+  },
+  {
+    "input": "7.11.59",
+    "internal": "#g4aa4ei",
+    "expected": "60275011501710",
+    "unicode": "⠼⠛⠲⠁⠁⠲⠑⠊"
+  },
+  {
+    "input": "1960's",
+    "internal": "#aifj's",
+    "expected": "601101126414",
+    "unicode": "⠼⠁⠊⠋⠚⠄⠎"
+  },
+  {
+    "input": "'70s and '80s",
+    "internal": "'#gjs & '#hjs",
+    "expected": "4602726140470460192614",
+    "unicode": "⠄⠼⠛⠚⠎⠀⠯⠀⠄⠼⠓⠚⠎"
+  },
+  {
+    "input": "10:30 a.m.",
+    "internal": "#aj3#cj a4m4",
+    "expected": "60126186092601501350",
+    "unicode": "⠼⠁⠚⠒⠼⠉⠚⠀⠁⠲⠍⠲"
+  },
+  {
+    "input": "10.30 am",
+    "internal": "#aj4cj am",
+    "expected": "60126509260113",
+    "unicode": "⠼⠁⠚⠲⠉⠚⠀⠁⠍"
+  },
+  {
+    "input": "$8.75",
+    "context": "english",
+    "internal": "@s#h4ge",
+    "expected": "8146019502717",
+    "unicode": "⠈⠎⠼⠓⠲⠛⠑"
+  },
+  {
+    "input": "£8.75",
+    "internal": "@l#h4ge",
+    "expected": "876019502717",
+    "unicode": "⠈⠇⠼⠓⠲⠛⠑"
+  },
+  {
+    "input": "R8,75",
+    "internal": ",r#h1ge",
+    "expected": "3223601922717",
+    "unicode": "⠠⠗⠼⠓⠂⠛⠑"
+  },
+  {
+    "input": "$1,500.00",
+    "context": "english",
+    "internal": "@s#a1ejj4jj",
+    "expected": "8146012172626502626",
+    "unicode": "⠈⠎⠼⠁⠂⠑⠚⠚⠲⠚⠚"
+  },
+  {
+    "input": "€1.500,00",
+    "context": "english",
+    "internal": "@e#a4ejj1jj",
+    "expected": "8176015017262622626",
+    "unicode": "⠈⠑⠼⠁⠲⠑⠚⠚⠂⠚⠚"
+  },
+  {
+    "input": "2nd",
+    "internal": "#bnd",
+    "expected": "6032925",
+    "unicode": "⠼⠃⠝⠙"
+  },
+  {
+    "input": "2d",
+    "internal": "#b;d",
+    "expected": "6034825",
+    "unicode": "⠼⠃⠰⠙"
+  },
+  {
+    "input": "1er",
+    "context": "english",
+    "internal": "#a;er",
+    "expected": "601481723",
+    "unicode": "⠼⠁⠰⠑⠗"
+  },
+  {
+    "input": "M4G 3E8",
+    "internal": ",m#d,g #c,e#h",
+    "expected": "321360253227060932176019",
+    "unicode": "⠠⠍⠼⠙⠠⠛⠀⠼⠉⠠⠑⠼⠓"
+  },
+  {
+    "input": "W1N 9LF",
+    "internal": ",w#a,n #i,,lf",
+    "expected": "32586013229060103232711",
+    "unicode": "⠠⠺⠼⠁⠠⠝⠀⠼⠊⠠⠠⠇⠋"
+  },
+  {
+    "input": "N12 7BT",
+    "internal": ",n#ab #g,,bt",
+    "expected": "32296013060273232330",
+    "unicode": "⠠⠝⠼⠁⠃⠀⠼⠛⠠⠠⠃⠞"
+  },
+  {
+    "input": "(416) 486-2500",
+    "internal": "\"<#daf\"> #dhf-#bejj",
+    "expected": "16356025111162806025191136603172626",
+    "unicode": "⠐⠣⠼⠙⠁⠋⠐⠜⠀⠼⠙⠓⠋⠤⠼⠃⠑⠚⠚"
+  },
+  {
+    "input": "For a taxi call 13-cabs.",
+    "internal": ",= a taxi call #ac-cabs4",
+    "expected": "326301030145100917706019369131450",
+    "unicode": "⠠⠿⠀⠁⠀⠞⠁⠭⠊⠀⠉⠁⠇⠇⠀⠼⠁⠉⠤⠉⠁⠃⠎⠲"
+  },
+  {
+    "input": "telephone 1300-vision",
+    "internal": "teleph\"o #acjj-vi.n",
+    "expected": "3017717151916210601926263639104029",
+    "unicode": "⠞⠑⠇⠑⠏⠓⠐⠕⠀⠼⠁⠉⠚⠚⠤⠧⠊⠨⠝"
+  },
+  {
+    "input": "1-800-SLEEP88",
+    "internal": "#a-#hjj-,,sleep#hh",
+    "expected": "6013660192626363232147171715601919",
+    "unicode": "⠼⠁⠤⠼⠓⠚⠚⠤⠠⠠⠎⠇⠑⠑⠏⠼⠓⠓"
+  },
+  {
+    "input": "ISBN 0-14-300414-X",
+    "internal": ",,isbn #j-#ad-#cjjdad-;,x",
+    "expected": "323210143290602636601253660926262512536483245",
+    "unicode": "⠠⠠⠊⠎⠃⠝⠀⠼⠚⠤⠼⠁⠙⠤⠼⠉⠚⠚⠙⠁⠙⠤⠰⠠⠭"
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "input": "we-e-ellll",
+    "internal": "we-;e-ellll",
+    "expected": "581736481736177777",
+    "unicode": "⠺⠑⠤⠰⠑⠤⠑⠇⠇⠇⠇"
+  },
+  {
+    "input": "a-a-ah—ch-o-o-oh",
+    "internal": "a-a-ah,-ch-o-o-oh",
+    "expected": "136136119323691936213621362119",
+    "unicode": "⠁⠤⠁⠤⠁⠓⠠⠤⠉⠓⠤⠕⠤⠕⠤⠕⠓"
+  },
+  {
+    "input": "mmm-more",
+    "internal": "mmm-m",
+    "expected": "1313133613",
+    "unicode": "⠍⠍⠍⠤⠍"
+  },
+  {
+    "input": "shhhh",
+    "internal": "%hhh",
+    "expected": "41191919",
+    "unicode": "⠩⠓⠓⠓"
+  },
+  {
+    "input": "errrr",
+    "internal": "]rrr",
+    "expected": "59232323",
+    "unicode": "⠻⠗⠗⠗"
+  },
+  {
+    "input": "pfft",
+    "internal": "p6t",
+    "expected": "152230",
+    "unicode": "⠏⠖⠞"
+  },
+  {
+    "input": "doodle-e-do",
+    "internal": "doodle-;e-d",
+    "expected": "252121257173648173625",
+    "unicode": "⠙⠕⠕⠙⠇⠑⠤⠰⠑⠤⠙"
+  },
+  {
+    "input": "the-e-enk",
+    "internal": "!-;e-5k",
+    "expected": "4636481736345",
+    "unicode": "⠮⠤⠰⠑⠤⠢⠅"
+  },
+  {
+    "input": "so-o-o-o",
+    "internal": "s-o-o-o",
+    "expected": "14362136213621",
+    "unicode": "⠎⠤⠕⠤⠕⠤⠕"
+  },
+  {
+    "input": "as-s-s-s",
+    "internal": "z-;;s-s-s",
+    "expected": "533648481436143614",
+    "unicode": "⠵⠤⠰⠰⠎⠤⠎⠤⠎"
+  },
+  {
+    "input": "aaarrrggghh",
+    "internal": "aa>rr7<h",
+    "expected": "11282323543519",
+    "unicode": "⠁⠁⠜⠗⠗⠶⠣⠓"
+  },
+  {
+    "input": "hm",
+    "internal": ";hm",
+    "expected": "481913",
+    "unicode": "⠰⠓⠍"
+  },
+  {
+    "input": "br-r-r",
+    "internal": "br-;r-;r",
+    "expected": "323364823364823",
+    "unicode": "⠃⠗⠤⠰⠗⠤⠰⠗"
+  },
+  {
+    "input": "cooooountry",
+    "internal": "coooo.try",
+    "expected": "92121212140302361",
+    "unicode": "⠉⠕⠕⠕⠕⠨⠞⠗⠽"
+  },
+  {
+    "input": "ggggood",
+    "internal": "g7good",
+    "expected": "275427212125",
+    "unicode": "⠛⠶⠛⠕⠕⠙"
+  },
+  {
+    "input": "lllittle",
+    "internal": ";lllittle",
+    "expected": "48777103030717",
+    "unicode": "⠰⠇⠇⠇⠊⠞⠞⠇⠑"
+  },
+  {
+    "input": "loooong",
+    "internal": "looo;g",
+    "expected": "72121214827",
+    "unicode": "⠇⠕⠕⠕⠰⠛"
+  },
+  {
+    "input": "sisterrr",
+    "internal": "si/]rr",
+    "expected": "141012592323",
+    "unicode": "⠎⠊⠌⠻⠗⠗"
+  }
+]

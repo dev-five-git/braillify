@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\int_0^\\infty$"
+unicode = ok: "⠴⠈⠎⠸⠡⠔⠞⠸⠤⠼⠚⠈⠢⠸⠡⠔⠋⠞⠽⠴⠈⠎"
+bytes   = ok: [52, 8, 14, 56, 33, 20, 30, 56, 36, 60, 26, 8, 34, 56, 33, 20, 11, 30, 61, 52, 8, 14]

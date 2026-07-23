@@ -1,6 +1,7 @@
 [
   {
     "input": "∇",
+    "note": "PDF 제55항 — 델 연산자 ∇ 기호 정의 (단독)",
     "internal": "_%",
     "expected": "5641",
     "unicode": "⠸⠩",
@@ -8,11 +9,48 @@
     "jeomsarang": "⠸⠩"
   },
   {
+    "input": "$\\nabla$",
+    "note": "LaTeX",
+    "internal": "_%",
+    "expected": "5641",
+    "unicode": "⠸⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "∇f",
+    "note": "PDF 제55항 — 델 적용 예제 ∇f",
     "internal": "_%f",
     "expected": "564111",
     "unicode": "⠸⠩⠋",
     "world": "⠴⠋⠲",
     "jeomsarang": "⠸⠩⠋⠲"
+  },
+  {
+    "input": "$\\nabla f$",
+    "note": "LaTeX",
+    "internal": "_%f",
+    "expected": "564111",
+    "unicode": "⠸⠩⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∇f = (f/x₁, f/x₂, ..., f/xₙ)",
+    "note": "PDF 제55항 — 본문 예제 (델 전체식, 분수, 평문 표기 시 슬래시로 근사)",
+    "internal": "_%F338X;#a/F\"`X;#b/F\"`,,,\"`X;N/F0",
+    "expected": "5641111818384548601121116045486031211160323232160454829121152",
+    "unicode": "⠸⠩⠋⠒⠒⠦⠭⠰⠼⠁⠌⠋⠐⠀⠭⠰⠼⠃⠌⠋⠐⠀⠠⠠⠠⠐⠀⠭⠰⠝⠌⠋⠴",
+    "world": "⠴⠋ ⠐⠶ ⠐⠣⠋⠸⠌⠭⠰⠼⠁⠂ ⠋⠸⠌⠭⠰⠼⠃⠂ ⠲⠲⠲⠂ ⠋⠸⠌⠭⠰⠝⠠⠴",
+    "jeomsarang": "⠸⠩⠋⠀⠐⠶⠀⠐⠣⠋⠸⠌⠭⠰⠢⠼⠁⠂⠀⠋⠸⠌⠭⠰⠢⠼⠃⠂⠀⠲⠲⠲⠂⠀⠋⠸⠌⠭⠲⠀⠐⠜⠲"
+  },
+  {
+    "input": "$\\nabla f = (\\frac{f}{x_1}, \\frac{f}{x_2}, \\cdots, \\frac{f}{x_n})$",
+    "note": "LaTeX",
+    "internal": "_%F338X;#a/F\"`X;#b/F\"`,,,\"`X;N/F0",
+    "expected": "5641111818384548601121116045486031211160323232160454829121152",
+    "unicode": "⠸⠩⠋⠒⠒⠦⠭⠰⠼⠁⠌⠋⠐⠀⠭⠰⠼⠃⠌⠋⠐⠀⠠⠠⠠⠐⠀⠭⠰⠝⠌⠋⠴",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

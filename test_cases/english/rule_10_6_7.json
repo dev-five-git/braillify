@@ -1,0 +1,26 @@
+[
+  {
+    "input": "deactivate",
+    "internal": "deactivate",
+    "expected": "25171930103913017",
+    "unicode": "⠙⠑⠁⠉⠞⠊⠧⠁⠞⠑"
+  },
+  {
+    "input": "geanticline",
+    "internal": "geanticl9e",
+    "expected": "27171293010972017",
+    "unicode": "⠛⠑⠁⠝⠞⠊⠉⠇⠔⠑"
+  },
+  {
+    "input": "preamble",
+    "internal": "preamble",
+    "expected": "1523171133717",
+    "unicode": "⠏⠗⠑⠁⠍⠃⠇⠑"
+  },
+  {
+    "input": "reaction",
+    "internal": "reac;n",
+    "expected": "2317194829",
+    "unicode": "⠗⠑⠁⠉⠰⠝"
+  }
+]

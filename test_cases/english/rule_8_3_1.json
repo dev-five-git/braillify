@@ -1,0 +1,57 @@
+[
+  {
+    "input": "O",
+    "internal": ",o",
+    "expected": "3221",
+    "unicode": "⠠⠕"
+  },
+  {
+    "input": "V",
+    "context": "english",
+    "internal": ";,v",
+    "expected": "483239",
+    "unicode": "⠰⠠⠧"
+  },
+  {
+    "input": "20B",
+    "internal": "#bj,b",
+    "expected": "60326323",
+    "unicode": "⠼⠃⠚⠠⠃"
+  },
+  {
+    "input": "B.C.",
+    "internal": ",b4,c4",
+    "expected": "3235032950",
+    "unicode": "⠠⠃⠲⠠⠉⠲"
+  },
+  {
+    "input": "Hush. Keep Quiet!",
+    "internal": ",hu%4 ,keep ,quiet6",
+    "expected": "32193741500325171715032313710173022",
+    "unicode": "⠠⠓⠥⠩⠲⠀⠠⠅⠑⠑⠏⠀⠠⠟⠥⠊⠑⠞⠖"
+  },
+  {
+    "input": "C. O. Linkletter",
+    "internal": ";,c4 ,o4 ,l9klett]",
+    "expected": "483295003221500327205717303059",
+    "unicode": "⠰⠠⠉⠲⠀⠠⠕⠲⠀⠠⠇⠔⠅⠇⠑⠞⠞⠻"
+  },
+  {
+    "input": "M MacPherson and O O'Hara",
+    "internal": ";,m ,mac,ph]son & ,o ,o',h>a",
+    "expected": "483213032131932151959142129047032210322143219281",
+    "unicode": "⠰⠠⠍⠀⠠⠍⠁⠉⠠⠏⠓⠻⠎⠕⠝⠀⠯⠀⠠⠕⠀⠠⠕⠄⠠⠓⠜⠁"
+  },
+  {
+    "input": "'Twas Dr. Hamilton-Hall.",
+    "internal": "',twas ,dr4 ,hamilton-,hall4",
+    "expected": "43230581140322523500321911310730212936321917750",
+    "unicode": "⠄⠠⠞⠺⠁⠎⠀⠠⠙⠗⠲⠀⠠⠓⠁⠍⠊⠇⠞⠕⠝⠤⠠⠓⠁⠇⠇⠲"
+  },
+  {
+    "input": "B-E-L-I-E-V-E",
+    "internal": ";;,b-,e-,l-,i-,e-,v-,e",
+    "expected": "484832336321736327363210363217363239363217",
+    "unicode": "⠰⠰⠠⠃⠤⠠⠑⠤⠠⠇⠤⠠⠊⠤⠠⠑⠤⠠⠧⠤⠠⠑"
+  }
+]

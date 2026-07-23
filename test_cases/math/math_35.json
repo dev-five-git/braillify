@@ -1,6 +1,25 @@
 [
   {
-    "input": "̅AB",
+    "input": "‾",
+    "note": "PDF 제35항 — 선분 ¯ 기호 정의 (단독)",
+    "internal": "@c",
+    "expected": "89",
+    "unicode": "⠈⠉",
+    "world": "",
+    "jeomsarang": "⠀"
+  },
+  {
+    "input": "$\\overline{\\,}$",
+    "note": "LaTeX",
+    "internal": "@c",
+    "expected": "89",
+    "unicode": "⠈⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "‾AB",
+    "note": "PDF 제35항 — 선분 AB̄ (평문 표기는 ‾ + AB 시각 근사)",
     "internal": "@c,,AB",
     "expected": "89323213",
     "unicode": "⠈⠉⠠⠠⠁⠃",
@@ -9,28 +28,29 @@
   },
   {
     "input": "$\\overline{AB}$",
+    "note": "LaTeX (PDF 정확 표기)",
     "internal": "@c,,AB",
     "expected": "89323213",
     "unicode": "⠈⠉⠠⠠⠁⠃",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠕⠧⠻⠇⠔⠑⠸⠣⠠⠠⠁⠃⠐⠴⠈⠎",
     "jeomsarang": ""
   },
   {
-    "input": "A′B′̅",
+    "input": "‾A′B′",
+    "note": "PDF 제35항 [붙임] — 선분 A′B′̄ (대문자 단어표 ,, 적용)",
     "internal": "@c,,A-B-",
     "expected": "893232136336",
     "unicode": "⠈⠉⠠⠠⠁⠤⠃⠤",
     "world": "⠴⠠⠁⠶⠠⠃⠴⠤",
-    "jeomsarang": "⠴⠠⠁⠶⠠⠃⠲⠶⠀"
+    "jeomsarang": "⠀⠠⠁⠶⠠⠃⠲⠶"
   },
   {
     "input": "$\\overline{A'B'}$",
+    "note": "LaTeX (PDF 정확 표기)",
     "internal": "@c,,A-B-",
     "expected": "893232136336",
     "unicode": "⠈⠉⠠⠠⠁⠤⠃⠤",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠕⠧⠻⠇⠔⠑⠸⠣⠠⠁⠄⠠⠃⠄⠐⠴⠈⠎",
     "jeomsarang": ""
   }
 ]

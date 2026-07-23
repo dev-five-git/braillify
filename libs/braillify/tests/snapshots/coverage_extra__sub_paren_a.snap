@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$z_{(a)}$"
+unicode = ok: "⠵⠰⠦⠁⠴"
+bytes   = ok: [53, 48, 38, 1, 52]

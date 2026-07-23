@@ -1,8 +1,8 @@
 [
   {
     "input": "a",
-    "context": "math_letter",
-    "note": "로마자 a",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: a",
     "internal": "0a",
     "expected": "521",
     "unicode": "⠴⠁",
@@ -11,8 +11,8 @@
   },
   {
     "input": "b",
-    "context": "math_letter",
-    "note": "로마자 b",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: b",
     "internal": "0b",
     "expected": "523",
     "unicode": "⠴⠃",
@@ -21,8 +21,8 @@
   },
   {
     "input": "c",
-    "context": "math_letter",
-    "note": "로마자 c",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: c",
     "internal": "0c",
     "expected": "529",
     "unicode": "⠴⠉",
@@ -31,8 +31,8 @@
   },
   {
     "input": "d",
-    "context": "math_letter",
-    "note": "로마자 d",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: d",
     "internal": "0d",
     "expected": "5225",
     "unicode": "⠴⠙",
@@ -41,8 +41,8 @@
   },
   {
     "input": "e",
-    "context": "math_letter",
-    "note": "로마자 e",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: e",
     "internal": "0e",
     "expected": "5217",
     "unicode": "⠴⠑",
@@ -51,8 +51,8 @@
   },
   {
     "input": "f",
-    "context": "math_letter",
-    "note": "로마자 f",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: f",
     "internal": "0f",
     "expected": "5211",
     "unicode": "⠴⠋",
@@ -61,8 +61,8 @@
   },
   {
     "input": "g",
-    "context": "math_letter",
-    "note": "로마자 g",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: g",
     "internal": "0g",
     "expected": "5227",
     "unicode": "⠴⠛",
@@ -71,8 +71,8 @@
   },
   {
     "input": "h",
-    "context": "math_letter",
-    "note": "로마자 h",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: h",
     "internal": "0h",
     "expected": "5219",
     "unicode": "⠴⠓",
@@ -81,8 +81,8 @@
   },
   {
     "input": "i",
-    "context": "math_letter",
-    "note": "로마자 i",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: i",
     "internal": "0i",
     "expected": "5210",
     "unicode": "⠴⠊",
@@ -91,8 +91,8 @@
   },
   {
     "input": "j",
-    "context": "math_letter",
-    "note": "로마자 j",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: j",
     "internal": "0j",
     "expected": "5226",
     "unicode": "⠴⠚",
@@ -101,8 +101,8 @@
   },
   {
     "input": "k",
-    "context": "math_letter",
-    "note": "로마자 k",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: k",
     "internal": "0k",
     "expected": "525",
     "unicode": "⠴⠅",
@@ -111,8 +111,8 @@
   },
   {
     "input": "l",
-    "context": "math_letter",
-    "note": "로마자 l",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: l",
     "internal": "0l",
     "expected": "527",
     "unicode": "⠴⠇",
@@ -121,8 +121,8 @@
   },
   {
     "input": "m",
-    "context": "math_letter",
-    "note": "로마자 m",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: m",
     "internal": "0m",
     "expected": "5213",
     "unicode": "⠴⠍",
@@ -131,8 +131,8 @@
   },
   {
     "input": "n",
-    "context": "math_letter",
-    "note": "로마자 n",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: n",
     "internal": "0n",
     "expected": "5229",
     "unicode": "⠴⠝",
@@ -141,8 +141,8 @@
   },
   {
     "input": "o",
-    "context": "math_letter",
-    "note": "로마자 o",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: o",
     "internal": "0o",
     "expected": "5221",
     "unicode": "⠴⠕",
@@ -151,8 +151,8 @@
   },
   {
     "input": "p",
-    "context": "math_letter",
-    "note": "로마자 p",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: p",
     "internal": "0p",
     "expected": "5215",
     "unicode": "⠴⠏",
@@ -161,8 +161,8 @@
   },
   {
     "input": "q",
-    "context": "math_letter",
-    "note": "로마자 q",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: q",
     "internal": "0q",
     "expected": "5231",
     "unicode": "⠴⠟",
@@ -171,8 +171,8 @@
   },
   {
     "input": "r",
-    "context": "math_letter",
-    "note": "로마자 r",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: r",
     "internal": "0r",
     "expected": "5223",
     "unicode": "⠴⠗",
@@ -181,8 +181,8 @@
   },
   {
     "input": "s",
-    "context": "math_letter",
-    "note": "로마자 s",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: s",
     "internal": "0s",
     "expected": "5214",
     "unicode": "⠴⠎",
@@ -191,8 +191,8 @@
   },
   {
     "input": "t",
-    "context": "math_letter",
-    "note": "로마자 t",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: t",
     "internal": "0t",
     "expected": "5230",
     "unicode": "⠴⠞",
@@ -201,8 +201,8 @@
   },
   {
     "input": "u",
-    "context": "math_letter",
-    "note": "로마자 u",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: u",
     "internal": "0u",
     "expected": "5237",
     "unicode": "⠴⠥",
@@ -211,8 +211,8 @@
   },
   {
     "input": "v",
-    "context": "math_letter",
-    "note": "로마자 v",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: v",
     "internal": "0v",
     "expected": "5239",
     "unicode": "⠴⠧",
@@ -221,8 +221,8 @@
   },
   {
     "input": "w",
-    "context": "math_letter",
-    "note": "로마자 w",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: w",
     "internal": "0w",
     "expected": "5258",
     "unicode": "⠴⠺",
@@ -231,8 +231,8 @@
   },
   {
     "input": "x",
-    "context": "math_letter",
-    "note": "로마자 x",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: x",
     "internal": "0x",
     "expected": "5245",
     "unicode": "⠴⠭",
@@ -241,8 +241,8 @@
   },
   {
     "input": "y",
-    "context": "math_letter",
-    "note": "로마자 y",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: y",
     "internal": "0y",
     "expected": "5261",
     "unicode": "⠴⠽",
@@ -251,8 +251,8 @@
   },
   {
     "input": "z",
-    "context": "math_letter",
-    "note": "로마자 z",
+    "context": "math",
+    "note": "PDF 수학 제12항 본문 1 — 로마자 정의: z",
     "internal": "0z",
     "expected": "5253",
     "unicode": "⠴⠵",
@@ -260,43 +260,39 @@
     "jeomsarang": "⠴⠵"
   },
   {
-    "input": "a",
-    "internal": "a",
-    "expected": "1",
-    "unicode": "⠁",
-    "world": "⠴⠁⠲",
-    "jeomsarang": "⠴⠁"
-  },
-  {
-    "input": "x",
-    "internal": "x",
-    "expected": "45",
-    "unicode": "⠭",
-    "world": "⠴⠭⠲",
-    "jeomsarang": "⠴⠭"
-  },
-  {
-    "input": "z",
-    "internal": "z",
-    "expected": "53",
-    "unicode": "⠵",
-    "world": "⠴⠵⠲",
-    "jeomsarang": "⠴⠵"
-  },
-  {
     "input": "ax+b=0",
+    "note": "PDF 수학 제12항 본문 1번 항목 — 수식에 사용하는 로마자",
     "internal": "ax5b33#j",
     "expected": "14534318186026",
     "unicode": "⠁⠭⠢⠃⠒⠒⠼⠚",
     "world": "⠴⠁⠭⠐⠖⠃⠒⠒⠼⠚",
-    "jeomsarang": "⠴⠁⠭⠢⠴⠃⠐⠶⠼⠚"
+    "jeomsarang": "⠴⠁⠭⠐⠖⠴⠃⠐⠶⠼⠚"
   },
   {
-    "input": "3ab",
-    "internal": "#c\"ab",
-    "expected": "6091613",
-    "unicode": "⠼⠉⠐⠁⠃",
-    "world": "⠼⠉⠴⠁⠃⠲",
-    "jeomsarang": "⠼⠉⠴⠁⠃⠲"
+    "input": "$ax+b=0$",
+    "note": "LaTeX",
+    "internal": "ax5b33#j",
+    "expected": "14534318186026",
+    "unicode": "⠁⠭⠢⠃⠒⠒⠼⠚",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "이 방정식의 해는 x=1 이다.",
+    "note": "PDF 수학 제12항 본문 1번 항목 — 수식에 사용하는 로마자",
+    "internal": "o`^7.],oaw`jrcz``x33#a``oi4",
+    "expected": "210245440593221158026239530045181860100211050",
+    "unicode": "⠕⠀⠘⠶⠨⠻⠠⠕⠁⠺⠀⠚⠗⠉⠵⠀⠀⠭⠒⠒⠼⠁⠀⠀⠕⠊⠲",
+    "world": "⠕ ⠘⠶⠨⠻⠠⠕⠁⠺ ⠚⠗⠉⠵ ⠴⠭⠒⠒⠼⠁ ⠕⠊⠲",
+    "jeomsarang": "⠕⠀⠘⠶⠨⠻⠠⠕⠁⠺⠀⠚⠗⠉⠵⠀⠴⠭⠐⠶⠼⠁⠀⠕⠊⠲"
+  },
+  {
+    "input": "이 방정식의 해는 $x=1$ 이다.",
+    "note": "LaTeX",
+    "internal": "o`^7.],oaw`jrcz``x33#a``oi4",
+    "expected": "210245440593221158026239530045181860100211050",
+    "unicode": "⠕⠀⠘⠶⠨⠻⠠⠕⠁⠺⠀⠚⠗⠉⠵⠀⠀⠭⠒⠒⠼⠁⠀⠀⠕⠊⠲",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\begin{matrix} \\frac{1}{2} & x \\\\ y & \\sqrt{2} \\end{matrix}$"
+unicode = ok: "⠦⠼⠃⠌⠼⠁⠀⠭⠀⠜⠀⠽⠀⠜⠼⠃⠴"
+bytes   = ok: [38, 60, 3, 12, 60, 1, 0, 45, 0, 28, 0, 61, 0, 28, 60, 3, 52]

@@ -131,16 +131,15 @@ impl RuleEngine {
                 continue;
             }
             let meta = rule.meta();
-            if !self.is_enabled(meta.section) {
-                continue;
-            }
-            if !rule.matches(ctx) {
-                continue;
-            }
-            match rule.apply(ctx)? {
-                RuleResult::Consumed => return Ok(RuleResult::Consumed),
-                RuleResult::Continue => {}
-                RuleResult::Skip => {}
+            if self.is_enabled(meta.section) {
+                if !rule.matches(ctx) {
+                    continue;
+                }
+                match rule.apply(ctx)? {
+                    RuleResult::Consumed => return Ok(RuleResult::Consumed),
+                    RuleResult::Continue => {}
+                    RuleResult::Skip => {}
+                }
             }
         }
         Ok(RuleResult::Skip)
@@ -284,5 +283,185 @@ mod tests {
         let metas = engine.list_rules();
         assert_eq!(metas[0].name, "core"); // CoreEncoding before PostProcessing
         assert_eq!(metas[1].name, "post");
+    }
+
+    /// `RuleEngine::default()` returns an engine with no rules.
+    /// Drives lines 151-152.
+    #[test]
+    fn engine_default_constructs_empty() {
+        let engine = RuleEngine::default();
+        assert_eq!(engine.list_rules().len(), 0);
+    }
+
+    /// `apply` skips disabled rules (drives line 107 `continue`).
+    /// `apply` skips non-matching rules (drives line 110 `continue`).
+    /// `apply` skips when no rule consumes → final `Ok(Skip)` (drives line 118).
+    /// `apply` runs through a Continue → next rule → Skip path (drives line 115).
+    #[test]
+    fn engine_apply_skip_disabled_nonmatching_and_final_skip() {
+        use crate::char_struct::CharType;
+        use crate::rules::context::EncoderState;
+
+        static META_DIS: RuleMeta = RuleMeta {
+            section: "dis",
+            subsection: None,
+            name: "disabled",
+            standard_ref: "",
+            description: "",
+        };
+        static META_NOMATCH: RuleMeta = RuleMeta {
+            section: "nomatch",
+            subsection: None,
+            name: "no-match",
+            standard_ref: "",
+            description: "",
+        };
+        static META_CONT: RuleMeta = RuleMeta {
+            section: "cont",
+            subsection: None,
+            name: "continuer",
+            standard_ref: "",
+            description: "",
+        };
+        static META_SKIP: RuleMeta = RuleMeta {
+            section: "skip",
+            subsection: None,
+            name: "skipper",
+            standard_ref: "",
+            description: "",
+        };
+
+        // Rule that matches everything but always returns Continue.
+        struct ContinueRule;
+        impl BrailleRule for ContinueRule {
+            fn meta(&self) -> &'static RuleMeta {
+                &META_CONT
+            }
+            fn phase(&self) -> Phase {
+                Phase::CoreEncoding
+            }
+            fn matches(&self, _: &RuleContext) -> bool {
+                true
+            }
+            fn apply(&self, _: &mut RuleContext) -> Result<RuleResult, String> {
+                Ok(RuleResult::Continue)
+            }
+        }
+
+        // Rule that matches but returns Skip.
+        struct SkipRule;
+        impl BrailleRule for SkipRule {
+            fn meta(&self) -> &'static RuleMeta {
+                &META_SKIP
+            }
+            fn phase(&self) -> Phase {
+                Phase::CoreEncoding
+            }
+            fn matches(&self, _: &RuleContext) -> bool {
+                true
+            }
+            fn apply(&self, _: &mut RuleContext) -> Result<RuleResult, String> {
+                Ok(RuleResult::Skip)
+            }
+        }
+
+        // Rule that never matches (drives the `!rule.matches(ctx) => continue` arm).
+        struct NoMatchRule;
+        impl BrailleRule for NoMatchRule {
+            fn meta(&self) -> &'static RuleMeta {
+                &META_NOMATCH
+            }
+            fn phase(&self) -> Phase {
+                Phase::CoreEncoding
+            }
+            fn matches(&self, _: &RuleContext) -> bool {
+                false
+            }
+            fn apply(&self, _: &mut RuleContext) -> Result<RuleResult, String> {
+                Ok(RuleResult::Consumed)
+            }
+        }
+
+        // Disabled rule (drives the `!self.is_enabled => continue` arm).
+        struct DisabledRule;
+        impl BrailleRule for DisabledRule {
+            fn meta(&self) -> &'static RuleMeta {
+                &META_DIS
+            }
+            fn phase(&self) -> Phase {
+                Phase::CoreEncoding
+            }
+            fn matches(&self, _: &RuleContext) -> bool {
+                true
+            }
+            fn apply(&self, _: &mut RuleContext) -> Result<RuleResult, String> {
+                Ok(RuleResult::Consumed)
+            }
+        }
+
+        let mut engine = RuleEngine::new();
+        engine.register(Box::new(DisabledRule));
+        engine.register(Box::new(NoMatchRule));
+        engine.register(Box::new(ContinueRule));
+        engine.register(Box::new(SkipRule));
+        engine.disable("dis");
+
+        let word_chars = vec!['x'];
+        let char_type = CharType::English('x');
+        let empty: [&str; 0] = [];
+        let mut skip = 0usize;
+        let mut state = EncoderState::new(false);
+        let mut result = Vec::new();
+        let mut ctx = RuleContext {
+            word_chars: &word_chars,
+            index: 0,
+            char_type: &char_type,
+            prev_word: "",
+            remaining_words: &empty,
+            has_korean_char: false,
+            is_all_uppercase: false,
+            ascii_starts_at_beginning: false,
+            skip_count: &mut skip,
+            state: &mut state,
+            result: &mut result,
+        };
+        let outcome = engine.apply(&mut ctx).expect("ok");
+        // Disabled and non-matching skipped �� Continue �� Skip �� no Consumed.
+        // Final return value is Skip.
+        assert_eq!(outcome, RuleResult::Skip);
+    }
+
+    /// engine.rs line 124 - `apply_phase` skip arm for disabled rules.
+    #[test]
+    fn engine_apply_phase_skips_disabled_rules() {
+        use crate::char_struct::CharType;
+
+        let mut engine = RuleEngine::new();
+        engine.register(Box::new(TestRule));
+        engine.disable("test");
+
+        let word_chars = vec!['x'];
+        let char_type = CharType::English('x');
+        let empty: [&str; 0] = [];
+        let mut skip = 0usize;
+        let mut state = EncoderState::new(false);
+        let mut result = Vec::new();
+        let mut ctx = RuleContext {
+            word_chars: &word_chars,
+            index: 0,
+            char_type: &char_type,
+            prev_word: "",
+            remaining_words: &empty,
+            has_korean_char: false,
+            is_all_uppercase: false,
+            ascii_starts_at_beginning: false,
+            skip_count: &mut skip,
+            state: &mut state,
+            result: &mut result,
+        };
+        // TestRule.phase() = CoreEncoding; with disabled section "test", apply_phase
+        // hits the `if !self.is_enabled(meta.section) { continue; }` arm.
+        let outcome = engine.apply_phase(Phase::CoreEncoding, &mut ctx).unwrap();
+        assert_eq!(outcome, RuleResult::Skip);
     }
 }

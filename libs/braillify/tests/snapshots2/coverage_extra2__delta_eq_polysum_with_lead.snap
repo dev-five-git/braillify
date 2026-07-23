@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "hello ∆x=(a)+(b)"
+unicode = ok: "⠓⠑⠇⠇⠕⠀⠀⠀⠸⠬⠭⠒⠒⠦⠁⠴⠀⠬⠀⠦⠃⠴"
+bytes   = ok: [19, 17, 7, 7, 21, 0, 0, 0, 56, 44, 45, 18, 18, 38, 1, 52, 0, 44, 0, 38, 3, 52]

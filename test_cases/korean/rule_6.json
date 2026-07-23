@@ -137,7 +137,7 @@
   },
   {
     "input": "법률",
-    "internal": "^sb\"%1",
+    "internal": "~sb\"%1",
     "expected": "2414316412",
     "unicode": "⠘⠎⠃⠐⠩⠂",
     "world": "⠘⠎⠃⠐⠩⠂",
@@ -145,7 +145,7 @@
   },
   {
     "input": "특기",
-    "internal": "h[a@o",
+    "internal": "h{a@o",
     "expected": "19421821",
     "unicode": "⠓⠪⠁⠈⠕",
     "world": "⠓⠪⠁⠈⠕",

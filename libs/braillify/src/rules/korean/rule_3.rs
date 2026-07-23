@@ -72,28 +72,28 @@ mod tests {
 
     // ── 제3항: basic 14 jongseong ──────────────────────
 
-    #[test]
-    fn encodes_basic_jongseong() {
-        let cases = vec![
-            ('ㄱ', vec![decode_unicode('⠁')]),
-            ('ㄴ', vec![decode_unicode('⠒')]),
-            ('ㄷ', vec![decode_unicode('⠔')]),
-            ('ㄹ', vec![decode_unicode('⠂')]),
-            ('ㅁ', vec![decode_unicode('⠢')]),
-            ('ㅂ', vec![decode_unicode('⠃')]),
-            ('ㅅ', vec![decode_unicode('⠄')]),
-            ('ㅇ', vec![decode_unicode('⠶')]),
-            ('ㅈ', vec![decode_unicode('⠅')]),
-            ('ㅊ', vec![decode_unicode('⠆')]),
-            ('ㅋ', vec![decode_unicode('⠖')]),
-            ('ㅌ', vec![decode_unicode('⠦')]),
-            ('ㅍ', vec![decode_unicode('⠲')]),
-            ('ㅎ', vec![decode_unicode('⠴')]),
-        ];
-        for (jong, expected) in cases {
-            let result = apply(jong).unwrap();
-            assert_eq!(result, &expected[..], "Failed for jongseong: {}", jong);
-        }
+    #[rstest::rstest]
+    #[case::giyeok('ㄱ', '⠁')]
+    #[case::nieun('ㄴ', '⠒')]
+    #[case::digeut('ㄷ', '⠔')]
+    #[case::rieul('ㄹ', '⠂')]
+    #[case::mieum('ㅁ', '⠢')]
+    #[case::bieup('ㅂ', '⠃')]
+    #[case::siot('ㅅ', '⠄')]
+    #[case::ieung('ㅇ', '⠶')]
+    #[case::jieut('ㅈ', '⠅')]
+    #[case::chieut('ㅊ', '⠆')]
+    #[case::kieuk('ㅋ', '⠖')]
+    #[case::tieut('ㅌ', '⠦')]
+    #[case::pieup('ㅍ', '⠲')]
+    #[case::hieut('ㅎ', '⠴')]
+    fn encodes_basic_jongseong(#[case] jong: char, #[case] expected: char) {
+        let result = apply(jong).unwrap();
+        assert_eq!(
+            result,
+            &[decode_unicode(expected)],
+            "Failed for jongseong: {jong}"
+        );
     }
 
     // ── 제4항: double jongseong (ㄲ, ㅆ) ──────────────
@@ -113,38 +113,78 @@ mod tests {
 
     // ── 제5항: compound jongseong ──────────────────────
 
-    #[test]
-    fn encodes_compound_jongseong() {
-        let cases = vec![
-            ('ㄳ', vec![decode_unicode('⠁'), decode_unicode('⠄')]),
-            ('ㄵ', vec![decode_unicode('⠒'), decode_unicode('⠅')]),
-            ('ㄶ', vec![decode_unicode('⠒'), decode_unicode('⠴')]),
-            ('ㄺ', vec![decode_unicode('⠂'), decode_unicode('⠁')]),
-            ('ㅄ', vec![decode_unicode('⠃'), decode_unicode('⠄')]),
-        ];
-        for (jong, expected) in cases {
-            let result = apply(jong).unwrap();
-            assert_eq!(
-                result,
-                &expected[..],
-                "Failed for compound jongseong: {}",
-                jong
-            );
-        }
+    #[rstest::rstest]
+    #[case::giyeok_siot('ㄳ', '⠁', '⠄')]
+    #[case::nieun_jieut('ㄵ', '⠒', '⠅')]
+    #[case::nieun_hieut('ㄶ', '⠒', '⠴')]
+    #[case::rieul_giyeok('ㄺ', '⠂', '⠁')]
+    #[case::bieup_siot('ㅄ', '⠃', '⠄')]
+    fn encodes_compound_jongseong(#[case] jong: char, #[case] first: char, #[case] second: char) {
+        let result = apply(jong).unwrap();
+        assert_eq!(
+            result,
+            &[decode_unicode(first), decode_unicode(second)],
+            "Failed for compound jongseong: {jong}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::ascii_letter('A')]
+    #[case::syllable('가')]
+    fn invalid_returns_error(#[case] ch: char) {
+        assert!(apply(ch).is_err());
+    }
+
+    use rstest::rstest;
+
+    /// matches() must be true only for syllables that have a jongseong (받침).
+    #[rstest]
+    #[case("국", true)] // 국 has 받침 ㄱ
+    #[case("강", true)] // 강 has 받침 ㅇ
+    #[case("가", false)] // 가 has no 받침
+    #[case("A", false)]
+    fn rule3_matches_only_for_syllable_with_jongseong(#[case] input: &str, #[case] expected: bool) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(0);
+        assert_eq!(Rule3.matches(&ctx), expected, "input={input}");
+    }
+
+    #[rstest]
+    #[case("국")]
+    #[case("강")]
+    #[case("님")]
+    #[case("닿")]
+    fn rule3_apply_emits_jongseong(#[case] input: &str) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule3.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Continue));
+        assert!(!owned.result.is_empty());
     }
 
     #[test]
-    fn invalid_returns_error() {
-        assert!(apply('A').is_err());
-        assert!(apply('가').is_err());
+    fn rule3_apply_no_emit_for_syllable_without_jongseong() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("가", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule3.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Continue));
+        assert!(owned.result.is_empty());
     }
 
     #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("국보", "⠈⠍⠁⠘⠥"), ("놋그릇", "⠉⠥⠄⠈⠪⠐⠪⠄")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(result, expected, "Rule 3 golden test failed for: {}", input);
-        }
+    fn rule3_apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule3.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    #[test]
+    fn rule3_meta_phase_priority() {
+        let rule: &dyn BrailleRule = std::hint::black_box(&Rule3);
+
+        assert_eq!(rule.meta().section, "3");
+        assert!(matches!(rule.phase(), Phase::CoreEncoding));
+        assert_eq!(rule.priority(), 210);
     }
 }

@@ -106,7 +106,8 @@ impl TokenRule for MiddleKoreanDetectorRule {
             && state.current_mode() == EncodingMode::MiddleKorean;
 
         if has_middle_korean {
-            if state.current_mode() != EncodingMode::MiddleKorean {
+            let should_enter_middle_korean = state.current_mode() != EncodingMode::MiddleKorean;
+            if should_enter_middle_korean {
                 state.push_mode(EncodingMode::MiddleKorean);
             }
         } else if state.current_mode() == EncodingMode::MiddleKorean
@@ -116,5 +117,124 @@ impl TokenRule for MiddleKoreanDetectorRule {
         }
 
         Ok(TokenAction::Noop)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::borrow::Cow;
+
+    use super::*;
+    use crate::rules::context::EncoderState;
+    use crate::rules::token::{WordMeta, WordToken};
+
+    fn word(text: &str) -> Token<'_> {
+        let chars: Vec<char> = text.chars().collect();
+        Token::Word(WordToken {
+            text: Cow::Borrowed(text),
+            meta: WordMeta::from_chars(&chars),
+            chars,
+        })
+    }
+
+    #[test]
+    fn entering_middle_korean_mode_from_strong_context_pushes_mode() {
+        let text = std::hint::black_box("ᄒ");
+        let tokens = [word(text)];
+        let mut state = EncoderState::new(false);
+
+        assert_ne!(state.current_mode(), EncodingMode::MiddleKorean);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn tone_punctuation_with_next_context_pushes_mode() {
+        let tokens = [word("·"), word("ᄒ")];
+        let mut state = EncoderState::new(false);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn middle_korean_mode_is_not_pushed_when_already_active() {
+        let tokens = [word("ᄒ")];
+        let mut state = EncoderState::new(false);
+        state.push_mode(EncodingMode::MiddleKorean);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn extended_b_jamo_enters_middle_korean_mode() {
+        let tokens = [word(std::hint::black_box("ힰ"))];
+        let mut state = EncoderState::new(false);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn old_hangul_jungseong_enters_middle_korean_mode() {
+        let tokens = [word(std::hint::black_box("ᅠ"))];
+        let mut state = EncoderState::new(false);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn private_use_old_hangul_enters_middle_korean_mode() {
+        let tokens = [word(std::hint::black_box("\u{E000}"))];
+        let mut state = EncoderState::new(false);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn tone_punctuation_with_neighboring_context_pushes_mode() {
+        let tokens = [word("ᄒ"), word("·")];
+        let mut state = EncoderState::new(false);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 1, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
+    }
+
+    #[test]
+    fn explicit_middle_korean_tone_punctuation_preserves_mode() {
+        let tokens = [word("·")];
+        let mut state = EncoderState::new(false);
+        state.push_mode(EncodingMode::MiddleKorean);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_eq!(state.current_mode(), EncodingMode::MiddleKorean);
     }
 }

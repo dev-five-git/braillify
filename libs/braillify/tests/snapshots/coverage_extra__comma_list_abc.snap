@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "점 $a, b, c$ 입니다"
+unicode = ok: "⠨⠎⠢⠀⠴⠁⠐⠀⠰⠃⠐⠀⠰⠉⠲⠀⠕⠃⠉⠕⠊"
+bytes   = ok: [40, 14, 34, 0, 52, 1, 16, 0, 48, 3, 16, 0, 48, 9, 50, 0, 21, 3, 9, 21, 10]

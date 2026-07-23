@@ -1,0 +1,278 @@
+[
+  {
+    "input": "𝐤𝐧𝐨𝐰ledge",
+    "internal": "^1\"k^'l$ge",
+    "expected": "2421652447432717",
+    "unicode": "⠘⠂⠐⠅⠘⠄⠇⠫⠛⠑"
+  },
+  {
+    "input": "\"just\"ice",
+    "internal": "8ju/0ice",
+    "expected": "382637125210917",
+    "unicode": "⠦⠚⠥⠌⠴⠊⠉⠑"
+  },
+  {
+    "input": "ra𝑡ℎer",
+    "internal": "ra.1?.']",
+    "expected": "2314025740459",
+    "unicode": "⠗⠁⠨⠂⠹⠨⠄⠻"
+  },
+  {
+    "input": "verY",
+    "internal": "v],y",
+    "expected": "39593261",
+    "unicode": "⠧⠻⠠⠽"
+  },
+  {
+    "input": "you'll",
+    "internal": "y'll",
+    "expected": "61477",
+    "unicode": "⠽⠄⠇⠇"
+  },
+  {
+    "input": "go'n",
+    "internal": "go'n",
+    "expected": "2721429",
+    "unicode": "⠛⠕⠄⠝"
+  },
+  {
+    "input": "𝑠ℎall",
+    "internal": ".1%.'all",
+    "expected": "40241404177",
+    "unicode": "⠨⠂⠩⠨⠄⠁⠇⠇"
+  },
+  {
+    "input": "child(ish)",
+    "internal": "*ild\"<i%\">",
+    "expected": "3310725163510411628",
+    "unicode": "⠡⠊⠇⠙⠐⠣⠊⠩⠐⠜"
+  },
+  {
+    "input": "this'll",
+    "internal": "?'ll",
+    "expected": "57477",
+    "unicode": "⠹⠄⠇⠇"
+  },
+  {
+    "input": "out'a",
+    "internal": "\\t'a",
+    "expected": "513041",
+    "unicode": "⠳⠞⠄⠁"
+  },
+  {
+    "input": "grandEST",
+    "internal": "gr&,,e/",
+    "expected": "27234732321712",
+    "unicode": "⠛⠗⠯⠠⠠⠑⠌"
+  },
+  {
+    "input": "𝑝𝑟𝑜fit",
+    "internal": ".1pro.'fit",
+    "expected": "402152321404111030",
+    "unicode": "⠨⠂⠏⠗⠕⠨⠄⠋⠊⠞"
+  },
+  {
+    "input": "with(er)",
+    "internal": ")\"<]\">",
+    "expected": "621635591628",
+    "unicode": "⠾⠐⠣⠻⠐⠜"
+  },
+  {
+    "input": "\"the\"s",
+    "internal": "8!0s",
+    "expected": "38465214",
+    "unicode": "⠦⠮⠴⠎"
+  },
+  {
+    "input": "THIRSTy",
+    "internal": ",,?ir/,'y",
+    "expected": "32325710231232461",
+    "unicode": "⠠⠠⠹⠊⠗⠌⠠⠄⠽"
+  },
+  {
+    "input": "ni(gh)t",
+    "internal": "ni\"<<\">t",
+    "expected": "2910163535162830",
+    "unicode": "⠝⠊⠐⠣⠣⠐⠜⠞"
+  },
+  {
+    "input": "tou𝐜𝐡ed",
+    "internal": "t\\^1*^'$",
+    "expected": "30512423324443",
+    "unicode": "⠞⠳⠘⠂⠡⠘⠄⠫"
+  },
+  {
+    "input": "flow𝑖𝑛𝑔",
+    "internal": "fl[.1+",
+    "expected": "1174240244",
+    "unicode": "⠋⠇⠪⠨⠂⠬"
+  },
+  {
+    "input": "mist-𝑖𝑛𝑔",
+    "internal": "mi/-.19g",
+    "expected": "131012364022027",
+    "unicode": "⠍⠊⠌⠤⠨⠂⠔⠛"
+  },
+  {
+    "input": "thou're",
+    "internal": "?\\'re",
+    "expected": "575142317",
+    "unicode": "⠹⠳⠄⠗⠑"
+  },
+  {
+    "input": "enoug̲h̲",
+    "internal": "5\\_1<",
+    "expected": "345156235",
+    "unicode": "⠢⠳⠸⠂⠣"
+  },
+  {
+    "input": "wer(e)",
+    "internal": "w]\"<e\">",
+    "expected": "58591635171628",
+    "unicode": "⠺⠻⠐⠣⠑⠐⠜"
+  },
+  {
+    "input": "his'n",
+    "internal": "his'n",
+    "expected": "191014429",
+    "unicode": "⠓⠊⠎⠄⠝"
+  },
+  {
+    "input": "in't",
+    "internal": "9't",
+    "expected": "20430",
+    "unicode": "⠔⠄⠞"
+  },
+  {
+    "input": "𝑖𝑛valid",
+    "internal": ".19.'valid",
+    "expected": "4022040439171025",
+    "unicode": "⠨⠂⠔⠨⠄⠧⠁⠇⠊⠙"
+  },
+  {
+    "input": "(be)long",
+    "internal": "\"<be\">l;g",
+    "expected": "1635317162874827",
+    "unicode": "⠐⠣⠃⠑⠐⠜⠇⠰⠛"
+  },
+  {
+    "input": "𝑑𝑖𝑠sent",
+    "internal": ".1dis.'s5t",
+    "expected": "402251014404143430",
+    "unicode": "⠨⠂⠙⠊⠎⠨⠄⠎⠢⠞"
+  },
+  {
+    "input": "O'Connor",
+    "internal": ",o',connor",
+    "expected": "322143292129292123",
+    "unicode": "⠠⠕⠄⠠⠉⠕⠝⠝⠕⠗"
+  },
+  {
+    "input": "\"en\"gage",
+    "internal": "850gage",
+    "expected": "3834522712717",
+    "unicode": "⠦⠢⠴⠛⠁⠛⠑"
+  },
+  {
+    "input": "un𝑒𝑎𝑡𝑒𝑛",
+    "internal": "un.1eat5",
+    "expected": "37294021713034",
+    "unicode": "⠥⠝⠨⠂⠑⠁⠞⠢"
+  },
+  {
+    "input": "CliffEdge",
+    "internal": ",cliff,$ge",
+    "expected": "329710111132432717",
+    "unicode": "⠠⠉⠇⠊⠋⠋⠠⠫⠛⠑"
+  },
+  {
+    "input": "dragg(ing)",
+    "internal": "dragg\"<+\">",
+    "expected": "2523127271635441628",
+    "unicode": "⠙⠗⠁⠛⠛⠐⠣⠬⠐⠜"
+  },
+  {
+    "input": "rubb'd",
+    "internal": "rubb'd",
+    "expected": "233733425",
+    "unicode": "⠗⠥⠃⠃⠄⠙"
+  },
+  {
+    "input": "NorthEast",
+    "internal": ",nor?,ea/",
+    "expected": "32292123573217112",
+    "unicode": "⠠⠝⠕⠗⠹⠠⠑⠁⠌"
+  },
+  {
+    "input": "tho̲se",
+    "internal": "?_2ose",
+    "expected": "57566211417",
+    "unicode": "⠹⠸⠆⠕⠎⠑"
+  },
+  {
+    "input": "there(upon)",
+    "internal": "\"!\"<^u\">",
+    "expected": "1646163524371628",
+    "unicode": "⠐⠮⠐⠣⠘⠥⠐⠜"
+  },
+  {
+    "input": "HANDsome",
+    "internal": ",,h&,'\"s",
+    "expected": "323219473241614",
+    "unicode": "⠠⠠⠓⠯⠠⠄⠐⠎"
+  },
+  {
+    "input": "WordPerfect",
+    "internal": ",^w,p]fect",
+    "expected": "3224583215591117930",
+    "unicode": "⠠⠘⠺⠠⠏⠻⠋⠑⠉⠞"
+  },
+  {
+    "input": "founDAtion",
+    "internal": "f\\n,d,a;n",
+    "expected": "11512932253214829",
+    "unicode": "⠋⠳⠝⠠⠙⠠⠁⠰⠝"
+  },
+  {
+    "input": "bound𝑎𝑟𝑦",
+    "internal": "b.d.1>y",
+    "expected": "340254022861",
+    "unicode": "⠃⠨⠙⠨⠂⠜⠽"
+  },
+  {
+    "input": "judg\"mental\"",
+    "internal": "judg^8m5tal^0",
+    "expected": "263725272438133430172452",
+    "unicode": "⠚⠥⠙⠛⠘⠦⠍⠢⠞⠁⠇⠘⠴"
+  },
+  {
+    "input": "count(less)",
+    "internal": "c.t\"<less\">",
+    "expected": "94030163571714141628",
+    "unicode": "⠉⠨⠞⠐⠣⠇⠑⠎⠎⠐⠜"
+  },
+  {
+    "input": "CarLess",
+    "internal": ",c>,less",
+    "expected": "32928327171414",
+    "unicode": "⠠⠉⠜⠠⠇⠑⠎⠎"
+  },
+  {
+    "input": "grey'ound",
+    "internal": "grey'\\nd",
+    "expected": "272317614512925",
+    "unicode": "⠛⠗⠑⠽⠄⠳⠝⠙"
+  },
+  {
+    "input": "together𝑛𝑒𝑠𝑠",
+    "internal": "toge!r.1ness",
+    "expected": "30212717462340229171414",
+    "unicode": "⠞⠕⠛⠑⠮⠗⠨⠂⠝⠑⠎⠎"
+  },
+  {
+    "input": "\"be\"friend",
+    "internal": "8be0fri5d",
+    "expected": "38317521123103425",
+    "unicode": "⠦⠃⠑⠴⠋⠗⠊⠢⠙"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "input": "aerial",
+    "internal": "a]ial",
+    "expected": "1591017",
+    "unicode": "⠁⠻⠊⠁⠇"
+  },
+  {
+    "input": "aerobic",
+    "internal": "a]obic",
+    "expected": "159213109",
+    "unicode": "⠁⠻⠕⠃⠊⠉"
+  },
+  {
+    "input": "Baedeker",
+    "internal": ",ba$ek]",
+    "expected": "32314317559",
+    "unicode": "⠠⠃⠁⠫⠑⠅⠻"
+  },
+  {
+    "input": "Betws-y-Coed",
+    "internal": ",betws-;y-,co$",
+    "expected": "32317305814364861363292143",
+    "unicode": "⠠⠃⠑⠞⠺⠎⠤⠰⠽⠤⠠⠉⠕⠫"
+  },
+  {
+    "input": "Blaenau Ffestiniog",
+    "internal": ",bla5au ,ffe/9iog",
+    "expected": "32371341370321111171220102127",
+    "unicode": "⠠⠃⠇⠁⠢⠁⠥⠀⠠⠋⠋⠑⠌⠔⠊⠕⠛"
+  },
+  {
+    "input": "Caernarvon",
+    "internal": ",ca]n>von",
+    "expected": "3291592928392129",
+    "unicode": "⠠⠉⠁⠻⠝⠜⠧⠕⠝"
+  },
+  {
+    "input": "Daedalus",
+    "internal": ",da$alus",
+    "expected": "3225143173714",
+    "unicode": "⠠⠙⠁⠫⠁⠇⠥⠎"
+  },
+  {
+    "input": "diaeresis",
+    "internal": "dia]esis",
+    "expected": "251015917141014",
+    "unicode": "⠙⠊⠁⠻⠑⠎⠊⠎"
+  },
+  {
+    "input": "encyclopaedia",
+    "internal": "5cyclopa$ia",
+    "expected": "34961972115143101",
+    "unicode": "⠢⠉⠽⠉⠇⠕⠏⠁⠫⠊⠁"
+  },
+  {
+    "input": "faerie",
+    "internal": "fa]ie",
+    "expected": "111591017",
+    "unicode": "⠋⠁⠻⠊⠑"
+  },
+  {
+    "input": "Goering",
+    "internal": ",go]+",
+    "expected": "3227215944",
+    "unicode": "⠠⠛⠕⠻⠬"
+  },
+  {
+    "input": "Gruenfeld",
+    "internal": ",gru5feld",
+    "expected": "32272337341117725",
+    "unicode": "⠠⠛⠗⠥⠢⠋⠑⠇⠙"
+  },
+  {
+    "input": "Judaean",
+    "internal": ",juda1n",
+    "expected": "322637251229",
+    "unicode": "⠠⠚⠥⠙⠁⠂⠝"
+  },
+  {
+    "input": "Liliaceae",
+    "internal": ",liliac1e",
+    "expected": "3271071019217",
+    "unicode": "⠠⠇⠊⠇⠊⠁⠉⠂⠑"
+  },
+  {
+    "input": "maenad",
+    "internal": "ma5ad",
+    "expected": "13134125",
+    "unicode": "⠍⠁⠢⠁⠙"
+  },
+  {
+    "input": "Oedipus",
+    "internal": ",o$ipus",
+    "expected": "32214310153714",
+    "unicode": "⠠⠕⠫⠊⠏⠥⠎"
+  },
+  {
+    "input": "orthopaedic",
+    "internal": "or?opa$ic",
+    "expected": "2123572115143109",
+    "unicode": "⠕⠗⠹⠕⠏⠁⠫⠊⠉"
+  },
+  {
+    "input": "paean",
+    "internal": "pa1n",
+    "expected": "151229",
+    "unicode": "⠏⠁⠂⠝"
+  },
+  {
+    "input": "phoenix",
+    "internal": "pho5ix",
+    "expected": "151921341045",
+    "unicode": "⠏⠓⠕⠢⠊⠭"
+  },
+  {
+    "input": "Schoenberg",
+    "internal": ",s*o5b]g",
+    "expected": "321433213435927",
+    "unicode": "⠠⠎⠡⠕⠢⠃⠻⠛"
+  },
+  {
+    "input": "subpoena",
+    "internal": "subpo5a",
+    "expected": "143731521341",
+    "unicode": "⠎⠥⠃⠏⠕⠢⠁"
+  },
+  {
+    "input": "færie",
+    "internal": "fa^6erie",
+    "expected": "111242217231017",
+    "unicode": "⠋⠁⠘⠖⠑⠗⠊⠑"
+  }
+]

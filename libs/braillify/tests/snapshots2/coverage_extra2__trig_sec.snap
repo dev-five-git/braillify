@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "sec x"
+unicode = ok: "⠖⠤⠀⠭"
+bytes   = ok: [22, 36, 0, 45]

@@ -1,6 +1,7 @@
 [
   {
     "input": "arcsinA",
+    "note": "PDF 제48항 — 예제 1 (arcsinA, arc 표기)",
     "internal": "arc6s,a",
     "expected": "12392214321",
     "unicode": "⠁⠗⠉⠖⠎⠠⠁",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠴⠜⠉⠎⠔⠠⠁⠲"
   },
   {
+    "input": "$\\arcsin A$",
+    "note": "LaTeX",
+    "internal": "arc6s,a",
+    "expected": "12392214321",
+    "unicode": "⠁⠗⠉⠖⠎⠠⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "sin⁻¹A",
+    "note": "PDF 제48항 — 예제 2 (sin⁻¹A, 역함수 표기)",
     "internal": "6s^9#a,a",
     "expected": "22142420601321",
     "unicode": "⠖⠎⠘⠔⠼⠁⠠⠁",
@@ -17,15 +28,16 @@
   },
   {
     "input": "$\\sin^{-1}A$",
+    "note": "LaTeX",
     "internal": "6s^9#a,a",
     "expected": "22142420601321",
     "unicode": "⠖⠎⠘⠔⠼⠁⠠⠁",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "3sin⁻¹x",
+    "note": "PDF 제48항 — 예제 3 (3sin⁻¹x, 계수)",
     "internal": "#c6s^9#ax",
     "expected": "6092214242060145",
     "unicode": "⠼⠉⠖⠎⠘⠔⠼⠁⠭",
@@ -33,7 +45,7 @@
     "jeomsarang": "⠼⠉⠴⠎⠊⠝⠘⠔⠘⠼⠁⠰⠭⠲"
   },
   {
-    "input": "$3sin^{-1}x$",
+    "input": "$3\\sin^{-1}x$",
     "note": "LaTeX",
     "internal": "#c6s^9#ax",
     "expected": "6092214242060145",
@@ -42,24 +54,17 @@
     "jeomsarang": ""
   },
   {
-    "input": "sin⁻¹(3/x)",
+    "input": "$\\sin^{-1}\\frac{x}{3}$",
+    "note": "PDF 제48항 — 예제 4 (sin⁻¹(x/3), 각이 분수 — 평문 표기 불가 LaTeX만)",
     "internal": "6s^9#a(#c/x)",
     "expected": "2214242060155609124562",
     "unicode": "⠖⠎⠘⠔⠼⠁⠷⠼⠉⠌⠭⠾",
-    "world": "⠴⠎⠔⠘⠐⠤ ⠘⠼⠁⠐⠣⠼⠉⠸⠌⠭⠠⠴",
-    "jeomsarang": "⠴⠎⠔⠘⠔⠘⠼⠁⠦⠄⠼⠉⠘⠌⠴⠭⠠⠴"
-  },
-  {
-    "input": "$\\sin^{-1}(3/x)$",
-    "note": "LaTeX",
-    "internal": "6s^9#a(#c/x)",
-    "expected": "2214242060155609124562",
-    "unicode": "⠖⠎⠘⠔⠼⠁⠷⠼⠉⠌⠭⠾",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠎⠔⠈⠢⠸⠣⠤⠼⠁⠸⠜⠸⠡⠋⠗⠁⠉⠸⠣⠭⠐⠴⠦⠂⠼⠉⠐⠴⠈⠎",
     "jeomsarang": ""
   },
   {
     "input": "sin(sin⁻¹x)",
+    "note": "PDF 제48항 — 예제 5 (sin(sin⁻¹x), 합성)",
     "internal": "6s86s^9#ax0",
     "expected": "221438221424206014552",
     "unicode": "⠖⠎⠦⠖⠎⠘⠔⠼⠁⠭⠴",
@@ -67,7 +72,7 @@
     "jeomsarang": "⠴⠎⠔⠐⠣⠎⠔⠘⠔⠘⠼⠁⠭⠐⠜⠲"
   },
   {
-    "input": "$\\sin(sin^{-1}x)$",
+    "input": "$\\sin(\\sin^{-1}x)$",
     "note": "LaTeX",
     "internal": "6s86s^9#ax0",
     "expected": "221438221424206014552",

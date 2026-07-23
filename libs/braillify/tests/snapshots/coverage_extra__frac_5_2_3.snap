@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "5/2³"
+unicode = ok: "⠼⠑⠸⠌⠼⠃⠘⠼⠉"
+bytes   = ok: [60, 17, 56, 12, 60, 3, 24, 60, 9]

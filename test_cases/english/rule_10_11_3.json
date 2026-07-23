@@ -1,0 +1,62 @@
+[
+  {
+    "input": "bedazzle",
+    "internal": "2dazzle",
+    "expected": "62515353717",
+    "unicode": "⠆⠙⠁⠵⠵⠇⠑"
+  },
+  {
+    "input": "bedevil",
+    "internal": "2devil",
+    "expected": "6251739107",
+    "unicode": "⠆⠙⠑⠧⠊⠇"
+  },
+  {
+    "input": "benighted",
+    "internal": "2ni<t$",
+    "expected": "62910353043",
+    "unicode": "⠆⠝⠊⠣⠞⠫"
+  },
+  {
+    "input": "benumb",
+    "internal": "2numb",
+    "expected": "62937133",
+    "unicode": "⠆⠝⠥⠍⠃"
+  },
+  {
+    "input": "berate",
+    "internal": "2rate",
+    "expected": "62313017",
+    "unicode": "⠆⠗⠁⠞⠑"
+  },
+  {
+    "input": "bereave",
+    "internal": "2r1ve",
+    "expected": "62323917",
+    "unicode": "⠆⠗⠂⠧⠑"
+  },
+  {
+    "input": "congeal",
+    "internal": "3g1l",
+    "expected": "182727",
+    "unicode": "⠒⠛⠂⠇"
+  },
+  {
+    "input": "congruent",
+    "internal": "3gru5t",
+    "expected": "182723373430",
+    "unicode": "⠒⠛⠗⠥⠢⠞"
+  },
+  {
+    "input": "disharmony",
+    "internal": "4h>mony",
+    "expected": "50192813212961",
+    "unicode": "⠲⠓⠜⠍⠕⠝⠽"
+  },
+  {
+    "input": "dishonest",
+    "internal": "4h\"o/",
+    "expected": "5019162112",
+    "unicode": "⠲⠓⠐⠕⠌"
+  }
+]

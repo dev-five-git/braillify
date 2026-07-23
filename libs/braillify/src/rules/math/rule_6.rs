@@ -10,6 +10,10 @@ pub fn encode_open_paren(kind: BracketKind, result: &mut Vec<u8>) {
     match kind {
         BracketKind::MathParen => result.push(38),
         BracketKind::Grouping => result.push(55),
+        BracketKind::Hangul => {
+            result.push(56);
+            result.push(55);
+        }
         BracketKind::Square => {
             result.push(55);
             result.push(4);
@@ -22,6 +26,10 @@ pub fn encode_close_paren(kind: BracketKind, result: &mut Vec<u8>) {
     match kind {
         BracketKind::MathParen => result.push(52),
         BracketKind::Grouping => result.push(62),
+        BracketKind::Hangul => {
+            result.push(56);
+            result.push(62);
+        }
         BracketKind::Square => {
             result.push(32);
             result.push(62);
@@ -78,13 +86,34 @@ impl MathTokenRule for BracketRule {
         state: &mut MathEncodeState,
         _engine: &MathTokenEngine,
     ) -> Result<MathTokenResult, String> {
-        match tokens.get(index) {
-            Some(MathToken::OpenParen(kind)) => encode_open_paren(*kind, result),
-            Some(MathToken::CloseParen(kind)) => encode_close_paren(*kind, result),
-            _ => return Ok(MathTokenResult::Skip),
+        let tok = tokens.get(index);
+        if let Some(MathToken::OpenParen(kind)) = tok {
+            encode_open_paren(*kind, result);
+        } else if let Some(MathToken::CloseParen(kind)) = tok {
+            encode_close_paren(*kind, result);
+        } else {
+            return Ok(MathTokenResult::Skip);
         }
 
         state.prev_was_number = false;
         Ok(MathTokenResult::Consumed(1))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::super::math_token_rule::MathContext;
+    use super::*;
+
+    /// rule_6 line 85 - `BracketRule.apply` Skip when token isn't OpenParen/CloseParen.
+    #[test]
+    fn bracket_rule_apply_skip_for_non_paren() {
+        let r = BracketRule;
+        let mut state = MathEncodeState::with_context(false, MathContext::default());
+        let toks = vec![MathToken::Variable('a')];
+        let mut result = Vec::new();
+        let engine = MathTokenEngine::with_context(MathContext::default());
+        let res = r.apply(&toks, 0, &mut result, &mut state, &engine);
+        assert!(matches!(res, Ok(MathTokenResult::Skip)));
     }
 }

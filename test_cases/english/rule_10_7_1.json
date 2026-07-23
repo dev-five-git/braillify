@@ -1,0 +1,494 @@
+[
+  {
+    "input": "acknowledge",
+    "internal": "ac\"kl$ge",
+    "expected": "191657432717",
+    "unicode": "⠁⠉⠐⠅⠇⠫⠛⠑"
+  },
+  {
+    "input": "affrighted",
+    "internal": "a6\"r$",
+    "expected": "122162343",
+    "unicode": "⠁⠖⠐⠗⠫"
+  },
+  {
+    "input": "apartheid",
+    "internal": "a\"pheid",
+    "expected": "1161519171025",
+    "unicode": "⠁⠐⠏⠓⠑⠊⠙"
+  },
+  {
+    "input": "aright",
+    "internal": "a\"r",
+    "expected": "11623",
+    "unicode": "⠁⠐⠗"
+  },
+  {
+    "input": "Bonaparte",
+    "internal": ",bona\"pe",
+    "expected": "32321291161517",
+    "unicode": "⠠⠃⠕⠝⠁⠐⠏⠑"
+  },
+  {
+    "input": "brighten",
+    "internal": "b\"r5",
+    "expected": "3162334",
+    "unicode": "⠃⠐⠗⠢"
+  },
+  {
+    "input": "cannot",
+    "internal": "_c",
+    "expected": "569",
+    "unicode": "⠸⠉"
+  },
+  {
+    "input": "characterise",
+    "internal": "\"*ise",
+    "expected": "1633101417",
+    "unicode": "⠐⠡⠊⠎⠑"
+  },
+  {
+    "input": "characteristic",
+    "internal": "\"*i/ic",
+    "expected": "16331012109",
+    "unicode": "⠐⠡⠊⠌⠊⠉"
+  },
+  {
+    "input": "coworker",
+    "internal": "co\"w]",
+    "expected": "921165859",
+    "unicode": "⠉⠕⠐⠺⠻"
+  },
+  {
+    "input": "day-by-day",
+    "internal": "\"d-by-\"d",
+    "expected": "162536361361625",
+    "unicode": "⠐⠙⠤⠃⠽⠤⠐⠙"
+  },
+  {
+    "input": "Dayton",
+    "internal": ",\"dton",
+    "expected": "321625302129",
+    "unicode": "⠠⠐⠙⠞⠕⠝"
+  },
+  {
+    "input": "dispirited",
+    "internal": "di_s$",
+    "expected": "2510561443",
+    "unicode": "⠙⠊⠸⠎⠫"
+  },
+  {
+    "input": "drought",
+    "internal": "dr\"\\",
+    "expected": "25231651",
+    "unicode": "⠙⠗⠐⠳"
+  },
+  {
+    "input": "elsewhere",
+    "internal": "else\":",
+    "expected": "17714171649",
+    "unicode": "⠑⠇⠎⠑⠐⠱"
+  },
+  {
+    "input": "father-in-law",
+    "internal": "\"f-9-law",
+    "expected": "16113620367158",
+    "unicode": "⠐⠋⠤⠔⠤⠇⠁⠺"
+  },
+  {
+    "input": "fatherless",
+    "internal": "\"f.s",
+    "expected": "16114014",
+    "unicode": "⠐⠋⠨⠎"
+  },
+  {
+    "input": "fireworks",
+    "internal": "fire\"ws",
+    "expected": "11102317165814",
+    "unicode": "⠋⠊⠗⠑⠐⠺⠎"
+  },
+  {
+    "input": "foreword",
+    "internal": "=e^w",
+    "expected": "63172458",
+    "unicode": "⠿⠑⠘⠺"
+  },
+  {
+    "input": "fought",
+    "internal": "f\"\\",
+    "expected": "111651",
+    "unicode": "⠋⠐⠳"
+  },
+  {
+    "input": "Friday",
+    "internal": ",fri\"d",
+    "expected": "321123101625",
+    "unicode": "⠠⠋⠗⠊⠐⠙"
+  },
+  {
+    "input": "Gaylord",
+    "internal": ",gay\"l",
+    "expected": "3227161167",
+    "unicode": "⠠⠛⠁⠽⠐⠇"
+  },
+  {
+    "input": "G'day",
+    "internal": ",g'\"d",
+    "expected": "322741625",
+    "unicode": "⠠⠛⠄⠐⠙"
+  },
+  {
+    "input": "Germany",
+    "internal": ",g]_m",
+    "expected": "3227595613",
+    "unicode": "⠠⠛⠻⠸⠍"
+  },
+  {
+    "input": "godmother",
+    "internal": "god\"m",
+    "expected": "2721251613",
+    "unicode": "⠛⠕⠙⠐⠍"
+  },
+  {
+    "input": "grandfather",
+    "internal": "gr&\"f",
+    "expected": "2723471611",
+    "unicode": "⠛⠗⠯⠐⠋"
+  },
+  {
+    "input": "Houghton",
+    "internal": ",h\"\\on",
+    "expected": "321916512129",
+    "unicode": "⠠⠓⠐⠳⠕⠝"
+  },
+  {
+    "input": "impartial",
+    "internal": "im\"pial",
+    "expected": "101316151017",
+    "unicode": "⠊⠍⠐⠏⠊⠁⠇"
+  },
+  {
+    "input": "knowing",
+    "internal": "\"k+",
+    "expected": "16544",
+    "unicode": "⠐⠅⠬"
+  },
+  {
+    "input": "Knowles",
+    "internal": ",\"kles",
+    "expected": "3216571714",
+    "unicode": "⠠⠐⠅⠇⠑⠎"
+  },
+  {
+    "input": "lordosis",
+    "internal": "\"losis",
+    "expected": "16721141014",
+    "unicode": "⠐⠇⠕⠎⠊⠎"
+  },
+  {
+    "input": "lordship",
+    "internal": "\"l%ip",
+    "expected": "167411015",
+    "unicode": "⠐⠇⠩⠊⠏"
+  },
+  {
+    "input": "many-sided",
+    "internal": "_m-sid$",
+    "expected": "56133614102543",
+    "unicode": "⠸⠍⠤⠎⠊⠙⠫"
+  },
+  {
+    "input": "millwright",
+    "internal": "millw\"r",
+    "expected": "131077581623",
+    "unicode": "⠍⠊⠇⠇⠺⠐⠗"
+  },
+  {
+    "input": "misworded",
+    "internal": "mis^w$",
+    "expected": "131014245843",
+    "unicode": "⠍⠊⠎⠘⠺⠫"
+  },
+  {
+    "input": "m'lord",
+    "internal": "m'\"l",
+    "expected": "134167",
+    "unicode": "⠍⠄⠐⠇"
+  },
+  {
+    "input": "motherly",
+    "internal": "\"mly",
+    "expected": "1613761",
+    "unicode": "⠐⠍⠇⠽"
+  },
+  {
+    "input": "mother-of-pearl",
+    "internal": "\"m-(-pe>l",
+    "expected": "16133655361517287",
+    "unicode": "⠐⠍⠤⠷⠤⠏⠑⠜⠇"
+  },
+  {
+    "input": "oughtn't",
+    "internal": "\"\\n't",
+    "expected": "165129430",
+    "unicode": "⠐⠳⠝⠄⠞"
+  },
+  {
+    "input": "partake",
+    "internal": "\"pake",
+    "expected": "16151517",
+    "unicode": "⠐⠏⠁⠅⠑"
+  },
+  {
+    "input": "parterre",
+    "internal": "\"p]re",
+    "expected": "1615592317",
+    "unicode": "⠐⠏⠻⠗⠑"
+  },
+  {
+    "input": "part-time",
+    "internal": "\"p-\"t",
+    "expected": "1615361630",
+    "unicode": "⠐⠏⠤⠐⠞"
+  },
+  {
+    "input": "party",
+    "internal": "\"py",
+    "expected": "161561",
+    "unicode": "⠐⠏⠽"
+  },
+  {
+    "input": "passe-partout",
+    "internal": "passe-\"p\\t",
+    "expected": "1511414173616155130",
+    "unicode": "⠏⠁⠎⠎⠑⠤⠐⠏⠳⠞"
+  },
+  {
+    "input": "questionnaire",
+    "internal": "\"qnaire",
+    "expected": "1631291102317",
+    "unicode": "⠐⠟⠝⠁⠊⠗⠑"
+  },
+  {
+    "input": "righteous",
+    "internal": "\"re\\s",
+    "expected": "1623175114",
+    "unicode": "⠐⠗⠑⠳⠎"
+  },
+  {
+    "input": "right-handed",
+    "internal": "\"r-h&$",
+    "expected": "162336194743",
+    "unicode": "⠐⠗⠤⠓⠯⠫"
+  },
+  {
+    "input": "SeaWorld",
+    "internal": ",sea,_w",
+    "expected": "3214171325658",
+    "unicode": "⠠⠎⠑⠁⠠⠸⠺"
+  },
+  {
+    "input": "smother",
+    "internal": "s\"m",
+    "expected": "141613",
+    "unicode": "⠎⠐⠍"
+  },
+  {
+    "input": "somewhere",
+    "internal": "\"s\":",
+    "expected": "16141649",
+    "unicode": "⠐⠎⠐⠱"
+  },
+  {
+    "input": "Spartan",
+    "internal": ",s\"pan",
+    "expected": "32141615129",
+    "unicode": "⠠⠎⠐⠏⠁⠝"
+  },
+  {
+    "input": "spirits",
+    "internal": "_ss",
+    "expected": "561414",
+    "unicode": "⠸⠎⠎"
+  },
+  {
+    "input": "spiritual",
+    "internal": "_sual",
+    "expected": "56143717",
+    "unicode": "⠸⠎⠥⠁⠇"
+  },
+  {
+    "input": "stonework",
+    "internal": "/\"o\"w",
+    "expected": "1216211658",
+    "unicode": "⠌⠐⠕⠐⠺"
+  },
+  {
+    "input": "sword",
+    "internal": "s^w",
+    "expected": "142458",
+    "unicode": "⠎⠘⠺"
+  },
+  {
+    "input": "theirs",
+    "internal": "_!s",
+    "expected": "564614",
+    "unicode": "⠸⠮⠎"
+  },
+  {
+    "input": "thoughtful",
+    "internal": "?\"\\;l",
+    "expected": "571651487",
+    "unicode": "⠹⠐⠳⠰⠇"
+  },
+  {
+    "input": "throughout",
+    "internal": "\"?\\t",
+    "expected": "16575130",
+    "unicode": "⠐⠹⠳⠞"
+  },
+  {
+    "input": "underworld",
+    "internal": "\"u_w",
+    "expected": "16375658",
+    "unicode": "⠐⠥⠸⠺"
+  },
+  {
+    "input": "unquestionable",
+    "internal": "un\"qable",
+    "expected": "3729163113717",
+    "unicode": "⠥⠝⠐⠟⠁⠃⠇⠑"
+  },
+  {
+    "input": "unworkable",
+    "internal": "un\"wable",
+    "expected": "3729165813717",
+    "unicode": "⠥⠝⠐⠺⠁⠃⠇⠑"
+  },
+  {
+    "input": "well-known",
+    "internal": "well-\"kn",
+    "expected": "5817773616529",
+    "unicode": "⠺⠑⠇⠇⠤⠐⠅⠝"
+  },
+  {
+    "input": "whereby",
+    "internal": "\":by",
+    "expected": "1649361",
+    "unicode": "⠐⠱⠃⠽"
+  },
+  {
+    "input": "wherein",
+    "internal": "\":9",
+    "expected": "164920",
+    "unicode": "⠐⠱⠔"
+  },
+  {
+    "input": "word-for-word",
+    "internal": "^w-=-^w",
+    "expected": "24583663362458",
+    "unicode": "⠘⠺⠤⠿⠤⠘⠺"
+  },
+  {
+    "input": "Wordsworth",
+    "internal": ",^wswor?",
+    "expected": "3224581458212357",
+    "unicode": "⠠⠘⠺⠎⠺⠕⠗⠹"
+  },
+  {
+    "input": "workday",
+    "internal": "\"w\"d",
+    "expected": "16581625",
+    "unicode": "⠐⠺⠐⠙"
+  },
+  {
+    "input": "working",
+    "internal": "\"w+",
+    "expected": "165844",
+    "unicode": "⠐⠺⠬"
+  },
+  {
+    "input": "worldly",
+    "internal": "_wly",
+    "expected": "5658761",
+    "unicode": "⠸⠺⠇⠽"
+  },
+  {
+    "input": "world-wide",
+    "internal": "_w-wide",
+    "expected": "56583658102517",
+    "unicode": "⠸⠺⠤⠺⠊⠙⠑"
+  },
+  {
+    "input": "youngest",
+    "internal": "\"ye/",
+    "expected": "16611712",
+    "unicode": "⠐⠽⠑⠌"
+  },
+  {
+    "input": "Youngstown",
+    "internal": ",\"yst[n",
+    "expected": "32166114304229",
+    "unicode": "⠠⠐⠽⠎⠞⠪⠝"
+  },
+  {
+    "input": "chemotherapy",
+    "internal": "*emo!rapy",
+    "expected": "33171321462311561",
+    "unicode": "⠡⠑⠍⠕⠮⠗⠁⠏⠽"
+  },
+  {
+    "input": "chlordane",
+    "internal": "*lordane",
+    "expected": "33721232512917",
+    "unicode": "⠡⠇⠕⠗⠙⠁⠝⠑"
+  },
+  {
+    "input": "Dayan",
+    "internal": ",dayan",
+    "expected": "3225161129",
+    "unicode": "⠠⠙⠁⠽⠁⠝"
+  },
+  {
+    "input": "Dworkin",
+    "internal": ",dwork9",
+    "expected": "3225582123520",
+    "unicode": "⠠⠙⠺⠕⠗⠅⠔"
+  },
+  {
+    "input": "Lucknow",
+    "internal": ",luckn[",
+    "expected": "32737952942",
+    "unicode": "⠠⠇⠥⠉⠅⠝⠪"
+  },
+  {
+    "input": "Parthenon",
+    "internal": ",p>!non",
+    "expected": "32152846292129",
+    "unicode": "⠠⠏⠜⠮⠝⠕⠝"
+  },
+  {
+    "input": "Sanday",
+    "internal": ",s&ay",
+    "expected": "321447161",
+    "unicode": "⠠⠎⠯⠁⠽"
+  },
+  {
+    "input": "today",
+    "internal": "td",
+    "expected": "3025",
+    "unicode": "⠞⠙"
+  },
+  {
+    "input": "where'er",
+    "internal": ":]e']",
+    "expected": "495917459",
+    "unicode": "⠱⠻⠑⠄⠻"
+  },
+  {
+    "input": "wherever",
+    "internal": ":]\"e",
+    "expected": "49591617",
+    "unicode": "⠱⠻⠐⠑"
+  }
+]

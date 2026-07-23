@@ -26,4 +26,11 @@ mod tests {
         assert!(encoded.is_ok());
         assert_eq!(result, vec![52, 4]);
     }
+
+    #[test]
+    fn rejects_non_perpendicular() {
+        let mut result = Vec::new();
+        assert!(encode_perpendicular('a', &mut result).is_err());
+        assert!(!is_perpendicular_symbol('a'));
+    }
 }

@@ -3,6 +3,9 @@
 import { Box, Center, Flex, Text, VStack } from '@devup-ui/react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+import { isSurveyActive, SURVEY_URL } from '@/constants/survey'
 
 import MobileMenuProvider, {
   MobileMenuItem,
@@ -16,6 +19,11 @@ export default function MobileMenu() {
   const searchParams = useSearchParams()
   const menuOpen = searchParams.get('menuOpen')
   const pathname = usePathname()
+  const [showSurvey, setShowSurvey] = useState(false)
+
+  useEffect(() => {
+    setShowSurvey(isSurveyActive())
+  }, [])
 
   return (
     <>
@@ -176,6 +184,22 @@ export default function MobileMenu() {
           >
             <Text typography="button">팀 소개</Text>
           </Box>
+          {showSurvey && (
+            <Box
+              aria-label="Survey link"
+              as="a"
+              borderBottom="1px solid $border"
+              cursor="pointer"
+              display="block"
+              href={SURVEY_URL}
+              px="16px"
+              py="20px"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Text typography="button">설문 참여하기</Text>
+            </Box>
+          )}
         </VStack>
       )}
     </>

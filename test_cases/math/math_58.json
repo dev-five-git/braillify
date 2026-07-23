@@ -1,6 +1,7 @@
 [
   {
     "input": "∬",
+    "note": "PDF 제58항 — 이중적분 ∬ 기호 정의 (단독)",
     "internal": "!!",
     "expected": "4646",
     "unicode": "⠮⠮",
@@ -8,20 +9,39 @@
     "jeomsarang": "⠮⠮"
   },
   {
+    "input": "$\\iint$",
+    "note": "LaTeX",
+    "internal": "!!",
+    "expected": "4646",
+    "unicode": "⠮⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "∬_A f(x,y)dxdy",
+    "note": "PDF 제58항 — 예제 1 (∬_A f(x,y)dxdy, 영역 A 표기)",
     "internal": "!!;,a`f8x\"`y0dxdy",
     "expected": "4646483210113845160615225452561",
     "unicode": "⠮⠮⠰⠠⠁⠀⠋⠦⠭⠐⠀⠽⠴⠙⠭⠙⠽",
     "world": "⠸⠤⠴⠠⠁ ⠋⠐⠣⠭⠰⠂⠽⠐⠜⠙⠭⠙⠽⠲",
-    "jeomsarang": "⠮⠮⠸⠤⠠⠁⠀⠋⠐⠣⠰⠭⠐⠽⠐⠜⠙⠭⠙⠽⠲"
+    "jeomsarang": "⠮⠮⠠⠤⠠⠁⠀⠋⠐⠣⠰⠭⠂⠰⠽⠐⠜⠙⠭⠙⠽⠲"
   },
   {
-    "input": "$\\int_a^b \\int_c^d f(r) dr d\\theta$",
-    "internal": "!;A`B`!;C`D`F8R0DRD.?",
-    "expected": "46481030464890250113823522523254057",
-    "unicode": "⠮⠰⠁⠀⠃⠀⠮⠰⠉⠀⠙⠀⠋⠦⠗⠴⠙⠗⠙⠨⠹",
+    "input": "$\\iint_A f(x,y)dxdy$",
     "note": "LaTeX",
+    "internal": "!!;,a`f8x\"`y0dxdy",
+    "expected": "4646483210113845160615225452561",
+    "unicode": "⠮⠮⠰⠠⠁⠀⠋⠦⠭⠐⠀⠽⠴⠙⠭⠙⠽",
     "world": "",
     "jeomsarang": ""
+  },
+  {
+    "input": "$\\int_a^b \\int_c^d f(r)drd\\theta$",
+    "note": "PDF 제58항 — 예제 2 (∫_a^b ∫_c^d f(r)drdθ, 이중 정적분)",
+    "internal": "!;a`b`!;c`d`f8r0drd.?",
+    "expected": "46481030464890250113823522523254057",
+    "unicode": "⠮⠰⠁⠀⠃⠀⠮⠰⠉⠀⠙⠀⠋⠦⠗⠴⠙⠗⠙⠨⠹",
+    "world": "⠴⠈⠎⠸⠡⠴⠔⠞⠨⠤⠁⠈⠢⠃ ⠸⠡⠔⠞⠨⠤⠉⠈⠢⠙ ⠋⠐⠣⠗⠐⠜⠙⠗⠙⠸⠡⠮⠞⠁⠈⠎",
+    "jeomsarang": "⠈⠎⠸⠡⠔⠞⠨⠤⠁⠈⠢⠃⠀⠸⠡⠔⠞⠨⠤⠉⠈⠢⠙⠀⠋⠐⠣⠗⠐⠜⠙⠗⠙⠸⠡⠮⠞⠁⠈⠎"
   }
 ]

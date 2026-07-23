@@ -1,6 +1,7 @@
 [
   {
     "input": "̂",
+    "note": "PDF 제64항 — 햇 ^ 기호 정의 (단독, COMBINING CIRCUMFLEX ACCENT U+0302)",
     "internal": "@@5",
     "expected": "8834",
     "unicode": "⠈⠈⠢",
@@ -9,6 +10,7 @@
   },
   {
     "input": "p̂",
+    "note": "PDF 제64항 — 예제 p̂ (햇 단위 벡터)",
     "internal": "p@@5",
     "expected": "158834",
     "unicode": "⠏⠈⠈⠢",
@@ -17,20 +19,20 @@
   },
   {
     "input": "$\\hat{p}$",
+    "note": "LaTeX",
     "internal": "p@@5",
     "expected": "158834",
     "unicode": "⠏⠈⠈⠢",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "$\\hat{S}(\\hat{p})=\\sqrt{V(\\hat{p})}$",
-    "internal": ".S8p@@5033>,V8p@@50",
+    "input": "$\\sigma(\\hat{p}) = \\sqrt{V(\\hat{p})}$",
+    "note": "PDF 제64항 — 예제 σ(p̂) = √V(p̂) (표준편차)",
+    "internal": ".s8p@@5033>,v8p@@50",
     "expected": "4014381588345218182832393815883452",
     "unicode": "⠨⠎⠦⠏⠈⠈⠢⠴⠒⠒⠜⠠⠧⠦⠏⠈⠈⠢⠴",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠎⠊⠛⠍⠁⠐⠣⠸⠡⠓⠁⠞⠸⠣⠏⠸⠜⠐⠜ ⠐⠶ ⠸⠡⠎⠟⠗⠞⠸⠣⠠⠧⠐⠣⠸⠡⠓⠁⠞⠸⠣⠏⠐⠴⠠⠴⠐⠴⠈⠎",
     "jeomsarang": ""
   }
 ]

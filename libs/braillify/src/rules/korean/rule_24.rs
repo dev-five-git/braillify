@@ -92,3 +92,35 @@ impl BrailleRule for Rule24 {
         Ok(RuleResult::Consumed)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule24.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    /// 제24항 — Symbol char that is not in MAPPINGS reaches the
+    /// `encode_legacy` early-return (line 87-89). Use a plain ASCII symbol.
+    #[test]
+    fn apply_skip_when_symbol_not_in_mappings() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(".", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule24.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    /// 제24항 — meta and phase exercise.
+    #[test]
+    fn rule24_meta_phase_priority() {
+        let r = Rule24;
+        assert_eq!(r.meta().section, "24");
+        assert!(matches!(r.phase(), Phase::CoreEncoding));
+        assert_eq!(r.priority(), 59);
+    }
+}

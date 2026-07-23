@@ -1,0 +1,15 @@
+[
+  {
+    "input": "spo͞on",
+    "internal": "sp@-<oo>n",
+    "expected": "14158363521212829",
+    "unicode": "⠎⠏⠈⠤⠣⠕⠕⠜⠝"
+  },
+  {
+    "input": "massₛᵤₙ",
+    "note": "아래첨자 sun",
+    "internal": "mass;;5<sun>",
+    "expected": "13114144848343514372928",
+    "unicode": "⠍⠁⠎⠎⠰⠰⠢⠣⠎⠥⠝⠜"
+  }
+]

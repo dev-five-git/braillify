@@ -24,8 +24,6 @@ pub enum Phase {
     Preprocessing = 0,
     /// Word-level shortcuts (그래서, 그러나, etc.)
     WordShortcut = 1,
-    /// Mode management (enter/exit English, number prefix)
-    ModeManagement = 2,
     /// Core character encoding (Korean syllables, English letters, digits, symbols)
     CoreEncoding = 3,
     /// Inter-character rules (vowel separators, etc.)

@@ -1,0 +1,92 @@
+[
+  {
+    "input": "daytime",
+    "internal": "\"d\"t",
+    "expected": "16251630",
+    "unicode": "⠐⠙⠐⠞"
+  },
+  {
+    "input": "maritime",
+    "internal": "m>i\"t",
+    "expected": "1328101630",
+    "unicode": "⠍⠜⠊⠐⠞"
+  },
+  {
+    "input": "mistimed",
+    "internal": "mis\"td",
+    "expected": "131014163025",
+    "unicode": "⠍⠊⠎⠐⠞⠙"
+  },
+  {
+    "input": "pastime",
+    "internal": "pas\"t",
+    "expected": "151141630",
+    "unicode": "⠏⠁⠎⠐⠞"
+  },
+  {
+    "input": "sometimes",
+    "internal": "\"s\"ts",
+    "expected": "1614163014",
+    "unicode": "⠐⠎⠐⠞⠎"
+  },
+  {
+    "input": "springtime",
+    "internal": "spr+\"t",
+    "expected": "141523441630",
+    "unicode": "⠎⠏⠗⠬⠐⠞"
+  },
+  {
+    "input": "timeously",
+    "internal": "\"t\\sly",
+    "expected": "16305114761",
+    "unicode": "⠐⠞⠳⠎⠇⠽"
+  },
+  {
+    "input": "Timex",
+    "internal": ",\"tx",
+    "expected": "32163045",
+    "unicode": "⠠⠐⠞⠭"
+  },
+  {
+    "input": "untimely",
+    "internal": "un\"tly",
+    "expected": "37291630761",
+    "unicode": "⠥⠝⠐⠞⠇⠽"
+  },
+  {
+    "input": "altimeter",
+    "internal": "altimet]",
+    "expected": "17301013173059",
+    "unicode": "⠁⠇⠞⠊⠍⠑⠞⠻"
+  },
+  {
+    "input": "centime",
+    "internal": "c5time",
+    "expected": "93430101317",
+    "unicode": "⠉⠢⠞⠊⠍⠑"
+  },
+  {
+    "input": "centimeter",
+    "internal": "c5timet]",
+    "expected": "934301013173059",
+    "unicode": "⠉⠢⠞⠊⠍⠑⠞⠻"
+  },
+  {
+    "input": "Mortimer",
+    "internal": ",mortim]",
+    "expected": "3213212330101359",
+    "unicode": "⠠⠍⠕⠗⠞⠊⠍⠻"
+  },
+  {
+    "input": "multimedia",
+    "internal": "multim$ia",
+    "expected": "1337730101343101",
+    "unicode": "⠍⠥⠇⠞⠊⠍⠫⠊⠁"
+  },
+  {
+    "input": "sentiment",
+    "internal": "s5ti;t",
+    "expected": "143430104830",
+    "unicode": "⠎⠢⠞⠊⠰⠞"
+  }
+]

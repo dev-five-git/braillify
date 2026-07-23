@@ -62,22 +62,16 @@ impl BrailleRule for Rule12 {
     }
 
     fn matches(&self, ctx: &RuleContext) -> bool {
-        let Some(korean) = ctx.as_korean() else {
-            return false;
-        };
-        if korean.jong.is_some() {
-            return false;
-        }
-        if !TRIGGERING_VOWELS.contains(&korean.jung) {
-            return false;
-        }
-        let Some(next) = ctx.next_char() else {
-            return false;
-        };
-        let Ok(CharType::Korean(next_k)) = CharType::new(next) else {
-            return false;
-        };
-        next_k.cho == 'ㅇ' && next_k.jung == 'ㅐ'
+        ctx.as_korean().is_some_and(|korean| {
+            korean.jong.is_none()
+                && TRIGGERING_VOWELS.contains(&korean.jung)
+                && ctx.next_char().is_some_and(|next| {
+                    matches!(
+                        CharType::new(next),
+                        Ok(CharType::Korean(next_k)) if next_k.cho == 'ㅇ' && next_k.jung == 'ㅐ'
+                    )
+                })
+        })
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
@@ -98,111 +92,49 @@ mod tests {
         }
     }
 
-    // ── ㅑ + 애 ──────────────────────────────────────────
-
-    #[test]
-    fn inserts_separator_for_ya_ae() {
-        // 야애: 야 (ㅇ+ㅑ, no jong) + 애 (ㅇ+ㅐ)
-        let current = make_korean('야');
+    /// 제12항 — current 자모(중성) + next 음절(애로 시작) 시 분리표 삽입.
+    /// 트리거 모음: ㅑ/ㅘ/ㅜ/ㅝ + (jong 없음) + next 가 ㅇ+ㅐ 시작 →
+    /// `vec![SEPARATOR]`, 그 외는 빈 결과.
+    #[rstest::rstest]
+    #[case::ya_followed_by_ae('야', '애', vec![SEPARATOR])]
+    #[case::hwa_followed_by_aek('화', '액', vec![SEPARATOR])]
+    #[case::su_followed_by_aek('수', '액', vec![SEPARATOR])]
+    #[case::weo_followed_by_aem('워', '앰', vec![SEPARATOR])]
+    #[case::a_non_triggering('가', '애', vec![])]
+    #[case::eo_non_triggering('서', '애', vec![])]
+    #[case::current_has_jong_skipped('숙', '애', vec![])]
+    #[case::next_not_ae_skipped('야', '이', vec![])]
+    fn rule12_apply_separator_paths(
+        #[case] current_syllable: char,
+        #[case] next_char: char,
+        #[case] expected: Vec<u8>,
+    ) {
+        let current = make_korean(current_syllable);
         let mut result = Vec::new();
-        apply(&current, '애', &mut result).unwrap();
-        assert_eq!(result, vec![SEPARATOR]);
-    }
-
-    // ── ㅘ + 애 ──────────────────────────────────────────
-
-    #[test]
-    fn inserts_separator_for_hwa_ae() {
-        // 화 (ㅎ+ㅘ, no jong) + 액 → 액's first is 애 (ㅇ+ㅐ+ㄱ)
-        let current = make_korean('화');
-        let mut result = Vec::new();
-        apply(&current, '액', &mut result).unwrap();
-        assert_eq!(result, vec![SEPARATOR]);
-    }
-
-    // ── ㅜ + 애 ──────────────────────────────────────────
-
-    #[test]
-    fn inserts_separator_for_su_ae() {
-        // 수 (ㅅ+ㅜ, no jong) + 액
-        let current = make_korean('수');
-        let mut result = Vec::new();
-        apply(&current, '액', &mut result).unwrap();
-        assert_eq!(result, vec![SEPARATOR]);
-    }
-
-    // ── ㅝ + 애 ──────────────────────────────────────────
-
-    #[test]
-    fn inserts_separator_for_weo_ae() {
-        // 워 (ㅇ+ㅝ, no jong) + 앰
-        let current = make_korean('워');
-        let mut result = Vec::new();
-        apply(&current, '앰', &mut result).unwrap();
-        assert_eq!(result, vec![SEPARATOR]);
-    }
-
-    // ── Non-triggering vowels ────────────────────────────
-
-    #[test]
-    fn skips_non_triggering_vowel_a() {
-        // 가 (ㄱ+ㅏ) → ㅏ is not in [ㅑ, ㅘ, ㅜ, ㅝ]
-        let current = make_korean('가');
-        let mut result = Vec::new();
-        apply(&current, '애', &mut result).unwrap();
-        assert!(result.is_empty());
-    }
-
-    #[test]
-    fn skips_non_triggering_vowel_eo() {
-        // 서 (ㅅ+ㅓ) → ㅓ is not in triggering set
-        let current = make_korean('서');
-        let mut result = Vec::new();
-        apply(&current, '애', &mut result).unwrap();
-        assert!(result.is_empty());
-    }
-
-    // ── Jong present → skip ──────────────────────────────
-
-    #[test]
-    fn skips_when_current_has_jongseong() {
-        // 숙 (ㅅ+ㅜ+ㄱ) has jong → no separator
-        let current = make_korean('숙');
-        assert!(current.jong.is_some());
-        let mut result = Vec::new();
-        apply(&current, '애', &mut result).unwrap();
-        assert!(result.is_empty());
-    }
-
-    // ── Next is not 애 → skip ────────────────────────────
-
-    #[test]
-    fn skips_when_next_is_not_ae() {
-        let current = make_korean('야');
-        let mut result = Vec::new();
-        apply(&current, '이', &mut result).unwrap();
-        assert!(result.is_empty());
-    }
-
-    // ── Golden tests ─────────────────────────────────────
-
-    #[test]
-    fn golden_test_alignment() {
-        // From test_cases/rule_12.json
-        let cases = vec![("야애", "⠜⠤⠗"), ("소화액", "⠠⠥⠚⠧⠤⠗⠁"), ("수액", "⠠⠍⠤⠗⠁")];
-        for (input, expected_unicode) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected_unicode,
-                "Rule 12 golden test failed for input: {}",
-                input
-            );
-        }
+        apply(&current, next_char, &mut result).unwrap();
+        assert_eq!(result, expected);
     }
 
     #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "12");
         assert_eq!(META.name, "vowel_ae_separator");
+    }
+
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("야애", true)] // ㅇ+ㅑ → ㅇ+ㅐ
+    #[case("화애", true)] // ㅎ+ㅘ → ㅇ+ㅐ
+    #[case("아애", false)] // ㅏ is non-triggering
+    #[case("어애", false)] // ㅓ is non-triggering
+    #[case("관애", false)] // current has jong (ㄴ)
+    #[case("야이", false)] // next is 이, not 애
+    #[case("A", false)] // non-Korean
+    #[case("야", false)] // single char, no next → line 65 hit
+    fn rule12_matches_triggering_vowel_ae(#[case] input: &str, #[case] expected: bool) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(0);
+        assert_eq!(Rule12.matches(&ctx), expected, "input={input}");
     }
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "input": "You should receive your letter tomorrow afternoon.",
+    "internal": ",y %d rcv yr lr tm afn4",
+    "expected": "3261041250239390612307230301301112950",
+    "unicode": "⠠⠽⠀⠩⠙⠀⠗⠉⠧⠀⠽⠗⠀⠇⠗⠀⠞⠍⠀⠁⠋⠝⠲"
+  },
+  {
+    "input": "an about-face from the quick-witted go-between",
+    "internal": "an ab-face f ! qk-witt$ g-2t",
+    "expected": "12901336111917011046031536581030304302736630",
+    "unicode": "⠁⠝⠀⠁⠃⠤⠋⠁⠉⠑⠀⠋⠀⠮⠀⠟⠅⠤⠺⠊⠞⠞⠫⠀⠛⠤⠆⠞"
+  },
+  {
+    "input": "\"Good-bye, Miss Little-Smythe!\"",
+    "internal": "8,gd-bye1 ,miss ,ll-,smy!60",
+    "expected": "383227253636117203213101414032773632141361462252",
+    "unicode": "⠦⠠⠛⠙⠤⠃⠽⠑⠂⠀⠠⠍⠊⠎⠎⠀⠠⠇⠇⠤⠠⠎⠍⠽⠮⠖⠴"
+  },
+  {
+    "input": "(braille–first writing system for blind people)",
+    "internal": "\"<brl,-f/ writ+ sy/em = bl p\">",
+    "expected": "163532373236111205823103044014611217130630370151628",
+    "unicode": "⠐⠣⠃⠗⠇⠠⠤⠋⠌⠀⠺⠗⠊⠞⠬⠀⠎⠽⠌⠑⠍⠀⠿⠀⠃⠇⠀⠏⠐⠜"
+  },
+  {
+    "input": "According to him, 𝑛𝑒𝑖𝑡ℎ𝑒𝑟 𝐿𝑖𝑡𝑡𝑙𝑒 𝑅𝑜𝑐𝑘, 𝑀𝑢𝑐ℎ 𝐻𝑎𝑑ℎ𝑎𝑚 𝑛𝑜𝑟 𝑃𝑜𝑟𝑡 𝑆𝑎𝑖𝑑 would be much fun.",
+    "internal": ",ac to hm1 .7nei ,ll ,rock1 ,m* ,_hham nor ,port ,sd.' wd 2 m* fun4",
+    "expected": "3219030210191320405429171003277032232195203213330325619191130292123032152123300321425404058250601333011372950",
+    "unicode": "⠠⠁⠉⠀⠞⠕⠀⠓⠍⠂⠀⠨⠶⠝⠑⠊⠀⠠⠇⠇⠀⠠⠗⠕⠉⠅⠂⠀⠠⠍⠡⠀⠠⠸⠓⠓⠁⠍⠀⠝⠕⠗⠀⠠⠏⠕⠗⠞⠀⠠⠎⠙⠨⠄⠀⠺⠙⠀⠆⠀⠍⠡⠀⠋⠥⠝⠲"
+  },
+  {
+    "input": "to-night",
+    "internal": "to-ni<t",
+    "expected": "30213629103530",
+    "unicode": "⠞⠕⠤⠝⠊⠣⠞"
+  },
+  {
+    "input": "above/below",
+    "internal": "above_/bel[",
+    "expected": "132139175612317742",
+    "unicode": "⠁⠃⠕⠧⠑⠸⠌⠃⠑⠇⠪"
+  },
+  {
+    "input": "PRINT/BRAILLE",
+    "internal": ",,pr9t_/,,braille",
+    "expected": "323215232030561232323231107717",
+    "unicode": "⠠⠠⠏⠗⠔⠞⠸⠌⠠⠠⠃⠗⠁⠊⠇⠇⠑"
+  },
+  {
+    "input": "friend@rogers.com",
+    "internal": "fri5d@arog]s4com",
+    "expected": "11231034258123212759145092113",
+    "unicode": "⠋⠗⠊⠢⠙⠈⠁⠗⠕⠛⠻⠎⠲⠉⠕⠍"
+  },
+  {
+    "input": "www.living.beyond.myself.org",
+    "internal": "www4liv+4beyond4myself4org",
+    "expected": "5858585071039445031761212925501361141771150212327",
+    "unicode": "⠺⠺⠺⠲⠇⠊⠧⠬⠲⠃⠑⠽⠕⠝⠙⠲⠍⠽⠎⠑⠇⠋⠲⠕⠗⠛"
+  }
+]

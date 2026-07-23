@@ -1,5 +1,6 @@
 pub mod digital_notation;
 pub mod emphasis_ring;
+pub mod english_dominant_korean_wrap;
 pub mod historical_gloss_spacing;
 pub mod inline_fraction;
 pub mod latex_fraction;
@@ -10,6 +11,8 @@ pub mod middle_korean_detector;
 pub mod normalize;
 pub mod quote_attachment;
 pub mod roman_numeral;
+pub mod rule_33_citation;
+pub mod rule_73_appendix_placeholder;
 pub mod spacing;
 pub mod uppercase_passage;
 pub mod word_shortcut;

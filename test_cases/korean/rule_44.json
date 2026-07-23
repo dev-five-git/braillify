@@ -65,7 +65,7 @@
   },
   {
     "input": "5 개",
-    "internal": "#e @r",
+    "internal": "#e`@r",
     "expected": "60170823",
     "unicode": "⠼⠑⠀⠈⠗",
     "world": "⠼⠑ ⠈⠗",
@@ -73,7 +73,7 @@
   },
   {
     "input": "8 상자",
-    "internal": "#h l7.",
+    "internal": "#h`l7.",
     "expected": "6019075440",
     "unicode": "⠼⠓⠀⠇⠶⠨",
     "world": "⠼⠓ ⠇⠶⠨",

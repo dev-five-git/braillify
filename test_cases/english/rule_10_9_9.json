@@ -1,0 +1,20 @@
+[
+  {
+    "input": "Dobrljin",
+    "internal": ";;,dobrljin",
+    "expected": "48483225213237261029",
+    "unicode": "⠰⠰⠠⠙⠕⠃⠗⠇⠚⠊⠝"
+  },
+  {
+    "input": "ozbrl",
+    "internal": ";;ozbrl",
+    "expected": "484821533237",
+    "unicode": "⠰⠰⠕⠵⠃⠗⠇"
+  },
+  {
+    "input": "UNSD",
+    "internal": ";;,,unsd",
+    "expected": "4848323237291425",
+    "unicode": "⠰⠰⠠⠠⠥⠝⠎⠙"
+  }
+]

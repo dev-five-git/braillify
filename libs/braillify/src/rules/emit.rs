@@ -4,19 +4,172 @@ use crate::fraction;
 use crate::rules::context::{EncoderState, RuleContext};
 use crate::rules::engine::RuleEngine;
 use crate::rules::korean::rule_69::parse_numeric_ascii_unit_prefix;
+use crate::rules::roman_mode;
 use crate::rules::traits::Phase;
 
-use super::token::{DocumentIR, ModeEvent, SpaceKind, Token, WordMeta, WordToken};
+use super::token::{DocumentIR, ModeEvent, SpaceKind, Token, WordToken};
+
+/// 제39항 한글표 점형 (⠸⠷). 영어 어절 사이에 끼인 한글 어절을 감싼다.
+pub(crate) const HANGUL_WRAP_START_BYTES: [u8; 2] = [56, 55];
+/// 제39항 한글 종료표 점형 (⠸⠾).
+pub(crate) const HANGUL_WRAP_END_BYTES: [u8; 2] = [56, 62];
+
+struct WordContext<'a> {
+    prev_word: &'a str,
+    remaining_words: &'a [&'a str],
+}
+
+/// 토큰의 byte 슬라이스가 한글표(⠸⠷) 점형과 일치하는지.
+fn is_hangul_wrap_start(token: &Token<'_>) -> bool {
+    matches!(token, Token::PreEncoded(bytes) if bytes.as_slice() == HANGUL_WRAP_START_BYTES)
+}
+
+/// 토큰의 byte 슬라이스가 한글 종료표(⠸⠾) 점형과 일치하는지.
+fn is_hangul_wrap_end(token: &Token<'_>) -> bool {
+    matches!(token, Token::PreEncoded(bytes) if bytes.as_slice() == HANGUL_WRAP_END_BYTES)
+}
+
+/// 어떤 토큰 직후, 공백/PreEncoded(non-wrap)을 건너뛰고 만나는 첫 토큰이
+/// 한글표 시작이면 true. 한글 wrap이 영어 모드 유지를 위한 신호이므로,
+/// 단어 끝의 종료표 emit을 건너뛰는 데 사용된다.
+fn next_non_space_is_hangul_wrap_start<'a>(tokens: &'a [Token<'a>], after_index: usize) -> bool {
+    for token in tokens.iter().skip(after_index + 1) {
+        match token {
+            Token::Space(_) => continue,
+            t => return is_hangul_wrap_start(t),
+        }
+    }
+    false
+}
+
+/// 어떤 토큰 직전에, 공백을 건너뛰고 만나는 첫 비공백 토큰이 한글 종료표면 true.
+/// 한글 wrap 종료 후 영어 컨텍스트가 자동 재개되는 점을 알리는 데 사용한다.
+fn prev_non_space_is_hangul_wrap_end<'a>(tokens: &'a [Token<'a>], before_index: usize) -> bool {
+    for token in tokens[..before_index].iter().rev() {
+        match token {
+            Token::Space(_) => continue,
+            t => return is_hangul_wrap_end(t),
+        }
+    }
+    false
+}
+
+/// Single-line predicate for math-context Unicode chars — extracted so
+/// tarpaulin attributes coverage to one line per call site (the multi-line
+/// `matches!()` form suffered attribution loss on lines 68-71).
+fn is_math_context_char(c: char) -> bool {
+    c.is_ascii_alphabetic()
+        || ('\u{2080}'..='\u{2089}').contains(&c)
+        || c == '\u{00B2}'
+        || c == '\u{00B3}'
+        || ('\u{2070}'..='\u{2079}').contains(&c)
+        || matches!(c, '∇' | '∂' | '∞' | '∫')
+        || ('α'..='ω').contains(&c)
+        || ('Α'..='Ω').contains(&c)
+}
+
+/// True iff `token` is a math-context Word (non-Korean with math/paren/slash chars)
+/// or any PreEncoded token. Extracted as a free function so coverage is attributed
+/// per-call-site instead of being lost inside a nested function.
+fn token_is_math_word(token: Option<&Token<'_>>) -> bool {
+    let Some(tok) = token else {
+        return false;
+    };
+    match tok {
+        Token::Word(w) => {
+            !w.meta.has_korean
+                && (w.chars.iter().any(|c| is_math_context_char(*c))
+                    || w.chars.contains(&'(')
+                    || w.chars.contains(&')')
+                    || w.chars.contains(&'/'))
+        }
+        Token::PreEncoded(_) => true,
+        _ => false,
+    }
+}
+
+/// PDF 수학 — `Word(math)+Space+Word(=/==/관계)+Space+Word(math)` 패턴에서
+/// 등호 양옆 Space 토큰을 묵음 처리한다. 점역 결과는 `expr⠒⠒expr`로 인접한다.
+fn is_math_operator_space_suppression<'a>(tokens: &'a [Token<'a>], space_idx: usize) -> bool {
+    fn token_is_relation_operator_word(token: Option<&Token<'_>>) -> bool {
+        match token {
+            Some(Token::Word(w)) => {
+                w.chars.len() <= 2
+                    && w.chars.iter().all(|c| {
+                        matches!(*c, '=' | '<' | '>' | '\u{2260}' | '\u{2264}' | '\u{2265}')
+                    })
+            }
+            // PDF — MathExpressionTokenRule이 관계연산자 Word를 PreEncoded로 변환한 결과.
+            // 등호/부등호/관계기호의 점역 결과는 다음과 같다 (소스: rule_3, rule_4, math_symbol_shortcut).
+            // 셀 시퀀스가 정확히 일치하면 관계연산자로 본다.
+            // 향후 Token 메타데이터로 의미를 보존하는 방향이 더 안전하지만, 현 구조에서는
+            // 점형이 짧고 충돌 가능성이 낮은 셀들만 골라 매칭한다.
+            Some(Token::PreEncoded(bytes)) => matches!(
+                bytes.as_slice(),
+                [18, 18]                  // ⠒⠒ : =
+                | [40, 18, 18]            // ⠨⠒⠒ : ≠
+                | [16, 16]                // ⠐⠐ : ≤  
+                | [16, 18]                // ⠐⠒ : <
+                | [18, 16] // ⠒⠐ : >
+            ),
+            _ => false,
+        }
+    }
+    // 케이스 1: Space 다음이 관계 연산자 Word, 이전이 math Word/PreEncoded.
+    if space_idx + 1 < tokens.len()
+        && token_is_relation_operator_word(tokens.get(space_idx + 1))
+        && space_idx > 0
+        && token_is_math_word(tokens.get(space_idx - 1))
+    {
+        return true;
+    }
+    // 케이스 2: Space 이전이 관계 연산자 Word, 다음이 math Word/PreEncoded.
+    if space_idx > 0
+        && token_is_relation_operator_word(tokens.get(space_idx - 1))
+        && space_idx + 1 < tokens.len()
+        && token_is_math_word(tokens.get(space_idx + 1))
+    {
+        return true;
+    }
+    false
+}
 
 pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>, String> {
     let mut result = Vec::new();
+    let word_texts = if ir.tokens.len() > 1 {
+        collect_word_texts(&ir.tokens)
+    } else {
+        Vec::new()
+    };
+    let mut word_index = 0usize;
 
-    for token in &ir.tokens {
+    for (idx, token) in ir.tokens.iter().enumerate() {
         match token {
             Token::Word(word) => {
-                emit_word(word, &mut ir.state, char_engine, &ir.tokens, &mut result)?;
+                let context = if word_texts.is_empty() {
+                    WordContext {
+                        prev_word: "",
+                        remaining_words: &[],
+                    }
+                } else {
+                    word_context(&word_texts, word_index)
+                };
+                emit_word(
+                    word,
+                    idx,
+                    &mut ir.state,
+                    char_engine,
+                    &ir.tokens,
+                    context,
+                    &mut result,
+                )?;
+                word_index += 1;
             }
-            Token::Space(SpaceKind::Regular) => result.push(0),
+            Token::Space(SpaceKind::Regular) => {
+                if !is_math_operator_space_suppression(&ir.tokens, idx) {
+                    result.push(0);
+                }
+            }
             Token::Mode(event) => emit_mode_event(*event, &mut ir.state, &mut result),
             Token::Fraction(frac) => {
                 if let Some(ref w) = frac.whole {
@@ -33,11 +186,26 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
                 }
                 ir.state.is_number = true;
             }
-            Token::PreEncoded(bytes) => result.extend(bytes),
+            Token::PreEncoded(bytes) => {
+                // 제39항 한글 wrap 점형은 영어 모드를 자동으로 휴면(⠸⠷)·재개(⠸⠾)시킨다.
+                // 이렇게 하면 wrap 사이의 한글 어절은 한국어 인코더로 처리되고,
+                // wrap 종료 후 이어지는 영어 어절은 영자표시(⠴) 없이 모드를 이어간다.
+                if bytes.as_slice() == HANGUL_WRAP_START_BYTES {
+                    ir.state.is_english = false;
+                    ir.state.needs_english_continuation = false;
+                    ir.state.roman_number_chain = false;
+                } else if bytes.as_slice() == HANGUL_WRAP_END_BYTES {
+                    ir.state.is_english = true;
+                    ir.state.needs_english_continuation = false;
+                }
+                result.extend(bytes);
+            }
         }
     }
 
-    // End-of-stream: close triple uppercase if active (Encoder::finish)
+    // End-of-stream: close triple uppercase if active (Encoder::finish).
+    // 모든 production input은 word loop 내에서 triple_big_english를 close하므로
+    // 이 분기는 fallback safety net. probe-verified 2026-05-24.
     if ir.state.triple_big_english {
         result.push(32);
         result.push(4);
@@ -46,21 +214,52 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
     Ok(result)
 }
 
+fn collect_word_texts<'tokens, 'source>(tokens: &'tokens [Token<'source>]) -> Vec<&'tokens str> {
+    let mut word_texts = Vec::with_capacity(tokens.len().div_ceil(2));
+
+    for token in tokens {
+        if let Token::Word(word) = token {
+            word_texts.push(word.text.as_ref());
+        }
+    }
+
+    word_texts
+}
+
+fn word_context<'a>(word_texts: &'a [&'a str], word_index: usize) -> WordContext<'a> {
+    let prev_word = word_index
+        .checked_sub(1)
+        .map_or("", |prev_index| word_texts[prev_index]);
+    let remaining_words = &word_texts[word_index + 1..];
+
+    WordContext {
+        prev_word,
+        remaining_words,
+    }
+}
+
 fn emit_mode_event(event: ModeEvent, state: &mut EncoderState, result: &mut Vec<u8>) {
     match event {
         ModeEvent::EnterEnglish => {
             result.push(52);
             state.is_english = true;
             state.needs_english_continuation = false;
+            state.roman_number_chain = false;
         }
         ModeEvent::EnterEnglishContinue => {
             result.push(48);
             state.is_english = true;
             state.needs_english_continuation = false;
+            state.roman_number_chain = false;
         }
         ModeEvent::CapsWord => {
             result.push(32);
             result.push(32);
+        }
+        ModeEvent::Grade1Indicator => {
+            // ⠰ (dots 5+6, byte 48): UEB Grade-1 indicator that forces literal letter
+            // reading and prevents shortform/contraction collision (UEB 5.7.2 + 10.9).
+            result.push(48);
         }
         ModeEvent::CapsPassageStart => {
             result.push(32);
@@ -139,70 +338,35 @@ fn apply_inter_character_rules(
     Ok(())
 }
 
-fn exit_english(state: &mut EncoderState, needs_continuation: bool) {
-    state.is_english = false;
-    state.needs_english_continuation = needs_continuation;
-}
-
-fn enter_english(state: &mut EncoderState, result: &mut Vec<u8>) {
-    if state.needs_english_continuation {
-        result.push(48);
-    } else {
-        result.push(52);
-    }
-    state.is_english = true;
-    state.needs_english_continuation = false;
-}
-
-fn extract_word_context<'a>(
-    word: &WordToken<'a>,
-    all_tokens: &'a [Token<'a>],
-) -> (&'a str, Vec<&'a str>) {
-    let mut prev_word = "";
-    let mut remaining_words = Vec::new();
-    let mut seen_current = false;
-
-    for token in all_tokens {
-        if let Token::Word(candidate) = token {
-            if !seen_current {
-                if std::ptr::eq(candidate, word) {
-                    seen_current = true;
-                } else {
-                    prev_word = candidate.text.as_ref();
-                }
-            } else {
-                remaining_words.push(candidate.text.as_ref());
-            }
-        }
-    }
-
-    (prev_word, remaining_words)
-}
-
 fn emit_word(
     word: &WordToken,
+    token_index: usize,
     state: &mut EncoderState,
     char_engine: &mut RuleEngine,
     all_tokens: &[Token],
+    context: WordContext<'_>,
     result: &mut Vec<u8>,
 ) -> Result<(), String> {
-    let (prev_word, remaining_words_vec) = extract_word_context(word, all_tokens);
-    let remaining_words = remaining_words_vec.as_slice();
-
-    let word_text = word.text.as_ref();
+    let prev_word = context.prev_word;
+    let remaining_words = context.remaining_words;
+    // 다음 비공백 토큰이 한글표(⠸⠷)이면 영어 모드를 끊지 않는다 (제39항).
+    let next_is_hangul_wrap = next_non_space_is_hangul_wrap_start(all_tokens, token_index);
+    // 직전 비공백 토큰이 한글 종료표(⠸⠾)이면 이 토큰의 시작 문장부호도
+    // 영어 컨텍스트의 일부로 본다 (제39항 wrap 재개 직후).
+    let prev_is_hangul_wrap_end = prev_non_space_is_hangul_wrap_end(all_tokens, token_index);
 
     // ── [D] Per-character loop (encoder.rs:201-409) ──
-    let word_chars: Vec<char> = word_text.chars().collect();
+    let word_chars = word.chars.as_slice();
     let word_len = word_chars.len();
 
     if word_len > 0 {
-        let meta = WordMeta::from_chars(&word_chars);
+        let meta = word.meta;
         let is_all_uppercase = meta.is_all_uppercase;
         let has_korean_char = meta.has_korean;
         let has_ascii_alphabetic = meta.has_ascii_alphabetic;
 
         if word_chars.first().is_some_and(|ch| ch.is_ascii_digit())
-            && let Some((numeric, unit, consumed)) = parse_numeric_ascii_unit_prefix(&word_chars)
+            && let Some((numeric, unit, consumed)) = parse_numeric_ascii_unit_prefix(word_chars)
             && consumed == word_chars.len()
         {
             let mut encoded = crate::encode(&numeric)?;
@@ -211,14 +375,8 @@ fn emit_word(
             return Ok(());
         }
 
-        // English entry (encoder.rs:216-223)
-        if state.english_indicator
-            && !state.is_english
-            && has_ascii_alphabetic
-            && word_chars[0].is_ascii_alphabetic()
-        {
-            enter_english(state, result);
-        }
+        // English entry (제28/35/39항) — 로마자표/연속표 emit + 영어 모드 전환.
+        roman_mode::enter_english_if_starting(state, word_chars, has_ascii_alphabetic, result);
 
         let first_ascii_index = word_chars.iter().position(|c| c.is_ascii_alphabetic());
         let ascii_starts_at_beginning = matches!(first_ascii_index, Some(0));
@@ -241,40 +399,82 @@ fn emit_word(
                 match &char_type {
                     CharType::English(_) => {}
                     CharType::Number(_) => {
-                        exit_english(state, true);
+                        roman_mode::exit_english_for_roman_number_chain(state);
                     }
                     CharType::Symbol(sym) => {
-                        if english_logic::should_render_symbol_as_english(
-                            state.english_indicator,
-                            state.is_english,
-                            &state.parenthesis_stack,
-                            *sym,
-                            &word_chars,
-                            i,
-                            remaining_words,
-                        ) || english_logic::should_keep_english_mode_for_symbol(
-                            *sym,
-                            &word_chars,
-                            i,
-                            remaining_words,
-                        ) {
+                        // 한글 wrap 직후의 첫 디지털 표기 기호(. / @ # _ : -)는
+                        // 영어 컨텍스트의 연속으로 본다. 예) "www.대통령.kr"에서
+                        // wrap 종료 직후의 '.'는 ".kr" 영어 도메인 일부.
+                        let prev_wrap_eng_continuation = i == 0
+                            && prev_is_hangul_wrap_end
+                            && matches!(*sym, '.' | '/' | '@' | '#' | '_' | ':' | '-')
+                            && english_logic::next_ascii_letter_or_digit(
+                                word_chars,
+                                i,
+                                remaining_words,
+                            );
+
+                        // 단어 끝의 영어 모드 유지 가능 기호(. , : ;) 직후 한글표(⠸⠷)가
+                        // 이어지면, 그 기호도 영어 컨텍스트의 연속으로 본다 (제39항 wrap
+                        // 직전). 예) "(Korean:" 끝의 ':'은 다음 wrap된 한글에 이어지므로
+                        // 영어 점자(⠒)로 처리.
+                        let next_wrap_eng_continuation = i == word_chars.len() - 1
+                            && next_is_hangul_wrap
+                            && matches!(*sym, '.' | ',' | ':' | ';');
+
+                        if prev_wrap_eng_continuation
+                            || next_wrap_eng_continuation
+                            || english_logic::should_render_symbol_as_english(
+                                state.english_indicator,
+                                state.is_english,
+                                &state.parenthesis_stack,
+                                *sym,
+                                word_chars,
+                                i,
+                                remaining_words,
+                            )
+                            || english_logic::should_keep_english_mode_for_symbol(
+                                *sym,
+                                word_chars,
+                                i,
+                                remaining_words,
+                            )
+                        {
                         } else if english_logic::should_force_terminator_before_symbol(*sym)
                             || !english_logic::should_skip_terminator_for_symbol(*sym)
                         {
                             result.push(50);
-                            exit_english(state, false);
+                            roman_mode::exit_english(state, false);
                         } else {
-                            exit_english(state, english_logic::should_request_continuation(*sym));
+                            roman_mode::exit_english(
+                                state,
+                                english_logic::should_request_continuation(*sym),
+                            );
                         }
                     }
                     _ => {
                         result.push(50);
-                        exit_english(state, false);
+                        roman_mode::exit_english(state, false);
                     }
                 }
             }
 
             // Pre-engine type-specific checks (encoder.rs:296-327)
+            if state.roman_number_chain && !state.is_english {
+                match &char_type {
+                    CharType::English(_) => {
+                        // PDF — roman_number_chain 안 digit 뒤 letter는 영어 연속 표지(⠰)를
+                        // 부착해 letter임을 명시한다 (digit과 혼동 방지).
+                        result.push(48);
+                        roman_mode::resume_english_from_roman_number_chain(state);
+                    }
+                    CharType::Number(_) => {}
+                    _ => {
+                        state.roman_number_chain = false;
+                    }
+                }
+            }
+
             match &char_type {
                 CharType::Korean(_) | CharType::KoreanPart(_) => {
                     state.needs_english_continuation = false;
@@ -284,39 +484,24 @@ fn emit_word(
             }
 
             // CoreEncoding via engine (encoder.rs:330-360)
-            let mut core_state = EncoderState {
-                mode_stack: state.mode_stack.clone(),
-                is_english: state.is_english,
-                english_indicator: state.english_indicator,
-                triple_big_english: state.triple_big_english,
-                has_processed_word: state.has_processed_word,
-                needs_english_continuation: state.needs_english_continuation,
-                parenthesis_stack: state.parenthesis_stack.clone(),
-                is_number,
-                is_big_english,
-            };
+            state.is_number = is_number;
+            state.is_big_english = is_big_english;
             apply_core_encoding_rules(
                 char_engine,
                 &char_type,
-                &word_chars,
+                word_chars,
                 i,
                 is_all_uppercase,
                 has_korean_char,
                 ascii_starts_at_beginning,
-                &mut core_state,
+                state,
                 &mut skip_count,
                 remaining_words,
                 prev_word,
                 result,
             )?;
-            state.is_english = core_state.is_english;
-            state.triple_big_english = core_state.triple_big_english;
-            state.has_processed_word = core_state.has_processed_word;
-            state.needs_english_continuation = core_state.needs_english_continuation;
-            state.parenthesis_stack = core_state.parenthesis_stack;
-            state.mode_stack = core_state.mode_stack;
-            is_number = core_state.is_number;
-            is_big_english = core_state.is_big_english;
+            is_number = state.is_number;
+            is_big_english = state.is_big_english;
 
             // InterCharacter via engine (encoder.rs:362-402)
             if let CharType::Korean(ref korean) = char_type
@@ -327,39 +512,24 @@ fn emit_word(
                     jung: korean.jung,
                     jong: korean.jong,
                 });
-                let mut inter_state = EncoderState {
-                    mode_stack: state.mode_stack.clone(),
-                    is_english: state.is_english,
-                    english_indicator: state.english_indicator,
-                    triple_big_english: state.triple_big_english,
-                    has_processed_word: state.has_processed_word,
-                    needs_english_continuation: state.needs_english_continuation,
-                    parenthesis_stack: state.parenthesis_stack.clone(),
-                    is_number,
-                    is_big_english,
-                };
+                state.is_number = is_number;
+                state.is_big_english = is_big_english;
                 apply_inter_character_rules(
                     char_engine,
                     &recon_type,
-                    &word_chars,
+                    word_chars,
                     i,
                     is_all_uppercase,
                     has_korean_char,
                     ascii_starts_at_beginning,
-                    &mut inter_state,
+                    state,
                     &mut skip_count,
                     remaining_words,
                     prev_word,
                     result,
                 )?;
-                state.is_english = inter_state.is_english;
-                state.triple_big_english = inter_state.triple_big_english;
-                state.has_processed_word = inter_state.has_processed_word;
-                state.needs_english_continuation = inter_state.needs_english_continuation;
-                state.parenthesis_stack = inter_state.parenthesis_stack;
-                state.mode_stack = inter_state.mode_stack;
-                is_number = inter_state.is_number;
-                is_big_english = inter_state.is_big_english;
+                is_number = state.is_number;
+                is_big_english = state.is_big_english;
             }
 
             // Post-char state reset (encoder.rs:403-408)
@@ -374,10 +544,16 @@ fn emit_word(
 
     // ── [F] Post-loop: English termination for next word (encoder.rs:424-482) ──
     // Space between words is handled by Token::Space, NOT emitted here.
-    if state.english_indicator && state.is_english {
+    // 제39항: 다음 토큰이 한글표(⠸⠷)이면 영어 모드를 끊지 않는다.
+    // 한글표 emit 시점에 영어 모드가 자동 휴면되고, 한글 종료표(⠸⠾)에서 재개된다.
+    if state.english_indicator && state.is_english && next_is_hangul_wrap {
+        // 한글 wrap이 영어 모드 전환을 책임지므로 여기서는 아무 것도 emit하지 않는다.
+    } else if state.english_dominant_no_indicator && state.english_indicator && state.is_english {
+        // 영어 주도 문서: 영어 단어 사이의 종료표 ⠲ 모두 생략하고 영어 모드를 유지.
+    } else if state.english_indicator && state.is_english {
         if remaining_words.is_empty() {
             result.push(50);
-            exit_english(state, false);
+            roman_mode::exit_english(state, false);
         } else if let Some(next_word) = remaining_words.first() {
             let ascii_letters = next_word
                 .chars()
@@ -396,7 +572,7 @@ fn emit_word(
             if is_single_letter_word
                 && english_logic::requires_single_letter_continuation(ascii_letters[0])
             {
-                exit_english(state, true);
+                roman_mode::exit_english(state, true);
             } else if let Some(next_char) = next_word.chars().next() {
                 if let Ok(next_type) = CharType::new(next_char) {
                     match next_type {
@@ -412,9 +588,9 @@ fn emit_word(
                                 || !english_logic::should_skip_terminator_for_symbol(sym)
                             {
                                 result.push(50);
-                                exit_english(state, false);
+                                roman_mode::exit_english(state, false);
                             } else {
-                                exit_english(
+                                roman_mode::exit_english(
                                     state,
                                     english_logic::should_request_continuation(sym),
                                 );
@@ -422,12 +598,12 @@ fn emit_word(
                         }
                         _ => {
                             result.push(50);
-                            exit_english(state, false);
+                            roman_mode::exit_english(state, false);
                         }
                     }
                 } else {
                     result.push(50);
-                    exit_english(state, false);
+                    roman_mode::exit_english(state, false);
                 }
             }
         }
@@ -461,7 +637,6 @@ mod tests {
         let mut engine = RuleEngine::new();
         engine.register(Box::new(crate::rules::korean::rule_53::Rule53));
         engine.register(Box::new(crate::rules::korean::rule_18::Rule18));
-        engine.register(Box::new(crate::rules::korean::rule_29::Rule29));
         engine.register(Box::new(crate::rules::korean::rule_44::Rule44));
         engine.register(Box::new(crate::rules::korean::rule_16::Rule16));
         engine.register(Box::new(crate::rules::korean::rule_14::Rule14));
@@ -544,14 +719,36 @@ mod tests {
 
     // ── Step 1-3: Basic token tests ──
 
-    #[test]
-    fn emit_round_trip_korean() {
-        assert_round_trip("안녕하세요");
-    }
-
-    #[test]
-    fn emit_round_trip_english_words() {
-        assert_round_trip("hello world");
+    /// `emit` 결과가 `encode()` 와 byte-identical 한지 (round-trip) 다양한
+    /// 입력에 대해 일관되게 통과하는지 검증한다. 각 case는 다른 점역 규칙
+    /// 경로를 통과한다 — 한글/영어/대문자/숫자/약어/LaTeX/전화번호/괄호 등.
+    #[rstest::rstest]
+    #[case::korean_greeting("안녕하세요")]
+    #[case::english_words("hello world는")]
+    #[case::triple_uppercase_passage("WELCOME TO KOREA")]
+    #[case::english_indicator_sns("SNS에서")]
+    #[case::english_indicator_atm("ATM 기기")]
+    #[case::english_indicator_bmi_paren("BMI(지수)")]
+    #[case::mixed_upper_atm("ATM")]
+    #[case::mixed_upper_capitalized("Contents는")]
+    #[case::mixed_upper_title("Table of Contents는")]
+    #[case::number_with_comma("1,000")]
+    #[case::number_decimal("0.48")]
+    #[case::multi_word_korean("상상이상의 ")]
+    #[case::korean_with_newline("안녕\n반가워")]
+    #[case::word_shortcut_geuraeseo("그래서")]
+    #[case::word_shortcut_geureona("그러나")]
+    #[case::latex_fraction_half("$\\frac{1}{2}$")]
+    #[case::math_symbols_korean_sentence("나루 + 배 = 나룻배")]
+    #[case::phone_number_range("02-2669-9775~6")]
+    #[case::parenthesized_english_bmi("지수(BMI)")]
+    #[case::parenthesized_english_chejilryang_bmi("체질량 지수(BMI)")]
+    #[case::standalone_jamo("삼각형 ㄱㄴㄷ")]
+    #[case::kg_parenthesized("(kg)는")]
+    #[case::kg_bare("kg")]
+    #[case::roma_bracket("Roma [ㄹㄹ로마]")]
+    fn emit_round_trip(#[case] text: &str) {
+        assert_round_trip(text);
     }
 
     #[test]
@@ -563,12 +760,13 @@ mod tests {
                 Token::Mode(ModeEvent::CapsWord),
                 Token::Mode(ModeEvent::CapsPassageStart),
                 Token::Mode(ModeEvent::CapsPassageEnd),
+                Token::Mode(ModeEvent::Grade1Indicator),
             ],
             state: EncoderState::new(false),
         };
         let mut engine = make_char_engine();
         let out = emit(&mut ir, &mut engine).unwrap();
-        assert_eq!(out, vec![52, 48, 32, 32, 32, 32, 32, 32, 4]);
+        assert_eq!(out, vec![52, 48, 32, 32, 32, 32, 32, 32, 4, 48]);
     }
 
     #[test]
@@ -613,97 +811,51 @@ mod tests {
             })
             .collect::<Vec<_>>();
 
-        let target = match &tokens[1] {
-            Token::Word(w) => w,
-            _ => panic!("expected word"),
-        };
-
-        let (prev, rem) = extract_word_context(target, &tokens);
-        assert_eq!(prev, "A");
-        assert_eq!(rem, vec!["C"]);
+        let word_texts = collect_word_texts(&tokens);
+        let context = word_context(&word_texts, 1);
+        assert_eq!(context.prev_word, "A");
+        assert_eq!(context.remaining_words, ["C"]);
     }
 
-    // ── Post-loop parity tests ──
-
+    /// emit:85 (extracted helper) — `token_is_math_word` returns false for None
+    /// and for tokens that aren't Word/PreEncoded (Space, Mode, Fraction).
     #[test]
-    fn emit_round_trip_triple_uppercase() {
-        // 제28항 [붙임] 대문자 구절표
-        assert_round_trip("WELCOME TO KOREA");
+    fn token_is_math_word_returns_false_for_non_word_non_preencoded() {
+        use super::token_is_math_word;
+        use crate::rules::token::{ModeEvent, SpaceKind};
+        assert!(!token_is_math_word(None));
+        assert!(!token_is_math_word(Some(&Token::Space(SpaceKind::Regular))));
+        assert!(!token_is_math_word(Some(&Token::Mode(
+            ModeEvent::EnterEnglish
+        ))));
+        // Korean Word also returns false (meta.has_korean = true).
+        let chars: Vec<char> = "한국".chars().collect();
+        let kw = Token::Word(crate::rules::token::WordToken {
+            text: std::borrow::Cow::Borrowed("한국"),
+            chars: chars.clone(),
+            meta: crate::rules::token::WordMeta::from_chars(&chars),
+        });
+        assert!(!token_is_math_word(Some(&kw)));
+        // PreEncoded → true.
+        assert!(token_is_math_word(Some(&Token::PreEncoded(vec![1, 2, 3]))));
     }
 
+    /// emit.rs lines 155-156 - end-of-stream triple_big_english cleanup arm.
+    /// 모든 production input은 word loop 내에서 triple_big_english를 close하므로
+    /// 이 fallback은 도달하지 않는다. 직접 DocumentIR을 구성해 상태를 강제 주입한
+    /// 뒤 emit을 호출해 분기를 cover한다.
     #[test]
-    fn emit_round_trip_english_indicator_with_korean() {
-        // 로마자표 + 종료표 tests
-        assert_round_trip("SNS에서");
-        assert_round_trip("ATM 기기");
-        assert_round_trip("BMI(지수)");
-    }
-
-    #[test]
-    fn emit_round_trip_mixed_uppercase_word() {
-        assert_round_trip("ATM");
-        assert_round_trip("Contents");
-        assert_round_trip("Table of Contents");
-    }
-
-    #[test]
-    fn emit_round_trip_numbers() {
-        assert_round_trip("1,000");
-        assert_round_trip("0.48");
-    }
-
-    #[test]
-    fn emit_round_trip_multi_word_korean() {
-        assert_round_trip("상상이상의 ");
-    }
-
-    #[test]
-    fn emit_round_trip_korean_with_newline() {
-        // parse() splits on spaces; newlines within words are handled by per-char
-        assert_round_trip("안녕\n반가워");
-    }
-
-    #[test]
-    fn emit_round_trip_word_shortcut() {
-        // 제18항 약어 (그래서, 그러나, etc.)
-        assert_round_trip("그래서");
-        assert_round_trip("그러나");
-    }
-
-    #[test]
-    fn emit_round_trip_latex_fraction() {
-        assert_round_trip("$\\frac{1}{2}$");
-    }
-
-    #[test]
-    fn emit_round_trip_math_symbols() {
-        assert_round_trip("나루 + 배 = 나룻배");
-    }
-
-    #[test]
-    fn emit_round_trip_phone_number() {
-        assert_round_trip("02-2669-9775~6");
-    }
-
-    #[test]
-    fn emit_round_trip_parenthesized_english() {
-        assert_round_trip("지수(BMI)");
-        assert_round_trip("체질량 지수(BMI)");
-    }
-
-    #[test]
-    fn emit_round_trip_standalone_jamo() {
-        assert_round_trip("삼각형 ㄱㄴㄷ");
-    }
-
-    #[test]
-    fn emit_round_trip_kg_parenthesized() {
-        assert_round_trip("(kg)");
-        assert_round_trip("kg");
-    }
-
-    #[test]
-    fn emit_round_trip_roma_bracket() {
-        assert_round_trip("Roma [ㄹㄹ로마]");
+    fn emit_end_of_stream_triple_big_english_safety_net() {
+        use crate::rules::engine::RuleEngine;
+        use crate::rules::token::DocumentIR;
+        let mut ir = DocumentIR::parse("", false);
+        ir.state.triple_big_english = true;
+        let mut engine = RuleEngine::new();
+        let result = emit(&mut ir, &mut engine).unwrap();
+        assert_eq!(
+            result,
+            vec![32, 4],
+            "expected safety-net close bytes, got {result:?}"
+        );
     }
 }

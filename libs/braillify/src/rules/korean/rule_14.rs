@@ -4,6 +4,11 @@
 //! a syllable starting with silent ㅇ (i.e., vowel-initial), the abbreviation is NOT used.
 //! Instead, the syllable is fully decomposed into choseong + jungseong.
 //!
+//! 된소리(쌍자음) 변형(따, 빠, 짜)도 동일하게 적용된다. 'ㄸ/ㅃ/ㅉ + ㅏ'는 인코더에서
+//! `된소리표 + 다/바/자 약자`로 압축되는데, 같은 모음 환경에서는 압축을 피해야 한다.
+//! 가는 제14항 본문에서 제외되므로 까(쌍자음 가)도 그대로 약자를 사용한다.
+//! 사 역시 본문에 없으므로 싸도 마찬가지다.
+//!
 //! Note: 가 is not in this list (가 always uses abbreviation).
 //!
 //! Reference: 2024 Korean Braille Standard, Chapter 2, Section 6, Article 14
@@ -14,6 +19,7 @@ use crate::moeum::jungsong::encode_jungsong;
 use crate::rules::RuleMeta;
 use crate::rules::context::RuleContext;
 use crate::rules::traits::{BrailleRule, Phase, RuleResult};
+use crate::split::split_korean_jauem;
 use crate::utils::has_choseong_o;
 
 pub static META: RuleMeta = RuleMeta {
@@ -28,6 +34,10 @@ pub static META: RuleMeta = RuleMeta {
 /// These syllables use abbreviation EXCEPT when followed by a vowel-initial syllable.
 pub const NO_ABBREV_SYLLABLES: [char; 9] = ['나', '다', '마', '바', '자', '카', '타', '파', '하'];
 
+/// 된소리 변형: 약자가 적용되는 9자 중 단순 자음이 쌍자음(된소리)으로 바뀐 음절.
+/// 다→따, 바→빠, 자→짜만 표준 한글 음절로 존재한다(ㄴ/ㅁ/ㅋ/ㅌ/ㅍ/ㅎ 은 된소리 없음).
+const NO_ABBREV_DOUBLE_BASES: [char; 3] = ['다', '바', '자'];
+
 /// When true, the encoder should use full decomposition (choseong + jungseong)
 /// instead of the abbreviation shortcut.
 #[cfg(test)]
@@ -36,8 +46,50 @@ fn should_suppress_abbreviation(current: char, next_has_choseong_o: bool) -> boo
 }
 
 /// Check if a character is subject to the no-abbreviation rule.
+///
+/// Returns true for both:
+/// 1. The 9 base syllables 나~하.
+/// 2. The 된소리 변형 따/빠/짜 — these decompose to 된소리표(⠠) + 다/바/자 약자,
+///    and the same vowel-environment suppression must apply.
 pub fn is_no_abbrev_target(ch: char) -> bool {
-    NO_ABBREV_SYLLABLES.contains(&ch)
+    if NO_ABBREV_SYLLABLES.contains(&ch) {
+        return true;
+    }
+    // 된소리 + ㅏ 음절인지 확인: chosung이 쌍자음이고, 단순화한 (chosung 단자음 + ㅏ)이
+    // NO_ABBREV_DOUBLE_BASES에 들어가는 경우.
+    let code = ch as u32;
+    if !(0xAC00..=0xD7A3).contains(&code) {
+        return false;
+    }
+    let uni = code - 0xAC00;
+    let cho_idx = (uni / 588) as usize;
+    let jung_idx = ((uni - (cho_idx as u32 * 588)) / 28) as usize;
+    let jong_idx = (uni % 28) as usize;
+    // 종성 있음 → 약자 대상 아님 (NO_ABBREV_SYLLABLES는 모두 종성 없는 음절)
+    if jong_idx != 0 {
+        return false;
+    }
+    // ㅏ만 처리(NO_ABBREV_SYLLABLES 모두 jungsong=ㅏ).
+    if jung_idx != 0 {
+        return false;
+    }
+    const CHOSEONG: [char; 19] = [
+        'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ',
+        'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
+    ];
+    let cho = CHOSEONG[cho_idx];
+    if let Ok((cho0, Some(cho1))) = split_korean_jauem(cho)
+        && cho0 == cho1
+    {
+        // 쌍자음. 단자음 버전 음절을 합성한다: 단자음 + ㅏ + (종성 없음).
+        // 단자음의 CHOSEONG 인덱스를 찾아 단순화 음절을 만든다.
+        if let Some(simple_cho_idx) = CHOSEONG.iter().position(|c| *c == cho0) {
+            let simple_uni = (simple_cho_idx as u32) * 588;
+            let simple_char = char::from_u32(0xAC00 + simple_uni).unwrap_or('가');
+            return NO_ABBREV_DOUBLE_BASES.contains(&simple_char);
+        }
+    }
+    false
 }
 
 /// Plugin struct for the rule engine.
@@ -75,8 +127,13 @@ impl BrailleRule for Rule14 {
         let CharType::Korean(korean) = ctx.char_type else {
             return Ok(RuleResult::Skip);
         };
-        // Full decomposition: choseong + jungseong (no abbreviation)
-        let cho_code = encode_choseong(korean.cho)?;
+        // Full decomposition: 된소리표(필요 시) + choseong + jungseong (약자 사용 금지)
+        let (cho0, cho1) = split_korean_jauem(korean.cho)?;
+        if cho1.is_some() {
+            // 쌍자음(된소리) 음절: 된소리표(⠠) 먼저 emit
+            ctx.emit(32);
+        }
+        let cho_code = encode_choseong(cho0)?;
         ctx.emit(cho_code);
         ctx.emit_slice(encode_jungsong(korean.jung)?);
         Ok(RuleResult::Consumed)
@@ -106,6 +163,16 @@ mod tests {
         assert!(!is_no_abbrev_target('가'));
     }
 
+    /// rule_14 line 56 — `is_no_abbrev_target` returns false for non-Hangul char.
+    /// Triggers the `!(0xAC00..=0xD7A3).contains(&code)` branch.
+    #[rstest::rstest]
+    #[case('A')]
+    #[case('1')]
+    #[case(' ')]
+    fn is_no_abbrev_target_non_hangul_returns_false(#[case] ch: char) {
+        assert!(!is_no_abbrev_target(ch));
+    }
+
     #[test]
     fn suppresses_when_next_is_vowel_initial() {
         assert!(should_suppress_abbreviation('나', true));
@@ -125,22 +192,37 @@ mod tests {
         assert!(!should_suppress_abbreviation('곤', true));
     }
 
+    use rstest::rstest;
+
+    /// Rule14 detects no-abbreviation target syllables followed by ㅇ-initial syllable.
+    /// e.g., "사아" — 사 is target, next 아 starts with ㅇ.
+    #[rstest]
+    #[case("나아", true)] // 나 is target, next 아 has ㅇ-initial
+    #[case("다어", true)]
+    #[case("자아", true)]
+    #[case("하이", true)]
+    #[case("가나", false)] // 가 not in NO_ABBREV
+    #[case("나람", false)] // 람 doesn't start with ㅇ
+    #[case("A", false)] // not Korean
+    fn rule14_matches_target_then_o_initial(#[case] input: &str, #[case] expected: bool) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(0);
+        assert_eq!(Rule14.matches(&ctx), expected, "input={input}");
+    }
+
     #[test]
-    fn golden_test_alignment() {
-        // 나이: 나 + 이(ㅇ-initial) → no abbreviation for 나
-        // 다음: 다 + 음(ㅇ-initial) → no abbreviation for 다
-        let cases = vec![
-            ("나이", "⠉⠣⠕"),  // full decomposition: ㄴ+ㅏ+ㅇ+ㅣ
-            ("다음", "⠊⠣⠪⠢"), // full decomposition: ㄷ+ㅏ+ㅇ+ㅡ+ㅁ
-            ("하얀", "⠚⠣⠜⠒"), // full decomposition: ㅎ+ㅏ+ㅇ+ㅑ+ㄴ
-        ];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 14 golden test failed for: {}",
-                input
-            );
-        }
+    fn rule14_apply_emits_for_target() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("나아", false);
+        let mut ctx = owned.ctx_at(0);
+        let _ = Rule14.apply(&mut ctx).unwrap();
+        assert!(!owned.result.is_empty());
+    }
+
+    #[test]
+    fn rule14_apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule14.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
     }
 }

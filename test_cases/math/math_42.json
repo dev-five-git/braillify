@@ -1,6 +1,7 @@
 [
   {
     "input": "∽",
+    "note": "PDF 제42항 — 닮음 ∽ 기호 정의 (단독)",
     "internal": ",'",
     "expected": "324",
     "unicode": "⠠⠄",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠨⠒"
   },
   {
+    "input": "$\\backsim$",
+    "note": "LaTeX (∽ REVERSED TILDE U+223D, math_34 ~ 과 구분)",
+    "internal": ",'",
+    "expected": "324",
+    "unicode": "⠠⠄",
+    "world": "⠴⠈⠎⠸⠡⠴⠃⠁⠉⠅⠎⠊⠍⠈⠎",
+    "jeomsarang": "⠈⠎⠸⠡⠃⠁⠉⠅⠎⠊⠍⠈⠎"
+  },
+  {
     "input": "△ABC∽△A′B′C′",
+    "note": "PDF 제42항 — 예제 △ABC∽△A'B'C' (대문자 단어표 ,, 적용)",
     "internal": "_+,,ABC,'_+,,A-B-C-",
     "expected": "5644323213932456443232136336936",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉⠠⠄⠸⠬⠠⠠⠁⠤⠃⠤⠉⠤",
@@ -16,7 +27,7 @@
     "jeomsarang": "⠸⠬⠠⠠⠁⠃⠉⠨⠒⠸⠬⠇⠠⠁⠶⠠⠃⠶⠠⠉⠲⠶"
   },
   {
-    "input": "$\\triangle ABC \\sim \\triangle A'B'C'$",
+    "input": "$\\triangle ABC \\backsim \\triangle A'B'C'$",
     "internal": "_+,,ABC,'_+,,A-B-C-",
     "expected": "5644323213932456443232136336936",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉⠠⠄⠸⠬⠠⠠⠁⠤⠃⠤⠉⠤",

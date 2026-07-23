@@ -1,5 +1,13 @@
 [
   {
+    "input": "ː",
+    "internal": ",'",
+    "expected": "324",
+    "unicode": "⠠⠄",
+    "world": "⠠⠄",
+    "jeomsarang": "⠠⠄"
+  },
+  {
     "input": "밤ː나무",
     "internal": "^5,'cem",
     "expected": "243432491713",

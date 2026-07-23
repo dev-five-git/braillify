@@ -1,0 +1,128 @@
+[
+  {
+    "input": "adhere",
+    "internal": "ad\"h",
+    "expected": "1251619",
+    "unicode": "⠁⠙⠐⠓"
+  },
+  {
+    "input": "atmosphere",
+    "internal": "atmosp\"h",
+    "expected": "130132114151619",
+    "unicode": "⠁⠞⠍⠕⠎⠏⠐⠓"
+  },
+  {
+    "input": "cohere",
+    "internal": "co\"h",
+    "expected": "9211619",
+    "unicode": "⠉⠕⠐⠓"
+  },
+  {
+    "input": "filename",
+    "internal": "file\"n",
+    "expected": "11107171629",
+    "unicode": "⠋⠊⠇⠑⠐⠝"
+  },
+  {
+    "input": "hereabout",
+    "internal": "\"hab",
+    "expected": "161913",
+    "unicode": "⠐⠓⠁⠃"
+  },
+  {
+    "input": "herewith",
+    "internal": "\"h)",
+    "expected": "161962",
+    "unicode": "⠐⠓⠾"
+  },
+  {
+    "input": "nameable",
+    "internal": "\"nable",
+    "expected": "162913717",
+    "unicode": "⠐⠝⠁⠃⠇⠑"
+  },
+  {
+    "input": "renamed",
+    "internal": "re\"nd",
+    "expected": "2317162925",
+    "unicode": "⠗⠑⠐⠝⠙"
+  },
+  {
+    "input": "sphere",
+    "internal": "sp\"h",
+    "expected": "14151619",
+    "unicode": "⠎⠏⠐⠓"
+  },
+  {
+    "input": "surname",
+    "internal": "sur\"n",
+    "expected": "1437231629",
+    "unicode": "⠎⠥⠗⠐⠝"
+  },
+  {
+    "input": "adhered",
+    "internal": "adh]$",
+    "expected": "125195943",
+    "unicode": "⠁⠙⠓⠻⠫"
+  },
+  {
+    "input": "bothered",
+    "internal": "bo!r$",
+    "expected": "321462343",
+    "unicode": "⠃⠕⠮⠗⠫"
+  },
+  {
+    "input": "coherence",
+    "internal": "coh];e",
+    "expected": "92119594817",
+    "unicode": "⠉⠕⠓⠻⠰⠑"
+  },
+  {
+    "input": "elsewhere",
+    "internal": "else\":",
+    "expected": "17714171649",
+    "unicode": "⠑⠇⠎⠑⠐⠱"
+  },
+  {
+    "input": "enamel",
+    "internal": "5amel",
+    "expected": "34113177",
+    "unicode": "⠢⠁⠍⠑⠇"
+  },
+  {
+    "input": "ethereal",
+    "internal": "e!r1l",
+    "expected": "17462327",
+    "unicode": "⠑⠮⠗⠂⠇"
+  },
+  {
+    "input": "heredity",
+    "internal": "h]$;y",
+    "expected": "1959434861",
+    "unicode": "⠓⠻⠫⠰⠽"
+  },
+  {
+    "input": "Hereford (City)",
+    "internal": ",h]e=d \"<,c;y\">",
+    "expected": "3219591763250163532948611628",
+    "unicode": "⠠⠓⠻⠑⠿⠙⠀⠐⠣⠠⠉⠰⠽⠐⠜"
+  },
+  {
+    "input": "ornament",
+    "internal": "orna;t",
+    "expected": "21232914830",
+    "unicode": "⠕⠗⠝⠁⠰⠞"
+  },
+  {
+    "input": "unamended",
+    "internal": "unam5d$",
+    "expected": "3729113342543",
+    "unicode": "⠥⠝⠁⠍⠢⠙⠫"
+  },
+  {
+    "input": "Vietnamese",
+    "internal": ",vietnamese",
+    "expected": "323910173029113171417",
+    "unicode": "⠠⠧⠊⠑⠞⠝⠁⠍⠑⠎⠑"
+  }
+]

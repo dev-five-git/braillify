@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\frac{dx}{dy}$"
+unicode = ok: "⠙⠽⠌⠙⠭"
+bytes   = ok: [25, 61, 12, 25, 45]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\begin{cases} a \\\\ b \\end{cases}$"
+unicode = ok: "⠶⠄⠁⠀⠃⠠⠶"
+bytes   = ok: [54, 4, 1, 0, 3, 32, 54]

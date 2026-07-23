@@ -64,12 +64,30 @@
     "jeomsarang": "⠼⠑⠢⠼⠛⠒⠒⠼⠁⠃"
   },
   {
+    "input": "$5+7=12$",
+    "note": "LaTeX",
+    "internal": "#e5#g33#ab",
+    "expected": "601734602718186013",
+    "unicode": "⠼⠑⠢⠼⠛⠒⠒⠼⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "9-3=6",
     "internal": "#i9#c33#f",
     "expected": "60102060918186011",
     "unicode": "⠼⠊⠔⠼⠉⠒⠒⠼⠋",
     "world": "⠼⠊⠤⠼⠉⠒⠒⠼⠋",
     "jeomsarang": "⠼⠊⠤⠼⠉⠒⠒⠼⠋"
+  },
+  {
+    "input": "$9-3=6$",
+    "note": "LaTeX",
+    "internal": "#i9#c33#f",
+    "expected": "60102060918186011",
+    "unicode": "⠼⠊⠔⠼⠉⠒⠒⠼⠋",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "4×8=32",
@@ -80,12 +98,30 @@
     "jeomsarang": "⠼⠙⠡⠼⠓⠒⠒⠼⠉⠃"
   },
   {
+    "input": "$4\\times 8=32$",
+    "note": "LaTeX",
+    "internal": "#d*#h33#cb",
+    "expected": "602533601918186093",
+    "unicode": "⠼⠙⠡⠼⠓⠒⠒⠼⠉⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "12÷3=4",
     "internal": "#ab//#c33#d",
     "expected": "6013121260918186025",
     "unicode": "⠼⠁⠃⠌⠌⠼⠉⠒⠒⠼⠙",
     "world": "⠼⠁⠃⠌⠌⠼⠉⠒⠒⠼⠙",
     "jeomsarang": "⠼⠁⠃⠌⠌⠼⠉⠒⠒⠼⠙"
+  },
+  {
+    "input": "$12\\div 3=4$",
+    "note": "LaTeX",
+    "internal": "#ab//#c33#d",
+    "expected": "6013121260918186025",
+    "unicode": "⠼⠁⠃⠌⠌⠼⠉⠒⠒⠼⠙",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "7>5",
@@ -96,11 +132,29 @@
     "jeomsarang": "⠼⠛⠢⠢⠼⠑"
   },
   {
+    "input": "$7>5$",
+    "note": "LaTeX",
+    "internal": "#g55#e",
+    "expected": "602734346017",
+    "unicode": "⠼⠛⠢⠢⠼⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "6<9",
     "internal": "#f99#i",
     "expected": "601120206010",
     "unicode": "⠼⠋⠔⠔⠼⠊",
     "world": "⠼⠋⠔⠔⠼⠊",
     "jeomsarang": "⠼⠋⠔⠔⠼⠊"
+  },
+  {
+    "input": "$6<9$",
+    "note": "LaTeX",
+    "internal": "#f99#i",
+    "expected": "601120206010",
+    "unicode": "⠼⠋⠔⠔⠼⠊",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "값 a⋯z 합"
+unicode = ok: "⠫⠃⠄⠀⠀⠁⠠⠠⠠⠵⠀⠀⠚⠃"
+bytes   = ok: [43, 3, 4, 0, 0, 1, 32, 32, 32, 53, 0, 0, 26, 3]

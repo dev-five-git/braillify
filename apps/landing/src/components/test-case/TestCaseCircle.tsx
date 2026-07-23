@@ -12,7 +12,7 @@ export default function TestCaseCircle({
   isSuccess: boolean
 }) {
   return (
-    <Box role="group">
+    <Box data-group>
       <Box
         aspectRatio="1"
         bg={isSuccess ? '$success' : '$error'}

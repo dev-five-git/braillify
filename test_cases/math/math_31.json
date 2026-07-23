@@ -1,6 +1,7 @@
 [
   {
     "input": "≃",
+    "note": "PDF 제31항 — 물결 아래 줄 ≃ 기호 정의 (단독)",
     "internal": "@93",
     "expected": "82018",
     "unicode": "⠈⠔⠒",
@@ -8,11 +9,30 @@
     "jeomsarang": "⠐⠤⠒"
   },
   {
+    "input": "$\\simeq$",
+    "note": "LaTeX",
+    "internal": "@93",
+    "expected": "82018",
+    "unicode": "⠈⠔⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "f ≃ g",
+    "note": "PDF 제31항 — 예제 (f ≃ g)",
     "internal": "f`@93`g",
     "expected": "11082018027",
     "unicode": "⠋⠀⠈⠔⠒⠀⠛",
     "world": "⠴⠋ ⠸⠔ ⠰⠛⠲",
     "jeomsarang": "⠴⠋⠀⠐⠤⠒⠀⠰⠛⠲"
+  },
+  {
+    "input": "$f \\simeq g$",
+    "note": "LaTeX",
+    "internal": "f`@93`g",
+    "expected": "11082018027",
+    "unicode": "⠋⠀⠈⠔⠒⠀⠛",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

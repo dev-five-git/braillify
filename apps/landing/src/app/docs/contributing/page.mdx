@@ -7,54 +7,237 @@ export const metadata = {
 
 # 기여하기
 
+<br />
+
 Braillify는 모든 오픈소스 기여를 환영합니다.
 
-## 개발 환경 설정
+<br />
 
-### 사전 요구사항
+## 사전 요구사항
 
-- **Rust**
-- **Python** 3.9 이상
-- **Node.js(22이상)**
-- **pnpm** (Node.js 패키지 매니저)
-- **uv** (Python 패키지 매니저)
-- **Git**
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+          width: '180px',
+        }}
+      >
+        도구
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>Rust</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>코어 빌드 및 테스트</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>Python</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>3.9 이상</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>Node.js</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>22 이상</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>pnpm</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>Node.js 패키지 매니저</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>uv</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>Python 패키지 매니저</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>Git</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>형상관리</td>
+    </tr>
+  </tbody>
+</table>
 
-### 설치 및 빌드
+<br />
+
+## 설치 및 빌드
+
+<br />
 
 #### 1. 저장소 Fork 및 Clone
 
-1. [brailify 레포지토리](https://github.com/dev-five-git/braillify)에 접속하세요.
-2. 페이지 우측 상단에 있는 'Fork 버튼'을 클릭합니다.
-3. 이어지는 화면에서 필요하다면 설정값을 조정한 후 'Create fork 버튼'을 클릭하세요.
-4. 더 자세한 방법은 [깃허브의 리포지토리 포크 문서](https://docs.github.com/ko/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)를 참고하세요.
-5. 포크한 자신의 저장소를 로컬로 클론합니다.
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+          width: '80px',
+        }}
+      >
+        단계
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>1</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        <a href="https://github.com/dev-five-git/braillify" rel="noopener noreferrer" target="_blank">brailify 레포지토리</a>에 접속하세요.
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>2</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        페이지 우측 상단에 있는 'Fork 버튼'을 클릭합니다.
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>3</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        이어지는 화면에서 필요하다면 설정값을 조정한 후 'Create fork 버튼'을 클릭하세요.
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>4</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        더 자세한 방법은 <a href="https://docs.github.com/ko/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo" rel="noopener noreferrer" target="_blank">깃허브의 리포지토리 포크 문서</a>를 참고하세요.
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>5</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        포크한 자신의 저장소를 로컬로 클론합니다.
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ```bash
 git clone git@github.com:<your-username>/braillify.git
 cd braillify
 ```
 
+<br />
+
 #### 2. 원본 저장소 연결
+
+<br />
 
 ```bash
 git remote add upstream git@github.com:dev-five-git/braillify.git
 git fetch --all
 ```
 
+<br />
+
 #### 3. 의존성 설치
+
+<br />
 
 ```bash
 pnpm install
 ```
 
-**설치 과정에서 자동으로 실행되는 작업:**
+<br />
 
-- `uv sync` (Python 의존성 설치)
-- `cargo install wasm-pack` (WebAssembly 빌드 도구)
-- `pip install maturin` (Python 바인딩 빌드 도구)
+설치 과정에서 자동으로 실행되는 작업:
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+          width: '240px',
+        }}
+      >
+        명령
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}><code>uv sync</code></td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>Python 의존성 설치</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}><code>cargo install wasm-pack</code></td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>WebAssembly 빌드 도구</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}><code>pip install maturin</code></td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>Python 바인딩 빌드 도구</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
 
 #### 4. 빌드 및 테스트
+
+<br />
 
 ```bash
 pnpm build
@@ -63,70 +246,180 @@ pnpm lint
 ```
 
 <br />
+<br />
 
 ## 테스트 케이스 추가
 
+<br />
+
 개발 환경 설정이 완료되면 `braillobe-case-collector` 도구를 사용하여 직접 테스트 케이스를 추가할 수 있습니다.
 
-**1. 터미널 실행**
+<br />
 
-- **Windows**: PowerShell(권장) 또는 명령 프롬프트(cmd) 사용
-- **macOS/Linux**: 기본 terminal 사용
+#### 1. 터미널 실행
 
-**2. braillove-case-collector 폴더로 이동**
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+          width: '180px',
+        }}
+      >
+        OS
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        사용 터미널
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>Windows</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>PowerShell(권장) 또는 명령 프롬프트(cmd) 사용</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>macOS/Linux</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>기본 terminal 사용</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+
+#### 2. braillove-case-collector 폴더로 이동
+
+<br />
 
 ```bash
 cd ./braillove-case-collector
 ```
 
-**3. Converter 실행**
+<br />
+
+#### 3. Converter 실행
+
+<br />
 
 ```bash
 uv run python ./converter.py
 ```
 
-**4. 2024 개정 한국 점자 규정 문서로부터 원하는 단어 드래그 후 복사**
+<br />
+
+#### 4. 2024 개정 한국 점자 규정 문서로부터 원하는 단어 드래그 후 복사
+
+<br />
+
 PDF에서 원하는 단어의 점자를 복사합니다.
+
+<br />
 
 ```csv
 ⠎⠕⠜
 ```
 
-**5. 붙여넣기 후 엔터, 실행하여 나온 결과의 숫자와 점자를 복사**
+<br />
+
+#### 5. 붙여넣기 후 엔터, 실행하여 나온 결과의 숫자와 점자를 복사
+
+<br />
+
 터미널에 복사한 점자를 붙여넣고 엔터를 눌러 변환을 실행한 후, 출력된 숫자 코드와 점자를 복사합니다.
 
-**6. rule\_항번호.csv에 해당 내용 입력**
+<br />
+
+#### 6. rule\_항번호.csv에 해당 내용 입력
+
+<br />
+
 적절한 `rule_N.csv` 파일을 열고 다음 형식으로 추가하세요:
 
+<br />
+
 `한글단어,^<mr,숫자코드,점자`
+
+<br />
 
 ```csv
 바위,^<mr,24351323,⠎⠕⠜
 ```
 
-**제안:** [github issue](https://github.com/dev-five-git/braillify/issues)에서 테스트 케이스 추가를 건의해 주세요.
+<br />
 
+제안: [github issue](https://github.com/dev-five-git/braillify/issues)에서 테스트 케이스 추가를 건의해 주세요.
+
+<br />
 <br />
 
 ## 기여 방법
 
-### 1. 이슈 생성
+<br />
+
+#### 1. 이슈 생성
+
+<br />
 
 이슈를 열기 전에, 깃허브의 이슈에서 유사한 이슈가 있는지 먼저 검색해주세요.
 
-### 2. 브랜치 생성
+<br />
+
+#### 2. 브랜치 생성
+
+<br />
 
 ```bash
 git checkout -b feature/my-contribution
 ```
 
-### 3. 코드 수정
+<br />
 
-- 코드를 수정하거나 새로운 기능을 추가하세요
-- 테스트 케이스를 추가하세요
-- 문서를 업데이트하세요
+#### 3. 코드 수정
 
-### 4. 테스트 실행
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>코드를 수정하거나 새로운 기능을 추가하세요</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>테스트 케이스를 추가하세요</td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>문서를 업데이트하세요</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+
+#### 4. 테스트 실행
+
+<br />
 
 ```bash
 # 전체 테스트
@@ -139,7 +432,11 @@ cd packages/python && pytest && cd ../..
 cd packages/node && npm test && cd ../..
 ```
 
-### 5. 커밋 및 푸시
+<br />
+
+#### 5. 커밋 및 푸시
+
+<br />
 
 ```bash
 git add .
@@ -147,4 +444,6 @@ git commit -m "Add feature"
 git push origin feature/my-contribution
 ```
 
-### 6. Pull Request 생성
+<br />
+
+#### 6. Pull Request 생성

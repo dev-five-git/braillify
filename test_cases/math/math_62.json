@@ -1,6 +1,25 @@
 [
   {
+    "input": "!",
+    "note": "PDF 제62항 1 — 계승(Factorial) ! 기호 정의 (단독)",
+    "internal": "6",
+    "expected": "22",
+    "unicode": "⠖",
+    "world": "⠖",
+    "jeomsarang": "⠖"
+  },
+  {
+    "input": "$!$",
+    "note": "LaTeX",
+    "internal": "6",
+    "expected": "22",
+    "unicode": "⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "8!",
+    "note": "PDF 제62항 1 — 예제 8!",
     "internal": "#h6",
     "expected": "601922",
     "unicode": "⠼⠓⠖",
@@ -8,49 +27,17 @@
     "jeomsarang": "⠼⠓⠖"
   },
   {
-    "input": "n!",
-    "internal": "n6",
-    "expected": "2922",
-    "unicode": "⠝⠖",
-    "world": "⠴⠝⠖",
-    "jeomsarang": "⠴⠝⠖"
-  },
-  {
-    "input": "₃P₁",
-    "internal": ",p8#c`#a0",
-    "expected": "321538609060152",
-    "unicode": "⠠⠏⠦⠼⠉⠀⠼⠁⠴",
-    "world": "⠰⠼⠉⠴⠠⠏⠰⠼⠁",
-    "jeomsarang": "⠰⠢⠼⠉⠠⠏⠲⠰⠢⠼⠁"
-  },
-  {
-    "input": "$\\_3P_1$",
-    "internal": ",p8#c`#a0",
-    "expected": "321538609060152",
-    "unicode": "⠠⠏⠦⠼⠉⠀⠼⠁⠴",
+    "input": "$8!$",
     "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "₃C₂",
-    "internal": ",c8#c`#b0",
-    "expected": "32938609060352",
-    "unicode": "⠠⠉⠦⠼⠉⠀⠼⠃⠴",
-    "world": "⠰⠼⠉⠴⠠⠉⠰⠼⠃",
-    "jeomsarang": "⠰⠢⠼⠉⠠⠉⠲⠰⠢⠼⠃"
-  },
-  {
-    "input": "$\\_3C_2$",
-    "internal": ",c8#c`#b0",
-    "expected": "32938609060352",
-    "unicode": "⠠⠉⠦⠼⠉⠀⠼⠃⠴",
-    "note": "LaTeX",
+    "internal": "#h6",
+    "expected": "601922",
+    "unicode": "⠼⠓⠖",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "x!",
+    "note": "PDF 제62항 1 — 예제 x!",
     "internal": "x6",
     "expected": "4522",
     "unicode": "⠭⠖",
@@ -58,7 +45,35 @@
     "jeomsarang": "⠴⠭⠖"
   },
   {
+    "input": "$x!$",
+    "note": "LaTeX",
+    "internal": "x6",
+    "expected": "4522",
+    "unicode": "⠭⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "n!",
+    "note": "PDF 제62항 1 — 예제 n!",
+    "internal": "n6",
+    "expected": "2922",
+    "unicode": "⠝⠖",
+    "world": "⠴⠝⠖",
+    "jeomsarang": "⠴⠝⠖"
+  },
+  {
+    "input": "$n!$",
+    "note": "LaTeX",
+    "internal": "n6",
+    "expected": "2922",
+    "unicode": "⠝⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "(7+4)!",
+    "note": "PDF 제62항 1 — 예제 (7+4)! (다항)",
     "internal": "8#g5#d06",
     "expected": "3860273460255222",
     "unicode": "⠦⠼⠛⠢⠼⠙⠴⠖",
@@ -66,54 +81,256 @@
     "jeomsarang": "⠦⠄⠼⠛⠢⠼⠙⠠⠴⠖"
   },
   {
+    "input": "$(7+4)!$",
+    "note": "LaTeX",
+    "internal": "8#g5#d06",
+    "expected": "3860273460255222",
+    "unicode": "⠦⠼⠛⠢⠼⠙⠴⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "(3n)!",
+    "note": "PDF 제62항 1 — 예제 (3n)! (계수)",
     "internal": "8#cn06",
     "expected": "38609295222",
     "unicode": "⠦⠼⠉⠝⠴⠖",
     "world": "⠦⠄⠼⠉⠴⠝⠠⠴⠖",
-    "jeomsarang": "⠦⠄⠼⠉⠴⠝⠠⠴⠖"
+    "jeomsarang": "⠐⠣⠼⠉⠴⠝⠐⠜⠖"
   },
   {
-    "input": "5!/3!",
+    "input": "$(3n)!$",
+    "note": "LaTeX",
+    "internal": "8#cn06",
+    "expected": "38609295222",
+    "unicode": "⠦⠼⠉⠝⠴⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$\\frac{5!}{3!}$",
+    "note": "PDF 제62항 1 — 예제 5!/3! (분수, 평문 표기 불가)",
     "internal": "#c6/#e6",
     "expected": "6092212601722",
     "unicode": "⠼⠉⠖⠌⠼⠑⠖",
-    "world": "⠼⠑⠖⠸⠌⠼⠉⠖",
-    "jeomsarang": "⠼⠑⠖⠸⠌⠼⠉⠖"
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠦⠂⠼⠑⠖⠐⠴⠦⠂⠼⠉⠖⠐⠴⠈⠎",
+    "jeomsarang": ""
   },
   {
-    "input": "$3P1$",
-    "internal": ",P(#C`#A)",
+    "input": "ₙ𝑃ᵣ",
+    "note": "PDF 제62항 2 — 순열 ₙ𝑃ᵣ 기호 정의 (Italic P, 일반 P와 구분)",
+    "internal": ",p(n`r)",
+    "expected": "3215552902362",
+    "unicode": "⠠⠏⠷⠝⠀⠗⠾",
+    "world": "⠰⠴⠝",
+    "jeomsarang": "⠀⠙⠽⠁⠄⠀"
+  },
+  {
+    "input": "$\\,_nP_r$",
+    "note": "LaTeX",
+    "internal": ",p(n`r)",
+    "expected": "3215552902362",
+    "unicode": "⠠⠏⠷⠝⠀⠗⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₃𝑃₁",
+    "note": "PDF 제62항 2 — 예제 ₃𝑃₁",
+    "internal": ",p(#c`#a)",
     "expected": "321555609060162",
     "unicode": "⠠⠏⠷⠼⠉⠀⠼⠁⠾",
+    "world": "⠰⠼⠉⠰⠼⠁",
+    "jeomsarang": "⠰⠼⠉⠙⠽⠁⠄⠰⠼⠁"
+  },
+  {
+    "input": "$\\,_3P_1$",
     "note": "LaTeX",
+    "internal": ",p(#c`#a)",
+    "expected": "321555609060162",
+    "unicode": "⠠⠏⠷⠼⠉⠀⠼⠁⠾",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "$3C2$",
-    "internal": ",C(#C`#B)",
+    "input": "2 ₇𝑃₂",
+    "note": "PDF 제62항 2 — 예제 2 ₇𝑃₂ (계수)",
+    "internal": "#b,p(#g`#b)",
+    "expected": "6033215556027060362",
+    "unicode": "⠼⠃⠠⠏⠷⠼⠛⠀⠼⠃⠾",
+    "world": "⠼⠃ ⠰⠼⠛⠰⠼⠃",
+    "jeomsarang": "⠼⠃⠀⠠⠶⠀⠙⠽⠁⠄⠰⠼⠃",
+    "context": "math"
+  },
+  {
+    "input": "$2 \\,_7P_2$",
+    "note": "LaTeX",
+    "internal": "#b,p(#g`#b)",
+    "expected": "6033215556027060362",
+    "unicode": "⠼⠃⠠⠏⠷⠼⠛⠀⠼⠃⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ₙ₋₁𝑃ᵣ₋₁",
+    "note": "PDF 제62항 2 — 예제 ₙ₋₁𝑃ᵣ₋₁",
+    "internal": ",p(n9#a`r9#a)",
+    "expected": "32155529206010232060162",
+    "unicode": "⠠⠏⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
+    "world": "⠰⠴⠝⠔⠼⠁⠰⠔⠼⠁",
+    "jeomsarang": "⠀⠰⠔⠰⠼⠁⠙⠽⠁⠄⠀⠰⠔⠰⠼⠁"
+  },
+  {
+    "input": "$\\,_{n-1}P_{r-1}$",
+    "note": "LaTeX",
+    "internal": ",p(n9#a`r9#a)",
+    "expected": "32155529206010232060162",
+    "unicode": "⠠⠏⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ₙ𝐶ᵣ",
+    "note": "PDF 제62항 3 — 조합 ₙ𝐶ᵣ 기호 정의 (Italic C, 일반 C와 구분)",
+    "internal": ",c(n`r)",
+    "expected": "329552902362",
+    "unicode": "⠠⠉⠷⠝⠀⠗⠾",
+    "world": "⠰⠴⠝",
+    "jeomsarang": "⠀⠙⠧⠗⠃⠄⠀"
+  },
+  {
+    "input": "$\\,_nC_r$",
+    "note": "LaTeX",
+    "internal": ",c(n`r)",
+    "expected": "329552902362",
+    "unicode": "⠠⠉⠷⠝⠀⠗⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₃𝐶₂",
+    "note": "PDF 제62항 3 — 예제 ₃𝐶₂",
+    "internal": ",c(#c`#b)",
     "expected": "32955609060362",
     "unicode": "⠠⠉⠷⠼⠉⠀⠼⠃⠾",
+    "world": "⠰⠼⠉⠰⠼⠃",
+    "jeomsarang": "⠰⠼⠉⠙⠧⠗⠃⠄⠰⠼⠃"
+  },
+  {
+    "input": "$\\,_3C_2$",
     "note": "LaTeX",
+    "internal": ",c(#c`#b)",
+    "expected": "32955609060362",
+    "unicode": "⠠⠉⠷⠼⠉⠀⠼⠃⠾",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "$\\Pi(7,2)$",
-    "internal": ",.P(#g`#b)",
+    "input": "ₙ₋₁𝐶ᵣ₋₁",
+    "note": "PDF 제62항 3 — 예제 ₙ₋₁𝐶ᵣ₋₁",
+    "internal": ",c(n9#a`r9#a)",
+    "expected": "3295529206010232060162",
+    "unicode": "⠠⠉⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
+    "world": "⠰⠴⠝⠔⠼⠁⠰⠔⠼⠁",
+    "jeomsarang": "⠀⠰⠔⠰⠼⠁⠙⠧⠗⠃⠄⠀⠰⠔⠰⠼⠁"
+  },
+  {
+    "input": "$\\,_{n-1}C_{r-1}$",
+    "note": "LaTeX",
+    "internal": ",c(n9#a`r9#a)",
+    "expected": "3295529206010232060162",
+    "unicode": "⠠⠉⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "2 ₙ₋₁𝐶ᵣ₋₁",
+    "note": "PDF 제62항 3 — 예제 2 ₙ₋₁𝐶ᵣ₋₁ (계수)",
+    "internal": "#b,c(n9#a`r9#a)",
+    "expected": "6033295529206010232060162",
+    "unicode": "⠼⠃⠠⠉⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
+    "world": "⠼⠃ ⠰⠴⠝⠔⠼⠁⠰⠔⠼⠁",
+    "jeomsarang": "⠼⠃⠀⠀⠰⠔⠰⠼⠁⠙⠧⠗⠃⠄⠀⠰⠔⠰⠼⠁",
+    "context": "math"
+  },
+  {
+    "input": "$2 \\,_{n-1}C_{r-1}$",
+    "note": "LaTeX",
+    "internal": "#b,c(n9#a`r9#a)",
+    "expected": "6033295529206010232060162",
+    "unicode": "⠼⠃⠠⠉⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ₙΠᵣ",
+    "note": "PDF 제62항 4 — 중복순열 ₙΠᵣ 기호 정의 (그리스 Π 사용)",
+    "internal": ",.p(n`r)",
+    "expected": "324015552902362",
+    "unicode": "⠠⠨⠏⠷⠝⠀⠗⠾",
+    "world": "⠰⠴⠝⠠⠨⠏",
+    "jeomsarang": "⠀⠠⠨⠏⠀"
+  },
+  {
+    "input": "$\\,_n\\Pi_r$",
+    "note": "LaTeX",
+    "internal": ",.p(n`r)",
+    "expected": "324015552902362",
+    "unicode": "⠠⠨⠏⠷⠝⠀⠗⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₇Π₂",
+    "note": "PDF 제62항 4 — 예제 ₇Π₂",
+    "internal": ",.p(#g`#b)",
     "expected": "324015556027060362",
     "unicode": "⠠⠨⠏⠷⠼⠛⠀⠼⠃⠾",
+    "world": "⠰⠼⠛⠴⠠⠨⠏⠰⠼⠃",
+    "jeomsarang": "⠠⠶⠠⠨⠏⠲⠰⠼⠃"
+  },
+  {
+    "input": "$\\,_7\\Pi_2$",
     "note": "LaTeX",
+    "internal": ",.p(#g`#b)",
+    "expected": "324015556027060362",
+    "unicode": "⠠⠨⠏⠷⠼⠛⠀⠼⠃⠾",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "$H(7,2)$",
-    "internal": ",H(#g`#b)",
+    "input": "ₙ𝐻ᵣ",
+    "note": "PDF 제62항 5 — 중복조합 ₙ𝐻ᵣ 기호 정의 (Italic H, 일반 H와 구분)",
+    "internal": ",h(n`r)",
+    "expected": "3219552902362",
+    "unicode": "⠠⠓⠷⠝⠀⠗⠾",
+    "world": "⠰⠴⠝",
+    "jeomsarang": "⠀⠙⠧⠗⠆⠀"
+  },
+  {
+    "input": "$\\,_nH_r$",
+    "note": "LaTeX",
+    "internal": ",h(n`r)",
+    "expected": "3219552902362",
+    "unicode": "⠠⠓⠷⠝⠀⠗⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₇𝐻₂",
+    "note": "PDF 제62항 5 — 예제 ₇𝐻₂",
+    "internal": ",h(#g`#b)",
     "expected": "3219556027060362",
     "unicode": "⠠⠓⠷⠼⠛⠀⠼⠃⠾",
+    "world": "⠰⠼⠛⠰⠼⠃",
+    "jeomsarang": "⠠⠶⠀⠙⠧⠗⠆⠰⠼⠃"
+  },
+  {
+    "input": "$\\,_7H_2$",
     "note": "LaTeX",
+    "internal": ",h(#g`#b)",
+    "expected": "3219556027060362",
+    "unicode": "⠠⠓⠷⠼⠛⠀⠼⠃⠾",
     "world": "",
     "jeomsarang": ""
   }

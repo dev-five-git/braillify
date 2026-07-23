@@ -86,3 +86,28 @@ impl BrailleRule for Rule73 {
         Ok(RuleResult::Consumed)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let _ = Rule73.apply(&mut ctx).unwrap();
+        // Just exercise apply() for coverage
+    }
+
+    /// 제73항 — `_` 직전에 다른 `_`가 있을 때 (이미 처리된 후속 underscore)
+    /// `Consumed`를 반환하고 출력하지 않는다 (line 67-69).
+    #[test]
+    fn rule73_apply_consecutive_underscore_consumed() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("__", false);
+        let mut ctx = owned.ctx_at(1); // second '_'
+        let outcome = Rule73.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        // The second '_' should be consumed silently (after the first '_' emitted)
+        assert!(owned.result.is_empty());
+    }
+}

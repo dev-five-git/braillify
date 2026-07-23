@@ -1,6 +1,7 @@
 [
   {
     "input": "≊",
+    "note": "PDF 제30항 — 이중물결 아래 줄 ≊ 기호 정의 (단독)",
     "internal": "@9@93",
     "expected": "82082018",
     "unicode": "⠈⠔⠈⠔⠒",
@@ -8,11 +9,30 @@
     "jeomsarang": "⠐⠤⠐⠤⠒"
   },
   {
+    "input": "$\\approxeq$",
+    "note": "LaTeX",
+    "internal": "@9@93",
+    "expected": "82082018",
+    "unicode": "⠈⠔⠈⠔⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "A/G ≊ B",
+    "note": "PDF 제30항 — 예제 (A/G ≊ B)",
     "internal": ",a_/,g`@9@93`,b",
     "expected": "321561232270820820180323",
     "unicode": "⠠⠁⠸⠌⠠⠛⠀⠈⠔⠈⠔⠒⠀⠠⠃",
     "world": "⠴⠠⠁⠸⠌⠠⠛ ⠄⠳⠭⠆⠆⠲⠁⠄ ⠰⠠⠃⠲",
     "jeomsarang": "⠴⠠⠁⠸⠌⠠⠛⠀⠐⠤⠐⠤⠒⠀⠰⠠⠃⠲"
+  },
+  {
+    "input": "$A/G \\approxeq B$",
+    "note": "LaTeX",
+    "internal": ",a_/,g`@9@93`,b",
+    "expected": "321561232270820820180323",
+    "unicode": "⠠⠁⠸⠌⠠⠛⠀⠈⠔⠈⠔⠒⠀⠠⠃",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

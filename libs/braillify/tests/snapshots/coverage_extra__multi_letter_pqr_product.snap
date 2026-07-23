@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "pqr의 곱을 구하시오"
+unicode = ok: "⠀⠏⠟⠗⠀⠀⠺⠀⠈⠥⠃⠮⠀⠈⠍⠚⠠⠕⠥"
+bytes   = ok: [0, 15, 31, 23, 0, 0, 58, 0, 8, 37, 3, 46, 0, 8, 13, 26, 32, 21, 37]

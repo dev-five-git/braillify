@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\begin{array}{rcl} a & = & b \\\\ c & = & d \\end{array}$"
+unicode = ok: "⠦⠁⠀⠒⠒⠀⠃⠀⠜⠀⠉⠀⠒⠒⠀⠙⠴"
+bytes   = ok: [38, 1, 0, 18, 18, 0, 3, 0, 28, 0, 9, 0, 18, 18, 0, 25, 52]

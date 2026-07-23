@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$-2$는 음수"
+unicode = ok: "⠔⠼⠃⠉⠵⠀⠪⠢⠠⠍"
+bytes   = ok: [20, 60, 3, 9, 53, 0, 42, 34, 32, 13]

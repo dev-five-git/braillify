@@ -1,18 +1,37 @@
 [
   {
-    "input": "↔AB",
+    "input": "⃡",
+    "note": "PDF 제37항 — 직선 ⃡ 기호 정의 (단독, COMBINING LEFT RIGHT ARROW ABOVE U+20E1)",
+    "internal": "[3O",
+    "expected": "421821",
+    "unicode": "⠪⠒⠕",
+    "world": "",
+    "jeomsarang": "⠀"
+  },
+  {
+    "input": "$\\overleftrightarrow{\\,}$",
+    "note": "LaTeX",
+    "internal": "[3O",
+    "expected": "421821",
+    "unicode": "⠪⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "A⃡B⃡",
+    "note": "PDF 제37항 — 예제 (직선 A⃡B⃡, 대문자 단어표 ,, 적용)",
     "internal": "[3O,,AB",
     "expected": "421821323213",
     "unicode": "⠪⠒⠕⠠⠠⠁⠃",
-    "world": "⠪⠒⠕⠴⠰⠠⠠⠁⠃⠲",
-    "jeomsarang": "⠪⠒⠕⠠⠠⠁⠃⠲"
+    "world": "⠴⠠⠁⠄⠳⠭⠆⠴⠑⠂⠄⠰⠠⠃",
+    "jeomsarang": "⠴⠠⠁⠲⠀⠠⠃⠲⠀"
   },
   {
     "input": "$\\overleftrightarrow{AB}$",
+    "note": "LaTeX",
     "internal": "[3O,,AB",
     "expected": "421821323213",
     "unicode": "⠪⠒⠕⠠⠠⠁⠃",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   }

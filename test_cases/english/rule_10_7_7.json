@@ -1,0 +1,98 @@
+[
+  {
+    "input": "blithesome",
+    "internal": "bli!\"s",
+    "expected": "3710461614",
+    "unicode": "⠃⠇⠊⠮⠐⠎"
+  },
+  {
+    "input": "chromosome",
+    "internal": "*romo\"s",
+    "expected": "33232113211614",
+    "unicode": "⠡⠗⠕⠍⠕⠐⠎"
+  },
+  {
+    "input": "fearsome",
+    "internal": "fe>\"s",
+    "expected": "1117281614",
+    "unicode": "⠋⠑⠜⠐⠎"
+  },
+  {
+    "input": "handsome",
+    "internal": "h&\"s",
+    "expected": "19471614",
+    "unicode": "⠓⠯⠐⠎"
+  },
+  {
+    "input": "handsomer",
+    "internal": "h&\"sr",
+    "expected": "1947161423",
+    "unicode": "⠓⠯⠐⠎⠗"
+  },
+  {
+    "input": "lonesomest",
+    "internal": "l\"o\"s/",
+    "expected": "71621161412",
+    "unicode": "⠇⠐⠕⠐⠎⠌"
+  },
+  {
+    "input": "somebody",
+    "internal": "\"sbody",
+    "expected": "16143212561",
+    "unicode": "⠐⠎⠃⠕⠙⠽"
+  },
+  {
+    "input": "somesuch",
+    "internal": "\"ss*",
+    "expected": "16141433",
+    "unicode": "⠐⠎⠎⠡"
+  },
+  {
+    "input": "somewhere",
+    "internal": "\"s\":",
+    "expected": "16141649",
+    "unicode": "⠐⠎⠐⠱"
+  },
+  {
+    "input": "twosome",
+    "internal": "two\"s",
+    "expected": "3058211614",
+    "unicode": "⠞⠺⠕⠐⠎"
+  },
+  {
+    "input": "blossomed (blossom)",
+    "internal": "blossom$ \"<blossom\">",
+    "expected": "37211414211343016353721141421131628",
+    "unicode": "⠃⠇⠕⠎⠎⠕⠍⠫⠀⠐⠣⠃⠇⠕⠎⠎⠕⠍⠐⠜"
+  },
+  {
+    "input": "gasometer",
+    "internal": "gasomet]",
+    "expected": "271142113173059",
+    "unicode": "⠛⠁⠎⠕⠍⠑⠞⠻"
+  },
+  {
+    "input": "isometric",
+    "internal": "isometric",
+    "expected": "10142113173023109",
+    "unicode": "⠊⠎⠕⠍⠑⠞⠗⠊⠉"
+  },
+  {
+    "input": "ransomed (ransom)",
+    "internal": "ransom$ \"<ransom\">",
+    "expected": "231291421134301635231291421131628",
+    "unicode": "⠗⠁⠝⠎⠕⠍⠫⠀⠐⠣⠗⠁⠝⠎⠕⠍⠐⠜"
+  },
+  {
+    "input": "somersault",
+    "internal": "som]sault",
+    "expected": "1421135914137730",
+    "unicode": "⠎⠕⠍⠻⠎⠁⠥⠇⠞"
+  },
+  {
+    "input": "Somerset",
+    "internal": ",som]set",
+    "expected": "3214211359141730",
+    "unicode": "⠠⠎⠕⠍⠻⠎⠑⠞"
+  }
+]

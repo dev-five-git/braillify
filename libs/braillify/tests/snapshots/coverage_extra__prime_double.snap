@@ -1,0 +1,8 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
+expression: rendered
+---
+input  = "x''"
+unicode = ok: "⠭⠄⠄"
+bytes   = ok: [45, 4, 4]

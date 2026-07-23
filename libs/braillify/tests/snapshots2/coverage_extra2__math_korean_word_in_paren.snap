@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "x=한글일때 y=다른"
+unicode = ok: "⠴⠭⠲⠒⠒⠚⠒⠈⠮⠕⠂⠠⠊⠗⠀⠴⠽⠲⠒⠒⠊⠐⠵"
+bytes   = ok: [52, 45, 50, 18, 18, 26, 18, 8, 46, 21, 2, 32, 10, 23, 0, 52, 61, 50, 18, 18, 10, 16, 53]

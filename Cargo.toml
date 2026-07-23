@@ -5,6 +5,23 @@ resolver = "3"
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.95"
 
+# Native release: prioritize runtime speed.
+# WASM builds override this profile in packages/node/Cargo.toml to keep size optimization.
 [profile.release]
-opt-level = "s"
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
+debug = 1   # required by dhat heap profiling for backtraces
+
+# WASM-targeted size-optimized release profile.
+# Use via:  cargo build --release --profile wasm-release -p node --target wasm32-unknown-unknown
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+debug = false

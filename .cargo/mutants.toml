@@ -1,0 +1,34 @@
+# cargo-mutants configuration
+
+# Skip the big end-to-end byte-identity test (covered by other cases that
+# pinpoint failures more precisely).
+additional_cargo_test_args = ["--skip", "test_by_testcase"]
+
+# Exclude mutations that produce runaway infinite loops in the parser.
+#
+# `parse_math_expression_with_math_mode` and helpers use `i += 1` (or similar
+# `j += 1`, `depth += 1`) loop counters. Replacing those with `*=` or `-=`
+# turns the counter into a no-op or makes it go backwards, producing an
+# infinite loop that the test harness can only escape via timeout-kill.
+#
+# Each TIMEOUT mutant leaves behind a runaway test child that cargo-mutants
+# SIGKILLs the cargo wrapper for, but the underlying test binary keeps
+# running. Accumulated zombie test processes destabilize the GitHub-hosted
+# runner, which then receives a shutdown signal and the entire job fails.
+#
+# These mutations are also INHERENTLY untestable by unit tests — detecting
+# them would require timing-based assertions, which we explicitly avoid for
+# deterministic CI. Excluding them here is a correctness fix, not a
+# coverage hack: the algorithm correctness is verified by the broader
+# byte-identity testcase suite.
+exclude_re = [
+    # `+=` → `*=` turns `i += 1` into `i *= 1` (no-op since i starts at 0).
+    'replace \+= with \*=',
+    # `+=` → `-=` turns `i += 1` into `i -= 1` (counter goes backwards →
+    # infinite loop on underflow / repeated processing).
+    'replace \+= with -=',
+    # `+=` → `/=` turns `i += 1` into `i /= 1` (no-op).
+    'replace \+= with /=',
+    # `+=` → `%=` turns `i += 1` into `i %= 1` (i becomes 0, infinite loop).
+    'replace \+= with %=',
+]

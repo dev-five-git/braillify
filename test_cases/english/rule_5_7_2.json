@@ -1,0 +1,56 @@
+[
+  {
+    "input": "CD-ROM",
+    "internal": ";,,cd-,,rom",
+    "expected": "483232925363232232113",
+    "unicode": "⠰⠠⠠⠉⠙⠤⠠⠠⠗⠕⠍"
+  },
+  {
+    "input": "\"Hm!\" he mused.",
+    "internal": "8;,hm60 he mus$4",
+    "expected": "384832191322520191701337144350",
+    "unicode": "⠦⠰⠠⠓⠍⠖⠴⠀⠓⠑⠀⠍⠥⠎⠫⠲"
+  },
+  {
+    "input": "Could you buy a CD/DVD?",
+    "internal": ",cd y buy a ,,cd_/,,dvd8",
+    "expected": "3292506103376101032329255612323225392538",
+    "unicode": "⠠⠉⠙⠀⠽⠀⠃⠥⠽⠀⠁⠀⠠⠠⠉⠙⠸⠌⠠⠠⠙⠧⠙⠦"
+  },
+  {
+    "input": "My friends are Fr Ted and Sr Ann.",
+    "internal": ",my frs >e ;,fr ,t$ & ,sr ,ann4",
+    "expected": "321361011231402817048321123032304304703214230321292950",
+    "unicode": "⠠⠍⠽⠀⠋⠗⠎⠀⠜⠑⠀⠰⠠⠋⠗⠀⠠⠞⠫⠀⠯⠀⠠⠎⠗⠀⠠⠁⠝⠝⠲"
+  },
+  {
+    "input": "the Imm family",
+    "internal": "! ;,imm family",
+    "expected": "460483210131301111310761",
+    "unicode": "⠮⠀⠰⠠⠊⠍⠍⠀⠋⠁⠍⠊⠇⠽"
+  },
+  {
+    "input": "al dente",
+    "internal": ";al d5te",
+    "expected": "4817025343017",
+    "unicode": "⠰⠁⠇⠀⠙⠢⠞⠑"
+  },
+  {
+    "input": "Use the ALT key.",
+    "internal": ",use ! ;,,alt key4",
+    "expected": "323714170460483232173005176150",
+    "unicode": "⠠⠥⠎⠑⠀⠮⠀⠰⠠⠠⠁⠇⠞⠀⠅⠑⠽⠲"
+  },
+  {
+    "input": "NEC (National Executive Committee)",
+    "internal": ";,,nec \"<,na;nal ,executive ,committee\">",
+    "expected": "48323229179016353229148291703217451793730103917032921131310303017171628",
+    "unicode": "⠰⠠⠠⠝⠑⠉⠀⠐⠣⠠⠝⠁⠰⠝⠁⠇⠀⠠⠑⠭⠑⠉⠥⠞⠊⠧⠑⠀⠠⠉⠕⠍⠍⠊⠞⠞⠑⠑⠐⠜"
+  },
+  {
+    "input": "ozbrl (Australian listserve)",
+    "internal": ";;ozbrl \"<,au/ralian li/s]ve\">",
+    "expected": "484821533237016353213712231710129071012145939171628",
+    "unicode": "⠰⠰⠕⠵⠃⠗⠇⠀⠐⠣⠠⠁⠥⠌⠗⠁⠇⠊⠁⠝⠀⠇⠊⠌⠎⠻⠧⠑⠐⠜"
+  }
+]

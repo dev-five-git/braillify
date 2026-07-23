@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "Hello 안녕"
+unicode = ok: "⠴⠠⠓⠑⠇⠇⠕⠲⠀⠣⠒⠉⠻"
+bytes   = ok: [52, 32, 19, 17, 7, 7, 21, 50, 0, 35, 18, 9, 59]

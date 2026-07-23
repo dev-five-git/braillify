@@ -1,0 +1,50 @@
+[
+  {
+    "input": "ABCs",
+    "internal": ",,abc,'s",
+    "expected": "323213932414",
+    "unicode": "⠠⠠⠁⠃⠉⠠⠄⠎"
+  },
+  {
+    "input": "WASPs",
+    "internal": ",,wasp,'s",
+    "expected": "3232581141532414",
+    "unicode": "⠠⠠⠺⠁⠎⠏⠠⠄⠎"
+  },
+  {
+    "input": "WALKing",
+    "internal": ",,walk,'+",
+    "expected": "32325817532444",
+    "unicode": "⠠⠠⠺⠁⠇⠅⠠⠄⠬"
+  },
+  {
+    "input": "unSELFish",
+    "internal": "un,,self,'i%",
+    "expected": "3729323214177113241041",
+    "unicode": "⠥⠝⠠⠠⠎⠑⠇⠋⠠⠄⠊⠩"
+  },
+  {
+    "input": "XXIInd",
+    "internal": ",,xxii,'nd",
+    "expected": "3232454510103242925",
+    "unicode": "⠠⠠⠭⠭⠊⠊⠠⠄⠝⠙"
+  },
+  {
+    "input": "VIIb",
+    "internal": ",,vii,'b",
+    "expected": "32323910103243",
+    "unicode": "⠠⠠⠧⠊⠊⠠⠄⠃"
+  },
+  {
+    "input": "INITIALS OF WRITER/initials of secretary",
+    "internal": ",,,9itials ( writ],'_/9itials ( secret>y",
+    "expected": "3232322010301017140550582310305932456122010301017140550141792317302861",
+    "unicode": "⠠⠠⠠⠔⠊⠞⠊⠁⠇⠎⠀⠷⠀⠺⠗⠊⠞⠻⠠⠄⠸⠌⠔⠊⠞⠊⠁⠇⠎⠀⠷⠀⠎⠑⠉⠗⠑⠞⠜⠽"
+  },
+  {
+    "input": "The two CEOs met in our CEO's office.",
+    "internal": ",! two ,,ceo,'s met 9 \\r ,,ceo's (fice4",
+    "expected": "324603058210323291721324140131730020051230323291721414055111091750",
+    "unicode": "⠠⠮⠀⠞⠺⠕⠀⠠⠠⠉⠑⠕⠠⠄⠎⠀⠍⠑⠞⠀⠔⠀⠳⠗⠀⠠⠠⠉⠑⠕⠄⠎⠀⠷⠋⠊⠉⠑⠲"
+  }
+]

@@ -1,42 +1,295 @@
 [
   {
-    "input": "¬P",
-    "note": "부정 ¬P",
-    "internal": "@9P",
+    "input": "~",
+    "note": "PDF 제61항 1 — 부정 ~ 기호 정의 (단독, TILDE U+007E)",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "⠈⠔",
+    "jeomsarang": "⠈⠔"
+  },
+  {
+    "input": "$\\sim$",
+    "note": "LaTeX (~ TILDE)",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "⠴⠈⠎⠸⠡⠴⠎⠊⠍⠈⠎",
+    "jeomsarang": "⠈⠎⠸⠡⠎⠊⠍⠈⠎"
+  },
+  {
+    "input": "¬",
+    "note": "PDF 제61항 1 — 부정 ¬ 기호 정의 (단독, NOT SIGN U+00AC, ~과 동일 점역)",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "",
+    "jeomsarang": "⠈⠒"
+  },
+  {
+    "input": "$\\neg$",
+    "note": "LaTeX (¬ NOT SIGN)",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "⠴⠈⠎⠸⠡⠴⠝⠑⠛⠈⠎",
+    "jeomsarang": "⠈⠎⠸⠡⠝⠑⠛⠈⠎"
+  },
+  {
+    "input": "~p",
+    "note": "PDF 제61항 1 — 예제 ~p (TILDE)",
+    "internal": "@9p",
     "expected": "82015",
     "unicode": "⠈⠔⠏",
-    "world": "⠴⠠⠏⠲",
-    "jeomsarang": "⠈⠒⠠⠏⠲"
+    "world": "⠈⠔⠴⠏⠲",
+    "jeomsarang": "⠈⠔⠏⠲"
   },
   {
-    "input": "P↔Q",
-    "note": "쌍조건문 P↔Q",
-    "internal": "P`[3O`Q",
+    "input": "$\\sim p$",
+    "note": "LaTeX (~)",
+    "internal": "@9p",
+    "expected": "82015",
+    "unicode": "⠈⠔⠏",
+    "world": "⠴⠈⠎⠸⠡⠴⠎⠊⠍ ⠰⠏⠈⠎",
+    "jeomsarang": "⠈⠎⠸⠡⠎⠊⠍⠀⠏⠈⠎"
+  },
+  {
+    "input": "P∨¬P",
+    "note": "PDF 제61항 1 — 예제 P∨¬P (NOT SIGN)",
+    "internal": ",p`#`@9,p",
+    "expected": "321506008203215",
+    "unicode": "⠠⠏⠀⠼⠀⠈⠔⠠⠏",
+    "world": "⠴⠠⠏⠈⠖⠈⠹⠠⠏⠲",
+    "jeomsarang": "⠴⠠⠏⠑⠕⠏⠇⠑⠼⠈⠒⠠⠏⠲"
+  },
+  {
+    "input": "$P \\lor \\neg P$",
+    "note": "LaTeX (¬)",
+    "internal": ",p`#`@9,p",
+    "expected": "321506008203215",
+    "unicode": "⠠⠏⠀⠼⠀⠈⠔⠠⠏",
+    "world": "⠴⠈⠎⠴⠠⠏ ⠸⠡⠇⠕⠗ ⠸⠡⠝⠑⠛ ⠰⠠⠏⠈⠎",
+    "jeomsarang": "⠈⠎⠠⠏⠀⠸⠡⠇⠕⠗⠀⠸⠡⠝⠑⠛⠀⠠⠏⠈⠎"
+  },
+  {
+    "input": "→",
+    "note": "PDF 제61항 2 — 조건문 → 기호 정의 (단독)",
+    "internal": "3o",
+    "expected": "1821",
+    "unicode": "⠒⠕",
+    "world": "⠒⠕",
+    "jeomsarang": "⠒⠕"
+  },
+  {
+    "input": "$\\to$",
+    "note": "LaTeX",
+    "internal": "3o",
+    "expected": "1821",
+    "unicode": "⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p → q",
+    "note": "PDF 제61항 2 — 예제 p → q",
+    "internal": "p`3o`q",
+    "expected": "1501821031",
+    "unicode": "⠏⠀⠒⠕⠀⠟",
+    "world": "⠴⠏ ⠰⠳⠕ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠰⠳⠕⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\to q$",
+    "note": "LaTeX",
+    "internal": "p`3o`q",
+    "expected": "1501821031",
+    "unicode": "⠏⠀⠒⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⇒",
+    "note": "PDF 제61항 3 — 항진명제 ⇒ 기호 정의 (단독)",
+    "internal": "33o",
+    "expected": "181821",
+    "unicode": "⠒⠒⠕",
+    "world": "",
+    "jeomsarang": "⠒⠒⠕"
+  },
+  {
+    "input": "$\\Rightarrow$",
+    "note": "LaTeX",
+    "internal": "33o",
+    "expected": "181821",
+    "unicode": "⠒⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ⇒ q",
+    "note": "PDF 제61항 3 — 예제 p ⇒ q",
+    "internal": "p`33o`q",
+    "expected": "150181821031",
+    "unicode": "⠏⠀⠒⠒⠕⠀⠟",
+    "world": "⠴⠏ ⠰⠳⠶⠕ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠒⠒⠕⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\Rightarrow q$",
+    "note": "LaTeX",
+    "internal": "p`33o`q",
+    "expected": "150181821031",
+    "unicode": "⠏⠀⠒⠒⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⇏",
+    "note": "PDF 제61항 4 — 항진명제의 부정 ⇏ 기호 정의 (단독)",
+    "internal": ".33o",
+    "expected": "40181821",
+    "unicode": "⠨⠒⠒⠕",
+    "world": "",
+    "jeomsarang": "⠒⠒⠕"
+  },
+  {
+    "input": "$\\nRightarrow$",
+    "note": "LaTeX",
+    "internal": ".33o",
+    "expected": "40181821",
+    "unicode": "⠨⠒⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ⇏ q",
+    "note": "PDF 제61항 4 — 예제 p ⇏ q",
+    "internal": "p`.33o`q",
+    "expected": "15040181821031",
+    "unicode": "⠏⠀⠨⠒⠒⠕⠀⠟",
+    "world": "⠴⠏ ⠰⠳⠶⠕⠄⠳⠭⠴⠒⠒⠦⠄ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠒⠒⠕⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\nRightarrow q$",
+    "note": "LaTeX",
+    "internal": "p`.33o`q",
+    "expected": "15040181821031",
+    "unicode": "⠏⠀⠨⠒⠒⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↔",
+    "note": "PDF 제61항 5 — 쌍조건문 ↔ 기호 정의 (단독)",
+    "internal": "[3o",
+    "expected": "421821",
+    "unicode": "⠪⠒⠕",
+    "world": "⠪⠒⠕",
+    "jeomsarang": "⠪⠒⠕"
+  },
+  {
+    "input": "$\\leftrightarrow$",
+    "note": "LaTeX",
+    "internal": "[3o",
+    "expected": "421821",
+    "unicode": "⠪⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ↔ q",
+    "note": "PDF 제61항 5 — 예제 p ↔ q",
+    "internal": "p`[3o`q",
     "expected": "150421821031",
     "unicode": "⠏⠀⠪⠒⠕⠀⠟",
-    "world": "⠴⠠⠏⠄⠳⠭⠆⠂⠔⠲⠄⠰⠠⠟⠲",
-    "jeomsarang": "⠴⠠⠏⠪⠒⠕⠠⠟⠲"
+    "world": "⠴⠏ ⠄⠳⠭⠆⠂⠔⠲⠄ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠪⠒⠕⠀⠰⠟⠲"
   },
   {
-    "input": "P⇔Q",
-    "note": "필요충분 P⇔Q",
-    "internal": "P`[33O`Q",
-    "expected": "15042181821031",
-    "unicode": "⠏⠀⠪⠒⠒⠕⠀⠟",
-    "world": "⠴⠠⠏⠄⠳⠭⠆⠂⠙⠲⠄⠰⠠⠟⠲",
-    "jeomsarang": "⠴⠠⠏⠪⠶⠕⠠⠟⠲"
+    "input": "$p \\leftrightarrow q$",
+    "note": "LaTeX",
+    "internal": "p`[3o`q",
+    "expected": "150421821031",
+    "unicode": "⠏⠀⠪⠒⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
   },
   {
-    "input": "P⇄Q",
-    "note": "동치명제 P⇄Q",
-    "internal": "P`[7O`Q",
+    "input": "⇔",
+    "note": "PDF 제61항 6 — 필요충분 ⇔ 기호 정의 (단독)",
+    "internal": "[33o",
+    "expected": "42181821",
+    "unicode": "⠪⠒⠒⠕",
+    "world": "",
+    "jeomsarang": "⠪⠶⠕"
+  },
+  {
+    "input": "$\\Leftrightarrow$",
+    "note": "LaTeX",
+    "internal": "[33o",
+    "expected": "42181821",
+    "unicode": "⠪⠒⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "r ⇔ s",
+    "note": "PDF 제61항 6 — 예제 r ⇔ s",
+    "internal": "r`[33o`s",
+    "expected": "23042181821014",
+    "unicode": "⠗⠀⠪⠒⠒⠕⠀⠎",
+    "world": "⠴⠗ ⠄⠳⠭⠆⠂⠙⠲⠄ ⠰⠎⠲",
+    "jeomsarang": "⠴⠗⠀⠪⠶⠕⠀⠰⠎⠲"
+  },
+  {
+    "input": "$r \\Leftrightarrow s$",
+    "note": "LaTeX",
+    "internal": "r`[33o`s",
+    "expected": "23042181821014",
+    "unicode": "⠗⠀⠪⠒⠒⠕⠀⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⇌",
+    "note": "PDF 제61항 7 — 동치명제 ⇌ 기호 정의 (단독)",
+    "internal": "[7o",
+    "expected": "425421",
+    "unicode": "⠪⠶⠕",
+    "world": "",
+    "jeomsarang": "⠀"
+  },
+  {
+    "input": "$\\rightleftarrows$",
+    "note": "LaTeX",
+    "internal": "[7o",
+    "expected": "425421",
+    "unicode": "⠪⠶⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ⇌ q",
+    "note": "PDF 제61항 7 — 예제 p ⇌ q",
+    "internal": "p`[7o`q",
     "expected": "150425421031",
     "unicode": "⠏⠀⠪⠶⠕⠀⠟",
-    "world": "⠴⠠⠏⠄⠳⠭⠆⠂⠉⠲⠄⠰⠠⠟⠲",
-    "jeomsarang": "⠴⠰⠠⠏⠪⠒⠕⠠⠟⠲"
+    "world": "⠴⠏ ⠘⠸⠶ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠀⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\rightleftarrows q$",
+    "note": "LaTeX",
+    "internal": "p`[7o`q",
+    "expected": "150425421031",
+    "unicode": "⠏⠀⠪⠶⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "∧",
+    "note": "PDF 제61항 8-가 — 논리곱 ∧ 기호 정의 (단독)",
     "internal": "?",
     "expected": "57",
     "unicode": "⠹",
@@ -45,15 +298,34 @@
   },
   {
     "input": "$\\land$",
+    "note": "LaTeX",
     "internal": "?",
     "expected": "57",
     "unicode": "⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ∧ q",
+    "note": "PDF 제61항 8-가 — 예제 p ∧ q",
+    "internal": "p`?`q",
+    "expected": "15057031",
+    "unicode": "⠏⠀⠹⠀⠟",
+    "world": "⠴⠏ ⠈⠦ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠹⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\land q$",
     "note": "LaTeX",
+    "internal": "p`?`q",
+    "expected": "15057031",
+    "unicode": "⠏⠀⠹⠀⠟",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "∨",
+    "note": "PDF 제61항 8-나 — 논리합 ∨ 기호 정의 (단독)",
     "internal": "#",
     "expected": "60",
     "unicode": "⠼",
@@ -62,24 +334,34 @@
   },
   {
     "input": "$\\lor$",
+    "note": "LaTeX",
     "internal": "#",
     "expected": "60",
     "unicode": "⠼",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "P∨Q",
-    "note": "논리합 P∨Q (예제)",
-    "internal": "P`#`Q",
+    "input": "p ∨ q",
+    "note": "PDF 제61항 8-나 — 예제 p ∨ q",
+    "internal": "p`#`q",
     "expected": "15060031",
     "unicode": "⠏⠀⠼⠀⠟",
-    "world": "⠴⠠⠏⠈⠖⠠⠟⠲",
-    "jeomsarang": "⠴⠠⠏⠼⠠⠟⠲"
+    "world": "⠴⠏ ⠈⠖ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠼⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\lor q$",
+    "note": "LaTeX",
+    "internal": "p`#`q",
+    "expected": "15060031",
+    "unicode": "⠏⠀⠼⠀⠟",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "⊻",
+    "note": "PDF 제61항 8-다 — 배타적논리합 ⊻ 기호 정의 (단독)",
     "internal": "#-",
     "expected": "6036",
     "unicode": "⠼⠤",
@@ -87,33 +369,107 @@
     "jeomsarang": "⠴⠠⠭⠕⠗"
   },
   {
-    "input": "P ⊻ Q",
-    "internal": "P`#-`Q",
-    "expected": "1506036031",
-    "unicode": "⠏⠀⠼⠤⠀⠟",
-    "world": "⠴⠠⠏ ⠄⠳⠭⠆⠆⠃⠃⠄ ⠰⠠⠟⠲",
-    "jeomsarang": "⠴⠰⠠⠏⠀⠴⠠⠭⠕⠗⠀⠰⠠⠟⠲"
+    "input": "$\\veebar$",
+    "note": "LaTeX",
+    "internal": "#-",
+    "expected": "6036",
+    "unicode": "⠼⠤",
+    "world": "",
+    "jeomsarang": ""
   },
   {
-    "input": "P↓Q",
-    "note": "부정논리합 P↓Q",
-    "internal": "P`^3O`Q",
+    "input": "p ⊻ q: p 또는 q이고 p인 동시에 q는 아니다.",
+    "note": "PDF 제61항 8-다 — 예제 p ⊻ q (한글 설명 포함)",
+    "internal": "P`#-`Q\"1`0P4`,IUCZ`0Q4O@U`0P4Q`I=,ON`0Q4CZ`<COI4",
+    "expected": "1506036031162052155003210379530523150218370521550310106332212905231509530359211050",
+    "unicode": "⠏⠀⠼⠤⠀⠟⠐⠂⠀⠴⠏⠲⠀⠠⠊⠥⠉⠵⠀⠴⠟⠲⠕⠈⠥⠀⠴⠏⠲⠟⠀⠊⠿⠠⠕⠝⠀⠴⠟⠲⠉⠵⠀⠣⠉⠕⠊⠲",
+    "world": "⠴⠏ ⠄⠳⠭⠆⠆⠃⠃⠄ ⠰⠟⠒ ⠰⠏⠲ ⠠⠊⠥⠉⠵ ⠴⠟⠲⠕⠈⠥ ⠴⠏⠲⠟ ⠊⠿⠠⠕⠝ ⠴⠟⠲⠉⠵ ⠣⠉⠕⠊⠲",
+    "jeomsarang": "⠴⠏⠀⠴⠠⠭⠕⠗⠀⠟⠒⠀⠰⠏⠲⠀⠠⠊⠥⠉⠵⠀⠴⠟⠲⠕⠈⠥⠀⠴⠏⠲⠟⠀⠊⠿⠠⠕⠝⠀⠴⠟⠲⠉⠵⠀⠣⠉⠕⠊⠲"
+  },
+  {
+    "input": "$p \\veebar q$: $p$ 또는 $q$이고 $p$인 동시에 $q$는 아니다.",
+    "note": "LaTeX",
+    "internal": "P`#-`Q\"1`0P4`,IUCZ`0Q4O@U`0P4Q`I=,ON`0Q4CZ`<COI4",
+    "expected": "1506036031162052155003210379530523150218370521550310106332212905231509530359211050",
+    "unicode": "⠏⠀⠼⠤⠀⠟⠐⠂⠀⠴⠏⠲⠀⠠⠊⠥⠉⠵⠀⠴⠟⠲⠕⠈⠥⠀⠴⠏⠲⠟⠀⠊⠿⠠⠕⠝⠀⠴⠟⠲⠉⠵⠀⠣⠉⠕⠊⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↓",
+    "note": "PDF 제61항 8-라 — 부정논리합 ↓ 기호 정의 (단독)",
+    "internal": "^3o",
+    "expected": "241821",
+    "unicode": "⠘⠒⠕",
+    "world": "⠘⠒⠕",
+    "jeomsarang": "⠘⠒⠕"
+  },
+  {
+    "input": "$\\downarrow$",
+    "note": "LaTeX",
+    "internal": "^3o",
+    "expected": "241821",
+    "unicode": "⠘⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ↓ q",
+    "note": "PDF 제61항 8-라 — 예제 p ↓ q",
+    "internal": "p`^3o`q",
     "expected": "150241821031",
     "unicode": "⠏⠀⠘⠒⠕⠀⠟",
-    "world": "⠴⠠⠏⠰⠳⠩⠠⠟⠲",
-    "jeomsarang": "⠴⠠⠏⠰⠳⠩⠠⠟⠲"
+    "world": "⠴⠏ ⠰⠳⠩ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠰⠳⠩⠀⠰⠟⠲"
   },
   {
-    "input": "P↑Q",
-    "note": "부정논리곱 P↑Q",
-    "internal": "P`;3o`Q",
+    "input": "$p \\downarrow q$",
+    "note": "LaTeX",
+    "internal": "p`^3o`q",
+    "expected": "150241821031",
+    "unicode": "⠏⠀⠘⠒⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↑",
+    "note": "PDF 제61항 8-마 — 부정논리곱 ↑ 기호 정의 (단독)",
+    "internal": ";3o",
+    "expected": "481821",
+    "unicode": "⠰⠒⠕",
+    "world": "⠰⠒⠕",
+    "jeomsarang": "⠰⠒⠕"
+  },
+  {
+    "input": "$\\uparrow$",
+    "note": "LaTeX",
+    "internal": ";3o",
+    "expected": "481821",
+    "unicode": "⠰⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p ↑ q",
+    "note": "PDF 제61항 8-마 — 예제 p ↑ q",
+    "internal": "p`;3o`q",
     "expected": "150481821031",
     "unicode": "⠏⠀⠰⠒⠕⠀⠟",
-    "world": "⠴⠠⠏⠰⠳⠬⠠⠟⠲",
-    "jeomsarang": "⠴⠠⠏⠰⠳⠬⠠⠟⠲"
+    "world": "⠴⠏ ⠰⠳⠬ ⠰⠟⠲",
+    "jeomsarang": "⠴⠏⠀⠰⠳⠬⠀⠰⠟⠲"
+  },
+  {
+    "input": "$p \\uparrow q$",
+    "note": "LaTeX",
+    "internal": "p`;3o`q",
+    "expected": "150481821031",
+    "unicode": "⠏⠀⠰⠒⠕⠀⠟",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "∀",
+    "note": "PDF 제61항 9-가 — 모든 ∀ 기호 정의 (단독)",
     "internal": ".'",
     "expected": "404",
     "unicode": "⠨⠄",
@@ -122,15 +478,34 @@
   },
   {
     "input": "$\\forall$",
+    "note": "LaTeX",
     "internal": ".'",
     "expected": "404",
     "unicode": "⠨⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∀x p(x)",
+    "note": "PDF 제61항 9-가 — 예제 ∀x p(x)",
+    "internal": ".'x`p8x0",
+    "expected": "40445015384552",
+    "unicode": "⠨⠄⠭⠀⠏⠦⠭⠴",
+    "world": "⠴⠭ ⠏⠐⠣⠭⠠⠴",
+    "jeomsarang": "⠨⠄⠭⠀⠏⠐⠣⠭⠐⠜⠲"
+  },
+  {
+    "input": "$\\forall x\\,p(x)$",
     "note": "LaTeX",
+    "internal": ".'x`p8x0",
+    "expected": "40445015384552",
+    "unicode": "⠨⠄⠭⠀⠏⠦⠭⠴",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "∃",
+    "note": "PDF 제61항 9-나 — 존재하는 ∃ 기호 정의 (단독)",
     "internal": ".5",
     "expected": "4034",
     "unicode": "⠨⠢",
@@ -139,24 +514,34 @@
   },
   {
     "input": "$\\exists$",
+    "note": "LaTeX",
     "internal": ".5",
     "expected": "4034",
     "unicode": "⠨⠢",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "∃x P(x)",
-    "note": "존재 ∃x P(x)",
-    "internal": ".5X`P8X0",
+    "input": "∃x p(x)",
+    "note": "PDF 제61항 9-나 — 예제 ∃x p(x)",
+    "internal": ".5x`p8x0",
     "expected": "403445015384552",
     "unicode": "⠨⠢⠭⠀⠏⠦⠭⠴",
-    "world": "⠴⠭ ⠠⠏⠐⠣⠭⠠⠴",
-    "jeomsarang": "⠨⠢⠭⠀⠠⠏⠦⠄⠭⠠⠴"
+    "world": "⠴⠭ ⠏⠐⠣⠭⠠⠴",
+    "jeomsarang": "⠨⠢⠭⠀⠏⠐⠣⠭⠐⠜⠲"
+  },
+  {
+    "input": "$\\exists x\\,p(x)$",
+    "note": "LaTeX",
+    "internal": ".5x`p8x0",
+    "expected": "403445015384552",
+    "unicode": "⠨⠢⠭⠀⠏⠦⠭⠴",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "∄",
+    "note": "PDF 제61항 9-다 — 존재하지않는 ∄ 기호 정의 (단독)",
     "internal": "..5",
     "expected": "404034",
     "unicode": "⠨⠨⠢",
@@ -165,133 +550,29 @@
   },
   {
     "input": "$\\nexists$",
+    "note": "LaTeX",
     "internal": "..5",
     "expected": "404034",
     "unicode": "⠨⠨⠢",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "∄x",
-    "note": "존재하지않는 ∄x",
-    "internal": "..5X",
+    "note": "PDF 제61항 9-다 — 예제 ∄x",
+    "internal": "..5x",
     "expected": "40403445",
     "unicode": "⠨⠨⠢⠭",
     "world": "⠴⠭⠲",
     "jeomsarang": "⠨⠨⠢⠭⠲"
   },
   {
-    "input": "p → q",
-    "internal": "p`3o`q",
-    "expected": "1501821031",
-    "unicode": "⠏⠀⠒⠕⠀⠟",
-    "world": "⠴⠏ ⠰⠳⠕ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠰⠳⠕⠀⠰⠟⠲"
-  },
-  {
-    "input": "p ⇒ q",
-    "internal": "p`33o`q",
-    "expected": "150181821031",
-    "unicode": "⠏⠀⠒⠒⠕⠀⠟",
-    "world": "⠴⠏ ⠰⠳⠶⠕ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠒⠒⠕⠀⠰⠟⠲"
-  },
-  {
-    "input": "p ↔ q",
-    "internal": "p`[3o`q",
-    "expected": "150421821031",
-    "unicode": "⠏⠀⠪⠒⠕⠀⠟",
-    "world": "⠴⠏ ⠄⠳⠭⠆⠂⠔⠲⠄ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠪⠒⠕⠀⠰⠟⠲"
-  },
-  {
-    "input": "r ⇔ s",
-    "internal": "r`[33o`s",
-    "expected": "23042181821014",
-    "unicode": "⠗⠀⠪⠒⠒⠕⠀⠎",
-    "world": "⠴⠗ ⠄⠳⠭⠆⠂⠙⠲⠄ ⠰⠎⠲",
-    "jeomsarang": "⠴⠗⠀⠪⠶⠕⠀⠰⠎⠲"
-  },
-  {
-    "input": "p ∧ q",
-    "internal": "p`?`q",
-    "expected": "15057031",
-    "unicode": "⠏⠀⠹⠀⠟",
-    "world": "⠴⠏ ⠈⠦ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠹⠀⠰⠟⠲"
-  },
-  {
-    "input": "p ∨ q",
-    "internal": "p`#`q",
-    "expected": "15060031",
-    "unicode": "⠏⠀⠼⠀⠟",
-    "world": "⠴⠏ ⠈⠖ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠼⠀⠰⠟⠲"
-  },
-  {
-    "input": "∀x p(x)",
-    "internal": ".'x`p8x0",
-    "expected": "40445015384552",
-    "unicode": "⠨⠄⠭⠀⠏⠦⠭⠴",
-    "world": "⠴⠭ ⠏⠐⠣⠭⠠⠴",
-    "jeomsarang": "⠨⠄⠭⠀⠏⠦⠄⠭⠠⠴"
-  },
-  {
-    "input": "∃x p(x)",
-    "internal": ".5x`p8x0",
-    "expected": "403445015384552",
-    "unicode": "⠨⠢⠭⠀⠏⠦⠭⠴",
-    "world": "⠴⠭ ⠏⠐⠣⠭⠠⠴",
-    "jeomsarang": "⠨⠢⠭⠀⠏⠦⠄⠭⠠⠴"
-  },
-  {
-    "input": "P∨¬P",
-    "internal": ",p`#`@9,p",
-    "expected": "321506008203215",
-    "unicode": "⠠⠏⠀⠼⠀⠈⠔⠠⠏",
-    "world": "⠴⠠⠏⠈⠖⠈⠹⠠⠏⠲",
-    "jeomsarang": "⠴⠠⠏⠼⠈⠒⠠⠏⠲"
-  },
-  {
-    "input": "p ⇏ q",
-    "internal": "p`.33o`q",
-    "expected": "15040181821031",
-    "unicode": "⠏⠀⠨⠒⠒⠕⠀⠟",
-    "world": "⠴⠏ ⠰⠳⠶⠕⠄⠳⠭⠴⠒⠒⠦⠄ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠒⠒⠕⠀⠰⠟⠲"
-  },
-  {
-    "input": "p ⇄ q",
-    "internal": "p`[7o`q",
-    "expected": "150425421031",
-    "unicode": "⠏⠀⠪⠶⠕⠀⠟",
-    "world": "⠴⠏ ⠄⠳⠭⠆⠂⠉⠲⠄ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠪⠒⠕⠀⠟⠲"
-  },
-  {
-    "input": "p ↓ q",
-    "internal": "p`^3o`q",
-    "expected": "150241821031",
-    "unicode": "⠏⠀⠘⠒⠕⠀⠟",
-    "world": "⠴⠏ ⠰⠳⠩ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠰⠳⠩⠀⠰⠟⠲"
-  },
-  {
-    "input": "p ↑ q",
-    "internal": "p`;3o`q",
-    "expected": "150481821031",
-    "unicode": "⠏⠀⠰⠒⠕⠀⠟",
-    "world": "⠴⠏ ⠰⠳⠬ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠰⠳⠬⠀⠰⠟⠲"
-  },
-  {
-    "input": "∀x P(x)",
-    "note": "모든 ∀x P(x)",
-    "internal": ".'X`P8X0",
-    "expected": "40445015384552",
-    "unicode": "⠨⠄⠭⠀⠏⠦⠭⠴",
-    "world": "⠴⠭ ⠠⠏⠐⠣⠭⠠⠴",
-    "jeomsarang": "⠨⠄⠭⠀⠠⠏⠦⠄⠭⠠⠴"
+    "input": "$\\nexists x$",
+    "note": "LaTeX",
+    "internal": "..5x",
+    "expected": "40403445",
+    "unicode": "⠨⠨⠢⠭",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

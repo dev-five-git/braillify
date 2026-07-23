@@ -1,7 +1,7 @@
 [
   {
     "input": "오그리고",
-    "internal": "u@[\"o@u",
+    "internal": "u@{\"o@u",
     "expected": "378421621837",
     "unicode": "⠥⠈⠪⠐⠕⠈⠥",
     "world": "⠥⠈⠪⠐⠕⠈⠥",
@@ -9,7 +9,7 @@
   },
   {
     "input": "우그리고",
-    "internal": "m@[\"o@u",
+    "internal": "m@{\"o@u",
     "expected": "138421621837",
     "unicode": "⠍⠈⠪⠐⠕⠈⠥",
     "world": "⠍⠈⠪⠐⠕⠈⠥",
@@ -17,7 +17,7 @@
   },
   {
     "input": "쭈그리고",
-    "internal": ",.m@[\"o@u",
+    "internal": ",.m@{\"o@u",
     "expected": "3240138421621837",
     "unicode": "⠠⠨⠍⠈⠪⠐⠕⠈⠥",
     "world": "⠠⠨⠍⠈⠪⠐⠕⠈⠥",
@@ -25,7 +25,7 @@
   },
   {
     "input": "찡그리고",
-    "internal": ",.o7@[\"o@u",
+    "internal": ",.o7@{\"o@u",
     "expected": "324021548421621837",
     "unicode": "⠠⠨⠕⠶⠈⠪⠐⠕⠈⠥",
     "world": "⠠⠨⠕⠶⠈⠪⠐⠕⠈⠥",

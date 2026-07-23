@@ -97,9 +97,9 @@ export function TestCaseStat({
       <Center
         bg="$menuHover"
         borderRadius="10px"
+        data-group
         p="10px"
         pos="relative"
-        role="group"
       >
         <Box
           aspectRatio="1"

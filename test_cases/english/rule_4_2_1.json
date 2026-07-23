@@ -1,0 +1,98 @@
+[
+  {
+    "input": "crème brûlée",
+    "internal": "cr^*eme br^%ul^/ee",
+    "expected": "92324331713170323244137724121717",
+    "unicode": "⠉⠗⠘⠡⠑⠍⠑⠀⠃⠗⠘⠩⠥⠇⠘⠌⠑⠑"
+  },
+  {
+    "input": "café (Fr.)",
+    "internal": "caf^/e \"<;,fr4\">",
+    "expected": "91112412170163548321123501628",
+    "unicode": "⠉⠁⠋⠘⠌⠑⠀⠐⠣⠰⠠⠋⠗⠲⠐⠜"
+  },
+  {
+    "input": "caffè (It.)",
+    "internal": "ca6^*e \"<,x4\">",
+    "expected": "9122243317016353245501628",
+    "unicode": "⠉⠁⠖⠘⠡⠑⠀⠐⠣⠠⠭⠲⠐⠜"
+  },
+  {
+    "input": "un bel dì",
+    "internal": "un bel d^*i",
+    "expected": "372903177025243310",
+    "unicode": "⠥⠝⠀⠃⠑⠇⠀⠙⠘⠡⠊"
+  },
+  {
+    "input": "Im Frühling",
+    "internal": ",im ,fr^3uhl+",
+    "expected": "321013032112324183719744",
+    "unicode": "⠠⠊⠍⠀⠠⠋⠗⠘⠒⠥⠓⠇⠬"
+  },
+  {
+    "input": "curação",
+    "internal": "cura^&c^]ao",
+    "expected": "937231244792459121",
+    "unicode": "⠉⠥⠗⠁⠘⠯⠉⠘⠻⠁⠕"
+  },
+  {
+    "input": "skål!",
+    "internal": "sk^$al6",
+    "expected": "14524431722",
+    "unicode": "⠎⠅⠘⠫⠁⠇⠖"
+  },
+  {
+    "input": "maître d'hôtel",
+    "internal": "ma^%itre d'h^%otel",
+    "expected": "13124411030231702541924412130177",
+    "unicode": "⠍⠁⠘⠩⠊⠞⠗⠑⠀⠙⠄⠓⠘⠩⠕⠞⠑⠇"
+  },
+  {
+    "input": "Étienne",
+    "internal": ",^/eti5ne",
+    "expected": "322412173010342917",
+    "unicode": "⠠⠘⠌⠑⠞⠊⠢⠝⠑"
+  },
+  {
+    "input": "háček",
+    "internal": "h^/a^+cek",
+    "expected": "192412124449175",
+    "unicode": "⠓⠘⠌⠁⠘⠬⠉⠑⠅"
+  },
+  {
+    "input": "Bjørnstjerne Bjørnson",
+    "internal": ",bj@*orn/j]ne ,bj@*ornson",
+    "expected": "323268332123291226592917032326833212329142129",
+    "unicode": "⠠⠃⠚⠈⠡⠕⠗⠝⠌⠚⠻⠝⠑⠀⠠⠃⠚⠈⠡⠕⠗⠝⠎⠕⠝"
+  },
+  {
+    "input": "Białka River",
+    "internal": ",bia@*lka ,riv]",
+    "expected": "32310183375103223103959",
+    "unicode": "⠠⠃⠊⠁⠈⠡⠇⠅⠁⠀⠠⠗⠊⠧⠻"
+  },
+  {
+    "input": "Öresund Bridge",
+    "internal": ",^3oresund ,bridge",
+    "expected": "3224182123171437292503232310252717",
+    "unicode": "⠠⠘⠒⠕⠗⠑⠎⠥⠝⠙⠀⠠⠃⠗⠊⠙⠛⠑"
+  },
+  {
+    "input": "Shāh Jahān built the Tāj Mahal.",
+    "internal": ",%@-ah ,jah@-an built ! ,t@-aj ,mahal4",
+    "expected": "32418361190322611983612903371073004603230836126032131191750",
+    "unicode": "⠠⠩⠈⠤⠁⠓⠀⠠⠚⠁⠓⠈⠤⠁⠝⠀⠃⠥⠊⠇⠞⠀⠮⠀⠠⠞⠈⠤⠁⠚⠀⠠⠍⠁⠓⠁⠇⠲"
+  },
+  {
+    "input": "Săpânța, Romania",
+    "internal": ",s@+ap^%an^_1ta1 ,romania",
+    "expected": "32148441152441129245623012032232113129101",
+    "unicode": "⠠⠎⠈⠬⠁⠏⠘⠩⠁⠝⠘⠸⠂⠞⠁⠂⠀⠠⠗⠕⠍⠁⠝⠊⠁"
+  },
+  {
+    "input": "Ħaġar Qim in Malta",
+    "internal": ",@3ha^_2g> ,qim 9 ,malta",
+    "expected": "328181912456627280323110130200321317301",
+    "unicode": "⠠⠈⠒⠓⠁⠘⠸⠆⠛⠜⠀⠠⠟⠊⠍⠀⠔⠀⠠⠍⠁⠇⠞⠁"
+  }
+]

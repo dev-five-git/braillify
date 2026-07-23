@@ -67,24 +67,15 @@ impl BrailleRule for Rule41 {
 
 /// Scan backwards from index to find if preceded by a digit or ASCII letter.
 fn scan_prefix(word_chars: &[char], index: usize) -> (bool, bool) {
-    let mut has_numeric_prefix = false;
-    let mut has_ascii_prefix = false;
-    let mut j = index;
-    while j > 0 {
-        let prev = word_chars[j - 1];
-        if prev.is_ascii_digit() {
-            has_numeric_prefix = true;
-            break;
-        } else if prev.is_ascii_alphabetic() {
-            has_ascii_prefix = true;
-            break;
-        } else if prev == ' ' {
-            j -= 1;
-        } else {
-            break;
-        }
+    match word_chars[..index]
+        .iter()
+        .rev()
+        .copied()
+        .find(|prev| *prev != ' ')
+    {
+        Some(prev) => (prev.is_ascii_digit(), prev.is_ascii_alphabetic()),
+        None => (false, false),
     }
-    (has_numeric_prefix, has_ascii_prefix)
 }
 
 /// Get the next character (within word or from next word).
@@ -100,41 +91,54 @@ fn get_next_char(ctx: &RuleContext) -> Option<char> {
 mod tests {
     use super::*;
 
-    #[test]
-    fn scan_prefix_finds_digit() {
-        let chars: Vec<char> = "1,000".chars().collect();
-        let (num, ascii) = scan_prefix(&chars, 1);
-        assert!(num);
-        assert!(!ascii);
-    }
-
-    #[test]
-    fn scan_prefix_finds_ascii() {
-        let chars: Vec<char> = "A,B".chars().collect();
-        let (num, ascii) = scan_prefix(&chars, 1);
-        assert!(!num);
-        assert!(ascii);
-    }
-
-    #[test]
-    fn golden_test_alignment() {
-        let cases = vec![
-            ("1,000", "⠼⠁⠂⠚⠚⠚"), // comma between digits → ⠂
-            ("0.48", "⠼⠚⠲⠙⠓"),   // period between digits (NOT this rule)
-        ];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 41 golden test failed for: {}",
-                input
-            );
-        }
+    /// `scan_prefix` — 직전 prefix 가 digit 흐름인지 ASCII 흐름인지 식별.
+    #[rstest::rstest]
+    #[case::digit_prefix("1,000", 1, true, false)]
+    #[case::ascii_prefix("A,B", 1, false, true)]
+    fn scan_prefix_paths(
+        #[case] input: &str,
+        #[case] idx: usize,
+        #[case] expect_num: bool,
+        #[case] expect_ascii: bool,
+    ) {
+        let chars: Vec<char> = input.chars().collect();
+        let (num, ascii) = scan_prefix(&chars, idx);
+        assert_eq!(num, expect_num);
+        assert_eq!(ascii, expect_ascii);
     }
 
     #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "41");
         assert_eq!(META.name, "numeric_comma");
+    }
+
+    /// rule_41 line 39 — `let-else return false` for non-Symbol ctx.
+    #[test]
+    fn rule41_matches_false_for_non_symbol_ctx() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("ab", false);
+        let ctx = owned.ctx_at(0);
+        assert!(!Rule41.matches(&ctx));
+    }
+
+    /// 제41항 — 숫자/로마자 구간 안의 쉼표는 숫자 쉼표 규칙이 잡는다.
+    #[rstest::rstest]
+    #[case::between_digits("1,000", 1)]
+    #[case::between_ascii_letters("A,B", 1)]
+    #[case::ascii_before_digit("A,1", 1)]
+    fn rule41_matches_numeric_or_ascii_comma_context(#[case] input: &str, #[case] index: usize) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(index);
+
+        assert!(Rule41.matches(&ctx));
+    }
+
+    /// rule_41 line 75 — `j -= 1;` when prev char is a space (continues backward scan).
+    #[test]
+    fn scan_prefix_skips_space_then_finds_digit() {
+        let chars: Vec<char> = "1 ,".chars().collect();
+        let (num, _) = scan_prefix(&chars, 2);
+        // prev=` `, j-=1, prev=`1`→ digit → has_numeric_prefix=true.
+        assert!(num);
     }
 }

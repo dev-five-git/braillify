@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$A, B, C$ 의 합"
+unicode = ok: "⠴⠠⠁⠐⠀⠰⠠⠃⠐⠀⠰⠠⠉⠲⠀⠺⠀⠚⠃"
+bytes   = ok: [52, 32, 1, 16, 0, 48, 32, 3, 16, 0, 48, 32, 9, 50, 0, 58, 0, 26, 3]

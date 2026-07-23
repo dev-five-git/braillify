@@ -1,0 +1,38 @@
+[
+  {
+    "input": "don’t",
+    "internal": "don't",
+    "expected": "252129430",
+    "unicode": "⠙⠕⠝⠄⠞"
+  },
+  {
+    "input": "Jones’",
+    "internal": ",j\"os'",
+    "expected": "32261621144",
+    "unicode": "⠠⠚⠐⠕⠎⠄"
+  },
+  {
+    "input": "It's done.",
+    "internal": ",x's d\"o4",
+    "expected": "3245414025162150",
+    "unicode": "⠠⠭⠄⠎⠀⠙⠐⠕⠲"
+  },
+  {
+    "input": "the '90s",
+    "internal": "! '#ijs",
+    "expected": "460460102614",
+    "unicode": "⠮⠀⠄⠼⠊⠚⠎"
+  },
+  {
+    "input": "rock ’n’ roll",
+    "internal": "rock ';n' roll",
+    "expected": "23219504482940232177",
+    "unicode": "⠗⠕⠉⠅⠀⠄⠰⠝⠄⠀⠗⠕⠇⠇"
+  },
+  {
+    "input": "“’Tis late.”",
+    "internal": "8',tis late40",
+    "expected": "3843230101407130175052",
+    "unicode": "⠦⠄⠠⠞⠊⠎⠀⠇⠁⠞⠑⠲⠴"
+  }
+]

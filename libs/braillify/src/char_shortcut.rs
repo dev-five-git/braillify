@@ -46,19 +46,29 @@ pub fn encode_char_shortcut(text: char) -> Result<&'static [u8], String> {
 mod test {
     use super::*;
 
+    /// 11개 기본 한글 약자 (가/나/다/마/바/사/자/카/타/파/하) 단일 셀 점역.
+    #[rstest::rstest]
+    #[case('가', '⠫')]
+    #[case('나', '⠉')]
+    #[case('다', '⠊')]
+    #[case('마', '⠑')]
+    #[case('바', '⠘')]
+    #[case('사', '⠇')]
+    #[case('자', '⠨')]
+    #[case('카', '⠋')]
+    #[case('타', '⠓')]
+    #[case('파', '⠙')]
+    #[case('하', '⠚')]
+    fn encode_char_shortcut_single_cell(#[case] input: char, #[case] expected: char) {
+        assert_eq!(
+            encode_char_shortcut(input).unwrap(),
+            &[decode_unicode(expected)]
+        );
+    }
+
+    /// 2-cell 약자 — `것` → `⠸⠎`.
     #[test]
-    pub fn test_encode_char_shortcut() {
-        assert_eq!(encode_char_shortcut('가').unwrap(), &[decode_unicode('⠫')]);
-        assert_eq!(encode_char_shortcut('나').unwrap(), &[decode_unicode('⠉')]);
-        assert_eq!(encode_char_shortcut('다').unwrap(), &[decode_unicode('⠊')]);
-        assert_eq!(encode_char_shortcut('마').unwrap(), &[decode_unicode('⠑')]);
-        assert_eq!(encode_char_shortcut('바').unwrap(), &[decode_unicode('⠘')]);
-        assert_eq!(encode_char_shortcut('사').unwrap(), &[decode_unicode('⠇')]);
-        assert_eq!(encode_char_shortcut('자').unwrap(), &[decode_unicode('⠨')]);
-        assert_eq!(encode_char_shortcut('카').unwrap(), &[decode_unicode('⠋')]);
-        assert_eq!(encode_char_shortcut('타').unwrap(), &[decode_unicode('⠓')]);
-        assert_eq!(encode_char_shortcut('파').unwrap(), &[decode_unicode('⠙')]);
-        assert_eq!(encode_char_shortcut('하').unwrap(), &[decode_unicode('⠚')]);
+    fn encode_char_shortcut_multi_cell() {
         assert_eq!(
             encode_char_shortcut('것').unwrap(),
             &[decode_unicode('⠸'), decode_unicode('⠎')]

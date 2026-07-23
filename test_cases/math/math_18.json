@@ -1,6 +1,43 @@
 [
   {
+    "input": "aᵏ",
+    "note": "PDF 제18항 1. 위첨자 — aᵏ",
+    "internal": "a^k",
+    "expected": "1245",
+    "unicode": "⠁⠘⠅",
+    "world": "⠴⠁",
+    "jeomsarang": "⠴⠁⠀"
+  },
+  {
+    "input": "$a^k$",
+    "note": "LaTeX",
+    "internal": "a^k",
+    "expected": "1245",
+    "unicode": "⠁⠘⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "c²",
+    "note": "PDF 제18항 1. 위첨자 — c²",
+    "internal": "c^#b",
+    "expected": "924603",
+    "unicode": "⠉⠘⠼⠃",
+    "world": "⠴⠉⠘⠼⠃",
+    "jeomsarang": "⠴⠉⠰⠔⠼⠃"
+  },
+  {
+    "input": "$c^2$",
+    "note": "LaTeX",
+    "internal": "c^#b",
+    "expected": "924603",
+    "unicode": "⠉⠘⠼⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "8²",
+    "note": "PDF 제18항 1. 위첨자 — 8²",
     "internal": "#h^#b",
     "expected": "601924603",
     "unicode": "⠼⠓⠘⠼⠃",
@@ -9,66 +46,16 @@
   },
   {
     "input": "$8^2$",
+    "note": "LaTeX",
     "internal": "#h^#b",
     "expected": "601924603",
     "unicode": "⠼⠓⠘⠼⠃",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "8²",
-    "internal": "#h^#b",
-    "expected": "601924603",
-    "unicode": "⠼⠓⠘⠼⠃",
-    "world": "⠼⠓⠘⠼⠃",
-    "jeomsarang": "⠼⠓⠘⠼⠃"
-  },
-  {
-    "input": "$8^{2}$",
-    "internal": "#h^#b",
-    "expected": "601924603",
-    "unicode": "⠼⠓⠘⠼⠃",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "c²",
-    "internal": "c^#b",
-    "expected": "924603",
-    "unicode": "⠉⠘⠼⠃",
-    "world": "⠴⠉⠘⠼⠃",
-    "jeomsarang": "⠴⠉⠲⠰⠘⠼⠃"
-  },
-  {
-    "input": "$c^2$",
-    "internal": "c^#b",
-    "expected": "924603",
-    "unicode": "⠉⠘⠼⠃",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "c²",
-    "internal": "c^#b",
-    "expected": "924603",
-    "unicode": "⠉⠘⠼⠃",
-    "world": "⠴⠉⠘⠼⠃",
-    "jeomsarang": "⠴⠉⠲⠰⠘⠼⠃"
-  },
-  {
-    "input": "$c^{2}$",
-    "internal": "c^#b",
-    "expected": "924603",
-    "unicode": "⠉⠘⠼⠃",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "(-3)³",
+    "note": "PDF 제18항 1. 위첨자 — (-3)³",
     "internal": "89#c0^#c",
     "expected": "38206095224609",
     "unicode": "⠦⠔⠼⠉⠴⠘⠼⠉",
@@ -77,15 +64,16 @@
   },
   {
     "input": "$(-3)^3$",
+    "note": "LaTeX",
     "internal": "89#c0^#c",
     "expected": "38206095224609",
     "unicode": "⠦⠔⠼⠉⠴⠘⠼⠉",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "x⁻¹",
+    "note": "PDF 제18항 1. 위첨자 — x⁻¹",
     "internal": "x^9#a",
     "expected": "452420601",
     "unicode": "⠭⠘⠔⠼⠁",
@@ -94,40 +82,16 @@
   },
   {
     "input": "$x^{-1}$",
+    "note": "LaTeX",
     "internal": "x^9#a",
     "expected": "452420601",
     "unicode": "⠭⠘⠔⠼⠁",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
-  },
-  {
-    "input": "x⁻¹",
-    "internal": "x^9#a",
-    "expected": "452420601",
-    "unicode": "⠭⠘⠔⠼⠁",
-    "world": "⠴⠭⠘⠔ ⠘⠼⠁",
-    "jeomsarang": "⠴⠭⠘⠔⠘⠼⠁"
-  },
-  {
-    "input": "$x^{-1}$",
-    "internal": "x^9#a",
-    "expected": "452420601",
-    "unicode": "⠭⠘⠔⠼⠁",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "aᵏ",
-    "internal": "a^k",
-    "expected": "1245",
-    "unicode": "⠁⠘⠅",
-    "world": "⠴⠁",
-    "jeomsarang": "⠴⠁⠀"
   },
   {
     "input": "x⁷⁺⁹",
+    "note": "PDF 제18항 [붙임] — x⁷⁺⁹ (다항)",
     "internal": "x^(#g5#i)",
     "expected": "452455602734601062",
     "unicode": "⠭⠘⠷⠼⠛⠢⠼⠊⠾",
@@ -136,49 +100,43 @@
   },
   {
     "input": "$x^{7+9}$",
+    "note": "LaTeX",
     "internal": "x^(#g5#i)",
     "expected": "452455602734601062",
     "unicode": "⠭⠘⠷⠼⠛⠢⠼⠊⠾",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "a³ᵐ⁺²ⁿ",
+    "note": "PDF 제18항 [붙임] — a³ᵐ⁺²ⁿ (다항)",
     "internal": "a^(#cm5#bn)",
     "expected": "1245560913346032962",
     "unicode": "⠁⠘⠷⠼⠉⠍⠢⠼⠃⠝⠾",
     "world": "⠴⠁⠘⠼⠉⠍⠘⠐⠖ ⠘⠼⠃⠝⠲",
-    "jeomsarang": "⠴⠁⠰⠘⠼⠉⠀⠘⠢⠘⠼⠃⠘⠝"
+    "jeomsarang": "⠴⠁⠰⠔⠼⠉⠀⠘⠢⠘⠼⠃⠘⠝"
   },
   {
     "input": "$a^{3m+2n}$",
+    "note": "LaTeX",
     "internal": "a^(#cm5#bn)",
     "expected": "1245560913346032962",
     "unicode": "⠁⠘⠷⠼⠉⠍⠢⠼⠃⠝⠾",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
-  },
-  {
-    "input": "x⁰·³",
-    "internal": "x^#j4c",
-    "expected": "45246026509",
-    "unicode": "⠭⠘⠼⠚⠲⠉",
-    "world": "⠴⠭⠘⠼⠚⠐⠆⠘⠼⠉",
-    "jeomsarang": "⠴⠭⠘⠼⠚⠐⠆⠘⠼⠉"
   },
   {
     "input": "$x^{0.3}$",
+    "note": "PDF 제18항 [붙임] — x^{0.3} (소수 지수, Unicode 평문 표기 불가 — LaTeX만)",
     "internal": "x^#j4c",
     "expected": "45246026509",
     "unicode": "⠭⠘⠼⠚⠲⠉",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
+    "world": "⠴⠈⠎⠴⠭⠈⠢⠦⠂⠼⠚⠲⠉⠐⠴⠈⠎",
+    "jeomsarang": "⠴⠭⠘⠼⠚⠐⠆⠘⠼⠉"
   },
   {
     "input": "2²⁽ᵐ⁺ⁿ⁾",
+    "note": "PDF 제18항 [붙임] — 2²⁽ᵐ⁺ⁿ⁾ (곱+다항)",
     "internal": "#b^(#b8m5n0)",
     "expected": "6032455603381334295262",
     "unicode": "⠼⠃⠘⠷⠼⠃⠦⠍⠢⠝⠴⠾",
@@ -195,28 +153,38 @@
     "jeomsarang": ""
   },
   {
-    "input": "3ˣ/1",
-    "note": "3^x / 1",
+    "input": "$\\frac{1}{3^x}$",
+    "note": "PDF 제18항 — 분수 지수 (가로분수)",
     "internal": "#c^x/#a",
     "expected": "609244512601",
     "unicode": "⠼⠉⠘⠭⠌⠼⠁",
-    "world": "⠼⠉⠸⠌⠼⠁",
-    "jeomsarang": "⠼⠉⠀⠸⠌⠼⠁"
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠼⠁⠸⠜⠸⠣⠼⠉⠈⠢⠭⠐⠴⠈⠎",
+    "jeomsarang": ""
   },
   {
-    "input": "3⁴⁄¹",
+    "input": "$3^{\\frac{1}{4}}$",
+    "note": "PDF 제18항 — 지수에 분수",
     "internal": "#c^(#d/#a)",
     "expected": "609245560251260162",
     "unicode": "⠼⠉⠘⠷⠼⠙⠌⠼⠁⠾",
-    "world": "⠼⠉⠘⠼⠙⠘⠼⠁",
-    "jeomsarang": "⠼⠉⠘⠼⠙⠌⠘⠼⠁"
+    "world": "⠴⠈⠎⠼⠉⠈⠢⠦⠂⠸⠡⠴⠋⠗⠁⠉⠦⠂⠼⠁⠐⠴⠦⠂⠼⠙⠐⠴⠐⠴⠈⠎",
+    "jeomsarang": ""
   },
   {
-    "input": "$3^{4/1}$",
+    "input": "전치행렬 ᵗA",
+    "note": "PDF 제18항 2. 왼쪽 위첨자 — 전치행렬 ᵗA",
+    "internal": ".);ojr7\"\\``^(t),a",
+    "expected": "4062482126235416510024553062321",
+    "unicode": "⠨⠾⠰⠕⠚⠗⠶⠐⠳⠀⠀⠘⠷⠞⠾⠠⠁",
+    "world": "⠨⠾⠰⠕⠚⠗⠶⠐⠳ ⠴⠠⠁⠲",
+    "jeomsarang": "⠨⠾⠰⠕⠚⠗⠶⠐⠳⠀⠀⠴⠠⠁⠲"
+  },
+  {
+    "input": "전치행렬 ${}^t A$",
     "note": "LaTeX",
-    "internal": "#c^(#d/#a)",
-    "expected": "609245560251260162",
-    "unicode": "⠼⠉⠘⠷⠼⠙⠌⠼⠁⠾",
+    "internal": ".);ojr7\"\\``^(t),a",
+    "expected": "4062482126235416510024553062321",
+    "unicode": "⠨⠾⠰⠕⠚⠗⠶⠐⠳⠀⠀⠘⠷⠞⠾⠠⠁",
     "world": "",
     "jeomsarang": ""
   }

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "{x | x^2 = 4}"
+unicode = ok: "⠦⠂⠭⠀⠸⠳⠀⠭⠈⠢⠼⠃⠒⠒⠼⠙⠶"
+bytes   = ok: [38, 2, 45, 0, 56, 51, 0, 45, 8, 34, 60, 3, 18, 18, 60, 25, 54]

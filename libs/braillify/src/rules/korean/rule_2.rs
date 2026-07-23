@@ -81,13 +81,33 @@ impl BrailleRule for Rule2 {
 mod tests {
     use super::*;
 
-    #[test]
-    fn identifies_all_double_consonants() {
-        assert!(is_double_choseong('ㄲ'));
-        assert!(is_double_choseong('ㄸ'));
-        assert!(is_double_choseong('ㅃ'));
-        assert!(is_double_choseong('ㅆ'));
-        assert!(is_double_choseong('ㅉ'));
+    /// `is_double_choseong` — 된소리(ㄲㄸㅃㅆㅉ)는 true, 평음/격음은 false.
+    #[rstest::rstest]
+    #[case::ssang_giyeok('ㄲ', true)]
+    #[case::ssang_digeut('ㄸ', true)]
+    #[case::ssang_bieup('ㅃ', true)]
+    #[case::ssang_siot('ㅆ', true)]
+    #[case::ssang_jieut('ㅉ', true)]
+    #[case::single_giyeok('ㄱ', false)]
+    #[case::single_digeut('ㄷ', false)]
+    #[case::single_bieup('ㅂ', false)]
+    #[case::single_siot('ㅅ', false)]
+    #[case::single_jieut('ㅈ', false)]
+    fn identifies_all_double_consonants(#[case] cho: char, #[case] expected: bool) {
+        assert_eq!(is_double_choseong(cho), expected);
+    }
+
+    /// `decompose` — 된소리는 (된소리표 32, 평음) 으로 분해, 단일자는 None.
+    #[rstest::rstest]
+    #[case::ssang_giyeok('ㄲ', Some((32, 'ㄱ')))]
+    #[case::ssang_digeut('ㄸ', Some((32, 'ㄷ')))]
+    #[case::ssang_bieup('ㅃ', Some((32, 'ㅂ')))]
+    #[case::ssang_siot('ㅆ', Some((32, 'ㅅ')))]
+    #[case::ssang_jieut('ㅉ', Some((32, 'ㅈ')))]
+    #[case::single_giyeok_none('ㄱ', None)]
+    #[case::single_hieut_none('ㅎ', None)]
+    fn decompose_double_consonant(#[case] cho: char, #[case] expected: Option<(u8, char)>) {
+        assert_eq!(decompose(cho), expected);
     }
 
     #[test]
@@ -114,12 +134,61 @@ mod tests {
         assert_eq!(decompose('ㅎ'), None);
     }
 
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("까", true)] // ㄲ
+    #[case("따", true)] // ㄸ
+    #[case("빠", true)] // ㅃ
+    #[case("싸", true)] // ㅆ
+    #[case("짜", true)] // ㅉ
+    #[case("가", false)] // ㄱ — single
+    #[case("A", false)] // not Korean
+    fn rule2_matches_double_choseong(#[case] input: &str, #[case] expected: bool) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(0);
+        assert_eq!(Rule2.matches(&ctx), expected, "input={input}");
+    }
+
+    #[rstest]
+    #[case("까")]
+    #[case("따")]
+    #[case("빠")]
+    #[case("싸")]
+    #[case("짜")]
+    fn rule2_apply_emits_double_indicator(#[case] input: &str) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule2.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Continue));
+        assert_eq!(owned.result, vec![32u8]); // ⠠ 된소리표
+    }
+
     #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("꾸러미", "⠠⠈⠍⠐⠎⠑⠕"), ("쓰기", "⠠⠠⠪⠈⠕")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(result, expected, "Rule 2 golden test failed for: {}", input);
-        }
+    fn rule2_apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule2.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    #[test]
+    fn rule2_apply_no_emit_for_single_choseong() {
+        // 가 is Korean, but ㄱ is not a double consonant — apply matches=false path
+        // however apply() doesn't check matches, just calls decompose
+        let mut owned = crate::test_helpers::CtxOwned::for_text("가", false);
+        let mut ctx = owned.ctx_at(0);
+        Rule2.apply(&mut ctx).unwrap();
+        // decompose('ㄱ') returns None → no emit
+        assert!(owned.result.is_empty());
+    }
+
+    #[test]
+    fn rule2_meta_phase_priority() {
+        let rule: &dyn BrailleRule = std::hint::black_box(&Rule2);
+
+        assert_eq!(rule.meta().section, "2");
+        assert!(matches!(rule.phase(), Phase::CoreEncoding));
+        assert_eq!(rule.priority(), 195);
     }
 }

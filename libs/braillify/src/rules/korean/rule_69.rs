@@ -41,6 +41,8 @@ const ASCII_UNIT_MAPPINGS: &[(&str, &str)] = &[
     ("h", "⠴⠓⠲"),
 ];
 
+const PERCENT_ABBREVIATION_MAPPINGS: &[(&str, &str)] = &[("%ile", "⠴⠏⠞"), ("%p", "⠴⠏⠏")];
+
 const SEPARATED_SYMBOLS: &[char] = &['%', '‰', '°', '℃', '℉'];
 
 fn encode_unicode_cells(unicode: &str) -> Vec<u8> {
@@ -54,13 +56,6 @@ pub fn is_rule_69_symbol(c: char) -> bool {
     SINGLE_MAPPINGS.iter().any(|(candidate, _)| *candidate == c) || c == 'μ'
 }
 
-fn next_non_ascii_after(word: &[char], start: usize) -> Option<char> {
-    word.iter()
-        .skip(start)
-        .copied()
-        .find(|ch| !ch.is_ascii_alphabetic())
-}
-
 fn is_numeric_or_unit_context(ctx: &RuleContext) -> bool {
     ctx.prev_char()
         .is_some_and(|prev| prev.is_ascii_digit() || matches!(prev, '/' | 'μ'))
@@ -70,6 +65,23 @@ fn is_numeric_or_unit_context(ctx: &RuleContext) -> bool {
                 .chars()
                 .all(|ch| ch.is_ascii_digit() || matches!(ch, ',' | '.'))
         || ctx.prev_char() == Some('/')
+}
+
+/// 단어 자체가 단위 연쇄(cal/㎠/min 등)로 구성된 경우 첫 음절이 한국어 뒤에 와도
+/// 단위로 해석한다. 단위 연쇄의 특징: 단어 내에 `/`가 있거나 제69항 단위 기호(㎠, ㎏ 등)가
+/// 섞여 있다.
+fn word_looks_like_unit_chain(word: &[char]) -> bool {
+    let mut has_separator = false;
+    let mut has_unit_symbol = false;
+    for c in word {
+        if *c == '/' {
+            has_separator = true;
+        } else if is_rule_69_symbol(*c) || *c == 'μ' {
+            has_unit_symbol = true;
+        }
+    }
+    let has_ascii_letter = word.iter().any(char::is_ascii_alphabetic);
+    has_separator && (has_unit_symbol || has_ascii_letter)
 }
 
 fn is_symbol_measurement_context(ctx: &RuleContext, symbol: char) -> bool {
@@ -86,19 +98,41 @@ fn is_symbol_measurement_context(ctx: &RuleContext, symbol: char) -> bool {
     }
 }
 
+/// Check whether `tail` starts with the ASCII-only string `s` (char-by-char).
+/// All entries in `ASCII_UNIT_MAPPINGS` are ASCII, so byte length and char count
+/// coincide; we avoid materializing `tail` into a `String` on the hot path.
+fn chars_start_with_ascii(tail: &[char], s: &str) -> bool {
+    if tail.len() < s.len() {
+        return false;
+    }
+    s.bytes().zip(tail.iter()).all(|(b, c)| (b as char) == *c)
+}
+
 pub(crate) fn encode_ascii_unit(word: &[char], index: usize) -> Option<(Vec<u8>, usize)> {
-    let tail = word[index..].iter().collect::<String>();
+    let tail = &word[index..];
     for (unit, unicode) in ASCII_UNIT_MAPPINGS {
-        if !tail.starts_with(unit) {
+        if !chars_start_with_ascii(tail, unit) {
             continue;
         }
-
-        let next = next_non_ascii_after(word, index + unit.len());
-        if next.is_some_and(|ch| ch.is_ascii_alphabetic()) {
-            continue;
-        }
-
         return Some((encode_unicode_cells(unicode), unit.len()));
+    }
+    None
+}
+
+fn encode_percent_abbreviation(word: &[char], index: usize) -> Option<(Vec<u8>, usize)> {
+    let tail = &word[index..];
+    for (abbr, unicode) in PERCENT_ABBREVIATION_MAPPINGS {
+        if !chars_start_with_ascii(tail, abbr) {
+            continue;
+        }
+        if *abbr == "%p"
+            && tail
+                .get(abbr.len())
+                .is_some_and(|ch| ch.is_ascii_alphabetic())
+        {
+            continue;
+        }
+        return Some((encode_unicode_cells(unicode), abbr.len()));
     }
     None
 }
@@ -150,7 +184,8 @@ impl BrailleRule for Rule69 {
             || matches!(ctx.char_type, CharType::Number(_)
                 if ctx.index == 0 && parse_numeric_ascii_unit_prefix(ctx.word_chars).is_some())
             || matches!(ctx.char_type, CharType::English(_)
-                if is_numeric_or_unit_context(ctx)
+                if (is_numeric_or_unit_context(ctx)
+                    || (ctx.index == 0 && word_looks_like_unit_chain(ctx.word_chars)))
                     && encode_ascii_unit(ctx.word_chars, ctx.index).is_some())
     }
 
@@ -169,18 +204,11 @@ impl BrailleRule for Rule69 {
         }
 
         if matches!(ctx.char_type, CharType::English(_))
-            && is_numeric_or_unit_context(ctx)
+            && (is_numeric_or_unit_context(ctx)
+                || (ctx.index == 0 && word_looks_like_unit_chain(ctx.word_chars)))
             && let Some((encoded, consumed)) = encode_ascii_unit(ctx.word_chars, ctx.index)
         {
             trim_recent_english_indicator(ctx.result);
-            if ctx.prev_char() == Some('/')
-                && ctx.word_chars[ctx.index..]
-                    .iter()
-                    .collect::<String>()
-                    .starts_with("min")
-            {
-                ctx.emit(0);
-            }
             ctx.emit_slice(&encoded);
             ctx.state.is_english = false;
             ctx.state.needs_english_continuation = false;
@@ -189,28 +217,14 @@ impl BrailleRule for Rule69 {
         }
 
         if ctx.current_char() == '%'
-            && ctx.word_chars.get(ctx.index + 1) == Some(&'i')
-            && ctx.word_chars.get(ctx.index + 2) == Some(&'l')
-            && ctx.word_chars.get(ctx.index + 3) == Some(&'e')
+            && let Some((encoded, consumed)) =
+                encode_percent_abbreviation(ctx.word_chars, ctx.index)
         {
-            let encoded = encode_unicode_cells("⠴⠏⠞");
             ctx.emit_slice(&encoded);
-            *ctx.skip_count = 3;
-            return Ok(RuleResult::Consumed);
-        }
-
-        if ctx.current_char() == '%'
-            && ctx.word_chars.get(ctx.index + 1) == Some(&'p')
-            && ctx
-                .word_chars
-                .get(ctx.index + 2)
-                .is_none_or(|ch| !ch.is_ascii_alphabetic())
-        {
-            ctx.emit_slice(&encode_unicode_cells("⠴⠏⠏"));
-            *ctx.skip_count = 1;
+            *ctx.skip_count = consumed.saturating_sub(1);
             if ctx
                 .word_chars
-                .get(ctx.index + 2)
+                .get(ctx.index + consumed)
                 .is_some_and(|ch| crate::utils::is_korean_char(*ch))
             {
                 ctx.emit(0);
@@ -242,12 +256,13 @@ impl BrailleRule for Rule69 {
             return Ok(RuleResult::Consumed);
         }
 
-        let Some((_, unicode)) = SINGLE_MAPPINGS
+        // `matches()` guard `is_rule_69_symbol(c)` is a `SINGLE_MAPPINGS` lookup,
+        // so reaching here without the prior μ/ASCII-unit/`%`-shortcut paths
+        // means the char is guaranteed to be in `SINGLE_MAPPINGS`.
+        let (_, unicode) = SINGLE_MAPPINGS
             .iter()
             .find(|(candidate, _)| *candidate == ctx.current_char())
-        else {
-            return Ok(RuleResult::Skip);
-        };
+            .expect("matches() guarantees the char is in SINGLE_MAPPINGS");
         let encoded = encode_unicode_cells(unicode);
         ctx.emit_slice(&encoded);
         if should_insert_separator_after_symbol(ctx.current_char(), ctx.next_char()) {
@@ -259,7 +274,21 @@ impl BrailleRule for Rule69 {
 
 #[cfg(test)]
 mod tests {
-    use super::parse_numeric_ascii_unit_prefix;
+    use super::{
+        Rule69, encode_ascii_unit, encode_percent_abbreviation, parse_numeric_ascii_unit_prefix,
+        word_looks_like_unit_chain,
+    };
+
+    #[rstest::rstest]
+    #[case::slash_with_ascii_unit("cal/min", true)]
+    #[case::slash_with_unit_symbol("kg/㎠", true)]
+    #[case::slash_without_unit_component("//", false)]
+    #[case::unit_symbol_without_slash("㎠", false)]
+    fn detects_unit_chain_words(#[case] input: &str, #[case] expected: bool) {
+        let chars: Vec<char> = input.chars().collect();
+
+        assert_eq!(word_looks_like_unit_chain(&chars), expected);
+    }
 
     #[test]
     fn parses_compact_number_unit_word() {
@@ -267,5 +296,70 @@ mod tests {
         let parsed = parse_numeric_ascii_unit_prefix(&chars).expect("should parse 180cm");
         assert_eq!(parsed.0, "180");
         assert_eq!(parsed.2, chars.len());
+    }
+
+    #[test]
+    fn parses_decimal_number_unit_word() {
+        let chars: Vec<char> = "1,234.5kg".chars().collect();
+        let parsed = parse_numeric_ascii_unit_prefix(&chars).expect("should parse decimal kg");
+
+        assert_eq!(parsed.0, "1,234.5");
+        assert_eq!(parsed.2, chars.len());
+    }
+
+    #[test]
+    fn parses_leading_decimal_numeric_unit_word() {
+        let chars: Vec<char> = ".5kg".chars().collect();
+        let parsed = parse_numeric_ascii_unit_prefix(&chars).expect("should parse .5kg");
+
+        assert_eq!(parsed.0, ".5");
+        assert_eq!(parsed.2, chars.len());
+    }
+
+    /// 제69항 — percent-derived measurement abbreviations are data-driven, and
+    /// `%p` only contracts at an abbreviation boundary.
+    #[rstest::rstest]
+    #[case::percentile("%ile", 4)]
+    #[case::percentage_point("%p는", 2)]
+    fn encodes_percent_abbreviation(#[case] input: &str, #[case] consumed: usize) {
+        let chars: Vec<char> = input.chars().collect();
+        let (encoded, actual_consumed) = encode_percent_abbreviation(&chars, 0).expect("abbr");
+        assert!(!encoded.is_empty());
+        assert_eq!(actual_consumed, consumed);
+    }
+
+    #[test]
+    fn percent_p_does_not_match_inside_ascii_word() {
+        let chars: Vec<char> = "%point".chars().collect();
+        assert!(encode_percent_abbreviation(&chars, 0).is_none());
+    }
+
+    #[test]
+    fn ascii_unit_scan_continues_past_non_matching_candidates() {
+        let chars: Vec<char> = "zzz".chars().collect();
+
+        assert!(encode_ascii_unit(&chars, 0).is_none());
+    }
+
+    #[test]
+    fn rule69_metadata_is_stable() {
+        use crate::rules::traits::BrailleRule;
+
+        assert_eq!(Rule69.meta().name, "measurement_symbols");
+        assert_eq!(Rule69.phase(), crate::rules::traits::Phase::CoreEncoding);
+        assert_eq!(Rule69.priority(), 90);
+    }
+
+    /// rule_69:255 — `μ` (mu) alone or followed by non-unit chars triggers the
+    /// else branch where `encode_unicode_cells("⠍")` is appended.
+    #[test]
+    fn rule69_mu_alone_without_unit() {
+        // μ followed by Korean (no ASCII unit) → encode_ascii_unit returns None →
+        // else branch at line 255 fires.
+        let result = crate::encode_to_unicode("3μ가");
+        assert!(result.is_ok());
+        // μ at end with no following text.
+        let result = crate::encode_to_unicode("3μ");
+        assert!(result.is_ok());
     }
 }

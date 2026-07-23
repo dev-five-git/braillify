@@ -1,6 +1,7 @@
 [
   {
     "input": "log₅2",
+    "note": "본문 1 — 밑이 숫자",
     "internal": "_,5#b",
     "expected": "563234603",
     "unicode": "⠸⠠⠢⠼⠃",
@@ -9,15 +10,16 @@
   },
   {
     "input": "$\\log_52$",
+    "note": "LaTeX",
     "internal": "_,5#b",
     "expected": "563234603",
     "unicode": "⠸⠠⠢⠼⠃",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "log2",
+    "note": "본문 1 — 상용로그 (밑 10 생략)",
     "internal": "_#b",
     "expected": "56603",
     "unicode": "⠸⠼⠃",
@@ -25,7 +27,53 @@
     "jeomsarang": "⠴⠇⠕⠛⠼⠃"
   },
   {
+    "input": "$\\log 2$",
+    "note": "LaTeX",
+    "internal": "_#b",
+    "expected": "56603",
+    "unicode": "⠸⠼⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "2log7",
+    "note": "본문 1 — 계수 있는 로그",
+    "internal": "#b_#g",
+    "expected": "603566027",
+    "unicode": "⠼⠃⠸⠼⠛",
+    "world": "⠼⠃⠴⠇⠕⠛⠼⠛",
+    "jeomsarang": "⠼⠃⠴⠇⠕⠛⠼⠛"
+  },
+  {
+    "input": "$2\\log 7$",
+    "note": "LaTeX",
+    "internal": "#b_#g",
+    "expected": "603566027",
+    "unicode": "⠼⠃⠸⠼⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "log(x+1)",
+    "note": "본문 1 — 진수가 다항식",
+    "internal": "_8x5#A0",
+    "expected": "5638453460152",
+    "unicode": "⠸⠦⠭⠢⠼⠁⠴",
+    "world": "⠴⠇⠕⠛⠐⠣⠭⠢⠼⠁⠠⠴",
+    "jeomsarang": "⠴⠇⠕⠛⠐⠣⠭⠐⠖⠼⠁⠐⠜⠲"
+  },
+  {
+    "input": "$\\log(x+1)$",
+    "note": "LaTeX",
+    "internal": "_8x5#A0",
+    "expected": "5638453460152",
+    "unicode": "⠸⠦⠭⠢⠼⠁⠴",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "logₐn",
+    "note": "본문 2 — 밑이 문자",
     "internal": "_;an",
     "expected": "5648129",
     "unicode": "⠸⠰⠁⠝",
@@ -34,64 +82,43 @@
   },
   {
     "input": "$\\log_an$",
+    "note": "LaTeX",
     "internal": "_;an",
     "expected": "5648129",
     "unicode": "⠸⠰⠁⠝",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "lnx=log_ex",
+    "input": "lnx=logₑx",
+    "note": "PDF 제46항 본문 2 — 자연로그 lnx=logₑx (밑 e)",
     "internal": "lnx33_;ex",
     "expected": "72945181856481745",
     "unicode": "⠇⠝⠭⠒⠒⠸⠰⠑⠭",
-    "world": "⠴⠇⠝⠭⠐⠶⠇⠕⠛⠨⠤⠑⠭⠲",
-    "jeomsarang": "⠴⠇⠝⠭⠐⠶⠇⠕⠛⠸⠤⠑⠭⠲"
+    "world": "⠴⠇⠝⠭⠐⠶⠇⠕⠛⠰⠑⠭⠲",
+    "jeomsarang": "⠴⠇⠝⠭⠐⠶⠇⠕⠛⠰⠑⠰⠭⠲"
   },
   {
-    "input": "2log7",
-    "internal": "#b_#g",
-    "expected": "603566027",
-    "unicode": "⠼⠃⠸⠼⠛",
-    "world": "⠼⠃⠴⠇⠕⠛⠼⠛",
-    "jeomsarang": "⠼⠃⠴⠇⠕⠛⠼⠛"
-  },
-  {
-    "input": "log(x+1)",
-    "internal": "_(x5#a)",
-    "expected": "5655453460162",
-    "unicode": "⠸⠷⠭⠢⠼⠁⠾",
-    "world": "⠴⠇⠕⠛⠐⠣⠭⠢⠼⠁⠠⠴",
-    "jeomsarang": "⠴⠇⠕⠛⠐⠣⠰⠭⠢⠼⠁⠐⠜⠲"
-  },
-  {
-    "input": "log_e(2+h)",
-    "internal": "_;e8#b5h0",
-    "expected": "56481738603341952",
-    "unicode": "⠸⠰⠑⠦⠼⠃⠢⠓⠴",
-    "world": "⠴⠇⠕⠛⠨⠤⠑⠐⠣⠼⠃⠐⠖⠓⠠⠴",
-    "jeomsarang": "⠴⠇⠕⠛⠸⠤⠑⠦⠄⠼⠃⠢⠴⠓⠠⠴"
-  },
-  {
-    "input": "log₍₃/₁₎9",
-    "internal": "_;(#c/#a)#i",
-    "expected": "56485560912601626010",
-    "unicode": "⠸⠰⠷⠼⠉⠌⠼⠁⠾⠼⠊",
-    "world": "⠴⠇⠕⠛⠰⠦⠄⠼⠉⠸⠌⠰⠼⠁⠠⠴⠼⠊",
-    "jeomsarang": "⠴⠇⠕⠛⠲⠰⠦⠰⠼⠉⠸⠌⠰⠼⠁⠰⠴⠼⠊"
-  },
-  {
-    "input": "$\\log_{(3}/_{1)}9$",
+    "input": "$\\ln x=\\log_e x$",
     "note": "LaTeX",
+    "internal": "lnx33_;ex",
+    "expected": "72945181856481745",
+    "unicode": "⠇⠝⠭⠒⠒⠸⠰⠑⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$\\log_{\\frac{1}{3}}9$",
+    "note": "LaTeX — [붙임 1] 밑이 분수",
     "internal": "_;(#c/#a)#i",
     "expected": "56485560912601626010",
     "unicode": "⠸⠰⠷⠼⠉⠌⠼⠁⠾⠼⠊",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠇⠕⠛⠨⠤⠸⠣⠸⠡⠋⠗⠁⠉⠦⠂⠼⠁⠐⠴⠦⠂⠼⠉⠐⠴⠐⠴⠼⠊⠈⠎",
     "jeomsarang": ""
   },
   {
     "input": "log₍₀.₂₎n",
+    "note": "[붙임 1] — 밑이 소수",
     "internal": "_;(#j4b),n",
     "expected": "5648556026503623229",
     "unicode": "⠸⠰⠷⠼⠚⠲⠃⠾⠠⠝",
@@ -99,7 +126,7 @@
     "jeomsarang": "⠴⠇⠕⠛⠰⠦⠠⠴⠲⠰⠼⠃⠰⠴⠰⠝⠲"
   },
   {
-    "input": "$\\log_{(0}._{2)}n$",
+    "input": "$\\log_{0.2}n$",
     "note": "LaTeX",
     "internal": "_;(#j4b),n",
     "expected": "5648556026503623229",
@@ -108,28 +135,29 @@
     "jeomsarang": ""
   },
   {
+    "input": "$\\log_a(\\frac{U}{V})$",
+    "note": "LaTeX — [붙임 2] 진수가 분수",
+    "internal": "_;A(V/U)",
+    "expected": "564815539123762",
+    "unicode": "⠸⠰⠁⠷⠧⠌⠥⠾",
+    "world": "⠴⠈⠎⠸⠡⠴⠇⠕⠛⠨⠤⠁⠐⠣⠸⠡⠋⠗⠁⠉⠸⠣⠠⠥⠸⠜⠸⠣⠠⠧⠐⠴⠠⠴⠈⠎",
+    "jeomsarang": ""
+  },
+  {
     "input": "log₂(x+1)",
+    "note": "[붙임 2] — 진수가 다항식",
     "internal": "_,2(8x5#a0)",
     "expected": "56326553845346015262",
     "unicode": "⠸⠠⠆⠷⠦⠭⠢⠼⠁⠴⠾",
     "world": "⠴⠇⠕⠛⠰⠼⠃⠐⠣⠭⠢⠼⠁⠠⠴",
-    "jeomsarang": "⠴⠇⠕⠛⠰⠢⠼⠃⠐⠣⠰⠭⠢⠼⠁⠐⠜⠲"
+    "jeomsarang": "⠴⠇⠕⠛⠰⠢⠼⠃⠐⠣⠭⠐⠖⠼⠁⠐⠜⠲"
   },
   {
     "input": "$\\log_2(x+1)$",
+    "note": "LaTeX",
     "internal": "_,2(8x5#a0)",
     "expected": "56326553845346015262",
     "unicode": "⠸⠠⠆⠷⠦⠭⠢⠼⠁⠴⠾",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "$\\log_a(V/U)$",
-    "internal": "_;A(V/U)",
-    "expected": "564815539123762",
-    "unicode": "⠸⠰⠁⠷⠧⠌⠥⠾",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   }

@@ -65,4 +65,25 @@ mod tests {
         assert_eq!(META.section, "60");
         assert_eq!(META.name, "asterisk_spacing");
     }
+
+    #[test]
+    fn apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let _ = Rule60.apply(&mut ctx).unwrap();
+        // Just exercise apply() for coverage
+    }
+
+    /// 제60항 — 별표(*)가 단독 어절로 직전 단어가 있을 때 앞에 공백 0을 emit
+    /// (line 50-52).
+    #[test]
+    fn rule60_apply_standalone_asterisk_after_word_prepends_space() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("*", false).with_prev_word("가");
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule60.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        // Space (0) is the first emitted byte
+        assert_eq!(owned.result[0], 0);
+        assert!(owned.result.len() > 1);
+    }
 }

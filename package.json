@@ -5,9 +5,13 @@
   "description": "Braillify is a library for converting text to braille.",
   "type": "module",
   "scripts": {
-    "lint": "oxlint .",
-    "lint:fix": "oxlint . --fix",
-    "test": "cargo tarpaulin --out xml --out stdout -- --skip test_by_testcase && bun test --coverage && cd py-test && uv run pytest __init__.py",
+    "lint": "oxlint . && cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings",
+    "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings && cargo clippy --workspace --all-targets -- -D warnings",
+    "test": "bun run test:rust && bun run test:node && bun run test:python",
+    "test:rust": "bun scripts/test-rust.ts",
+    "test:node": "bun test",
+    "test:python": "cd py-test && uv run --locked pytest",
+    "test:testcase": "cargo test -p braillify test_by_testcase -- --nocapture",
     "preinstall": "uv sync && (cargo install wasm-pack || node -e \"process.exit(0)\") && (pip install maturin || \"process.exit(0)\")",
     "build": "cargo build --release -p braillify && bun -F braillify build && cd packages/python && maturin build --release --out dist",
     "build:landing": "bun run build && (cargo test test_by_testcase || node -e \"process.exit(0)\") && bun -F landing build",
@@ -19,20 +23,11 @@
     "apps/landing"
   ],
   "devDependencies": {
-    "@types/node": "^25.5.2",
+    "@types/bun": "^1.3.14",
+    "@types/node": "^26.1.1",
     "braillify": "workspace:*",
-    "eslint-plugin-devup": "^2.0.18",
-    "oxlint": "^1.59",
-    "eslint": "^9",
-    "@types/bun": "^1.3"
-  },
-  "overrides": {
-    "@typescript-eslint/utils": "^8.59.0",
-    "@typescript-eslint/eslint-plugin": "^8.59.0",
-    "@typescript-eslint/parser": "^8.59.0",
-    "@typescript-eslint/type-utils": "^8.59.0",
-    "@typescript-eslint/typescript-estree": "^8.59.0",
-    "typescript-eslint": "^8.59.0"
+    "eslint-plugin-devup": "^2.0.19",
+    "oxlint": "^1.73.0"
   },
   "author": "devfive"
 }

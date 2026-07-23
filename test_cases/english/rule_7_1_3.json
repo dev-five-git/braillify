@@ -1,0 +1,32 @@
+[
+  {
+    "input": "Replace . with ? where appropriate.",
+    "internal": ",replace 4 ) ;8 \": appropriate4",
+    "expected": "3223171571917050062048380164901151523211523101301750",
+    "unicode": "⠠⠗⠑⠏⠇⠁⠉⠑⠀⠲⠀⠾⠀⠰⠦⠀⠐⠱⠀⠁⠏⠏⠗⠕⠏⠗⠊⠁⠞⠑⠲"
+  },
+  {
+    "input": "lang:uk",
+    "internal": "lang;3uk",
+    "expected": "7129274818375",
+    "unicode": "⠇⠁⠝⠛⠰⠒⠥⠅"
+  },
+  {
+    "input": "a:o",
+    "internal": "a;3o",
+    "expected": "1481821",
+    "unicode": "⠁⠰⠒⠕"
+  },
+  {
+    "input": ".doc",
+    "internal": ";4doc",
+    "expected": "485025219",
+    "unicode": "⠰⠲⠙⠕⠉"
+  },
+  {
+    "input": "Ai!!ams",
+    "internal": ",ai;66ams",
+    "expected": "3211048222211314",
+    "unicode": "⠠⠁⠊⠰⠖⠖⠁⠍⠎"
+  }
+]

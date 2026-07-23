@@ -1,6 +1,7 @@
 [
   {
     "input": "≒",
+    "note": "PDF 제20항 — 근삿값 기호 정의",
     "internal": "\"33",
     "expected": "161818",
     "unicode": "⠐⠒⠒",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠐⠒⠒"
   },
   {
+    "input": "$\\fallingdotseq$",
+    "note": "LaTeX",
+    "internal": "\"33",
+    "expected": "161818",
+    "unicode": "⠐⠒⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "√3≒1.732",
+    "note": "PDF 제20항 — 근삿값 예제",
     "internal": ">#c\"33#a4gcb",
     "expected": "28609161818601502793",
     "unicode": "⠜⠼⠉⠐⠒⠒⠼⠁⠲⠛⠉⠃",
@@ -16,7 +27,7 @@
     "jeomsarang": "⠻⠼⠉⠐⠒⠒⠼⠁⠲⠛⠉⠃"
   },
   {
-    "input": "$\\sqrt{3} \\approx 1.732$",
+    "input": "$\\sqrt{3} \\fallingdotseq 1.732$",
     "internal": ">#c\"33#a4gcb",
     "expected": "28609161818601502793",
     "unicode": "⠜⠼⠉⠐⠒⠒⠼⠁⠲⠛⠉⠃",

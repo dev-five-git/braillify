@@ -21,5 +21,15 @@ mod tests {
     #[test]
     fn test_is_similarity_symbol() {
         assert!(is_similarity_symbol('\u{223D}'));
+        assert!(!is_similarity_symbol('~'));
+        assert!(!is_similarity_symbol('a'));
+    }
+
+    #[test]
+    fn encode_emits_shortcut_bytes() -> Result<(), String> {
+        let mut result = Vec::new();
+        encode_similarity_symbol('\u{223D}', &mut result)?;
+        assert!(!result.is_empty());
+        Ok(())
     }
 }

@@ -1,6 +1,7 @@
 [
   {
     "input": "·",
+    "context": "middle_korean",
     "note": "거성(去聲)",
     "internal": "_1",
     "expected": "562",
@@ -10,6 +11,7 @@
   },
   {
     "input": "：",
+    "context": "middle_korean",
     "note": "상성(上聲)",
     "internal": "_k",
     "expected": "565",

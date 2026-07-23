@@ -1,0 +1,44 @@
+[
+  {
+    "input": "XI XIth",
+    "internal": ",,xi ,,xi,'?",
+    "expected": "3232451003232451032457",
+    "unicode": "⠠⠠⠭⠊⠀⠠⠠⠭⠊⠠⠄⠹"
+  },
+  {
+    "input": "XXXI XXXIst",
+    "internal": ",,xxxi ,,xxxi,'/",
+    "expected": "323245454510032324545451032412",
+    "unicode": "⠠⠠⠭⠭⠭⠊⠀⠠⠠⠭⠭⠭⠊⠠⠄⠌"
+  },
+  {
+    "input": "OK OKd",
+    "internal": ",,ok ,,ok,'d",
+    "expected": "32322150323221532425",
+    "unicode": "⠠⠠⠕⠅⠀⠠⠠⠕⠅⠠⠄⠙"
+  },
+  {
+    "input": "CD CDs",
+    "internal": ";,,cd ,,cd,'s",
+    "expected": "4832329250323292532414",
+    "unicode": "⠰⠠⠠⠉⠙⠀⠠⠠⠉⠙⠠⠄⠎"
+  },
+  {
+    "input": "RV:  Recreational Vehicle–Let's go RVing.",
+    "internal": ",,rv3 ,recr1;nal ,vehicle,-,let's g ,,rv,'+4",
+    "expected": "323223391803223179232482917032391719109717323632717304140270323223393244450",
+    "unicode": "⠠⠠⠗⠧⠒⠀⠠⠗⠑⠉⠗⠂⠰⠝⠁⠇⠀⠠⠧⠑⠓⠊⠉⠇⠑⠠⠤⠠⠇⠑⠞⠄⠎⠀⠛⠀⠠⠠⠗⠧⠠⠄⠬⠲"
+  },
+  {
+    "input": "www.BLASTSoundMachine.com",
+    "internal": "www4,,bla/,s.d,ma*9e4com",
+    "expected": "5858585032323711232144025321313320175092113",
+    "unicode": "⠺⠺⠺⠲⠠⠠⠃⠇⠁⠌⠠⠎⠨⠙⠠⠍⠁⠡⠔⠑⠲⠉⠕⠍"
+  },
+  {
+    "input": "www.BLASTsoundmachine.com",
+    "internal": "www4,,bla/,'s.dma*9e4com",
+    "expected": "585858503232371123241440251313320175092113",
+    "unicode": "⠺⠺⠺⠲⠠⠠⠃⠇⠁⠌⠠⠄⠎⠨⠙⠍⠁⠡⠔⠑⠲⠉⠕⠍"
+  }
+]

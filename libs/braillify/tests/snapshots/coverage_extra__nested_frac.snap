@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\frac{1}{\\frac{2}{3}}$"
+unicode = ok: "⠼⠉⠌⠼⠃⠌⠼⠁"
+bytes   = ok: [60, 9, 12, 60, 3, 12, 60, 1]

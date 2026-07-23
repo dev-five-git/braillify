@@ -1,0 +1,9 @@
+[
+  {
+    "input": "$\\left.\\begin{array}{l}\\text{I We} \\\\ \\text{You} \\\\ \\text{They}\\end{array}\\right\\}\\text{run fast.}$",
+    "context": "english",
+    "internal": ",i ,we,_> run fa/4\n,y ,_>\n,!y ,_>",
+    "expected": "32100325817325628023372901111250\n32610325628\n3246610325628",
+    "unicode": "⠠⠊⠀⠠⠺⠑⠠⠸⠜⠀⠗⠥⠝⠀⠋⠁⠌⠲\n⠠⠽⠀⠠⠸⠜\n⠠⠮⠽⠀⠠⠸⠜"
+  }
+]

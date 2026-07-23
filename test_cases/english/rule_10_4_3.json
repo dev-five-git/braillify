@@ -1,0 +1,104 @@
+[
+  {
+    "input": "finger",
+    "internal": "f+]",
+    "expected": "114459",
+    "unicode": "⠋⠬⠻"
+  },
+  {
+    "input": "ginger",
+    "internal": "g+]",
+    "expected": "274459",
+    "unicode": "⠛⠬⠻"
+  },
+  {
+    "input": "singe",
+    "internal": "s+e",
+    "expected": "144417",
+    "unicode": "⠎⠬⠑"
+  },
+  {
+    "input": "singeing",
+    "internal": "s+e+",
+    "expected": "14441744",
+    "unicode": "⠎⠬⠑⠬"
+  },
+  {
+    "input": "sting",
+    "internal": "/+",
+    "expected": "1244",
+    "unicode": "⠌⠬"
+  },
+  {
+    "input": "stinging",
+    "internal": "/++",
+    "expected": "124444",
+    "unicode": "⠌⠬⠬"
+  },
+  {
+    "input": "brown(ing)",
+    "internal": "br[n\"<+\">",
+    "expected": "32342291635441628",
+    "unicode": "⠃⠗⠪⠝⠐⠣⠬⠐⠜"
+  },
+  {
+    "input": "brown𝑖𝑛𝑔",
+    "internal": "br[n.2+",
+    "expected": "323422940644",
+    "unicode": "⠃⠗⠪⠝⠨⠆⠬"
+  },
+  {
+    "input": "SmithInge",
+    "internal": ",smi?,+e",
+    "expected": "3214131057324417",
+    "unicode": "⠠⠎⠍⠊⠹⠠⠬⠑"
+  },
+  {
+    "input": "Ch'ing Dynasty",
+    "internal": ",*'+ ,dyna/y",
+    "expected": "323344403225612911261",
+    "unicode": "⠠⠡⠄⠬⠀⠠⠙⠽⠝⠁⠌⠽"
+  },
+  {
+    "input": "ingot",
+    "internal": "9got",
+    "expected": "20272130",
+    "unicode": "⠔⠛⠕⠞"
+  },
+  {
+    "input": "Ingoldsby",
+    "internal": ",9goldsby",
+    "expected": "3220272172514361",
+    "unicode": "⠠⠔⠛⠕⠇⠙⠎⠃⠽"
+  },
+  {
+    "input": "ingredients",
+    "internal": "9gr$i5ts",
+    "expected": "2027234310343014",
+    "unicode": "⠔⠛⠗⠫⠊⠢⠞⠎"
+  },
+  {
+    "input": "ingrown",
+    "internal": "9gr[n",
+    "expected": "2027234229",
+    "unicode": "⠔⠛⠗⠪⠝"
+  },
+  {
+    "input": "to-ing and fro-ing",
+    "internal": "to-9g & fro-9g",
+    "expected": "30213620270470112321362027",
+    "unicode": "⠞⠕⠤⠔⠛⠀⠯⠀⠋⠗⠕⠤⠔⠛"
+  },
+  {
+    "input": "brown-𝑖𝑛𝑔",
+    "internal": "br[n-.19g",
+    "expected": "3234229364022027",
+    "unicode": "⠃⠗⠪⠝⠤⠨⠂⠔⠛"
+  },
+  {
+    "input": "Smith–Inge",
+    "internal": ",smi?,-,9ge",
+    "expected": "3214131057323632202717",
+    "unicode": "⠠⠎⠍⠊⠹⠠⠤⠠⠔⠛⠑"
+  }
+]

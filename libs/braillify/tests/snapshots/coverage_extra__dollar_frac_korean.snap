@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\frac{1}{2}$의 역수"
+unicode = ok: "⠼⠃⠌⠼⠁⠺⠀⠱⠁⠠⠍"
+bytes   = ok: [60, 3, 12, 60, 1, 58, 0, 49, 1, 32, 13]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "cos(y)"
+unicode = ok: "⠖⠉⠷⠽⠾"
+bytes   = ok: [22, 9, 55, 61, 62]

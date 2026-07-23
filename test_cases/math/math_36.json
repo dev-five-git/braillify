@@ -1,6 +1,7 @@
 [
   {
     "input": "⌢",
+    "note": "PDF 제36항 — 호 ⌢ 기호 정의 (단독)",
     "internal": "@[",
     "expected": "842",
     "unicode": "⠈⠪",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠀"
   },
   {
+    "input": "$\\frown$",
+    "note": "LaTeX",
+    "internal": "@[",
+    "expected": "842",
+    "unicode": "⠈⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "⌢AB",
+    "note": "PDF 제36항 — 호 ⌢AB (대문자 단어표 ,, 적용)",
     "internal": "@[,,AB",
     "expected": "842323213",
     "unicode": "⠈⠪⠠⠠⠁⠃",
@@ -17,10 +28,10 @@
   },
   {
     "input": "$\\overset{\\frown}{AB}$",
+    "note": "LaTeX",
     "internal": "@[,,AB",
     "expected": "842323213",
     "unicode": "⠈⠪⠠⠠⠁⠃",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   }

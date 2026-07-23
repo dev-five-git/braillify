@@ -1,0 +1,8 @@
+[
+  {
+    "input": "In some fonts the letters appear joined.",
+    "internal": ",9 \"s fonts ! lrs appe> jo9$4",
+    "expected": "32200161401121293014046072314011515172802621204350",
+    "unicode": "⠠⠔⠀⠐⠎⠀⠋⠕⠝⠞⠎⠀⠮⠀⠇⠗⠎⠀⠁⠏⠏⠑⠜⠀⠚⠕⠔⠫⠲"
+  }
+]

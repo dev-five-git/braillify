@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "∃Y Q(Y)"
+unicode = ok: "⠨⠢⠽⠀⠠⠟⠦⠠⠽⠴"
+bytes   = ok: [40, 34, 61, 0, 32, 31, 38, 32, 61, 52]

@@ -1,0 +1,20 @@
+[
+  {
+    "input": "Father Edmond Anderson",
+    "internal": ",\"f ,$mond ,&]son",
+    "expected": "32161103243132129250324759142129",
+    "unicode": "⠠⠐⠋⠀⠠⠫⠍⠕⠝⠙⠀⠠⠯⠻⠎⠕⠝"
+  },
+  {
+    "input": "Today, Mr Will Just visited us.",
+    "internal": ",td1 ,mr ,w ,j visit$ u4",
+    "expected": "323025203213230325803226039101410304303750",
+    "unicode": "⠠⠞⠙⠂⠀⠠⠍⠗⠀⠠⠺⠀⠠⠚⠀⠧⠊⠎⠊⠞⠫⠀⠥⠲"
+  },
+  {
+    "input": "His name is Thomas.",
+    "internal": ",8 \"n is ,?omas4",
+    "expected": "3238016290101403257211311450",
+    "unicode": "⠠⠦⠀⠐⠝⠀⠊⠎⠀⠠⠹⠕⠍⠁⠎⠲"
+  }
+]

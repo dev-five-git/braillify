@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "csc x"
+unicode = ok: "⠖⠣⠀⠭"
+bytes   = ok: [22, 35, 0, 45]

@@ -48,27 +48,22 @@ pub fn determine_prefix<F>(
 where
     F: Fn(char) -> bool,
 {
-    match word_len {
-        1 => ONTAB, // 제8항: standalone
-        2 => ONTAB, // 제8항/제9항: standalone in 2-char word
-        _ => {
-            // Multi-char word: check context
-            let is_first_with_ja = char_index == 0 && word_len > 1 && word_chars[1] == '자';
+    if word_len <= 2 {
+        // 제8항/제9항: standalone in 1- or 2-char word
+        return ONTAB;
+    }
 
-            let is_bordered_by_symbols = {
-                let prev_is_symbol_or_start =
-                    char_index == 0 || (char_index > 0 && is_symbol(word_chars[char_index - 1]));
-                let next_is_symbol_or_end = word_len - 1 == char_index
-                    || (char_index < word_len - 1 && is_symbol(word_chars[char_index + 1]));
-                prev_is_symbol_or_start && next_is_symbol_or_end
-            };
+    // Multi-char word: check context
+    let is_first_with_ja = char_index == 0 && word_chars[1] == '자';
 
-            if (is_first_with_ja || is_bordered_by_symbols) || !has_korean_char {
-                ONTAB // 제8항: standalone context
-            } else {
-                WORD_ATTACHED_PREFIX // 제10항: attached to Korean word
-            }
-        }
+    let prev_is_symbol_or_start = char_index == 0 || is_symbol(word_chars[char_index - 1]);
+    let next_is_symbol_or_end = char_index == word_len - 1 || is_symbol(word_chars[char_index + 1]);
+    let is_bordered_by_symbols = prev_is_symbol_or_start && next_is_symbol_or_end;
+
+    if is_first_with_ja || is_bordered_by_symbols || !has_korean_char {
+        ONTAB // 제8항: standalone context
+    } else {
+        WORD_ATTACHED_PREFIX // 제10항: attached to Korean word
     }
 }
 
@@ -137,51 +132,85 @@ mod tests {
         matches!(c, '.' | ',' | '(' | ')' | '[' | ']')
     }
 
-    #[test]
-    fn standalone_single_char() {
-        assert_eq!(determine_prefix(1, 0, &['ㄱ'], false, not_symbol), ONTAB);
-    }
-
-    #[test]
-    fn jamo_numbering_format() {
-        let chars = ['ㄱ', '.'];
-        assert!(is_jamo_numbering(0, &chars));
-        assert_eq!(determine_prefix(2, 0, &chars, false, not_symbol), ONTAB);
-    }
-
-    #[test]
-    fn non_numbering_two_char() {
-        let chars = ['ㄱ', 'ㄴ'];
-        assert!(!is_jamo_numbering(0, &chars));
-    }
-
-    #[test]
-    fn attached_to_korean_word() {
-        let chars = ['가', 'ㄱ', '나'];
+    /// `determine_prefix` — 자모 단독/이중/문맥별 접두 부호 선택.
+    #[rstest::rstest]
+    #[case::standalone_single_char(vec!['ㄱ'], 0, false, not_symbol as fn(char) -> bool, ONTAB)]
+    #[case::jamo_numbering_format(vec!['ㄱ', '.'], 0, false, not_symbol, ONTAB)]
+    #[case::attached_to_korean_word(vec!['가', 'ㄱ', '나'], 1, true, not_symbol, WORD_ATTACHED_PREFIX)]
+    #[case::bordered_by_symbols_uses_ontab(vec!['(', 'ㄱ', ')'], 1, true, is_sym, ONTAB)]
+    #[case::first_with_ja_uses_ontab(vec!['ㄱ', '자', '도'], 0, true, not_symbol, ONTAB)]
+    fn determine_prefix_paths(
+        #[case] chars: Vec<char>,
+        #[case] index: usize,
+        #[case] is_korean: bool,
+        #[case] sym: fn(char) -> bool,
+        #[case] expected: u8,
+    ) {
         assert_eq!(
-            determine_prefix(3, 1, &chars, true, not_symbol),
-            WORD_ATTACHED_PREFIX
+            determine_prefix(chars.len(), index, &chars, is_korean, sym),
+            expected
         );
     }
 
-    #[test]
-    fn bordered_by_symbols_uses_ontab() {
-        let chars = ['(', 'ㄱ', ')'];
-        assert_eq!(determine_prefix(3, 1, &chars, true, is_sym), ONTAB);
+    /// `is_jamo_numbering` — `'자모.'` 패턴 인식 (`ㄱ.` 등은 true, `ㄱㄴ`은 false).
+    #[rstest::rstest]
+    #[case::jamo_dot(vec!['ㄱ', '.'], true)]
+    #[case::two_jamo_no_dot(vec!['ㄱ', 'ㄴ'], false)]
+    fn is_jamo_numbering_paths(#[case] chars: Vec<char>, #[case] expected: bool) {
+        assert_eq!(is_jamo_numbering(0, &chars), expected);
+    }
+
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("ㄱ", true)] // KoreanPart consonant
+    #[case("ㅏ", true)] // KoreanPart vowel
+    #[case("가", false)] // Korean syllable, not part
+    #[case("A", false)] // English
+    fn rule8_matches_korean_part_only(#[case] input: &str, #[case] expected: bool) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(0);
+        assert_eq!(Rule8.matches(&ctx), expected, "input={input}");
+    }
+
+    #[rstest]
+    #[case("ㄱ")]
+    #[case("ㄴ")]
+    #[case("ㅏ")]
+    #[case("ㅎ")]
+    fn rule8_apply_emits_for_korean_part(#[case] input: &str) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule8.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(!owned.result.is_empty());
     }
 
     #[test]
-    fn first_with_ja_uses_ontab() {
-        let chars = ['ㄱ', '자', '도'];
-        assert_eq!(determine_prefix(3, 0, &chars, true, not_symbol), ONTAB);
+    fn rule8_apply_skips_non_korean_part() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule8.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
     }
 
+    /// 제8항 — multi-char jamo sequence without any Korean syllable in the word
+    /// must use 온표 (제8항 standalone context) since `has_korean_char=false`.
     #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("ㄱ", "⠿⠁"), ("ㅏ", "⠿⠣")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(result, expected, "Rule 8 golden test failed for: {}", input);
-        }
+    fn multi_char_without_korean_falls_back_to_ontab() {
+        let chars = ['ㄱ', 'ㄴ', 'ㄷ'];
+        // has_korean_char=false → !has_korean_char branch should pick ONTAB
+        assert_eq!(determine_prefix(3, 1, &chars, false, not_symbol), ONTAB);
+    }
+
+    /// 제9항 — jamo numbering (ㄱ.) inside the apply path emits ONTAB + jongseong.
+    #[test]
+    fn rule8_apply_jamo_numbering_emits_ontab_and_jongseong() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("ㄱ.", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule8.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(!owned.result.is_empty());
+        assert_eq!(owned.result[0], ONTAB);
     }
 }

@@ -1,0 +1,56 @@
+[
+  {
+    "input": "B♭ trumpet",
+    "internal": ",b#< trumpet",
+    "expected": "3236035030233713151730",
+    "unicode": "⠠⠃⠼⠣⠀⠞⠗⠥⠍⠏⠑⠞"
+  },
+  {
+    "input": "The C♯ pavilion is named for Cecil Sharp.",
+    "internal": ",! ,c#% pavilion is \"nd = ,cecil ,%>p4",
+    "expected": "324603296041015139107102129010140162925063032917910703241281550",
+    "unicode": "⠠⠮⠀⠠⠉⠼⠩⠀⠏⠁⠧⠊⠇⠊⠕⠝⠀⠊⠎⠀⠐⠝⠙⠀⠿⠀⠠⠉⠑⠉⠊⠇⠀⠠⠩⠜⠏⠲"
+  },
+  {
+    "input": "The scale of G major includes the note F♯.",
+    "internal": ",! scale ( ;,g major 9cludes ! note ,f#%4",
+    "expected": "32460149171705504832270131262123020973725171404602921301703211604150",
+    "unicode": "⠠⠮⠀⠎⠉⠁⠇⠑⠀⠷⠀⠰⠠⠛⠀⠍⠁⠚⠕⠗⠀⠔⠉⠇⠥⠙⠑⠎⠀⠮⠀⠝⠕⠞⠑⠀⠠⠋⠼⠩⠲"
+  },
+  {
+    "input": "A jazz 2-5-1 progression in C minor could be Dm7♭5 - G7♯9 - Cm7.",
+    "internal": ",a jazz #b-#e-#a progres.n 9 ;,c m9or cd 2 ,dm#g#<#e - ,g#g#%#i - ,cm#g4",
+    "expected": "321026153530603366017366010152321272317144029020048329013202123092506032251360276035601703603227602760416010036032913602750",
+    "unicode": "⠠⠁⠀⠚⠁⠵⠵⠀⠼⠃⠤⠼⠑⠤⠼⠁⠀⠏⠗⠕⠛⠗⠑⠎⠨⠝⠀⠔⠀⠰⠠⠉⠀⠍⠔⠕⠗⠀⠉⠙⠀⠆⠀⠠⠙⠍⠼⠛⠼⠣⠼⠑⠀⠤⠀⠠⠛⠼⠛⠼⠩⠼⠊⠀⠤⠀⠠⠉⠍⠼⠛⠲"
+  },
+  {
+    "input": "The ♮ sign on a note cancels the effect of any ♯ or ♭ in the key signature.",
+    "internal": ",! #* sign on a note c.els ! e6ect ( any #% or #< 9 ! key signature4",
+    "expected": "3246060330141027290212901029213017094017714046017221793005501296106041021230603502004605176101410272913037231750",
+    "unicode": "⠠⠮⠀⠼⠡⠀⠎⠊⠛⠝⠀⠕⠝⠀⠁⠀⠝⠕⠞⠑⠀⠉⠨⠑⠇⠎⠀⠮⠀⠑⠖⠑⠉⠞⠀⠷⠀⠁⠝⠽⠀⠼⠩⠀⠕⠗⠀⠼⠣⠀⠔⠀⠮⠀⠅⠑⠽⠀⠎⠊⠛⠝⠁⠞⠥⠗⠑⠲"
+  },
+  {
+    "input": "the dominant chord g-b♮-d",
+    "internal": "! dom9ant *ord ;g-b#*-;d",
+    "expected": "4602521132012930033212325048273636033364825",
+    "unicode": "⠮⠀⠙⠕⠍⠔⠁⠝⠞⠀⠡⠕⠗⠙⠀⠰⠛⠤⠃⠼⠡⠤⠰⠙"
+  },
+  {
+    "input": "... we obtain the somewhat more transparent relation",
+    "internal": "444 we obta9 ! \"s:at m transp>5t rela;n",
+    "expected": "50505005817021330120046016144913001303023129141528343002317714829",
+    "unicode": "⠲⠲⠲⠀⠺⠑⠀⠕⠃⠞⠁⠔⠀⠮⠀⠐⠎⠱⠁⠞⠀⠍⠀⠞⠗⠁⠝⠎⠏⠜⠢⠞⠀⠗⠑⠇⠁⠰⠝"
+  },
+  {
+    "input": "X♭(Y) = ⟨X,Y⟩",
+    "internal": ",x;9#<\"<,y\"> \"7 @<,x1 ,y@>",
+    "expected": "3245482060351635326116280165408353245203261828",
+    "unicode": "⠠⠭⠰⠔⠼⠣⠐⠣⠠⠽⠐⠜⠀⠐⠶⠀⠈⠣⠠⠭⠂⠀⠠⠽⠈⠜"
+  },
+  {
+    "input": "for all vectors X and Y.",
+    "internal": "= all vectors ;,x & ;,y4",
+    "expected": "630177039179302123140483245047048326150",
+    "unicode": "⠿⠀⠁⠇⠇⠀⠧⠑⠉⠞⠕⠗⠎⠀⠰⠠⠭⠀⠯⠀⠰⠠⠽⠲"
+  }
+]

@@ -1,14 +1,16 @@
 [
   {
-    "input": "3/4",
-    "internal": "#d/#c",
-    "expected": "602512609",
-    "unicode": "⠼⠙⠌⠼⠉",
-    "world": "⠼⠉⠸⠌⠼⠙",
-    "jeomsarang": "⠼⠉⠸⠌⠼⠙"
+    "input": "─",
+    "note": "PDF 제7항 1. 분수표 ─ 정의 (분수표는 ⠌으로 적는다)",
+    "internal": "/",
+    "expected": "12",
+    "unicode": "⠌",
+    "world": "",
+    "jeomsarang": "⠠⠄"
   },
   {
     "input": "¾",
+    "note": "PDF 제7항 1. 가로분수 예제 (¾)",
     "internal": "#d/#c",
     "expected": "602512609",
     "unicode": "⠼⠙⠌⠼⠉",
@@ -17,15 +19,16 @@
   },
   {
     "input": "$\\frac{3}{4}$",
+    "note": "LaTeX",
     "internal": "#d/#c",
     "expected": "602512609",
     "unicode": "⠼⠙⠌⠼⠉",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "3⅙",
+    "note": "PDF 제7항 1. 혼합 가로분수 예제 (3⅙)",
     "internal": "#c#f/#a",
     "expected": "609601112601",
     "unicode": "⠼⠉⠼⠋⠌⠼⠁",
@@ -34,23 +37,25 @@
   },
   {
     "input": "$3\\frac{1}{6}$",
+    "note": "LaTeX",
     "internal": "#c#f/#a",
     "expected": "609601112601",
     "unicode": "⠼⠉⠼⠋⠌⠼⠁",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "/",
+    "note": "PDF 제7항 2. 빗금 / 정의 (빗금은 ⠸⠌으로 적는다)",
     "internal": "_/",
     "expected": "5612",
     "unicode": "⠸⠌",
-    "world": null,
+    "world": "",
     "jeomsarang": "⠸⠌"
   },
   {
     "input": "2/3",
+    "note": "PDF 제7항 2. 빗금 분수 예제",
     "internal": "#b_/#c",
     "expected": "6035612609",
     "unicode": "⠼⠃⠸⠌⠼⠉",
@@ -58,97 +63,48 @@
     "jeomsarang": "⠼⠃⠸⠌⠼⠉"
   },
   {
-    "input": "⅔",
-    "internal": "#b_/#c",
-    "expected": "6035612609",
-    "unicode": "⠼⠃⠸⠌⠼⠉",
-    "world": "",
-    "jeomsarang": "⠼⠉⠌⠼⠃"
-  },
-  {
-    "input": "$\\frac{2}{3}$",
-    "internal": "#b_/#c",
-    "expected": "6035612609",
-    "unicode": "⠼⠃⠸⠌⠼⠉",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "x+y̲",
+    "input": "$x+\\frac{1}{y}$",
+    "note": "PDF 제7항 3. 묶음 괄호 — x + 1/y",
     "internal": "x5y/#a",
     "expected": "45346112601",
     "unicode": "⠭⠢⠽⠌⠼⠁",
-    "world": "⠴⠭⠐⠖⠽",
-    "jeomsarang": "⠴⠭⠢⠽⠀"
-  },
-  {
-    "input": "$x+\\underline{y}$",
-    "internal": "x5y/#a",
-    "expected": "45346112601",
-    "unicode": "⠭⠢⠽⠌⠼⠁",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠴⠭⠐⠖⠸⠡⠋⠗⠁⠉⠸⠣⠼⠁⠸⠜⠸⠣⠽⠐⠴⠈⠎",
     "jeomsarang": ""
   },
   {
-    "input": "1̲/(x+y)",
+    "input": "$\\frac{1}{x+y}$",
+    "note": "PDF 제7항 3. 묶음 괄호 — 1/(x+y)",
     "internal": "(x5y)/#a",
     "expected": "554534616212601",
     "unicode": "⠷⠭⠢⠽⠾⠌⠼⠁",
-    "world": "⠼⠁⠸⠌⠦⠄⠴⠭⠐⠖⠽⠠⠴",
-    "jeomsarang": "⠼⠁⠀⠸⠌⠦⠄⠴⠭⠢⠽⠠⠴"
-  },
-  {
-    "input": "$\\underline{1}/(x+y)$",
-    "internal": "(x5y)/#a",
-    "expected": "554534616212601",
-    "unicode": "⠷⠭⠢⠽⠾⠌⠼⠁",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠼⠁⠸⠜⠸⠣⠭⠐⠖⠽⠐⠴⠈⠎",
     "jeomsarang": ""
   },
   {
-    "input": "1̲/(ab)",
+    "input": "$\\frac{1}{ab}$",
+    "note": "PDF 제7항 3. 묶음 괄호 — 1/ab",
     "internal": "(ab)/#a",
     "expected": "55136212601",
     "unicode": "⠷⠁⠃⠾⠌⠼⠁",
-    "world": "⠼⠁⠸⠌⠦⠄⠴⠁⠃⠠⠴",
-    "jeomsarang": "⠼⠁⠀⠸⠌⠦⠄⠴⠰⠁⠃⠠⠴"
-  },
-  {
-    "input": "$\\underline{1}/(ab)$",
-    "internal": "(ab)/#a",
-    "expected": "55136212601",
-    "unicode": "⠷⠁⠃⠾⠌⠼⠁",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠼⠁⠸⠜⠸⠣⠁⠃⠐⠴⠈⠎",
     "jeomsarang": ""
   },
   {
-    "input": "ab̲/5",
+    "input": "$\\frac{ab}{5}$",
+    "note": "PDF 제7항 3. 묶음 괄호 — ab/5",
     "internal": "#e/(ab)",
     "expected": "601712551362",
     "unicode": "⠼⠑⠌⠷⠁⠃⠾",
-    "world": "⠴⠁⠃⠸⠌⠼⠑",
-    "jeomsarang": "⠴⠰⠁⠃⠀⠘⠌⠼⠑"
-  },
-  {
-    "input": "$a\\underline{b}/5$",
-    "internal": "#e/(ab)",
-    "expected": "601712551362",
-    "unicode": "⠼⠑⠌⠷⠁⠃⠾",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠁⠃⠐⠴⠦⠂⠼⠑⠐⠴⠈⠎",
     "jeomsarang": ""
   },
   {
-    "input": "2^(3/(x+1))",
-    "note": "분수 중첩",
+    "input": "$2^{\\frac{x+1}{3}}$",
+    "note": "PDF 제7항 3. 묶음 괄호 — 2^((x+1)/3)",
     "internal": "#b^(#c/(x5#a))",
     "expected": "6032455609125545346016262",
     "unicode": "⠼⠃⠘⠷⠼⠉⠌⠷⠭⠢⠼⠁⠾⠾",
-    "world": "⠼⠃⠈⠢⠦⠄⠼⠉⠸⠌⠦⠄⠴⠭⠢⠼⠁⠠⠴⠠⠴",
-    "jeomsarang": "⠼⠃⠸⠘⠐⠣⠼⠉⠸⠌⠐⠣⠭⠢⠼⠁⠐⠜⠐⠜⠲"
+    "world": "⠴⠈⠎⠼⠃⠈⠢⠦⠂⠸⠡⠴⠋⠗⠁⠉⠸⠣⠭⠢⠼⠁⠐⠴⠦⠂⠼⠉⠐⠴⠐⠴⠈⠎",
+    "jeomsarang": ""
   }
 ]

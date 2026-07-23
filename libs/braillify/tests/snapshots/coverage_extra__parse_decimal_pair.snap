@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "1.0 + 2.5"
+unicode = ok: "⠼⠁⠲⠚⠀⠢⠀⠼⠃⠲⠑"
+bytes   = ok: [60, 1, 50, 26, 0, 34, 0, 60, 3, 50, 17]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\frac{(a+b)(c+d)}{e}$"
+unicode = ok: "⠑⠌⠷⠦⠁⠢⠃⠴⠦⠉⠢⠙⠴⠾"
+bytes   = ok: [17, 12, 55, 38, 1, 34, 3, 52, 38, 9, 34, 25, 52, 62]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "arccosy"
+unicode = ok: "⠁⠗⠉⠖⠉⠽"
+bytes   = ok: [1, 23, 9, 22, 9, 61]

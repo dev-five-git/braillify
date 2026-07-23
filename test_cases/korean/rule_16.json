@@ -41,7 +41,7 @@
   },
   {
     "input": "마음껏",
-    "internal": "e<[5,_s",
+    "internal": "e<{5,_s",
     "expected": "17354234325614",
     "unicode": "⠑⠣⠪⠢⠠⠸⠎",
     "world": "⠑⠣⠪⠢⠠⠸⠎",
@@ -49,7 +49,7 @@
   },
   {
     "input": "불을 껐다.",
-    "internal": "^&! ,@s/i4",
+    "internal": "~&!`,@s/i4",
     "expected": "244746032814121050",
     "unicode": "⠘⠯⠮⠀⠠⠈⠎⠌⠊⠲",
     "world": "⠘⠯⠮ ⠠⠈⠎⠌⠊⠲",

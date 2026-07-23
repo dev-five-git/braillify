@@ -1,0 +1,71 @@
+[
+  {
+    "input": "Wᵐ",
+    "context": "english",
+    "internal": ",w;9m",
+    "expected": "3258482013",
+    "unicode": "⠠⠺⠰⠔⠍"
+  },
+  {
+    "input": "H₂O",
+    "context": "english",
+    "internal": ",h;5#b,o",
+    "expected": "321948346033221",
+    "unicode": "⠠⠓⠰⠢⠼⠃⠠⠕"
+  },
+  {
+    "input": "3 yd³",
+    "internal": "#c yd;9#c",
+    "expected": "609061254820609",
+    "unicode": "⠼⠉⠀⠽⠙⠰⠔⠼⠉"
+  },
+  {
+    "input": "4m²",
+    "context": "english",
+    "internal": "#dm9#b",
+    "expected": "60251320603",
+    "unicode": "⠼⠙⠍⠔⠼⠃"
+  },
+  {
+    "input": "vitamin B₁₂",
+    "internal": "vitam9 ,b;5#ab",
+    "expected": "39103011320032348346013",
+    "unicode": "⠧⠊⠞⠁⠍⠔⠀⠠⠃⠰⠢⠼⠁⠃"
+  },
+  {
+    "input": "born in 1682.³",
+    "internal": "born 9 #afhb49#c",
+    "expected": "32123290200601111935020609",
+    "unicode": "⠃⠕⠗⠝⠀⠔⠀⠼⠁⠋⠓⠃⠲⠔⠼⠉"
+  },
+  {
+    "input": "born in 1982.ᶜ",
+    "internal": "born 9 #aihb49c",
+    "expected": "321232902006011019350209",
+    "unicode": "⠃⠕⠗⠝⠀⠔⠀⠼⠁⠊⠓⠃⠲⠔⠉"
+  },
+  {
+    "input": "America³ (America Cubed–name of a sailing ship)",
+    "internal": ",am]ica;9#c \"<,am]ica ,cub$,-\"n ( a sail+ %ip\">",
+    "expected": "3211359109148206090163532113591091032937343323616290550101411074404110151628",
+    "unicode": "⠠⠁⠍⠻⠊⠉⠁⠰⠔⠼⠉⠀⠐⠣⠠⠁⠍⠻⠊⠉⠁⠀⠠⠉⠥⠃⠫⠠⠤⠐⠝⠀⠷⠀⠁⠀⠎⠁⠊⠇⠬⠀⠩⠊⠏⠐⠜"
+  },
+  {
+    "input": "an earthquake measuring 6.5MW",
+    "internal": "an e>?quake m1sur+ #f4e,m5,w",
+    "expected": "1290172857313715170132143723440601150173213343258",
+    "unicode": "⠁⠝⠀⠑⠜⠹⠟⠥⠁⠅⠑⠀⠍⠂⠎⠥⠗⠬⠀⠼⠋⠲⠑⠠⠍⠢⠠⠺"
+  },
+  {
+    "input": "the clarion¹ horn",
+    "internal": "! cl>ion;9#a horn",
+    "expected": "46097281021294820601019212329",
+    "unicode": "⠮⠀⠉⠇⠜⠊⠕⠝⠰⠔⠼⠁⠀⠓⠕⠗⠝"
+  },
+  {
+    "input": "¹ clarion:  loud and clear",
+    "internal": ";9#a cl>ion3 l\\d & cle>",
+    "expected": "482060109728102129180751250470971728",
+    "unicode": "⠰⠔⠼⠁⠀⠉⠇⠜⠊⠕⠝⠒⠀⠇⠳⠙⠀⠯⠀⠉⠇⠑⠜"
+  }
+]

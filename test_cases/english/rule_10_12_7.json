@@ -1,0 +1,77 @@
+[
+  {
+    "input": "Berea",
+    "alternatives": [
+      {
+        "internal": ",2rea",
+        "expected": "32623171",
+        "unicode": "⠠⠆⠗⠑⠁"
+      },
+      {
+        "internal": ",b]ea",
+        "expected": "32359171",
+        "unicode": "⠠⠃⠻⠑⠁"
+      }
+    ]
+  },
+  {
+    "input": "Ione",
+    "alternatives": [
+      {
+        "internal": ",ione",
+        "expected": "3210212917",
+        "unicode": "⠠⠊⠕⠝⠑"
+      },
+      {
+        "internal": ",i\"o",
+        "expected": "32101621",
+        "unicode": "⠠⠊⠐⠕"
+      }
+    ]
+  },
+  {
+    "input": "Simone",
+    "alternatives": [
+      {
+        "internal": ",simone",
+        "expected": "32141013212917",
+        "unicode": "⠠⠎⠊⠍⠕⠝⠑"
+      },
+      {
+        "internal": ",sim\"o",
+        "expected": "321410131621",
+        "unicode": "⠠⠎⠊⠍⠐⠕"
+      }
+    ]
+  },
+  {
+    "input": "Townshend",
+    "alternatives": [
+      {
+        "internal": ",t[nsh5d",
+        "expected": "3230422914193425",
+        "unicode": "⠠⠞⠪⠝⠎⠓⠢⠙"
+      },
+      {
+        "internal": ",t[n%5d",
+        "expected": "32304229413425",
+        "unicode": "⠠⠞⠪⠝⠩⠢⠙"
+      }
+    ]
+  },
+  {
+    "input": "Twillingate",
+    "alternatives": [
+      {
+        "internal": ",twill9gate",
+        "expected": "3230581077202713017",
+        "unicode": "⠠⠞⠺⠊⠇⠇⠔⠛⠁⠞⠑"
+      },
+      {
+        "internal": ",twill+ate",
+        "expected": "32305810774413017",
+        "unicode": "⠠⠞⠺⠊⠇⠇⠬⠁⠞⠑"
+      }
+    ]
+  }
+]

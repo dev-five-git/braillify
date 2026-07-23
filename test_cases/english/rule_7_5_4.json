@@ -1,0 +1,29 @@
+[
+  {
+    "input": "?-1750",
+    "context": "english",
+    "internal": ";8-#agej",
+    "expected": "483836601271726",
+    "unicode": "⠰⠦⠤⠼⠁⠛⠑⠚"
+  },
+  {
+    "input": "(?—1750)",
+    "context": "english",
+    "internal": "\"<;8,-#agej\">",
+    "expected": "1635483832366012717261628",
+    "unicode": "⠐⠣⠰⠦⠠⠤⠼⠁⠛⠑⠚⠐⠜"
+  },
+  {
+    "input": "10:30-?",
+    "context": "english",
+    "internal": "#aj3#cj-;8",
+    "expected": "601261860926364838",
+    "unicode": "⠼⠁⠚⠒⠼⠉⠚⠤⠰⠦"
+  },
+  {
+    "input": "Replace each ? with a letter: ?e??u",
+    "internal": ",replace ea* ;8 ) a lr3 ;8e88u",
+    "expected": "322317157191701713304838062010723180483817383837",
+    "unicode": "⠠⠗⠑⠏⠇⠁⠉⠑⠀⠑⠁⠡⠀⠰⠦⠀⠾⠀⠁⠀⠇⠗⠒⠀⠰⠦⠑⠦⠦⠥"
+  }
+]

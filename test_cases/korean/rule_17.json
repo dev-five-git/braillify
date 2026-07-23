@@ -1,7 +1,7 @@
 [
   {
     "input": "성가",
-    "internal": ",]$",
+    "internal": ",}$",
     "expected": "325943",
     "unicode": "⠠⠻⠫",
     "world": "⠠⠻⠫",
@@ -17,7 +17,7 @@
   },
   {
     "input": "정성",
-    "internal": ".],]",
+    "internal": ".},}",
     "expected": "40593259",
     "unicode": "⠨⠻⠠⠻",
     "world": "⠨⠻⠠⠻",
@@ -25,7 +25,7 @@
   },
   {
     "input": "어정쩡",
-    "internal": "s.],.]",
+    "internal": "s.},.}",
     "expected": "144059324059",
     "unicode": "⠎⠨⠻⠠⠨⠻",
     "world": "⠎⠨⠻⠠⠨⠻",
@@ -33,7 +33,7 @@
   },
   {
     "input": "청년",
-    "internal": ";]c*",
+    "internal": ";}c*",
     "expected": "4859933",
     "unicode": "⠰⠻⠉⠡",
     "world": "⠰⠻⠉⠡",

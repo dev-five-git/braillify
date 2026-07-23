@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "X\u{305} = 0"
+unicode = ok: "⠭⠈⠉⠀⠒⠒⠀⠼⠚"
+bytes   = ok: [45, 8, 9, 0, 18, 18, 0, 60, 26]

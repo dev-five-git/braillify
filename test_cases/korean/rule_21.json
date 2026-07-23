@@ -1,5 +1,32 @@
 [
   {
+    "input": "ㅥ",
+    "note": "쌍니은 — PDF 제21항 각자 병서로 만들어진 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + ⠉⠉.",
+    "internal": "=\"cc",
+    "expected": "631699",
+    "unicode": "⠿⠐⠉⠉",
+    "world": "",
+    "jeomsarang": "⠐⠉⠉"
+  },
+  {
+    "input": "ㆀ",
+    "note": "쌍이응 — PDF 제21항 각자 병서로 만들어진 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + ⠛⠛.",
+    "internal": "=\"gg",
+    "expected": "63162727",
+    "unicode": "⠿⠐⠛⠛",
+    "world": "",
+    "jeomsarang": "⠐⠛⠛"
+  },
+  {
+    "input": "ㆅ",
+    "note": "쌍히읗 — PDF 제21항 각자 병서로 만들어진 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + ⠚⠚.",
+    "internal": "=\"jj",
+    "expected": "63162626",
+    "unicode": "⠿⠐⠚⠚",
+    "world": "",
+    "jeomsarang": "⠐⠚⠚"
+  },
+  {
     "input": "다니라",
     "note": "닿는다",
     "internal": "i\"cc\"#co\"<",

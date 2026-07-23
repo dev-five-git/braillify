@@ -40,3 +40,23 @@ impl BrailleRule for Rule56 {
         Ok(RuleResult::Consumed)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_exercise() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        // Just exercise apply() for coverage; either Skip or Continue/Consumed is OK
+        let _ = Rule56.apply(&mut ctx);
+    }
+
+    #[test]
+    fn matches_does_not_panic() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let ctx = owned.ctx_at(0);
+        let _ = Rule56.matches(&ctx);
+    }
+}

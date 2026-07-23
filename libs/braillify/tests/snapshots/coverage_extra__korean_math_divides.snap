@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "조건 x|y 정의"
+unicode = ok: "⠨⠥⠈⠾⠀⠀⠭⠳⠽⠀⠀⠨⠻⠺"
+bytes   = ok: [40, 37, 8, 62, 0, 0, 45, 51, 61, 0, 0, 40, 59, 58]

@@ -24,6 +24,23 @@ pub fn encode_partial_derivative(c: char, result: &mut Vec<u8>) -> Result<(), St
     Ok(())
 }
 
+/// Single-line helpers for `matches!()` checks — extracted so tarpaulin attributes
+/// each call's coverage to a single line. The multi-line `matches!()` form
+/// suffered from line-attribution artifacts.
+fn is_partial_symbol(tok: Option<&MathToken>) -> bool {
+    matches!(tok, Some(MathToken::MathSymbol('\u{2202}')))
+}
+
+fn is_variable_or_upper(tok: Option<&MathToken>) -> bool {
+    #[rustfmt::skip]
+    let r = matches!(tok, Some(MathToken::Variable(_) | MathToken::UpperVariable(_)));
+    r
+}
+
+fn is_slash_operator(tok: Option<&MathToken>) -> bool {
+    matches!(tok, Some(MathToken::Operator('/')))
+}
+
 pub struct PartialDerivativeFractionRule;
 
 impl MathTokenRule for PartialDerivativeFractionRule {
@@ -49,20 +66,11 @@ impl MathTokenRule for PartialDerivativeFractionRule {
             return false;
         };
 
-        matches!(tokens.get(index), Some(MathToken::MathSymbol('\u{2202}')))
-            && matches!(
-                tokens.get(numerator_index),
-                Some(MathToken::Variable(_) | MathToken::UpperVariable(_))
-            )
-            && matches!(tokens.get(slash_index), Some(MathToken::Operator('/')))
-            && matches!(
-                tokens.get(second_partial_index),
-                Some(MathToken::MathSymbol('\u{2202}'))
-            )
-            && matches!(
-                tokens.get(denominator_index),
-                Some(MathToken::Variable(_) | MathToken::UpperVariable(_))
-            )
+        is_partial_symbol(tokens.get(index))
+            && is_variable_or_upper(tokens.get(numerator_index))
+            && is_slash_operator(tokens.get(slash_index))
+            && is_partial_symbol(tokens.get(second_partial_index))
+            && is_variable_or_upper(tokens.get(denominator_index))
     }
 
     fn apply(
@@ -120,5 +128,12 @@ mod tests {
             encode_math_expression("∂z / ∂x").unwrap(),
             vec![43, 45, 12, 43, 53]
         );
+    }
+
+    #[test]
+    fn next_non_space_returns_current_index_when_token_present() {
+        let tokens = [MathToken::Variable('x')];
+
+        assert_eq!(next_non_space(&tokens, 0), Some(0));
     }
 }

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\overset{a}{bc}$"
+unicode = ok: "⠃⠉"
+bytes   = ok: [3, 9]

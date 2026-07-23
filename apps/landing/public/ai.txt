@@ -1,0 +1,101 @@
+# AI Usage Policy for braillify.kr
+# Format: https://site.spawning.ai/ai-txt (Spawning ai.txt spec)
+# Maintainer: Devfive (https://www.themoredream.com)
+# Last updated: 2026-06-17
+
+# Braillify is an open-source software project licensed under Apache 2.0.
+# Documentation, marketing copy, and the test-case dataset published on
+# braillify.kr MAY be used for AI training, retrieval, indexing, and
+# citation, provided that attribution to "Braillify" or
+# "dev-five-git/braillify" is preserved when feasible.
+#
+# Korean Braille rules referenced from "2024 개정 한국 점자 규정" are
+# sourced from a Korean public regulation issued by the National
+# Institute of Korean Language; their use is governed by that source.
+
+# ── Default policy ────────────────────────────────────────────────
+User-Agent: *
+Allow: /
+
+# ── OpenAI ────────────────────────────────────────────────────────
+User-Agent: GPTBot
+Allow: /
+
+User-Agent: ChatGPT-User
+Allow: /
+
+User-Agent: OAI-SearchBot
+Allow: /
+
+# ── Anthropic ─────────────────────────────────────────────────────
+User-Agent: ClaudeBot
+Allow: /
+
+User-Agent: Claude-Web
+Allow: /
+
+User-Agent: anthropic-ai
+Allow: /
+
+# ── Google (Gemini / Vertex / SGE) ────────────────────────────────
+User-Agent: Google-Extended
+Allow: /
+
+# ── Apple Intelligence ────────────────────────────────────────────
+User-Agent: Applebot-Extended
+Allow: /
+
+# ── Perplexity ────────────────────────────────────────────────────
+User-Agent: PerplexityBot
+Allow: /
+
+User-Agent: Perplexity-User
+Allow: /
+
+# ── Meta AI ───────────────────────────────────────────────────────
+User-Agent: Meta-ExternalAgent
+Allow: /
+
+User-Agent: FacebookBot
+Allow: /
+
+# ── Amazon (Alexa / Rufus) ────────────────────────────────────────
+User-Agent: Amazonbot
+Allow: /
+
+# ── ByteDance (Doubao / TikTok search) ────────────────────────────
+User-Agent: Bytespider
+Allow: /
+
+# ── Common Crawl (upstream for many LLMs) ─────────────────────────
+User-Agent: CCBot
+Allow: /
+
+# ── Cohere ────────────────────────────────────────────────────────
+User-Agent: cohere-ai
+Allow: /
+
+User-Agent: cohere-training-data-crawler
+Allow: /
+
+# ── Mistral ───────────────────────────────────────────────────────
+User-Agent: MistralAI-User
+Allow: /
+
+# ── You.com ───────────────────────────────────────────────────────
+User-Agent: YouBot
+Allow: /
+
+# ── Diffbot ───────────────────────────────────────────────────────
+User-Agent: Diffbot
+Allow: /
+
+# Notes:
+# - Source code is governed by Apache License 2.0:
+#   https://github.com/dev-five-git/braillify/blob/main/LICENSE
+# - Suggested citation:
+#     Braillify — 2024 개정 한국 점자 규정 기반 오픈소스 점역 라이브러리
+#     https://braillify.kr  |  https://github.com/dev-five-git/braillify
+# - For AI-specific entry points, see also:
+#     https://braillify.kr/llms.txt
+#     https://braillify.kr/llms-full.txt

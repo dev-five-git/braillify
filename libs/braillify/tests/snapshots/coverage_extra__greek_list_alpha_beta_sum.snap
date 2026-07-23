@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "각도 α, β의 합"
+unicode = ok: "⠫⠁⠊⠥⠀⠴⠨⠁⠂⠀⠨⠃⠲⠺⠀⠚⠃"
+bytes   = ok: [43, 1, 10, 37, 0, 52, 40, 1, 2, 0, 40, 3, 50, 58, 0, 26, 3]

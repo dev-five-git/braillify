@@ -74,11 +74,50 @@ impl BrailleRule for Rule26 {
             return Ok(RuleResult::Consumed);
         }
 
-        let Some(encoded) = encode_legacy(c) else {
-            return Ok(RuleResult::Skip);
-        };
-
+        // `matches()` requires `encode_legacy(c).is_some()` OR
+        // `is_standalone_i_after_hanja`. The latter is already handled at line 72.
+        // So reaching here implies `encode_legacy(c)` returns Some.
+        let encoded = encode_legacy(c).expect(
+            "matches() guarantees encode_legacy returns Some when standalone-i path didn't fire",
+        );
         ctx.emit_slice(&encoded);
         Ok(RuleResult::Consumed)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule26.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
+    }
+
+    /// 제26항 — 한자(火) 뒤에 단독 모음 ㅣ가 나오면 `⠸⠕` 점역. Triggers the
+    /// `is_standalone_i_after_hanja` branch (line 72-75).
+    #[test]
+    fn apply_standalone_i_after_hanja() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("火ㅣ", false);
+        let mut ctx = owned.ctx_at(1);
+        assert!(Rule26.matches(&ctx));
+        let outcome = Rule26.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(!owned.result.is_empty());
+    }
+
+    /// 제26항 — Symbol entry in MAPPINGS (烽) emits the legacy mapping
+    /// (line 77-82).
+    #[test]
+    fn apply_emits_for_legacy_symbol_in_mappings() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("烽", false);
+        let mut ctx = owned.ctx_at(0);
+        assert!(Rule26.matches(&ctx));
+        let outcome = Rule26.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(!owned.result.is_empty());
     }
 }

@@ -1,7 +1,8 @@
 [package]
 name = "braillify"
-version = "2.0.0"
-edition = "2024"
+version = "2.1.0"
+edition.workspace = true
+rust-version.workspace = true
 authors = ["JeongMin Oh <owjs39@gmail.com>"]
 description = "Rust 기반 크로스플랫폼 한국어 점역 라이브러리"
 license = "Apache-2.0"
@@ -13,30 +14,54 @@ readme = "../../README.md"
 homepage = "https://braillify.kr"
 
 [dependencies]
-phf = { version = "0.13", features = ["macros"] }
-clap = { version = "4", features = ["derive"], optional = true }
-anyhow = { version = "1", optional = true }
-rustyline = { version = "18", optional = true }
-regex = "1"
-once_cell = "1"
+phf = { version = "0.14.0", features = ["macros"] }
+clap = { version = "4.6.1", features = ["derive"], optional = true }
+anyhow = { version = "1.0.103", optional = true }
+rustyline = { version = "18.0.1", optional = true }
+regex = "1.13.0"
+once_cell = "1.21.4"
 unicode-normalization = "0.1.25"
+dhat = { version = "0.3.3", optional = true }
+# Knuth-Liang hyphenation (public-domain en-US TeX patterns) for §10.11 compound
+# boundary detection. UEB Grade-2 is base behaviour, so this is always compiled in.
+hyphenation = { version = "0.8.4", features = ["embed_en-us"] }
 
 [dev-dependencies]
-serde_json = "^1"
-proptest = "1.11"
-assert_cmd = "2"
-predicates = "3"
+serde_json = "1.0.150"
+proptest = "1.11.0"
+assert_cmd = "2.2.2"
+predicates = "3.1.4"
 escargot = "0.5.15"
+criterion = { version = "0.8.2", features = ["html_reports"] }
+rstest = "0.26"
+insta = "1.48"
 
 [target.'cfg(windows)'.build-dependencies]
-embed-manifest = "1.5"
+embed-manifest = "1.5.0"
 
 [features]
+# UEB Grade-2 English is base behaviour, always compiled in: the CMU Pronouncing
+# Dictionary (Simplified BSD) and Knuth-Liang en-US hyphenation patterns are
+# unconditional dependencies (resolving §10.6/§10.7/§10.11 contractions that are
+# undecidable from spelling alone: become/beckon, oceanic/react, carthorse/panther).
 default = ["cli"]
 cli = ["clap", "anyhow", "rustyline"]
 wasm = []
+dhat-heap = ["dep:dhat"]
 
 [[bin]]
 name = "braillify"
 path = "src/main.rs"
 required-features = ["cli"]
+
+[[bench]]
+name = "encode_native"
+harness = false
+
+[[bench]]
+name = "encode_math"
+harness = false
+
+[[bench]]
+name = "memory_dhat"
+harness = false

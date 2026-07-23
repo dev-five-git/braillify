@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\begin{bmatrix} -1 & 0 \\\\ 0 & -1 \\end{bmatrix}$"
+unicode = ok: "⠦⠔⠼⠁⠀⠼⠚⠀⠜⠀⠼⠚⠀⠔⠼⠁⠴"
+bytes   = ok: [38, 20, 60, 1, 0, 60, 26, 0, 28, 0, 60, 26, 0, 20, 60, 1, 52]

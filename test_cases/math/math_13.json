@@ -1,7 +1,7 @@
 [
   {
     "input": "Α",
-    "note": "대문자 Alpha",
+    "note": "PDF 제13항 — 대문자 Alpha",
     "internal": ",.a",
     "expected": "32401",
     "unicode": "⠠⠨⠁",
@@ -9,376 +9,17 @@
     "jeomsarang": "⠠⠨⠁⠲"
   },
   {
-    "input": "Β",
-    "note": "대문자 Beta",
-    "internal": ",.b",
-    "expected": "32403",
-    "unicode": "⠠⠨⠃",
-    "world": "⠴⠠⠨⠃⠲",
-    "jeomsarang": "⠠⠨⠃⠲"
-  },
-  {
-    "input": "Γ",
-    "note": "대문자 Gamma",
-    "internal": ",.g",
-    "expected": "324027",
-    "unicode": "⠠⠨⠛",
-    "world": "⠴⠠⠨⠛⠲",
-    "jeomsarang": "⠠⠨⠛⠲"
-  },
-  {
-    "input": "γ",
-    "note": "소문자 gamma",
-    "internal": ".g",
-    "expected": "4027",
-    "unicode": "⠨⠛",
-    "world": "⠴⠨⠛⠲",
-    "jeomsarang": "⠨⠛⠲"
-  },
-  {
-    "input": "Δ",
-    "note": "대문자 Delta",
-    "internal": ",.d",
-    "expected": "324025",
-    "unicode": "⠠⠨⠙",
-    "world": "⠴⠠⠨⠙⠲",
-    "jeomsarang": "⠠⠨⠙⠲"
-  },
-  {
-    "input": "δ",
-    "note": "소문자 delta",
-    "internal": ".d",
-    "expected": "4025",
-    "unicode": "⠨⠙",
-    "world": "⠴⠨⠙⠲",
-    "jeomsarang": "⠨⠙⠲"
-  },
-  {
-    "input": "Ε",
-    "note": "대문자 Epsilon",
-    "internal": ",.e",
-    "expected": "324017",
-    "unicode": "⠠⠨⠑",
-    "world": "⠴⠠⠨⠑⠲",
-    "jeomsarang": "⠠⠨⠑⠲"
-  },
-  {
-    "input": "ε",
-    "note": "소문자 epsilon",
-    "internal": ".e",
-    "expected": "4017",
-    "unicode": "⠨⠑",
-    "world": "⠴⠨⠑⠲",
-    "jeomsarang": "⠨⠑⠲"
-  },
-  {
-    "input": "Ζ",
-    "note": "대문자 Zeta",
-    "internal": ",.z",
-    "expected": "324053",
-    "unicode": "⠠⠨⠵",
-    "world": "⠴⠠⠨⠵⠲",
-    "jeomsarang": "⠠⠨⠵⠲"
-  },
-  {
-    "input": "ζ",
-    "note": "소문자 zeta",
-    "internal": ".z",
-    "expected": "4053",
-    "unicode": "⠨⠵",
-    "world": "⠴⠨⠵⠲",
-    "jeomsarang": "⠨⠵⠲"
-  },
-  {
-    "input": "Η",
-    "note": "대문자 Eta",
-    "internal": ".:",
-    "expected": "4049",
-    "unicode": "⠨⠱",
-    "world": "⠴⠠⠨⠱⠲",
-    "jeomsarang": "⠠⠨⠱⠲"
-  },
-  {
-    "input": "η",
-    "note": "소문자 eta",
-    "internal": ".:",
-    "expected": "4049",
-    "unicode": "⠨⠱",
-    "world": "⠴⠨⠱⠲",
-    "jeomsarang": "⠨⠱⠲"
-  },
-  {
-    "input": "Θ",
-    "note": "대문자 Theta",
-    "internal": ",.?",
-    "expected": "324057",
-    "unicode": "⠠⠨⠹",
-    "world": "⠴⠠⠨⠹⠲",
-    "jeomsarang": "⠠⠨⠹⠲"
-  },
-  {
-    "input": "Ι",
-    "note": "대문자 Iota",
-    "internal": ",.i",
-    "expected": "324010",
-    "unicode": "⠠⠨⠊",
-    "world": "⠴⠠⠨⠊⠲",
-    "jeomsarang": "⠠⠨⠊⠲"
-  },
-  {
-    "input": "ι",
-    "note": "소문자 iota",
-    "internal": ".i",
-    "expected": "4010",
-    "unicode": "⠨⠊",
-    "world": "⠴⠨⠊⠲",
-    "jeomsarang": "⠨⠊⠲"
-  },
-  {
-    "input": "Κ",
-    "note": "대문자 Kappa",
-    "internal": ",.k",
-    "expected": "32405",
-    "unicode": "⠠⠨⠅",
-    "world": "⠴⠠⠨⠅⠲",
-    "jeomsarang": "⠠⠨⠅⠲"
-  },
-  {
-    "input": "κ",
-    "note": "소문자 kappa",
-    "internal": ".k",
-    "expected": "405",
-    "unicode": "⠨⠅",
-    "world": "⠴⠨⠅⠲",
-    "jeomsarang": "⠨⠅⠲"
-  },
-  {
-    "input": "Λ",
-    "note": "대문자 Lambda",
-    "internal": ",.l",
-    "expected": "32407",
-    "unicode": "⠠⠨⠇",
-    "world": "⠴⠠⠨⠇⠲",
-    "jeomsarang": "⠠⠨⠇⠲"
-  },
-  {
-    "input": "λ",
-    "note": "소문자 lambda",
-    "internal": ".l",
-    "expected": "407",
-    "unicode": "⠨⠇",
-    "world": "⠴⠨⠇⠲",
-    "jeomsarang": "⠨⠇⠲"
-  },
-  {
-    "input": "Μ",
-    "note": "대문자 Mu",
-    "internal": ",.m",
-    "expected": "324013",
-    "unicode": "⠠⠨⠍",
-    "world": "⠴⠠⠨⠍⠲",
-    "jeomsarang": "⠠⠨⠍⠲"
-  },
-  {
-    "input": "μ",
-    "note": "소문자 mu",
-    "internal": ".m",
-    "expected": "4013",
-    "unicode": "⠨⠍",
-    "world": "⠴⠨⠍⠲",
-    "jeomsarang": "⠨⠍⠲"
-  },
-  {
-    "input": "Ν",
-    "note": "대문자 Nu",
-    "internal": ",.n",
-    "expected": "324029",
-    "unicode": "⠠⠨⠝",
-    "world": "⠴⠠⠨⠝⠲",
-    "jeomsarang": "⠠⠨⠝⠲"
-  },
-  {
-    "input": "ν",
-    "note": "소문자 nu",
-    "internal": ".n",
-    "expected": "4029",
-    "unicode": "⠨⠝",
-    "world": "⠴⠨⠝⠲",
-    "jeomsarang": "⠨⠝⠲"
-  },
-  {
-    "input": "Ξ",
-    "note": "대문자 Xi",
-    "internal": ",.x",
-    "expected": "324045",
-    "unicode": "⠠⠨⠭",
-    "world": "⠴⠠⠨⠭⠲",
-    "jeomsarang": "⠠⠨⠭⠲"
-  },
-  {
-    "input": "ξ",
-    "note": "소문자 xi",
-    "internal": ".x",
-    "expected": "4045",
-    "unicode": "⠨⠭",
-    "world": "⠴⠨⠭⠲",
-    "jeomsarang": "⠨⠭⠲"
-  },
-  {
-    "input": "Ο",
-    "note": "대문자 Omicron",
-    "internal": ",.o",
-    "expected": "324021",
-    "unicode": "⠠⠨⠕",
-    "world": "⠴⠠⠨⠕⠲",
-    "jeomsarang": "⠠⠨⠕⠲"
-  },
-  {
-    "input": "ο",
-    "note": "소문자 omicron",
-    "internal": ".o",
-    "expected": "4021",
-    "unicode": "⠨⠕",
-    "world": "⠴⠨⠕⠲",
-    "jeomsarang": "⠨⠕⠲"
-  },
-  {
-    "input": "Π",
-    "note": "대문자 Pi",
-    "internal": ",.p",
-    "expected": "324015",
-    "unicode": "⠠⠨⠏",
-    "world": "⠴⠠⠨⠏⠲",
-    "jeomsarang": "⠠⠨⠏⠲"
-  },
-  {
-    "input": "Ρ",
-    "note": "대문자 Rho",
-    "internal": ",.r",
-    "expected": "324023",
-    "unicode": "⠠⠨⠗",
-    "world": "⠴⠠⠨⠗⠲",
-    "jeomsarang": "⠠⠨⠗⠲"
-  },
-  {
-    "input": "ρ",
-    "note": "소문자 rho",
-    "internal": ".r",
-    "expected": "4023",
-    "unicode": "⠨⠗",
-    "world": "⠴⠨⠗⠲",
-    "jeomsarang": "⠨⠗⠲"
-  },
-  {
-    "input": "Σ",
-    "note": "대문자 Sigma",
-    "internal": ",.s",
-    "expected": "324014",
-    "unicode": "⠠⠨⠎",
-    "world": "⠴⠠⠨⠎⠲",
-    "jeomsarang": "⠠⠨⠎⠲"
-  },
-  {
-    "input": "Τ",
-    "note": "대문자 Tau",
-    "internal": ",.t",
-    "expected": "324030",
-    "unicode": "⠠⠨⠞",
-    "world": "⠴⠠⠨⠞⠲",
-    "jeomsarang": "⠠⠨⠞⠲"
-  },
-  {
-    "input": "τ",
-    "note": "소문자 tau",
-    "internal": ".t",
-    "expected": "4030",
-    "unicode": "⠨⠞",
-    "world": "⠴⠨⠞⠲",
-    "jeomsarang": "⠨⠞⠲"
-  },
-  {
-    "input": "Υ",
-    "note": "대문자 Upsilon",
-    "internal": ",.u",
-    "expected": "324037",
-    "unicode": "⠠⠨⠥",
-    "world": "⠴⠠⠨⠥⠲",
-    "jeomsarang": "⠠⠨⠥⠲"
-  },
-  {
-    "input": "υ",
-    "note": "소문자 upsilon",
-    "internal": ".u",
-    "expected": "4037",
-    "unicode": "⠨⠥",
-    "world": "⠴⠨⠥⠲",
-    "jeomsarang": "⠨⠥⠲"
-  },
-  {
-    "input": "Φ",
-    "note": "대문자 Phi",
-    "internal": ",.f",
-    "expected": "324011",
-    "unicode": "⠠⠨⠋",
-    "world": "⠴⠠⠨⠋⠲",
-    "jeomsarang": "⠠⠨⠋⠲"
-  },
-  {
-    "input": "φ",
-    "note": "소문자 phi",
-    "internal": ".f",
-    "expected": "4011",
-    "unicode": "⠨⠋",
-    "world": "⠴⠨⠋⠲",
-    "jeomsarang": "⠨⠋⠲"
-  },
-  {
-    "input": "Χ",
-    "note": "대문자 Chi",
-    "internal": ",.&",
-    "expected": "324047",
-    "unicode": "⠠⠨⠯",
-    "world": "⠴⠠⠨⠯⠲",
-    "jeomsarang": "⠠⠨⠯⠲"
-  },
-  {
-    "input": "χ",
-    "note": "소문자 chi",
-    "internal": ".&",
-    "expected": "4047",
-    "unicode": "⠨⠯",
-    "world": "⠴⠨⠯⠲",
-    "jeomsarang": "⠨⠯⠲"
-  },
-  {
-    "input": "Ψ",
-    "note": "대문자 Psi",
-    "internal": ",.y",
-    "expected": "324061",
-    "unicode": "⠠⠨⠽",
-    "world": "⠴⠠⠨⠽⠲",
-    "jeomsarang": "⠠⠨⠽⠲"
-  },
-  {
-    "input": "ψ",
-    "note": "소문자 psi",
-    "internal": ".y",
-    "expected": "4061",
-    "unicode": "⠨⠽",
-    "world": "⠴⠨⠽⠲",
-    "jeomsarang": "⠨⠽⠲"
-  },
-  {
-    "input": "Ω",
-    "note": "대문자 Omega",
-    "internal": ",.w",
-    "expected": "324058",
-    "unicode": "⠠⠨⠺",
-    "world": "⠴⠠⠨⠺⠲",
-    "jeomsarang": "⠠⠨⠺⠲"
+    "input": "$Α$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.a",
+    "expected": "32401",
+    "unicode": "⠠⠨⠁",
+    "world": "⠴⠈⠎⠴⠠⠨⠁⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠁⠈⠎"
   },
   {
     "input": "α",
+    "note": "PDF 제13항 — 소문자 alpha",
     "internal": ".a",
     "expected": "401",
     "unicode": "⠨⠁",
@@ -386,7 +27,35 @@
     "jeomsarang": "⠨⠁⠲"
   },
   {
+    "input": "$\\alpha$",
+    "note": "LaTeX",
+    "internal": ".a",
+    "expected": "401",
+    "unicode": "⠨⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Β",
+    "note": "PDF 제13항 — 대문자 Beta",
+    "internal": ",.b",
+    "expected": "32403",
+    "unicode": "⠠⠨⠃",
+    "world": "⠴⠠⠨⠃⠲",
+    "jeomsarang": "⠠⠨⠃⠲"
+  },
+  {
+    "input": "$Β$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.b",
+    "expected": "32403",
+    "unicode": "⠠⠨⠃",
+    "world": "⠴⠈⠎⠴⠠⠨⠃⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠃⠈⠎"
+  },
+  {
     "input": "β",
+    "note": "PDF 제13항 — 소문자 beta",
     "internal": ".b",
     "expected": "403",
     "unicode": "⠨⠃",
@@ -394,15 +63,215 @@
     "jeomsarang": "⠨⠃⠲"
   },
   {
-    "input": "π",
-    "internal": ".p",
-    "expected": "4015",
-    "unicode": "⠨⠏",
-    "world": "⠴⠨⠏⠲",
-    "jeomsarang": "⠨⠏⠲"
+    "input": "$\\beta$",
+    "note": "LaTeX",
+    "internal": ".b",
+    "expected": "403",
+    "unicode": "⠨⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Γ",
+    "note": "PDF 제13항 — 대문자 Gamma",
+    "internal": ",.g",
+    "expected": "324027",
+    "unicode": "⠠⠨⠛",
+    "world": "⠴⠠⠨⠛⠲",
+    "jeomsarang": "⠠⠨⠛⠲"
+  },
+  {
+    "input": "$\\Gamma$",
+    "note": "LaTeX",
+    "internal": ",.g",
+    "expected": "324027",
+    "unicode": "⠠⠨⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "γ",
+    "note": "PDF 제13항 — 소문자 gamma",
+    "internal": ".g",
+    "expected": "4027",
+    "unicode": "⠨⠛",
+    "world": "⠴⠨⠛⠲",
+    "jeomsarang": "⠨⠛⠲"
+  },
+  {
+    "input": "$\\gamma$",
+    "note": "LaTeX",
+    "internal": ".g",
+    "expected": "4027",
+    "unicode": "⠨⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Δ",
+    "note": "PDF 제13항 — 대문자 Delta",
+    "internal": ",.d",
+    "expected": "324025",
+    "unicode": "⠠⠨⠙",
+    "world": "⠴⠠⠨⠙⠲",
+    "jeomsarang": "⠠⠨⠙⠲"
+  },
+  {
+    "input": "$\\Delta$",
+    "note": "LaTeX",
+    "internal": ",.d",
+    "expected": "324025",
+    "unicode": "⠠⠨⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "δ",
+    "note": "PDF 제13항 — 소문자 delta",
+    "internal": ".d",
+    "expected": "4025",
+    "unicode": "⠨⠙",
+    "world": "⠴⠨⠙⠲",
+    "jeomsarang": "⠨⠙⠲"
+  },
+  {
+    "input": "$\\delta$",
+    "note": "LaTeX",
+    "internal": ".d",
+    "expected": "4025",
+    "unicode": "⠨⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ε",
+    "note": "PDF 제13항 — 대문자 Epsilon",
+    "internal": ",.e",
+    "expected": "324017",
+    "unicode": "⠠⠨⠑",
+    "world": "⠴⠠⠨⠑⠲",
+    "jeomsarang": "⠠⠨⠑⠲"
+  },
+  {
+    "input": "$Ε$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.e",
+    "expected": "324017",
+    "unicode": "⠠⠨⠑",
+    "world": "⠴⠈⠎⠴⠠⠨⠑⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠑⠈⠎"
+  },
+  {
+    "input": "ε",
+    "note": "PDF 제13항 — 소문자 epsilon",
+    "internal": ".e",
+    "expected": "4017",
+    "unicode": "⠨⠑",
+    "world": "⠴⠨⠑⠲",
+    "jeomsarang": "⠨⠑⠲"
+  },
+  {
+    "input": "$\\epsilon$",
+    "note": "LaTeX",
+    "internal": ".e",
+    "expected": "4017",
+    "unicode": "⠨⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ζ",
+    "note": "PDF 제13항 — 대문자 Zeta",
+    "internal": ",.z",
+    "expected": "324053",
+    "unicode": "⠠⠨⠵",
+    "world": "⠴⠠⠨⠵⠲",
+    "jeomsarang": "⠠⠨⠵⠲"
+  },
+  {
+    "input": "$Ζ$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.z",
+    "expected": "324053",
+    "unicode": "⠠⠨⠵",
+    "world": "⠴⠈⠎⠴⠠⠨⠵⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠵⠈⠎"
+  },
+  {
+    "input": "ζ",
+    "note": "PDF 제13항 — 소문자 zeta",
+    "internal": ".z",
+    "expected": "4053",
+    "unicode": "⠨⠵",
+    "world": "⠴⠨⠵⠲",
+    "jeomsarang": "⠨⠵⠲"
+  },
+  {
+    "input": "$\\zeta$",
+    "note": "LaTeX",
+    "internal": ".z",
+    "expected": "4053",
+    "unicode": "⠨⠵",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Η",
+    "note": "PDF 제13항 — 대문자 Eta",
+    "internal": ",.:",
+    "expected": "324049",
+    "unicode": "⠠⠨⠱",
+    "world": "⠴⠠⠨⠱⠲",
+    "jeomsarang": "⠠⠨⠱⠲"
+  },
+  {
+    "input": "$Η$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.:",
+    "expected": "324049",
+    "unicode": "⠠⠨⠱",
+    "world": "⠴⠈⠎⠴⠠⠨⠱⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠱⠈⠎"
+  },
+  {
+    "input": "η",
+    "note": "PDF 제13항 — 소문자 eta",
+    "internal": ".:",
+    "expected": "4049",
+    "unicode": "⠨⠱",
+    "world": "⠴⠨⠱⠲",
+    "jeomsarang": "⠨⠱⠲"
+  },
+  {
+    "input": "$\\eta$",
+    "note": "LaTeX",
+    "internal": ".:",
+    "expected": "4049",
+    "unicode": "⠨⠱",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Θ",
+    "note": "PDF 제13항 — 대문자 Theta",
+    "internal": ",.?",
+    "expected": "324057",
+    "unicode": "⠠⠨⠹",
+    "world": "⠴⠠⠨⠹⠲",
+    "jeomsarang": "⠠⠨⠹⠲"
+  },
+  {
+    "input": "$\\Theta$",
+    "note": "LaTeX",
+    "internal": ",.?",
+    "expected": "324057",
+    "unicode": "⠠⠨⠹",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "θ",
+    "note": "PDF 제13항 — 소문자 theta",
     "internal": ".?",
     "expected": "4057",
     "unicode": "⠨⠹",
@@ -410,7 +279,359 @@
     "jeomsarang": "⠨⠹⠲"
   },
   {
+    "input": "$\\theta$",
+    "note": "LaTeX",
+    "internal": ".?",
+    "expected": "4057",
+    "unicode": "⠨⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ι",
+    "note": "PDF 제13항 — 대문자 Iota",
+    "internal": ",.i",
+    "expected": "324010",
+    "unicode": "⠠⠨⠊",
+    "world": "⠴⠠⠨⠊⠲",
+    "jeomsarang": "⠠⠨⠊⠲"
+  },
+  {
+    "input": "$Ι$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.i",
+    "expected": "324010",
+    "unicode": "⠠⠨⠊",
+    "world": "⠴⠈⠎⠴⠠⠨⠊⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠊⠈⠎"
+  },
+  {
+    "input": "ι",
+    "note": "PDF 제13항 — 소문자 iota",
+    "internal": ".i",
+    "expected": "4010",
+    "unicode": "⠨⠊",
+    "world": "⠴⠨⠊⠲",
+    "jeomsarang": "⠨⠊⠲"
+  },
+  {
+    "input": "$\\iota$",
+    "note": "LaTeX",
+    "internal": ".i",
+    "expected": "4010",
+    "unicode": "⠨⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Κ",
+    "note": "PDF 제13항 — 대문자 Kappa",
+    "internal": ",.k",
+    "expected": "32405",
+    "unicode": "⠠⠨⠅",
+    "world": "⠴⠠⠨⠅⠲",
+    "jeomsarang": "⠠⠨⠅⠲"
+  },
+  {
+    "input": "$Κ$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.k",
+    "expected": "32405",
+    "unicode": "⠠⠨⠅",
+    "world": "⠴⠈⠎⠴⠠⠨⠅⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠅⠈⠎"
+  },
+  {
+    "input": "κ",
+    "note": "PDF 제13항 — 소문자 kappa",
+    "internal": ".k",
+    "expected": "405",
+    "unicode": "⠨⠅",
+    "world": "⠴⠨⠅⠲",
+    "jeomsarang": "⠨⠅⠲"
+  },
+  {
+    "input": "$\\kappa$",
+    "note": "LaTeX",
+    "internal": ".k",
+    "expected": "405",
+    "unicode": "⠨⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Λ",
+    "note": "PDF 제13항 — 대문자 Lambda",
+    "internal": ",.l",
+    "expected": "32407",
+    "unicode": "⠠⠨⠇",
+    "world": "⠴⠠⠨⠇⠲",
+    "jeomsarang": "⠠⠨⠇⠲"
+  },
+  {
+    "input": "$\\Lambda$",
+    "note": "LaTeX",
+    "internal": ",.l",
+    "expected": "32407",
+    "unicode": "⠠⠨⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "λ",
+    "note": "PDF 제13항 — 소문자 lambda",
+    "internal": ".l",
+    "expected": "407",
+    "unicode": "⠨⠇",
+    "world": "⠴⠨⠇⠲",
+    "jeomsarang": "⠨⠇⠲"
+  },
+  {
+    "input": "$\\lambda$",
+    "note": "LaTeX",
+    "internal": ".l",
+    "expected": "407",
+    "unicode": "⠨⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Μ",
+    "note": "PDF 제13항 — 대문자 Mu",
+    "internal": ",.m",
+    "expected": "324013",
+    "unicode": "⠠⠨⠍",
+    "world": "⠴⠠⠨⠍⠲",
+    "jeomsarang": "⠠⠨⠍⠲"
+  },
+  {
+    "input": "$Μ$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.m",
+    "expected": "324013",
+    "unicode": "⠠⠨⠍",
+    "world": "⠴⠈⠎⠴⠠⠨⠍⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠍⠈⠎"
+  },
+  {
+    "input": "μ",
+    "note": "PDF 제13항 — 소문자 mu",
+    "internal": ".m",
+    "expected": "4013",
+    "unicode": "⠨⠍",
+    "world": "⠴⠨⠍⠲",
+    "jeomsarang": "⠨⠍⠲"
+  },
+  {
+    "input": "$\\mu$",
+    "note": "LaTeX",
+    "internal": ".m",
+    "expected": "4013",
+    "unicode": "⠨⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ν",
+    "note": "PDF 제13항 — 대문자 Nu",
+    "internal": ",.n",
+    "expected": "324029",
+    "unicode": "⠠⠨⠝",
+    "world": "⠴⠠⠨⠝⠲",
+    "jeomsarang": "⠠⠨⠝⠲"
+  },
+  {
+    "input": "$Ν$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.n",
+    "expected": "324029",
+    "unicode": "⠠⠨⠝",
+    "world": "⠴⠈⠎⠴⠠⠨⠝⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠝⠈⠎"
+  },
+  {
+    "input": "ν",
+    "note": "PDF 제13항 — 소문자 nu",
+    "internal": ".n",
+    "expected": "4029",
+    "unicode": "⠨⠝",
+    "world": "⠴⠨⠝⠲",
+    "jeomsarang": "⠨⠝⠲"
+  },
+  {
+    "input": "$\\nu$",
+    "note": "LaTeX",
+    "internal": ".n",
+    "expected": "4029",
+    "unicode": "⠨⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ξ",
+    "note": "PDF 제13항 — 대문자 Xi",
+    "internal": ",.x",
+    "expected": "324045",
+    "unicode": "⠠⠨⠭",
+    "world": "⠴⠠⠨⠭⠲",
+    "jeomsarang": "⠠⠨⠭⠲"
+  },
+  {
+    "input": "$\\Xi$",
+    "note": "LaTeX",
+    "internal": ",.x",
+    "expected": "324045",
+    "unicode": "⠠⠨⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ξ",
+    "note": "PDF 제13항 — 소문자 xi",
+    "internal": ".x",
+    "expected": "4045",
+    "unicode": "⠨⠭",
+    "world": "⠴⠨⠭⠲",
+    "jeomsarang": "⠨⠭⠲"
+  },
+  {
+    "input": "$\\xi$",
+    "note": "LaTeX",
+    "internal": ".x",
+    "expected": "4045",
+    "unicode": "⠨⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ο",
+    "note": "PDF 제13항 — 대문자 Omicron",
+    "internal": ",.o",
+    "expected": "324021",
+    "unicode": "⠠⠨⠕",
+    "world": "⠴⠠⠨⠕⠲",
+    "jeomsarang": "⠠⠨⠕⠲"
+  },
+  {
+    "input": "$Ο$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.o",
+    "expected": "324021",
+    "unicode": "⠠⠨⠕",
+    "world": "⠴⠈⠎⠴⠠⠨⠕⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠕⠈⠎"
+  },
+  {
+    "input": "ο",
+    "note": "PDF 제13항 — 소문자 omicron",
+    "internal": ".o",
+    "expected": "4021",
+    "unicode": "⠨⠕",
+    "world": "⠴⠨⠕⠲",
+    "jeomsarang": "⠨⠕⠲"
+  },
+  {
+    "input": "$\\omicron$",
+    "note": "LaTeX",
+    "internal": ".o",
+    "expected": "4021",
+    "unicode": "⠨⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Π",
+    "note": "PDF 제13항 — 대문자 Pi",
+    "internal": ",.p",
+    "expected": "324015",
+    "unicode": "⠠⠨⠏",
+    "world": "⠴⠠⠨⠏⠲",
+    "jeomsarang": "⠠⠨⠏⠲"
+  },
+  {
+    "input": "$\\Pi$",
+    "note": "LaTeX",
+    "internal": ",.p",
+    "expected": "324015",
+    "unicode": "⠠⠨⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "π",
+    "note": "PDF 제13항 — 소문자 pi",
+    "internal": ".p",
+    "expected": "4015",
+    "unicode": "⠨⠏",
+    "world": "⠴⠨⠏⠲",
+    "jeomsarang": "⠨⠏⠲"
+  },
+  {
+    "input": "$\\pi$",
+    "note": "LaTeX",
+    "internal": ".p",
+    "expected": "4015",
+    "unicode": "⠨⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ρ",
+    "note": "PDF 제13항 — 대문자 Rho",
+    "internal": ",.r",
+    "expected": "324023",
+    "unicode": "⠠⠨⠗",
+    "world": "⠴⠠⠨⠗⠲",
+    "jeomsarang": "⠠⠨⠗⠲"
+  },
+  {
+    "input": "$Ρ$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.r",
+    "expected": "324023",
+    "unicode": "⠠⠨⠗",
+    "world": "⠴⠈⠎⠴⠠⠨⠗⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠗⠈⠎"
+  },
+  {
+    "input": "ρ",
+    "note": "PDF 제13항 — 소문자 rho",
+    "internal": ".r",
+    "expected": "4023",
+    "unicode": "⠨⠗",
+    "world": "⠴⠨⠗⠲",
+    "jeomsarang": "⠨⠗⠲"
+  },
+  {
+    "input": "$\\rho$",
+    "note": "LaTeX",
+    "internal": ".r",
+    "expected": "4023",
+    "unicode": "⠨⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Σ",
+    "note": "PDF 제13항 — 대문자 Sigma",
+    "internal": ",.s",
+    "expected": "324014",
+    "unicode": "⠠⠨⠎",
+    "world": "⠴⠠⠨⠎⠲",
+    "jeomsarang": "⠠⠨⠎⠲"
+  },
+  {
+    "input": "$\\Sigma$",
+    "note": "LaTeX",
+    "internal": ",.s",
+    "expected": "324014",
+    "unicode": "⠠⠨⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "σ",
+    "note": "PDF 제13항 — 소문자 sigma",
     "internal": ".s",
     "expected": "4014",
     "unicode": "⠨⠎",
@@ -418,11 +639,255 @@
     "jeomsarang": "⠨⠎⠲"
   },
   {
+    "input": "$\\sigma$",
+    "note": "LaTeX",
+    "internal": ".s",
+    "expected": "4014",
+    "unicode": "⠨⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Τ",
+    "note": "PDF 제13항 — 대문자 Tau",
+    "internal": ",.t",
+    "expected": "324030",
+    "unicode": "⠠⠨⠞",
+    "world": "⠴⠠⠨⠞⠲",
+    "jeomsarang": "⠠⠨⠞⠲"
+  },
+  {
+    "input": "$Τ$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.t",
+    "expected": "324030",
+    "unicode": "⠠⠨⠞",
+    "world": "⠴⠈⠎⠴⠠⠨⠞⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠞⠈⠎"
+  },
+  {
+    "input": "τ",
+    "note": "PDF 제13항 — 소문자 tau",
+    "internal": ".t",
+    "expected": "4030",
+    "unicode": "⠨⠞",
+    "world": "⠴⠨⠞⠲",
+    "jeomsarang": "⠨⠞⠲"
+  },
+  {
+    "input": "$\\tau$",
+    "note": "LaTeX",
+    "internal": ".t",
+    "expected": "4030",
+    "unicode": "⠨⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Υ",
+    "note": "PDF 제13항 — 대문자 Upsilon",
+    "internal": ",.u",
+    "expected": "324037",
+    "unicode": "⠠⠨⠥",
+    "world": "⠴⠠⠨⠥⠲",
+    "jeomsarang": "⠠⠨⠥⠲"
+  },
+  {
+    "input": "$\\Upsilon$",
+    "note": "LaTeX",
+    "internal": ",.u",
+    "expected": "324037",
+    "unicode": "⠠⠨⠥",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "υ",
+    "note": "PDF 제13항 — 소문자 upsilon",
+    "internal": ".u",
+    "expected": "4037",
+    "unicode": "⠨⠥",
+    "world": "⠴⠨⠥⠲",
+    "jeomsarang": "⠨⠥⠲"
+  },
+  {
+    "input": "$\\upsilon$",
+    "note": "LaTeX",
+    "internal": ".u",
+    "expected": "4037",
+    "unicode": "⠨⠥",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Φ",
+    "note": "PDF 제13항 — 대문자 Phi",
+    "internal": ",.f",
+    "expected": "324011",
+    "unicode": "⠠⠨⠋",
+    "world": "⠴⠠⠨⠋⠲",
+    "jeomsarang": "⠠⠨⠋⠲"
+  },
+  {
+    "input": "$\\Phi$",
+    "note": "LaTeX",
+    "internal": ",.f",
+    "expected": "324011",
+    "unicode": "⠠⠨⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "φ",
+    "note": "PDF 제13항 — 소문자 phi",
+    "internal": ".f",
+    "expected": "4011",
+    "unicode": "⠨⠋",
+    "world": "⠴⠨⠋⠲",
+    "jeomsarang": "⠨⠋⠲"
+  },
+  {
+    "input": "$\\phi$",
+    "note": "LaTeX",
+    "internal": ".f",
+    "expected": "4011",
+    "unicode": "⠨⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Χ",
+    "note": "PDF 제13항 — 대문자 Chi",
+    "internal": ",.&",
+    "expected": "324047",
+    "unicode": "⠠⠨⠯",
+    "world": "⠴⠠⠨⠯⠲",
+    "jeomsarang": "⠠⠨⠯⠲"
+  },
+  {
+    "input": "$Χ$",
+    "note": "LaTeX (Unicode in LaTeX, 표준 LaTeX 명령어 없음)",
+    "internal": ",.&",
+    "expected": "324047",
+    "unicode": "⠠⠨⠯",
+    "world": "⠴⠈⠎⠴⠠⠨⠯⠈⠎",
+    "jeomsarang": "⠴⠈⠎⠠⠨⠯⠈⠎"
+  },
+  {
+    "input": "χ",
+    "note": "PDF 제13항 — 소문자 chi",
+    "internal": ".&",
+    "expected": "4047",
+    "unicode": "⠨⠯",
+    "world": "⠴⠨⠯⠲",
+    "jeomsarang": "⠨⠯⠲"
+  },
+  {
+    "input": "$\\chi$",
+    "note": "LaTeX",
+    "internal": ".&",
+    "expected": "4047",
+    "unicode": "⠨⠯",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ψ",
+    "note": "PDF 제13항 — 대문자 Psi",
+    "internal": ",.y",
+    "expected": "324061",
+    "unicode": "⠠⠨⠽",
+    "world": "⠴⠠⠨⠽⠲",
+    "jeomsarang": "⠠⠨⠽⠲"
+  },
+  {
+    "input": "$\\Psi$",
+    "note": "LaTeX",
+    "internal": ",.y",
+    "expected": "324061",
+    "unicode": "⠠⠨⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ψ",
+    "note": "PDF 제13항 — 소문자 psi",
+    "internal": ".y",
+    "expected": "4061",
+    "unicode": "⠨⠽",
+    "world": "⠴⠨⠽⠲",
+    "jeomsarang": "⠨⠽⠲"
+  },
+  {
+    "input": "$\\psi$",
+    "note": "LaTeX",
+    "internal": ".y",
+    "expected": "4061",
+    "unicode": "⠨⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ω",
+    "note": "PDF 제13항 — 대문자 Omega",
+    "internal": ",.w",
+    "expected": "324058",
+    "unicode": "⠠⠨⠺",
+    "world": "⠴⠠⠨⠺⠲",
+    "jeomsarang": "⠠⠨⠺⠲"
+  },
+  {
+    "input": "$\\Omega$",
+    "note": "LaTeX",
+    "internal": ",.w",
+    "expected": "324058",
+    "unicode": "⠠⠨⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "ω",
+    "note": "PDF 제13항 — 소문자 omega",
     "internal": ".w",
     "expected": "4058",
     "unicode": "⠨⠺",
     "world": "⠴⠨⠺⠲",
     "jeomsarang": "⠨⠺⠲"
+  },
+  {
+    "input": "$\\omega$",
+    "note": "LaTeX",
+    "internal": ".w",
+    "expected": "4058",
+    "unicode": "⠨⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "복소수 α, β에 대하여 $\\frac{α}{β}$의 값을 구하시오.",
+    "note": "PDF 제13항 본문 예제 1 — 복소수 α/β (분수, LaTeX 필수)",
+    "internal": "^x,u,m`0.a1`.b4n`irj<:``.b/.a``w`$b'!`@mj,ou4",
+    "expected": "2445323732130524012040350290102326354900403124010058043344608132632213750",
+    "unicode": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠁⠂⠀⠨⠃⠲⠝⠀⠊⠗⠚⠣⠱⠀⠀⠨⠃⠌⠨⠁⠀⠀⠺⠀⠫⠃⠄⠮⠀⠈⠍⠚⠠⠕⠥⠲",
+    "world": "⠘⠭⠠⠥⠠⠍ ⠴⠨⠁⠂ ⠨⠃⠲⠝ ⠊⠗⠚⠣⠱ ⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠨⠁⠸⠜⠸⠣⠨⠃⠐⠴⠴⠈⠎ ⠺ ⠫⠃⠄⠮ ⠈⠍⠚⠠⠕⠥⠲",
+    "jeomsarang": ""
+  },
+  {
+    "input": "복소수 ω가 ω²-ω+1=0 을 만족할 때",
+    "note": "PDF 제13항 본문 예제 2 — 복소수 ω 방정식",
+    "internal": "^x,u,m`0.w4$``.w^#b9.w5#a33#j``!`e3.xj1`,ir",
+    "expected": "2445323732130524058504300405824603204058346011818602600460171840452620321023",
+    "unicode": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠺⠲⠫⠀⠀⠨⠺⠘⠼⠃⠔⠨⠺⠢⠼⠁⠒⠒⠼⠚⠀⠀⠮⠀⠑⠒⠨⠭⠚⠂⠀⠠⠊⠗",
+    "world": "⠘⠭⠠⠥⠠⠍ ⠴⠨⠺⠲⠫ ⠴⠨⠺⠘⠼⠃⠤⠨⠺⠢⠼⠁⠒⠒⠼⠚ ⠮ ⠑⠒⠨⠭⠚⠂ ⠠⠊⠗",
+    "jeomsarang": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠺⠲⠫⠀⠴⠨⠺⠘⠼⠃⠤⠨⠺⠐⠖⠼⠁⠒⠒⠼⠚⠀⠮⠀⠑⠒⠨⠭⠚⠂⠀⠠⠊⠗"
+  },
+  {
+    "input": "복소수 $\\omega$가 $\\omega^2-\\omega+1=0$ 을 만족할 때",
+    "note": "LaTeX",
+    "internal": "^x,u,m`0.w4$``.w^#b9.w5#a33#j``!`e3.xj1`,ir",
+    "expected": "2445323732130524058504300405824603204058346011818602600460171840452620321023",
+    "unicode": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠺⠲⠫⠀⠀⠨⠺⠘⠼⠃⠔⠨⠺⠢⠼⠁⠒⠒⠼⠚⠀⠀⠮⠀⠑⠒⠨⠭⠚⠂⠀⠠⠊⠗",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

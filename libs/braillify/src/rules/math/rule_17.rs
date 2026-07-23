@@ -45,4 +45,11 @@ mod tests {
 
         Ok(())
     }
+
+    #[test]
+    fn rejects_unsupported_prime() {
+        let mut result = Vec::new();
+        assert!(encode_prime('a', &mut result).is_err());
+        assert!(!is_prime_mark('a'));
+    }
 }

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$x_{iruv}$"
+unicode = ok: "⠭⠰⠷⠊⠗⠥⠧⠾"
+bytes   = ok: [45, 48, 55, 10, 23, 37, 39, 62]

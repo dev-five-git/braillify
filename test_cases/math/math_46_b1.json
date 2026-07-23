@@ -1,0 +1,20 @@
+[
+  {
+    "input": "logₑ(2+h)",
+    "note": "PDF 제46항 [다만] — 밑이 문자이고 진수 부분이 괄호로 묶여 있을 때에는 묶음 괄호로 묶지 않음",
+    "internal": "_;e8#b5h0",
+    "expected": "56481738603341952",
+    "unicode": "⠸⠰⠑⠦⠼⠃⠢⠓⠴",
+    "world": "⠴⠇⠕⠛⠰⠑⠐⠣⠼⠃⠐⠖⠓⠠⠴",
+    "jeomsarang": "⠴⠇⠕⠛⠰⠑⠐⠣⠼⠃⠐⠖⠴⠓⠐⠜⠲"
+  },
+  {
+    "input": "$\\log_e(2+h)$",
+    "note": "LaTeX",
+    "internal": "_;e8#b5h0",
+    "expected": "56481738603341952",
+    "unicode": "⠸⠰⠑⠦⠼⠃⠢⠓⠴",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

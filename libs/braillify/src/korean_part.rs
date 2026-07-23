@@ -45,3 +45,27 @@ pub fn encode_korean_part(text: char) -> Result<&'static [u8], String> {
     }
     Err("Invalid Korean part character".to_string())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rejects_non_korean_part_input() {
+        assert!(encode_korean_part('a').is_err());
+        assert!(encode_korean_part('1').is_err());
+        assert!(encode_korean_part('!').is_err());
+    }
+
+    #[test]
+    fn accepts_jongseong_jamo() {
+        assert!(encode_korean_part('ㄱ').is_ok());
+        assert!(encode_korean_part('ㅎ').is_ok());
+    }
+
+    #[test]
+    fn accepts_jungseong_jamo() {
+        assert!(encode_korean_part('ㅏ').is_ok());
+        assert!(encode_korean_part('ㅣ').is_ok());
+    }
+}

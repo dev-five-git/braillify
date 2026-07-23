@@ -1,0 +1,8 @@
+[
+  {
+    "input": "ANGLO-\nSAXON",
+    "internal": ",,anglo-\n,,saxon",
+    "expected": "32321292772136\n3232141452129",
+    "unicode": "⠠⠠⠁⠝⠛⠇⠕⠤\n⠠⠠⠎⠁⠭⠕⠝"
+  }
+]

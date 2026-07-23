@@ -1,0 +1,32 @@
+[
+  {
+    "input": "Blvd",
+    "internal": ";,blvd",
+    "expected": "4832373925",
+    "unicode": "⠰⠠⠃⠇⠧⠙"
+  },
+  {
+    "input": "LLC",
+    "internal": ";,,llc",
+    "expected": "483232779",
+    "unicode": "⠰⠠⠠⠇⠇⠉"
+  },
+  {
+    "input": "Grtsamada",
+    "internal": ";,grtsamada",
+    "expected": "4832272330141131251",
+    "unicode": "⠰⠠⠛⠗⠞⠎⠁⠍⠁⠙⠁"
+  },
+  {
+    "input": "llama",
+    "internal": "llama",
+    "expected": "771131",
+    "unicode": "⠇⠇⠁⠍⠁"
+  },
+  {
+    "input": "Llanelli",
+    "internal": ",llanelli",
+    "expected": "3277129177710",
+    "unicode": "⠠⠇⠇⠁⠝⠑⠇⠇⠊"
+  }
+]

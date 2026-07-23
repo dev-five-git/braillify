@@ -3,6 +3,17 @@ use phf::phf_map;
 use crate::unicode::decode_unicode;
 
 static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
+    // PDF 한국 점자 규정 (수학) — 동그라미 숫자 ①②③④⑤⑥⑦⑧⑨⑩
+    '\u{2460}' => &[decode_unicode('⠼'), decode_unicode('⠂')], // ①
+    '\u{2461}' => &[decode_unicode('⠼'), decode_unicode('⠆')], // ②
+    '\u{2462}' => &[decode_unicode('⠼'), decode_unicode('⠒')], // ③
+    '\u{2463}' => &[decode_unicode('⠼'), decode_unicode('⠲')], // ④
+    '\u{2464}' => &[decode_unicode('⠼'), decode_unicode('⠢')], // ⑤
+    '\u{2465}' => &[decode_unicode('⠼'), decode_unicode('⠖')], // ⑥
+    '\u{2466}' => &[decode_unicode('⠼'), decode_unicode('⠶')], // ⑦
+    '\u{2467}' => &[decode_unicode('⠼'), decode_unicode('⠦')], // ⑧
+    '\u{2468}' => &[decode_unicode('⠼'), decode_unicode('⠔')], // ⑨
+    '\u{2469}' => &[decode_unicode('⠼'), decode_unicode('⠴')], // ⑩
     '+' => &[decode_unicode('⠢')], // 5 (덧셈표)
     '/' => &[decode_unicode('⠸'), decode_unicode('⠌')], // _/ (분수 기호)
     '\u{2212}' => &[decode_unicode('⠔')], // 9 (뺄셈표)
@@ -27,6 +38,8 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '\u{21D4}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')], // [33o (필요충분)
     '\u{21C4}' => &[decode_unicode('⠪'), decode_unicode('⠶'), decode_unicode('⠕')], // [7o (동치명제)
     '\u{2032}' => &[decode_unicode('⠤')], // - (프라임)
+    '\u{2033}' => &[decode_unicode('⠤'), decode_unicode('⠤')], // -- (더블 프라임, PDF 제17항)
+    '\u{2034}' => &[decode_unicode('⠤'), decode_unicode('⠤'), decode_unicode('⠤')], // --- (트리플 프라임)
     '\u{00B2}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠃')], // ^#b (제곱)
     '\u{00B3}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠉')], // ^#c (세제곱)
     '\u{2074}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠙')], // ^#d (네제곱)
@@ -61,9 +74,14 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '\u{2099}' => &[decode_unicode('⠰'), decode_unicode('⠝')], // ;n (아래첨자 n)
     '\u{208A}' => &[decode_unicode('⠰'), decode_unicode('⠢')], // ;5 (아래첨자 +)
     '\u{2044}' => &[decode_unicode('⠌')], // / (분수 슬래시)
+    '\u{2500}' => &[decode_unicode('⠌')], // ─ (괘선 — PDF 제7항 분수선 기호 형태)
+    '\u{2E29}' => &[decode_unicode('⠄')], // open-ended right delimiter (`\right.`)
+    '_' => &[decode_unicode('⠠'), decode_unicode('⠤')], // 밑줄 marker (PDF 제23항 2)
+    '\u{0332}' => &[decode_unicode('⠠'), decode_unicode('⠤')], // ̲ (combining low line — 밑줄 결합부호)
     '|' => &[decode_unicode('⠳')], // | (절댓값)
     '\u{00AC}' => &[decode_unicode('⠈'), decode_unicode('⠔')], // @9 (부정)
     '\u{00B0}' => &[decode_unicode('⠴'), decode_unicode('⠙')], // 0d (도)
+    '\u{00B1}' => &[decode_unicode('⠢'), decode_unicode('⠔')], // ± (PDF 제2항 — plus-minus)
     '\u{00B7}' => &[decode_unicode('⠐')], // " (점 곱셈)
     '…' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')], // ,,, (줄임표)
     '⋯' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')], // ,,, (줄임표)
@@ -114,6 +132,7 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '\u{25A1}' => &[decode_unicode('⠸'), decode_unicode('⠶')], // _7 (네모)
     '\u{25B3}' => &[decode_unicode('⠸'), decode_unicode('⠬')], // _+ (세모)
     '\u{25B1}' => &[decode_unicode('⠸'), decode_unicode('⠌'), decode_unicode('⠌')], // _// (평행사변형)
+    '\u{23E2}' => &[decode_unicode('⠸'), decode_unicode('⠌'), decode_unicode('⠡')], // _/* (사다리꼴)
     '\u{2302}' => &[decode_unicode('⠸'), decode_unicode('⠪'), decode_unicode('⠅')], // _[k (집)
     '\u{2394}' => &[decode_unicode('⠸'), decode_unicode('⠪'), decode_unicode('⠕')], // _[o (기하 기호)
     '\u{29BE}' => &[decode_unicode('⠸'), decode_unicode('⠴'), decode_unicode('⠴')], // _00 (원안점)
@@ -152,7 +171,7 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '\u{0393}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠛')], // ,.g (대문자 감마)
     '\u{0395}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠑')], // ,.e (대문자 엡실론)
     '\u{0396}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠵')], // ,.z (대문자 제타)
-    '\u{0397}' => &[decode_unicode('⠨'), decode_unicode('⠱')], // .: (대문자 에타; test_cases 기준)
+    '\u{0397}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠱')], // ,.: (대문자 에타)
     '\u{0398}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠹')], // ,.? (대문자 세타)
     '\u{0399}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠊')], // ,.i (대문자 요타)
     '\u{039A}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠅')], // ,.k (대문자 카파)
@@ -185,10 +204,39 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '\u{0305}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (결합 윗줄)
     '\u{2016}' => &[decode_unicode('⠳'), decode_unicode('⠳')], // \\ (이중 세로선)
     '\u{2322}' => &[decode_unicode('⠈'), decode_unicode('⠪')], // @[ (호)
-    '\u{0307}' => &[decode_unicode('⠈')], // @ (결합 윗점)
-    '\u{0308}' => &[decode_unicode('⠈'), decode_unicode('⠲'), decode_unicode('⠲')], // @44 (결합 윗두점)
+    // PDF 수학 제65항 5 — 문자 위 결합 부호 (틸데)
+    '\u{0303}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')], // @@9 (결합 틸데)
+    // 결합 윗 한 점 U+0307은 컨텍스트에 따라 의미가 다르다:
+    //   - 숫자 뒤  : 순환소수 마크 (PDF 수학 제9항) → ⠈
+    //   - 문자 뒤  : 문자 위 한 점 (PDF 수학 제65항 5) → ⠈⠲
+    // 이 SHORTCUT_MAP의 값은 숫자 뒤 기본형이고, 문자 뒤 처리는 rule_65에서 별도 분기한다.
+    '\u{0307}' => &[decode_unicode('⠈')], // @ (결합 윗점 - 기본/숫자 뒤)
+    '\u{0308}' => &[decode_unicode('⠈'), decode_unicode('⠲'), decode_unicode('⠲')], // @44 (결합 윗 두 점)
     '\u{0309}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')], // @@9 (결합 고리/훅)
     '\u{030A}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')], // @@9 (결합 윗고리)
+    '\u{211B}' => &[decode_unicode('⠠'), decode_unicode('⠗')], // ,R (ℛ = script R)
+    '~' => &[decode_unicode('⠈'), decode_unicode('⠔')], // @9 (물결 = 닮음)
+    '\u{0338}' => &[decode_unicode('⠨')], // . (부정 표지)
+    '\u{203E}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (선분 기호 U+203E)
+    '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')], // [3O (직선 기호 U+20E1)
+    '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')], // 3O (반직선 기호 U+20D7)
+    // PDF 수학 제60항 6 — 추론 기호 ⊢/⊣/⊨/⫤
+    '\u{22A2}' => &[decode_unicode('⠸'), decode_unicode('⠒')], // _3 (⊢ vdash)
+    '\u{22A3}' => &[decode_unicode('⠈'), decode_unicode('⠸'), decode_unicode('⠒')], // @_3 (⊣ dashv)
+    '\u{22A8}' => &[decode_unicode('⠘'), decode_unicode('⠸'), decode_unicode('⠒')], // ^_3 (⊨ models)
+    '\u{2AE4}' => &[decode_unicode('⠨'), decode_unicode('⠸'), decode_unicode('⠒')], // ._3 (⫤ Dashv)
+    // PDF 수학 제60항 7 — 앞선다 ≲ (보다같거나 작다 + 닮음)
+    '\u{2272}' => &[decode_unicode('⠔'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔')], // 99@9 (≲ lesssim)
+    // PDF 수학 제60항 8 — 앞서고같지않다 ≺ (보다작다)
+    '\u{227A}' => &[decode_unicode('⠔'), decode_unicode('⠔')], // 99 (≺ prec — same as <)
+    // PDF 수학 제61항 7 — 동치명제 ⇌
+    '\u{21CC}' => &[decode_unicode('⠪'), decode_unicode('⠶'), decode_unicode('⠕')], // [7o (⇌ rightleftharpoons)
+    // PDF 수학 제23항 1 — 켤레복소수/평균값 macron ¯
+    '\u{00AF}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (¯ macron)
+    // PDF 수학 제25항 — 총합 기호 ∑ (Greek capital Sigma과 동일 점형)
+    '\u{2211}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠎')], // ,.s
+    // PDF 수학 제26항 — 곱 기호 ∏
+    '\u{220F}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠏')], // ,.p
 };
 
 pub fn encode_char_math_symbol_shortcut(text: char) -> Result<&'static [u8], String> {
@@ -207,62 +255,53 @@ pub fn is_math_symbol_char(text: char) -> bool {
 mod test {
     use super::*;
 
+    /// `is_math_symbol_char` true 케이스 — 연산자/그리스/집합/미적분 기호 전체.
+    #[rstest::rstest]
+    // basic operators
+    #[case('+')]
+    #[case('−')]
+    #[case('×')]
+    #[case('÷')]
+    #[case('=')]
+    // greek
+    #[case('α')]
+    #[case('π')]
+    #[case('ω')]
+    // set / logic
+    #[case('∈')]
+    #[case('∅')]
+    #[case('∪')]
+    #[case('∩')]
+    // calculus
+    #[case('∫')]
+    #[case('∞')]
+    #[case('√')]
+    fn is_math_symbol_char_recognizes_math_chars(#[case] ch: char) {
+        assert!(is_math_symbol_char(ch));
+    }
+
+    /// `is_math_symbol_char` false 케이스 — ASCII 알파벳은 수학 기호 아님.
     #[test]
-    fn test_basic_operators() {
-        assert!(is_math_symbol_char('+'));
-        assert!(is_math_symbol_char('−'));
-        assert!(is_math_symbol_char('×'));
-        assert!(is_math_symbol_char('÷'));
-        assert!(is_math_symbol_char('='));
+    fn is_math_symbol_char_rejects_ascii_letter() {
         assert!(!is_math_symbol_char('a'));
     }
 
-    #[test]
-    fn test_superscript() {
-        // ² should be ^#b = ⠘⠼⠃
+    /// `encode_char_math_symbol_shortcut` 표 매핑.
+    /// - `²` (제곱) → `⠘⠼⠃` (^#b, 3-cell)
+    /// - `≥` (크거나 같음) → `⠲⠲` (2-cell)
+    /// - `≤` (작거나 같음) → `⠖⠖` (2-cell)
+    #[rstest::rstest]
+    #[case('²', &['⠘', '⠼', '⠃'][..])]
+    #[case('≥', &['⠲', '⠲'][..])]
+    #[case('≤', &['⠖', '⠖'][..])]
+    fn encode_char_math_symbol_shortcut_table(
+        #[case] input: char,
+        #[case] expected_chars: &[char],
+    ) {
+        let expected: Vec<u8> = expected_chars.iter().copied().map(decode_unicode).collect();
         assert_eq!(
-            encode_char_math_symbol_shortcut('²').unwrap(),
-            &[
-                decode_unicode('⠘'),
-                decode_unicode('⠼'),
-                decode_unicode('⠃')
-            ]
+            encode_char_math_symbol_shortcut(input).unwrap(),
+            expected.as_slice()
         );
-    }
-
-    #[test]
-    fn test_inequality() {
-        // ≥ should be 44 = ⠲⠲
-        assert_eq!(
-            encode_char_math_symbol_shortcut('≥').unwrap(),
-            &[decode_unicode('⠲'), decode_unicode('⠲')]
-        );
-        // ≤ should be 66 = ⠖⠖
-        assert_eq!(
-            encode_char_math_symbol_shortcut('≤').unwrap(),
-            &[decode_unicode('⠖'), decode_unicode('⠖')]
-        );
-    }
-
-    #[test]
-    fn test_greek() {
-        assert!(is_math_symbol_char('α'));
-        assert!(is_math_symbol_char('π'));
-        assert!(is_math_symbol_char('ω'));
-    }
-
-    #[test]
-    fn test_set_logic() {
-        assert!(is_math_symbol_char('∈'));
-        assert!(is_math_symbol_char('∅'));
-        assert!(is_math_symbol_char('∪'));
-        assert!(is_math_symbol_char('∩'));
-    }
-
-    #[test]
-    fn test_calculus() {
-        assert!(is_math_symbol_char('∫'));
-        assert!(is_math_symbol_char('∞'));
-        assert!(is_math_symbol_char('√'));
     }
 }

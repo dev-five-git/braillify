@@ -104,94 +104,98 @@ pub fn split_korean_char(text: char) -> Result<Vec<KoreanChar>, String> {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_split() {
-        assert_eq!(
-            split_korean_char('강'),
-            Ok(vec![
-                KoreanChar::Choseong('ㄱ'),
-                KoreanChar::Jungseong('ㅏ'),
-                KoreanChar::Jongseong('ㅇ')
-            ])
-        );
-        assert_eq!(
-            split_korean_char('한'),
-            Ok(vec![
-                KoreanChar::Choseong('ㅎ'),
-                KoreanChar::Jungseong('ㅏ'),
-                KoreanChar::Jongseong('ㄴ')
-            ])
-        );
-        assert_eq!(
-            split_korean_char('글'),
-            Ok(vec![
-                KoreanChar::Choseong('ㄱ'),
-                KoreanChar::Jungseong('ㅡ'),
-                KoreanChar::Jongseong('ㄹ')
-            ])
-        );
-        assert_eq!(
-            split_korean_char('안'),
-            Ok(vec![
-                KoreanChar::Choseong('ㅇ'),
-                KoreanChar::Jungseong('ㅏ'),
-                KoreanChar::Jongseong('ㄴ')
-            ])
-        );
-        assert_eq!(
-            split_korean_char('녕'),
-            Ok(vec![
-                KoreanChar::Choseong('ㄴ'),
-                KoreanChar::Jungseong('ㅕ'),
-                KoreanChar::Jongseong('ㅇ')
-            ])
-        );
-
-        assert_eq!(
-            split_korean_char('나'),
-            Ok(vec![
-                KoreanChar::Choseong('ㄴ'),
-                KoreanChar::Jungseong('ㅏ'),
-            ])
-        );
-
-        assert_eq!(
-            split_korean_char('라'),
-            Ok(vec![
-                KoreanChar::Choseong('ㄹ'),
-                KoreanChar::Jungseong('ㅏ'),
-            ])
-        );
-    }
-
-    #[test]
-    fn test_split_choseong() {
-        for c in [
-            'ㄱ', 'ㄴ', 'ㄷ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
-        ] {
-            assert_eq!(split_korean_char(c), Ok(vec![KoreanChar::Choseong(c),]));
+    /// 완전한 음절 (초성 + 중성 + 종성) 분해.
+    #[rstest::rstest]
+    #[case('강', 'ㄱ', 'ㅏ', Some('ㅇ'))]
+    #[case('한', 'ㅎ', 'ㅏ', Some('ㄴ'))]
+    #[case('글', 'ㄱ', 'ㅡ', Some('ㄹ'))]
+    #[case('안', 'ㅇ', 'ㅏ', Some('ㄴ'))]
+    #[case('녕', 'ㄴ', 'ㅕ', Some('ㅇ'))]
+    #[case('나', 'ㄴ', 'ㅏ', None)]
+    #[case('라', 'ㄹ', 'ㅏ', None)]
+    fn split_korean_char_full_syllable(
+        #[case] input: char,
+        #[case] cho: char,
+        #[case] jung: char,
+        #[case] jong: Option<char>,
+    ) {
+        let mut expected = vec![KoreanChar::Choseong(cho), KoreanChar::Jungseong(jung)];
+        if let Some(j) = jong {
+            expected.push(KoreanChar::Jongseong(j));
         }
+        assert_eq!(split_korean_char(input), Ok(expected));
     }
 
-    #[test]
-    fn test_split_jungseong() {
-        for c in [
-            'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ',
-            'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ',
-        ] {
-            assert_eq!(split_korean_char(c), Ok(vec![KoreanChar::Jungseong(c),]));
-        }
+    /// 단일 초성(자음) 분해.
+    #[rstest::rstest]
+    #[case('ㄱ')]
+    #[case('ㄴ')]
+    #[case('ㄷ')]
+    #[case('ㅁ')]
+    #[case('ㅂ')]
+    #[case('ㅅ')]
+    #[case('ㅈ')]
+    #[case('ㅊ')]
+    #[case('ㅋ')]
+    #[case('ㅌ')]
+    #[case('ㅍ')]
+    #[case('ㅎ')]
+    fn split_korean_char_single_choseong(#[case] c: char) {
+        assert_eq!(split_korean_char(c), Ok(vec![KoreanChar::Choseong(c)]));
     }
 
-    #[test]
-    fn test_split_wrong() {
+    /// 단일 중성(모음) 분해.
+    #[rstest::rstest]
+    #[case('ㅏ')]
+    #[case('ㅐ')]
+    #[case('ㅑ')]
+    #[case('ㅒ')]
+    #[case('ㅓ')]
+    #[case('ㅔ')]
+    #[case('ㅕ')]
+    #[case('ㅖ')]
+    #[case('ㅗ')]
+    #[case('ㅘ')]
+    #[case('ㅙ')]
+    #[case('ㅚ')]
+    #[case('ㅛ')]
+    #[case('ㅜ')]
+    #[case('ㅝ')]
+    #[case('ㅞ')]
+    #[case('ㅟ')]
+    #[case('ㅠ')]
+    #[case('ㅡ')]
+    #[case('ㅢ')]
+    #[case('ㅣ')]
+    fn split_korean_char_single_jungseong(#[case] c: char) {
+        assert_eq!(split_korean_char(c), Ok(vec![KoreanChar::Jungseong(c)]));
+    }
+
+    /// 한글이 아닌 문자는 에러.
+    #[rstest::rstest]
+    #[case('a')]
+    #[case('1')]
+    fn split_korean_char_non_korean_returns_err(#[case] c: char) {
         assert_eq!(
-            split_korean_char('a'),
+            split_korean_char(c),
             Err("Invalid Korean character".to_string())
         );
-        assert_eq!(
-            split_korean_char('1'),
-            Err("Invalid Korean character".to_string())
-        );
+    }
+
+    /// 각 `KoreanChar` variant의 `get_char` 분기.
+    #[rstest::rstest]
+    #[case(KoreanChar::Choseong('ㄱ'), 'ㄱ')]
+    #[case(KoreanChar::Jungseong('ㅏ'), 'ㅏ')]
+    #[case(KoreanChar::Jongseong('ㄴ'), 'ㄴ')]
+    fn korean_char_get_char_all_variants(#[case] kc: KoreanChar, #[case] expected: char) {
+        assert_eq!(kc.get_char(), expected);
+    }
+
+    /// split.rs line 58 - Err arm when char isn't in KOREAN_JAUEM_MAP.
+    #[rstest::rstest]
+    #[case('A')]
+    #[case('1')]
+    fn split_korean_jauem_returns_err_for_non_jamo(#[case] ch: char) {
+        assert!(split_korean_jauem(ch).is_err());
     }
 }

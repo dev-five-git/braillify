@@ -1,7 +1,7 @@
 [
   {
     "input": "아버지",
-    "internal": "<^s.o",
+    "internal": "<~s.o",
     "expected": "3524144021",
     "unicode": "⠣⠘⠎⠨⠕",
     "world": "⠣⠘⠎⠨⠕",
@@ -65,7 +65,7 @@
   },
   {
     "input": "으스스",
-    "internal": "[,[,[",
+    "internal": "{,{,{",
     "expected": "4232423242",
     "unicode": "⠪⠠⠪⠠⠪",
     "world": "⠪⠠⠪⠠⠪",

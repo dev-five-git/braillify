@@ -1,7 +1,7 @@
 [
   {
     "input": "오전 10:20",
-    "internal": "U.) #AJ\"1#BJ",
+    "internal": "u.)`#aj\"1#bj",
     "expected": "37406206012616260326",
     "unicode": "⠥⠨⠾⠀⠼⠁⠚⠐⠂⠼⠃⠚",
     "world": "⠥⠨⠾ ⠼⠁⠚⠐⠂⠼⠃⠚",
@@ -9,7 +9,7 @@
   },
   {
     "input": "요한 3:16",
-    "internal": "+J3 #C\"1#AF",
+    "internal": "+j3`#c\"1#af",
     "expected": "442618060916260111",
     "unicode": "⠬⠚⠒⠀⠼⠉⠐⠂⠼⠁⠋",
     "world": "⠬⠚⠒ ⠼⠉⠐⠂⠼⠁⠋",

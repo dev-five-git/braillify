@@ -6,7 +6,7 @@ Korean + Math Braille encoding engine implementing 2024 Korean Braille Standard.
 
 ```
 src/
-├── lib.rs              # Main encode() entry, encode_for_testcase(), KNOWN_FAILURES
+├── lib.rs              # Main encode() entry + encode_to_unicode() / encode_to_braille_font()
 ├── cli.rs              # CLI: REPL + one-shot mode (feature-gated)
 ├── main.rs             # Binary entry point
 ├── encoder.rs          # DocumentIR construction, token + char engine orchestration
@@ -148,9 +148,72 @@ Infrastructure:
 - PHF macros (`phf_map!`) for all static lookup tables
 - Error handling via `Result<T, String>` — propagate, never suppress
 - Feature flags: `cli` (default), `wasm`
-- Tests inline with `#[cfg(test)]` in each module
+- Tests inline with `#[cfg(test)]` in each module (see TEST ORGANIZATION)
 - No `#[allow(dead_code)]` — all functions must be used or tested
 - Math rules: one `.rs` file per standard article (제N항)
+
+## TEST ORGANIZATION (NON-NEGOTIABLE)
+
+### 1. 테스트 코드 배치
+
+테스트 코드의 배치 우선순위는 **inline → tests/ 폴더** 순이다. `src/` 트리에는 테스트 전용 `.rs` 파일을 두지 않는다.
+
+| 상황 | 배치 | 예시 |
+|---|---|---|
+| 단일 모듈에서만 쓰는 단위 테스트 | **inline `#[cfg(test)] mod tests { ... }`** (해당 `.rs` 파일 하단) | `rule_18.rs` 끝에 `mod tests` |
+| 여러 모듈이 공유하는 테스트 utility (예: `test_helpers`) | **owning module 안에 inline `#[cfg(test)] mod name { ... }`** 블록 | `lib.rs` 안의 `mod test_helpers { ... }` |
+| 공개 API 만 검증하는 시나리오 테스트 | **`tests/` 폴더 (integration test)** | `tests/cli_smoke.rs` |
+| 위 어느 것도 불가능 | tests/ 폴더로 강제 | — |
+
+**금지 패턴 (BLOCKING):**
+
+- ❌ `src/test_helpers.rs`, `src/rule_18_test.rs` 같은 standalone test-only `.rs` 파일
+- ❌ test fixture 만 담은 `mod something;` 선언 (별도 파일로 분리된 형태)
+- ❌ production code 와 같은 파일에 `#[cfg(test)]` 없는 helper 를 두는 것
+
+### 2. 파라미터화 테스트는 `rstest` 우선 (NON-NEGOTIABLE)
+
+같은 호출 shape 으로 입력/기대값만 다른 케이스가 **3개 이상** 모이면 **반드시 `rstest::rstest`** 로 파라미터화한다. for-loop 위에 assertion 을 거는 패턴을 새로 추가하지 않는다.
+
+**필수 변환 트리거 (둘 중 하나라도 해당 → rstest 사용):**
+
+- 동일 fn 에 3+ assertion (입력/기대값만 다름)
+- `for x in [a, b, c, ...] { assert!(...) }` 형태의 테이블 루프
+
+**Cheat sheet:**
+
+```rust
+// ❌ Anti-pattern: hand-rolled table loop, 실패시 어느 케이스인지 불명확
+#[test]
+fn encodes_digits() {
+    assert_eq!(encode_digit('1').unwrap(), decode_unicode('⠁'));
+    assert_eq!(encode_digit('0').unwrap(), decode_unicode('⠚'));
+    assert_eq!(encode_digit('9').unwrap(), decode_unicode('⠊'));
+}
+
+// ✅ rstest: 케이스별 라벨 → 실패 위치 즉시 파악
+#[rstest::rstest]
+#[case::one('1', '⠁')]
+#[case::zero('0', '⠚')]
+#[case::nine('9', '⠊')]
+fn encodes_digits(#[case] ch: char, #[case] expected: char) {
+    assert_eq!(encode_digit(ch).unwrap(), decode_unicode(expected));
+}
+
+// ✅ 단일 입력만 다른 경우 #[values(...)] 사용 가능
+#[rstest::rstest]
+fn unicode_superscripts_parse_ok(#[values('\u{2070}', '\u{00B9}', '\u{00B2}')] c: char) {
+    let result = parse_math_expression(&format!("x{c}"));
+    assert!(result.is_ok(), "parse failed for x{c:?}");
+}
+```
+
+**원칙:**
+
+- `#[case::label(...)]` 의 label 은 의미를 담는다 (`#[case::lower_a]`, `#[case::overflow_max]` 등)
+- 실패 메시지에 input 을 포함시킬 필요가 줄어든다 — label 이 그 역할을 한다
+- `#[case]` 와 `#[values]` 둘 다 가능한 경우 `#[case]` 우선 (의도 표현이 더 명확)
+- smoke test (`let _ = enc(input);` 처럼 assertion 이 없는 경우) 는 변환 의무 없음 — for-loop 형태가 더 간결하면 유지
 
 ## ANTI-PATTERNS
 
@@ -163,13 +226,34 @@ Infrastructure:
 ## TESTING
 
 ```bash
-cargo test                           # All tests (353+)
-cargo test test_by_testcase          # Testcase suite (2064 cases, tracks KNOWN_FAILURES)
-cargo test test_accuracy_report      # Accuracy report (raw encode, no test routing)
-cargo test test_no_regression        # Regression guard
+cargo test                           # All tests (390+ unit + 14 integration)
+cargo test test_by_testcase          # Full testcase suite (2419 cases)
 cargo fmt && cargo clippy            # Format + lint
+bun test test_cases/                 # JSON integrity checks (14163 assertions)
 ```
 
 Test cases in `test_cases/korean/*.json` and `test_cases/math/*.json`.
 
-Current status: 1710/2064 passing (354 known failures).
+**Current status: 2419/2419 passing (100% PDF 규정 준수, 0 known failures).**
+
+`KNOWN_FAILURES` 상수는 더 이상 존재하지 않는다. raw `encode()` 가 모든 testcase 에서
+PDF 정답과 byte-동일 결과를 낸다. 새로 추가되는 testcase 도 같은 기준을 만족해야 한다.
+
+## BENCHMARK
+
+```bash
+# 마이크로 벤치 (criterion) — Wave 0 인프라
+cargo bench -p braillify --bench encode_native
+cargo bench -p braillify --bench encode_math
+
+# 메모리 프로파일 (dhat)
+cargo bench -p braillify --bench memory_dhat --features dhat-heap
+
+# 외부 점역기 비교 (점자세상 / 점사랑 7.0)
+bun run scripts/world-bench.ts        # PDF 정답 일치율 측정
+bun run scripts/jeomsarang-bench.ts
+```
+
+벤치 결과: `bench/BASELINE.md`, `bench/FINAL_REPORT.md`,
+`bench/WORLD_BENCH.md`, `bench/JEOMSARANG_BENCH.md`,
+`bench/FINAL_BENCHMARK_COMPARISON.md` 참고.

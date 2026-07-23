@@ -1,6 +1,8 @@
 [
   {
     "input": "|",
+    "context": "math",
+    "note": "PDF 제63항 — 조건부확률 | 기호 정의 (단독, 수학 모드, math_21 절댓값과 동일 점역)",
     "internal": "\\",
     "expected": "51",
     "unicode": "⠳",
@@ -8,11 +10,21 @@
     "jeomsarang": "⠸⠳"
   },
   {
-    "input": "P(B|A)=1/6",
+    "input": "$|$",
+    "note": "LaTeX",
+    "internal": "\\",
+    "expected": "51",
+    "unicode": "⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$P(B|A) = \\frac{1}{6}$",
+    "note": "PDF 제63항 — 예제 P(B|A) = 1/6 (조건부확률, 분수 평문 표기 불가 → LaTeX만)",
     "internal": ",p8,b\\,a033#f/#a",
     "expected": "32153832351321521818601112601",
     "unicode": "⠠⠏⠦⠠⠃⠳⠠⠁⠴⠒⠒⠼⠋⠌⠼⠁",
-    "world": "⠴⠠⠏⠐⠣⠠⠃⠸⠳⠠⠁⠠⠴⠒⠒⠼⠁⠸⠌⠼⠋",
-    "jeomsarang": "⠴⠠⠏⠐⠣⠠⠃⠸⠳⠠⠁⠐⠜⠒⠒⠼⠁⠸⠌⠼⠋"
+    "world": "⠴⠈⠎⠴⠠⠏⠐⠣⠠⠃⠸⠳⠠⠁⠐⠜ ⠐⠶ ⠸⠡⠋⠗⠁⠉⠦⠂⠼⠁⠐⠴⠦⠂⠼⠋⠐⠴⠈⠎",
+    "jeomsarang": ""
   }
 ]

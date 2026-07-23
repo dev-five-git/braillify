@@ -1,0 +1,9 @@
+[
+  {
+    "input": "\\time 4/4 is the time signature.",
+    "context": "english",
+    "internal": ",'#d4 ;2is ! \"t signature4",
+    "expected": "324602550048610140460163001410272913037231750",
+    "unicode": "⠠⠄⠼⠙⠲⠀⠰⠆⠊⠎⠀⠮⠀⠐⠞⠀⠎⠊⠛⠝⠁⠞⠥⠗⠑⠲"
+  }
+]

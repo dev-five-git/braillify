@@ -1,6 +1,7 @@
 [
   {
     "input": "∠",
+    "note": "PDF 제39항 — 각 ∠ 기호 정의 (단독)",
     "internal": "?",
     "expected": "57",
     "unicode": "⠹",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠹"
   },
   {
+    "input": "$\\angle$",
+    "note": "LaTeX",
+    "internal": "?",
+    "expected": "57",
+    "unicode": "⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "∠ABC",
+    "note": "PDF 제39항 — 예제 ∠ABC (대문자 단어표 ,, 적용)",
     "internal": "?,,ABC",
     "expected": "573232139",
     "unicode": "⠹⠠⠠⠁⠃⠉",

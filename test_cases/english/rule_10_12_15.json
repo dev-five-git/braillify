@@ -1,0 +1,32 @@
+[
+  {
+    "input": "Take the dog for a w-a-l-k.",
+    "internal": ",take ! dog = a ;;w-a-l-k4",
+    "expected": "32301517046025212706301048485836136736550",
+    "unicode": "⠠⠞⠁⠅⠑⠀⠮⠀⠙⠕⠛⠀⠿⠀⠁⠀⠰⠰⠺⠤⠁⠤⠇⠤⠅⠲"
+  },
+  {
+    "input": "w-i-n-d-o-w",
+    "internal": ";;w-i-n-d-o-w",
+    "expected": "48485836103629362536213658",
+    "unicode": "⠰⠰⠺⠤⠊⠤⠝⠤⠙⠤⠕⠤⠺"
+  },
+  {
+    "input": "M-a-c-L-e-a-n",
+    "internal": ";;,m-a-c-,l-e-a-n",
+    "expected": "484832133613693632736173613629",
+    "unicode": "⠰⠰⠠⠍⠤⠁⠤⠉⠤⠠⠇⠤⠑⠤⠁⠤⠝"
+  },
+  {
+    "input": "N O W!",
+    "internal": ";,n ,o ;,w6",
+    "expected": "48322903221048325822",
+    "unicode": "⠰⠠⠝⠀⠠⠕⠀⠰⠠⠺⠖"
+  },
+  {
+    "input": "U-N-I-T-E-D",
+    "internal": ";;,u-,n-,i-,t-,e-,d",
+    "expected": "48483237363229363210363230363217363225",
+    "unicode": "⠰⠰⠠⠥⠤⠠⠝⠤⠠⠊⠤⠠⠞⠤⠠⠑⠤⠠⠙"
+  }
+]

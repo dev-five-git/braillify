@@ -1,6 +1,7 @@
 [
   {
     "input": "▷",
+    "note": "PDF 제33항 1 — 오른쪽으로 뾰족한 세모꼴 ▷ 정의 (단독)",
     "internal": "_>",
     "expected": "5628",
     "unicode": "⠸⠜",
@@ -8,7 +9,35 @@
     "jeomsarang": "⠸⠜"
   },
   {
+    "input": "$\\triangleright$",
+    "note": "LaTeX",
+    "internal": "_>",
+    "expected": "5628",
+    "unicode": "⠸⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "G ▷ N",
+    "note": "PDF 제33항 1 — 예제 (G ▷ N)",
+    "internal": ",g`_>`,n",
+    "expected": "32270562803229",
+    "unicode": "⠠⠛⠀⠸⠜⠀⠠⠝",
+    "world": "⠴⠠⠛ ⠄⠳⠭⠆⠢⠃⠶⠄ ⠰⠠⠝⠲",
+    "jeomsarang": "⠴⠰⠠⠛⠀⠸⠜⠀⠰⠠⠝⠲"
+  },
+  {
+    "input": "$G \\triangleright N$",
+    "note": "LaTeX",
+    "internal": ",g`_>`,n",
+    "expected": "32270562803229",
+    "unicode": "⠠⠛⠀⠸⠜⠀⠠⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "◁",
+    "note": "PDF 제33항 2 — 왼쪽으로 뾰족한 세모꼴 ◁ 정의 (단독)",
     "internal": "_<",
     "expected": "5635",
     "unicode": "⠸⠣",
@@ -16,19 +45,30 @@
     "jeomsarang": "⠸⠣"
   },
   {
-    "input": "G ▷ N",
-    "internal": ",g`_>`,n",
-    "expected": "32270562803229",
-    "unicode": "⠠⠛⠀⠸⠜⠀⠠⠝",
-    "world": "⠴⠠⠛ ⠄⠳⠭⠆⠢⠃⠶⠄ ⠰⠠⠝⠲",
-    "jeomsarang": "⠴⠠⠛⠀⠸⠜⠀⠰⠠⠝⠲"
+    "input": "$\\triangleleft$",
+    "note": "LaTeX",
+    "internal": "_<",
+    "expected": "5635",
+    "unicode": "⠸⠣",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "N ◁ G",
+    "note": "PDF 제33항 2 — 예제 (N ◁ G)",
     "internal": ",n`_<`,g",
     "expected": "32290563503227",
     "unicode": "⠠⠝⠀⠸⠣⠀⠠⠛",
     "world": "⠴⠠⠝ ⠄⠳⠭⠆⠢⠉⠂⠄ ⠰⠠⠛⠲",
-    "jeomsarang": "⠴⠠⠝⠀⠸⠣⠀⠰⠠⠛⠲"
+    "jeomsarang": "⠴⠰⠠⠝⠀⠸⠣⠀⠰⠠⠛⠲"
+  },
+  {
+    "input": "$N \\triangleleft G$",
+    "note": "LaTeX",
+    "internal": ",n`_<`,g",
+    "expected": "32290563503227",
+    "unicode": "⠠⠝⠀⠸⠣⠀⠠⠛",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

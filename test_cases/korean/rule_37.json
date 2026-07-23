@@ -1,241 +1,270 @@
 [
   {
     "input": "but",
-    "internal": "but",
-    "expected": "33730",
-    "unicode": "⠃⠥⠞",
+    "context": "korean",
+    "internal": "0but4",
+    "expected": "523373050",
+    "unicode": "⠴⠃⠥⠞⠲",
     "world": "⠴⠃⠥⠞⠲",
-    "jeomsarang": "⠴⠃"
+    "jeomsarang": "⠴⠃⠥⠞⠲"
   },
   {
     "input": "can",
-    "internal": "can",
-    "expected": "9129",
-    "unicode": "⠉⠁⠝",
+    "context": "korean",
+    "internal": "0can4",
+    "expected": "52912950",
+    "unicode": "⠴⠉⠁⠝⠲",
     "world": "⠴⠉⠁⠝⠲",
-    "jeomsarang": "⠴⠉"
+    "jeomsarang": "⠴⠉⠁⠝⠲"
   },
   {
     "input": "do",
-    "internal": "do",
-    "expected": "2521",
-    "unicode": "⠙⠕",
+    "context": "korean",
+    "internal": "0do4",
+    "expected": "52252150",
+    "unicode": "⠴⠙⠕⠲",
     "world": "⠴⠙⠕⠲",
-    "jeomsarang": "⠴⠙"
+    "jeomsarang": "⠴⠙⠕⠲"
   },
   {
     "input": "every",
-    "internal": "\"ey",
-    "expected": "161761",
-    "unicode": "⠐⠑⠽",
+    "context": "korean",
+    "internal": "0\"ey4",
+    "expected": "5216176150",
+    "unicode": "⠴⠐⠑⠽⠲",
     "world": "⠴⠐⠑⠽⠲",
-    "jeomsarang": "⠴⠑"
+    "jeomsarang": "⠴⠐⠑⠽⠲"
   },
   {
     "input": "from",
-    "internal": "from",
-    "expected": "11232113",
-    "unicode": "⠋⠗⠕⠍",
+    "context": "korean",
+    "internal": "0from4",
+    "expected": "521123211350",
+    "unicode": "⠴⠋⠗⠕⠍⠲",
     "world": "⠴⠋⠗⠕⠍⠲",
-    "jeomsarang": "⠴⠋"
+    "jeomsarang": "⠴⠋⠗⠕⠍⠲"
   },
   {
     "input": "go",
-    "internal": "go",
-    "expected": "2721",
-    "unicode": "⠛⠕",
+    "context": "korean",
+    "internal": "0go4",
+    "expected": "52272150",
+    "unicode": "⠴⠛⠕⠲",
     "world": "⠴⠛⠕⠲",
-    "jeomsarang": "⠴⠛"
+    "jeomsarang": "⠴⠛⠕⠲"
   },
   {
     "input": "have",
-    "internal": "have",
-    "expected": "1913917",
-    "unicode": "⠓⠁⠧⠑",
+    "context": "korean",
+    "internal": "0have4",
+    "expected": "52191391750",
+    "unicode": "⠴⠓⠁⠧⠑⠲",
     "world": "⠴⠓⠁⠧⠑⠲",
-    "jeomsarang": "⠴⠓"
+    "jeomsarang": "⠴⠓⠁⠧⠑⠲"
   },
   {
     "input": "just",
-    "internal": "ju/",
-    "expected": "263712",
-    "unicode": "⠚⠥⠌",
+    "context": "korean",
+    "internal": "0ju/4",
+    "expected": "5226371250",
+    "unicode": "⠴⠚⠥⠌⠲",
     "world": "⠴⠚⠥⠌⠲",
-    "jeomsarang": "⠴⠚"
+    "jeomsarang": "⠴⠚⠥⠌⠲"
   },
   {
     "input": "knowledge",
-    "internal": "\"kl$ge",
-    "expected": "1657432717",
-    "unicode": "⠐⠅⠇⠫⠛⠑",
+    "context": "korean",
+    "internal": "0\"kl$ge4",
+    "expected": "52165743271750",
+    "unicode": "⠴⠐⠅⠇⠫⠛⠑⠲",
     "world": "⠴⠐⠅⠇⠫⠛⠑⠲",
-    "jeomsarang": "⠴⠅"
+    "jeomsarang": "⠴⠐⠅⠇⠫⠛⠑⠲"
   },
   {
     "input": "like",
-    "internal": "like",
-    "expected": "710517",
-    "unicode": "⠇⠊⠅⠑",
+    "context": "korean",
+    "internal": "0like4",
+    "expected": "5271051750",
+    "unicode": "⠴⠇⠊⠅⠑⠲",
     "world": "⠴⠇⠊⠅⠑⠲",
-    "jeomsarang": "⠴⠇"
+    "jeomsarang": "⠴⠇⠊⠅⠑⠲"
   },
   {
     "input": "more",
-    "internal": "more",
-    "expected": "13212317",
-    "unicode": "⠍⠕⠗⠑",
+    "context": "korean",
+    "internal": "0more4",
+    "expected": "521321231750",
+    "unicode": "⠴⠍⠕⠗⠑⠲",
     "world": "⠴⠍⠕⠗⠑⠲",
-    "jeomsarang": "⠴⠍"
+    "jeomsarang": "⠴⠍⠕⠗⠑⠲"
   },
   {
     "input": "not",
-    "internal": "not",
-    "expected": "292130",
-    "unicode": "⠝⠕⠞",
+    "context": "korean",
+    "internal": "0not4",
+    "expected": "5229213050",
+    "unicode": "⠴⠝⠕⠞⠲",
     "world": "⠴⠝⠕⠞⠲",
-    "jeomsarang": "⠴⠝"
+    "jeomsarang": "⠴⠝⠕⠞⠲"
   },
   {
     "input": "people",
-    "internal": "people",
-    "expected": "15172115717",
-    "unicode": "⠏⠑⠕⠏⠇⠑",
+    "context": "korean",
+    "internal": "0people4",
+    "expected": "521517211571750",
+    "unicode": "⠴⠏⠑⠕⠏⠇⠑⠲",
     "world": "⠴⠏⠑⠕⠏⠇⠑⠲",
-    "jeomsarang": "⠴⠏"
+    "jeomsarang": "⠴⠏⠑⠕⠏⠇⠑⠲"
   },
   {
     "input": "quite",
-    "internal": "quite",
-    "expected": "3137103017",
-    "unicode": "⠟⠥⠊⠞⠑",
+    "context": "korean",
+    "internal": "0quite4",
+    "expected": "52313710301750",
+    "unicode": "⠴⠟⠥⠊⠞⠑⠲",
     "world": "⠴⠟⠥⠊⠞⠑⠲",
-    "jeomsarang": "⠴⠟"
+    "jeomsarang": "⠴⠟⠥⠊⠞⠑⠲"
   },
   {
     "input": "rather",
-    "internal": "ra!r",
-    "expected": "2314623",
-    "unicode": "⠗⠁⠮⠗",
+    "context": "korean",
+    "internal": "0ra!r4",
+    "expected": "52231462350",
+    "unicode": "⠴⠗⠁⠮⠗⠲",
     "world": "⠴⠗⠁⠮⠗⠲",
-    "jeomsarang": "⠴⠗"
+    "jeomsarang": "⠴⠗⠁⠮⠗⠲"
   },
   {
     "input": "so",
-    "internal": "so",
-    "expected": "1421",
-    "unicode": "⠎⠕",
+    "context": "korean",
+    "internal": "0so4",
+    "expected": "52142150",
+    "unicode": "⠴⠎⠕⠲",
     "world": "⠴⠎⠕⠲",
-    "jeomsarang": "⠴⠎"
+    "jeomsarang": "⠴⠎⠕⠲"
   },
   {
     "input": "that",
-    "internal": "?at",
-    "expected": "57130",
-    "unicode": "⠹⠁⠞",
+    "context": "korean",
+    "internal": "0?at4",
+    "expected": "525713050",
+    "unicode": "⠴⠹⠁⠞⠲",
     "world": "⠴⠹⠁⠞⠲",
-    "jeomsarang": "⠴⠞"
+    "jeomsarang": "⠴⠹⠁⠞⠲"
   },
   {
     "input": "us",
-    "internal": "us",
-    "expected": "3714",
-    "unicode": "⠥⠎",
+    "context": "korean",
+    "internal": "0us4",
+    "expected": "52371450",
+    "unicode": "⠴⠥⠎⠲",
     "world": "⠴⠥⠎⠲",
-    "jeomsarang": "⠴⠥"
+    "jeomsarang": "⠴⠥⠎⠲"
   },
   {
     "input": "very",
-    "internal": "v}y",
-    "expected": "395961",
-    "unicode": "⠧⠻⠽",
+    "context": "korean",
+    "internal": "0v}y4",
+    "expected": "5239596150",
+    "unicode": "⠴⠧⠻⠽⠲",
     "world": "⠴⠧⠻⠽⠲",
-    "jeomsarang": "⠴⠧"
+    "jeomsarang": "⠴⠧⠻⠽⠲"
   },
   {
     "input": "will",
-    "internal": "will",
-    "expected": "581077",
-    "unicode": "⠺⠊⠇⠇",
+    "context": "korean",
+    "internal": "0will4",
+    "expected": "5258107750",
+    "unicode": "⠴⠺⠊⠇⠇⠲",
     "world": "⠴⠺⠊⠇⠇⠲",
-    "jeomsarang": "⠴⠺"
+    "jeomsarang": "⠴⠺⠊⠇⠇⠲"
   },
   {
     "input": "it",
-    "internal": "it",
-    "expected": "1030",
-    "unicode": "⠊⠞",
+    "context": "korean",
+    "internal": "0it4",
+    "expected": "52103050",
+    "unicode": "⠴⠊⠞⠲",
     "world": "⠴⠊⠞⠲",
-    "jeomsarang": "⠴⠭"
+    "jeomsarang": "⠴⠊⠞⠲"
   },
   {
     "input": "you",
-    "internal": "y\\",
-    "expected": "6151",
-    "unicode": "⠽⠳",
+    "context": "korean",
+    "internal": "0y\\4",
+    "expected": "52615150",
+    "unicode": "⠴⠽⠳⠲",
     "world": "⠴⠽⠳⠲",
-    "jeomsarang": "⠴⠽"
+    "jeomsarang": "⠴⠽⠳⠲"
   },
   {
     "input": "as",
-    "internal": "as",
-    "expected": "114",
-    "unicode": "⠁⠎",
+    "context": "korean",
+    "internal": "0as4",
+    "expected": "5211450",
+    "unicode": "⠴⠁⠎⠲",
     "world": "⠴⠁⠎⠲",
-    "jeomsarang": "⠴⠵"
+    "jeomsarang": "⠴⠁⠎⠲"
   },
   {
     "input": "be",
-    "internal": "be",
-    "expected": "317",
-    "unicode": "⠃⠑",
+    "context": "korean",
+    "internal": "0be4",
+    "expected": "5231750",
+    "unicode": "⠴⠃⠑⠲",
     "world": "⠴⠃⠑⠲",
     "jeomsarang": "⠴⠆"
   },
   {
     "input": "enough",
-    "internal": "5\\<",
-    "expected": "345135",
-    "unicode": "⠢⠳⠣",
+    "context": "korean",
+    "internal": "05\\<4",
+    "expected": "5234513550",
+    "unicode": "⠴⠢⠳⠣⠲",
     "world": "⠴⠢⠳⠣⠲",
     "jeomsarang": "⠴⠢"
   },
   {
     "input": "his",
-    "internal": "his",
-    "expected": "191014",
-    "unicode": "⠓⠊⠎",
+    "context": "korean",
+    "internal": "0his4",
+    "expected": "5219101450",
+    "unicode": "⠴⠓⠊⠎⠲",
     "world": "⠴⠓⠊⠎⠲",
     "jeomsarang": "⠴⠦"
   },
   {
     "input": "in",
-    "internal": "in",
-    "expected": "1029",
-    "unicode": "⠊⠝",
+    "context": "korean",
+    "internal": "0in4",
+    "expected": "52102950",
+    "unicode": "⠴⠊⠝⠲",
     "world": "⠴⠊⠝⠲",
     "jeomsarang": "⠴⠔"
   },
   {
     "input": "was",
-    "internal": "was",
-    "expected": "58114",
-    "unicode": "⠺⠁⠎",
+    "context": "korean",
+    "internal": "0was4",
+    "expected": "525811450",
+    "unicode": "⠴⠺⠁⠎⠲",
     "world": "⠴⠺⠁⠎⠲",
     "jeomsarang": "⠴⠴"
   },
   {
     "input": "were",
-    "internal": "w}e",
-    "expected": "585917",
-    "unicode": "⠺⠻⠑",
+    "context": "korean",
+    "internal": "0w}e4",
+    "expected": "5258591750",
+    "unicode": "⠴⠺⠻⠑⠲",
     "world": "⠴⠺⠻⠑⠲",
     "jeomsarang": "⠴⠶"
   },
   {
     "input": "그는 Can you help me?라고 도움을 요청했다.",
-    "internal": "@{cz`0,can`y`help`me8\"<@u`ium5`!`+;]jr/i4",
-    "expected": "842953052329129061019177150131738163583701037133404604448592623121050",
-    "unicode": "⠈⠪⠉⠵⠀⠴⠠⠉⠁⠝⠀⠽⠀⠓⠑⠇⠏⠀⠍⠑⠦⠐⠣⠈⠥⠀⠊⠥⠍⠢⠀⠮⠀⠬⠰⠻⠚⠗⠌⠊⠲",
+    "internal": "@{cz`0,can`y`help`me8\"<@u`ium5!`+;]jr/i4",
+    "expected": "84295305232912906101917715013173816358370103713344604448592623121050",
+    "unicode": "⠈⠪⠉⠵⠀⠴⠠⠉⠁⠝⠀⠽⠀⠓⠑⠇⠏⠀⠍⠑⠦⠐⠣⠈⠥⠀⠊⠥⠍⠢⠮⠀⠬⠰⠻⠚⠗⠌⠊⠲",
     "world": "⠈⠪⠉⠵ ⠴⠠⠉⠁⠝ ⠽ ⠓⠑⠇⠏ ⠍⠑⠦⠐⠣⠈⠥ ⠊⠥⠍⠢⠮ ⠬⠰⠻⠚⠗⠌⠊⠲",
     "jeomsarang": "⠈⠪⠉⠵⠀⠴⠠⠉⠁⠝⠀⠽⠀⠓⠑⠇⠏⠀⠍⠑⠦⠐⠣⠈⠥⠀⠊⠥⠍⠢⠮⠀⠬⠰⠻⠚⠗⠌⠊⠲"
   },
@@ -245,7 +274,7 @@
     "expected": "52317509530521132028172010145058015182659010637211050",
     "unicode": "⠴⠃⠑⠲⠉⠵⠀⠴⠁⠍⠂⠀⠜⠑⠂⠀⠊⠎⠲⠺⠀⠏⠒⠚⠻⠀⠊⠿⠇⠕⠊⠲",
     "world": "⠴⠃⠑⠲⠉⠵ ⠴⠁⠍⠂ ⠜⠑⠂ ⠊⠎⠲⠺ ⠏⠒⠚⠻ ⠊⠿⠇⠕⠊⠲",
-    "jeomsarang": "⠴⠃⠑⠲⠉⠵⠀⠴⠁⠍⠐⠀⠜⠑⠐⠀⠊⠎⠲⠺⠀⠏⠒⠚⠻⠀⠊⠿⠇⠕⠊⠲"
+    "jeomsarang": "⠴⠃⠑⠲⠉⠵⠀⠴⠁⠍⠂⠀⠜⠑⠂⠀⠊⠎⠲⠺⠀⠏⠒⠚⠻⠀⠊⠿⠇⠕⠊⠲"
   },
   {
     "input": "be, his, was, were의 약자를 바르게 쓰시오.",
@@ -253,6 +282,6 @@
     "expected": "5231720191014205811420585917505802814016460241642829032324232213750",
     "unicode": "⠴⠃⠑⠂⠀⠓⠊⠎⠂⠀⠺⠁⠎⠂⠀⠺⠻⠑⠲⠺⠀⠜⠁⠨⠐⠮⠀⠘⠐⠪⠈⠝⠀⠠⠠⠪⠠⠕⠥⠲",
     "world": "⠴⠃⠑⠂ ⠓⠊⠎⠂ ⠺⠁⠎⠂ ⠺⠻⠑⠲⠺ ⠜⠁⠨⠐⠮ ⠘⠐⠪⠈⠝ ⠠⠠⠪⠠⠕⠥⠲",
-    "jeomsarang": "⠴⠃⠑⠐⠀⠓⠊⠎⠐⠀⠺⠁⠎⠐⠀⠺⠻⠑⠲⠺⠀⠜⠁⠨⠐⠮⠀⠘⠐⠪⠈⠝⠀⠠⠠⠪⠠⠕⠥⠲"
+    "jeomsarang": "⠴⠃⠑⠂⠀⠓⠊⠎⠂⠀⠺⠁⠎⠂⠀⠺⠻⠑⠲⠺⠀⠜⠁⠨⠐⠮⠀⠘⠐⠪⠈⠝⠀⠠⠠⠪⠠⠕⠥⠲"
   }
 ]

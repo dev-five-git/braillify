@@ -1,0 +1,26 @@
+[
+  {
+    "input": "chemotherapy",
+    "internal": "*emo!rapy",
+    "expected": "33171321462311561",
+    "unicode": "⠡⠑⠍⠕⠮⠗⠁⠏⠽"
+  },
+  {
+    "input": "chlordane",
+    "internal": "*lordane",
+    "expected": "33721232512917",
+    "unicode": "⠡⠇⠕⠗⠙⠁⠝⠑"
+  },
+  {
+    "input": "whaddaya",
+    "internal": ":addaya",
+    "expected": "49125251611",
+    "unicode": "⠱⠁⠙⠙⠁⠽⠁"
+  },
+  {
+    "input": "Beethoven",
+    "internal": ",bee?ov5",
+    "expected": "323171757213934",
+    "unicode": "⠠⠃⠑⠑⠹⠕⠧⠢"
+  }
+]

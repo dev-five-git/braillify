@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "∑(x*y+1)"
+unicode = ok: "⠠⠨⠎⠦⠄⠭⠐⠔⠽⠢⠼⠁⠠⠴"
+bytes   = ok: [32, 40, 14, 38, 4, 45, 16, 20, 61, 34, 60, 1, 32, 52]

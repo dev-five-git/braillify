@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "값 x\u{305} 합"
+unicode = ok: "⠫⠃⠄⠀⠀⠭⠈⠉⠀⠀⠚⠃"
+bytes   = ok: [43, 3, 4, 0, 0, 45, 8, 9, 0, 0, 26, 3]

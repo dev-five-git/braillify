@@ -48,21 +48,25 @@ pub fn encode_jongseong(text: char) -> Result<&'static [u8], String> {
 #[cfg(test)]
 mod test {
     use super::*;
-    #[test]
-    pub fn test_encode_jongseong() {
-        assert_eq!(encode_jongseong('ㄱ').unwrap(), vec![decode_unicode('⠁')]);
-        assert_eq!(encode_jongseong('ㄴ').unwrap(), vec![decode_unicode('⠒')]);
-        assert_eq!(encode_jongseong('ㄷ').unwrap(), vec![decode_unicode('⠔')]);
-        assert_eq!(encode_jongseong('ㄹ').unwrap(), vec![decode_unicode('⠂')]);
-        assert_eq!(encode_jongseong('ㅁ').unwrap(), vec![decode_unicode('⠢')]);
-        assert_eq!(encode_jongseong('ㅂ').unwrap(), vec![decode_unicode('⠃')]);
-        assert_eq!(encode_jongseong('ㅅ').unwrap(), vec![decode_unicode('⠄')]);
-        assert_eq!(encode_jongseong('ㅇ').unwrap(), vec![decode_unicode('⠶')]);
-        assert_eq!(encode_jongseong('ㅈ').unwrap(), vec![decode_unicode('⠅')]);
-        assert_eq!(encode_jongseong('ㅊ').unwrap(), vec![decode_unicode('⠆')]);
-        assert_eq!(encode_jongseong('ㅋ').unwrap(), vec![decode_unicode('⠖')]);
-        assert_eq!(encode_jongseong('ㅌ').unwrap(), vec![decode_unicode('⠦')]);
-        assert_eq!(encode_jongseong('ㅍ').unwrap(), vec![decode_unicode('⠲')]);
-        assert_eq!(encode_jongseong('ㅎ').unwrap(), vec![decode_unicode('⠴')]);
+    #[rstest::rstest]
+    #[case::giyeok('ㄱ', '⠁')]
+    #[case::nieun('ㄴ', '⠒')]
+    #[case::digeut('ㄷ', '⠔')]
+    #[case::rieul('ㄹ', '⠂')]
+    #[case::mieum('ㅁ', '⠢')]
+    #[case::bieup('ㅂ', '⠃')]
+    #[case::siot('ㅅ', '⠄')]
+    #[case::ieung('ㅇ', '⠶')]
+    #[case::jieut('ㅈ', '⠅')]
+    #[case::chieut('ㅊ', '⠆')]
+    #[case::kieuk('ㅋ', '⠖')]
+    #[case::tieut('ㅌ', '⠦')]
+    #[case::pieup('ㅍ', '⠲')]
+    #[case::hieut('ㅎ', '⠴')]
+    pub fn test_encode_jongseong(#[case] jong: char, #[case] expected: char) {
+        assert_eq!(
+            encode_jongseong(jong).unwrap(),
+            vec![decode_unicode(expected)]
+        );
     }
 }

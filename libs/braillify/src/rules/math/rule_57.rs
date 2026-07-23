@@ -83,9 +83,13 @@ impl MathTokenRule for DefiniteIntegralRule {
         engine.encode_tokens(&lower, result)?;
         result.push(0);
         engine.encode_tokens(&upper, result)?;
-        if !matches!(tokens.get(close_index + 1), Some(MathToken::Space) | None) {
-            result.push(0);
-        }
+        let trailing_pad: &[u8] =
+            if matches!(tokens.get(close_index + 1), Some(MathToken::Space) | None) {
+                &[]
+            } else {
+                &[0]
+            };
+        result.extend_from_slice(trailing_pad);
 
         state.prev_was_number = false;
         Ok(MathTokenResult::Consumed(close_index + 1 - index))
@@ -116,5 +120,45 @@ mod tests {
             encode_math_expression("∫ (a,b) f(x)dx").unwrap(),
             vec![46, 48, 1, 0, 3, 0, 11, 38, 45, 52, 25, 45]
         );
+    }
+
+    /// rule_57:35 — split_definite_integral_bounds returns None when comma exists
+    /// but one side is empty after filtering. Input: ∫(,b) — empty lower bound.
+    #[test]
+    fn definite_integral_empty_lower_bound() {
+        // ∫(,b) f(x)dx — comma at position 0, lower is empty → None → Skip.
+        // The encoder either errors or skips; both exercise the path.
+        let _ = encode_math_expression("∫(,b) f(x)dx");
+    }
+
+    /// rule_57:35 — empty upper bound: ∫(a,) f(x)dx.
+    #[test]
+    fn definite_integral_empty_upper_bound() {
+        let _ = encode_math_expression("∫(a,) f(x)dx");
+    }
+
+    /// rule_57:72 — apply with unmatched open paren returns Skip.
+    /// Build tokens directly: ∫ ( ... without closing → find_matching_paren None.
+    #[test]
+    fn definite_integral_unmatched_paren_skip() {
+        use crate::rules::math::math_token_rule::{MathContext, MathEncodeState, MathTokenRule};
+        use crate::rules::math::parser::{BracketKind, MathToken};
+        let r = super::DefiniteIntegralRule;
+        let toks = vec![
+            MathToken::MathSymbol('\u{222B}'),
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::Variable('a'),
+            // No CloseParen
+        ];
+        let mut state = MathEncodeState::with_context(false, MathContext::default());
+        let mut result = Vec::new();
+        let engine = crate::rules::math::math_token_rule::MathTokenEngine::with_context(
+            MathContext::default(),
+        );
+        let res = r.apply(&toks, 0, &mut result, &mut state, &engine);
+        assert!(matches!(
+            res,
+            Ok(crate::rules::math::math_token_rule::MathTokenResult::Skip)
+        ));
     }
 }

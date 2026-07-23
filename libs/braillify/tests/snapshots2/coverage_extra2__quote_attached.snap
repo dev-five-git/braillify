@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "그는 \"좋다\"고 말했다"
+unicode = ok: "⠈⠪⠉⠵⠈⠦⠨⠥⠴⠊⠴⠈⠥⠈⠑⠂⠚⠗⠌⠊"
+bytes   = ok: [8, 42, 9, 53, 8, 38, 40, 37, 52, 10, 52, 8, 37, 8, 17, 2, 26, 23, 12, 10]

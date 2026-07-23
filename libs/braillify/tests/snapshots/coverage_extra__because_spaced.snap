@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "∵ p=q"
+unicode = ok: "⠈⠌⠀⠏⠒⠒⠟"
+bytes   = ok: [8, 12, 0, 15, 18, 18, 31]

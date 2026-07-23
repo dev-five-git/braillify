@@ -33,7 +33,7 @@
   },
   {
     "input": "열",
-    "internal": "\\",
+    "internal": "|",
     "expected": "51",
     "unicode": "⠳",
     "world": "⠳",
@@ -41,7 +41,7 @@
   },
   {
     "input": "영",
-    "internal": "]",
+    "internal": "}",
     "expected": "59",
     "unicode": "⠻",
     "world": "⠻",
@@ -161,7 +161,7 @@
   },
   {
     "input": "하얼빈",
-    "internal": "j<t^q",
+    "internal": "j<t~q",
     "expected": "2635302431",
     "unicode": "⠚⠣⠞⠘⠟",
     "world": "⠚⠣⠞⠘⠟",
@@ -185,7 +185,7 @@
   },
   {
     "input": "열매",
-    "internal": "\\er",
+    "internal": "|er",
     "expected": "511723",
     "unicode": "⠳⠑⠗",
     "world": "⠳⠑⠗",
@@ -193,7 +193,7 @@
   },
   {
     "input": "가열",
-    "internal": "$\\",
+    "internal": "$|",
     "expected": "4351",
     "unicode": "⠫⠳",
     "world": "⠫⠳",
@@ -201,7 +201,7 @@
   },
   {
     "input": "영어",
-    "internal": "]s",
+    "internal": "}s",
     "expected": "5914",
     "unicode": "⠻⠎",
     "world": "⠻⠎",
@@ -209,7 +209,7 @@
   },
   {
     "input": "환영",
-    "internal": "jv3]",
+    "internal": "jv3}",
     "expected": "26391859",
     "unicode": "⠚⠧⠒⠻",
     "world": "⠚⠧⠒⠻",
@@ -417,7 +417,7 @@
   },
   {
     "input": "벌레",
-    "internal": "^t\"n",
+    "internal": "~t\"n",
     "expected": "24301629",
     "unicode": "⠘⠞⠐⠝",
     "world": "⠘⠞⠐⠝",
@@ -457,7 +457,7 @@
   },
   {
     "input": "변화",
-    "internal": "^*jv",
+    "internal": "~*jv",
     "expected": "24332639",
     "unicode": "⠘⠡⠚⠧",
     "world": "⠘⠡⠚⠧",
@@ -473,7 +473,7 @@
   },
   {
     "input": "별자리",
-    "internal": "^\\.\"o",
+    "internal": "~|.\"o",
     "expected": "2451401621",
     "unicode": "⠘⠳⠨⠐⠕",
     "world": "⠘⠳⠨⠐⠕",
@@ -481,7 +481,7 @@
   },
   {
     "input": "헌혈",
-    "internal": "j)j\\",
+    "internal": "j)j|",
     "expected": "26622651",
     "unicode": "⠚⠾⠚⠳",
     "world": "⠚⠾⠚⠳",
@@ -489,7 +489,7 @@
   },
   {
     "input": "엷다",
-    "internal": "\\bi",
+    "internal": "|bi",
     "expected": "51310",
     "unicode": "⠳⠃⠊",
     "world": "⠳⠃⠊",
@@ -497,7 +497,7 @@
   },
   {
     "input": "평화",
-    "internal": "d]jv",
+    "internal": "d}jv",
     "expected": "25592639",
     "unicode": "⠙⠻⠚⠧",
     "world": "⠙⠻⠚⠧",
@@ -505,7 +505,7 @@
   },
   {
     "input": "안녕",
-    "internal": "<3c]",
+    "internal": "<3c}",
     "expected": "3518959",
     "unicode": "⠣⠒⠉⠻",
     "world": "⠣⠒⠉⠻",
@@ -513,7 +513,7 @@
   },
   {
     "input": "복덕방",
-    "internal": "^xi?^7",
+    "internal": "~xi?~7",
     "expected": "244510572454",
     "unicode": "⠘⠭⠊⠹⠘⠶",
     "world": "⠘⠭⠊⠹⠘⠶",
@@ -529,7 +529,7 @@
   },
   {
     "input": "볶다",
-    "internal": "^xai",
+    "internal": "~xai",
     "expected": "2445110",
     "unicode": "⠘⠭⠁⠊",
     "world": "⠘⠭⠁⠊",
@@ -553,7 +553,7 @@
   },
   {
     "input": "동그라미",
-    "internal": "i=@[\"<eo",
+    "internal": "i=@{\"<eo",
     "expected": "106384216351721",
     "unicode": "⠊⠿⠈⠪⠐⠣⠑⠕",
     "world": "⠊⠿⠈⠪⠐⠣⠑⠕",
@@ -569,7 +569,7 @@
   },
   {
     "input": "순두부",
-    "internal": ",gim^m",
+    "internal": ",gim~m",
     "expected": "322710132413",
     "unicode": "⠠⠛⠊⠍⠘⠍",
     "world": "⠠⠛⠊⠍⠘⠍",
@@ -585,7 +585,7 @@
   },
   {
     "input": "불고기",
-    "internal": "^&@u@o",
+    "internal": "~&@u@o",
     "expected": "2447837821",
     "unicode": "⠘⠯⠈⠥⠈⠕",
     "world": "⠘⠯⠈⠥⠈⠕",

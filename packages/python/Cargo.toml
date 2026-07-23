@@ -1,12 +1,17 @@
 [package]
 name = "python"
 version = "1.0.3"
-edition = "2024"
+edition.workspace = true
+rust-version.workspace = true
 
 [lib]
 name = "braillify"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
+doctest = false
 
 [dependencies]
-pyo3 = "0.28.3"
+pyo3 = "0.29.0"
 braillify = { path = "../../libs/braillify" }
+
+[dev-dependencies]
+pyo3 = { version = "0.29.0", features = ["auto-initialize"] }

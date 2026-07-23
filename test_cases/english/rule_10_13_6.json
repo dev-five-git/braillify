@@ -1,0 +1,14 @@
+[
+  {
+    "input": "always\n—except",
+    "internal": "alw\n,-except",
+    "expected": "1758\n323617459171530",
+    "unicode": "⠁⠇⠺\n⠠⠤⠑⠭⠉⠑⠏⠞"
+  },
+  {
+    "input": "always—\nexcept",
+    "internal": "alw,-\nexcept",
+    "expected": "17583236\n17459171530",
+    "unicode": "⠁⠇⠺⠠⠤\n⠑⠭⠉⠑⠏⠞"
+  }
+]

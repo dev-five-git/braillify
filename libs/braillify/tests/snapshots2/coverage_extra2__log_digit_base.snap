@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "log_3 x"
+unicode = ok: "⠸⠠⠒⠀⠭"
+bytes   = ok: [56, 32, 18, 0, 45]

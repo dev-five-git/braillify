@@ -1,0 +1,32 @@
+[
+  {
+    "input": "enough–bein'",
+    "internal": "5,-2in'",
+    "expected": "343236610294",
+    "unicode": "⠢⠠⠤⠆⠊⠝⠄"
+  },
+  {
+    "input": "in.....",
+    "internal": "in44444",
+    "expected": "10295050505050",
+    "unicode": "⠊⠝⠲⠲⠲⠲⠲"
+  },
+  {
+    "input": "Was that in?–in bounds?",
+    "internal": ",0 t 98,-in b.ds8",
+    "expected": "325203002038323610290340251438",
+    "unicode": "⠠⠴⠀⠞⠀⠔⠦⠠⠤⠊⠝⠀⠃⠨⠙⠎⠦"
+  },
+  {
+    "input": "\"Enough!\"",
+    "internal": "8,5\\<60",
+    "expected": "38323451352252",
+    "unicode": "⠦⠠⠢⠳⠣⠖⠴"
+  },
+  {
+    "input": "IN MY HOUSE",
+    "internal": ",,,9 my h\\se,'",
+    "expected": "3232322001361019511417324",
+    "unicode": "⠠⠠⠠⠔⠀⠍⠽⠀⠓⠳⠎⠑⠠⠄"
+  }
+]

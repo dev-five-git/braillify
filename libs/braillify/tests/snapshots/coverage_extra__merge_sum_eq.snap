@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\sum i = 1$"
+unicode = ok: "⠠⠨⠎⠊⠒⠒⠼⠁"
+bytes   = ok: [32, 40, 14, 10, 18, 18, 60, 1]

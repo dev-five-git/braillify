@@ -1,0 +1,242 @@
+[
+  {
+    "input": "beatitude",
+    "internal": "2atitude",
+    "expected": "61301030372517",
+    "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑"
+  },
+  {
+    "input": "Beatrice",
+    "internal": ",2atrice",
+    "expected": "3261302310917",
+    "unicode": "⠠⠆⠁⠞⠗⠊⠉⠑"
+  },
+  {
+    "input": "become",
+    "internal": "2come",
+    "expected": "69211317",
+    "unicode": "⠆⠉⠕⠍⠑"
+  },
+  {
+    "input": "begonia",
+    "internal": "2gonia",
+    "expected": "6272129101",
+    "unicode": "⠆⠛⠕⠝⠊⠁"
+  },
+  {
+    "input": "behemoth",
+    "internal": "2hemo?",
+    "expected": "61917132157",
+    "unicode": "⠆⠓⠑⠍⠕⠹"
+  },
+  {
+    "input": "being",
+    "internal": "2+",
+    "expected": "644",
+    "unicode": "⠆⠬"
+  },
+  {
+    "input": "beneficent",
+    "internal": "2nefic5t",
+    "expected": "62917111093430",
+    "unicode": "⠆⠝⠑⠋⠊⠉⠢⠞"
+  },
+  {
+    "input": "beta",
+    "internal": "2ta",
+    "expected": "6301",
+    "unicode": "⠆⠞⠁"
+  },
+  {
+    "input": "first-begotten",
+    "internal": "f/-2gott5",
+    "expected": "11123662721303034",
+    "unicode": "⠋⠌⠤⠆⠛⠕⠞⠞⠢"
+  },
+  {
+    "input": "air-conditioned",
+    "internal": "air-3di;n$",
+    "expected": "1102336182510482943",
+    "unicode": "⠁⠊⠗⠤⠒⠙⠊⠰⠝⠫"
+  },
+  {
+    "input": "concept",
+    "internal": "3cept",
+    "expected": "189171530",
+    "unicode": "⠒⠉⠑⠏⠞"
+  },
+  {
+    "input": "congress",
+    "internal": "3gress",
+    "expected": "182723171414",
+    "unicode": "⠒⠛⠗⠑⠎⠎"
+  },
+  {
+    "input": "control",
+    "internal": "3trol",
+    "expected": "183023217",
+    "unicode": "⠒⠞⠗⠕⠇"
+  },
+  {
+    "input": "re-connect",
+    "internal": "re-3nect",
+    "expected": "231736182917930",
+    "unicode": "⠗⠑⠤⠒⠝⠑⠉⠞"
+  },
+  {
+    "input": "disaster",
+    "internal": "4a/]",
+    "expected": "5011259",
+    "unicode": "⠲⠁⠌⠻"
+  },
+  {
+    "input": "disco",
+    "internal": "4co",
+    "expected": "50921",
+    "unicode": "⠲⠉⠕"
+  },
+  {
+    "input": "dishonest",
+    "internal": "4h\"o/",
+    "expected": "5019162112",
+    "unicode": "⠲⠓⠐⠕⠌"
+  },
+  {
+    "input": "dislike",
+    "internal": "4like",
+    "expected": "50710517",
+    "unicode": "⠲⠇⠊⠅⠑"
+  },
+  {
+    "input": "dissect",
+    "internal": "4sect",
+    "expected": "501417930",
+    "unicode": "⠲⠎⠑⠉⠞"
+  },
+  {
+    "input": "distance",
+    "internal": "4t.e",
+    "expected": "50304017",
+    "unicode": "⠲⠞⠨⠑"
+  },
+  {
+    "input": "self-discipline",
+    "internal": "self-4cipl9e",
+    "expected": "141771136509101572017",
+    "unicode": "⠎⠑⠇⠋⠤⠲⠉⠊⠏⠇⠔⠑"
+  },
+  {
+    "input": "beckon",
+    "internal": "beckon",
+    "expected": "317952129",
+    "unicode": "⠃⠑⠉⠅⠕⠝"
+  },
+  {
+    "input": "been",
+    "internal": "be5",
+    "expected": "31734",
+    "unicode": "⠃⠑⠢"
+  },
+  {
+    "input": "belligerent",
+    "internal": "bellig]5t",
+    "expected": "317771027593430",
+    "unicode": "⠃⠑⠇⠇⠊⠛⠻⠢⠞"
+  },
+  {
+    "input": "benefit",
+    "internal": "b5efit",
+    "expected": "33417111030",
+    "unicode": "⠃⠢⠑⠋⠊⠞"
+  },
+  {
+    "input": "best",
+    "internal": "be/",
+    "expected": "31712",
+    "unicode": "⠃⠑⠌"
+  },
+  {
+    "input": "bethel",
+    "internal": "be!l",
+    "expected": "317467",
+    "unicode": "⠃⠑⠮⠇"
+  },
+  {
+    "input": "better",
+    "internal": "bett]",
+    "expected": "317303059",
+    "unicode": "⠃⠑⠞⠞⠻"
+  },
+  {
+    "input": "unbecoming",
+    "internal": "unbecom+",
+    "expected": "37293179211344",
+    "unicode": "⠥⠝⠃⠑⠉⠕⠍⠬"
+  },
+  {
+    "input": "con",
+    "internal": "con",
+    "expected": "92129",
+    "unicode": "⠉⠕⠝"
+  },
+  {
+    "input": "conch",
+    "internal": "con*",
+    "expected": "9212933",
+    "unicode": "⠉⠕⠝⠡"
+  },
+  {
+    "input": "cone",
+    "internal": "c\"o",
+    "expected": "91621",
+    "unicode": "⠉⠐⠕"
+  },
+  {
+    "input": "coneys",
+    "internal": "c\"oys",
+    "expected": "916216114",
+    "unicode": "⠉⠐⠕⠽⠎"
+  },
+  {
+    "input": "inconvenient",
+    "internal": "9conv5i5t",
+    "expected": "20921293934103430",
+    "unicode": "⠔⠉⠕⠝⠧⠢⠊⠢⠞"
+  },
+  {
+    "input": "disc",
+    "internal": "disc",
+    "expected": "2510149",
+    "unicode": "⠙⠊⠎⠉"
+  },
+  {
+    "input": "dish",
+    "internal": "di%",
+    "expected": "251041",
+    "unicode": "⠙⠊⠩"
+  },
+  {
+    "input": "dishevel",
+    "internal": "di%evel",
+    "expected": "2510411739177",
+    "unicode": "⠙⠊⠩⠑⠧⠑⠇"
+  },
+  {
+    "input": "dispirited",
+    "internal": "di_s$",
+    "expected": "2510561443",
+    "unicode": "⠙⠊⠸⠎⠫"
+  },
+  {
+    "input": "disulphide",
+    "internal": "disulphide",
+    "expected": "2510143771519102517",
+    "unicode": "⠙⠊⠎⠥⠇⠏⠓⠊⠙⠑"
+  },
+  {
+    "input": "indistinct",
+    "internal": "9di/9ct",
+    "expected": "2025101220930",
+    "unicode": "⠔⠙⠊⠌⠔⠉⠞"
+  }
+]

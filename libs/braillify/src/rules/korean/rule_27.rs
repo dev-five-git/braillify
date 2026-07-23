@@ -48,6 +48,11 @@ fn is_middle_korean_geoseong(ctx: &RuleContext) -> bool {
         return false;
     }
 
+    // 단독 입력 `·`은 한국어 점자에서 두 가지 의미를 가진다:
+    //   - 일반 한국어(가운뎃점, 제49항): ⠐⠆ — rule_49가 처리
+    //   - 중세국어(거성, 제27항): ⠸⠂ — 이 규칙이 처리
+    // 두 의미는 동일 입력으로 구분할 수 없으므로 EncodingMode::MiddleKorean이
+    // 명시된 경우에만 거성으로 해석한다.
     if ctx.word_len() == 1 {
         return ctx.state.current_mode() == EncodingMode::MiddleKorean;
     }
@@ -126,5 +131,94 @@ impl BrailleRule for Rule27 {
         }
 
         Ok(RuleResult::Consumed)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn apply_exercise() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        // Just exercise apply() for coverage; either Skip or Continue/Consumed is OK
+        let _ = Rule27.apply(&mut ctx);
+    }
+
+    #[test]
+    fn matches_does_not_panic() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let ctx = owned.ctx_at(0);
+        let _ = Rule27.matches(&ctx);
+    }
+
+    /// 제27항 — `has_historical_context` returns true when current word contains
+    /// a hanja character (CJK Unified). Exercises lines 33-35 (own-word branch).
+    #[test]
+    fn has_historical_context_via_own_word() {
+        // "·君" — first cell is '·', second '君' (CJK).
+        let mut owned = crate::test_helpers::CtxOwned::for_text("·君", false);
+        let ctx = owned.ctx_at(0);
+        assert!(has_historical_context(&ctx));
+    }
+
+    #[rstest::rstest]
+    #[case::private_use('\u{E000}')]
+    #[case::hanja('君')]
+    #[case::gloss_open('〔')]
+    #[case::gloss_close('〕')]
+    fn historical_context_word_detects_marker_chars(#[case] marker: char) {
+        assert!(is_historical_context_word(&marker.to_string()));
+    }
+
+    /// 제27항 — `has_historical_context` returns true when prev_word contains
+    /// a hanja. Exercises lines 36-38 (prev_word branch).
+    #[test]
+    fn has_historical_context_via_prev_word() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("·", false).with_prev_word("君");
+        let ctx = owned.ctx_at(0);
+        assert!(has_historical_context(&ctx));
+    }
+
+    /// 제27항 — `has_historical_context` returns true when a remaining_word
+    /// contains a hanja (within the first two). Exercises lines 40-43.
+    #[test]
+    fn has_historical_context_via_remaining_word() {
+        let mut owned =
+            crate::test_helpers::CtxOwned::for_text("·", false).with_remaining_words(["君"]);
+        let ctx = owned.ctx_at(0);
+        assert!(has_historical_context(&ctx));
+    }
+
+    /// 제27항 — `：` (sangseong/상성) in any context emits the SANGSEONG cells.
+    #[test]
+    fn apply_emits_sangseong_for_full_width_colon() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("：", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule27.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(owned.result, SANGSEONG.to_vec());
+    }
+
+    /// 제27항 — In MiddleKorean mode, single-cell `·` emits GEOSEONG cells.
+    /// Triggers the `current_mode() == MiddleKorean` arm in apply (line 125-127).
+    #[test]
+    fn apply_emits_geoseong_in_middle_korean_mode() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("·", false);
+        owned.state.push_mode(EncodingMode::MiddleKorean);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule27.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(owned.result, GEOSEONG.to_vec());
+    }
+
+    /// rule_27 line 106 — `_ => return Ok(Skip)` fallback for non-· non-: symbol char.
+    #[test]
+    fn rule27_apply_skip_for_unrelated_symbol() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("!", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule27.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
     }
 }

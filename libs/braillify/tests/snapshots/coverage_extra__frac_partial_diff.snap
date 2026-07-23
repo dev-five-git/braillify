@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\frac{d^2 z}{dx dy}$"
+unicode = ok: "⠙⠭⠙⠽⠌⠙⠘⠼⠃⠵"
+bytes   = ok: [25, 45, 25, 61, 12, 25, 24, 60, 3, 53]

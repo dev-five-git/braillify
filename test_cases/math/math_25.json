@@ -1,6 +1,16 @@
 [
   {
+    "input": "∑",
+    "note": "PDF 제25항 — 총합 기호 ∑ 정의 (단독)",
+    "internal": ",.s",
+    "expected": "324014",
+    "unicode": "⠠⠨⠎",
+    "world": "",
+    "jeomsarang": "⠨⠎"
+  },
+  {
     "input": "Σ(k=0,∞) k",
+    "note": "PDF 제25항 — 총합 예 1 (∑_(k=0)^∞ k)",
     "internal": ",.s;k33#j`=`k",
     "expected": "3240144851818602606305",
     "unicode": "⠠⠨⠎⠰⠅⠒⠒⠼⠚⠀⠿⠀⠅",
@@ -8,7 +18,17 @@
     "jeomsarang": "⠠⠠⠨⠎⠐⠣⠅⠐⠶⠼⠚⠂⠿⠐⠜⠀⠰⠅⠲"
   },
   {
+    "input": "$\\sum_{k=0}^{\\infty} k$",
+    "note": "LaTeX",
+    "internal": ",.s;k33#j`=`k",
+    "expected": "3240144851818602606305",
+    "unicode": "⠠⠨⠎⠰⠅⠒⠒⠼⠚⠀⠿⠀⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Σ(n=1,∞) aₙ",
+    "note": "PDF 제25항 — 총합 예 2 (∑_(n=1)^∞ aₙ)",
     "internal": ",.s;n33#a`=`a;n",
     "expected": "32401448291818601063014829",
     "unicode": "⠠⠨⠎⠰⠝⠒⠒⠼⠁⠀⠿⠀⠁⠰⠝",
@@ -16,21 +36,21 @@
     "jeomsarang": "⠠⠠⠨⠎⠐⠣⠝⠐⠶⠼⠁⠂⠿⠐⠜⠀⠁⠲⠀"
   },
   {
-    "input": "$\\Sigma(n=1,\\infty) a_n$",
+    "input": "$\\sum_{n=1}^{\\infty} a_n$",
+    "note": "LaTeX",
     "internal": ",.s;n33#a`=`a;n",
     "expected": "32401448291818601063014829",
     "unicode": "⠠⠨⠎⠰⠝⠒⠒⠼⠁⠀⠿⠀⠁⠰⠝",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "$\\sum(n/1)$",
-    "internal": ",.S(N/#A)",
+    "input": "$\\sum(\\frac{1}{n})$",
+    "note": "PDF 제25항 — 총합 예 3 (∑(1/n), 분수 평문 표기 불가 → LaTeX만)",
+    "internal": ",.s(n/#a)",
     "expected": "32401455291260162",
     "unicode": "⠠⠨⠎⠷⠝⠌⠼⠁⠾",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠎⠥⠍⠐⠣⠸⠡⠋⠗⠁⠉⠸⠣⠼⠁⠸⠜⠸⠣⠝⠐⠴⠠⠴⠈⠎",
     "jeomsarang": ""
   }
 ]

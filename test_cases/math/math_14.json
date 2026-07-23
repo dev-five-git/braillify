@@ -1,7 +1,8 @@
 [
   {
     "input": "I",
-    "context": "roman_numeral",
+    "context": "number",
+    "note": "PDF 수학 제14항 — 로마 숫자 (「한글 점자」 제36항 참조)",
     "internal": "0,i4",
     "expected": "52321050",
     "unicode": "⠴⠠⠊⠲",
@@ -9,8 +10,18 @@
     "jeomsarang": "⠴⠠⠊⠲"
   },
   {
+    "input": "$I$",
+    "note": "LaTeX",
+    "internal": "0,i4",
+    "expected": "52321050",
+    "unicode": "⠴⠠⠊⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "II",
-    "context": "roman_numeral",
+    "context": "number",
+    "note": "PDF 수학 제14항 — 로마 숫자 (「한글 점자」 제36항 참조)",
     "internal": "0,,ii4",
     "expected": "523232101050",
     "unicode": "⠴⠠⠠⠊⠊⠲",
@@ -18,12 +29,31 @@
     "jeomsarang": "⠴⠠⠠⠊⠊⠲"
   },
   {
+    "input": "$II$",
+    "note": "LaTeX",
+    "internal": "0,,ii4",
+    "expected": "523232101050",
+    "unicode": "⠴⠠⠠⠊⠊⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "III",
-    "context": "roman_numeral",
+    "context": "number",
+    "note": "PDF 수학 제14항 — 로마 숫자 (「한글 점자」 제36항 참조)",
     "internal": "0,,iii4",
     "expected": "52323210101050",
     "unicode": "⠴⠠⠠⠊⠊⠊⠲",
     "world": "⠴⠠⠠⠊⠊⠊⠲",
     "jeomsarang": "⠴⠠⠠⠊⠊⠊⠲"
+  },
+  {
+    "input": "$III$",
+    "note": "LaTeX",
+    "internal": "0,,iii4",
+    "expected": "52323210101050",
+    "unicode": "⠴⠠⠠⠊⠊⠊⠲",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

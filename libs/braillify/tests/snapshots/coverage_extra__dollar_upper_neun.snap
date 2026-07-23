@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$X$는"
+unicode = ok: "⠴⠴⠠⠭⠲⠲⠉⠵"
+bytes   = ok: [52, 52, 32, 45, 50, 50, 9, 53]

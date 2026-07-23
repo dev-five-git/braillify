@@ -1,0 +1,74 @@
+[
+  {
+    "input": "Galahad",
+    "internal": ",gala_h",
+    "expected": "32271715619",
+    "unicode": "⠠⠛⠁⠇⠁⠸⠓"
+  },
+  {
+    "input": "haddock",
+    "internal": "_hdock",
+    "expected": "5619252195",
+    "unicode": "⠸⠓⠙⠕⠉⠅"
+  },
+  {
+    "input": "Haddon",
+    "internal": ",_hdon",
+    "expected": "325619252129",
+    "unicode": "⠠⠸⠓⠙⠕⠝"
+  },
+  {
+    "input": "hadji",
+    "internal": "_hji",
+    "expected": "56192610",
+    "unicode": "⠸⠓⠚⠊"
+  },
+  {
+    "input": "Hadley",
+    "internal": ",_hley",
+    "expected": "32561971761",
+    "unicode": "⠠⠸⠓⠇⠑⠽"
+  },
+  {
+    "input": "hadn't",
+    "internal": "_hn't",
+    "expected": "561929430",
+    "unicode": "⠸⠓⠝⠄⠞"
+  },
+  {
+    "input": "Chad",
+    "internal": ",*ad",
+    "expected": "3233125",
+    "unicode": "⠠⠡⠁⠙"
+  },
+  {
+    "input": "Hades",
+    "internal": ",hades",
+    "expected": "32191251714",
+    "unicode": "⠠⠓⠁⠙⠑⠎"
+  },
+  {
+    "input": "Hadrian",
+    "internal": ",hadrian",
+    "expected": "32191252310129",
+    "unicode": "⠠⠓⠁⠙⠗⠊⠁⠝"
+  },
+  {
+    "input": "menhaden",
+    "internal": "m5had5",
+    "expected": "13341912534",
+    "unicode": "⠍⠢⠓⠁⠙⠢"
+  },
+  {
+    "input": "shadow",
+    "internal": "%ad[",
+    "expected": "4112542",
+    "unicode": "⠩⠁⠙⠪"
+  },
+  {
+    "input": "Thaddeus",
+    "internal": ",?addeus",
+    "expected": "325712525173714",
+    "unicode": "⠠⠹⠁⠙⠙⠑⠥⠎"
+  }
+]

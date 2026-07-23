@@ -81,4 +81,71 @@ mod tests {
             matches!(action, crate::rules::token_rule::TokenAction::ReplaceMany(ref ts) if ts.is_empty())
         );
     }
+
+    #[test]
+    fn noop_when_not_space() {
+        let tokens = vec![word("刀")];
+        let mut state = EncoderState::new(false);
+        let action = HistoricalGlossSpacingRule
+            .apply(&tokens, 0, &mut state)
+            .unwrap();
+        assert!(matches!(
+            action,
+            crate::rules::token_rule::TokenAction::Noop
+        ));
+    }
+
+    #[test]
+    fn noop_when_no_prev_word() {
+        let tokens = vec![Token::Space(SpaceKind::Regular), word("刀")];
+        let mut state = EncoderState::new(false);
+        let action = HistoricalGlossSpacingRule
+            .apply(&tokens, 0, &mut state)
+            .unwrap();
+        assert!(matches!(
+            action,
+            crate::rules::token_rule::TokenAction::Noop
+        ));
+    }
+
+    /// Covers line 24 (early-return when next is not a Word).
+    #[test]
+    fn noop_when_next_is_not_word() {
+        let tokens = vec![
+            word("a"),
+            Token::Space(SpaceKind::Regular),
+            Token::Space(SpaceKind::Regular),
+        ];
+        let mut state = EncoderState::new(false);
+        let action = HistoricalGlossSpacingRule
+            .apply(&tokens, 1, &mut state)
+            .unwrap();
+        assert!(matches!(
+            action,
+            crate::rules::token_rule::TokenAction::Noop
+        ));
+    }
+
+    #[test]
+    fn noop_when_neither_tortoise_shell() {
+        let tokens = vec![word("a"), Token::Space(SpaceKind::Regular), word("b")];
+        let mut state = EncoderState::new(false);
+        let action = HistoricalGlossSpacingRule
+            .apply(&tokens, 1, &mut state)
+            .unwrap();
+        assert!(matches!(
+            action,
+            crate::rules::token_rule::TokenAction::Noop
+        ));
+    }
+
+    #[test]
+    fn rule_phase_priority() {
+        use crate::rules::token_rule::TokenPhase;
+        assert!(matches!(
+            HistoricalGlossSpacingRule.phase(),
+            TokenPhase::Normalization
+        ));
+        assert_eq!(HistoricalGlossSpacingRule.priority(), 120);
+    }
 }

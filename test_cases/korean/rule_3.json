@@ -1,7 +1,7 @@
 [
   {
     "input": "국보",
-    "internal": "@ma^u",
+    "internal": "@ma~u",
     "expected": "81312437",
     "unicode": "⠈⠍⠁⠘⠥",
     "world": "⠈⠍⠁⠘⠥",
@@ -49,7 +49,7 @@
   },
   {
     "input": "놋그릇",
-    "internal": "cu'@[\"['",
+    "internal": "cu'@{\"{'",
     "expected": "937484216424",
     "unicode": "⠉⠥⠄⠈⠪⠐⠪⠄",
     "world": "⠉⠥⠄⠈⠪⠐⠪⠄",
@@ -81,7 +81,7 @@
   },
   {
     "input": "부엌",
-    "internal": "^ms6",
+    "internal": "~ms6",
     "expected": "24131422",
     "unicode": "⠘⠍⠎⠖",
     "world": "⠘⠍⠎⠖",
@@ -89,7 +89,7 @@
   },
   {
     "input": "겉보리",
-    "internal": "@s8^u\"o",
+    "internal": "@s8~u\"o",
     "expected": "8143824371621",
     "unicode": "⠈⠎⠦⠘⠥⠐⠕",
     "world": "⠈⠎⠦⠘⠥⠐⠕",
@@ -105,7 +105,7 @@
   },
   {
     "input": "히읗",
-    "internal": "jo[0",
+    "internal": "jo{0",
     "expected": "26214252",
     "unicode": "⠚⠕⠪⠴",
     "world": "⠚⠕⠪⠴",

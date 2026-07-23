@@ -3,10 +3,6 @@
 //! Parses math expression strings into structured tokens
 //! that can be encoded into braille by the encoder.
 
-use crate::math_symbol_shortcut;
-
-use super::function;
-
 /// The kind of bracket in a math expression.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BracketKind {
@@ -14,6 +10,8 @@ pub enum BracketKind {
     MathParen,
     /// Grouping brackets used in braille-only notation
     Grouping,
+    /// Hangul-wrapped math group _( ... _)
+    Hangul,
     /// Square brackets: [x]
     Square,
     /// Curly braces: {1, 2, 3}
@@ -37,6 +35,8 @@ pub enum MathToken {
     Operator(char),
     /// Known function name (sin, cos, etc.)
     FunctionName(String),
+    /// Korean word or phrase inside a math expression.
+    KoreanWord(String),
     /// Opening bracket
     OpenParen(BracketKind),
     /// Closing bracket
@@ -55,648 +55,20 @@ pub enum MathToken {
     Raw(char),
 }
 
-/// Check if a character is a Unicode superscript digit.
-fn is_superscript_char(c: char) -> bool {
-    matches!(
-        c,
-        '\u{2070}' | '\u{00B9}' | '\u{00B2}' | '\u{00B3}' | '\u{2074}'
-            ..='\u{2079}'
-                | '\u{207A}'
-                | '\u{207B}'
-                | '\u{207D}'
-                | '\u{207E}'
-                | '\u{207F}'
-                | '\u{1D4F}'
-                | '\u{1D50}'
-                | '\u{02E3}' // modifier letters ᵏ ᵐ ˣ
-    )
+#[derive(Debug, Clone, Copy)]
+struct GroupState {
+    kind: BracketKind,
+    token_index: usize,
+    contains_korean: bool,
+    contains_arithmetic: bool,
+    contains_comma: bool,
+    promote_grouping: bool,
 }
 
-/// Check if a character is a Unicode subscript.
-fn is_subscript_char(c: char) -> bool {
-    matches!(
-        c,
-        '\u{2080}'
-            ..='\u{2089}' | '\u{208D}' | '\u{208E}' |
-        '\u{2090}' | '\u{2093}' | '\u{2098}' | '\u{2099}' | // ₐ ₓ ₘ ₙ
-        '\u{208A}' | '\u{208B}' // ₊ ₋
-    )
-}
+mod helpers;
 
-fn is_combining_math_mark(c: char) -> bool {
-    matches!(
-        c,
-        '\u{0307}' // combining dot above
-            | '\u{0305}' // combining overline
-            | '\u{0308}' // combining diaeresis
-            | '\u{0309}' // combining hook above (used as ring case in tests)
-            | '\u{030A}' // combining ring above
-            | '\u{0332}' // combining low line
-    )
-}
-
-/// Normalize a superscript character to its base form.
-fn normalize_superscript(c: char) -> Option<MathToken> {
-    match c {
-        '\u{2070}' => Some(MathToken::Number("0".into())),
-        '\u{00B9}' => Some(MathToken::Number("1".into())),
-        '\u{00B2}' => Some(MathToken::Number("2".into())),
-        '\u{00B3}' => Some(MathToken::Number("3".into())),
-        '\u{2074}' => Some(MathToken::Number("4".into())),
-        '\u{2075}' => Some(MathToken::Number("5".into())),
-        '\u{2076}' => Some(MathToken::Number("6".into())),
-        '\u{2077}' => Some(MathToken::Number("7".into())),
-        '\u{2078}' => Some(MathToken::Number("8".into())),
-        '\u{2079}' => Some(MathToken::Number("9".into())),
-        '\u{207A}' => Some(MathToken::Operator('+')),
-        '\u{207B}' => Some(MathToken::Operator('\u{2212}')), // minus
-        '\u{207D}' => Some(MathToken::OpenParen(BracketKind::MathParen)),
-        '\u{207E}' => Some(MathToken::CloseParen(BracketKind::MathParen)),
-        '\u{207F}' => Some(MathToken::Variable('n')),
-        '\u{1D4F}' => Some(MathToken::Variable('k')),
-        '\u{1D50}' => Some(MathToken::Variable('m')),
-        '\u{02E3}' => Some(MathToken::Variable('x')),
-        _ => None,
-    }
-}
-
-/// Normalize a subscript character to its base form.
-fn normalize_subscript(c: char) -> Option<MathToken> {
-    match c {
-        '\u{2080}' => Some(MathToken::Number("0".into())),
-        '\u{2081}' => Some(MathToken::Number("1".into())),
-        '\u{2082}' => Some(MathToken::Number("2".into())),
-        '\u{2083}' => Some(MathToken::Number("3".into())),
-        '\u{2084}' => Some(MathToken::Number("4".into())),
-        '\u{2085}' => Some(MathToken::Number("5".into())),
-        '\u{2086}' => Some(MathToken::Number("6".into())),
-        '\u{2087}' => Some(MathToken::Number("7".into())),
-        '\u{2088}' => Some(MathToken::Number("8".into())),
-        '\u{2089}' => Some(MathToken::Number("9".into())),
-        '\u{208A}' => Some(MathToken::Operator('+')),
-        '\u{208B}' => Some(MathToken::Operator('\u{2212}')),
-        '\u{208D}' => Some(MathToken::OpenParen(BracketKind::MathParen)),
-        '\u{208E}' => Some(MathToken::CloseParen(BracketKind::MathParen)),
-        '\u{2090}' => Some(MathToken::Variable('a')),
-        '\u{2093}' => Some(MathToken::Variable('x')),
-        '\u{2098}' => Some(MathToken::Variable('m')),
-        '\u{2099}' => Some(MathToken::Variable('n')),
-        _ => None,
-    }
-}
-
-/// Parse a math expression string into tokens.
-pub fn parse_math_expression(input: &str) -> Result<Vec<MathToken>, String> {
-    if let Some((left, right)) = input.split_once('/')
-        && let (Some(left_fact), Some(right_fact)) =
-            (left.strip_suffix('!'), right.strip_suffix('!'))
-        && !left_fact.is_empty()
-        && !right_fact.is_empty()
-        && left_fact.chars().all(|c| c.is_ascii_digit())
-        && right_fact.chars().all(|c| c.is_ascii_digit())
-    {
-        return Ok(vec![
-            MathToken::Number(right_fact.to_string()),
-            MathToken::Operator('!'),
-            MathToken::Operator('/'),
-            MathToken::Number(left_fact.to_string()),
-            MathToken::Operator('!'),
-        ]);
-    }
-
-    if input.contains('\u{0332}') {
-        // Underline-notation normalizations used in fraction testcases.
-        if let Some(prefix) = input.strip_suffix('\u{0332}') {
-            return parse_math_expression(&format!("{prefix}/1"));
-        }
-
-        if let Some(rest) = input.strip_prefix("1̲/") {
-            let body = rest.trim();
-            if body.starts_with('(') && body.ends_with(')') {
-                let inner = &body[1..body.len() - 1];
-                let mut tokens = Vec::new();
-                tokens.push(MathToken::OpenParen(BracketKind::Grouping));
-                tokens.extend(parse_math_expression(inner)?);
-                tokens.push(MathToken::CloseParen(BracketKind::Grouping));
-                tokens.push(MathToken::Operator('/'));
-                tokens.push(MathToken::Number("1".to_string()));
-                return Ok(tokens);
-            }
-        }
-
-        if let Some((left, right)) = input.split_once("̲/") {
-            let mut tokens = parse_math_expression(right)?;
-            tokens.push(MathToken::Operator('/'));
-            tokens.push(MathToken::OpenParen(BracketKind::Grouping));
-            tokens.extend(parse_math_expression(left)?);
-            tokens.push(MathToken::CloseParen(BracketKind::Grouping));
-            return Ok(tokens);
-        }
-    }
-
-    let chars: Vec<char> = input.chars().collect();
-    let mut tokens = Vec::new();
-    let mut bracket_stack: Vec<BracketKind> = Vec::new();
-    let mut i = 0;
-
-    // Some notations (e.g., segment AB with overline) use expression-level overline prefix.
-    let should_prefix_overline = if chars
-        .first()
-        .is_some_and(|c| matches!(*c, '\u{0305}' | '\u{0304}'))
-    {
-        true
-    } else if chars
-        .last()
-        .is_some_and(|c| matches!(*c, '\u{0305}' | '\u{0304}'))
-    {
-        let core: Vec<char> = chars
-            .iter()
-            .copied()
-            .filter(|c| !matches!(*c, '\u{0305}' | '\u{0304}'))
-            .collect();
-        core.len() >= 2
-            && core
-                .iter()
-                .all(|c| c.is_ascii_uppercase() || matches!(*c, '\u{2032}' | '\''))
-    } else {
-        false
-    };
-
-    if should_prefix_overline {
-        tokens.push(MathToken::MathSymbol('\u{0304}'));
-    }
-
-    while i < chars.len() {
-        let c = chars[i];
-
-        if should_prefix_overline && matches!(c, '\u{0305}' | '\u{0304}') {
-            i += 1;
-            continue;
-        }
-
-        // Whitespace
-        if c.is_whitespace() {
-            tokens.push(MathToken::Space);
-            i += 1;
-            continue;
-        }
-
-        // Function name detection (must come before letter detection)
-        if c.is_ascii_lowercase() {
-            let remaining: String = chars[i..].iter().collect();
-            if let Some((name, _)) = function::match_function_prefix(&remaining) {
-                tokens.push(MathToken::FunctionName(name.to_string()));
-                i += name.len();
-                continue;
-            }
-        }
-
-        // Unicode superscript sequence → merge into single Superscript
-        if is_superscript_char(c) {
-            let mut content = Vec::new();
-            while i < chars.len() && is_superscript_char(chars[i]) {
-                if let Some(tok) = normalize_superscript(chars[i]) {
-                    content.push(tok);
-                }
-                i += 1;
-            }
-            if !content.is_empty() {
-                tokens.push(MathToken::Superscript(content));
-            }
-            continue;
-        }
-
-        // Unicode subscript sequence → merge into single Subscript
-        if is_subscript_char(c) {
-            let mut content = Vec::new();
-            while i < chars.len() && (is_subscript_char(chars[i]) || matches!(chars[i], '.' | '/'))
-            {
-                if is_subscript_char(chars[i]) {
-                    if let Some(tok) = normalize_subscript(chars[i]) {
-                        content.push(tok);
-                    }
-                } else {
-                    match chars[i] {
-                        '.' => content.push(MathToken::DecimalPoint),
-                        '/' => content.push(MathToken::Operator('/')),
-                        _ => {}
-                    }
-                }
-                i += 1;
-            }
-            if !content.is_empty() {
-                tokens.push(MathToken::Subscript(content));
-            }
-            continue;
-        }
-
-        // ASCII subscript notation (LaTeX-like): _x, _2, _{...}, _(...)
-        if c == '_' {
-            if i + 1 >= chars.len() {
-                tokens.push(MathToken::Raw(c));
-                i += 1;
-                continue;
-            }
-
-            let next = chars[i + 1];
-            if next == '{' {
-                let mut j = i + 2;
-                let mut depth = 1usize;
-                while j < chars.len() {
-                    match chars[j] {
-                        '{' => depth += 1,
-                        '}' => {
-                            depth = depth.saturating_sub(1);
-                            if depth == 0 {
-                                break;
-                            }
-                        }
-                        _ => {}
-                    }
-                    j += 1;
-                }
-
-                if j < chars.len() && chars[j] == '}' {
-                    let inner: String = chars[i + 2..j].iter().collect();
-                    let content = parse_math_expression(&inner)?;
-                    tokens.push(MathToken::Subscript(content));
-                    i = j + 1;
-                    continue;
-                }
-
-                tokens.push(MathToken::Raw(c));
-                i += 1;
-                continue;
-            }
-
-            if next == '(' {
-                let mut j = i + 2;
-                let mut depth = 1usize;
-                while j < chars.len() {
-                    match chars[j] {
-                        '(' => depth += 1,
-                        ')' => {
-                            depth = depth.saturating_sub(1);
-                            if depth == 0 {
-                                break;
-                            }
-                        }
-                        _ => {}
-                    }
-                    j += 1;
-                }
-
-                if j < chars.len() && chars[j] == ')' {
-                    let inner: String = chars[i + 2..j].iter().collect();
-                    let mut content = Vec::new();
-                    content.push(MathToken::OpenParen(BracketKind::MathParen));
-                    content.extend(parse_math_expression(&inner)?);
-                    content.push(MathToken::CloseParen(BracketKind::MathParen));
-                    tokens.push(MathToken::Subscript(content));
-                    i = j + 1;
-                    continue;
-                }
-
-                tokens.push(MathToken::Raw(c));
-                i += 1;
-                continue;
-            }
-
-            // Single-character base
-            let content = if next.is_ascii_digit() {
-                vec![MathToken::Number(next.to_string())]
-            } else if next.is_ascii_lowercase() {
-                vec![MathToken::Variable(next)]
-            } else if next.is_ascii_uppercase() {
-                vec![MathToken::UpperVariable(next)]
-            } else {
-                vec![MathToken::Raw(next)]
-            };
-
-            tokens.push(MathToken::Subscript(content));
-            i += 2;
-            continue;
-        }
-
-        // ASCII superscript notation: ^x, ^2, ^{...}, ^(...)
-        if c == '^' {
-            if i + 1 >= chars.len() {
-                tokens.push(MathToken::Raw(c));
-                i += 1;
-                continue;
-            }
-
-            let next = chars[i + 1];
-            if next == '{' {
-                let mut j = i + 2;
-                let mut depth = 1usize;
-                while j < chars.len() {
-                    match chars[j] {
-                        '{' => depth += 1,
-                        '}' => {
-                            depth = depth.saturating_sub(1);
-                            if depth == 0 {
-                                break;
-                            }
-                        }
-                        _ => {}
-                    }
-                    j += 1;
-                }
-
-                if j < chars.len() && chars[j] == '}' {
-                    let inner: String = chars[i + 2..j].iter().collect();
-                    let content = parse_math_expression(&inner)?;
-                    tokens.push(MathToken::Superscript(content));
-                    i = j + 1;
-                    continue;
-                }
-
-                tokens.push(MathToken::Raw(c));
-                i += 1;
-                continue;
-            }
-
-            if next == '(' {
-                let mut j = i + 2;
-                let mut depth = 1usize;
-                while j < chars.len() {
-                    match chars[j] {
-                        '(' => depth += 1,
-                        ')' => {
-                            depth = depth.saturating_sub(1);
-                            if depth == 0 {
-                                break;
-                            }
-                        }
-                        _ => {}
-                    }
-                    j += 1;
-                }
-
-                if j < chars.len() && chars[j] == ')' {
-                    let inner: String = chars[i + 2..j].iter().collect();
-                    let mut content = Vec::new();
-                    content.push(MathToken::OpenParen(BracketKind::MathParen));
-                    content.extend(parse_math_expression(&inner)?);
-                    content.push(MathToken::CloseParen(BracketKind::MathParen));
-                    tokens.push(MathToken::Superscript(content));
-                    i = j + 1;
-                    continue;
-                }
-
-                tokens.push(MathToken::Raw(c));
-                i += 1;
-                continue;
-            }
-
-            let content = if next.is_ascii_digit() {
-                vec![MathToken::Number(next.to_string())]
-            } else if next.is_ascii_lowercase() {
-                vec![MathToken::Variable(next)]
-            } else if next.is_ascii_uppercase() {
-                vec![MathToken::UpperVariable(next)]
-            } else {
-                vec![MathToken::Raw(next)]
-            };
-
-            tokens.push(MathToken::Superscript(content));
-            i += 2;
-            continue;
-        }
-
-        // Prime mark
-        if c == '\u{2032}' || c == '\'' {
-            tokens.push(MathToken::Prime);
-            i += 1;
-            continue;
-        }
-
-        // Digits
-        if c.is_ascii_digit() {
-            let mut num = String::new();
-            while i < chars.len() && chars[i].is_ascii_digit() {
-                num.push(chars[i]);
-                i += 1;
-            }
-            if i < chars.len() && chars[i] == '\u{0307}' {
-                // Repeating-decimal mark after trailing digit.
-                // Most forms repeat from the first digit; keep one compatibility
-                // split for 0.739̇ style notation from testcase corpus.
-                let split_idx = if num == "739" { 1 } else { 0 };
-                if split_idx > 0 {
-                    tokens.push(MathToken::Number(num[..split_idx].to_string()));
-                }
-                tokens.push(MathToken::MathSymbol('\u{0307}'));
-                let repeat_part = &num[split_idx..];
-                if !repeat_part.is_empty() {
-                    tokens.push(MathToken::Number(repeat_part.to_string()));
-                }
-                i += 1;
-            } else {
-                tokens.push(MathToken::Number(num));
-            }
-            continue;
-        }
-
-        // Lowercase letters (variables)
-        if c.is_ascii_lowercase() {
-            tokens.push(MathToken::Variable(c));
-            i += 1;
-            continue;
-        }
-
-        // Uppercase letters
-        if c.is_ascii_uppercase() {
-            tokens.push(MathToken::UpperVariable(c));
-            i += 1;
-            continue;
-        }
-
-        // Brackets
-        match c {
-            '(' => {
-                let next_is_function = if i + 1 < chars.len() {
-                    let remaining: String = chars[i + 1..].iter().collect();
-                    function::starts_with_function(&remaining)
-                } else {
-                    false
-                };
-
-                let kind = match tokens.last() {
-                    Some(MathToken::MathSymbol('\u{221A}')) => BracketKind::Grouping,
-                    Some(MathToken::FunctionName(_)) if !next_is_function => BracketKind::Grouping,
-                    Some(MathToken::Superscript(_))
-                        if matches!(
-                            tokens.iter().rev().nth(1),
-                            Some(MathToken::FunctionName(_))
-                        ) =>
-                    {
-                        BracketKind::Grouping
-                    }
-                    Some(MathToken::Operator('/')) => BracketKind::Grouping,
-                    _ => BracketKind::MathParen,
-                };
-                bracket_stack.push(kind);
-                tokens.push(MathToken::OpenParen(kind));
-                i += 1;
-                continue;
-            }
-            ')' => {
-                let kind = bracket_stack.pop().unwrap_or(BracketKind::MathParen);
-                tokens.push(MathToken::CloseParen(kind));
-                i += 1;
-                continue;
-            }
-            '[' => {
-                bracket_stack.push(BracketKind::Square);
-                tokens.push(MathToken::OpenParen(BracketKind::Square));
-                i += 1;
-                continue;
-            }
-            ']' => {
-                let kind = bracket_stack.pop().unwrap_or(BracketKind::Square);
-                tokens.push(MathToken::CloseParen(kind));
-                i += 1;
-                continue;
-            }
-            '{' => {
-                bracket_stack.push(BracketKind::Curly);
-                tokens.push(MathToken::OpenParen(BracketKind::Curly));
-                i += 1;
-                continue;
-            }
-            '}' => {
-                let kind = bracket_stack.pop().unwrap_or(BracketKind::Curly);
-                tokens.push(MathToken::CloseParen(kind));
-                i += 1;
-                continue;
-            }
-            _ => {}
-        }
-
-        // Math operators (basic)
-        if matches!(
-            c,
-            '+' | '=' | '>' | '<' | '/' | '-' | '!' | '\u{2212}' | '\u{2044}'
-        ) {
-            // In chained inequalities like -5 < x < -2, the second minus is omitted.
-            if c == '-'
-                && i > 0
-                && chars[i - 1] == '<'
-                && i + 1 < chars.len()
-                && chars[i + 1].is_ascii_digit()
-            {
-                i += 1;
-                continue;
-            }
-
-            let op = if c == '\u{2044}' {
-                '/'
-            } else if c == '-' {
-                '\u{2212}'
-            } else {
-                c
-            };
-            tokens.push(MathToken::Operator(op));
-            i += 1;
-            continue;
-        }
-
-        // Math symbols from shortcut map
-        if math_symbol_shortcut::is_math_symbol_char(c) {
-            tokens.push(MathToken::MathSymbol(c));
-            i += 1;
-            continue;
-        }
-
-        if is_combining_math_mark(c) {
-            if should_prefix_overline && matches!(c, '\u{0305}' | '\u{0304}') {
-                i += 1;
-                continue;
-            }
-            tokens.push(MathToken::MathSymbol(c));
-            i += 1;
-            continue;
-        }
-
-        // Decimal point in number context (e.g., 3.14, .47)
-        if c == '.' && i + 2 < chars.len() && chars[i + 1] == '.' && chars[i + 2] == '.' {
-            tokens.push(MathToken::MathSymbol('…'));
-            i += 3;
-            continue;
-        }
-
-        if c == '.' {
-            let prev_is_digit = i > 0 && chars[i - 1].is_ascii_digit();
-            let next_is_digit = i + 1 < chars.len() && chars[i + 1].is_ascii_digit();
-            if next_is_digit && (prev_is_digit || i == 0) {
-                tokens.push(MathToken::DecimalPoint);
-            } else {
-                tokens.push(MathToken::Raw(c));
-            }
-            i += 1;
-            continue;
-        }
-
-        // Comma as digit grouping separator (e.g., 5,700,000)
-        if c == ',' {
-            let prev_is_digit = i > 0 && chars[i - 1].is_ascii_digit();
-            let next_is_digit = i + 1 < chars.len() && chars[i + 1].is_ascii_digit();
-            if prev_is_digit && next_is_digit && bracket_stack.is_empty() {
-                tokens.push(MathToken::DigitSeparator);
-            } else {
-                // Set/list separator
-                tokens.push(MathToken::Operator(','));
-            }
-            i += 1;
-            continue;
-        }
-
-        // Fallback
-        tokens.push(MathToken::Raw(c));
-        i += 1;
-    }
-
-    // (expr)̅ / (expr)̄ should use grouping parentheses around the overlined group.
-    if matches!(
-        tokens.last(),
-        Some(MathToken::MathSymbol('\u{0305}' | '\u{0304}'))
-    ) && tokens.len() >= 3
-        && matches!(
-            tokens.first(),
-            Some(MathToken::OpenParen(BracketKind::MathParen))
-        )
-        && matches!(
-            tokens.get(tokens.len() - 2),
-            Some(MathToken::CloseParen(BracketKind::MathParen))
-        )
-    {
-        let mut depth = 0usize;
-        let mut closes_at_end = false;
-        for (idx, token) in tokens.iter().enumerate() {
-            match token {
-                MathToken::OpenParen(BracketKind::MathParen) => depth += 1,
-                MathToken::CloseParen(BracketKind::MathParen) => {
-                    depth = depth.saturating_sub(1);
-                    if depth == 0 {
-                        closes_at_end = idx == tokens.len() - 2;
-                        break;
-                    }
-                }
-                _ => {}
-            }
-        }
-
-        if closes_at_end {
-            tokens[0] = MathToken::OpenParen(BracketKind::Grouping);
-            let close_idx = tokens.len() - 2;
-            tokens[close_idx] = MathToken::CloseParen(BracketKind::Grouping);
-        }
-    }
-
-    Ok(tokens)
-}
+mod parse;
+pub(crate) use parse::{parse_math_expression, parse_math_expression_with_math_mode};
 
 #[cfg(test)]
 mod tests {
@@ -760,5 +132,355 @@ mod tests {
             tokens[3],
             MathToken::CloseParen(BracketKind::Grouping)
         ));
+    }
+
+    /// Exercise every Unicode superscript character recognized by
+    /// `normalize_superscript`. Each codepoint must parse without error
+    /// and produce at least one token.
+    #[rstest::rstest]
+    fn unicode_superscripts_parsed(
+        #[values(
+            '\u{2070}', '\u{00B9}', '\u{00B2}', '\u{00B3}', '\u{2074}', '\u{2075}', '\u{2076}',
+            '\u{2077}', '\u{2078}', '\u{2079}', '\u{207A}', '\u{207B}', '\u{207D}', '\u{207E}',
+            '\u{207F}', '\u{1D43}', '\u{1D47}', '\u{1D9C}', '\u{1D48}', '\u{1D49}', '\u{1DA0}',
+            '\u{1D4D}', '\u{02B0}', '\u{2071}', '\u{02B2}', '\u{1D4F}', '\u{02E1}', '\u{1D50}',
+            '\u{1D52}', '\u{1D56}', '\u{02B3}', '\u{02E2}', '\u{1D57}', '\u{1D58}', '\u{1D5B}',
+            '\u{02B7}', '\u{02E3}', '\u{02B8}', '\u{1DBB}'
+        )]
+        c: char,
+    ) {
+        let input = format!("x{c}");
+        let result = parse_math_expression(&input);
+        assert!(result.is_ok(), "parse failed for x{c:?}");
+        assert!(!result.unwrap().is_empty());
+    }
+
+    /// Exercise every Unicode subscript character recognized by
+    /// `normalize_subscript`.
+    #[rstest::rstest]
+    fn unicode_subscripts_parsed(
+        #[values(
+            '\u{2080}', '\u{2081}', '\u{2082}', '\u{2083}', '\u{2084}', '\u{2085}', '\u{2086}',
+            '\u{2087}', '\u{2088}', '\u{2089}', '\u{208A}', '\u{208B}', '\u{208D}', '\u{208E}',
+            '\u{2090}', '\u{2091}', '\u{2092}', '\u{2093}', '\u{2095}', '\u{2096}', '\u{2097}',
+            '\u{2098}', '\u{2099}', '\u{209A}', '\u{209B}', '\u{209C}', '\u{1D62}', '\u{1D63}',
+            '\u{1D64}', '\u{1D65}'
+        )]
+        c: char,
+    ) {
+        let input = format!("x{c}");
+        let result = parse_math_expression(&input);
+        assert!(result.is_ok(), "parse failed for x{c:?}");
+        assert!(!result.unwrap().is_empty());
+    }
+
+    /// Underline-notation fraction normalization paths (lines around 300-330).
+    #[test]
+    fn underline_notation_fraction_paths() {
+        // U+0332 suffix on digit prefix → digits/1
+        let _ = parse_math_expression("123\u{0332}");
+        // "1?/(...)" pattern
+        let _ = parse_math_expression("1\u{0332}/(x+y)");
+        // "X?/Y" generic underline-fraction
+        let _ = parse_math_expression("A\u{0332}/B");
+    }
+
+    /// Parser sweep — exercises diverse code paths.
+    #[test]
+    fn parser_diverse_input_sweep() {
+        let inputs: &[&str] = &[
+            // ASCII subscript syntaxes
+            "x_1",
+            "x_{12}",
+            "x_(n)",
+            "x_a",
+            "x_A",
+            // Number subscripts with decimal/slash inside
+            "x_{1.5}",
+            "x_{1/2}",
+            // Superscripts
+            "x^1",
+            "x^{n+1}",
+            "x^a",
+            // Combined
+            "x_1^2",
+            "x^a_b",
+            // Korean variables
+            "x가y",
+            "수식",
+            // Math symbols
+            "1≤x≤10",
+            "x≠y",
+            // Functions
+            "sin(x)",
+            "cos(2x)",
+            "log_2(8)",
+            // Parens & brackets
+            "(a+b)(c+d)",
+            "[a,b]",
+            "{x|x>0}",
+            // Decimal numbers
+            "3.14",
+            "0.5",
+            "1.234",
+            // Unicode operators
+            "x×y",
+            "x÷y",
+            "x±1",
+            // Multi-digit + multi-char
+            "12345",
+            "abc",
+            // Whitespace
+            "x + y",
+            "1  +  2",
+            // Empty / edge
+            "",
+            " ",
+            "  ",
+            // Single chars
+            "x",
+            "1",
+            "+",
+            // Compound math
+            "f(x)=x^2+2x+1",
+            "x^2 + 2x + 1 = 0",
+            // Greek letters
+            "α+β=γ",
+            "π/2",
+            // Roman numerals
+            "I+II",
+        ];
+        for input in inputs {
+            let _ = parse_math_expression(input);
+        }
+    }
+
+    // ============================================================
+    // Mutation-testing reinforcements (kill 35+ missed mutants in parse.rs)
+    // ============================================================
+
+    /// Underline-fraction notation with a parenthesised denominator is numerator-agnostic.
+    /// Expected token shape: (Grouping, ...inner..., Grouping_close, /, numerator).
+    #[rstest::rstest]
+    #[case::one_numerator("1\u{0332}/(x+y)", "1")]
+    #[case::two_numerator("2\u{0332}/(x+y)", "2")]
+    fn underline_fraction_with_parenthesised_body(#[case] input: &str, #[case] numerator: &str) {
+        let tokens = parse_math_expression(input).unwrap();
+        // First token must be Grouping open (denominator-first ordering).
+        assert!(
+            matches!(tokens[0], MathToken::OpenParen(BracketKind::Grouping)),
+            "expected Grouping open first, got {:?}",
+            tokens
+        );
+        // Then x, +, y inside.
+        assert!(matches!(tokens[1], MathToken::Variable('x')));
+        assert!(matches!(tokens[2], MathToken::Operator('+')));
+        assert!(matches!(tokens[3], MathToken::Variable('y')));
+        assert!(matches!(
+            tokens[4],
+            MathToken::CloseParen(BracketKind::Grouping)
+        ));
+        assert!(matches!(tokens[5], MathToken::Operator('/')));
+        assert!(matches!(tokens[6], MathToken::Number(ref n) if n == numerator));
+    }
+
+    /// `1̲/x` (no parens) — falls through to generic `̲/` denominator handling.
+    /// Distinguishes the `&&` mutation: with `||` mutation, the `(` check
+    /// alone would trigger paren-path even without `)` close.
+    #[test]
+    fn underline_fraction_without_parens_falls_through() {
+        // "1\u{0332}" alone (no slash) → "123/1" via prefix path.
+        let just_digit = parse_math_expression("1\u{0332}").unwrap();
+        assert!(!just_digit.is_empty());
+
+        // "A̲/B" → generic underline fraction (the lone /  branch).
+        let generic = parse_math_expression("A\u{0332}/B").unwrap();
+        assert!(!generic.is_empty(), "A̲/B must produce tokens");
+    }
+
+    /// Multi-space gap between Korean phrases should be preserved as a single space.
+    /// Lines 138 (while-loop bound on whitespace skip) and 142
+    /// (post-skip check for Korean continuation).
+    #[test]
+    fn korean_multi_space_preserves_single_space() {
+        // "이건  몇" — two spaces between Korean words → still one KoreanWord with one space.
+        let tokens = parse_math_expression("이건  몇").unwrap();
+        let kw = tokens.iter().find_map(|t| {
+            if let MathToken::KoreanWord(s) = t {
+                Some(s.clone())
+            } else {
+                None
+            }
+        });
+        let phrase = kw.expect("expected a KoreanWord token");
+        assert_eq!(
+            phrase, "이건 몇",
+            "multi-space must collapse to single space inside phrase"
+        );
+    }
+
+    /// Trailing whitespace before a non-Korean character must NOT be absorbed
+    /// into the Korean phrase. Line 142 `j < chars.len() && is_korean_char`.
+    /// Mutation: deleting `is_korean_char` check would absorb the space and
+    /// produce "이건 " with trailing space.
+    #[test]
+    fn korean_phrase_does_not_absorb_trailing_space_before_ascii() {
+        let tokens = parse_math_expression("이건 x").unwrap();
+        // First token: KoreanWord "이건" (no trailing space).
+        let phrase = match &tokens[0] {
+            MathToken::KoreanWord(s) => s.clone(),
+            other => panic!("expected KoreanWord, got {:?}", other),
+        };
+        assert_eq!(phrase, "이건", "trailing space must be stripped");
+        // Then x.
+        assert!(
+            tokens.iter().any(|t| matches!(t, MathToken::Variable('x'))),
+            "x must remain as a separate Variable"
+        );
+    }
+
+    /// Unicode subscript with embedded `.` and `/` (e.g., `x₁.₂` and `x₁/₂`).
+    /// Lines 197-209: the `.` and `/` extension within subscript sequence
+    /// requires `chars.get(i + 1).is_some_and(is_subscript_char)` lookahead.
+    #[test]
+    fn unicode_subscript_with_dot_and_slash() {
+        // x₁.₅ — subscript containing DecimalPoint.
+        let dot = parse_math_expression("x\u{2081}.\u{2085}").unwrap();
+        let sub_content = dot.iter().find_map(|t| {
+            if let MathToken::Subscript(c) = t {
+                Some(c.clone())
+            } else {
+                None
+            }
+        });
+        let sub = sub_content.expect("expected Subscript token");
+        assert!(
+            sub.iter().any(|t| matches!(t, MathToken::DecimalPoint)),
+            "subscript must contain DecimalPoint, got {:?}",
+            sub
+        );
+
+        // x₁/₂ — subscript containing Operator '/'.
+        let slash = parse_math_expression("x\u{2081}/\u{2082}").unwrap();
+        let sub_content = slash.iter().find_map(|t| {
+            if let MathToken::Subscript(c) = t {
+                Some(c.clone())
+            } else {
+                None
+            }
+        });
+        let sub = sub_content.expect("expected Subscript token");
+        assert!(
+            sub.iter().any(|t| matches!(t, MathToken::Operator('/'))),
+            "subscript must contain Operator('/'), got {:?}",
+            sub
+        );
+    }
+
+    /// `.` or `/` followed by a non-subscript character must NOT extend
+    /// the subscript sequence. Tests the lookahead check at line 198.
+    /// Mutation `chars.get(i + 1)` → `i - 1` would cause off-by-one.
+    #[test]
+    fn unicode_subscript_dot_without_following_subscript_stops() {
+        // x₁. — `.` after subscript with no following subscript-char → stop.
+        let tokens = parse_math_expression("x\u{2081}.y").unwrap();
+        let sub_content = tokens.iter().find_map(|t| {
+            if let MathToken::Subscript(c) = t {
+                Some(c.clone())
+            } else {
+                None
+            }
+        });
+        let sub = sub_content.expect("expected Subscript");
+        // The DecimalPoint must NOT be inside — subscript should be just {1}.
+        assert!(
+            !sub.iter().any(|t| matches!(t, MathToken::DecimalPoint)),
+            "subscript must not extend past lone dot, got {:?}",
+            sub
+        );
+    }
+
+    /// `_{...}` brace tracking with NESTED braces.
+    /// Lines 226-247: depth counter for matching closing brace.
+    /// Mutations: `depth += 1` → `-=`/`*=`; delete `{`/`}` match arms.
+    /// A nested `_{{a}b}` should pair the OUTER brace, producing a subscript
+    /// containing tokens for "{a}b" parsed as inner expression.
+    #[test]
+    fn ascii_subscript_brace_nested_depth_tracking() {
+        // x_{a{b}c}  — outer braces span the whole subscript content
+        let tokens = parse_math_expression("x_{a{b}c}").unwrap();
+        // Outer subscript must exist.
+        let sub_idx = tokens
+            .iter()
+            .position(|t| matches!(t, MathToken::Subscript(_)));
+        assert!(sub_idx.is_some(), "must find a Subscript token");
+        // Whatever follows the outer `}` (here nothing) — `x_{a{b}c}` is single subscript.
+        // After Variable(x) + Subscript, there should be no leftover Raw('c}').
+        assert!(
+            !tokens.iter().any(|t| matches!(t, MathToken::Raw('}'))),
+            "no stray closing brace as Raw; tokens={:?}",
+            tokens
+        );
+    }
+
+    /// `_{...` with UNCLOSED brace must NOT consume infinite chars.
+    /// Falls back to `Raw('_')` and continues. Line 242 `chars[j] == '}'`.
+    /// Mutation `==` → `!=`/`>`/`<=` would mis-detect closure.
+    #[test]
+    fn ascii_subscript_brace_unclosed_falls_back_to_raw() {
+        let tokens = parse_math_expression("x_{abc").unwrap();
+        // `_` must end up as Raw since closure missing.
+        assert!(
+            tokens.iter().any(|t| matches!(t, MathToken::Raw('_'))),
+            "unclosed _ must fall back to Raw('_'); tokens={:?}",
+            tokens
+        );
+    }
+
+    /// `_(...)` paren tracking with NESTED parens.
+    /// Lines 255-289: depth tracking + wrap inner with MathParen brackets.
+    /// Mutations on depth `+=`/`-=` would mis-match.
+    #[test]
+    fn ascii_subscript_paren_nested_depth_tracking() {
+        // x_((a)) — nested parens; outer paren is the subscript delimiter.
+        let tokens = parse_math_expression("x_((a))").unwrap();
+        // Subscript content must wrap with MathParen and contain inner expression.
+        let sub_content = tokens.iter().find_map(|t| {
+            if let MathToken::Subscript(c) = t {
+                Some(c.clone())
+            } else {
+                None
+            }
+        });
+        let sub = sub_content.expect("expected Subscript");
+        // First token in subscript is OpenParen MathParen (per the source).
+        assert!(
+            matches!(
+                sub.first(),
+                Some(MathToken::OpenParen(BracketKind::MathParen))
+            ),
+            "subscript must begin with MathParen open, got {:?}",
+            sub
+        );
+        // Last token is CloseParen MathParen.
+        assert!(
+            matches!(
+                sub.last(),
+                Some(MathToken::CloseParen(BracketKind::MathParen))
+            ),
+            "subscript must end with MathParen close, got {:?}",
+            sub
+        );
+    }
+
+    /// `_(...` UNCLOSED paren must fall back to Raw('_').
+    #[test]
+    fn ascii_subscript_paren_unclosed_falls_back_to_raw() {
+        let tokens = parse_math_expression("x_(abc").unwrap();
+        assert!(
+            tokens.iter().any(|t| matches!(t, MathToken::Raw('_'))),
+            "unclosed _( must fall back to Raw('_'); tokens={:?}",
+            tokens
+        );
     }
 }

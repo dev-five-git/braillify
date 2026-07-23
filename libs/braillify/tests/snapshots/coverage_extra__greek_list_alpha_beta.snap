@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "각 α, β에 대하여"
+unicode = ok: "⠫⠁⠀⠴⠨⠁⠂⠀⠨⠃⠲⠝⠀⠊⠗⠚⠣⠱"
+bytes   = ok: [43, 1, 0, 52, 40, 1, 2, 0, 40, 3, 50, 29, 0, 10, 23, 26, 35, 49]

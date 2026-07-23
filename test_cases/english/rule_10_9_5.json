@@ -1,0 +1,32 @@
+[
+  {
+    "input": "belowdecks",
+    "internal": "2ldecks",
+    "expected": "6725179514",
+    "unicode": "⠆⠇⠙⠑⠉⠅⠎"
+  },
+  {
+    "input": "hereabouts",
+    "internal": "\"habs",
+    "expected": "16191314",
+    "unicode": "⠐⠓⠁⠃⠎"
+  },
+  {
+    "input": "GodChildren's",
+    "internal": ",god,*n's",
+    "expected": "32272125323329414",
+    "unicode": "⠠⠛⠕⠙⠠⠡⠝⠄⠎"
+  },
+  {
+    "input": "Our boyfriends mustn't miss tomorrow's afterdinner speaker!",
+    "internal": ",\\r boyfrs m/n't miss tm's afd9n] sp1k]6",
+    "expected": "32512303216111231401312294300131014140301341401112520295901415255922",
+    "unicode": "⠠⠳⠗⠀⠃⠕⠽⠋⠗⠎⠀⠍⠌⠝⠄⠞⠀⠍⠊⠎⠎⠀⠞⠍⠄⠎⠀⠁⠋⠙⠔⠝⠻⠀⠎⠏⠂⠅⠻⠖"
+  },
+  {
+    "input": "friend(s)",
+    "internal": "fri5d\"<s\">",
+    "expected": "11231034251635141628",
+    "unicode": "⠋⠗⠊⠢⠙⠐⠣⠎⠐⠜"
+  }
+]

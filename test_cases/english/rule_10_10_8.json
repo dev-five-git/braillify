@@ -1,0 +1,74 @@
+[
+  {
+    "input": "apartheid",
+    "internal": "a\"pheid",
+    "expected": "1161519171025",
+    "unicode": "⠁⠐⠏⠓⠑⠊⠙"
+  },
+  {
+    "input": "asthma",
+    "internal": "as?ma",
+    "expected": "11457131",
+    "unicode": "⠁⠎⠹⠍⠁"
+  },
+  {
+    "input": "dishevelled",
+    "internal": "di%evell$",
+    "expected": "2510411739177743",
+    "unicode": "⠙⠊⠩⠑⠧⠑⠇⠇⠫"
+  },
+  {
+    "input": "gingham",
+    "internal": "g+ham",
+    "expected": "274419113",
+    "unicode": "⠛⠬⠓⠁⠍"
+  },
+  {
+    "input": "hypotheses",
+    "internal": "hypo!ses",
+    "expected": "1961152146141714",
+    "unicode": "⠓⠽⠏⠕⠮⠎⠑⠎"
+  },
+  {
+    "input": "isthmus",
+    "internal": "is?mus",
+    "expected": "101457133714",
+    "unicode": "⠊⠎⠹⠍⠥⠎"
+  },
+  {
+    "input": "posthumous",
+    "internal": "po/hum\\s",
+    "expected": "1521121937135114",
+    "unicode": "⠏⠕⠌⠓⠥⠍⠳⠎"
+  },
+  {
+    "input": "stronghold",
+    "internal": "/r;ghold",
+    "expected": "122348271921725",
+    "unicode": "⠌⠗⠰⠛⠓⠕⠇⠙"
+  },
+  {
+    "input": "towhee",
+    "internal": "t[hee",
+    "expected": "3042191717",
+    "unicode": "⠞⠪⠓⠑⠑"
+  },
+  {
+    "input": "where'er",
+    "internal": ":]e']",
+    "expected": "495917459",
+    "unicode": "⠱⠻⠑⠄⠻"
+  },
+  {
+    "input": "whereas",
+    "internal": "\":as",
+    "expected": "1649114",
+    "unicode": "⠐⠱⠁⠎"
+  },
+  {
+    "input": "wherever",
+    "internal": ":]\"e",
+    "expected": "49591617",
+    "unicode": "⠱⠻⠐⠑"
+  }
+]

@@ -17,7 +17,7 @@
   },
   {
     "input": "마우스",
-    "internal": "e<m,[",
+    "internal": "e<m,{",
     "expected": "1735133242",
     "unicode": "⠑⠣⠍⠠⠪",
     "world": "⠑⠣⠍⠠⠪",
@@ -57,7 +57,7 @@
   },
   {
     "input": "파이프",
-    "internal": "d<od[",
+    "internal": "d<od{",
     "expected": "2535212542",
     "unicode": "⠙⠣⠕⠙⠪",
     "world": "⠙⠣⠕⠙⠪",

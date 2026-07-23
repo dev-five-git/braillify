@@ -1,0 +1,110 @@
+[
+  {
+    "input": "th–",
+    "internal": "th,-",
+    "expected": "30193236",
+    "unicode": "⠞⠓⠠⠤"
+  },
+  {
+    "input": "say pl...",
+    "internal": "say pl444",
+    "expected": "141610157505050",
+    "unicode": "⠎⠁⠽⠀⠏⠇⠲⠲⠲"
+  },
+  {
+    "input": "Tell me wh-.",
+    "internal": ",tell me wh-4",
+    "expected": "3230177701317058193650",
+    "unicode": "⠠⠞⠑⠇⠇⠀⠍⠑⠀⠺⠓⠤⠲"
+  },
+  {
+    "input": "-tion",
+    "internal": "-tion",
+    "expected": "3630102129",
+    "unicode": "⠤⠞⠊⠕⠝"
+  },
+  {
+    "input": "-ccio",
+    "internal": "-ccio",
+    "expected": "36991021",
+    "unicode": "⠤⠉⠉⠊⠕"
+  },
+  {
+    "input": "-ean",
+    "internal": "-ean",
+    "expected": "3617129",
+    "unicode": "⠤⠑⠁⠝"
+  },
+  {
+    "input": "-ence",
+    "internal": "-5ce",
+    "expected": "3634917",
+    "unicode": "⠤⠢⠉⠑"
+  },
+  {
+    "input": "-ing",
+    "internal": "-9g",
+    "expected": "362027",
+    "unicode": "⠤⠔⠛"
+  },
+  {
+    "input": "-ount",
+    "internal": "-\\nt",
+    "expected": "36512930",
+    "unicode": "⠤⠳⠝⠞"
+  },
+  {
+    "input": "-in",
+    "internal": "-in",
+    "expected": "361029",
+    "unicode": "⠤⠊⠝"
+  },
+  {
+    "input": "-est",
+    "internal": "-e/",
+    "expected": "361712",
+    "unicode": "⠤⠑⠌"
+  },
+  {
+    "input": "-ed",
+    "internal": "-$",
+    "expected": "3643",
+    "unicode": "⠤⠫"
+  },
+  {
+    "input": "-ar",
+    "internal": "->",
+    "expected": "3628",
+    "unicode": "⠤⠜"
+  },
+  {
+    "input": "ar-",
+    "internal": ">-",
+    "expected": "2836",
+    "unicode": "⠜⠤"
+  },
+  {
+    "input": "be-",
+    "internal": "be-",
+    "expected": "31736",
+    "unicode": "⠃⠑⠤"
+  },
+  {
+    "input": "-es",
+    "internal": "-es",
+    "expected": "361714",
+    "unicode": "⠤⠑⠎"
+  },
+  {
+    "input": "-s",
+    "internal": "-;s",
+    "expected": "364814",
+    "unicode": "⠤⠰⠎"
+  },
+  {
+    "input": "~s",
+    "internal": "@9s",
+    "expected": "82014",
+    "unicode": "⠈⠔⠎"
+  }
+]

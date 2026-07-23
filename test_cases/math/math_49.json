@@ -1,6 +1,7 @@
 [
   {
     "input": "sinh",
+    "note": "PDF 제49항 — 쌍곡선 사인 sinh 기호 정의 (단독)",
     "internal": "6sh",
     "expected": "221419",
     "unicode": "⠖⠎⠓",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠴⠎⠔⠓⠲"
   },
   {
+    "input": "$\\sinh$",
+    "note": "LaTeX",
+    "internal": "6sh",
+    "expected": "221419",
+    "unicode": "⠖⠎⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "cosh",
+    "note": "PDF 제49항 — 쌍곡선 코사인 cosh 기호 정의 (단독)",
     "internal": "6ch",
     "expected": "22919",
     "unicode": "⠖⠉⠓",
@@ -16,7 +27,17 @@
     "jeomsarang": "⠴⠉⠕⠩⠲"
   },
   {
+    "input": "$\\cosh$",
+    "note": "LaTeX",
+    "internal": "6ch",
+    "expected": "22919",
+    "unicode": "⠖⠉⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "tanh",
+    "note": "PDF 제49항 — 쌍곡선 탄젠트 tanh 기호 정의 (단독)",
     "internal": "6th",
     "expected": "223019",
     "unicode": "⠖⠞⠓",
@@ -24,36 +45,92 @@
     "jeomsarang": "⠴⠞⠁⠝⠓⠲"
   },
   {
-    "input": "sinhx=(eˣ-e⁻ˣ)/2",
-    "internal": "6shx33#b/(e^x9e^9x)",
-    "expected": "2214194518186031255172445201724204562",
-    "unicode": "⠖⠎⠓⠭⠒⠒⠼⠃⠌⠷⠑⠘⠭⠔⠑⠘⠔⠭⠾",
-    "world": "⠴⠎⠔⠓⠭⠐⠶⠐⠣⠑⠭⠤⠰⠑⠘⠔ ⠠⠴⠸⠌⠼⠃",
-    "jeomsarang": "⠴⠎⠔⠓⠭⠐⠶⠐⠣⠰⠑⠲⠀⠤⠰⠑⠘⠔⠀⠐⠜⠸⠌⠼⠃"
-  },
-  {
-    "input": "$\\sinhx=(e^x-e^{-x})/2$",
+    "input": "$\\tanh$",
     "note": "LaTeX",
-    "internal": "6shx33#b/(e^x9e^9x)",
-    "expected": "2214194518186031255172445201724204562",
-    "unicode": "⠖⠎⠓⠭⠒⠒⠼⠃⠌⠷⠑⠘⠭⠔⠑⠘⠔⠭⠾",
+    "internal": "6th",
+    "expected": "223019",
+    "unicode": "⠖⠞⠓",
     "world": "",
     "jeomsarang": ""
   },
   {
+    "input": "sinhx",
+    "note": "PDF 제49항 — 예제 sinhx (쌍곡선 사인 적용)",
+    "internal": "6shx",
+    "expected": "22141945",
+    "unicode": "⠖⠎⠓⠭",
+    "world": "⠴⠎⠔⠓⠭⠲",
+    "jeomsarang": "⠴⠎⠔⠓⠭⠲"
+  },
+  {
+    "input": "$\\sinh x$",
+    "note": "LaTeX",
+    "internal": "6shx",
+    "expected": "22141945",
+    "unicode": "⠖⠎⠓⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "coshx",
+    "note": "PDF 제49항 — 예제 coshx (쌍곡선 코사인 적용)",
+    "internal": "6chx",
+    "expected": "2291945",
+    "unicode": "⠖⠉⠓⠭",
+    "world": "⠴⠉⠕⠩⠭⠲",
+    "jeomsarang": "⠴⠉⠕⠩⠭⠲"
+  },
+  {
+    "input": "$\\cosh x$",
+    "note": "LaTeX",
+    "internal": "6chx",
+    "expected": "2291945",
+    "unicode": "⠖⠉⠓⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tanhx",
+    "note": "PDF 제49항 — 예제 tanhx (쌍곡선 탄젠트 적용)",
+    "internal": "6thx",
+    "expected": "22301945",
+    "unicode": "⠖⠞⠓⠭",
+    "world": "⠴⠞⠁⠝⠓⠭⠲",
+    "jeomsarang": "⠴⠞⠁⠝⠓⠭⠲"
+  },
+  {
+    "input": "$\\tanh x$",
+    "note": "LaTeX",
+    "internal": "6thx",
+    "expected": "22301945",
+    "unicode": "⠖⠞⠓⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$\\sinh x=\\frac{e^x-e^{-x}}{2}$",
+    "note": "PDF 제49항 — 예제 (sinhx 정의식, 분수 — 평문 표기 불가 LaTeX만)",
+    "internal": "6shx33#b/(e^x9e^9x)",
+    "expected": "2214194518186031255172445201724204562",
+    "unicode": "⠖⠎⠓⠭⠒⠒⠼⠃⠌⠷⠑⠘⠭⠔⠑⠘⠔⠭⠾",
+    "world": "⠴⠈⠎⠸⠡⠴⠎⠔⠓ ⠭⠐⠶⠸⠡⠋⠗⠁⠉⠸⠣⠑⠈⠢⠭⠤⠑⠈⠢⠸⠣⠤⠰⠭⠐⠴⠐⠴⠦⠂⠼⠃⠐⠴⠈⠎",
+    "jeomsarang": ""
+  },
+  {
     "input": "cosh²x-sinh²x=1",
+    "note": "PDF 제49항 — 예제 (cosh²x-sinh²x=1, 항등식)",
     "internal": "6ch^#bx96sh^#bx33#a",
     "expected": "2291924603452022141924603451818601",
     "unicode": "⠖⠉⠓⠘⠼⠃⠭⠔⠖⠎⠓⠘⠼⠃⠭⠒⠒⠼⠁",
     "world": "⠴⠉⠕⠩⠘⠼⠃⠭⠤⠎⠔⠓⠘⠼⠃⠭⠒⠒⠼⠁",
-    "jeomsarang": "⠴⠉⠕⠩⠰⠘⠼⠃⠭⠤⠎⠔⠓⠰⠘⠼⠃⠭⠐⠶⠼⠁"
+    "jeomsarang": "⠴⠉⠕⠩⠰⠔⠼⠃⠭⠤⠎⠔⠓⠰⠔⠼⠃⠭⠐⠶⠼⠁"
   },
   {
-    "input": "$\\cosh^2x-sinh^2x=1$",
+    "input": "$\\cosh^2x-\\sinh^2x=1$",
+    "note": "LaTeX",
     "internal": "6ch^#bx96sh^#bx33#a",
     "expected": "2291924603452022141924603451818601",
     "unicode": "⠖⠉⠓⠘⠼⠃⠭⠔⠖⠎⠓⠘⠼⠃⠭⠒⠒⠼⠁",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   }

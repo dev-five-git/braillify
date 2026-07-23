@@ -1,26 +1,18 @@
 //! 수학 제29항 — 근사 등호 (≈).
 //!
-//! 근사 등호 `≈`(U+2248)는 수학 내부표기에서 `@9@9`에 해당한다.
-
-use crate::math_symbol_shortcut;
-
-pub fn is_approximate_equal(c: char) -> bool {
-    c == '≈'
-}
-
-pub fn encode_approximate_equal(c: char, result: &mut Vec<u8>) -> Result<(), String> {
-    let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
-    result.extend_from_slice(encoded);
-    Ok(())
-}
+//! 근사 등호 `≈`(U+2248)는 `rule_3::is_equality_symbol`에 포함되어 있어
+//! equality dispatch에서 처리된다. 별도 rule_29 dispatch는 dead code였다.
+//! 본 파일은 PDF 규정 추적용으로만 보존된다.
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
+    /// PDF 제29항 — `≈` (U+2248) 근사 등호 encode 파이프라인.
+    /// rule_3::encode_equality_symbol 경로로 처리된다.
     #[test]
-    fn detects_approximate_equal_symbol() {
-        assert!(is_approximate_equal('≈'));
-        assert!(!is_approximate_equal('='));
+    fn approximate_equal_through_pipeline() {
+        let result = crate::encode("\u{2248}");
+        assert!(result.is_ok());
+        let result = crate::encode("X\u{2248}F/N");
+        assert!(result.is_ok());
     }
 }

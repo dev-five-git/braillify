@@ -1,7 +1,7 @@
 [
   {
     "input": "I",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,i4",
     "expected": "52321050",
     "unicode": "⠴⠠⠊⠲",
@@ -10,7 +10,7 @@
   },
   {
     "input": "II",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,,ii4",
     "expected": "523232101050",
     "unicode": "⠴⠠⠠⠊⠊⠲",
@@ -19,7 +19,7 @@
   },
   {
     "input": "III",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,,iii4",
     "expected": "52323210101050",
     "unicode": "⠴⠠⠠⠊⠊⠊⠲",
@@ -28,16 +28,16 @@
   },
   {
     "input": "V",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,v4",
     "expected": "52323950",
     "unicode": "⠴⠠⠧⠲",
     "world": "⠴⠠⠧⠲",
-    "jeomsarang": "⠴⠠⠧⠲"
+    "jeomsarang": "⠴⠰⠠⠧⠲"
   },
   {
     "input": "IX",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,,ix4",
     "expected": "523232104550",
     "unicode": "⠴⠠⠠⠊⠭⠲",
@@ -46,16 +46,16 @@
   },
   {
     "input": "X",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,x4",
     "expected": "52324550",
     "unicode": "⠴⠠⠭⠲",
     "world": "⠴⠠⠭⠲",
-    "jeomsarang": "⠴⠠⠭⠲"
+    "jeomsarang": "⠴⠰⠠⠭⠲"
   },
   {
     "input": "XV",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,,xv4",
     "expected": "523232453950",
     "unicode": "⠴⠠⠠⠭⠧⠲",
@@ -64,7 +64,7 @@
   },
   {
     "input": "XX",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0,,xx4",
     "expected": "523232454550",
     "unicode": "⠴⠠⠠⠭⠭⠲",
@@ -73,7 +73,7 @@
   },
   {
     "input": "i",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0i4",
     "expected": "521050",
     "unicode": "⠴⠊⠲",
@@ -82,7 +82,7 @@
   },
   {
     "input": "ii",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0ii4",
     "expected": "52101050",
     "unicode": "⠴⠊⠊⠲",
@@ -91,7 +91,7 @@
   },
   {
     "input": "iii",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0iii4",
     "expected": "5210101050",
     "unicode": "⠴⠊⠊⠊⠲",
@@ -100,7 +100,7 @@
   },
   {
     "input": "v",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0v4",
     "expected": "523950",
     "unicode": "⠴⠧⠲",
@@ -109,7 +109,7 @@
   },
   {
     "input": "ix",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0ix4",
     "expected": "52104550",
     "unicode": "⠴⠊⠭⠲",
@@ -118,7 +118,7 @@
   },
   {
     "input": "x",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0x4",
     "expected": "524550",
     "unicode": "⠴⠭⠲",
@@ -127,7 +127,7 @@
   },
   {
     "input": "xviii",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0xviii4",
     "expected": "52453910101050",
     "unicode": "⠴⠭⠧⠊⠊⠊⠲",
@@ -136,7 +136,7 @@
   },
   {
     "input": "xxx",
-    "context": "roman_numeral",
+    "context": "number",
     "internal": "0xxx4",
     "expected": "5245454550",
     "unicode": "⠴⠭⠭⠭⠲",
@@ -145,9 +145,9 @@
   },
   {
     "input": "가영이는 미적분학 II 과목을 수강하고 있다.",
-    "internal": "$]ocz`eo.?^gja`0,,ii4`@vex!`,m`$7j@u`o/i4",
-    "expected": "435921953017214057242726105232321010500839174546032130435426837021121050",
-    "unicode": "⠫⠻⠕⠉⠵⠀⠑⠕⠨⠹⠘⠛⠚⠁⠀⠴⠠⠠⠊⠊⠲⠀⠈⠧⠑⠭⠮⠀⠠⠍⠀⠫⠶⠚⠈⠥⠀⠕⠌⠊⠲",
+    "internal": "$]ocz`eo.?^gja`0,,ii4`@vex!`,m$7j@u`o/i4",
+    "expected": "43592195301721405724272610523232101050083917454603213435426837021121050",
+    "unicode": "⠫⠻⠕⠉⠵⠀⠑⠕⠨⠹⠘⠛⠚⠁⠀⠴⠠⠠⠊⠊⠲⠀⠈⠧⠑⠭⠮⠀⠠⠍⠫⠶⠚⠈⠥⠀⠕⠌⠊⠲",
     "world": "⠫⠻⠕⠉⠵ ⠑⠕⠨⠹⠘⠛⠚⠁ ⠴⠠⠠⠊⠊⠲ ⠈⠧⠑⠭⠮ ⠠⠍⠫⠶⠚⠈⠥ ⠕⠌⠊⠲",
     "jeomsarang": "⠫⠻⠕⠉⠵⠀⠑⠕⠨⠹⠘⠛⠚⠁⠀⠴⠠⠠⠊⠊⠲⠀⠈⠧⠑⠭⠮⠀⠠⠍⠫⠶⠚⠈⠥⠀⠕⠌⠊⠲"
   },

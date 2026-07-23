@@ -208,3 +208,516 @@ Braillify 는 Node.js(Wasm for Web) 와 Python 그리고 Rust, .NET을 지원합
     </tr>
   </tbody>
 </table>
+
+<br />
+
+# HTTP API
+
+<br />
+
+별도의 패키지 설치 없이 HTTP 요청만으로 점역을 이용할 수 있도록 공개 API 서버를 제공합니다.
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <tbody>
+    <tr>
+      <td
+        style={{
+          padding: '12px',
+          borderBottom: '1px solid #ddd',
+          fontWeight: 600,
+          width: '180px',
+        }}
+      >
+        Base URL
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        https://api.braillify.kr
+      </td>
+    </tr>
+    <tr>
+      <td
+        style={{
+          padding: '12px',
+          borderBottom: '1px solid #ddd',
+          fontWeight: 600,
+        }}
+      >
+        Swagger UI
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        <a
+          href="https://api.braillify.kr/docs"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          https://api.braillify.kr/docs
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td
+        style={{
+          padding: '12px',
+          borderBottom: '1px solid #ddd',
+          fontWeight: 600,
+        }}
+      >
+        인증
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        불필요
+      </td>
+    </tr>
+    <tr>
+      <td
+        style={{
+          padding: '12px',
+          borderBottom: '1px solid #ddd',
+          fontWeight: 600,
+        }}
+      >
+        요청 / 응답 포맷
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        application/json (UTF-8)
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+
+## 텍스트 점역 (GET)
+<br />
+쿼리 스트링으로 텍스트를 전달하여 점역합니다.
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        이름
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        타입
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        필수
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>text</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>string</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>O</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        점역할 텍스트. 한글 / 영문 / 숫자 모두 지원합니다.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+```bash
+curl "https://api.braillify.kr/braille?text=안녕하세요"
+```
+
+<br />
+<br />
+
+## 텍스트 점역 (POST)
+<br />
+긴 문장이나 줄바꿈 / 특수문자를 안전하게 전달하려면 JSON 본문으로 요청합니다.
+<br />
+
+```json
+{
+  "text": "안녕하세요"
+}
+```
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        필드
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        타입
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        필수
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>text</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>string</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>O</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        점역할 텍스트. UTF-8 로 인코딩합니다.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+```bash
+curl -X POST "https://api.braillify.kr/braille" \
+  -H "Content-Type: application/json" \
+  -d '{"text":"안녕하세요"}'
+```
+
+<br />
+<br />
+## 응답 (200 OK)
+<br />
+
+```json
+{
+  "text": "안녕하세요",
+  "braille": "⠣⠉⠟⠚⠠⠝⠚⠠⠝⠝⠬",
+  "length": 5
+}
+```
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        필드
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        타입
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>text</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>string</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        입력한 원문 텍스트를 그대로 echo 합니다.
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>braille</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>string</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        점역 결과 (유니코드 점자 문자열).
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>length</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>integer</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        입력 문자열의 문자 개수 (uint32).
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+<br />
+
+## 에러 응답
+<br />
+
+요청이 실패하면 다음 형태의 에러 객체를 반환합니다.
+
+```json
+{
+  "error": "too_long",
+  "message": "text exceeds 2000 character limit"
+}
+```
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+          width: '120px',
+        }}
+      >
+        HTTP 상태
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+          width: '180px',
+        }}
+      >
+        error 코드
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        발생 상황
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        메시지
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>
+        413 PAYLOAD_TOO_LARGE
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>too_long</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        입력 텍스트가 <code>max_input_chars</code> (기본 2000자) 를 초과한 경우.
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        <code>text exceeds &#123;max&#125; character limit</code>
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>
+        429 TOO_MANY_REQUESTS
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>rate_limited</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        IP 당 rate limit (기본 60req / 60s) 을 초과한 경우.
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        <code>rate limit exceeded - try again later</code>
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd', fontWeight: 600 }}>
+        400 BAD_REQUEST
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>conversion_failed</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        <code>braillify::encode_to_unicode</code> 변환 자체가 실패한 경우.
+      </td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        <code>braille conversion failed: &#123;err&#125;</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+
+#### 응답 본문 스키마
+
+```json
+{
+  "error": "too_long",
+  "message": "text exceeds 2000 character limit"
+}
+```
+
+<table
+  style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    margin: '20px 0',
+  }}
+>
+  <thead>
+    <tr>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        필드
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        타입
+      </th>
+      <th
+        style={{
+          padding: '12px',
+          textAlign: 'left',
+          borderBottom: '2px solid #ddd',
+          backgroundColor: 'var(--containerBackground)',
+          color: 'var(--text)',
+        }}
+      >
+        설명
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>error</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>string</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        에러 코드 (machine-readable).
+      </td>
+    </tr>
+    <tr>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>message</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>string</td>
+      <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+        사람이 읽을 수 있는 에러 메시지.
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -53,9 +53,14 @@ impl BrailleRule for Rule44 {
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
-        let has_middle_dot_before = ctx.word_chars[..ctx.index].contains(&'·');
-        if has_middle_dot_before {
-            ctx.emit(8); // Attached separator in middle-dot enumerations
+        // 한글 바로 앞 문자가 가운뎃점(`·`)인 경우에만 부착 분리자 ⠈(8)을 쓰고,
+        // 그 외 (가운뎃점 열거 내부라도 한글이 숫자 다음에 나오는 경우 등)에는
+        // 통상의 공백 ⠀(0)으로 분리한다.
+        // 근거: 제44항 [다만] — 숫자와 혼동되는 한글은 띄어 쓴다. (제50항 가운뎃점
+        // 열거의 부착 분리자는 `·` 바로 뒤에 한글이 붙은 형태에만 적용)
+        let middle_dot_adjacent = ctx.prev_char() == Some('·');
+        if middle_dot_adjacent {
+            ctx.emit(8); // Attached separator
         } else {
             ctx.emit(0); // Space separator
         }
@@ -79,15 +84,37 @@ mod tests {
     }
 
     #[test]
-    fn golden_test_alignment() {
-        // "5운6기" → ⠼⠑ + space + 운 + ⠼⠋ + 기
-        let result = crate::encode_to_unicode("5운6기").unwrap();
-        assert_eq!(result, "⠼⠑⠀⠛⠼⠋⠈⠕");
-    }
-
-    #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "44");
         assert_eq!(META.name, "number_korean_spacing");
+    }
+
+    /// 제44항 [다만] — 가운뎃점(·) 바로 뒤에 confusable 한글이 오면 부착 분리자
+    /// ⠈(8)을 emit한다 (line 62-63). 가운뎃점 열거 컨텍스트.
+    #[test]
+    fn rule44_apply_emits_attached_separator_after_middle_dot() {
+        // "·" + "ㅎ어" pattern — confusable choseong ㅎ after middle dot
+        let word: Vec<char> = "·하".chars().collect();
+        let ct = CharType::new(word[1]).unwrap();
+        let mut skip = 0usize;
+        let mut state = crate::rules::context::EncoderState::new(false);
+        state.is_number = true;
+        let mut out = Vec::new();
+        let mut ctx = RuleContext {
+            word_chars: &word,
+            index: 1,
+            char_type: &ct,
+            prev_word: "",
+            remaining_words: &[],
+            has_korean_char: true,
+            is_all_uppercase: false,
+            ascii_starts_at_beginning: false,
+            skip_count: &mut skip,
+            state: &mut state,
+            result: &mut out,
+        };
+        let outcome = Rule44.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Continue));
+        assert_eq!(out, vec![8]); // attached separator
     }
 }

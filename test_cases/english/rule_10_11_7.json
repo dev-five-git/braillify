@@ -1,0 +1,272 @@
+[
+  {
+    "input": "acreage",
+    "internal": "acr1ge",
+    "expected": "192322717",
+    "unicode": "⠁⠉⠗⠂⠛⠑"
+  },
+  {
+    "input": "agreeable",
+    "internal": "agre1ble",
+    "expected": "127231723717",
+    "unicode": "⠁⠛⠗⠑⠂⠃⠇⠑"
+  },
+  {
+    "input": "arboreal",
+    "internal": ">bor1l",
+    "expected": "283212327",
+    "unicode": "⠜⠃⠕⠗⠂⠇"
+  },
+  {
+    "input": "baroness",
+    "internal": "b>o;s",
+    "expected": "328214814",
+    "unicode": "⠃⠜⠕⠰⠎"
+  },
+  {
+    "input": "boredom",
+    "internal": "bor$om",
+    "expected": "32123432113",
+    "unicode": "⠃⠕⠗⠫⠕⠍"
+  },
+  {
+    "input": "Brigham",
+    "internal": ",bri<am",
+    "expected": "323231035113",
+    "unicode": "⠠⠃⠗⠊⠣⠁⠍"
+  },
+  {
+    "input": "changeability",
+    "internal": "*ang1bil;y",
+    "expected": "3312927231074861",
+    "unicode": "⠡⠁⠝⠛⠂⠃⠊⠇⠰⠽"
+  },
+  {
+    "input": "chargeable",
+    "internal": "*>g1ble",
+    "expected": "33282723717",
+    "unicode": "⠡⠜⠛⠂⠃⠇⠑"
+  },
+  {
+    "input": "Chatham",
+    "internal": ",*a?am",
+    "expected": "3233157113",
+    "unicode": "⠠⠡⠁⠹⠁⠍"
+  },
+  {
+    "input": "delineate",
+    "internal": "del91te",
+    "expected": "251772023017",
+    "unicode": "⠙⠑⠇⠔⠂⠞⠑"
+  },
+  {
+    "input": "dukedom",
+    "internal": "duk$om",
+    "expected": "25375432113",
+    "unicode": "⠙⠥⠅⠫⠕⠍"
+  },
+  {
+    "input": "effaceable",
+    "internal": "e6ac1ble",
+    "expected": "17221923717",
+    "unicode": "⠑⠖⠁⠉⠂⠃⠇⠑"
+  },
+  {
+    "input": "European",
+    "internal": ",europ1n",
+    "expected": "321737232115229",
+    "unicode": "⠠⠑⠥⠗⠕⠏⠂⠝"
+  },
+  {
+    "input": "finery",
+    "internal": "f9]y",
+    "expected": "11205961",
+    "unicode": "⠋⠔⠻⠽"
+  },
+  {
+    "input": "foreseeably",
+    "internal": "=ese1bly",
+    "expected": "6317141723761",
+    "unicode": "⠿⠑⠎⠑⠂⠃⠇⠽"
+  },
+  {
+    "input": "freedom",
+    "internal": "fre$om",
+    "expected": "112317432113",
+    "unicode": "⠋⠗⠑⠫⠕⠍"
+  },
+  {
+    "input": "genealogy",
+    "internal": "g51logy",
+    "expected": "273427212761",
+    "unicode": "⠛⠢⠂⠇⠕⠛⠽"
+  },
+  {
+    "input": "governess",
+    "internal": "gov];s",
+    "expected": "272139594814",
+    "unicode": "⠛⠕⠧⠻⠰⠎"
+  },
+  {
+    "input": "Higham",
+    "internal": ",hi<am",
+    "expected": "32191035113",
+    "unicode": "⠠⠓⠊⠣⠁⠍"
+  },
+  {
+    "input": "imagery",
+    "internal": "imag]y",
+    "expected": "10131275961",
+    "unicode": "⠊⠍⠁⠛⠻⠽"
+  },
+  {
+    "input": "laureate",
+    "internal": "laur1te",
+    "expected": "71372323017",
+    "unicode": "⠇⠁⠥⠗⠂⠞⠑"
+  },
+  {
+    "input": "likeable",
+    "internal": "lik1ble",
+    "expected": "710523717",
+    "unicode": "⠇⠊⠅⠂⠃⠇⠑"
+  },
+  {
+    "input": "lineage",
+    "internal": "l91ge",
+    "expected": "72022717",
+    "unicode": "⠇⠔⠂⠛⠑"
+  },
+  {
+    "input": "lineal",
+    "internal": "l91l",
+    "expected": "72027",
+    "unicode": "⠇⠔⠂⠇"
+  },
+  {
+    "input": "lioness",
+    "internal": "lio;s",
+    "expected": "710214814",
+    "unicode": "⠇⠊⠕⠰⠎"
+  },
+  {
+    "input": "midwifery",
+    "internal": "midwif]y",
+    "expected": "1310255810115961",
+    "unicode": "⠍⠊⠙⠺⠊⠋⠻⠽"
+  },
+  {
+    "input": "mileage",
+    "internal": "mil1ge",
+    "expected": "1310722717",
+    "unicode": "⠍⠊⠇⠂⠛⠑"
+  },
+  {
+    "input": "noticeable",
+    "internal": "notic1ble",
+    "expected": "29213010923717",
+    "unicode": "⠝⠕⠞⠊⠉⠂⠃⠇⠑"
+  },
+  {
+    "input": "oleaginous",
+    "internal": "ol1g9\\s",
+    "expected": "217227205114",
+    "unicode": "⠕⠇⠂⠛⠔⠳⠎"
+  },
+  {
+    "input": "orangery",
+    "internal": "orang]y",
+    "expected": "2123129275961",
+    "unicode": "⠕⠗⠁⠝⠛⠻⠽"
+  },
+  {
+    "input": "peaceable",
+    "internal": "p1c1ble",
+    "expected": "152923717",
+    "unicode": "⠏⠂⠉⠂⠃⠇⠑"
+  },
+  {
+    "input": "permeable",
+    "internal": "p]m1ble",
+    "expected": "15591323717",
+    "unicode": "⠏⠻⠍⠂⠃⠇⠑"
+  },
+  {
+    "input": "permeate",
+    "internal": "p]m1te",
+    "expected": "15591323017",
+    "unicode": "⠏⠻⠍⠂⠞⠑"
+  },
+  {
+    "input": "popedom",
+    "internal": "pop$om",
+    "expected": "152115432113",
+    "unicode": "⠏⠕⠏⠫⠕⠍"
+  },
+  {
+    "input": "rateable",
+    "internal": "rat1ble",
+    "expected": "2313023717",
+    "unicode": "⠗⠁⠞⠂⠃⠇⠑"
+  },
+  {
+    "input": "savagery",
+    "internal": "savag]y",
+    "expected": "141391275961",
+    "unicode": "⠎⠁⠧⠁⠛⠻⠽"
+  },
+  {
+    "input": "venereal",
+    "internal": "v5]1l",
+    "expected": "39345927",
+    "unicode": "⠧⠢⠻⠂⠇"
+  },
+  {
+    "input": "biscuity",
+    "internal": "biscuity",
+    "expected": "31014937103061",
+    "unicode": "⠃⠊⠎⠉⠥⠊⠞⠽"
+  },
+  {
+    "input": "chieftainess",
+    "internal": "*iefta9ess",
+    "expected": "3310171130120171414",
+    "unicode": "⠡⠊⠑⠋⠞⠁⠔⠑⠎⠎"
+  },
+  {
+    "input": "Chisholm",
+    "internal": ",*isholm",
+    "expected": "323310141921713",
+    "unicode": "⠠⠡⠊⠎⠓⠕⠇⠍"
+  },
+  {
+    "input": "citizeness",
+    "internal": "citiz5ess",
+    "expected": "91030105334171414",
+    "unicode": "⠉⠊⠞⠊⠵⠢⠑⠎⠎"
+  },
+  {
+    "input": "fruity",
+    "internal": "fruity",
+    "expected": "112337103061",
+    "unicode": "⠋⠗⠥⠊⠞⠽"
+  },
+  {
+    "input": "orangeade",
+    "internal": "orangeade",
+    "expected": "2123129271712517",
+    "unicode": "⠕⠗⠁⠝⠛⠑⠁⠙⠑"
+  },
+  {
+    "input": "rabbity",
+    "internal": "ra2ity",
+    "expected": "2316103061",
+    "unicode": "⠗⠁⠆⠊⠞⠽"
+  },
+  {
+    "input": "twofold",
+    "internal": "twofold",
+    "expected": "3058211121725",
+    "unicode": "⠞⠺⠕⠋⠕⠇⠙"
+  }
+]

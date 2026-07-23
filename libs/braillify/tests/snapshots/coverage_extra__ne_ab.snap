@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "a≠b"
+unicode = ok: "⠁⠨⠒⠒⠃"
+bytes   = ok: [1, 40, 18, 18, 3]

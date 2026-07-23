@@ -1,14 +1,30 @@
 {
   "name": "braillify",
-  "description": "Braillify is a library for converting text to braille.",
-  "repository": "https://github.com/dev-five-git/braillify",
+  "version": "2.1.0",
   "author": "devfive",
-  "license": "Apache-2.0",
-  "homepage": "https://braillify.com",
+  "repository": "https://github.com/dev-five-git/braillify",
+  "main": "./pkg/index.js",
+  "module": "./pkg/index.js",
+  "exports": {
+    ".": {
+      "import": "./pkg/index.js",
+      "require": "./pkg/index.js",
+      "types": "./pkg/index.d.ts"
+    }
+  },
   "bugs": {
     "url": "https://github.com/dev-five-git/braillify/issues",
     "email": "contact@devfive.kr"
   },
+  "description": "Braillify is a library for converting text to braille.",
+  "files": [
+    "pkg/index.d.ts",
+    "pkg/index.js",
+    "pkg/index_bg.wasm",
+    "pkg/index_bg.wasm.d.ts",
+    "pkg/index_bg.js"
+  ],
+  "homepage": "https://braillify.com",
   "keywords": [
     "braillify",
     "braille",
@@ -17,31 +33,19 @@
     "text-to-braille",
     "wasm"
   ],
-  "version": "2.0.0",
-  "scripts": {
-    "build": "wasm-pack build --target bundler --out-dir ./pkg --out-name index",
-    "test": "wasm-pack test --node"
-  },
+  "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
-  "main": "./pkg/index.js",
-  "module": "./pkg/index.js",
-  "files": [
-    "pkg/index.d.ts",
-    "pkg/index.js",
-    "pkg/index_bg.wasm",
-    "pkg/index_bg.wasm.d.ts",
-    "pkg/index_bg.js"
-  ],
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./pkg/index.js",
-      "require": "./pkg/index.js",
-      "types": "./pkg/index.d.ts"
-    }
+  "scripts": {
+    "build": "wasm-pack build --target bundler --out-dir ./pkg --out-name index --release && bun run optimize",
+    "optimize": "wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext -o pkg/index_bg_opt.wasm pkg/index_bg.wasm && mv pkg/index_bg_opt.wasm pkg/index_bg.wasm",
+    "test": "wasm-pack test --node"
   },
-  "types": "./pkg/index.d.ts"
+  "sideEffects": false,
+  "type": "module",
+  "types": "./pkg/index.d.ts",
+  "devDependencies": {
+    "binaryen": "^130.0.0"
+  }
 }

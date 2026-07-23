@@ -9,7 +9,7 @@
   },
   {
     "input": "두꺼비",
-    "internal": "im,@s^o",
+    "internal": "im,@s~o",
     "expected": "1013328142421",
     "unicode": "⠊⠍⠠⠈⠎⠘⠕",
     "world": "⠊⠍⠠⠈⠎⠘⠕",
@@ -33,7 +33,7 @@
   },
   {
     "input": "뻐꾸기",
-    "internal": ",^s,@m@o",
+    "internal": ",~s,@m@o",
     "expected": "32241432813821",
     "unicode": "⠠⠘⠎⠠⠈⠍⠈⠕",
     "world": "⠠⠘⠎⠠⠈⠍⠈⠕",
@@ -41,7 +41,7 @@
   },
   {
     "input": "고삐",
-    "internal": "@u,^o",
+    "internal": "@u,~o",
     "expected": "837322421",
     "unicode": "⠈⠥⠠⠘⠕",
     "world": "⠈⠥⠠⠘⠕",
@@ -49,7 +49,7 @@
   },
   {
     "input": "쓰기",
-    "internal": ",,[@o",
+    "internal": ",,{@o",
     "expected": "323242821",
     "unicode": "⠠⠠⠪⠈⠕",
     "world": "⠠⠠⠪⠈⠕",
@@ -65,7 +65,7 @@
   },
   {
     "input": "쭈르르",
-    "internal": ",.m\"[\"[",
+    "internal": ",.m\"{\"{",
     "expected": "32401316421642",
     "unicode": "⠠⠨⠍⠐⠪⠐⠪",
     "world": "⠠⠨⠍⠐⠪⠐⠪",
@@ -73,7 +73,7 @@
   },
   {
     "input": "버찌",
-    "internal": "^s,.o",
+    "internal": "~s,.o",
     "expected": "2414324021",
     "unicode": "⠘⠎⠠⠨⠕",
     "world": "⠘⠎⠠⠨⠕",

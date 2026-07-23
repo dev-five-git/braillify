@@ -1,5 +1,113 @@
 [
   {
+    "input": "ㅲ",
+    "note": "비읍기역 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\"^@",
+    "expected": "6316248",
+    "unicode": "⠿⠐⠘⠈",
+    "world": "",
+    "jeomsarang": "⠐⠘⠈"
+  },
+  {
+    "input": "ㅳ",
+    "note": "비읍디귿 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\"^i",
+    "expected": "63162410",
+    "unicode": "⠿⠐⠘⠊",
+    "world": "",
+    "jeomsarang": "⠐⠘⠊"
+  },
+  {
+    "input": "ᄡ",
+    "note": "비읍시옷 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태. Old Hangul Choseong ᄡ (U+1121) 사용 — 모던 ㅄ(U+3144)는 받침으로 별도 처리.",
+    "internal": "=\"^,",
+    "expected": "63162432",
+    "unicode": "⠿⠐⠘⠠",
+    "world": "",
+    "jeomsarang": "⠐⠘⠠"
+  },
+  {
+    "input": "ㅶ",
+    "note": "비읍지읒 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\"^.",
+    "expected": "63162440",
+    "unicode": "⠿⠐⠘⠨",
+    "world": "",
+    "jeomsarang": "⠐⠘⠨"
+  },
+  {
+    "input": "ㅷ",
+    "note": "비읍티읕 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\"^h",
+    "expected": "63162419",
+    "unicode": "⠿⠐⠘⠓",
+    "world": "",
+    "jeomsarang": "⠐⠘⠓"
+  },
+  {
+    "input": "ㅴ",
+    "note": "비읍시옷기역 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\"^,@",
+    "expected": "631624328",
+    "unicode": "⠿⠐⠘⠠⠈",
+    "world": "",
+    "jeomsarang": "⠐⠘⠠⠈"
+  },
+  {
+    "input": "ㅵ",
+    "note": "비읍시옷디귿 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\"^,i",
+    "expected": "6316243210",
+    "unicode": "⠿⠐⠘⠠⠊",
+    "world": "",
+    "jeomsarang": "⠐⠘⠠⠊"
+  },
+  {
+    "input": "ㅺ",
+    "note": "시옷기역 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\",@",
+    "expected": "6316328",
+    "unicode": "⠿⠐⠠⠈",
+    "world": "",
+    "jeomsarang": "⠐⠠⠈"
+  },
+  {
+    "input": "ㅻ",
+    "note": "시옷니은 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\",c",
+    "expected": "6316329",
+    "unicode": "⠿⠐⠠⠉",
+    "world": "",
+    "jeomsarang": "⠐⠠⠉"
+  },
+  {
+    "input": "ㅼ",
+    "note": "시옷디귿 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\",i",
+    "expected": "63163210",
+    "unicode": "⠿⠐⠠⠊",
+    "world": "",
+    "jeomsarang": "⠐⠠⠊"
+  },
+  {
+    "input": "ㅽ",
+    "note": "시옷비읍 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\",^",
+    "expected": "63163224",
+    "unicode": "⠿⠐⠠⠘",
+    "world": "",
+    "jeomsarang": "⠐⠠⠘"
+  },
+  {
+    "input": "ㅾ",
+    "note": "시옷지읒 — PDF 제22항 합용 병서 옛 자음자. 단독은 제8항 온표 ⠿ + 옛글자표 ⠐ + 어울러 적은 형태.",
+    "internal": "=\",.",
+    "expected": "63163240",
+    "unicode": "⠿⠐⠠⠨",
+    "world": "",
+    "jeomsarang": "⠐⠠⠨"
+  },
+  {
     "input": "리더라",
     "note": "감싸더라, 보호하더라",
     "internal": "\"^@[\"ois\"<",

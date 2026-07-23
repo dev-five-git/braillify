@@ -38,14 +38,18 @@ mod test {
     use super::*;
     use crate::unicode::decode_unicode;
 
-    #[test]
-    pub fn test_encode_jungsong() {
-        assert_eq!(encode_jungsong('ㅏ').unwrap(), vec![decode_unicode('⠣')]);
-        assert_eq!(encode_jungsong('ㅑ').unwrap(), vec![decode_unicode('⠜')]);
-        assert_eq!(encode_jungsong('ㅓ').unwrap(), vec![decode_unicode('⠎')]);
-        assert_eq!(encode_jungsong('ㅕ').unwrap(), vec![decode_unicode('⠱')]);
-        assert_eq!(encode_jungsong('ㅗ').unwrap(), vec![decode_unicode('⠥')]);
-        assert_eq!(encode_jungsong('ㅛ').unwrap(), vec![decode_unicode('⠬')]);
-        assert_eq!(encode_jungsong('ㅜ').unwrap(), vec![decode_unicode('⠍')]);
+    #[rstest::rstest]
+    #[case::ah('ㅏ', '⠣')]
+    #[case::ya('ㅑ', '⠜')]
+    #[case::eo('ㅓ', '⠎')]
+    #[case::yeo('ㅕ', '⠱')]
+    #[case::o('ㅗ', '⠥')]
+    #[case::yo('ㅛ', '⠬')]
+    #[case::u('ㅜ', '⠍')]
+    pub fn test_encode_jungsong(#[case] jung: char, #[case] expected: char) {
+        assert_eq!(
+            encode_jungsong(jung).unwrap(),
+            vec![decode_unicode(expected)]
+        );
     }
 }

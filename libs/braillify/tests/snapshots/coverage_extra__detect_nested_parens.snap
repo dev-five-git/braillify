@@ -1,0 +1,8 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
+expression: rendered
+---
+input  = "(((a)))"
+unicode = ok: "⠐⠣⠐⠣⠐⠣⠁⠐⠜⠐⠜⠐⠜"
+bytes   = ok: [16, 35, 16, 35, 16, 35, 1, 16, 28, 16, 28, 16, 28]

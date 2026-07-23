@@ -1,7 +1,7 @@
 [
   {
     "input": "△",
-    "context": "math",
+    "note": "PDF 제40항 1 — 삼각형 △ 기호 정의 (단독)",
     "internal": "_+",
     "expected": "5644",
     "unicode": "⠸⠬",
@@ -9,7 +9,17 @@
     "jeomsarang": "⠸⠬"
   },
   {
+    "input": "$\\triangle$",
+    "note": "LaTeX",
+    "internal": "_+",
+    "expected": "5644",
+    "unicode": "⠸⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "△ABC",
+    "note": "PDF 제40항 1 — 예제 △ABC (대문자 단어표)",
     "internal": "_+,,ABC",
     "expected": "56443232139",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉",
@@ -18,16 +28,16 @@
   },
   {
     "input": "$\\triangle ABC$",
+    "note": "LaTeX",
     "internal": "_+,,ABC",
     "expected": "56443232139",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "□",
-    "context": "math",
+    "note": "PDF 제40항 2 — 사각형 □ 기호 정의 (단독)",
     "internal": "_7",
     "expected": "5654",
     "unicode": "⠸⠶",
@@ -35,7 +45,17 @@
     "jeomsarang": "⠸⠶"
   },
   {
+    "input": "$\\square$",
+    "note": "LaTeX",
+    "internal": "_7",
+    "expected": "5654",
+    "unicode": "⠸⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "□ABCD",
+    "note": "PDF 제40항 2 — 예제 □ABCD (대문자 단어표)",
     "internal": "_7,,ABCD",
     "expected": "5654323213925",
     "unicode": "⠸⠶⠠⠠⠁⠃⠉⠙",
@@ -44,15 +64,16 @@
   },
   {
     "input": "$\\square ABCD$",
+    "note": "LaTeX",
     "internal": "_7,,ABCD",
     "expected": "5654323213925",
     "unicode": "⠸⠶⠠⠠⠁⠃⠉⠙",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "⌂",
+    "note": "PDF 제40항 3 — 오각형 ⌂ 기호 정의 (단독)",
     "internal": "_[K",
     "expected": "56425",
     "unicode": "⠸⠪⠅",
@@ -61,6 +82,7 @@
   },
   {
     "input": "⎔",
+    "note": "PDF 제40항 3 — 육각형 ⎔ 기호 정의 (단독)",
     "internal": "_[O",
     "expected": "564221",
     "unicode": "⠸⠪⠕",
@@ -68,15 +90,17 @@
     "jeomsarang": "⠀"
   },
   {
-    "input": "",
+    "input": "⏢",
+    "note": "PDF 제40항 3 — 사다리꼴 ⏢ 기호 정의 (단독)",
     "internal": "_/*",
     "expected": "561233",
     "unicode": "⠸⠌⠡",
     "world": "",
-    "jeomsarang": ""
+    "jeomsarang": "⠀"
   },
   {
     "input": "▱",
+    "note": "PDF 제40항 3 — 평행사변형 ▱ 기호 정의 (단독)",
     "internal": "_//",
     "expected": "561212",
     "unicode": "⠸⠌⠌",

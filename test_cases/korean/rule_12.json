@@ -25,7 +25,7 @@
   },
   {
     "input": "파워앰프",
-    "internal": "d<p-r5d[",
+    "internal": "d<p-r5d{",
     "expected": "2535153623342542",
     "unicode": "⠙⠣⠏⠤⠗⠢⠙⠪",
     "world": "⠙⠣⠏⠤⠗⠢⠙⠪",

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "수식 f(x)+g(x) 의 값"
+unicode = ok: "⠠⠍⠠⠕⠁⠀⠀⠋⠦⠭⠴⠢⠛⠦⠭⠴⠀⠀⠺⠀⠫⠃⠄"
+bytes   = ok: [32, 13, 32, 21, 1, 0, 0, 11, 38, 45, 52, 34, 27, 38, 45, 52, 0, 0, 58, 0, 43, 3, 4]

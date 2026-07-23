@@ -1,14 +1,61 @@
 [
   {
-    "input": "aRb",
+    "input": "ℛ",
+    "note": "PDF 제34항 1-가 — 관계가있다 R 정의 (단독)",
+    "internal": ",R",
+    "expected": "3223",
+    "unicode": "⠠⠗",
+    "world": "",
+    "jeomsarang": "⠸⠿⠠⠗⠸⠿"
+  },
+  {
+    "input": "$\\mathcal{R}$",
+    "note": "LaTeX",
+    "internal": ",R",
+    "expected": "3223",
+    "unicode": "⠠⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aℛb",
+    "note": "PDF 제34항 1-가 — 예제 (aRb)",
     "internal": "a,rb",
     "expected": "132233",
     "unicode": "⠁⠠⠗⠃",
     "world": "⠴⠁⠠⠗⠃⠲",
-    "jeomsarang": "⠴⠁⠠⠗⠃⠲"
+    "jeomsarang": "⠴⠁⠸⠿⠠⠗⠸⠿⠰⠃⠲"
+  },
+  {
+    "input": "$a\\mathcal{R}b$",
+    "note": "LaTeX",
+    "internal": "a,rb",
+    "expected": "132233",
+    "unicode": "⠁⠠⠗⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "~",
+    "note": "PDF 제34항 1-나 — 관계가있다 ~ 정의 (단독)",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "⠈⠔",
+    "jeomsarang": "⠈⠔"
+  },
+  {
+    "input": "$\\sim$",
+    "note": "LaTeX",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "a~b",
+    "note": "PDF 제34항 1-나 — 예제 (a~b)",
     "internal": "a@9b",
     "expected": "18203",
     "unicode": "⠁⠈⠔⠃",
@@ -16,20 +63,83 @@
     "jeomsarang": "⠴⠁⠈⠔⠃⠲"
   },
   {
-    "input": "$a \\not\\mathrel{R} b$",
-    "internal": "a.,Rb",
-    "expected": "14032233",
-    "unicode": "⠁⠨⠠⠗⠃",
+    "input": "$a \\sim b$",
     "note": "LaTeX",
+    "internal": "a@9b",
+    "expected": "18203",
+    "unicode": "⠁⠈⠔⠃",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "$a \\not\\sim b$",
+    "input": "ℛ̸",
+    "note": "PDF 제34항 2-가 — 관계가없다 R̸ 정의 (단독)",
+    "internal": ".,R",
+    "expected": "403223",
+    "unicode": "⠨⠠⠗",
+    "world": "",
+    "jeomsarang": "⠸⠿⠠⠗⠸⠿⠀"
+  },
+  {
+    "input": "$\\not\\mathcal{R}$",
+    "note": "LaTeX",
+    "internal": ".,R",
+    "expected": "403223",
+    "unicode": "⠨⠠⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aℛ̸b",
+    "note": "PDF 제34항 2-가 — 예제 (aR̸b)",
+    "internal": "a.,Rb",
+    "expected": "14032233",
+    "unicode": "⠁⠨⠠⠗⠃",
+    "world": "⠴⠁⠠⠗⠄⠳⠭⠴⠒⠒⠦⠄⠰⠃⠲",
+    "jeomsarang": "⠴⠁⠸⠿⠠⠗⠸⠿⠀⠰⠃⠲"
+  },
+  {
+    "input": "$a \\not\\mathcal{R} b$",
+    "note": "LaTeX",
+    "internal": "a.,Rb",
+    "expected": "14032233",
+    "unicode": "⠁⠨⠠⠗⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≁",
+    "note": "PDF 제34항 2-나 — 관계가없다 ≁ 정의 (단독)",
+    "internal": ".@9",
+    "expected": "40820",
+    "unicode": "⠨⠈⠔",
+    "world": "⠤⠤",
+    "jeomsarang": "⠨⠐⠤"
+  },
+  {
+    "input": "$\\nsim$",
+    "note": "LaTeX",
+    "internal": ".@9",
+    "expected": "40820",
+    "unicode": "⠨⠈⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "a≁b",
+    "note": "PDF 제34항 2-나 — 예제 (a≁b)",
     "internal": "a.@9b",
     "expected": "1408203",
     "unicode": "⠁⠨⠈⠔⠃",
+    "world": "⠴⠁⠈⠔⠄⠳⠭⠴⠒⠒⠦⠄⠰⠃⠲",
+    "jeomsarang": "⠴⠁⠨⠐⠤⠰⠃⠲"
+  },
+  {
+    "input": "$a \\nsim b$",
     "note": "LaTeX",
+    "internal": "a.@9b",
+    "expected": "1408203",
+    "unicode": "⠁⠨⠈⠔⠃",
     "world": "",
     "jeomsarang": ""
   }

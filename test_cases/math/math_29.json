@@ -1,6 +1,7 @@
 [
   {
     "input": "≈",
+    "note": "PDF 제29항 — 이중물결 ≈ 기호 정의 (단독)",
     "internal": "@9@9",
     "expected": "820820",
     "unicode": "⠈⠔⠈⠔",
@@ -8,11 +9,30 @@
     "jeomsarang": "⠐⠤⠐⠤"
   },
   {
+    "input": "$\\approx$",
+    "note": "LaTeX",
+    "internal": "@9@9",
+    "expected": "820820",
+    "unicode": "⠈⠔⠈⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "X ≈ F/N",
+    "note": "PDF 제29항 — 예제 (X ≈ F/N)",
     "internal": ",x`@9@9`,f_/,n",
     "expected": "324508208200321156123229",
     "unicode": "⠠⠭⠀⠈⠔⠈⠔⠀⠠⠋⠸⠌⠠⠝",
     "world": "⠴⠠⠭ ⠘⠔ ⠠⠋⠸⠌⠠⠝⠲",
-    "jeomsarang": "⠴⠠⠭⠀⠐⠤⠐⠤⠀⠠⠋⠸⠌⠠⠝⠲"
+    "jeomsarang": "⠴⠰⠠⠭⠀⠐⠤⠐⠤⠀⠠⠋⠸⠌⠠⠝⠲"
+  },
+  {
+    "input": "$X \\approx F/N$",
+    "note": "LaTeX",
+    "internal": ",x`@9@9`,f_/,n",
+    "expected": "324508208200321156123229",
+    "unicode": "⠠⠭⠀⠈⠔⠈⠔⠀⠠⠋⠸⠌⠠⠝",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "행렬 [a;b] 의 곱"
+unicode = ok: "⠚⠗⠶⠐⠳⠀⠦⠆⠴⠁⠰⠆⠰⠃⠰⠴⠀⠺⠀⠈⠥⠃"
+bytes   = ok: [26, 23, 54, 16, 51, 0, 38, 6, 52, 1, 48, 6, 48, 3, 48, 52, 0, 58, 0, 8, 37, 3]

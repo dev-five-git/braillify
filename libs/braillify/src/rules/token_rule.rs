@@ -17,6 +17,9 @@ pub enum TokenAction<'a> {
     #[cfg(test)]
     InsertBefore(Vec<Token<'a>>),
     ReplaceMany(Vec<Token<'a>>),
+    /// 현재 토큰(i)부터 N개의 토큰을 모두 제거하고 주어진 토큰들로 교체한다.
+    /// 다중 토큰 패턴(예: Word+Space+Word)을 단일 결과로 합칠 때 사용.
+    ReplaceRange(usize, Vec<Token<'a>>),
     #[cfg(test)]
     Remove,
 }

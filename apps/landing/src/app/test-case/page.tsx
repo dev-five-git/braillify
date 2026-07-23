@@ -1,8 +1,9 @@
 import 'katex/dist/katex.min.css'
 
+import { readFile } from 'node:fs/promises'
+
 import { Box, Center, css, Flex, Grid, Text, VStack } from '@devup-ui/react'
-import { readFile } from 'fs/promises'
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 
 import { ScrollToElement } from '@/components/scroll-to-element'
 import { ScrollTopButton } from '@/components/scroll-top-button'
@@ -19,8 +20,8 @@ import { TestCaseDisplayBoundary } from '@/components/test-case/TestCaseDisplayB
 import { TestCaseFilterContainer } from '@/components/test-case/TestCaseFilterContainer'
 import { TestCaseFilterValue } from '@/components/test-case/TestCaseFilterValue'
 import {
-  FilterTotalMap,
-  TestCaseFilter as TestCaseFilterType,
+  type FilterTotalMap,
+  type TestCaseFilter as TestCaseFilterType,
   TestCaseProvider,
 } from '@/components/test-case/TestCaseProvider'
 import { TestCaseRuleContainer } from '@/components/test-case/TestCaseRuleContainer'
@@ -34,12 +35,52 @@ import {
   TEST_CASE_FILTERS,
   TEST_CASE_FILTERS_MAP,
 } from '@/constants'
-import { TestStatusMap } from '@/types'
+import type { TestStatusMap } from '@/types'
 
 export const metadata: Metadata = {
+  title: '테스트 케이스 - 한국·영어 점자 표준 검증',
+  description:
+    'Braillify의 한국어·영어 점자 변환 테스트 케이스를 표준 문서별로 확인하세요. 2024 개정 한국 점자 규정과 영어 표준 점자 규정을 기준으로 점역 결과를 검증합니다.',
   alternates: {
     canonical: '/test-case',
   },
+  // Next.js does not deep-merge openGraph from the parent layout, so the
+  // shared fields (siteName, locale, image) must be repeated to keep
+  // social previews consistent across pages.
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: 'https://braillify.kr/test-case',
+    siteName: 'Braillify',
+    title: '테스트 케이스 | Braillify',
+    description:
+      '한국 점자와 영어 표준 점자 규정에 따른 Braillify 점역 테스트 케이스. 점역기 정확도를 항별로 검증합니다.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Braillify - 한국어 점자 변환 라이브러리',
+        type: 'image/png',
+      },
+    ],
+  },
+  keywords: [
+    '한국 점자 테스트',
+    '점역 정확도',
+    '점자 변환 테스트',
+    '점역 검증',
+    '2024 개정 한국 점자 규정',
+    '영어 표준 점자',
+    'Unified English Braille',
+    'braillify 테스트',
+    '점자 비교',
+    '점사랑 비교',
+    'World 점역 비교',
+    'Braillify',
+    '한국어 점자 변환',
+    '한글 점역',
+  ],
 }
 
 export default async function TestCasePage() {
@@ -172,7 +213,7 @@ export default async function TestCasePage() {
               flexDir={[null, null, null, 'row']}
               gap={['10px', null, null, '20px']}
             >
-              <Text color="$title" typography="title">
+              <Text as="h1" color="$title" m="0" typography="title">
                 테스트 케이스
               </Text>
               <TestCaseStat
@@ -200,7 +241,31 @@ export default async function TestCasePage() {
               >
                 2024 개정 한국 점자 규정
               </Text>
-              을 기반으로 작성되었습니다.
+              뿐 아니라{' '}
+              <Text
+                _hover={{
+                  textDecoration: 'underline',
+                }}
+                as="a"
+                color="$link"
+                href="/Rules-of-Unified-English-Braille-2024.pdf"
+                target="_blank"
+              >
+                영어 표준 점자 규정
+              </Text>
+              (
+              <Text
+                _hover={{
+                  textDecoration: 'underline',
+                }}
+                as="a"
+                color="$link"
+                href="/Korean-UEB-3rd-edition.pdf"
+                target="_blank"
+              >
+                국문 참고
+              </Text>
+              ) 등 각 분야의 공식 문서를 기반으로 작성되었습니다.
             </Text>
           </VStack>
           <TestCaseFilterContainer>

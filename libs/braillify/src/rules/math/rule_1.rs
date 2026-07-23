@@ -63,3 +63,21 @@ impl MathTokenRule for NumberRule {
         Ok(MathTokenResult::Consumed(1))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::super::math_token_rule::MathContext;
+    use super::*;
+
+    /// rule_1 line 51 - `NumberRule.apply` let-else Skip when token isn't Number.
+    #[test]
+    fn number_rule_apply_skip_for_non_number() {
+        let r = NumberRule;
+        let mut state = MathEncodeState::with_context(false, MathContext::default());
+        let toks = vec![MathToken::Variable('a')];
+        let mut result = Vec::new();
+        let engine = MathTokenEngine::with_context(MathContext::default());
+        let res = r.apply(&toks, 0, &mut result, &mut state, &engine);
+        assert!(matches!(res, Ok(MathTokenResult::Skip)));
+    }
+}

@@ -74,7 +74,11 @@ pub mod rule_50;
 
 // ── 제51항–제60항: 극한, 델타, 미분, 적분, 집합 등 ──
 pub mod rule_51;
-pub mod rule_52;
+// 제52항 (Δ, U+0394) is fully captured by `rule_13::is_greek_symbol` and the
+// generic math-symbol shortcut table; the dedicated module had only the
+// `is_delta_symbol` predicate and the `encode_delta_symbol` wrapper, neither
+// of which was reachable from any production path. Removed to satisfy the
+// "dead-code elimination after `unreachable!()` probe" policy.
 pub mod rule_53;
 pub mod rule_54;
 pub mod rule_55;

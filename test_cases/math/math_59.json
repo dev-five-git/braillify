@@ -1,6 +1,7 @@
 [
   {
     "input": "∮",
+    "note": "PDF 제59항 — 선적분 ∮ 기호 정의 (단독)",
     "internal": ")",
     "expected": "62",
     "unicode": "⠾",
@@ -8,11 +9,30 @@
     "jeomsarang": "⠾"
   },
   {
+    "input": "$\\oint$",
+    "note": "LaTeX",
+    "internal": ")",
+    "expected": "62",
+    "unicode": "⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "∮_C f(z)dz",
+    "note": "PDF 제59항 — 예제 (∮_C f(z)dz, 영역 C 표기)",
     "internal": ");,c`f8z0dz",
     "expected": "62483290113853522553",
     "unicode": "⠾⠰⠠⠉⠀⠋⠦⠵⠴⠙⠵",
     "world": "⠸⠤⠴⠠⠉ ⠋⠐⠣⠵⠐⠜⠙⠵⠲",
-    "jeomsarang": "⠾⠸⠤⠠⠉⠀⠋⠦⠄⠵⠠⠴⠙⠵⠲"
+    "jeomsarang": "⠾⠠⠤⠠⠉⠀⠋⠐⠣⠵⠐⠜⠙⠵⠲"
+  },
+  {
+    "input": "$\\oint_C f(z)dz$",
+    "note": "LaTeX",
+    "internal": ");,c`f8z0dz",
+    "expected": "62483290113853522553",
+    "unicode": "⠾⠰⠠⠉⠀⠋⠦⠵⠴⠙⠵",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

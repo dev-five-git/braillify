@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "제$n$항까지"
+unicode = ok: "⠨⠝⠴⠝⠲⠚⠶⠠⠫⠨⠕"
+bytes   = ok: [40, 29, 52, 29, 50, 26, 54, 32, 43, 40, 21]

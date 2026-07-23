@@ -1,0 +1,14 @@
+[
+  {
+    "input": "C is for candy.",
+    "internal": ",c is for candy4",
+    "expected": "32901014011212309129256150",
+    "unicode": "⠠⠉⠀⠊⠎⠀⠋⠕⠗⠀⠉⠁⠝⠙⠽⠲"
+  },
+  {
+    "input": "Question 3c",
+    "internal": ",question #c;c",
+    "expected": "3231371714301021290609489",
+    "unicode": "⠠⠟⠥⠑⠎⠞⠊⠕⠝⠀⠼⠉⠰⠉"
+  }
+]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "삼각형 △ABC 의 둘레"
+unicode = ok: "⠇⠢⠫⠁⠚⠻⠀⠀⠸⠬⠠⠠⠁⠃⠉⠀⠀⠺⠀⠊⠯⠐⠝"
+bytes   = ok: [7, 34, 43, 1, 26, 59, 0, 0, 56, 44, 32, 32, 1, 3, 9, 0, 0, 58, 0, 10, 47, 16, 29]

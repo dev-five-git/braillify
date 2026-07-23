@@ -1,0 +1,32 @@
+[
+  {
+    "input": "AttenTION!",
+    "internal": ",att5,,tion6",
+    "expected": "32130303432323010212922",
+    "unicode": "⠠⠁⠞⠞⠢⠠⠠⠞⠊⠕⠝⠖"
+  },
+  {
+    "input": "AWful",
+    "internal": ",,aw,'ful",
+    "expected": "323215832411377",
+    "unicode": "⠠⠠⠁⠺⠠⠄⠋⠥⠇"
+  },
+  {
+    "input": "ELesson",
+    "internal": ",e,lesson",
+    "expected": "32173271714142129",
+    "unicode": "⠠⠑⠠⠇⠑⠎⠎⠕⠝"
+  },
+  {
+    "input": "ExperiMental",
+    "internal": ",exp]i,m5tal",
+    "expected": "3217451559103213343017",
+    "unicode": "⠠⠑⠭⠏⠻⠊⠠⠍⠢⠞⠁⠇"
+  },
+  {
+    "input": "MyAncestor",
+    "internal": ",my,ance/or",
+    "expected": "32136132129917122123",
+    "unicode": "⠠⠍⠽⠠⠁⠝⠉⠑⠌⠕⠗"
+  }
+]

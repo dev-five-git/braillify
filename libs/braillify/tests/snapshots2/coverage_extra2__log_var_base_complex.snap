@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "log_a (x+y)"
+unicode = ok: "⠸⠰⠁⠀⠦⠭⠢⠽⠴"
+bytes   = ok: [56, 48, 1, 0, 38, 45, 34, 61, 52]

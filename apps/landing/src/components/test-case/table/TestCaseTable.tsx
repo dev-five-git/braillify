@@ -4,6 +4,7 @@ import { Text } from '@devup-ui/react'
 import { Table, Tbody, Td, Th, Thead, Tr } from '@/components/test-case/table'
 import { TestStatus } from '@/types'
 
+import { LatexText } from '../LatexText'
 import { TestCaseDisplayBoundary } from '../TestCaseDisplayBoundary'
 
 function CompetitorCell({
@@ -84,7 +85,7 @@ export function TestCaseTable({ results }: { results: TestStatus[6] }) {
                 >
                   <Td>{index + 1}</Td>
                   <Td>
-                    {text}
+                    <LatexText>{text}</LatexText>
                     {note ? ` (${note})` : null}
                   </Td>
                   <Td>{expected}</Td>
@@ -152,7 +153,7 @@ export function TestCaseTable({ results }: { results: TestStatus[6] }) {
                           예문
                         </Text>
                         <Text>
-                          {text}
+                          <LatexText>{text}</LatexText>
                           {note ? ` (${note})` : null}
                         </Text>
                       </Flex>

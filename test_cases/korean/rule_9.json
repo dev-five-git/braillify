@@ -1,7 +1,7 @@
 [
   {
     "input": "ㄱ. 유아기",
-    "internal": "=a4 %<@o",
+    "internal": "=a4`%<@o",
     "expected": "6315004135821",
     "unicode": "⠿⠁⠲⠀⠩⠣⠈⠕",
     "world": "⠿⠁⠲ ⠩⠣⠈⠕",
@@ -9,7 +9,7 @@
   },
   {
     "input": "ㄴ. 아동기",
-    "internal": "=34 <i=@o",
+    "internal": "=34`<i=@o",
     "expected": "6318500351063821",
     "unicode": "⠿⠒⠲⠀⠣⠊⠿⠈⠕",
     "world": "⠿⠒⠲ ⠣⠊⠿⠈⠕",
@@ -17,7 +17,7 @@
   },
   {
     "input": "ㄷ. 청년기",
-    "internal": "=94 ;]c*@o",
+    "internal": "=94`;]c*@o",
     "expected": "63205004859933821",
     "unicode": "⠿⠔⠲⠀⠰⠻⠉⠡⠈⠕",
     "world": "⠿⠔⠲ ⠰⠻⠉⠡⠈⠕",
@@ -25,7 +25,7 @@
   },
   {
     "input": "ㄹ. 장년기",
-    "internal": "=14 .7c*@o",
+    "internal": "=14`.7c*@o",
     "expected": "6325004054933821",
     "unicode": "⠿⠂⠲⠀⠨⠶⠉⠡⠈⠕",
     "world": "⠿⠂⠲ ⠨⠶⠉⠡⠈⠕",
@@ -33,7 +33,7 @@
   },
   {
     "input": "ㅁ. 노년기",
-    "internal": "=54 cuc*@o",
+    "internal": "=54`cuc*@o",
     "expected": "6334500937933821",
     "unicode": "⠿⠢⠲⠀⠉⠥⠉⠡⠈⠕",
     "world": "⠿⠢⠲ ⠉⠥⠉⠡⠈⠕",

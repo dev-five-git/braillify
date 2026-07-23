@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "한국×수학"
+unicode = ok: "⠚⠒⠈⠍⠁⠀⠡⠀⠠⠍⠚⠁"
+bytes   = ok: [26, 18, 8, 13, 1, 0, 33, 0, 32, 13, 26, 1]

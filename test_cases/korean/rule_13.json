@@ -97,7 +97,7 @@
   },
   {
     "input": "나비",
-    "internal": "c^o",
+    "internal": "c~o",
     "expected": "92421",
     "unicode": "⠉⠘⠕",
     "world": "⠉⠘⠕",
@@ -129,7 +129,7 @@
   },
   {
     "input": "바느질",
-    "internal": "^c[.o1",
+    "internal": "~c{.o1",
     "expected": "2494240212",
     "unicode": "⠘⠉⠪⠨⠕⠂",
     "world": "⠘⠉⠪⠨⠕⠂",
@@ -233,7 +233,7 @@
   },
   {
     "input": "안방",
-    "internal": "<3^7",
+    "internal": "<3~7",
     "expected": "35182454",
     "unicode": "⠣⠒⠘⠶",
     "world": "⠣⠒⠘⠶",
@@ -241,7 +241,7 @@
   },
   {
     "input": "바캉스",
-    "internal": "^f7,[",
+    "internal": "~f7,{",
     "expected": "2411543242",
     "unicode": "⠘⠋⠶⠠⠪",
     "world": "⠘⠋⠶⠠⠪",
@@ -249,7 +249,7 @@
   },
   {
     "input": "갈비탕",
-    "internal": "$1^oh7",
+    "internal": "$1~oh7",
     "expected": "43224211954",
     "unicode": "⠫⠂⠘⠕⠓⠶",
     "world": "⠫⠂⠘⠕⠓⠶",
@@ -305,7 +305,7 @@
   },
   {
     "input": "오빠",
-    "internal": "u,^",
+    "internal": "u,~",
     "expected": "373224",
     "unicode": "⠥⠠⠘",
     "world": "⠥⠠⠘",
@@ -313,7 +313,7 @@
   },
   {
     "input": "빵집",
-    "internal": ",^7.ob",
+    "internal": ",~7.ob",
     "expected": "32245440213",
     "unicode": "⠠⠘⠶⠨⠕⠃",
     "world": "⠠⠘⠶⠨⠕⠃",

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "∭f"
+unicode = err: Invalid character
+bytes   = err: Invalid character

@@ -1,11 +1,30 @@
 [
   {
     "input": "∥",
+    "note": "PDF 제44항 — 평행 ∥ 기호 정의 (단독)",
     "internal": ";2",
     "expected": "486",
     "unicode": "⠰⠆",
     "world": "",
     "jeomsarang": "⠰⠆"
+  },
+  {
+    "input": "$\\parallel$",
+    "note": "LaTeX",
+    "internal": ";2",
+    "expected": "486",
+    "unicode": "⠰⠆",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "AB∥CD",
+    "note": "PDF 제44항 — 예제 AB∥CD (대문자 단어표 ,, 양쪽 적용)",
+    "internal": ",,AB;2,,CD",
+    "expected": "3232134863232925",
+    "unicode": "⠠⠠⠁⠃⠰⠆⠠⠠⠉⠙",
+    "world": "⠴⠠⠠⠁⠃⠼⠇⠠⠠⠉⠙⠲",
+    "jeomsarang": "⠴⠠⠠⠁⠃⠰⠆⠠⠠⠉⠙⠲"
   },
   {
     "input": "$AB \\parallel CD$",

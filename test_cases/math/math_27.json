@@ -1,6 +1,8 @@
 [
   {
     "input": "|",
+    "context": "math",
+    "note": "PDF 제27항 1 — 나누어떨어진다 기호 | 정의 (단독, 수학 모드)",
     "internal": "\\",
     "expected": "51",
     "unicode": "⠳",
@@ -8,15 +10,17 @@
     "jeomsarang": "⠸⠳"
   },
   {
-    "input": "∤",
-    "internal": ".\\",
-    "expected": "4051",
-    "unicode": "⠨⠳",
+    "input": "$|$",
+    "note": "LaTeX",
+    "internal": "\\",
+    "expected": "51",
+    "unicode": "⠳",
     "world": "",
-    "jeomsarang": "⠨⠳"
+    "jeomsarang": ""
   },
   {
     "input": "4|8",
+    "note": "PDF 제27항 1 — 예제 1 (4|8)",
     "internal": "#d\\#h",
     "expected": "6025516019",
     "unicode": "⠼⠙⠳⠼⠓",
@@ -24,7 +28,53 @@
     "jeomsarang": "⠼⠙⠸⠳⠼⠓"
   },
   {
+    "input": "$4 \\mid 8$",
+    "note": "LaTeX",
+    "internal": "#d\\#h",
+    "expected": "6025516019",
+    "unicode": "⠼⠙⠳⠼⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "-5|n",
+    "note": "PDF 제27항 1 — 예제 2 (-5|n)",
+    "internal": "9#e\\n",
+    "expected": "2060175129",
+    "unicode": "⠔⠼⠑⠳⠝",
+    "world": "⠤⠼⠑⠸⠳⠴⠝⠲",
+    "jeomsarang": "⠤⠼⠑⠈⠳⠝⠲"
+  },
+  {
+    "input": "$-5 \\mid n$",
+    "note": "LaTeX",
+    "internal": "9#e\\n",
+    "expected": "2060175129",
+    "unicode": "⠔⠼⠑⠳⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∤",
+    "note": "PDF 제27항 2 — 나누어떨어지지않는다 기호 ∤ 정의 (단독)",
+    "internal": ".\\",
+    "expected": "4051",
+    "unicode": "⠨⠳",
+    "world": "",
+    "jeomsarang": "⠨⠳"
+  },
+  {
+    "input": "$\\nmid$",
+    "note": "LaTeX",
+    "internal": ".\\",
+    "expected": "4051",
+    "unicode": "⠨⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "2∤3",
+    "note": "PDF 제27항 2 — 예제 1 (2∤3)",
     "internal": "#b.\\#c",
     "expected": "6034051609",
     "unicode": "⠼⠃⠨⠳⠼⠉",
@@ -32,11 +82,30 @@
     "jeomsarang": "⠼⠃⠨⠳⠼⠉"
   },
   {
-    "input": "4|8, -5|n",
-    "internal": "#d\\#h`9#e\\n",
-    "expected": "602551601902060175129",
-    "unicode": "⠼⠙⠳⠼⠓⠀⠔⠼⠑⠳⠝",
-    "world": "⠼⠙⠸⠳⠼⠓⠐ ⠤⠼⠑⠸⠳⠴⠝⠲",
-    "jeomsarang": "⠼⠙⠸⠳⠼⠓⠐⠀⠤⠼⠑⠸⠳⠴⠝⠲"
+    "input": "$2 \\nmid 3$",
+    "note": "LaTeX",
+    "internal": "#b.\\#c",
+    "expected": "6034051609",
+    "unicode": "⠼⠃⠨⠳⠼⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "p∤n",
+    "note": "PDF 제27항 2 — 예제 2 (p∤n)",
+    "internal": "p.\\n",
+    "expected": "15405129",
+    "unicode": "⠏⠨⠳⠝",
+    "world": "⠴⠏⠸⠳⠄⠳⠭⠴⠒⠒⠦⠄⠰⠝⠲",
+    "jeomsarang": "⠴⠏⠨⠳⠝⠲"
+  },
+  {
+    "input": "$p \\nmid n$",
+    "note": "LaTeX",
+    "internal": "p.\\n",
+    "expected": "15405129",
+    "unicode": "⠏⠨⠳⠝",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

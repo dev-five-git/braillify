@@ -1,6 +1,7 @@
 [
   {
     "input": "∂",
+    "note": "PDF 제54항 — 편도함수 ∂ 기호 정의 (단독)",
     "internal": "$",
     "expected": "43",
     "unicode": "⠫",
@@ -8,20 +9,30 @@
     "jeomsarang": "⠫"
   },
   {
-    "input": "∂z/∂x=fₓ(x,y)",
-    "internal": "$x/$z33f;x8x\"`y0",
-    "expected": "4345124353181811484538451606152",
-    "unicode": "⠫⠭⠌⠫⠵⠒⠒⠋⠰⠭⠦⠭⠐⠀⠽⠴",
-    "world": "⠴⠵⠸⠌⠈⠙⠭⠐⠶⠋⠰⠭⠐⠣⠭⠰⠂⠽⠠⠴",
-    "jeomsarang": "⠫⠵⠸⠌⠫⠭⠐⠶⠰⠋⠰⠭⠐⠣⠰⠭⠐⠽⠐⠜⠲"
+    "input": "$\\partial$",
+    "note": "LaTeX",
+    "internal": "$",
+    "expected": "43",
+    "unicode": "⠫",
+    "world": "",
+    "jeomsarang": ""
   },
   {
-    "input": "$∂z/∂x=f_x(x,y)$",
+    "input": "$\\frac{\\partial z}{\\partial x}=f_x(x,y)$",
+    "note": "PDF 제54항 1 — 일계 편도함수 ∂z/∂x = f_x(x,y) (분수, 평문 표기 불가)",
     "internal": "$x/$z33f;x8x\"`y0",
     "expected": "4345124353181811484538451606152",
     "unicode": "⠫⠭⠌⠫⠵⠒⠒⠋⠰⠭⠦⠭⠐⠀⠽⠴",
-    "note": "LaTeX",
-    "world": "",
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠸⠡⠐⠏⠊⠁⠇ ⠵⠸⠜⠸⠣⠸⠡⠐⠏⠊⠁⠇ ⠭⠸⠜⠐⠶⠋⠨⠤⠭⠐⠣⠭⠰⠂⠽⠠⠴⠈⠎",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$\\frac{\\partial^2 z}{\\partial x \\partial y}=f_{xy}(x,y)$",
+    "note": "PDF 제54항 2 — 이계 편도함수 ∂²z/(∂x∂y) = f_xy(x,y) (분수+묶음괄호, 평문 표기 불가)",
+    "internal": "($x$y)/($^#Bz)33f;(xy)8x\"`y0",
+    "expected": "554345436162125543246035362181811485545616238451606152",
+    "unicode": "⠷⠫⠭⠫⠽⠾⠌⠷⠫⠘⠼⠃⠵⠾⠒⠒⠋⠰⠷⠭⠽⠾⠦⠭⠐⠀⠽⠴",
+    "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠸⠡⠐⠏⠊⠁⠇⠈⠢⠼⠃ ⠵⠸⠜⠸⠣⠸⠡⠐⠏⠊⠁⠇ ⠰⠭ ⠸⠡⠐⠏⠊⠁⠇ ⠽⠸⠜⠐⠶⠋⠨⠤⠸⠣⠭⠽⠸⠜⠐⠣⠭⠰⠂⠽⠠⠴⠈⠎",
     "jeomsarang": ""
   }
 ]

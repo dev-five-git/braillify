@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$\\sin x$가 0"
+unicode = ok: "⠖⠎⠭⠀⠀⠫⠀⠼⠚"
+bytes   = ok: [22, 14, 45, 0, 0, 43, 0, 60, 26]

@@ -1,0 +1,51 @@
+[
+  {
+    "input": "CAUTION: WET PAINT!",
+    "internal": ",,,cau;n3 wet pa9t6,'",
+    "expected": "323232913748291805817300151203022324",
+    "unicode": "⠠⠠⠠⠉⠁⠥⠰⠝⠒⠀⠺⠑⠞⠀⠏⠁⠔⠞⠖⠠⠄"
+  },
+  {
+    "input": "Please KEEP OFF THE GRASS in this area.",
+    "internal": ",pl1se ,,,keep (f ! grass,' 9 ? >ea4",
+    "expected": "32157214170323232517171505511046027231141432402005702817150",
+    "unicode": "⠠⠏⠇⠂⠎⠑⠀⠠⠠⠠⠅⠑⠑⠏⠀⠷⠋⠀⠮⠀⠛⠗⠁⠎⠎⠠⠄⠀⠔⠀⠹⠀⠜⠑⠁⠲"
+  },
+  {
+    "input": "THE BBC AFRICA NEWS",
+    "internal": ",,,! bbc africa news,'",
+    "expected": "3232324603390111231091029175814324",
+    "unicode": "⠠⠠⠠⠮⠀⠃⠃⠉⠀⠁⠋⠗⠊⠉⠁⠀⠝⠑⠺⠎⠠⠄"
+  },
+  {
+    "input": "PROUD TO BE A ΦΒΚ",
+    "internal": ",,,pr\\d to 2 a .f.b.k,'",
+    "expected": "3232321523512503021060104011403405324",
+    "unicode": "⠠⠠⠠⠏⠗⠳⠙⠀⠞⠕⠀⠆⠀⠁⠀⠨⠋⠨⠃⠨⠅⠠⠄"
+  },
+  {
+    "input": "FOR SALE: 1975 FIREBIRD",
+    "internal": ",,,= sale3 #aige firebird,'",
+    "expected": "3232326301417171806011027170111023173102325324",
+    "unicode": "⠠⠠⠠⠿⠀⠎⠁⠇⠑⠒⠀⠼⠁⠊⠛⠑⠀⠋⠊⠗⠑⠃⠊⠗⠙⠠⠄"
+  },
+  {
+    "input": "A SELF-MADE MAN",
+    "internal": ",,,a self-made man,'",
+    "expected": "323232101417711361312517013129324",
+    "unicode": "⠠⠠⠠⠁⠀⠎⠑⠇⠋⠤⠍⠁⠙⠑⠀⠍⠁⠝⠠⠄"
+  },
+  {
+    "input": "BUY FAHRENHEIT 9/11 ON E-BAY",
+    "note": "PDF typeform on FAHRENHEIT and 9/11 is not representable in plain Unicode input",
+    "internal": ",,,buy fahr5heit #i_/#aa on ;e-bay,'",
+    "expected": "3232323376101111923341917103006010561260110212904817363161324",
+    "unicode": "⠠⠠⠠⠃⠥⠽⠀⠋⠁⠓⠗⠢⠓⠑⠊⠞⠀⠼⠊⠸⠌⠼⠁⠁⠀⠕⠝⠀⠰⠑⠤⠃⠁⠽⠠⠄"
+  },
+  {
+    "input": "A.A. (ALAN ALEXANDER) MILNE",
+    "internal": ",,,a4a4 \"<alan alex&]\"> milne,'",
+    "expected": "32323215015001635171290171745475916280131072917324",
+    "unicode": "⠠⠠⠠⠁⠲⠁⠲⠀⠐⠣⠁⠇⠁⠝⠀⠁⠇⠑⠭⠯⠻⠐⠜⠀⠍⠊⠇⠝⠑⠠⠄"
+  }
+]

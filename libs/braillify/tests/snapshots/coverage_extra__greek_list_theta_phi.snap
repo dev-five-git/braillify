@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "변수 θ, φ가 직각"
+unicode = ok: "⠘⠡⠠⠍⠀⠴⠨⠹⠂⠀⠨⠋⠲⠫⠀⠨⠕⠁⠫⠁"
+bytes   = ok: [24, 33, 32, 13, 0, 52, 40, 57, 2, 0, 40, 11, 50, 43, 0, 40, 21, 1, 43, 1]

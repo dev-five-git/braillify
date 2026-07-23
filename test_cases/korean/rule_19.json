@@ -1,5 +1,32 @@
 [
   {
+    "input": "ㅿ",
+    "note": "반치음 — PDF 제19항 옛 자음자표. 단독 자모는 제8항 온표 ⠿ + 옛글자표 ⠐ + 받침형 ⠅.",
+    "internal": "=\"k",
+    "expected": "63165",
+    "unicode": "⠿⠐⠅",
+    "world": "",
+    "jeomsarang": "⠿⠐⠅"
+  },
+  {
+    "input": "ㆁ",
+    "note": "옛이응 — PDF 제19항 옛 자음자표. 단독 자모는 제8항 온표 ⠿ + 옛글자표 ⠐ + 받침형 ⠲.",
+    "internal": "=\"4",
+    "expected": "631650",
+    "unicode": "⠿⠐⠲",
+    "world": "",
+    "jeomsarang": "⠐⠙"
+  },
+  {
+    "input": "ㆆ",
+    "note": "여린히읗 — PDF 제19항 옛 자음자표. 단독 자모는 제8항 온표 ⠿ + 옛글자표 ⠐ + 받침형 ⠴.",
+    "internal": "=\"0",
+    "expected": "631652",
+    "unicode": "⠿⠐⠴",
+    "world": "",
+    "jeomsarang": "⠿⠐⠴"
+  },
+  {
     "input": "아",
     "note": "아우",
     "internal": "<\".\"#",
@@ -60,7 +87,7 @@
     "expected": "8275620324016601654",
     "unicode": "⠈⠛⠸⠔⠠⠨⠐⠼⠐⠶",
     "world": "⠈⠛⠈⠛⠿⠔⠨",
-    "jeomsarang": ""
+    "jeomsarang": "⠈⠛⠈⠛⠸⠔⠨⠠⠨⠐⠼⠐⠶"
   },
   {
     "input": "洪ㄱ字",

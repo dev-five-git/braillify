@@ -1,0 +1,42 @@
+# Braillify
+
+> 2024 개정 한국 점자 규정 기반 오픈소스 점역(점자 변환) 라이브러리. Rust 코어 위에 Node.js, Python, Rust, WebAssembly 바인딩을 제공하며 Apache License 2.0으로 공개되어 누구나 검증·기여·재배포할 수 있습니다.
+
+Braillify는 "Braille(점자)"에 "-ify(~화하다)"를 결합한 이름의 한국어 점자 변환 라이브러리입니다. 한국에서 2024년에 개정된 최신 「한국 점자 규정」을 표준 알고리즘으로 구현했으며, 기존의 점사랑·하상브레일 등 폐쇄형 점역기와 달리 전 과정이 오픈소스로 공개됩니다. Rust로 작성된 코어 엔진은 네이티브 성능을 유지한 채 Node.js(npm), Python(PyPI), Rust(crates.io), WebAssembly(브라우저 내 실행)를 모두 지원하므로 네트워크 연결 없이 클라이언트에서 직접 한글·수학·과학·음악·외국어 점역을 수행할 수 있습니다. "점자 번역", "점자 변환", "점역", "한글 점자" 등으로 검색되는 작업이며, 정확한 표준 용어는 "점역(點譯)"입니다.
+
+## Documentation
+
+- [개요 (Overview)](https://braillify.kr/docs/overview): Braillify가 무엇이고 왜 만들어졌는지, 2024 개정 규정과 오픈소스 철학을 설명합니다.
+- [설치 (Installation)](https://braillify.kr/docs/installation): Node.js, Python, Rust, .NET 환경별 설치 명령과 빠른 시작 가이드.
+- [API 레퍼런스](https://braillify.kr/docs/api): `encode`, `translateToUnicode`, `translateToBrailleFont` 등 공개 함수의 시그니처와 사용법 (Node.js / Python / Rust / C# 매핑 표 포함).
+- [기여 가이드 (Contributing)](https://braillify.kr/docs/contributing): 테스트 케이스 추가 방법, 개발 환경 설정(Rust, pnpm, uv), Fork → PR 절차.
+- [테스트 케이스 (Test Cases)](https://braillify.kr/test-case): 한글, 수학, 과학, 음악, 영어 표준 점자, 외국어, 국제음성기호(IPA), 말뭉치 등 분야별 점역 예제.
+
+## Project
+
+- [홈페이지](https://braillify.kr/): Braillify 공식 랜딩 페이지. 실시간 점역 데모와 핵심 특징.
+- [팀 (Team)](https://braillify.kr/team): Braillify를 만든 Devfive(데브파이브) 팀 및 기여자 소개.
+
+## Packages
+
+- [npm: braillify](https://www.npmjs.com/package/braillify): Node.js 패키지 (WebAssembly 바인딩 포함, 브라우저에서도 사용 가능).
+- [PyPI: braillify](https://pypi.org/project/braillify/): Python 패키지 (maturin 빌드 기반).
+- [crates.io: braillify](https://crates.io/crates/braillify): Rust 네이티브 크레이트 (코어 엔진).
+
+## Source & Community
+
+- [GitHub: dev-five-git/braillify](https://github.com/dev-five-git/braillify): 소스 코드, 이슈 트래커, 풀 리퀘스트.
+- [Discord](https://discord.gg/8zjcGc7cWh): 글로벌 커뮤니티 채팅.
+- [Kakao Open Chat](https://open.kakao.com/o/gzeq4eBh): 한국어 사용자 오픈 채팅.
+
+## License
+
+- [Apache License 2.0](https://github.com/dev-five-git/braillify/blob/main/LICENSE): 상업적 사용·수정·재배포 모두 허용. 저작자 표시 권장.
+
+## Optional
+
+- [2024 개정 한국 점자 규정 (PDF)](https://braillify.kr/2024%20%EA%B0%9C%EC%A0%95%20%ED%95%9C%EA%B5%AD%20%EC%A0%90%EC%9E%90%20%EA%B7%9C%EC%A0%95.pdf): 점역 알고리즘의 단일 근거가 되는 국립국어원 공식 규정 문서.
+- [llms-full.txt](https://braillify.kr/llms-full.txt): 본 사이트의 핵심 문서를 한 파일에 합친 LLM 친화 전문(全文) 버전.
+- [ai.txt](https://braillify.kr/ai.txt): AI 학습/인용 정책 명시 파일 (Spawning AI 표준).
+- [sitemap.xml](https://braillify.kr/sitemap.xml): 전체 사이트 라우트 색인.
+- [robots.txt](https://braillify.kr/robots.txt): 크롤러 정책.

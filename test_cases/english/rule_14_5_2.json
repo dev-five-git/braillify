@@ -1,0 +1,9 @@
+[
+  {
+    "input": "The key signature is \\key es \\major",
+    "context": "english",
+    "internal": ",! key signature is ,'<<<",
+    "expected": "3246051761014102729130372317010140324353535",
+    "unicode": "⠠⠮⠀⠅⠑⠽⠀⠎⠊⠛⠝⠁⠞⠥⠗⠑⠀⠊⠎⠀⠠⠄⠣⠣⠣"
+  }
+]

@@ -9,7 +9,7 @@
   },
   {
     "input": "너비",
-    "internal": "cs^o",
+    "internal": "cs~o",
     "expected": "9142421",
     "unicode": "⠉⠎⠘⠕",
     "world": "⠉⠎⠘⠕",
@@ -41,7 +41,7 @@
   },
   {
     "input": "보리",
-    "internal": "^u\"o",
+    "internal": "~u\"o",
     "expected": "24371621",
     "unicode": "⠘⠥⠐⠕",
     "world": "⠘⠥⠐⠕",
@@ -49,7 +49,7 @@
   },
   {
     "input": "셔츠",
-    "internal": ",:;[",
+    "internal": ",:;{",
     "expected": "32494842",
     "unicode": "⠠⠱⠰⠪",
     "world": "⠠⠱⠰⠪",
@@ -88,12 +88,12 @@
     "jeomsarang": "⠓⠎⠑⠍⠉⠕"
   },
   {
-    "input": "파리",
-    "internal": "d\"o",
-    "expected": "251621",
-    "unicode": "⠙⠐⠕",
-    "world": "⠙⠐⠕",
-    "jeomsarang": "⠙⠐⠕"
+    "input": "피리",
+    "internal": "do\"o",
+    "expected": "25211621",
+    "unicode": "⠙⠕⠐⠕",
+    "world": "⠙⠕⠐⠕",
+    "jeomsarang": "⠙⠕⠐⠕"
   },
   {
     "input": "호수",

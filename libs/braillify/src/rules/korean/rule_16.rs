@@ -84,34 +84,26 @@ mod tests {
         }
     }
 
-    #[test]
-    fn rejects_non_exception_chars() {
-        assert!(!is_exception('가'));
-        assert!(!is_exception('나'));
-        assert!(!is_exception('성')); // 성 is NOT exception — 셩 is
-        assert!(!is_exception('정')); // 정 is NOT exception — 졍 is
-    }
-
-    #[test]
-    fn golden_test_alignment() {
-        let cases = vec![
-            ("껐", "⠠⠈⠎⠌"),       // rule 16 [붙임]: 꺼 + ㅆ
-            ("겄", "⠈⠎⠌"),        // rule 4 exception: 것 variant
-            ("껐어요", "⠠⠈⠎⠌⠎⠬"), // 껐 + 어요
-        ];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 16 golden test failed for: {}",
-                input
-            );
-        }
+    #[rstest::rstest]
+    #[case::ga('가')]
+    #[case::na('나')]
+    #[case::seong_not_syeong('성')] // 성 is NOT exception — 셩 is
+    #[case::jeong_not_jyeong('정')] // 정 is NOT exception — 졍 is
+    fn rejects_non_exception_chars(#[case] ch: char) {
+        assert!(!is_exception(ch));
     }
 
     #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "16");
         assert_eq!(META.name, "korean_exception_decomposition");
+    }
+
+    #[test]
+    fn apply_skips_non_korean() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule16.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
     }
 }

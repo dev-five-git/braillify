@@ -11,9 +11,45 @@ coverage
 cobertura.xml
 codecov
 codecov.*
+*.profraw
 .DS_Store
-._.DS_Store 
-**/.DS_Store 
+._.DS_Store
+**/.DS_Store
 **/._.DS_Store
 .claude
 .omc
+.omo
+.sisyphus/
+.audit
+trace_out.txt
+
+# Heap profiling output from `cargo bench --bench memory_dhat --features dhat-heap`.
+# Generated artifact, not source. Regenerate locally if needed.
+dhat-heap.json
+**/dhat-heap.json
+
+# wasm-pack post-optimize transient (W11 build pipeline writes pkg/index_bg_opt.wasm
+# then renames it over pkg/index_bg.wasm; if interrupted, the temp may linger).
+# pkg/ itself is already covered by packages/node/.gitignore.
+**/index_bg_opt.wasm
+
+# Playwright MCP output (screenshots, snapshots, console logs).
+.playwright-mcp/
+**/.playwright-mcp/
+
+# cargo-mutants output directories — generated per-run mutation reports.
+# `mutants.toml` (the config) IS tracked; only outputs are ignored.
+mutants.out/
+mutants.out.old/
+**/mutants.out/
+**/mutants.out.old/
+
+# cargo-tarpaulin coverage outputs — `cargo tarpaulin --out Lcov` writes lcov.info
+# to the workspace root; HTML/JSON reports drop tarpaulin-report.{html,json}.
+# `cobertura.xml` is already ignored above.
+lcov.info
+**/lcov.info
+tarpaulin-report.html
+tarpaulin-report.json
+**/tarpaulin-report.html
+**/tarpaulin-report.json

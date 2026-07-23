@@ -1,6 +1,7 @@
 [
   {
     "input": "≅",
+    "note": "PDF 제32항 — 물결아래등호 ≅ 기호 정의 (단독)",
     "internal": "@933",
     "expected": "8201818",
     "unicode": "⠈⠔⠒⠒",
@@ -8,11 +9,30 @@
     "jeomsarang": "⠐⠤⠒⠒"
   },
   {
+    "input": "$\\cong$",
+    "note": "LaTeX",
+    "internal": "@933",
+    "expected": "8201818",
+    "unicode": "⠈⠔⠒⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "A ≅ B",
+    "note": "PDF 제32항 — 예제 (A ≅ B)",
     "internal": ",a`@933`,b",
     "expected": "321082018180323",
     "unicode": "⠠⠁⠀⠈⠔⠒⠒⠀⠠⠃",
     "world": "⠴⠠⠁ ⠐⠸⠔ ⠰⠠⠃⠲",
     "jeomsarang": "⠴⠠⠁⠀⠐⠤⠒⠒⠀⠰⠠⠃⠲"
+  },
+  {
+    "input": "$A \\cong B$",
+    "note": "LaTeX",
+    "internal": ",a`@933`,b",
+    "expected": "321082018180323",
+    "unicode": "⠠⠁⠀⠈⠔⠒⠒⠀⠠⠃",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

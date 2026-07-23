@@ -1,0 +1,15 @@
+[
+  {
+    "input": "$\\frac{x}{y}$",
+    "context": "english",
+    "internal": ";;(x./y)",
+    "expected": "4848554540126162",
+    "unicode": "⠰⠰⠷⠭⠨⠌⠽⠾"
+  },
+  {
+    "input": "speed = $\\frac{distance}{time}$",
+    "internal": "spe$ \"7 ;(di/.e./\"t;)",
+    "expected": "1415174301654048552510124017401216304862",
+    "unicode": "⠎⠏⠑⠫⠀⠐⠶⠀⠰⠷⠙⠊⠌⠨⠑⠨⠌⠐⠞⠰⠾"
+  }
+]

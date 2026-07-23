@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$x^3$"
+unicode = ok: "⠭⠘⠼⠉"
+bytes   = ok: [45, 24, 60, 9]

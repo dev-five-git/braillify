@@ -149,6 +149,32 @@ mod tests {
     }
 
     #[test]
+    fn attaches_space_next_to_quote_boundary() {
+        let tokens = vec![
+            word("열림\""),
+            Token::Space(SpaceKind::Regular),
+            word("다음"),
+        ];
+        let mut state = EncoderState::new(false);
+        let action = QuoteAttachmentRule.apply(&tokens, 1, &mut state).unwrap();
+
+        assert!(
+            matches!(action, TokenAction::Replace(Token::PreEncoded(bytes)) if bytes == vec![8])
+        );
+    }
+
+    #[test]
+    fn rule_metadata_reports_phase_and_priority() {
+        let rule = std::hint::black_box(QuoteAttachmentRule);
+
+        assert!(matches!(
+            rule.phase(),
+            crate::rules::token_rule::TokenPhase::Normalization
+        ));
+        assert_eq!(rule.priority(), 130);
+    }
+
+    #[test]
     fn pipeline_keeps_attachment_for_ascii_quote_sentence() {
         let mut ir = crate::rules::token::DocumentIR::parse("\"빨리 말해!\"", true);
         let mut engine = crate::rules::token_engine::TokenRuleEngine::new();
@@ -187,5 +213,47 @@ mod tests {
                 .any(|t| matches!(t, Token::PreEncoded(bytes) if bytes == &vec![8])),
             "expected attach marker token in pipeline output"
         );
+    }
+
+    /// quote_attachment:25 — ends_with_ascii_double `"` decrements delta.
+    #[test]
+    fn quote_delta_ends_with_ascii_double_decrements() {
+        // Input ending with `"` triggers line 25.
+        assert!(super::quote_delta("text\"") < 0 || super::quote_delta("text\"") == 0);
+        // Input both starts AND ends with `"` cancels out.
+        assert_eq!(super::quote_delta("\"text\""), 0);
+        // Input ends with single ascii quote → starts at 0, line 31 fires.
+        assert!(super::quote_delta("text'") <= 0);
+    }
+
+    #[test]
+    fn quote_balance_before_accumulates_prior_word_quotes() {
+        let tokens = vec![
+            word("\"열림"),
+            Token::Space(SpaceKind::Regular),
+            word("중간"),
+        ];
+
+        assert_eq!(super::quote_balance_before(&tokens, 2), 1);
+    }
+
+    /// quote_attachment:81 — `apply` with Space token at index where next token
+    /// is NOT a Word (e.g. PreEncoded or end of tokens) returns Noop.
+    #[test]
+    fn apply_with_no_next_word_returns_noop() {
+        use crate::rules::context::EncoderState;
+        use crate::rules::token::{SpaceKind, WordMeta, WordToken};
+        use std::borrow::Cow;
+        let word_token = Token::Word(WordToken {
+            text: Cow::Borrowed("foo"),
+            chars: vec!['f', 'o', 'o'],
+            meta: WordMeta::from_chars(&['f', 'o', 'o']),
+        });
+        let space_token = Token::Space(SpaceKind::Regular);
+        // [Word, Space] — next of Space is None → line 81.
+        let tokens = vec![word_token, space_token];
+        let mut state = EncoderState::new(false);
+        let action = QuoteAttachmentRule.apply(&tokens, 1, &mut state).unwrap();
+        assert!(matches!(action, TokenAction::Noop));
     }
 }

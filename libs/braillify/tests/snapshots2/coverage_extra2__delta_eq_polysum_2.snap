@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "∆y=(p)+(q)+(r)"
+unicode = ok: "⠸⠬⠽⠒⠒⠦⠏⠴⠀⠬⠀⠦⠟⠴⠀⠬⠀⠦⠗⠴"
+bytes   = ok: [56, 44, 61, 18, 18, 38, 15, 52, 0, 44, 0, 38, 31, 52, 0, 44, 0, 38, 23, 52]

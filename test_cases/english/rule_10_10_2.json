@@ -1,0 +1,122 @@
+[
+  {
+    "input": "advanced",
+    "internal": "adv.ed",
+    "expected": "12539401725",
+    "unicode": "⠁⠙⠧⠨⠑⠙"
+  },
+  {
+    "input": "aright",
+    "internal": "a\"r",
+    "expected": "11623",
+    "unicode": "⠁⠐⠗"
+  },
+  {
+    "input": "bastion",
+    "internal": "bas;n",
+    "expected": "31144829",
+    "unicode": "⠃⠁⠎⠰⠝"
+  },
+  {
+    "input": "coherence",
+    "internal": "coh];e",
+    "expected": "92119594817",
+    "unicode": "⠉⠕⠓⠻⠰⠑"
+  },
+  {
+    "input": "Congo",
+    "internal": ",3go",
+    "expected": "32182721",
+    "unicode": "⠠⠒⠛⠕"
+  },
+  {
+    "input": "congratulate",
+    "internal": "3gratulate",
+    "expected": "18272313037713017",
+    "unicode": "⠒⠛⠗⠁⠞⠥⠇⠁⠞⠑"
+  },
+  {
+    "input": "congruity",
+    "internal": "3gru;y",
+    "expected": "182723374861",
+    "unicode": "⠒⠛⠗⠥⠰⠽"
+  },
+  {
+    "input": "dancer",
+    "internal": "d.er",
+    "expected": "25401723",
+    "unicode": "⠙⠨⠑⠗"
+  },
+  {
+    "input": "dispirited",
+    "internal": "di_s$",
+    "expected": "2510561443",
+    "unicode": "⠙⠊⠸⠎⠫"
+  },
+  {
+    "input": "distinct",
+    "internal": "4t9ct",
+    "expected": "503020930",
+    "unicode": "⠲⠞⠔⠉⠞"
+  },
+  {
+    "input": "disturbed",
+    "internal": "4turb$",
+    "expected": "50303723343",
+    "unicode": "⠲⠞⠥⠗⠃⠫"
+  },
+  {
+    "input": "happiness",
+    "internal": "happi;s",
+    "expected": "1911515104814",
+    "unicode": "⠓⠁⠏⠏⠊⠰⠎"
+  },
+  {
+    "input": "meander",
+    "internal": "me&]",
+    "expected": "13174759",
+    "unicode": "⠍⠑⠯⠻"
+  },
+  {
+    "input": "named",
+    "internal": "\"nd",
+    "expected": "162925",
+    "unicode": "⠐⠝⠙"
+  },
+  {
+    "input": "oneness",
+    "internal": "\"o;s",
+    "expected": "16214814",
+    "unicode": "⠐⠕⠰⠎"
+  },
+  {
+    "input": "thence",
+    "internal": "?;e",
+    "expected": "574817",
+    "unicode": "⠹⠰⠑"
+  },
+  {
+    "input": "timer",
+    "internal": "\"tr",
+    "expected": "163023",
+    "unicode": "⠐⠞⠗"
+  },
+  {
+    "input": "vengeance",
+    "internal": "v5ge.e",
+    "expected": "393427174017",
+    "unicode": "⠧⠢⠛⠑⠨⠑"
+  },
+  {
+    "input": "wither",
+    "internal": ")]",
+    "expected": "6259",
+    "unicode": "⠾⠻"
+  },
+  {
+    "input": "captainess",
+    "internal": "capta9ess",
+    "expected": "911530120171414",
+    "unicode": "⠉⠁⠏⠞⠁⠔⠑⠎⠎"
+  }
+]

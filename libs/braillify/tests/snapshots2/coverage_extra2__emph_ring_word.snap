@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "**중요**"
+unicode = ok: "⠐⠔⠐⠔⠨⠍⠶⠬⠐⠔⠐⠔⠀"
+bytes   = ok: [16, 20, 16, 20, 40, 13, 54, 44, 16, 20, 16, 20, 0]

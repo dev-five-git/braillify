@@ -1,6 +1,7 @@
 [
   {
     "input": "≡",
+    "note": "PDF 제43항 — 합동 ≡ 기호 정의 (단독)",
     "internal": "77",
     "expected": "5454",
     "unicode": "⠶⠶",
@@ -8,7 +9,17 @@
     "jeomsarang": "⠶⠶"
   },
   {
+    "input": "$\\equiv$",
+    "note": "LaTeX",
+    "internal": "77",
+    "expected": "5454",
+    "unicode": "⠶⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "△ABC≡△DEF",
+    "note": "PDF 제43항 — 예제 △ABC≡△DEF (대문자 단어표 ,, 적용)",
     "internal": "_+,,ABC77_+,,DEF",
     "expected": "56443232139545456443232251711",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉⠶⠶⠸⠬⠠⠠⠙⠑⠋",

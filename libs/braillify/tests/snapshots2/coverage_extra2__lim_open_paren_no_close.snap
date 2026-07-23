@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "lim_x (n→0"
+unicode = ok: "⠇⠊⠍⠰⠭⠀⠦⠝⠀⠒⠕⠀⠼⠚"
+bytes   = ok: [7, 10, 13, 48, 45, 0, 38, 29, 0, 18, 21, 0, 60, 26]

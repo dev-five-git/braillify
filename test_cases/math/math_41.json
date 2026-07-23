@@ -1,11 +1,30 @@
 [
   {
     "input": "⊥",
+    "note": "PDF 제41항 — 수직 ⊥ 기호 정의 (단독)",
     "internal": "0'",
     "expected": "524",
     "unicode": "⠴⠄",
     "world": "",
     "jeomsarang": "⠴⠄"
+  },
+  {
+    "input": "$\\perp$",
+    "note": "LaTeX",
+    "internal": "0'",
+    "expected": "524",
+    "unicode": "⠴⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "AB⊥DE",
+    "note": "PDF 제41항 — 예제 AB⊥DE (대문자 단어표 ,, 양쪽 적용)",
+    "internal": ",,AB0',,DE",
+    "expected": "32321352432322517",
+    "unicode": "⠠⠠⠁⠃⠴⠄⠠⠠⠙⠑",
+    "world": "⠴⠠⠠⠁⠃⠼⠤⠠⠠⠙⠑⠲",
+    "jeomsarang": "⠴⠠⠠⠁⠃⠴⠄⠠⠠⠙⠑⠲"
   },
   {
     "input": "$AB \\perp DE$",

@@ -52,7 +52,9 @@ def main():
             output_path = f"../test_cases/{file_name}.json"
 
             entries = []
-            with open(test_file, "r", encoding="utf-8") as file:
+            with open(test_file, "r",
+
+                encoding="utf-8") as file:
                 for row in file.readlines():
                     row = row.strip()
                     if not row:

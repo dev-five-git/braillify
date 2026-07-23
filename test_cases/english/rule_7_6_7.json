@@ -1,0 +1,15 @@
+[
+  {
+    "input": "Franc“e”s or Franc“i”s",
+    "internal": ",franc^8e^0s or ,franc^8i^0s",
+    "expected": "32112312992438172452140212303211231299243810245214",
+    "unicode": "⠠⠋⠗⠁⠝⠉⠘⠦⠑⠘⠴⠎⠀⠕⠗⠀⠠⠋⠗⠁⠝⠉⠘⠦⠊⠘⠴⠎"
+  },
+  {
+    "input": "\\“Remember those backslashes\\”",
+    "context": "english",
+    "internal": "_*^8,remember those backslashes_*^0",
+    "expected": "5633243832231713171331723030192114170319514711419171456332452",
+    "unicode": "⠸⠡⠘⠦⠠⠗⠑⠍⠑⠍⠃⠑⠗⠀⠞⠓⠕⠎⠑⠀⠃⠁⠉⠅⠎⠇⠁⠎⠓⠑⠎⠸⠡⠘⠴"
+  }
+]

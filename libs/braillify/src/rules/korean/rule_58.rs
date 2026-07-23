@@ -44,8 +44,23 @@ impl BrailleRule for Rule58 {
     }
 
     fn matches(&self, ctx: &RuleContext) -> bool {
-        matches!(ctx.char_type, CharType::Symbol(c) if *c == BLANK_MARK)
-            && (ctx.word_len() != 1 || ctx.remaining_words.is_empty())
+        if !matches!(ctx.char_type, CharType::Symbol(c) if *c == BLANK_MARK) {
+            return false;
+        }
+
+        // 단독 □ (앞뒤에 다른 단어 없음, word 자체도 1글자)는 rule_72/rule_15에 위임.
+        let is_lone =
+            ctx.word_len() == 1 && ctx.prev_word.is_empty() && ctx.remaining_words.is_empty();
+        if is_lone {
+            return false;
+        }
+
+        // 단어 안에서는 □가 2개 이상 연속될 때 (rule_58 본문) 적용.
+        let count = ctx.word_chars[ctx.index..]
+            .iter()
+            .take_while(|&&c| c == BLANK_MARK)
+            .count();
+        count >= 2
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
@@ -74,15 +89,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn single_blank_mark() {
-        // □ → ⠸⠶⠇
-        let result = crate::encode_to_unicode("□").unwrap();
-        assert_eq!(result, "⠸⠶⠇");
-    }
-
-    #[test]
     fn multiple_blank_marks() {
-        // □□□ → ⠸⠶⠶⠶⠇
+        // □□□ → ⠸⠶⠶⠶⠇ (제58항: 2개 이상 연속될 때 묶음 표기)
         let result = crate::encode_to_unicode("□□□").unwrap();
         assert_eq!(result, "⠸⠶⠶⠶⠇");
     }

@@ -28,6 +28,38 @@ fn apply(text: &str) -> Option<(&'static str, &'static [u8], String)> {
     word_shortcut::split_word_shortcut(text)
 }
 
+/// Check whether `word_chars` starts with any entry in the word-shortcut table,
+/// returning the matching braille code slice without materializing a `String`.
+///
+/// Hot-path alternative to `word_shortcut::split_word_shortcut(&word)` when the
+/// caller only needs the matched codes (제18항 약어). PHF table has 7 short
+/// Korean keys, so the linear scan is trivial.
+fn match_word_shortcut(word_chars: &[char]) -> Option<&'static [u8]> {
+    for (key, codes) in word_shortcut::SHORTCUT_MAP.entries() {
+        let mut key_chars = key.chars();
+        let mut matched = true;
+        let mut consumed = 0usize;
+        loop {
+            match key_chars.next() {
+                None => break,
+                Some(kc) => match word_chars.get(consumed) {
+                    Some(wc) if *wc == kc => {
+                        consumed += 1;
+                    }
+                    _ => {
+                        matched = false;
+                        break;
+                    }
+                },
+            }
+        }
+        if matched {
+            return Some(*codes);
+        }
+    }
+    None
+}
+
 /// Plugin struct for the rule engine.
 ///
 /// Handles word-level abbreviations (제18항): 그래서, 그러나, 그러면, etc.
@@ -53,13 +85,11 @@ impl BrailleRule for Rule18 {
         if ctx.index != 0 {
             return false;
         }
-        let word: String = ctx.word_chars.iter().collect();
-        word_shortcut::split_word_shortcut(&word).is_some()
+        match_word_shortcut(ctx.word_chars).is_some()
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
-        let word: String = ctx.word_chars.iter().collect();
-        if let Some((_, codes, _rest)) = word_shortcut::split_word_shortcut(&word) {
+        if let Some(codes) = match_word_shortcut(ctx.word_chars) {
             ctx.emit_slice(codes);
             // TODO(Phase 3): handle `rest` by re-entering encoding pipeline
             // For now, the remaining characters are handled by the caller.
@@ -74,25 +104,22 @@ impl BrailleRule for Rule18 {
 mod tests {
     use super::*;
 
-    #[test]
-    fn matches_all_word_abbreviations() {
-        let words = vec![
-            "그래서",
-            "그러나",
-            "그러면",
-            "그러므로",
-            "그런데",
-            "그리고",
-            "그리하여",
-        ];
-        for word in words {
-            let result = apply(word);
-            assert!(result.is_some(), "Expected abbreviation for: {}", word);
-            let (matched, codes, rest) = result.unwrap();
-            assert_eq!(matched, word);
-            assert!(!codes.is_empty());
-            assert!(rest.is_empty());
-        }
+    /// 제18항 — 7개 약어 단어가 모두 약자 매칭된다.
+    #[rstest::rstest]
+    #[case("그래서")]
+    #[case("그러나")]
+    #[case("그러면")]
+    #[case("그러므로")]
+    #[case("그런데")]
+    #[case("그리고")]
+    #[case("그리하여")]
+    fn matches_all_word_abbreviations(#[case] word: &str) {
+        let result = apply(word);
+        assert!(result.is_some(), "Expected abbreviation for: {word}");
+        let (matched, codes, rest) = result.unwrap();
+        assert_eq!(matched, word);
+        assert!(!codes.is_empty());
+        assert!(rest.is_empty());
     }
 
     #[test]
@@ -103,22 +130,130 @@ mod tests {
         assert_eq!(result.2, "인지");
     }
 
-    #[test]
-    fn no_match_for_non_abbreviation() {
-        assert!(apply("안녕하세요").is_none());
-        assert!(apply("hello").is_none());
+    /// 약어 사전 미등록 단어 → None.
+    #[rstest::rstest]
+    #[case::korean_unknown("안녕하세요")]
+    #[case::english("hello")]
+    fn no_match_for_non_abbreviation(#[case] input: &str) {
+        assert!(apply(input).is_none());
+    }
+
+    /// Direct tests for `match_word_shortcut` — covers lines 31-55.
+    #[rstest::rstest]
+    #[case("그래서")]
+    #[case("그러나")]
+    #[case("그러면")]
+    #[case("그러므로")]
+    #[case("그런데")]
+    #[case("그리고")]
+    #[case("그리하여")]
+    fn match_word_shortcut_finds_each_abbreviation(#[case] word: &str) {
+        let chars: Vec<char> = word.chars().collect();
+        let result = match_word_shortcut(&chars);
+        assert!(result.is_some(), "should match {word}");
+        assert!(!result.unwrap().is_empty());
     }
 
     #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("그래서", "⠁⠎"), ("그러나", "⠁⠉"), ("그리고", "⠁⠥")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 18 golden test failed for: {}",
-                input
-            );
+    fn match_word_shortcut_returns_none_for_unknown() {
+        let chars: Vec<char> = "안녕".chars().collect();
+        assert!(match_word_shortcut(&chars).is_none());
+    }
+
+    #[test]
+    fn match_word_shortcut_matches_prefix_only() {
+        // 그래서인지 — prefix matches 그래서
+        let chars: Vec<char> = "그래서인지".chars().collect();
+        let result = match_word_shortcut(&chars);
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn match_word_shortcut_short_word_no_match() {
+        // Single char — shorter than any key in shortcut map
+        let chars: Vec<char> = "가".chars().collect();
+        assert!(match_word_shortcut(&chars).is_none());
+    }
+
+    /// BrailleRule trait surface tests.
+    #[test]
+    fn rule18_meta_and_phase() {
+        let rule = Rule18;
+        let meta = rule.meta();
+        assert_eq!(meta.section, "18");
+        assert!(matches!(rule.phase(), Phase::WordShortcut));
+    }
+
+    fn make_ctx<'a>(
+        word_chars: &'a [char],
+        index: usize,
+        char_type: &'a crate::char_struct::CharType,
+        skip_count: &'a mut usize,
+        state: &'a mut crate::rules::context::EncoderState,
+        result: &'a mut Vec<u8>,
+    ) -> RuleContext<'a> {
+        RuleContext {
+            word_chars,
+            index,
+            char_type,
+            prev_word: "",
+            remaining_words: &[],
+            has_korean_char: true,
+            is_all_uppercase: false,
+            ascii_starts_at_beginning: false,
+            skip_count,
+            state,
+            result,
         }
+    }
+
+    #[test]
+    fn rule18_matches_at_word_start_only() {
+        use crate::char_struct::CharType;
+        use crate::rules::context::EncoderState;
+        let word_chars: Vec<char> = "그래서".chars().collect();
+        let ct0 = CharType::new(word_chars[0]).unwrap();
+        let mut skip = 0usize;
+        let mut state = EncoderState::new(false);
+        let mut result = Vec::new();
+        let ctx_start = make_ctx(&word_chars, 0, &ct0, &mut skip, &mut state, &mut result);
+        assert!(Rule18.matches(&ctx_start));
+
+        let ct1 = CharType::new(word_chars[1]).unwrap();
+        let mut skip2 = 0usize;
+        let mut state2 = EncoderState::new(false);
+        let mut result2 = Vec::new();
+        let ctx_mid = make_ctx(&word_chars, 1, &ct1, &mut skip2, &mut state2, &mut result2);
+        assert!(!Rule18.matches(&ctx_mid));
+    }
+
+    #[test]
+    fn rule18_apply_emits_codes_on_match() {
+        use crate::char_struct::CharType;
+        use crate::rules::context::EncoderState;
+        let word_chars: Vec<char> = "그래서".chars().collect();
+        let ct = CharType::new(word_chars[0]).unwrap();
+        let mut skip = 0usize;
+        let mut state = EncoderState::new(false);
+        let mut result = Vec::new();
+        let mut ctx = make_ctx(&word_chars, 0, &ct, &mut skip, &mut state, &mut result);
+        let outcome = Rule18.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(!result.is_empty());
+    }
+
+    #[test]
+    fn rule18_apply_skips_on_no_match() {
+        use crate::char_struct::CharType;
+        use crate::rules::context::EncoderState;
+        let word_chars: Vec<char> = "안녕".chars().collect();
+        let ct = CharType::new(word_chars[0]).unwrap();
+        let mut skip = 0usize;
+        let mut state = EncoderState::new(false);
+        let mut result = Vec::new();
+        let mut ctx = make_ctx(&word_chars, 0, &ct, &mut skip, &mut state, &mut result);
+        let outcome = Rule18.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Skip));
+        assert!(result.is_empty());
     }
 }

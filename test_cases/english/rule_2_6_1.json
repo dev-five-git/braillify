@@ -1,0 +1,123 @@
+[
+  {
+    "input": "x",
+    "context": "english",
+    "internal": ";x",
+    "expected": "4845",
+    "unicode": "⠰⠭"
+  },
+  {
+    "input": "it",
+    "internal": "x",
+    "expected": "45",
+    "unicode": "⠭"
+  },
+  {
+    "input": "which",
+    "internal": ":",
+    "expected": "49",
+    "unicode": "⠱"
+  },
+  {
+    "input": "was",
+    "internal": "0",
+    "expected": "52",
+    "unicode": "⠴"
+  },
+  {
+    "input": "al",
+    "internal": ";al",
+    "expected": "4817",
+    "unicode": "⠰⠁⠇"
+  },
+  {
+    "input": "also",
+    "internal": "al",
+    "expected": "17",
+    "unicode": "⠁⠇"
+  },
+  {
+    "input": "e-x-u-d-e",
+    "internal": ";;e-x-u-d-e",
+    "expected": "4848173645363736253617",
+    "unicode": "⠰⠰⠑⠤⠭⠤⠥⠤⠙⠤⠑"
+  },
+  {
+    "input": "do-it-yourself",
+    "internal": "d-x-yrf",
+    "expected": "25364536612311",
+    "unicode": "⠙⠤⠭⠤⠽⠗⠋"
+  },
+  {
+    "input": "out-and-out",
+    "internal": "\\-&-\\",
+    "expected": "5136473651",
+    "unicode": "⠳⠤⠯⠤⠳"
+  },
+  {
+    "input": "5-yrf-678",
+    "internal": "#e-;yrf-#fgh",
+    "expected": "601736486123113660112719",
+    "unicode": "⠼⠑⠤⠰⠽⠗⠋⠤⠼⠋⠛⠓"
+  },
+  {
+    "input": "I like x-it works.",
+    "internal": ",i l ;x,-x \"ws4",
+    "expected": "32100704845323645016581450",
+    "unicode": "⠠⠊⠀⠇⠀⠰⠭⠠⠤⠭⠀⠐⠺⠎⠲"
+  },
+  {
+    "input": "his child–this one",
+    "internal": "8 *,-? \"o",
+    "expected": "3803332365701621",
+    "unicode": "⠦⠀⠡⠠⠤⠹⠀⠐⠕"
+  },
+  {
+    "input": "my friend–Fr John",
+    "internal": "my fr,-;,fr ,john",
+    "expected": "13610112332364832112303226211929",
+    "unicode": "⠍⠽⠀⠋⠗⠠⠤⠰⠠⠋⠗⠀⠠⠚⠕⠓⠝"
+  },
+  {
+    "input": "th--r",
+    "internal": "th--;r",
+    "expected": "301936364823",
+    "unicode": "⠞⠓⠤⠤⠰⠗"
+  },
+  {
+    "input": "Mme. M—",
+    "internal": ",mme4 ;,m\",-",
+    "expected": "32131317500483213163236",
+    "unicode": "⠠⠍⠍⠑⠲⠀⠰⠠⠍⠐⠠⠤"
+  },
+  {
+    "input": "–s",
+    "internal": ",-;s",
+    "expected": "32364814",
+    "unicode": "⠠⠤⠰⠎"
+  },
+  {
+    "input": "—st",
+    "internal": "\",-st",
+    "expected": "1632361430",
+    "unicode": "⠐⠠⠤⠎⠞"
+  },
+  {
+    "input": "YouTube",
+    "internal": ",y\\,tube",
+    "expected": "326151323037317",
+    "unicode": "⠠⠽⠳⠠⠞⠥⠃⠑"
+  },
+  {
+    "input": "𝑝𝑟𝑒paid",
+    "internal": ".1pre.'paid",
+    "expected": "4021523174041511025",
+    "unicode": "⠨⠂⠏⠗⠑⠨⠄⠏⠁⠊⠙"
+  },
+  {
+    "input": "but...not",
+    "internal": "but444not",
+    "expected": "33730505050292130",
+    "unicode": "⠃⠥⠞⠲⠲⠲⠝⠕⠞"
+  }
+]

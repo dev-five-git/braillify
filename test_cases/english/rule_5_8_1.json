@@ -1,0 +1,8 @@
+[
+  {
+    "input": "T-SHIRTS FOR SALE",
+    "internal": ";,,,t-%irts = sale,'",
+    "expected": "48323232303641102330140630141717324",
+    "unicode": "⠰⠠⠠⠠⠞⠤⠩⠊⠗⠞⠎⠀⠿⠀⠎⠁⠇⠑⠠⠄"
+  }
+]

@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "7+- 등급"
+unicode = ok: "⠼⠛⠢⠔⠀⠊⠪⠶⠈⠪⠃"
+bytes   = ok: [60, 27, 34, 20, 0, 10, 42, 54, 8, 42, 3]

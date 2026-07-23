@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "J₉"
+unicode = ok: "⠴⠠⠚⠰⠼⠊"
+bytes   = ok: [52, 32, 26, 48, 60, 10]

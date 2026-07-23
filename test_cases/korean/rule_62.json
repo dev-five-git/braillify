@@ -1,5 +1,13 @@
 [
   {
+    "input": "〃",
+    "internal": "00",
+    "expected": "5252",
+    "unicode": "⠴⠴",
+    "world": "",
+    "jeomsarang": "⠴⠴"
+  },
+  {
     "input": "제1 작업실",
     "internal": ".n#a`.asb,o1",
     "expected": "4029601040114332212",
@@ -8,11 +16,11 @@
     "jeomsarang": "⠨⠝⠼⠁⠀⠨⠁⠎⠃⠠⠕⠂"
   },
   {
-    "input": "제2 〃  ",
+    "input": "제2 〃",
     "internal": ".n#b`00",
     "expected": "402960305252",
     "unicode": "⠨⠝⠼⠃⠀⠴⠴",
     "world": "⠨⠝⠼⠃",
-    "jeomsarang": "⠨⠝⠼⠃⠀⠴⠴⠀⠀"
+    "jeomsarang": "⠨⠝⠼⠃⠀⠴⠴"
   }
 ]

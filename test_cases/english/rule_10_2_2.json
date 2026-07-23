@@ -1,0 +1,38 @@
+[
+  {
+    "input": "this'd",
+    "internal": "?'d",
+    "expected": "57425",
+    "unicode": "⠹⠄⠙"
+  },
+  {
+    "input": "which'll",
+    "internal": ":'ll",
+    "expected": "49477",
+    "unicode": "⠱⠄⠇⠇"
+  },
+  {
+    "input": "still's",
+    "internal": "/'s",
+    "expected": "12414",
+    "unicode": "⠌⠄⠎"
+  },
+  {
+    "input": "which've",
+    "internal": ":'ve",
+    "expected": "4943917",
+    "unicode": "⠱⠄⠧⠑"
+  },
+  {
+    "input": "Julia Child's recipe",
+    "internal": ",julia ,*'s recipe",
+    "expected": "322637710103233414023179101517",
+    "unicode": "⠠⠚⠥⠇⠊⠁⠀⠠⠡⠄⠎⠀⠗⠑⠉⠊⠏⠑"
+  },
+  {
+    "input": "this'n",
+    "internal": "?is'n",
+    "expected": "571014429",
+    "unicode": "⠹⠊⠎⠄⠝"
+  }
+]

@@ -16,12 +16,30 @@
     "jeomsarang": "⠼⠚⠲⠁⠛"
   },
   {
+    "input": "$0.17$",
+    "note": "LaTeX",
+    "internal": "#j4ag",
+    "expected": "602650127",
+    "unicode": "⠼⠚⠲⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": ".47",
     "internal": "#4dg",
     "expected": "60502527",
     "unicode": "⠼⠲⠙⠛",
     "world": "⠲⠼⠙⠛",
     "jeomsarang": "⠲⠼⠙⠛"
+  },
+  {
+    "input": "$.47$",
+    "note": "LaTeX",
+    "internal": "#4dg",
+    "expected": "60502527",
+    "unicode": "⠼⠲⠙⠛",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "0.6̇",
@@ -32,7 +50,7 @@
     "jeomsarang": "⠼⠚⠲⠋⠀"
   },
   {
-    "input": "$\\0.\\dot{6}$",
+    "input": "$0.\\dot{6}$",
     "internal": "#j4@f",
     "expected": "602650811",
     "unicode": "⠼⠚⠲⠈⠋",
@@ -41,15 +59,15 @@
     "jeomsarang": ""
   },
   {
-    "input": "0.739̇",
+    "input": "0.73̇9̇",
     "internal": "#j4g@ci",
     "expected": "602650278910",
     "unicode": "⠼⠚⠲⠛⠈⠉⠊",
-    "world": "⠼⠚⠲⠛⠉⠊",
-    "jeomsarang": "⠼⠚⠲⠛⠉⠊⠀"
+    "world": "⠼⠚⠲⠛⠉⠼⠊",
+    "jeomsarang": "⠼⠚⠲⠛⠉⠀⠼⠊⠀"
   },
   {
-    "input": "$\\0.73\\dot{9}$",
+    "input": "$0.7\\dot{3}\\dot{9}$",
     "internal": "#j4g@ci",
     "expected": "602650278910",
     "unicode": "⠼⠚⠲⠛⠈⠉⠊",
@@ -58,15 +76,15 @@
     "jeomsarang": ""
   },
   {
-    "input": "0.123̇",
+    "input": "0.1̇23̇",
     "internal": "#j4@abc",
     "expected": "6026508139",
     "unicode": "⠼⠚⠲⠈⠁⠃⠉",
-    "world": "⠼⠚⠲⠁⠃⠉",
-    "jeomsarang": "⠼⠚⠲⠁⠃⠉⠀"
+    "world": "⠼⠚⠲⠁⠼⠃⠉",
+    "jeomsarang": "⠼⠚⠲⠁⠀⠼⠃⠉⠀"
   },
   {
-    "input": "$\\0.12\\dot{3}$",
+    "input": "$0.\\dot{1}2\\dot{3}$",
     "internal": "#j4@abc",
     "expected": "6026508139",
     "unicode": "⠼⠚⠲⠈⠁⠃⠉",
@@ -83,7 +101,7 @@
     "jeomsarang": "⠲⠼⠊⠀"
   },
   {
-    "input": "$\\.\\dot{9}$",
+    "input": "$.\\dot{9}$",
     "internal": "#4@i",
     "expected": "6050810",
     "unicode": "⠼⠲⠈⠊",

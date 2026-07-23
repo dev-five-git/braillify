@@ -74,57 +74,36 @@ mod tests {
     use super::*;
     use crate::unicode::decode_unicode;
 
-    #[test]
-    fn encodes_basic_syllable_abbreviations() {
-        // 제13항: 가, 나, 다, ... 하
-        assert_eq!(apply('가').unwrap(), &[decode_unicode('⠫')]);
-        assert_eq!(apply('나').unwrap(), &[decode_unicode('⠉')]);
-        assert_eq!(apply('다').unwrap(), &[decode_unicode('⠊')]);
-        assert_eq!(apply('사').unwrap(), &[decode_unicode('⠇')]);
-        assert_eq!(apply('하').unwrap(), &[decode_unicode('⠚')]);
+    /// 제13항·제15항 — 약자 음절을 점형 단일 또는 이중 셀로 매핑.
+    #[rstest::rstest]
+    #[case::ga('가', vec!['⠫'])]
+    #[case::na('나', vec!['⠉'])]
+    #[case::da('다', vec!['⠊'])]
+    #[case::sa('사', vec!['⠇'])]
+    #[case::ha('하', vec!['⠚'])]
+    #[case::geot('것', vec!['⠸', '⠎'])]
+    #[case::yeong('영', vec!['⠻'])]
+    #[case::eun('은', vec!['⠵'])]
+    #[case::in_char('인', vec!['⠟'])]
+    fn encodes_syllable_abbreviations(#[case] syllable: char, #[case] expected_unicode: Vec<char>) {
+        let expected: Vec<u8> = expected_unicode.into_iter().map(decode_unicode).collect();
+        assert_eq!(apply(syllable).unwrap(), expected.as_slice());
     }
 
-    #[test]
-    fn encodes_extended_abbreviations() {
-        // 제15항: 것, 억, 언, 영, etc.
-        assert_eq!(
-            apply('것').unwrap(),
-            &[decode_unicode('⠸'), decode_unicode('⠎')]
-        );
-        assert_eq!(apply('영').unwrap(), &[decode_unicode('⠻')]);
-        assert_eq!(apply('은').unwrap(), &[decode_unicode('⠵')]);
-        assert_eq!(apply('인').unwrap(), &[decode_unicode('⠟')]);
-    }
-
-    #[test]
-    fn has_abbreviation_returns_true_for_known() {
-        assert!(has_abbreviation('가'));
-        assert!(has_abbreviation('것'));
-        assert!(has_abbreviation('영'));
-    }
-
-    #[test]
-    fn has_abbreviation_returns_false_for_unknown() {
-        assert!(!has_abbreviation('곤'));
-        assert!(!has_abbreviation('A'));
-        assert!(!has_abbreviation('1'));
+    /// `has_abbreviation` — 약자 사전 등록 여부.
+    #[rstest::rstest]
+    #[case::known_ga('가', true)]
+    #[case::known_geot('것', true)]
+    #[case::known_yeong('영', true)]
+    #[case::unknown_gon('곤', false)]
+    #[case::unknown_ascii('A', false)]
+    #[case::unknown_digit('1', false)]
+    fn has_abbreviation_paths(#[case] ch: char, #[case] expected: bool) {
+        assert_eq!(has_abbreviation(ch), expected);
     }
 
     #[test]
     fn non_abbreviated_char_returns_error() {
         assert!(apply('곤').is_err());
-    }
-
-    #[test]
-    fn golden_test_alignment() {
-        let cases = vec![("가지", "⠫⠨⠕"), ("나비", "⠉⠘⠕"), ("것이다", "⠸⠎⠕⠊")];
-        for (input, expected) in cases {
-            let result = crate::encode_to_unicode(input).unwrap();
-            assert_eq!(
-                result, expected,
-                "Rule 13 golden test failed for: {}",
-                input
-            );
-        }
     }
 }

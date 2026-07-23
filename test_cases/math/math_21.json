@@ -1,35 +1,37 @@
 [
   {
     "input": "|x|",
+    "note": "PDF 제21항 — 절댓값 |x|",
     "internal": "\\x\\",
     "expected": "514551",
     "unicode": "⠳⠭⠳",
     "world": "⠸⠳⠴⠭⠸⠳",
-    "jeomsarang": "⠸⠳⠴⠭⠸⠳⠲"
+    "jeomsarang": "⠈⠳⠭⠸⠳⠲"
   },
   {
-    "input": "$\\|x|$",
+    "input": "$|x|$",
+    "note": "LaTeX",
     "internal": "\\x\\",
     "expected": "514551",
     "unicode": "⠳⠭⠳",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "|2x+7|-8",
+    "note": "PDF 제21항 — 절댓값 |2x+7|-8",
     "internal": "\\#bx5#g\\9#h",
     "expected": "516034534602751206019",
     "unicode": "⠳⠼⠃⠭⠢⠼⠛⠳⠔⠼⠓",
     "world": "⠸⠳⠼⠃⠴⠭⠢⠼⠛⠸⠳⠤⠼⠓",
-    "jeomsarang": "⠸⠳⠼⠃⠴⠭⠢⠼⠛⠸⠳⠤⠼⠓"
+    "jeomsarang": "⠈⠳⠼⠃⠴⠭⠐⠖⠼⠛⠈⠳⠤⠼⠓"
   },
   {
-    "input": "$\\|2x+7|-8$",
+    "input": "$|2x+7|-8$",
+    "note": "LaTeX",
     "internal": "\\#bx5#g\\9#h",
     "expected": "516034534602751206019",
     "unicode": "⠳⠼⠃⠭⠢⠼⠛⠳⠔⠼⠓",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   }

@@ -1,24 +1,11 @@
 //! 수학 제27항 — 약수/배수 관계 기호.
 //!
 //! `|`(나눔 관계)와 `∤`(나누지 않음)를 처리한다.
-//! `|`는 코드 51(⠳), `∤`는 부정 표지 + 51 순서로 인코딩한다.
+//! `|`는 rule_21(절댓값 막대)가 항상 먼저 처리하고, `∤`는 math_symbol_shortcut
+//! 테이블을 통해 직접 인코딩된다.
 
 pub fn is_divisibility_symbol(c: char) -> bool {
     matches!(c, '|' | '\u{2224}')
-}
-
-pub fn encode_divisibility(c: char, result: &mut Vec<u8>) -> Result<(), String> {
-    match c {
-        '|' => {
-            result.push(51);
-            Ok(())
-        }
-        '\u{2224}' => {
-            result.extend_from_slice(&[24, 51]);
-            Ok(())
-        }
-        _ => Err(format!("unsupported divisibility symbol: {c}")),
-    }
 }
 
 #[cfg(test)]
@@ -26,10 +13,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn encodes_not_divides_symbol() -> Result<(), String> {
-        let mut result = Vec::new();
-        encode_divisibility('\u{2224}', &mut result)?;
-        assert_eq!(result, vec![24, 51]);
-        Ok(())
+    fn detects_divisibility_symbols() {
+        assert!(is_divisibility_symbol('|'));
+        assert!(is_divisibility_symbol('\u{2224}'));
+        assert!(!is_divisibility_symbol('a'));
     }
 }

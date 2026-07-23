@@ -1,0 +1,8 @@
+[
+  {
+    "input": "ŒDIPUS",
+    "internal": ",,o^6edipus",
+    "expected": "3232212422172510153714",
+    "unicode": "⠠⠠⠕⠘⠖⠑⠙⠊⠏⠥⠎"
+  }
+]

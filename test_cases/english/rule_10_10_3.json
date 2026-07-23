@@ -1,0 +1,104 @@
+[
+  {
+    "input": "afford",
+    "internal": "af=d",
+    "expected": "1116325",
+    "unicode": "⠁⠋⠿⠙"
+  },
+  {
+    "input": "bathed",
+    "internal": "ba!d",
+    "expected": "314625",
+    "unicode": "⠃⠁⠮⠙"
+  },
+  {
+    "input": "calisthenics",
+    "internal": "calis!nics",
+    "expected": "9171014462910914",
+    "unicode": "⠉⠁⠇⠊⠎⠮⠝⠊⠉⠎"
+  },
+  {
+    "input": "coffee",
+    "internal": "c(fee",
+    "expected": "955111717",
+    "unicode": "⠉⠷⠋⠑⠑"
+  },
+  {
+    "input": "effort",
+    "internal": "ef=t",
+    "expected": "17116330",
+    "unicode": "⠑⠋⠿⠞"
+  },
+  {
+    "input": "gathered",
+    "internal": "ga!r$",
+    "expected": "271462343",
+    "unicode": "⠛⠁⠮⠗⠫"
+  },
+  {
+    "input": "Leander",
+    "internal": ",le&]",
+    "expected": "327174759",
+    "unicode": "⠠⠇⠑⠯⠻"
+  },
+  {
+    "input": "offer",
+    "internal": "(f]",
+    "expected": "551159",
+    "unicode": "⠷⠋⠻"
+  },
+  {
+    "input": "office",
+    "internal": "(fice",
+    "expected": "551110917",
+    "unicode": "⠷⠋⠊⠉⠑"
+  },
+  {
+    "input": "other",
+    "internal": "o!r",
+    "expected": "214623",
+    "unicode": "⠕⠮⠗"
+  },
+  {
+    "input": "Parthenon",
+    "internal": ",p>!non",
+    "expected": "32152846292129",
+    "unicode": "⠠⠏⠜⠮⠝⠕⠝"
+  },
+  {
+    "input": "proffer",
+    "internal": "pr(f]",
+    "expected": "1523551159",
+    "unicode": "⠏⠗⠷⠋⠻"
+  },
+  {
+    "input": "slithered",
+    "internal": "sli!r$",
+    "expected": "14710462343",
+    "unicode": "⠎⠇⠊⠮⠗⠫"
+  },
+  {
+    "input": "theatre",
+    "internal": "!atre",
+    "expected": "461302317",
+    "unicode": "⠮⠁⠞⠗⠑"
+  },
+  {
+    "input": "then",
+    "internal": "!n",
+    "expected": "4629",
+    "unicode": "⠮⠝"
+  },
+  {
+    "input": "weathered",
+    "internal": "w1!r$",
+    "expected": "582462343",
+    "unicode": "⠺⠂⠮⠗⠫"
+  },
+  {
+    "input": "thence",
+    "internal": "?;e",
+    "expected": "574817",
+    "unicode": "⠹⠰⠑"
+  }
+]

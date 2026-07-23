@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "a ⊂ b ⊂ c"
+unicode = ok: "⠁⠀⠖⠂⠀⠃⠀⠖⠂⠀⠉"
+bytes   = ok: [1, 0, 22, 2, 0, 3, 0, 22, 2, 0, 9]

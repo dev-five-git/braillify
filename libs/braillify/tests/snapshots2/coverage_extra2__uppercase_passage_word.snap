@@ -1,0 +1,8 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+assertion_line: 304
+expression: rendered
+---
+input  = "HELLO WORLD"
+unicode = ok: "⠠⠠⠓⠑⠇⠇⠕⠀⠠⠠⠸⠺"
+bytes   = ok: [32, 32, 19, 17, 7, 7, 21, 0, 32, 32, 56, 58]

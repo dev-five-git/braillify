@@ -1,0 +1,32 @@
+[
+  {
+    "input": "CliffSide",
+    "internal": ",cliff,side",
+    "expected": "32971011113214102517",
+    "unicode": "⠠⠉⠇⠊⠋⠋⠠⠎⠊⠙⠑"
+  },
+  {
+    "input": "EggHead",
+    "internal": ",egg,h1d",
+    "expected": "321727273219225",
+    "unicode": "⠠⠑⠛⠛⠠⠓⠂⠙"
+  },
+  {
+    "input": "MacEACHEN",
+    "internal": ",mac,,ea*5",
+    "expected": "32131932321713334",
+    "unicode": "⠠⠍⠁⠉⠠⠠⠑⠁⠡⠢"
+  },
+  {
+    "input": "SeaWorld",
+    "internal": ",sea,_w",
+    "expected": "3214171325658",
+    "unicode": "⠠⠎⠑⠁⠠⠸⠺"
+  },
+  {
+    "input": "TEAspoon",
+    "internal": ",,tea,'spoon",
+    "expected": "3232301713241415212129",
+    "unicode": "⠠⠠⠞⠑⠁⠠⠄⠎⠏⠕⠕⠝"
+  }
+]

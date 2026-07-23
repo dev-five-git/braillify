@@ -1,0 +1,15 @@
+[
+  {
+    "input": "[?]",
+    "context": "english",
+    "internal": ".<;8.>",
+    "expected": "403548384028",
+    "unicode": "⠨⠣⠰⠦⠨⠜"
+  },
+  {
+    "input": "Use single quotes ‘ and ’.",
+    "internal": ",use s+le quotes ;,8 & ,04",
+    "expected": "3237141701444717031372130171404832380470325250",
+    "unicode": "⠠⠥⠎⠑⠀⠎⠬⠇⠑⠀⠟⠥⠕⠞⠑⠎⠀⠰⠠⠦⠀⠯⠀⠠⠴⠲"
+  }
+]

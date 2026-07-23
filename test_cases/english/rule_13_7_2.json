@@ -1,0 +1,20 @@
+[
+  {
+    "input": "No article is used after 𝐪𝐮𝐞́ and 𝐯𝐚𝐲𝐚 in exclamations:",
+    "internal": ",no >ticle is us$ af ^1qu! & ^1vaya 9 exclama;ns3",
+    "expected": "322921028301097170101403714430111024231374604702423916110200174597113148291418",
+    "unicode": "⠠⠝⠕⠀⠜⠞⠊⠉⠇⠑⠀⠊⠎⠀⠥⠎⠫⠀⠁⠋⠀⠘⠂⠟⠥⠮⠀⠯⠀⠘⠂⠧⠁⠽⠁⠀⠔⠀⠑⠭⠉⠇⠁⠍⠁⠰⠝⠎⠒"
+  },
+  {
+    "input": "¡𝐪𝐮𝐞́ 𝐥𝐚́𝐬𝐭𝐢𝐦𝐚!",
+    "internal": "^;6qu! l(stima6",
+    "expected": "244822313746075514301013122",
+    "unicode": "⠘⠰⠖⠟⠥⠮⠀⠇⠷⠎⠞⠊⠍⠁⠖"
+  },
+  {
+    "input": "what a shame",
+    "internal": ":at a %ame",
+    "expected": "491300104111317",
+    "unicode": "⠱⠁⠞⠀⠁⠀⠩⠁⠍⠑"
+  }
+]

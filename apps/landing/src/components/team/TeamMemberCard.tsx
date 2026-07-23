@@ -57,7 +57,12 @@ export default function TeamMemberCard({
         </VStack>
       </VStack>
       <Flex alignItems="center" gap="10px">
-        <a href={githubUrl} rel="noreferrer" target="_blank">
+        <a
+          aria-label="github"
+          href={githubUrl}
+          rel="noreferrer"
+          target="_blank"
+        >
           <svg
             className={css({ color: '$title' })}
             fill="none"
@@ -72,7 +77,12 @@ export default function TeamMemberCard({
             />
           </svg>
         </a>
-        <a href={instagramUrl} rel="noreferrer" target="_blank">
+        <a
+          aria-label="instagram"
+          href={instagramUrl}
+          rel="noreferrer"
+          target="_blank"
+        >
           <svg
             className={css({ color: '$title' })}
             fill="none"

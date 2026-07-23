@@ -18,7 +18,7 @@ export default function PillButton({
       scroll={false}
       target={target}
     >
-      <Button bg="transparent" border="none" cursor="pointer" role="group">
+      <Button bg="transparent" border="none" cursor="pointer" data-group>
         <Flex
           alignItems="center"
           bg="#2B2B2B"

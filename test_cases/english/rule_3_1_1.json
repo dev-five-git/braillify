@@ -1,0 +1,26 @@
+[
+  {
+    "input": "Marks & Spencer",
+    "internal": ",m>ks @& ,sp;er",
+    "expected": "32132851408470321415481723",
+    "unicode": "⠠⠍⠜⠅⠎⠀⠈⠯⠀⠠⠎⠏⠰⠑⠗"
+  },
+  {
+    "input": "AT&T",
+    "internal": ",,at@&,t",
+    "expected": "32321308473230",
+    "unicode": "⠠⠠⠁⠞⠈⠯⠠⠞"
+  },
+  {
+    "input": "B&B",
+    "internal": ",b@&,b",
+    "expected": "323847323",
+    "unicode": "⠠⠃⠈⠯⠠⠃"
+  },
+  {
+    "input": "&c (etc)",
+    "internal": "@&c \"<etc\">",
+    "expected": "847901635173091628",
+    "unicode": "⠈⠯⠉⠀⠐⠣⠑⠞⠉⠐⠜"
+  }
+]

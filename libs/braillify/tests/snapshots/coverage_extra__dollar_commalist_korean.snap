@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$a, b, c$에 대하여"
+unicode = ok: "⠴⠁⠂⠀⠰⠃⠂⠀⠰⠉⠲⠝⠀⠊⠗⠚⠣⠱"
+bytes   = ok: [52, 1, 2, 0, 48, 3, 2, 0, 48, 9, 50, 29, 0, 10, 23, 26, 35, 49]

@@ -1,0 +1,14 @@
+[
+  {
+    "input": "PREMIèRE",
+    "internal": ",,premi^*ere",
+    "expected": "323215231713102433172317",
+    "unicode": "⠠⠠⠏⠗⠑⠍⠊⠘⠡⠑⠗⠑"
+  },
+  {
+    "input": "ESPAñOLA",
+    "internal": ",,espa^]nola",
+    "expected": "323217141512459292171",
+    "unicode": "⠠⠠⠑⠎⠏⠁⠘⠻⠝⠕⠇⠁"
+  }
+]

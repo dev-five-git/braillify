@@ -1,7 +1,7 @@
 [
   {
     "input": "1년",
-    "internal": "#a c*",
+    "internal": "#a`c*",
     "expected": "6010933",
     "unicode": "⠼⠁⠀⠉⠡",
     "world": "⠼⠁ ⠉⠡",
@@ -9,7 +9,7 @@
   },
   {
     "input": "2도",
-    "internal": "#b iu",
+    "internal": "#b`iu",
     "expected": "60301037",
     "unicode": "⠼⠃⠀⠊⠥",
     "world": "⠼⠃ ⠊⠥",
@@ -17,7 +17,7 @@
   },
   {
     "input": "3명",
-    "internal": "#c e]",
+    "internal": "#c`e]",
     "expected": "60901759",
     "unicode": "⠼⠉⠀⠑⠻",
     "world": "⠼⠉ ⠑⠻",
@@ -25,7 +25,7 @@
   },
   {
     "input": "4칸",
-    "internal": "#d f3",
+    "internal": "#d`f3",
     "expected": "602501118",
     "unicode": "⠼⠙⠀⠋⠒",
     "world": "⠼⠙ ⠋⠒",
@@ -33,7 +33,7 @@
   },
   {
     "input": "5톤",
-    "internal": "#e h(",
+    "internal": "#e`h(",
     "expected": "601701955",
     "unicode": "⠼⠑⠀⠓⠷",
     "world": "⠼⠑ ⠓⠷",
@@ -41,7 +41,7 @@
   },
   {
     "input": "6평",
-    "internal": "#f d]",
+    "internal": "#f`d]",
     "expected": "601102559",
     "unicode": "⠼⠋⠀⠙⠻",
     "world": "⠼⠋ ⠙⠻",
@@ -49,7 +49,7 @@
   },
   {
     "input": "7항",
-    "internal": "#g j7",
+    "internal": "#g`j7",
     "expected": "602702654",
     "unicode": "⠼⠛⠀⠚⠶",
     "world": "⠼⠛ ⠚⠶",
@@ -57,7 +57,7 @@
   },
   {
     "input": "5운6기",
-    "internal": "#e g#f@o",
+    "internal": "#e`g#f@o",
     "expected": "60170276011821",
     "unicode": "⠼⠑⠀⠛⠼⠋⠈⠕",
     "world": "⠼⠑ ⠛⠼⠋⠈⠕",

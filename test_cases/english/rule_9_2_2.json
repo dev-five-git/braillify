@@ -1,0 +1,26 @@
+[
+  {
+    "input": "I̲ h̲ave e̲nough k̲nowledge.",
+    "internal": "_2,i _2h _25 _2k4",
+    "expected": "56632100566190566340566550",
+    "unicode": "⠸⠆⠠⠊⠀⠸⠆⠓⠀⠸⠆⠢⠀⠸⠆⠅⠲"
+  },
+  {
+    "input": "(\"𝐵eyond 𝑏elief!\")",
+    "internal": "\"<8.2,2y .22lief60\">",
+    "expected": "1635384063266104066710171122521628",
+    "unicode": "⠐⠣⠦⠨⠆⠠⠆⠽⠀⠨⠆⠆⠇⠊⠑⠋⠖⠴⠐⠜"
+  },
+  {
+    "input": "𝐖hi𝐜h b𝐨wl is brok𝐞n?",
+    "internal": "^2,:i^2* b^2[l is brok^258",
+    "expected": "24632491024633032464270101403232152463438",
+    "unicode": "⠘⠆⠠⠱⠊⠘⠆⠡⠀⠃⠘⠆⠪⠇⠀⠊⠎⠀⠃⠗⠕⠅⠘⠆⠢⠦"
+  },
+  {
+    "input": "M is for 𝑀other",
+    "internal": ";,m is = .2,\"m",
+    "expected": "483213010140630406321613",
+    "unicode": "⠰⠠⠍⠀⠊⠎⠀⠿⠀⠨⠆⠠⠐⠍"
+  }
+]

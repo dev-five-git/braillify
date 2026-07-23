@@ -32,20 +32,21 @@ mod test {
     use crate::unicode::decode_unicode;
 
     use super::*;
-    #[test]
-    pub fn test_encode_choseong() {
-        assert_eq!(encode_choseong('ㄱ').unwrap(), decode_unicode('⠈'));
-        assert_eq!(encode_choseong('ㄴ').unwrap(), decode_unicode('⠉'));
-        assert_eq!(encode_choseong('ㄷ').unwrap(), decode_unicode('⠊'));
-        assert_eq!(encode_choseong('ㄹ').unwrap(), decode_unicode('⠐'));
-        assert_eq!(encode_choseong('ㅁ').unwrap(), decode_unicode('⠑'));
-        assert_eq!(encode_choseong('ㅂ').unwrap(), decode_unicode('⠘'));
-        assert_eq!(encode_choseong('ㅅ').unwrap(), decode_unicode('⠠'));
-        assert_eq!(encode_choseong('ㅈ').unwrap(), decode_unicode('⠨'));
-        assert_eq!(encode_choseong('ㅊ').unwrap(), decode_unicode('⠰'));
-        assert_eq!(encode_choseong('ㅋ').unwrap(), decode_unicode('⠋'));
-        assert_eq!(encode_choseong('ㅌ').unwrap(), decode_unicode('⠓'));
-        assert_eq!(encode_choseong('ㅍ').unwrap(), decode_unicode('⠙'));
-        assert_eq!(encode_choseong('ㅎ').unwrap(), decode_unicode('⠚'));
+    #[rstest::rstest]
+    #[case::giyeok('ㄱ', '⠈')]
+    #[case::nieun('ㄴ', '⠉')]
+    #[case::digeut('ㄷ', '⠊')]
+    #[case::rieul('ㄹ', '⠐')]
+    #[case::mieum('ㅁ', '⠑')]
+    #[case::bieup('ㅂ', '⠘')]
+    #[case::siot('ㅅ', '⠠')]
+    #[case::jieut('ㅈ', '⠨')]
+    #[case::chieut('ㅊ', '⠰')]
+    #[case::kieuk('ㅋ', '⠋')]
+    #[case::tieut('ㅌ', '⠓')]
+    #[case::pieup('ㅍ', '⠙')]
+    #[case::hieut('ㅎ', '⠚')]
+    pub fn test_encode_choseong(#[case] cho: char, #[case] expected: char) {
+        assert_eq!(encode_choseong(cho).unwrap(), decode_unicode(expected));
     }
 }

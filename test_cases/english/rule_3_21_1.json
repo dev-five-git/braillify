@@ -1,0 +1,28 @@
+[
+  {
+    "input": "5%",
+    "context": "english",
+    "internal": "#e.0",
+    "expected": "60174052",
+    "unicode": "⠼⠑⠨⠴"
+  },
+  {
+    "input": "95 %",
+    "context": "english",
+    "internal": "#ie .0",
+    "expected": "60101704052",
+    "unicode": "⠼⠊⠑⠀⠨⠴"
+  },
+  {
+    "input": "a 50% increase",
+    "internal": "a #ej.0 9cr1se",
+    "expected": "10601726405202092321417",
+    "unicode": "⠁⠀⠼⠑⠚⠨⠴⠀⠔⠉⠗⠂⠎⠑"
+  },
+  {
+    "input": "% of population",
+    "internal": ".0 ( popula;n",
+    "expected": "4052055015211537714829",
+    "unicode": "⠨⠴⠀⠷⠀⠏⠕⠏⠥⠇⠁⠰⠝"
+  }
+]

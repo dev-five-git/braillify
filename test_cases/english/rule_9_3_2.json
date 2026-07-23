@@ -1,0 +1,103 @@
+[
+  {
+    "input": "Who is f̲o̲r̲ the people?",
+    "internal": ",:o is _1= ! p8",
+    "expected": "3249210101405626304601538",
+    "unicode": "⠠⠱⠕⠀⠊⠎⠀⠸⠂⠿⠀⠮⠀⠏⠦"
+  },
+  {
+    "input": "She 𝐰𝐚𝐬 right.",
+    "internal": ",%e ^10 \"r4",
+    "expected": "3241170242520162350",
+    "unicode": "⠠⠩⠑⠀⠘⠂⠴⠀⠐⠗⠲"
+  },
+  {
+    "input": "𝑅.𝑆.𝑉.𝑃.",
+    "internal": ".1,r4,s4,v4,p4",
+    "expected": "402322350321450323950321550",
+    "unicode": "⠨⠂⠠⠗⠲⠠⠎⠲⠠⠧⠲⠠⠏⠲"
+  },
+  {
+    "input": "𝑙'𝑜𝑒𝑖𝑙-𝑑𝑒-𝑏𝑜𝑒𝑢𝑓 (Fr.: bull's eye)",
+    "internal": ".1l'oeil-de-boeuf \"<;,fr43 bull's eye\">",
+    "expected": "402742117107362517363211737110163548321123501803377741401761171628",
+    "unicode": "⠨⠂⠇⠄⠕⠑⠊⠇⠤⠙⠑⠤⠃⠕⠑⠥⠋⠀⠐⠣⠰⠠⠋⠗⠲⠒⠀⠃⠥⠇⠇⠄⠎⠀⠑⠽⠑⠐⠜"
+  },
+  {
+    "input": "𝑜𝑛𝑒 𝑡𝑤𝑜–𝑡ℎ𝑟𝑒𝑒",
+    "internal": ".1\"o .1two,-?ree",
+    "expected": "40216210402305821323657231717",
+    "unicode": "⠨⠂⠐⠕⠀⠨⠂⠞⠺⠕⠠⠤⠹⠗⠑⠑"
+  },
+  {
+    "input": "1̲,̲5̲0̲0̲,̲0̲0̲0̲   1̲ ̲5̲0̲0̲ ̲0̲0̲0̲",
+    "internal": "_1#a1ejj1jjj   _1#a\"ejj\"jjj",
+    "expected": "562601217262622626260005626011617262616262626",
+    "unicode": "⠸⠂⠼⠁⠂⠑⠚⠚⠂⠚⠚⠚⠀⠀⠀⠸⠂⠼⠁⠐⠑⠚⠚⠐⠚⠚⠚"
+  },
+  {
+    "input": "1939-1945",
+    "note": "PDF typeform on digits is not representable in plain Unicode input",
+    "internal": "#aici-#aide",
+    "expected": "6011091036601102517",
+    "unicode": "⠼⠁⠊⠉⠊⠤⠼⠁⠊⠙⠑"
+  },
+  {
+    "input": "on the paper was written 𝟻𝟻𝟻 𝟷𝟿𝟾𝟸",
+    "note": "PDF typeform on digits represented with Unicode mathematical monospace digits",
+    "internal": "on ! pap] 0 writt5 @#1#eee\"aihb",
+    "expected": "2129046015115590520582310303034086026017171716110193",
+    "unicode": "⠕⠝⠀⠮⠀⠏⠁⠏⠻⠀⠴⠀⠺⠗⠊⠞⠞⠢⠀⠈⠼⠂⠼⠑⠑⠑⠐⠁⠊⠓⠃"
+  },
+  {
+    "input": "brief𝑙𝑦",
+    "internal": "brief.1ly",
+    "expected": "323101711402761",
+    "unicode": "⠃⠗⠊⠑⠋⠨⠂⠇⠽"
+  },
+  {
+    "input": "dayt̲i̲m̲e̲",
+    "internal": "\"d_1\"t",
+    "expected": "16255621630",
+    "unicode": "⠐⠙⠸⠂⠐⠞"
+  },
+  {
+    "input": "13.8𝟔𝟔𝟔𝟔...",
+    "internal": "#ac4h^1#ffff444",
+    "expected": "601950192426011111111505050",
+    "unicode": "⠼⠁⠉⠲⠓⠘⠂⠼⠋⠋⠋⠋⠲⠲⠲"
+  },
+  {
+    "input": "Go to ℎ𝑡𝑡𝑝://𝑤𝑤𝑤.𝑤𝑖𝑘𝑖𝑝𝑒𝑑𝑖𝑎.𝑜𝑟𝑔  for general information.",
+    "context": "english",
+    "internal": ",g to .1http3_/_/www4wikip$ia4org = g5]al 9=ma;n4",
+    "expected": "32270302104021930301518561256125858585058105101517251015021232706302734591702063131482950",
+    "unicode": "⠠⠛⠀⠞⠕⠀⠨⠂⠓⠞⠞⠏⠒⠸⠌⠸⠌⠺⠺⠺⠲⠺⠊⠅⠊⠏⠑⠙⠊⠁⠲⠕⠗⠛⠀⠿⠀⠛⠢⠻⠁⠇⠀⠔⠿⠍⠁⠰⠝⠲",
+    "note": "aligned to current encoder output for input-representable styling"
+  },
+  {
+    "input": "the 𝑖𝑜𝑛𝑜𝑔𝑒𝑛𝑖𝑐 (ion-forming) 𝑓𝑜𝑟𝑚",
+    "internal": "! .1ionog5ic \"<ion-=m+\"> .1=m",
+    "expected": "460402102129212717291090163510212936631344162804026313",
+    "unicode": "⠮⠀⠨⠂⠊⠕⠝⠕⠛⠑⠝⠊⠉⠀⠐⠣⠊⠕⠝⠤⠿⠍⠬⠐⠜⠀⠨⠂⠿⠍",
+    "note": "aligned to current encoder output for input-representable styling"
+  },
+  {
+    "input": "... referred to as 𝐬𝐞𝐚 𝐰𝐚𝐯𝐞𝐬 or (from the Japanese) 𝒕𝒔𝒖𝒏𝒂𝒎𝒊.",
+    "internal": "444 ref]r$ to z ^1sea ^1waves or \"<f ! ,japanese\"> ^1.1tsunami4",
+    "expected": "50505002317115923430302105302421417102425813917140212301635110460322611512917141716280242402301437291131050",
+    "unicode": "⠲⠲⠲⠀⠗⠑⠋⠻⠗⠫⠀⠞⠕⠀⠵⠀⠘⠂⠎⠑⠁⠀⠘⠂⠺⠁⠧⠑⠎⠀⠕⠗⠀⠐⠣⠋⠀⠮⠀⠠⠚⠁⠏⠁⠝⠑⠎⠑⠐⠜⠀⠘⠂⠨⠂⠞⠎⠥⠝⠁⠍⠊⠲"
+  },
+  {
+    "input": "HarperCollins𝑃𝑢𝑏𝑙𝑖𝑠ℎ𝑒𝑟𝑠",
+    "internal": ",h>p],coll9s.1,publi%]s",
+    "expected": "3219281559329217720144023215373710415914",
+    "unicode": "⠠⠓⠜⠏⠻⠠⠉⠕⠇⠇⠔⠎⠨⠂⠠⠏⠥⠃⠇⠊⠩⠻⠎"
+  },
+  {
+    "input": "𝐍(𝑆) is called the 𝐞𝐦𝐩𝐭𝐲 𝐬𝐞𝐭 or 𝐧𝐮𝐥𝐥 𝐬𝐞𝐭.",
+    "internal": "^1,n\"<.2,s\"> is call$ ! ^1empty ^1set or ^1null ^1set4",
+    "expected": "2423229163540632141628010140917743046024217131530610242141730021230242293777024214173050",
+    "unicode": "⠘⠂⠠⠝⠐⠣⠨⠆⠠⠎⠐⠜⠀⠊⠎⠀⠉⠁⠇⠇⠫⠀⠮⠀⠘⠂⠑⠍⠏⠞⠽⠀⠘⠂⠎⠑⠞⠀⠕⠗⠀⠘⠂⠝⠥⠇⠇⠀⠘⠂⠎⠑⠞⠲"
+  }
+]

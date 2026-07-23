@@ -17,9 +17,9 @@
   },
   {
     "input": "b",
-    "internal": "0b",
-    "expected": "523",
-    "unicode": "⠴⠃",
+    "internal": "b",
+    "expected": "3",
+    "unicode": "⠃",
     "world": "⠴⠃⠲",
     "jeomsarang": "⠴⠃"
   },
@@ -29,7 +29,7 @@
     "expected": "323",
     "unicode": "⠠⠃",
     "world": "⠴⠠⠃⠲",
-    "jeomsarang": "⠴⠠⠃⠲"
+    "jeomsarang": "⠴⠰⠠⠃⠲"
   },
   {
     "input": "c",
@@ -45,7 +45,7 @@
     "expected": "329",
     "unicode": "⠠⠉",
     "world": "⠴⠠⠉⠲",
-    "jeomsarang": "⠴⠠⠉⠲"
+    "jeomsarang": "⠴⠰⠠⠉⠲"
   },
   {
     "input": "d",
@@ -61,7 +61,7 @@
     "expected": "3225",
     "unicode": "⠠⠙",
     "world": "⠴⠠⠙⠲",
-    "jeomsarang": "⠴⠠⠙⠲"
+    "jeomsarang": "⠴⠰⠠⠙⠲"
   },
   {
     "input": "e",
@@ -77,7 +77,7 @@
     "expected": "3217",
     "unicode": "⠠⠑",
     "world": "⠴⠠⠑⠲",
-    "jeomsarang": "⠴⠠⠑⠲"
+    "jeomsarang": "⠴⠰⠠⠑⠲"
   },
   {
     "input": "f",
@@ -93,7 +93,7 @@
     "expected": "3211",
     "unicode": "⠠⠋",
     "world": "⠴⠠⠋⠲",
-    "jeomsarang": "⠴⠠⠋⠲"
+    "jeomsarang": "⠴⠰⠠⠋⠲"
   },
   {
     "input": "g",
@@ -109,7 +109,7 @@
     "expected": "3227",
     "unicode": "⠠⠛",
     "world": "⠴⠠⠛⠲",
-    "jeomsarang": "⠴⠠⠛⠲"
+    "jeomsarang": "⠴⠰⠠⠛⠲"
   },
   {
     "input": "h",
@@ -125,7 +125,7 @@
     "expected": "3219",
     "unicode": "⠠⠓",
     "world": "⠴⠠⠓⠲",
-    "jeomsarang": "⠴⠠⠓⠲"
+    "jeomsarang": "⠴⠰⠠⠓⠲"
   },
   {
     "input": "i",
@@ -157,7 +157,7 @@
     "expected": "3226",
     "unicode": "⠠⠚",
     "world": "⠴⠠⠚⠲",
-    "jeomsarang": "⠴⠠⠚⠲"
+    "jeomsarang": "⠴⠰⠠⠚⠲"
   },
   {
     "input": "k",
@@ -173,7 +173,7 @@
     "expected": "325",
     "unicode": "⠠⠅",
     "world": "⠴⠠⠅⠲",
-    "jeomsarang": "⠴⠠⠅⠲"
+    "jeomsarang": "⠴⠰⠠⠅⠲"
   },
   {
     "input": "l",
@@ -189,7 +189,7 @@
     "expected": "327",
     "unicode": "⠠⠇",
     "world": "⠴⠠⠇⠲",
-    "jeomsarang": "⠴⠠⠇⠲"
+    "jeomsarang": "⠴⠰⠠⠇⠲"
   },
   {
     "input": "m",
@@ -205,7 +205,7 @@
     "expected": "3213",
     "unicode": "⠠⠍",
     "world": "⠴⠠⠍⠲",
-    "jeomsarang": "⠴⠠⠍⠲"
+    "jeomsarang": "⠴⠰⠠⠍⠲"
   },
   {
     "input": "n",
@@ -221,7 +221,7 @@
     "expected": "3229",
     "unicode": "⠠⠝",
     "world": "⠴⠠⠝⠲",
-    "jeomsarang": "⠴⠠⠝⠲"
+    "jeomsarang": "⠴⠰⠠⠝⠲"
   },
   {
     "input": "o",
@@ -253,7 +253,7 @@
     "expected": "3215",
     "unicode": "⠠⠏",
     "world": "⠴⠠⠏⠲",
-    "jeomsarang": "⠴⠠⠏⠲"
+    "jeomsarang": "⠴⠰⠠⠏⠲"
   },
   {
     "input": "q",
@@ -269,7 +269,7 @@
     "expected": "3231",
     "unicode": "⠠⠟",
     "world": "⠴⠠⠟⠲",
-    "jeomsarang": "⠴⠠⠟⠲"
+    "jeomsarang": "⠴⠰⠠⠟⠲"
   },
   {
     "input": "r",
@@ -285,7 +285,7 @@
     "expected": "3223",
     "unicode": "⠠⠗",
     "world": "⠴⠠⠗⠲",
-    "jeomsarang": "⠴⠠⠗⠲"
+    "jeomsarang": "⠴⠰⠠⠗⠲"
   },
   {
     "input": "s",
@@ -301,7 +301,7 @@
     "expected": "3214",
     "unicode": "⠠⠎",
     "world": "⠴⠠⠎⠲",
-    "jeomsarang": "⠴⠠⠎⠲"
+    "jeomsarang": "⠴⠰⠠⠎⠲"
   },
   {
     "input": "t",
@@ -317,7 +317,7 @@
     "expected": "3230",
     "unicode": "⠠⠞",
     "world": "⠴⠠⠞⠲",
-    "jeomsarang": "⠴⠠⠞⠲"
+    "jeomsarang": "⠴⠰⠠⠞⠲"
   },
   {
     "input": "u",
@@ -333,7 +333,7 @@
     "expected": "3237",
     "unicode": "⠠⠥",
     "world": "⠴⠠⠥⠲",
-    "jeomsarang": "⠴⠠⠥⠲"
+    "jeomsarang": "⠴⠰⠠⠥⠲"
   },
   {
     "input": "v",
@@ -349,7 +349,7 @@
     "expected": "3239",
     "unicode": "⠠⠧",
     "world": "⠴⠠⠧⠲",
-    "jeomsarang": "⠴⠠⠧⠲"
+    "jeomsarang": "⠴⠰⠠⠧⠲"
   },
   {
     "input": "w",
@@ -365,7 +365,7 @@
     "expected": "3258",
     "unicode": "⠠⠺",
     "world": "⠴⠠⠺⠲",
-    "jeomsarang": "⠴⠠⠺⠲"
+    "jeomsarang": "⠴⠰⠠⠺⠲"
   },
   {
     "input": "x",
@@ -381,7 +381,7 @@
     "expected": "3245",
     "unicode": "⠠⠭",
     "world": "⠴⠠⠭⠲",
-    "jeomsarang": "⠴⠠⠭⠲"
+    "jeomsarang": "⠴⠰⠠⠭⠲"
   },
   {
     "input": "y",
@@ -397,7 +397,7 @@
     "expected": "3261",
     "unicode": "⠠⠽",
     "world": "⠴⠠⠽⠲",
-    "jeomsarang": "⠴⠠⠽⠲"
+    "jeomsarang": "⠴⠰⠠⠽⠲"
   },
   {
     "input": "z",
@@ -413,7 +413,7 @@
     "expected": "3253",
     "unicode": "⠠⠵",
     "world": "⠴⠠⠵⠲",
-    "jeomsarang": "⠴⠠⠵⠲"
+    "jeomsarang": "⠴⠰⠠⠵⠲"
   },
   {
     "input": "book",
@@ -465,7 +465,7 @@
   },
   {
     "input": "New York",
-    "internal": ",new ,york",
+    "internal": ",new`,york",
     "expected": "322917580326121235",
     "unicode": "⠠⠝⠑⠺⠀⠠⠽⠕⠗⠅",
     "world": "⠴⠠⠝⠑⠺ ⠠⠽⠕⠗⠅⠲",
@@ -473,7 +473,7 @@
   },
   {
     "input": "NEW YORK",
-    "internal": ",,new ,,york",
+    "internal": ",,new`,,york",
     "expected": "3232291758032326121235",
     "unicode": "⠠⠠⠝⠑⠺⠀⠠⠠⠽⠕⠗⠅",
     "world": "⠴⠠⠠⠝⠑⠺ ⠠⠠⠽⠕⠗⠅⠲",
@@ -505,7 +505,7 @@
   },
   {
     "input": "WELCOME TO KOREA",
-    "internal": ",,,welcome to korea,'",
+    "internal": ",,,welcome`to`korea,'",
     "expected": "32323258177921131703021052123171324",
     "unicode": "⠠⠠⠠⠺⠑⠇⠉⠕⠍⠑⠀⠞⠕⠀⠅⠕⠗⠑⠁⠠⠄",
     "world": "⠴⠠⠠⠠⠺⠑⠇⠉⠕⠍⠑ ⠞⠕ ⠅⠕⠗⠑⠁⠠⠄⠲",

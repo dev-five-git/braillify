@@ -1,0 +1,74 @@
+[
+  {
+    "input": "Afrikaans",
+    "internal": "\"(af'",
+    "expected": "16551114",
+    "unicode": "⠐⠷⠁⠋⠄"
+  },
+  {
+    "input": "French",
+    "internal": "\"(fr'",
+    "expected": "165511234",
+    "unicode": "⠐⠷⠋⠗⠄"
+  },
+  {
+    "input": "German",
+    "internal": "\"(de'",
+    "expected": "165525174",
+    "unicode": "⠐⠷⠙⠑⠄"
+  },
+  {
+    "input": "Greek (International)",
+    "internal": "\"(gr'",
+    "expected": "165527234",
+    "unicode": "⠐⠷⠛⠗⠄"
+  },
+  {
+    "input": "Greek (Modern)",
+    "internal": "\"(el'",
+    "expected": "16551774",
+    "unicode": "⠐⠷⠑⠇⠄"
+  },
+  {
+    "input": "Indonesian",
+    "internal": "\"(id'",
+    "expected": "165510254",
+    "unicode": "⠐⠷⠊⠙⠄"
+  },
+  {
+    "input": "Italian",
+    "internal": "\"(it'",
+    "expected": "165510304",
+    "unicode": "⠐⠷⠊⠞⠄"
+  },
+  {
+    "input": "Japanese",
+    "internal": "\"(ja'",
+    "expected": "16552614",
+    "unicode": "⠐⠷⠚⠁⠄"
+  },
+  {
+    "input": "Northern Sotho (Pedi, Sepedi)",
+    "internal": "\"(nso'",
+    "expected": "16552914214",
+    "unicode": "⠐⠷⠝⠎⠕⠄"
+  },
+  {
+    "input": "Spanish",
+    "internal": "\"(es'",
+    "expected": "165517144",
+    "unicode": "⠐⠷⠑⠎⠄"
+  },
+  {
+    "input": "Tswana",
+    "internal": "\"(tn'",
+    "expected": "165530294",
+    "unicode": "⠐⠷⠞⠝⠄"
+  },
+  {
+    "input": "Venda",
+    "internal": "\"(ve'",
+    "expected": "165539174",
+    "unicode": "⠐⠷⠧⠑⠄"
+  }
+]

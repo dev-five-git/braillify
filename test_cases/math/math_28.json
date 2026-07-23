@@ -1,10 +1,57 @@
 [
   {
+    "input": "‖ ‖",
+    "note": "PDF 제28항 — 노름(norm) 기호 정의 (단독)",
+    "internal": "\\\\ \\\\",
+    "expected": "515105151",
+    "unicode": "⠳⠳⠀⠳⠳",
+    "world": "",
+    "jeomsarang": "⠳⠳⠀⠳⠳"
+  },
+  {
+    "input": "$\\| \\|$",
+    "note": "LaTeX",
+    "internal": "\\\\ \\\\",
+    "expected": "515105151",
+    "unicode": "⠳⠳⠀⠳⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "‖x‖",
+    "note": "PDF 제28항 — 예제 1 (‖x‖)",
     "internal": "\\\\x\\\\",
     "expected": "5151455151",
     "unicode": "⠳⠳⠭⠳⠳",
     "world": "⠴⠭",
     "jeomsarang": "⠳⠳⠭⠲⠳⠳"
+  },
+  {
+    "input": "$\\|x\\|$",
+    "note": "LaTeX",
+    "internal": "\\\\x\\\\",
+    "expected": "5151455151",
+    "unicode": "⠳⠳⠭⠳⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "‖f‖ = ∫₀¹ |f(x)|dx",
+    "note": "PDF 제28항 — 예제 2 (‖f‖ = ∫₀¹ |f(x)|dx, 적분식)",
+    "internal": "\\\\f\\\\33!;#j`#a`\\f8x0\\dx",
+    "expected": "5151115151181846486026060105111384552512545",
+    "unicode": "⠳⠳⠋⠳⠳⠒⠒⠮⠰⠼⠚⠀⠼⠁⠀⠳⠋⠦⠭⠴⠳⠙⠭",
+    "world": "⠴⠋⠄⠳⠭⠆⠴⠂⠖⠄ ⠐⠶ ⠮⠰⠼⠚⠘⠼⠁ ⠸⠳⠋⠐⠣⠭⠐⠜⠸⠳⠙⠭⠲",
+    "jeomsarang": "⠳⠳⠋⠳⠳⠀⠐⠶⠀⠮⠠⠴⠘⠼⠁⠀⠈⠳⠋⠐⠣⠭⠐⠜⠈⠳⠙⠭⠲",
+    "context": "math"
+  },
+  {
+    "input": "$\\|f\\| = \\int_0^1 |f(x)|dx$",
+    "note": "LaTeX",
+    "internal": "\\\\f\\\\33!;#j`#a`\\f8x0\\dx",
+    "expected": "5151115151181846486026060105111384552512545",
+    "unicode": "⠳⠳⠋⠳⠳⠒⠒⠮⠰⠼⠚⠀⠼⠁⠀⠳⠋⠦⠭⠴⠳⠙⠭",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

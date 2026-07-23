@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "ABCDEFG"
+unicode = ok: "⠠⠠⠁⠃⠉⠙⠑⠋⠛"
+bytes   = ok: [32, 32, 1, 3, 9, 25, 17, 11, 27]

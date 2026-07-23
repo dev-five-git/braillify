@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra2.rs
+expression: rendered
+---
+input  = "H₇"
+unicode = ok: "⠴⠠⠓⠰⠼⠛"
+bytes   = ok: [52, 32, 19, 48, 60, 27]

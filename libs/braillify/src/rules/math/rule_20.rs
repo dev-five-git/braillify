@@ -1,25 +1,18 @@
 //! 수학 제20항 — 약동호.
 //!
-//! 약동호 ≒(U+2252)를 단축표 인코딩으로 처리한다.
-
-use crate::math_symbol_shortcut;
-
-pub fn is_approximation_symbol(c: char) -> bool {
-    c == '\u{2252}'
-}
-
-pub fn encode_approximation_symbol(c: char, result: &mut Vec<u8>) -> Result<(), String> {
-    let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
-    result.extend_from_slice(encoded);
-    Ok(())
-}
+//! 약동호 ≒(U+2252)는 `rule_3::is_equality_symbol`에 포함되어 있어 equality
+//! dispatch에서 처리된다. 별도 rule_20 dispatch는 dead code였다.
+//! 본 파일은 PDF 규정 추적용으로만 보존된다.
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
+    /// PDF 제20항 — `≒` (U+2252) 약동호 encode 파이프라인.
+    /// rule_3::encode_equality_symbol 경로로 처리된다.
     #[test]
-    fn detects_approximation_symbol() {
-        assert!(is_approximation_symbol('\u{2252}'));
+    fn approximation_symbol_through_pipeline() {
+        let result = crate::encode("\u{2252}");
+        assert!(result.is_ok());
+        let result = crate::encode("\u{221A}3\u{2252}1.732");
+        assert!(result.is_ok());
     }
 }

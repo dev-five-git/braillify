@@ -1,0 +1,8 @@
+[
+  {
+    "input": "I support the SG Sonnenhof Großaspach football team.",
+    "internal": ",i support ! ,,sg ,sonn5h( ,gro.!aspa* football t1m4",
+    "expected": "321001437151521233004603232142703214212929341955032272321404611415133011212130317703021350",
+    "unicode": "⠠⠊⠀⠎⠥⠏⠏⠕⠗⠞⠀⠮⠀⠠⠠⠎⠛⠀⠠⠎⠕⠝⠝⠢⠓⠷⠀⠠⠛⠗⠕⠨⠮⠁⠎⠏⠁⠡⠀⠋⠕⠕⠞⠃⠁⠇⠇⠀⠞⠂⠍⠲"
+  }
+]

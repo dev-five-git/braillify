@@ -1,6 +1,7 @@
 [
   {
     "input": "∞",
+    "note": "PDF 제50항 — 무한대 ∞ 기호 정의 (단독)",
     "internal": "=",
     "expected": "63",
     "unicode": "⠿",
@@ -9,15 +10,16 @@
   },
   {
     "input": "$\\infty$",
+    "note": "LaTeX",
     "internal": "=",
     "expected": "63",
     "unicode": "⠿",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "n → ∞",
+    "note": "PDF 제50항 — 예제 1 (n → ∞)",
     "internal": "n`3o`=",
     "expected": "2901821063",
     "unicode": "⠝⠀⠒⠕⠀⠿",
@@ -25,7 +27,17 @@
     "jeomsarang": "⠴⠝⠀⠰⠳⠕⠀⠿"
   },
   {
+    "input": "$n \\to \\infty$",
+    "note": "LaTeX",
+    "internal": "n`3o`=",
+    "expected": "2901821063",
+    "unicode": "⠝⠀⠒⠕⠀⠿",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "-∞",
+    "note": "PDF 제50항 — 예제 2 (-∞)",
     "internal": "9=",
     "expected": "2063",
     "unicode": "⠔⠿",
@@ -34,28 +46,30 @@
   },
   {
     "input": "$-\\infty$",
+    "note": "LaTeX",
     "internal": "9=",
     "expected": "2063",
     "unicode": "⠔⠿",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "n→∞",
-    "note": "n → ∞",
-    "internal": "N`3o`=",
-    "expected": "2901821063",
-    "unicode": "⠝⠀⠒⠕⠀⠿",
-    "world": "⠴⠝⠳⠕",
-    "jeomsarang": "⠴⠝⠲⠰⠳⠕⠿"
-  },
-  {
-    "input": "tan90°=∞",
-    "internal": "6T#IJ0D33=",
+    "input": "tan90° = ∞",
+    "note": "PDF 제50항 — 예제 3 (tan90° = ∞)",
+    "internal": "6t#ij0d33=",
     "expected": "22306010265225181863",
     "unicode": "⠖⠞⠼⠊⠚⠴⠙⠒⠒⠿",
-    "world": "⠴⠞⠁⠝⠼⠊⠚⠴⠙⠒⠒",
-    "jeomsarang": "⠴⠞⠁⠝⠼⠊⠚⠘⠚⠒⠒⠿"
+    "world": "⠴⠞⠁⠝⠼⠊⠚⠴⠙ ⠒⠒",
+    "jeomsarang": "⠴⠞⠁⠝⠼⠊⠚⠘⠚⠀⠐⠶⠀⠿",
+    "context": "math"
+  },
+  {
+    "input": "$\\tan 90° = \\infty$",
+    "note": "LaTeX",
+    "internal": "6t#ij0d33=",
+    "expected": "22306010265225181863",
+    "unicode": "⠖⠞⠼⠊⠚⠴⠙⠒⠒⠿",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

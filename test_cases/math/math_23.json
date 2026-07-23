@@ -1,6 +1,43 @@
 [
   {
+    "input": "¯",
+    "note": "PDF 제23항 1-가 — 켤레 복소수 기호 정의 (단독)",
+    "internal": "@C",
+    "expected": "89",
+    "unicode": "⠈⠉",
+    "world": "",
+    "jeomsarang": "⠒"
+  },
+  {
+    "input": "(a+bi)̅",
+    "note": "PDF 제23항 1-가 — 켤레 복소수 (a+bi)̅",
+    "internal": "(a5bi)@c",
+    "expected": "551343106289",
+    "unicode": "⠷⠁⠢⠃⠊⠾⠈⠉",
+    "world": "⠦⠄⠴⠁⠐⠖⠃⠊⠠⠴",
+    "jeomsarang": "⠐⠣⠁⠐⠖⠃⠊⠐⠜⠀"
+  },
+  {
+    "input": "$\\overline{a+bi}$",
+    "note": "LaTeX",
+    "internal": "(a5bi)@c",
+    "expected": "551343106289",
+    "unicode": "⠷⠁⠢⠃⠊⠾⠈⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "¯",
+    "note": "PDF 제23항 1-나 — 평균값/편차 기호 정의 (단독)",
+    "internal": "@c",
+    "expected": "89",
+    "unicode": "⠈⠉",
+    "world": "",
+    "jeomsarang": "⠒"
+  },
+  {
     "input": "x̄",
+    "note": "PDF 제23항 1-나 — 평균값/편차 x̄",
     "internal": "x@c",
     "expected": "4589",
     "unicode": "⠭⠈⠉",
@@ -9,44 +46,38 @@
   },
   {
     "input": "$\\bar{x}$",
+    "note": "LaTeX",
     "internal": "x@c",
     "expected": "4589",
     "unicode": "⠭⠈⠉",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "(a+bi)̅",
-    "internal": "(a5bi)@c",
-    "expected": "551343106289",
-    "unicode": "⠷⠁⠢⠃⠊⠾⠈⠉",
-    "world": "⠦⠄⠴⠁⠐⠖⠃⠊⠠⠴",
-    "jeomsarang": "⠐⠣⠁⠢⠃⠊⠐⠜⠀"
+    "input": "_",
+    "context": "math",
+    "note": "PDF 제23항 2 — 밑줄 기호 정의 (단독, 수학 모드)",
+    "internal": ",-",
+    "expected": "3236",
+    "unicode": "⠠⠤",
+    "world": "⠸⠤",
+    "jeomsarang": "⠸⠤"
   },
   {
-    "input": "$\\overline{(a+bi)}$",
+    "input": "거리공간 X̲",
+    "note": "PDF 제23항 2 — 밑줄 거리공간 X̲",
+    "internal": "@s\"o@=$3``,x,-",
+    "expected": "814162186343180032453236",
+    "unicode": "⠈⠎⠐⠕⠈⠿⠫⠒⠀⠀⠠⠭⠠⠤",
+    "world": "⠈⠎⠐⠕⠈⠿⠫⠒ ⠴⠠⠭",
+    "jeomsarang": "⠈⠎⠐⠕⠈⠿⠫⠒⠀⠴⠠⠭⠀"
+  },
+  {
+    "input": "거리공간 $\\underline{X}$",
     "note": "LaTeX",
-    "internal": "(a5bi)@c",
-    "expected": "551343106289",
-    "unicode": "⠷⠁⠢⠃⠊⠾⠈⠉",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "X̅",
-    "internal": "X@C",
-    "expected": "4589",
-    "unicode": "⠭⠈⠉",
-    "world": "⠴⠠⠭",
-    "jeomsarang": "⠴⠠⠭⠲⠀"
-  },
-  {
-    "input": "$\\overline{X}$",
-    "note": "LaTeX",
-    "internal": "X@C",
-    "expected": "4589",
-    "unicode": "⠭⠈⠉",
+    "internal": "@s\"o@=$3``,x,-",
+    "expected": "814162186343180032453236",
+    "unicode": "⠈⠎⠐⠕⠈⠿⠫⠒⠀⠀⠠⠭⠠⠤",
     "world": "",
     "jeomsarang": ""
   }

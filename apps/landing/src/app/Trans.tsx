@@ -33,7 +33,7 @@ export function Trans() {
         justifyContent={['center', null, null, 'flex-start']}
       >
         <Box
-          aria-label="Finger pointing image"
+          aria-hidden="true"
           bg="$text"
           flexShrink={0}
           h={['20px', null, null, '32px']}
@@ -70,16 +70,18 @@ export function Trans() {
           }}
           value={input}
         />
-        <Flex>
+        <Flex aria-hidden="true">
           <Image
             alt=""
             display={['none', null, null, 'block']}
             mr="10px"
+            role="presentation"
             src="/images/home/translate-arrow-circle.svg"
             w="16px"
           />
           <Image
             alt=""
+            role="presentation"
             src="/images/home/translate-arrow.svg"
             transform={['rotate(0deg)', null, null, 'rotate(-90deg)']}
             w={['16px', null, null, '24px']}

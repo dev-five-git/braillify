@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "각 ∠A 의 크기"
+unicode = ok: "⠫⠁⠀⠀⠹⠠⠁⠀⠀⠺⠀⠋⠪⠈⠕"
+bytes   = ok: [43, 1, 0, 0, 57, 32, 1, 0, 0, 58, 0, 11, 42, 8, 21]

@@ -3,9 +3,17 @@
 import { Box, Center, css, Flex, Text } from '@devup-ui/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+import { isSurveyActive, SURVEY_URL } from '@/constants/survey'
 
 export default function Pages({ isIntersecting }: { isIntersecting: boolean }) {
   const pathname = usePathname()
+  const [showSurvey, setShowSurvey] = useState(false)
+
+  useEffect(() => {
+    setShowSurvey(isSurveyActive())
+  }, [])
 
   return (
     <Flex
@@ -30,7 +38,7 @@ export default function Pages({ isIntersecting }: { isIntersecting: boolean }) {
           href="/docs/overview"
         >
           <Flex alignItems="center" p="40px">
-            <Center gap="10px" role="group">
+            <Center data-group gap="10px">
               <Box
                 _groupActive={{
                   bg: '$text',
@@ -63,7 +71,7 @@ export default function Pages({ isIntersecting }: { isIntersecting: boolean }) {
           href="/test-case"
         >
           <Flex alignItems="center" p="40px">
-            <Center gap="10px" role="group">
+            <Center data-group gap="10px">
               <Box
                 _groupActive={{
                   bg: '$text',
@@ -96,7 +104,7 @@ export default function Pages({ isIntersecting }: { isIntersecting: boolean }) {
           href="/team"
         >
           <Flex alignItems="center" p="40px">
-            <Center gap="10px" role="group">
+            <Center data-group gap="10px">
               <Box
                 _groupActive={{
                   bg: '$text',
@@ -121,6 +129,37 @@ export default function Pages({ isIntersecting }: { isIntersecting: boolean }) {
             </Center>
           </Flex>
         </Link>
+        {showSurvey && (
+          <Link
+            aria-label="Survey link"
+            className={css({
+              color: '$text',
+            })}
+            href={SURVEY_URL}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Flex alignItems="center" p="40px">
+              <Center data-group gap="10px">
+                <Box
+                  _groupActive={{
+                    bg: '$text',
+                  }}
+                  _groupHover={{
+                    bg: '$text',
+                  }}
+                  aspectRatio="1"
+                  bg="transparent"
+                  border="1px solid $text"
+                  borderRadius="50%"
+                  h="12px"
+                  transition="all 0.2s ease"
+                />
+                <Text typography="gnbMenu">설문 참여하기</Text>
+              </Center>
+            </Flex>
+          </Link>
+        )}
       </Flex>
     </Flex>
   )

@@ -10,9 +10,8 @@ pub fn is_sequence_brace(c: char) -> bool {
 }
 
 pub fn encode_sequence_brace(c: char, result: &mut Vec<u8>) -> Result<(), String> {
-    let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
-    result.extend_from_slice(encoded);
-    Ok(())
+    math_symbol_shortcut::encode_char_math_symbol_shortcut(c)
+        .map(|encoded| result.extend_from_slice(encoded))
 }
 
 #[cfg(test)]

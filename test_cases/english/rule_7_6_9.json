@@ -1,0 +1,8 @@
+[
+  {
+    "input": "Spell \"W-a-l-k\" so the dog stays calm.",
+    "internal": ",spell 8;;,w-a-l-k0 s ! dog /ays calm4",
+    "expected": "3214151777038484832583613673655201404602521270121611409171350",
+    "unicode": "⠠⠎⠏⠑⠇⠇⠀⠦⠰⠰⠠⠺⠤⠁⠤⠇⠤⠅⠴⠀⠎⠀⠮⠀⠙⠕⠛⠀⠌⠁⠽⠎⠀⠉⠁⠇⠍⠲"
+  }
+]

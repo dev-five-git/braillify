@@ -1,0 +1,14 @@
+[
+  {
+    "input": "Cœur de Lion",
+    "internal": ",co^6eur de ,lion",
+    "expected": "329212422173723025170327102129",
+    "unicode": "⠠⠉⠕⠘⠖⠑⠥⠗⠀⠙⠑⠀⠠⠇⠊⠕⠝"
+  },
+  {
+    "input": "help t͡he man fi͡end t͡he ro͡ed",
+    "internal": "help t^6he man fi^6end t^6he ro^6ed",
+    "expected": "191771503024221917013129011102422172925030242219170232124221725",
+    "unicode": "⠓⠑⠇⠏⠀⠞⠘⠖⠓⠑⠀⠍⠁⠝⠀⠋⠊⠘⠖⠑⠝⠙⠀⠞⠘⠖⠓⠑⠀⠗⠕⠘⠖⠑⠙"
+  }
+]

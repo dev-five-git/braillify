@@ -1,10 +1,67 @@
 import { Box, Center, Flex, Image, Text, VStack } from '@devup-ui/react'
 
+import HomePopup from '@/components/home/HomePopup'
 import PillButton from '@/components/home/PillButton'
 import IconDiscord from '@/components/icons/IconDiscord'
 import IconKakao from '@/components/icons/IconKakao'
 
 import { Trans } from './Trans'
+
+const SITE_URL = 'https://braillify.kr'
+
+// Page-level JSON-LD: Breadcrumb + FAQ for rich results
+const pageJsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '홈',
+        item: SITE_URL,
+      },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Braillify(브레일리파이)는 무엇인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Braillify는 2024 개정 한국 점자 규정을 기반으로 설계된 오픈소스 한국어 점자 변환 라이브러리입니다. Rust로 개발되어 Node.js, Python, Rust, WebAssembly 환경에서 실시간 점역(점자 변환)을 지원합니다.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Braillify는 어떤 언어/플랫폼을 지원하나요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Node.js(npm), Python(PyPI), Rust(crates.io)에서 설치 가능하며 WebAssembly(wasm)로도 브라우저에서 바로 실행할 수 있습니다. 네트워크 연결 없이 로컬에서 점자 변환이 가능합니다.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '기존 점역기(점사랑, 하상브레일 등)와 무엇이 다른가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Braillify는 완전 오픈소스(Apache License 2.0)로 공개되어 누구나 코드를 검증하고 개선할 수 있습니다. 2024 개정 한국 점자 규정을 기반으로 문맥을 고려한 자연스러운 점역 결과를 제공합니다.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: '점자 번역과 점역의 차이는 무엇인가요?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: '일반적으로 검색에는 "점자 번역"이라는 용어가 많이 사용되지만, 정확한 표현은 "점역(點譯)"입니다. Braillify는 한국어 텍스트를 점자로 변환하는 점역 라이브러리입니다.',
+        },
+      },
+    ],
+  },
+]
 
 const DESCRIPTIONS = [
   {
@@ -27,17 +84,24 @@ const DESCRIPTIONS = [
 export default function HomePage() {
   return (
     <VStack alignItems="center" bg="$background" position="relative">
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }}
+        type="application/ld+json"
+      />
+      <HomePopup />
       <Box
         px={['16px', null, '30px', '80px']}
         py={['40px', null, null, '100px']}
         w="100%"
       >
         <Image
-          alt="Braille background image"
+          alt=""
+          aria-hidden="true"
           display={['none', null, null, null, 'block']}
           h="1019px"
           pos="absolute"
           right="47.172px"
+          role="presentation"
           src="/images/home/background-braille.svg"
           top="145px"
           w="236px"
@@ -50,23 +114,50 @@ export default function HomePage() {
           zIndex="1"
         >
           <VStack alignItems={['center', null, null, 'flex-start']} w="100%">
+            {/*
+              The hero SVG (Braillify wordmark) acts as the visual H1.
+              The <h1> wraps the mask-rendered logo AND a visually-hidden
+              text label so SEO crawlers and screen readers receive the
+              actual heading text "Braillify - 한국어 점자 변환 라이브러리".
+            */}
             <Box
-              aspectRatio="838/341"
-              bg="$text"
-              maskImage="url(/images/home/hero.svg)"
-              maskPosition="start"
-              maskRepeat="no-repeat"
-              maskSize="contain"
+              as="h1"
+              m="0"
               maxW="1000px"
               mb={['30px', null, null, '60px']}
+              position="relative"
               w={['100%', null, null, '60%']}
-            />
+            >
+              <Box
+                aria-hidden="true"
+                aspectRatio="838/341"
+                bg="$text"
+                maskImage="url(/images/home/hero.svg)"
+                maskPosition="start"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+                w="100%"
+              />
+              <Box
+                border="0"
+                clipPath="inset(50%)"
+                h="1px"
+                m="-1px"
+                overflow="hidden"
+                p="0"
+                position="absolute"
+                w="1px"
+                whiteSpace="nowrap"
+              >
+                Braillify - 한국어 점자 변환 라이브러리
+              </Box>
+            </Box>
             <VStack
               alignItems={['center', null, null, 'flex-start']}
               gap={['20px', null, null, '40px']}
               w="100%"
             >
-              <Text color="$text" typography="mainText">
+              <Text as="h2" color="$text" m="0" typography="mainText">
                 실시간 한글 점역 라이브러리
               </Text>
               <PillButton aria-label="Start now button" href="/docs/overview">
@@ -92,7 +183,7 @@ export default function HomePage() {
       >
         <VStack gap="20px">
           <Flex gap="16px">
-            <Text color="$text" typography="title">
+            <Text as="h2" color="$text" m="0" typography="title">
               braillify의 특징
             </Text>
             <Box aspectRatio="1" bg="$text" borderRadius="50%" h="16px" />
@@ -119,7 +210,7 @@ export default function HomePage() {
                 <Text color="$text" typography="featureCount">
                   {(index + 1).toString().padStart(2, '0')}
                 </Text>
-                <Text color="$text" typography="featureTitle">
+                <Text as="h3" color="$text" m="0" typography="featureTitle">
                   {title}
                 </Text>
                 <Text color="$text" typography="body">
@@ -160,7 +251,13 @@ export default function HomePage() {
               gap="16px"
               justifyContent={['center', null, null, 'flex-start']}
             >
-              <Text color="#FFF" typography="title" whiteSpace="nowrap">
+              <Text
+                as="h2"
+                color="#FFF"
+                m="0"
+                typography="title"
+                whiteSpace="nowrap"
+              >
                 공식 커뮤니티 참여하기
               </Text>
               <Box aspectRatio="1" bg="#FFF" borderRadius="50%" h="16px" />

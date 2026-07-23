@@ -1,0 +1,8 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+assertion_line: 447
+expression: rendered
+---
+input  = "H(a, b)"
+unicode = ok: "⠠⠓⠐⠣⠁⠂⠀⠰⠃⠐⠜"
+bytes   = ok: [32, 19, 16, 35, 1, 2, 0, 48, 3, 16, 28]

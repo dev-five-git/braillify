@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "10,000"
+unicode = ok: "⠼⠁⠚⠂⠚⠚⠚"
+bytes   = ok: [60, 1, 26, 2, 26, 26, 26]

@@ -1,0 +1,116 @@
+[
+  {
+    "input": "I shall still find out which 𝐜𝐡𝐢𝐥𝐝 did this!",
+    "internal": ",i % / f9d \\ : ^1* did ?6",
+    "expected": "32100410120112025051049024233025102505722",
+    "unicode": "⠠⠊⠀⠩⠀⠌⠀⠋⠔⠙⠀⠳⠀⠱⠀⠘⠂⠡⠀⠙⠊⠙⠀⠹⠖"
+  },
+  {
+    "input": "Which CHILD-PROOF lock?",
+    "internal": ",: ,,*-,,pro( lock8",
+    "expected": "324903232333632321523215507219538",
+    "unicode": "⠠⠱⠀⠠⠠⠡⠤⠠⠠⠏⠗⠕⠷⠀⠇⠕⠉⠅⠦"
+  },
+  {
+    "input": "still-life and whiskey-still",
+    "internal": "/-life & :iskey-/",
+    "expected": "123671011170470491014517613612",
+    "unicode": "⠌⠤⠇⠊⠋⠑⠀⠯⠀⠱⠊⠎⠅⠑⠽⠤⠌"
+  },
+  {
+    "input": "𝑂𝑢𝑡-𝑜𝑓-𝑡ℎ𝑒-𝑤𝑎𝑦",
+    "internal": ".1,\\-(-!-way",
+    "expected": "4023251365536463658161",
+    "unicode": "⠨⠂⠠⠳⠤⠷⠤⠮⠤⠺⠁⠽"
+  },
+  {
+    "input": "(This way out!)",
+    "internal": "\"<,? way \\6\">",
+    "expected": "16353257058161051221628",
+    "unicode": "⠐⠣⠠⠹⠀⠺⠁⠽⠀⠳⠖⠐⠜"
+  },
+  {
+    "input": "\"Which way out?\"",
+    "internal": "8,: way \\80",
+    "expected": "3832490581610513852",
+    "unicode": "⠦⠠⠱⠀⠺⠁⠽⠀⠳⠦⠴"
+  },
+  {
+    "input": "childish",
+    "internal": "*ildi%",
+    "expected": "33107251041",
+    "unicode": "⠡⠊⠇⠙⠊⠩"
+  },
+  {
+    "input": "grandchild",
+    "internal": "gr&*ild",
+    "expected": "2723473310725",
+    "unicode": "⠛⠗⠯⠡⠊⠇⠙"
+  },
+  {
+    "input": "outcome",
+    "internal": "\\tcome",
+    "expected": "51309211317",
+    "unicode": "⠳⠞⠉⠕⠍⠑"
+  },
+  {
+    "input": "without",
+    "internal": ")\\t",
+    "expected": "625130",
+    "unicode": "⠾⠳⠞"
+  },
+  {
+    "input": "shallot",
+    "internal": "%allot",
+    "expected": "411772130",
+    "unicode": "⠩⠁⠇⠇⠕⠞"
+  },
+  {
+    "input": "shallow",
+    "internal": "%all[",
+    "expected": "4117742",
+    "unicode": "⠩⠁⠇⠇⠪"
+  },
+  {
+    "input": "shilly-shally",
+    "internal": "%illy-%ally",
+    "expected": "41107761364117761",
+    "unicode": "⠩⠊⠇⠇⠽⠤⠩⠁⠇⠇⠽"
+  },
+  {
+    "input": "standstill",
+    "internal": "/&/ill",
+    "expected": "1247121077",
+    "unicode": "⠌⠯⠌⠊⠇⠇"
+  },
+  {
+    "input": "thistle",
+    "internal": "?i/le",
+    "expected": "571012717",
+    "unicode": "⠹⠊⠌⠇⠑"
+  },
+  {
+    "input": "whichever",
+    "internal": ":i*\"e",
+    "expected": "4910331617",
+    "unicode": "⠱⠊⠡⠐⠑"
+  },
+  {
+    "input": "this/that",
+    "internal": "?is_/?at",
+    "expected": "571014561257130",
+    "unicode": "⠹⠊⠎⠸⠌⠹⠁⠞"
+  },
+  {
+    "input": "Stillson wrench",
+    "internal": ",/illson wr5*",
+    "expected": "32121077142129058233433",
+    "unicode": "⠠⠌⠊⠇⠇⠎⠕⠝⠀⠺⠗⠢⠡"
+  },
+  {
+    "input": "www.universalchildcare.ca",
+    "internal": "www4univ]sal*ildc>e4ca",
+    "expected": "58585850372910395914173310725928175091",
+    "unicode": "⠺⠺⠺⠲⠥⠝⠊⠧⠻⠎⠁⠇⠡⠊⠇⠙⠉⠜⠑⠲⠉⠁"
+  }
+]

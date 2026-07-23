@@ -1,6 +1,7 @@
 [
   {
     "input": "x₂",
+    "note": "PDF 제19항 1. 아래첨자 — x₂",
     "internal": "x;#b",
     "expected": "4548603",
     "unicode": "⠭⠰⠼⠃",
@@ -9,32 +10,16 @@
   },
   {
     "input": "$x_2$",
-    "internal": "x;#b",
-    "expected": "4548603",
-    "unicode": "⠭⠰⠼⠃",
     "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "x₂",
     "internal": "x;#b",
     "expected": "4548603",
     "unicode": "⠭⠰⠼⠃",
-    "world": "⠴⠭⠰⠼⠃",
-    "jeomsarang": "⠴⠭⠲⠰⠢⠼⠃"
-  },
-  {
-    "input": "$x_{2}$",
-    "internal": "x;#b",
-    "expected": "4548603",
-    "unicode": "⠭⠰⠼⠃",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "aₙ",
+    "note": "PDF 제19항 1. 아래첨자 — aₙ",
     "internal": "a;n",
     "expected": "14829",
     "unicode": "⠁⠰⠝",
@@ -43,32 +28,34 @@
   },
   {
     "input": "$a_n$",
+    "note": "LaTeX",
     "internal": "a;n",
     "expected": "14829",
     "unicode": "⠁⠰⠝",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
-    "input": "aₙ",
-    "internal": "a;n",
-    "expected": "14829",
-    "unicode": "⠁⠰⠝",
-    "world": "⠴⠁⠰⠝⠲",
-    "jeomsarang": "⠴⠁⠲⠀"
+    "input": "$x_{\\frac{1}{6}}$",
+    "note": "PDF 제19항 [붙임] — 분수 아래첨자 x_{1/6} (Unicode 분수 아래첨자 표기 불가 — LaTeX만)",
+    "internal": "x;(#f/#a)",
+    "expected": "45485560111260162",
+    "unicode": "⠭⠰⠷⠼⠋⠌⠼⠁⠾",
+    "world": "⠴⠈⠎⠴⠭⠨⠤⠸⠣⠸⠡⠋⠗⠁⠉⠦⠂⠼⠁⠐⠴⠦⠂⠼⠋⠐⠴⠐⠴⠈⠎",
+    "jeomsarang": ""
   },
   {
-    "input": "$a_{n}$",
-    "internal": "a;n",
-    "expected": "14829",
-    "unicode": "⠁⠰⠝",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
+    "input": "$x_{0.5}$",
+    "note": "PDF 제19항 [붙임] — 소수 아래첨자 x_{0.5} (Unicode 아래첨자 소수점 없음 — LaTeX만)",
+    "internal": "x;#j4e",
+    "expected": "454860265017",
+    "unicode": "⠭⠰⠼⠚⠲⠑",
+    "world": "⠴⠈⠎⠴⠭⠸⠤⠦⠂⠼⠚⠲⠑⠐⠴⠈⠎",
+    "jeomsarang": "⠴⠭⠲⠰⠼⠚⠲⠠⠢"
   },
   {
     "input": "aₙ₊₃",
+    "note": "PDF 제19항 [붙임] — aₙ₊₃ (다항)",
     "internal": "a;(n5#c)",
     "expected": "14855293460962",
     "unicode": "⠁⠰⠷⠝⠢⠼⠉⠾",
@@ -77,15 +64,16 @@
   },
   {
     "input": "$a_{n+3}$",
+    "note": "LaTeX",
     "internal": "a;(n5#c)",
     "expected": "14855293460962",
     "unicode": "⠁⠰⠷⠝⠢⠼⠉⠾",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "aₘ₊ₙ",
+    "note": "PDF 제19항 [붙임] — aₘ₊ₙ (다항)",
     "internal": "a;(m5n)",
     "expected": "1485513342962",
     "unicode": "⠁⠰⠷⠍⠢⠝⠾",
@@ -94,32 +82,16 @@
   },
   {
     "input": "$a_{m+n}$",
+    "note": "LaTeX",
     "internal": "a;(m5n)",
     "expected": "1485513342962",
     "unicode": "⠁⠰⠷⠍⠢⠝⠾",
-    "note": "LaTeX",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "x₀.₅",
-    "internal": "x;#j4e",
-    "expected": "454860265017",
-    "unicode": "⠭⠰⠼⠚⠲⠑",
-    "world": "⠴⠭⠰⠼⠚⠲⠰⠑",
-    "jeomsarang": "⠴⠭⠲⠰⠼⠚⠲⠠⠢"
-  },
-  {
-    "input": "$x_{0.5}$",
-    "internal": "x;#j4e",
-    "expected": "454860265017",
-    "unicode": "⠭⠰⠼⠚⠲⠑",
-    "note": "LaTeX",
     "world": "",
     "jeomsarang": ""
   },
   {
     "input": "S₂ₐ",
+    "note": "PDF 제19항 [붙임] — S₂ₐ (곱)",
     "internal": ",s;(#b\"a)",
     "expected": "3214485560316162",
     "unicode": "⠠⠎⠰⠷⠼⠃⠐⠁⠾",
@@ -128,10 +100,46 @@
   },
   {
     "input": "$S_{2a}$",
+    "note": "LaTeX",
     "internal": ",s;(#b\"a)",
     "expected": "3214485560316162",
     "unicode": "⠠⠎⠰⠷⠼⠃⠐⠁⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ₙa",
+    "note": "PDF 제19항 2. 왼쪽 아래첨자 — ₙa",
+    "internal": ";(n)a",
+    "expected": "485529621",
+    "unicode": "⠰⠷⠝⠾⠁",
+    "world": "⠰⠴⠝⠁⠲",
+    "jeomsarang": "⠀⠁⠲"
+  },
+  {
+    "input": "${}_n a$",
     "note": "LaTeX",
+    "internal": ";(n)a",
+    "expected": "485529621",
+    "unicode": "⠰⠷⠝⠾⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₂a",
+    "note": "PDF 제19항 2. 왼쪽 아래첨자 — ₂a",
+    "internal": ";(#b)a",
+    "expected": "4855603621",
+    "unicode": "⠰⠷⠼⠃⠾⠁",
+    "world": "⠰⠼⠃⠴⠁⠲",
+    "jeomsarang": "⠰⠢⠼⠃⠁⠲"
+  },
+  {
+    "input": "${}_2 a$",
+    "note": "LaTeX",
+    "internal": ";(#b)a",
+    "expected": "4855603621",
+    "unicode": "⠰⠷⠼⠃⠾⠁",
     "world": "",
     "jeomsarang": ""
   }

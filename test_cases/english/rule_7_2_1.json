@@ -1,0 +1,32 @@
+[
+  {
+    "input": "He sees it  —  feels it.",
+    "internal": ",he sees x ,- feels x4",
+    "expected": "32191701417171404503236011171771404550",
+    "unicode": "⠠⠓⠑⠀⠎⠑⠑⠎⠀⠭⠀⠠⠤⠀⠋⠑⠑⠇⠎⠀⠭⠲"
+  },
+  {
+    "input": "He will go when —",
+    "internal": ",he w g :5 ,-",
+    "expected": "3219170580270493403236",
+    "unicode": "⠠⠓⠑⠀⠺⠀⠛⠀⠱⠢⠀⠠⠤"
+  },
+  {
+    "input": "He will go when—",
+    "internal": ",he w g :5,-",
+    "expected": "321917058027049343236",
+    "unicode": "⠠⠓⠑⠀⠺⠀⠛⠀⠱⠢⠠⠤"
+  },
+  {
+    "input": "He will go wh—",
+    "internal": ",he w g wh,-",
+    "expected": "321917058027058193236",
+    "unicode": "⠠⠓⠑⠀⠺⠀⠛⠀⠺⠓⠠⠤"
+  },
+  {
+    "input": "We want— we need — more br—",
+    "internal": ",we want ,- we ne$ ,- m br,-",
+    "expected": "32581705812930032360581702917430323601303233236",
+    "unicode": "⠠⠺⠑⠀⠺⠁⠝⠞⠀⠠⠤⠀⠺⠑⠀⠝⠑⠫⠀⠠⠤⠀⠍⠀⠃⠗⠠⠤"
+  }
+]

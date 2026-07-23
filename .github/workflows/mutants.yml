@@ -1,0 +1,115 @@
+name: Mutation Testing
+
+# cargo-mutants runs on a small set of high-value files. A full sweep over
+# the whole crate takes hours, so this CI lane targets the files we have
+# explicitly hardened with assertion-level tests. Adding more files here is
+# safe but increases runtime — keep the matrix lean and shard if needed.
+#
+# The job is INFORMATIONAL by default (continue-on-error: true) so a missed
+# mutant does not block merges. Once the missed count is consistently zero,
+# flip continue-on-error to false to make the gate strict.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/mutants.yml'
+      - '.cargo/mutants.toml'
+      - 'Cargo.lock'
+      - 'Cargo.toml'
+      - 'libs/braillify/src/rules/math/encoder.rs'
+      - 'libs/braillify/src/rules/math/parser/**'
+      - 'libs/braillify/src/rules/token_rules/math_expression/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: mutants-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mutants:
+    name: cargo-mutants (${{ matrix.shard.label }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - label: encoder
+            file: libs/braillify/src/rules/math/encoder.rs
+          - label: parser
+            file: libs/braillify/src/rules/math/parser/parse.rs
+          - label: apply
+            file: libs/braillify/src/rules/token_rules/math_expression/apply.rs
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Cache cargo-mutants binary
+        uses: actions/cache@v6
+        with:
+          path: ~/.cargo/bin/cargo-mutants
+          key: cargo-mutants-bin-v27-${{ runner.os }}
+
+      - name: Install cargo-mutants
+        run: |
+          if ! command -v cargo-mutants >/dev/null; then
+            cargo install cargo-mutants --locked --version ^27
+          fi
+
+      - name: Run cargo-mutants on ${{ matrix.shard.label }}
+        id: mutants
+        continue-on-error: true
+        run: |
+          mkdir -p target/mutants-${{ matrix.shard.label }}
+          cargo mutants \
+            -p braillify \
+            --file "${{ matrix.shard.file }}" \
+            --no-shuffle \
+            --output "target/mutants-${{ matrix.shard.label }}" \
+            --colors never
+
+      - name: Summarize outcomes
+        if: always()
+        shell: bash
+        run: |
+          set -e
+          report_dir="target/mutants-${{ matrix.shard.label }}/mutants.out"
+          if [ ! -f "$report_dir/outcomes.json" ]; then
+            echo "No outcomes.json — cargo-mutants likely failed before testing"
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, pathlib, sys
+          path = pathlib.Path("target/mutants-${{ matrix.shard.label }}/mutants.out/outcomes.json")
+          data = json.loads(path.read_text())
+          counts = {}
+          for o in data.get("outcomes", []):
+              counts[o["summary"]] = counts.get(o["summary"], 0) + 1
+          print("Mutation outcomes:")
+          for k, v in sorted(counts.items()):
+              print(f"  {k}: {v}")
+          missed = counts.get("MissedMutant", 0)
+          # Print one-line summary for the CI log scraper.
+          total = sum(counts.values())
+          print(f"::notice title=mutants/${{ matrix.shard.label }}::missed={missed} total={total} counts={counts}")
+          # Currently soft-gate: don't fail on missed. To make strict, exit non-zero here.
+          PY
+
+      - name: Upload mutants report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutants-${{ matrix.shard.label }}
+          path: target/mutants-${{ matrix.shard.label }}/mutants.out/
+          retention-days: 1

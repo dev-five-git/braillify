@@ -1,0 +1,128 @@
+[
+  {
+    "input": "to be",
+    "internal": "to 2",
+    "expected": "302106",
+    "unicode": "⠞⠕⠀⠆"
+  },
+  {
+    "input": "his car",
+    "internal": "8 c>",
+    "expected": "380928",
+    "unicode": "⠦⠀⠉⠜"
+  },
+  {
+    "input": "Be good.",
+    "internal": ",2 gd4",
+    "expected": "3260272550",
+    "unicode": "⠠⠆⠀⠛⠙⠲"
+  },
+  {
+    "input": "HIS DOG",
+    "internal": ",,8 ,,dog",
+    "expected": "32323803232252127",
+    "unicode": "⠠⠠⠦⠀⠠⠠⠙⠕⠛"
+  },
+  {
+    "input": "That 𝑤𝑎𝑠 right!",
+    "internal": ",t .10 \"r6",
+    "expected": "32300402520162322",
+    "unicode": "⠠⠞⠀⠨⠂⠴⠀⠐⠗⠖"
+  },
+  {
+    "input": "BE ALL THAT YOU CAN BE",
+    "internal": ",,,2 all t y c 2,'",
+    "expected": "323232601770300610906324",
+    "unicode": "⠠⠠⠠⠆⠀⠁⠇⠇⠀⠞⠀⠽⠀⠉⠀⠆⠠⠄"
+  },
+  {
+    "input": "𝐵𝑒 ℎ𝑎𝑝𝑝𝑦.",
+    "internal": ".1,2 .1happy4",
+    "expected": "402326040219115156150",
+    "unicode": "⠨⠂⠠⠆⠀⠨⠂⠓⠁⠏⠏⠽⠲"
+  },
+  {
+    "input": "𝑡𝑜 𝑏𝑒 𝑜𝑟 𝑛𝑜𝑡 𝑡𝑜 𝑏𝑒",
+    "internal": ".7to 2 or n to 2.'",
+    "expected": "4054302106021230290302106404",
+    "unicode": "⠨⠶⠞⠕⠀⠆⠀⠕⠗⠀⠝⠀⠞⠕⠀⠆⠨⠄"
+  },
+  {
+    "input": "𝐡𝐢𝐬 𝐡𝐞𝐫𝐬 𝐢𝐭𝐬",
+    "internal": "^78 h]s xs^'",
+    "expected": "245438019591404514244",
+    "unicode": "⠘⠶⠦⠀⠓⠻⠎⠀⠭⠎⠘⠄"
+  },
+  {
+    "input": "\"W̲a̲s̲ that h̲i̲s̲ car?\"",
+    "internal": "8_1,0 t _18 c>80",
+    "expected": "38562325203005623809283852",
+    "unicode": "⠦⠸⠂⠠⠴⠀⠞⠀⠸⠂⠦⠀⠉⠜⠦⠴"
+  },
+  {
+    "input": "at my (not his) house",
+    "internal": "at my \"<n 8\"> h\\se",
+    "expected": "1300136101635290381628019511417",
+    "unicode": "⠁⠞⠀⠍⠽⠀⠐⠣⠝⠀⠦⠐⠜⠀⠓⠳⠎⠑"
+  },
+  {
+    "input": "He is [was]; they are [were].",
+    "internal": ",he is .<0.>2 !y >e .<7.>4",
+    "expected": "3219170101404035524028604661028170403554402850",
+    "unicode": "⠠⠓⠑⠀⠊⠎⠀⠨⠣⠴⠨⠜⠆⠀⠮⠽⠀⠜⠑⠀⠨⠣⠶⠨⠜⠲"
+  },
+  {
+    "input": "(Were there many?)",
+    "internal": "\"<,7 \"! _m8\">",
+    "expected": "163532540164605613381628",
+    "unicode": "⠐⠣⠠⠶⠀⠐⠮⠀⠸⠍⠦⠐⠜"
+  },
+  {
+    "input": "his/her",
+    "internal": "his_/h]",
+    "expected": "19101456121959",
+    "unicode": "⠓⠊⠎⠸⠌⠓⠻"
+  },
+  {
+    "input": "What will you be?",
+    "internal": ",:at w y be8",
+    "expected": "3249130058061031738",
+    "unicode": "⠠⠱⠁⠞⠀⠺⠀⠽⠀⠃⠑⠦"
+  },
+  {
+    "input": "would-be actor",
+    "internal": "wd-be actor",
+    "expected": "582536317019302123",
+    "unicode": "⠺⠙⠤⠃⠑⠀⠁⠉⠞⠕⠗"
+  },
+  {
+    "input": "his-and-hers towels",
+    "internal": "his-&-h]s t[els",
+    "expected": "1910143647361959140304217714",
+    "unicode": "⠓⠊⠎⠤⠯⠤⠓⠻⠎⠀⠞⠪⠑⠇⠎"
+  },
+  {
+    "input": "That were–I mean was–mine.",
+    "internal": ",t w]e,-,i m1n was,-m9e4",
+    "expected": "3230058591732363210013229058114323613201750",
+    "unicode": "⠠⠞⠀⠺⠻⠑⠠⠤⠠⠊⠀⠍⠂⠝⠀⠺⠁⠎⠠⠤⠍⠔⠑⠲"
+  },
+  {
+    "input": "\"Be safe.\"",
+    "internal": "8,be safe40",
+    "expected": "3832317014111175052",
+    "unicode": "⠦⠠⠃⠑⠀⠎⠁⠋⠑⠲⠴"
+  },
+  {
+    "input": "\"Was that ℎ𝑖𝑠?\"",
+    "internal": "8,was t .1his80",
+    "expected": "38325811403004021910143852",
+    "unicode": "⠦⠠⠺⠁⠎⠀⠞⠀⠨⠂⠓⠊⠎⠦⠴"
+  },
+  {
+    "input": "‘His mother owns “his” car.’",
+    "internal": ",8,his \"m [ns 8his0 c>4,0",
+    "expected": "323832191014016130422914038191014520928503252",
+    "unicode": "⠠⠦⠠⠓⠊⠎⠀⠐⠍⠀⠪⠝⠎⠀⠦⠓⠊⠎⠴⠀⠉⠜⠲⠠⠴"
+  }
+]

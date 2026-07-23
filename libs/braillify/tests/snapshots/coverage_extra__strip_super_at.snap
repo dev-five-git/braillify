@@ -1,0 +1,7 @@
+---
+source: libs/braillify/tests/coverage_extra.rs
+expression: rendered
+---
+input  = "$x^@$"
+unicode = ok: "⠴⠈⠎⠭⠈⠢⠈⠁⠴⠈⠎"
+bytes   = ok: [52, 8, 14, 45, 8, 34, 8, 1, 52, 8, 14]

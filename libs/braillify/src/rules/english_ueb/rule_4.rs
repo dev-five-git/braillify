@@ -242,4 +242,23 @@ mod tests {
             ])
         );
     }
+
+    #[test]
+    fn accent_cells_runtime_eszett_and_upper_ligature_paths() {
+        assert_eq!(
+            accent_cells(std::hint::black_box('ß')),
+            Some(vec![decode_unicode('⠨'), decode_unicode('⠮')])
+        );
+        assert_eq!(
+            accent_cells(std::hint::black_box('Æ')),
+            Some(vec![
+                decode_unicode('⠠'),
+                decode_unicode('⠁'),
+                decode_unicode('⠠'),
+                decode_unicode('⠘'),
+                decode_unicode('⠖'),
+                decode_unicode('⠑')
+            ])
+        );
+    }
 }

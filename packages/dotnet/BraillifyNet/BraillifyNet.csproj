@@ -6,7 +6,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <PackageId>BraillifyNet</PackageId>
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
     <Authors>DevFive</Authors>
     <Description>Rust 기반 크로스플랫폼 한국어 점역 라이브러리 .NET 바인딩</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

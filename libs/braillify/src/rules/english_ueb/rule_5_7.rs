@@ -164,6 +164,8 @@ mod tests {
     #[case::running_text_space_bounded(vec![word("a"), EnglishToken::Space, word("b")], 2, true)]
     // Not indicated:
     #[case::bare_alone(vec![word("b")], 0, false)]
+    // The index points at a non-word token (a symbol) → never a wordsign letter.
+    #[case::index_on_non_word(vec![sym('!')], 0, false)]
     #[case::aio_excluded(vec![sym('('), word("i"), sym(')')], 1, false)]
     #[case::factorial(vec![word("x"), sym('!')], 0, false)]
     #[case::abbreviation_dot_digit(vec![word("p"), sym('.'), num("7")], 0, false)]

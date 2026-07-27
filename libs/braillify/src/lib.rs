@@ -1728,6 +1728,20 @@ mod coverage_targeted_tests {
         assert_eq!(normalize_math_alphanumeric_char(input), expected);
     }
 
+    #[test]
+    fn normalize_math_alphanumeric_runtime_block_offset() {
+        let input = std::hint::black_box('\u{1D44F}');
+
+        assert_eq!(normalize_math_alphanumeric_char(input), 'b');
+    }
+
+    #[test]
+    fn normalize_math_alphanumeric_runtime_digit_offset() {
+        let input = std::hint::black_box('\u{1D7D9}');
+
+        assert_eq!(normalize_math_alphanumeric_char(input), '1');
+    }
+
     /// `normalize_math_alphanumeric_string` short-circuits when no trigger char
     /// is present (Cow::Borrowed) and otherwise allocates a new String (Cow::Owned).
     #[test]
@@ -1742,6 +1756,18 @@ mod coverage_targeted_tests {
         let result = normalize_math_alphanumeric_string("X = \u{1D400}");
         assert!(matches!(result, Cow::Owned(_)));
         assert_eq!(result.as_ref(), "X = A");
+    }
+
+    #[test]
+    fn encode_decomposes_runtime_accented_latin_when_triggered() {
+        let input = std::hint::black_box("café");
+
+        let encoded = encode_with_options(input, &EncodeOptions::default()).unwrap();
+
+        assert_eq!(
+            encoded,
+            encode_with_options("cafe\u{301}", &EncodeOptions::default()).unwrap()
+        );
     }
 
     /// Korean 제68항 — compact uppercase + subscript digit is Korean/math-owned by

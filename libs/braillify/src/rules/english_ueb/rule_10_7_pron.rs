@@ -597,4 +597,31 @@ mod tests {
         let somewise: Vec<char> = "somewise".chars().collect();
         assert!(rule.morphology_recovers(&somewise, 0, "some", 4));
     }
+
+    #[rstest::rstest]
+    #[case::initial_some_suffix("somesuch", 0, "some", 4, true)]
+    #[case::one_compound_suffix("stonework", 2, "one", 5, true)]
+    #[case::final_time_component("teatime", 3, "time", 7, true)]
+    fn morphology_recovery_runtime_word_edge_paths(
+        #[case] word: &str,
+        #[case] pos: usize,
+        #[case] key: &str,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let rule = rule();
+        let chars: Vec<char> = std::hint::black_box(word).chars().collect();
+
+        assert_eq!(
+            rule.morphology_recovers(&chars, pos, std::hint::black_box(key), end),
+            expected
+        );
+    }
+
+    #[test]
+    fn contains_contiguous_rejects_empty_or_oversized_needle() {
+        // An empty needle — like any needle longer than the haystack — is not
+        // contained.
+        assert!(!contains_contiguous(&[], &[]));
+    }
 }

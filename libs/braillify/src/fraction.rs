@@ -94,12 +94,9 @@ fn read_braced_content(iter: &mut std::iter::Peekable<std::str::Chars>) -> Optio
                 iter.next();
             }
             _ => {
-                if let Some(digit) = normalize_digit(*c) {
-                    content.push(digit);
-                    iter.next();
-                } else {
-                    return None;
-                }
+                let digit = normalize_digit(*c)?;
+                content.push(digit);
+                iter.next();
             }
         }
     }

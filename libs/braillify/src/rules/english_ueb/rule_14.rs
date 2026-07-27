@@ -1677,4 +1677,14 @@ mod tests {
     fn rejects_unknown_music_switch() {
         assert_eq!(encode_music("play \\clef treble", enc_ueb_segment), None);
     }
+
+    /// §14.3.1: `encode_with_code_switches` detects a chemical equation (subscripts
+    /// + `+`/`→` + capitals) and routes it to the chemistry passage encoder.
+    #[test]
+    fn encode_with_code_switches_routes_chemistry_to_passage() {
+        assert_eq!(
+            encode_with_code_switches("CuSO₄ + Zn → ZnSO₄ + Cu", enc_ueb_segment),
+            Some(cells("⠐⠷⠄⠀⠐⠉⠥⠎⠕⠲⠀⠰⠖⠐⠵⠝⠀⠒⠕⠀⠐⠵⠝⠎⠕⠲⠀⠰⠖⠐⠉⠥⠀⠠⠐⠾"))
+        );
+    }
 }

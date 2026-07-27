@@ -294,10 +294,13 @@ fn bridges_compound_seam(word: &[char], pos: usize, consumed: usize) -> bool {
 impl ContractionRule for MiddleLowerGroupsignRule {
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let m = middle_lower_groupsign(word, pos)?;
-        let allowed = match (word[pos], word[pos + 1]) {
-            ('e', 'a') => self.ea_allowed(word, pos),
-            (a, b) if a == b => self.doubled_allowed(word, pos),
-            _ => false,
+        // `middle_lower_groupsign` only matches `ea` or a doubled letter
+        // (bb/cc/ff/gg), so the pair is either `ea` or a doubling — there is no
+        // other case to guard.
+        let allowed = if (word[pos], word[pos + 1]) == ('e', 'a') {
+            self.ea_allowed(word, pos)
+        } else {
+            self.doubled_allowed(word, pos)
         };
         allowed.then_some(ContractionMatch {
             protect_span: true,

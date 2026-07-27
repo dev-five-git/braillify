@@ -330,7 +330,7 @@ fn encode_expr_with_options(
             let (next, item) = if chars.get(i) == Some(&'{') {
                 take_braced(chars, i)?
             } else {
-                (i + 1, &chars[i..i + 1])
+                (i + 1, chars.get(i..i + 1)?)
             };
             let need_grouping = item_needs_braille_grouping(item);
             if need_grouping {
@@ -734,6 +734,13 @@ mod tests {
     #[test]
     fn rejects_unknown_technical_symbol() {
         assert_eq!(encode_technical(&"@".chars().collect::<Vec<_>>()), None);
+    }
+
+    #[rstest::rstest]
+    #[case::dangling_superscript('^')]
+    #[case::dangling_subscript('_')]
+    fn rejects_dangling_script_marker_without_panicking(#[case] marker: char) {
+        assert_eq!(encode_technical(&[marker]), None);
     }
 
     #[test]

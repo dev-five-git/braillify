@@ -725,3 +725,16 @@ mod is_ueb_eligible_tests {
         );
     }
 }
+
+#[cfg(test)]
+mod encode_pipeline_tests {
+    use super::encode_forced;
+
+    /// An input that parses to zero tokens — the empty string, reached through
+    /// the eligibility-free `encode_forced` entry — yields None rather than an
+    /// empty cell vector.
+    #[test]
+    fn forced_empty_input_yields_none() {
+        assert_eq!(encode_forced(""), None);
+    }
+}

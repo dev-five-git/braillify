@@ -242,9 +242,6 @@ fn encode_with_constraints(
             relax_shortforms,
         ) {
             let next = pos + consumed;
-            if next > n || cost[next] == usize::MAX {
-                continue;
-            }
             let total = cells.len() + cost[next];
             // The preference of the whole remaining path: the best contraction in
             // this move or anything the tail already chose.
@@ -1158,5 +1155,48 @@ mod tests {
     fn rejects_unknown_shortform_notation_symbol() {
         assert_eq!(notation_cell('@'), None);
         assert_eq!(notation_cells("@").as_deref(), None);
+    }
+
+    #[test]
+    fn candidate_moves_offers_early_letter_fallback_for_thorn() {
+        // rule_12 early letters (Old/Middle English `þ` etc.) give the DP a
+        // single-cell fallback move so it never stalls on a non-contractible
+        // letter that still has a §4.1 print form.
+        let word = chars("þ");
+        let moves = candidate_moves(
+            &word,
+            0,
+            &ContractionEngine::default(),
+            false,
+            false,
+            &vec![false; word.len()],
+            &[],
+            None,
+            false,
+            false,
+            false,
+        );
+        assert!(moves.iter().any(|(cells_, consumed, priority)| {
+            *cells_ == cells("⠼⠮") && *consumed == 1 && *priority == u16::MAX
+        }));
+    }
+
+    #[test]
+    fn encode_with_constraints_returns_none_for_uncontractible_char() {
+        // A character the §4/§10 fallback cannot encode (a CJK ideograph has no
+        // early-letter, accent, or English cell) yields no candidate move at its
+        // DP position, so `best` is None and the whole word fails to contract.
+        let word = chars("a\u{4e00}");
+        let result = encode_with_constraints(
+            &word,
+            &ContractionEngine::default(),
+            false,
+            false,
+            None,
+            false,
+            true,
+            false,
+        );
+        assert_eq!(result, None);
     }
 }

@@ -14,19 +14,23 @@ use super::{Phoneme, PronunciationProvider, parse_phoneme};
 /// `word(N)` for pronunciation variants.
 static CMUDICT: &str = include_str!("../../../../resources/cmudict.dict");
 
+/// Parse one CMUdict line into `(word, phones)`: drop a trailing `# comment` and
+/// surrounding whitespace, strip a `(2)` variant marker so all variants share one
+/// key, and return `None` for a blank or comment-only line (no space-separated
+/// head) or an entry missing a word or phones.
+fn parse_cmudict_line(line: &str) -> Option<(&str, &str)> {
+    let line = line.split('#').next().unwrap_or(line).trim();
+    let (head, phones) = line.split_once(' ')?;
+    let word = head.split_once('(').map_or(head, |(w, _)| w);
+    let phones = phones.trim();
+    (!word.is_empty() && !phones.is_empty()).then_some((word, phones))
+}
+
 /// word → its pronunciation strings, as zero-copy slices into [`CMUDICT`].
 static INDEX: LazyLock<HashMap<&'static str, Vec<&'static str>>> = LazyLock::new(|| {
     let mut map: HashMap<&'static str, Vec<&'static str>> = HashMap::new();
     for line in CMUDICT.lines() {
-        // Drop any trailing `# comment` and surrounding whitespace.
-        let line = line.split('#').next().unwrap_or(line).trim();
-        let Some((head, phones)) = line.split_once(' ') else {
-            continue;
-        };
-        // Strip a `(2)` variant marker so all variants share one key.
-        let word = head.split_once('(').map_or(head, |(w, _)| w);
-        let phones = phones.trim();
-        if !word.is_empty() && !phones.is_empty() {
+        if let Some((word, phones)) = parse_cmudict_line(line) {
             map.entry(word).or_default().push(phones);
         }
     }
@@ -103,11 +107,33 @@ mod tests {
 
     #[test]
     fn default_provider_matches_new_provider() {
-        let default_provider = CmuDictProvider;
+        // Exercise the `Default` impl (delegates to `new`) via the trait method so
+        // clippy's unit-struct lint stays happy.
+        let default_provider: CmuDictProvider = Default::default();
 
         assert_eq!(
             default_provider.pronunciations("become"),
             CmuDictProvider::new().pronunciations("become")
         );
+    }
+
+    #[test]
+    fn parse_cmudict_line_handles_entries_variants_and_blanks() {
+        // A normal entry parses to (word, phones).
+        assert_eq!(
+            parse_cmudict_line("become B IH0 K AH1 M"),
+            Some(("become", "B IH0 K AH1 M"))
+        );
+        // A `(2)` variant collapses onto the base word.
+        assert_eq!(
+            parse_cmudict_line("become(2) B IY0 K AH1 M"),
+            Some(("become", "B IY0 K AH1 M"))
+        );
+        // Blank, whitespace-only, and comment-only lines have no head → None.
+        assert_eq!(parse_cmudict_line(""), None);
+        assert_eq!(parse_cmudict_line("   "), None);
+        assert_eq!(parse_cmudict_line("# comment only"), None);
+        // A head with no phones → None.
+        assert_eq!(parse_cmudict_line("word "), None);
     }
 }

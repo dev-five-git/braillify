@@ -12,7 +12,7 @@
 
     <!-- NuGet Package 설정 -->
     <PackageId>Braillify</PackageId>
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
     <Authors>DevFive</Authors>
     <Description>한국어 점자 변환 CLI 도구</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

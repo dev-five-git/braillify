@@ -503,6 +503,17 @@ mod tests {
         assert!(er_unstressed_in(&word, 0, &[phoneme]));
     }
 
+    #[rstest::rstest]
+    #[case::unstressed_er("ER0", true)]
+    #[case::secondary_er("ER2", false)]
+    #[case::bare_r("R", true)]
+    fn er_unstressed_runtime_stress_paths(#[case] token: &str, #[case] expected: bool) {
+        let word = [std::hint::black_box('e'), std::hint::black_box('r')];
+        let phoneme = parse_phoneme(std::hint::black_box(token));
+
+        assert_eq!(er_unstressed_in(&word, 0, &[phoneme]), expected);
+    }
+
     #[test]
     fn er_unstressed_rejects_secondary_stress_and_split_vowel() {
         assert!(!er_unstressed_in(&['e', 'r'], 0, &[ph("ER2")]));
@@ -528,5 +539,14 @@ mod tests {
     #[test]
     fn unstressed_er_accepts_bare_r_after_silent_e() {
         assert!(er_unstressed_in(&['e', 'r'], 0, &[ph("R")]));
+    }
+
+    #[test]
+    fn consonant_and_digraph_costs_cover_q_z_ng() {
+        // Natural consonant pairings cost 0: `q`→K, `z`→Z.
+        assert_eq!(consonant_cost('q', "K"), 0);
+        assert_eq!(consonant_cost('z', "Z"), 0);
+        // The `ng` digraph voices the NG phoneme at cost 0.
+        assert_eq!(digraph_cost('n', 'g', &ph("NG")), 0);
     }
 }

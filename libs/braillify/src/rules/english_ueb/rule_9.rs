@@ -443,4 +443,12 @@ mod tests {
     fn script_lower_offset_paths(#[case] cp: u32, #[case] expected: Option<u8>) {
         assert_eq!(script_lower(cp), expected);
     }
+
+    /// §9.6.1: every small-capital letter maps to its ordinary capital, including
+    /// the final `ᴢ`→`Z` arm; a non-small-cap char maps to `None`.
+    #[test]
+    fn decode_small_cap_covers_final_letter() {
+        assert_eq!(decode_small_cap('ᴢ'), Some('Z'));
+        assert_eq!(decode_small_cap('x'), None);
+    }
 }

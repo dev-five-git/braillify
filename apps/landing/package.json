@@ -29,6 +29,6 @@
     "@types/react-dom": "^19",
     "@types/react-syntax-highlighter": "^15.5.13",
     "babel-plugin-react-compiler": "^1.0.0",
-    "typescript": "^7"
+    "typescript": "^6.0.3"
   }
 }

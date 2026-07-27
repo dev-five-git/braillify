@@ -7,7 +7,10 @@
   "scripts": {
     "lint": "oxlint . && cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings",
     "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings && cargo clippy --workspace --all-targets -- -D warnings",
-    "test": "cargo tarpaulin --engine llvm --out xml --out stdout -- --skip test_by_testcase && bun test --coverage && cd py-test && uv run pytest",
+    "test": "bun run test:rust && bun run test:node && bun run test:python",
+    "test:rust": "bun scripts/test-rust.ts",
+    "test:node": "bun test",
+    "test:python": "cd py-test && uv run --locked pytest",
     "test:testcase": "cargo test -p braillify test_by_testcase -- --nocapture",
     "preinstall": "uv sync && (cargo install wasm-pack || node -e \"process.exit(0)\") && (pip install maturin || \"process.exit(0)\")",
     "build": "cargo build --release -p braillify && bun -F braillify build && cd packages/python && maturin build --release --out dist",

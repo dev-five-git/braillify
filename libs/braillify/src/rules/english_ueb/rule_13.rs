@@ -567,6 +567,17 @@ mod tests {
         );
     }
 
+    /// §12.2: under the UEB accent code an Old-English early letter (thorn `þ`)
+    /// is emitted via its §12 early-letter sign rather than spelled as ASCII —
+    /// exercising the `early_letter` fallback arm of `encode_uncontracted_word`.
+    #[test]
+    fn encode_uncontracted_word_emits_early_letter_under_ueb() {
+        assert_eq!(
+            encode_uncontracted_word(&['þ'], AccentCode::Ueb, false),
+            Some(cells("⠼⠮"))
+        );
+    }
+
     /// §13.6 weak-signal path: pure-French `Il y a combien de temps que tu vas
     /// dans ce collège? (deux ans)` has only one foreign letter (`è`) so
     /// `has_foreign_code_signal` is false, but the sentence is dominantly

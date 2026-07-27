@@ -495,4 +495,22 @@ mod tests {
             ]
         );
     }
+
+    /// §9.5: the combining dot below (U+0323) is the fourth transcriber-defined
+    /// print form; unrelated characters carry no typeform.
+    #[test]
+    fn combining_typeform_maps_dot_below_to_transcriber4() {
+        assert_eq!(combining_typeform('\u{0323}'), Some(Typeform::Transcriber4));
+        assert_eq!(combining_typeform('a'), None);
+    }
+
+    /// §4.2: a base letter followed by a combining accent composes into a single
+    /// accented word letter (`a` + U+0301 → `á`) rather than splitting the word.
+    #[test]
+    fn parse_english_composes_letter_with_combining_accent() {
+        assert_eq!(
+            parse_english("a\u{0301}"),
+            vec![EnglishToken::Word(vec!['á'])]
+        );
+    }
 }

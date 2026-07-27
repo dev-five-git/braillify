@@ -1,6 +1,6 @@
 {
   "name": "braillify",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "devfive",
   "repository": "https://github.com/dev-five-git/braillify",
   "main": "./pkg/index.js",

@@ -143,4 +143,11 @@ mod tests {
         assert!(unicode.starts_with('⠖'));
         assert!(unicode.contains('⠓'));
     }
+
+    /// Only matrix-like environments are recognised; an unknown `\begin{...}`
+    /// environment is not a matrix and returns `None`.
+    #[test]
+    fn unknown_environment_is_not_a_matrix() {
+        assert!(find_latex_matrix("\\begin{foobar} 1 & 2 \\end{foobar}").is_none());
+    }
 }

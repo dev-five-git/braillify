@@ -19,6 +19,16 @@ fn clear_last_error() {
     });
 }
 
+fn string_into_c_ptr(value: String) -> *mut c_char {
+    match CString::new(value) {
+        Ok(c_string) => c_string.into_raw(),
+        Err(e) => {
+            set_last_error(format!("CString conversion error: {}", e));
+            ptr::null_mut()
+        }
+    }
+}
+
 #[unsafe(no_mangle)]
 pub extern "C" fn braillify_get_last_error() -> *mut c_char {
     LAST_ERROR.with(|e| match e.borrow().as_ref() {
@@ -103,17 +113,8 @@ pub unsafe extern "C" fn braillify_encode_to_unicode(text: *const c_char) -> *mu
         }
     };
 
-    // CString::new() cannot fail here: braille output only contains
-    // Unicode characters in U+2800..U+28FF, never null bytes.
-    // The Err branch is defensive dead code.
     match braillify::encode_to_unicode(text_str) {
-        Ok(result) => match CString::new(result) {
-            Ok(c_string) => c_string.into_raw(),
-            Err(e) => {
-                set_last_error(format!("CString conversion error: {}", e));
-                ptr::null_mut()
-            }
-        },
+        Ok(result) => string_into_c_ptr(result),
         Err(e) => {
             set_last_error(e);
             ptr::null_mut()
@@ -148,17 +149,8 @@ pub unsafe extern "C" fn braillify_encode_to_braille_font(text: *const c_char) -
         }
     };
 
-    // CString::new() cannot fail here: braille output only contains
-    // Unicode characters in U+2800..U+28FF, never null bytes.
-    // The Err branch is defensive dead code.
     match braillify::encode_to_braille_font(text_str) {
-        Ok(result) => match CString::new(result) {
-            Ok(c_string) => c_string.into_raw(),
-            Err(e) => {
-                set_last_error(format!("CString conversion error: {}", e));
-                ptr::null_mut()
-            }
-        },
+        Ok(result) => string_into_c_ptr(result),
         Err(e) => {
             set_last_error(e);
             ptr::null_mut()
@@ -207,6 +199,28 @@ mod tests {
     use super::*;
     use std::ffi::CString;
     use std::ptr;
+
+    #[test]
+    fn string_into_c_ptr_converts_valid_string() {
+        let result = string_into_c_ptr("braille".to_string());
+
+        assert!(!result.is_null());
+        let c_string = unsafe { CString::from_raw(result) };
+        assert_eq!(c_string.to_str().unwrap(), "braille");
+    }
+
+    #[test]
+    fn string_into_c_ptr_rejects_interior_null() {
+        clear_last_error();
+
+        let result = string_into_c_ptr("braille\0output".to_string());
+
+        assert!(result.is_null());
+        let error = braillify_get_last_error();
+        assert!(!error.is_null());
+        let error = unsafe { CString::from_raw(error) };
+        assert!(error.to_str().unwrap().contains("CString conversion error"));
+    }
 
     #[test]
     fn test_encode_to_unicode() {

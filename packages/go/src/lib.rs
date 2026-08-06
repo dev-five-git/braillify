@@ -43,10 +43,7 @@ pub extern "C" fn braillify_get_last_error() -> *mut c_char {
 /// - A non-null returned pointer must be freed exactly once using
 ///   [`braillify_free_bytes`] with the length written to `out_len`.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn braillify_encode(
-    text: *const c_char,
-    out_len: *mut usize,
-) -> *mut u8 {
+pub unsafe extern "C" fn braillify_encode(text: *const c_char, out_len: *mut usize) -> *mut u8 {
     clear_last_error();
 
     if text.is_null() || out_len.is_null() {
@@ -134,9 +131,7 @@ pub unsafe extern "C" fn braillify_encode_to_unicode(text: *const c_char) -> *mu
 /// - A non-null returned pointer must be freed exactly once using
 ///   [`braillify_free_string`].
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn braillify_encode_to_braille_font(
-    text: *const c_char,
-) -> *mut c_char {
+pub unsafe extern "C" fn braillify_encode_to_braille_font(text: *const c_char) -> *mut c_char {
     clear_last_error();
 
     if text.is_null() {

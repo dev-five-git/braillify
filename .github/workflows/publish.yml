@@ -32,6 +32,10 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
+          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
+          # 지우면 CI 가 다시 깨진다. https://gh.io/securely-using-pull_request_target
+          allow-unsafe-pr-checkout: true
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -131,6 +135,10 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
+          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
+          # 지우면 CI 가 다시 깨진다. https://gh.io/securely-using-pull_request_target
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1

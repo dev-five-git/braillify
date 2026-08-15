@@ -1,0 +1,36 @@
+{
+  "name": "mobile",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev -p 1420",
+    "build": "next build",
+    "start": "next start",
+    "lint": "oxlint",
+    "check": "tsc --noEmit && cargo check --manifest-path src-tauri/Cargo.toml",
+    "ios:init": "tauri ios init && bun run icons",
+    "ios:dev": "tauri ios dev --config src-tauri/tauri.sim.conf.json",
+    "ios:run": "tauri ios run",
+    "ios:build": "tauri ios build",
+    "android:init": "tauri android init && bun run icons",
+    "icons": "tauri icon app-icon.json",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@devup-ui/react": "^1.0.37",
+    "@tauri-apps/plugin-clipboard-manager": "^2",
+    "braillify": "workspace:*",
+    "next": "16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@devup-ui/next-plugin": "^1.0.77",
+    "@tauri-apps/cli": "^2",
+    "@types/node": "^25",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "typescript": "~5.8.3"
+  }
+}

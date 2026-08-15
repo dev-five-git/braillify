@@ -1,0 +1,131 @@
+{
+  "theme": {
+    "colors": {
+      "light": {
+        "primary": "#30302E",
+        "primaryHover": "#454543",
+        "text": "#2D2D2C",
+        "background": "#F3F2EF",
+        "containerBackground": "#FFFFFF",
+        "border": "#DEDDD9",
+        "caption": "#7A7976",
+        "error": "#B42318",
+        "focus": "#006BFF",
+        "base": "#FFFFFF",
+        "negativeBase": "#000000",
+        "disabledBackground": "#DDDCD9",
+        "disabledText": "#82817E",
+        "emptyBraille": "#B9B8B5",
+        "sidebarBackground": "#383735",
+        "sidebarSelected": "#575654",
+        "sidebarBorder": "#4A4947",
+        "sidebarText": "#F8F8F7",
+        "sidebarCaption": "#A8A7A4",
+        "sidebarDisabled": "#AAA9A6",
+        "sidebarFooter": "#858481"
+      },
+      "dark": {
+        "primary": "#30302E",
+        "primaryHover": "#454543",
+        "text": "#2D2D2C",
+        "background": "#F3F2EF",
+        "containerBackground": "#FFFFFF",
+        "border": "#DEDDD9",
+        "caption": "#7A7976",
+        "error": "#B42318",
+        "focus": "#006BFF",
+        "base": "#FFFFFF",
+        "negativeBase": "#000000",
+        "disabledBackground": "#DDDCD9",
+        "disabledText": "#82817E",
+        "emptyBraille": "#B9B8B5",
+        "sidebarBackground": "#383735",
+        "sidebarSelected": "#575654",
+        "sidebarBorder": "#4A4947",
+        "sidebarText": "#F8F8F7",
+        "sidebarCaption": "#A8A7A4",
+        "sidebarDisabled": "#AAA9A6",
+        "sidebarFooter": "#858481"
+      }
+    },
+    "typography": {
+      "brandTitle": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 700,
+        "fontSize": "23px",
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.025em"
+      },
+      "pageTitle": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 750,
+        "fontSize": "34px",
+        "lineHeight": 1.3,
+        "letterSpacing": "-0.035em"
+      },
+      "pageDescription": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 400,
+        "fontSize": "17px",
+        "lineHeight": 1.55,
+        "letterSpacing": "-0.02em"
+      },
+      "inputTitle": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 650,
+        "fontSize": "16px",
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.02em"
+      },
+      "navigationTitle": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 700,
+        "fontSize": "16px",
+        "lineHeight": 1.4,
+        "letterSpacing": "-0.02em"
+      },
+      "body": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 400,
+        "fontSize": "16px",
+        "lineHeight": 1.55,
+        "letterSpacing": "-0.015em"
+      },
+      "sidebarBody": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 400,
+        "fontSize": "14px",
+        "lineHeight": 1.45,
+        "letterSpacing": "-0.01em"
+      },
+      "sidebarCaption": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 400,
+        "fontSize": "13px",
+        "lineHeight": 1.45,
+        "letterSpacing": "-0.01em"
+      },
+      "button": {
+        "fontFamily": "Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 650,
+        "fontSize": "16px",
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.015em"
+      },
+      "braille": {
+        "fontFamily": "Segoe UI Symbol, Noto Sans Symbols 2, monospace",
+        "fontWeight": 400,
+        "fontSize": "30px",
+        "lineHeight": 1.6,
+        "letterSpacing": "0.04em"
+      },
+      "reverseText": {
+        "fontFamily": "var(--font-spoqa-han-sans-neo), Segoe UI, Malgun Gothic, sans-serif",
+        "fontWeight": 400,
+        "fontSize": "22px",
+        "lineHeight": 1.6,
+        "letterSpacing": "-0.01em"
+      }
+    }
+  }
+}

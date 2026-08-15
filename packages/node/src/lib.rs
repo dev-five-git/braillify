@@ -17,6 +17,11 @@ pub fn translate_to_braille_font(text: &str) -> Result<String, String> {
     braillify::encode_to_braille_font(text)
 }
 
+#[wasm_bindgen(js_name = "decodeFromUnicode")]
+pub fn decode_from_unicode(braille: &str) -> Result<String, String> {
+    braillify::decode(braille)
+}
+
 #[cfg(test)]
 mod tests {
     //! Native-host tests for the wasm-bindgen shim. `wasm_bindgen` macros
@@ -59,6 +64,26 @@ mod tests {
     #[test]
     fn translate_to_braille_font_propagates_error() {
         assert!(translate_to_braille_font("😀").is_err());
+    }
+
+    /// JS에 노출되는 역점역 wrapper가 입력을 바꾸지 않고 core decoder에 위임한다.
+    #[test]
+    fn decode_from_unicode_delegates_to_core() {
+        assert_eq!(
+            decode_from_unicode("⠈⠎⠐⠕").expect("decode must succeed"),
+            "거리"
+        );
+    }
+
+    /// Node 공개 encoder가 만든 Unicode 점자를 같은 패키지의 decoder가 소비할 수 있어야 한다.
+    #[test]
+    fn decode_from_unicode_roundtrips_core_unicode() {
+        let encoded = translate_to_unicode("강아지").expect("encode must succeed");
+
+        assert_eq!(
+            decode_from_unicode(&encoded).expect("decode must succeed"),
+            "강아지"
+        );
     }
 
     #[test]

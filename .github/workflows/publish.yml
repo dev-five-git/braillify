@@ -85,6 +85,12 @@ jobs:
       - name: Test (Python)
         timeout-minutes: 10
         run: bun run test:python
+      - name: Set up MSVC for C/C++ tests
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Test (C and C++)
+        timeout-minutes: 5
+        run: bun run test:c
       - name: Format Rollback
         shell: bash
         run: |
@@ -820,6 +826,144 @@ jobs:
           name: nuget-packages
           path: packages/dotnet/**/nupkg/*.nupkg
           retention-days: 1
+          
+  # c
+  c-build:
+    name: C Build - ${{ matrix.rid }}
+    runs-on: ${{ matrix.runner }}
+    if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/c/Cargo.toml') }}
+    needs:
+      - test
+      - changepacks
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            rid: linux-x64
+            archive: braillify-c-linux-x64.tar.gz
+          - runner: ubuntu-22.04
+            target: aarch64-unknown-linux-gnu
+            rid: linux-arm64
+            archive: braillify-c-linux-arm64.tar.gz
+          - runner: macos-14
+            target: x86_64-apple-darwin
+            rid: macos-x64
+            archive: braillify-c-macos-x64.tar.gz
+          - runner: macos-14
+            target: aarch64-apple-darwin
+            rid: macos-arm64
+            archive: braillify-c-macos-arm64.tar.gz
+          - runner: windows-2022
+            target: x86_64-pc-windows-msvc
+            rid: windows-x64
+            archive: braillify-c-windows-x64.tar.gz
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install cross-compilation tools (Linux ARM64)
+        if: matrix.rid == 'linux-arm64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build C libraries
+        run: cargo build --release --target ${{ matrix.target }} -p braillify-c
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Bundle libraries and header
+        shell: bash
+        env:
+          TARGET: ${{ matrix.target }}
+          RID: ${{ matrix.rid }}
+          ARCHIVE: ${{ matrix.archive }}
+        run: |
+          mkdir -p "dist/$RID/include" "dist/$RID/lib"
+          cp packages/c/include/braillify.h "dist/$RID/include/"
+          cp packages/c/README.md "dist/$RID/"
+          case "$RUNNER_OS" in
+            Linux)
+              cp "target/$TARGET/release/libbraillify_c.a" "dist/$RID/lib/"
+              cp "target/$TARGET/release/libbraillify_c.so" "dist/$RID/lib/"
+              ;;
+            macOS)
+              cp "target/$TARGET/release/libbraillify_c.a" "dist/$RID/lib/"
+              cp "target/$TARGET/release/libbraillify_c.dylib" "dist/$RID/lib/"
+              ;;
+            Windows)
+              cp "target/$TARGET/release/braillify_c.dll" "dist/$RID/lib/"
+              cp "target/$TARGET/release/braillify_c.dll.lib" "dist/$RID/lib/"
+              cp "target/$TARGET/release/braillify_c.lib" "dist/$RID/lib/"
+              ;;
+          esac
+          tar -C dist -czf "$ARCHIVE" "$RID"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: c-bindings-${{ matrix.rid }}
+          path: ${{ matrix.archive }}
+          if-no-files-found: error
+          retention-days: 1
+
+  c-publish:
+    name: C Publish
+    runs-on: ubuntu-latest
+    if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/c/Cargo.toml') }}
+    needs:
+      - changepacks
+      - c-build
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download C artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: c-bindings-*
+          path: c-artifacts
+          merge-multiple: true
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: "c-artifacts/*.tar.gz"
+
+      - name: Delete existing release assets (idempotent re-run)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPLOAD_URL: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/c/Cargo.toml'] }}
+        run: |
+          RELEASE_ID=$(echo "$UPLOAD_URL" | sed -E 's#.*/releases/([0-9]+)/assets.*#\1#')
+          REPO="${GITHUB_REPOSITORY}"
+          for ARCHIVE in c-artifacts/*.tar.gz; do
+            NAME=$(basename "$ARCHIVE")
+            ASSET_ID=$(gh api "repos/$REPO/releases/$RELEASE_ID/assets" \
+              --paginate --jq ".[] | select(.name == \"$NAME\") | .id" || true)
+            if [ -n "$ASSET_ID" ]; then
+              gh api -X DELETE "repos/$REPO/releases/assets/$ASSET_ID" || true
+            fi
+          done
+
+      - name: Upload release assets
+        uses: owjs3901/upload-github-release-asset@main
+        with:
+          upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/c/Cargo.toml'] }}
+          asset_path: "c-artifacts/*.tar.gz"
+          
 
   # go
   go-test:

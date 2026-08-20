@@ -206,6 +206,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "braillify-c"
+version = "0.1.0"
+dependencies = [
+ "braillify",
+]
+
+[[package]]
 name = "bstr"
 version = "1.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -53,3 +53,9 @@ tarpaulin-report.html
 tarpaulin-report.json
 **/tarpaulin-report.html
 **/tarpaulin-report.json
+
+# superpowers 작업 산출물(플랜 문서 등) — 저장소에 커밋하지 않는다.
+docs/superpowers/
+
+# superpowers 로컬 작업 디렉터리.
+.superpowers/

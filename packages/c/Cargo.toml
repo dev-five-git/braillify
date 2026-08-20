@@ -1,0 +1,16 @@
+[package]
+name = "braillify-c"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+description = "C ABI bindings for Braillify"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dev-five-git/braillify"
+
+[lib]
+name = "braillify_c"
+crate-type = ["cdylib", "staticlib", "rlib"]
+doctest = false
+
+[dependencies]
+braillify = { path = "../../libs/braillify", default-features = false }

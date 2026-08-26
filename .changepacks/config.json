@@ -1,5 +1,5 @@
 {
-  "ignore": ["**", "!packages/python/pyproject.toml", "!packages/dotnet/BraillifyNet/BraillifyNet.csproj", "!packages/dotnet/Braillify/Braillify.csproj", "!packages/node/package.json", "!packages/ruby/Cargo.toml", "!libs/braillify/Cargo.toml"],
+  "ignore": ["**", "!packages/python/pyproject.toml", "!packages/dotnet/BraillifyNet/BraillifyNet.csproj", "!packages/dotnet/Braillify/Braillify.csproj", "!packages/node/package.json", "!packages/c/Cargo.toml", "!packages/ruby/Cargo.toml", "!libs/braillify/Cargo.toml"],
   "baseBranch": "main",
   "latestPackage": null,
   "publish": {}

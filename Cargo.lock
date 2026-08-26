@@ -217,6 +217,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "braillify-c"
+version = "0.1.0"
+dependencies = [
+ "braillify",
+]
+
+[[package]]
 name = "braillify_rb"
 version = "0.1.0"
 dependencies = [

@@ -1,0 +1,28 @@
+# NOTE: 이 crate는 소스 gem으로 배포되어 워크스페이스 밖에서 단독 빌드될 수 있으므로
+# workspace 상속(edition.workspace 등)을 사용하지 않는다.
+# 저장소 내 빌드는 루트 Cargo.toml의 [patch.crates-io]로 로컬 libs/braillify를 사용한다.
+# 패키지 이름은 rb_sys ExtensionTask가 cargo metadata에서 조회하는 키이므로
+# 확장 이름(braillify_rb)과 일치해야 한다.
+[package]
+name = "braillify_rb"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+
+[lib]
+name = "braillify_rb"
+crate-type = ["cdylib", "rlib"]
+doctest = false
+
+[dependencies]
+magnus = "0.8"
+# build.rs(rb-sys-env)가 DEP_RB_* 환경변수를 받으려면 rb-sys 직접 의존이 필요하다.
+rb-sys = "0.9"
+braillify = { version = "2", default-features = false }
+
+[build-dependencies]
+rb-sys-env = "0.2"
+
+[dev-dependencies]
+rb-sys = { version = "0.9", features = ["link-ruby"] }
+rb-sys-test-helpers = "0.2"

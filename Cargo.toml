@@ -2,6 +2,11 @@
 members = ["libs/*", "packages/*"]
 resolver = "3"
 
+# packages/ruby는 소스 gem 배포를 위해 braillify를 crates.io 버전으로 의존한다.
+# 저장소 내 빌드(개발/CI/프리컴파일 gem)는 이 patch로 로컬 코어를 사용한다.
+[patch.crates-io]
+braillify = { path = "libs/braillify" }
+
 [workspace.package]
 version = "0.1.0"
 edition = "2024"

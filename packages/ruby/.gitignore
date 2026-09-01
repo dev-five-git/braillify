@@ -1,0 +1,7 @@
+/tmp/
+/pkg/
+/.bundle/
+Gemfile.lock
+/lib/braillify/**/*.so
+/lib/braillify/**/*.bundle
+/lib/braillify/**/*.dll

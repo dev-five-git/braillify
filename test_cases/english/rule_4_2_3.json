@@ -3,6 +3,7 @@
     "input": "AOÛT",
     "internal": ",,ao^%ut",
     "expected": "323212124413730",
-    "unicode": "⠠⠠⠁⠕⠘⠩⠥⠞"
+    "unicode": "⠠⠠⠁⠕⠘⠩⠥⠞",
+    "world": "⠴⠠⠠⠁⠕⠘⠩⠠⠠⠥⠞⠲"
   }
 ]

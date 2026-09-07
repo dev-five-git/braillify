@@ -3,18 +3,21 @@
     "input": "Copyright © 2009",
     "internal": ",copy\"r ^c #bjji",
     "expected": "329211561162302490603262610",
-    "unicode": "⠠⠉⠕⠏⠽⠐⠗⠀⠘⠉⠀⠼⠃⠚⠚⠊"
+    "unicode": "⠠⠉⠕⠏⠽⠐⠗⠀⠘⠉⠀⠼⠃⠚⠚⠊",
+    "world": "⠴⠠⠉⠕⠏⠽⠐⠗ ⠘⠉ ⠼⠃⠚⠚⠊"
   },
   {
     "input": "©2009",
     "internal": "^c#bjji",
     "expected": "249603262610",
-    "unicode": "⠘⠉⠼⠃⠚⠚⠊"
+    "unicode": "⠘⠉⠼⠃⠚⠚⠊",
+    "world": "⠘⠉⠼⠃⠚⠚⠊"
   },
   {
     "input": "QuickTax™ from Intuit® Canada Limited",
     "internal": ",quick,tax^t f ,9tuit^r ,canada ,limit$",
     "expected": "323137109532301452430011032203037103024230329129125103271013103043",
-    "unicode": "⠠⠟⠥⠊⠉⠅⠠⠞⠁⠭⠘⠞⠀⠋⠀⠠⠔⠞⠥⠊⠞⠘⠗⠀⠠⠉⠁⠝⠁⠙⠁⠀⠠⠇⠊⠍⠊⠞⠫"
+    "unicode": "⠠⠟⠥⠊⠉⠅⠠⠞⠁⠭⠘⠞⠀⠋⠀⠠⠔⠞⠥⠊⠞⠘⠗⠀⠠⠉⠁⠝⠁⠙⠁⠀⠠⠇⠊⠍⠊⠞⠫",
+    "world": "⠴⠠⠟⠅⠠⠞⠁⠭⠠⠠⠞⠍ ⠋ ⠠⠔⠞⠥⠊⠞⠘⠗ ⠠⠉⠁⠝⠁⠙⠁ ⠠⠇⠊⠍⠊⠞⠫⠲"
   }
 ]

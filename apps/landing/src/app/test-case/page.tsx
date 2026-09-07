@@ -14,8 +14,6 @@ import {
 } from '@/components/side-bar'
 import { FailedOnlyInput } from '@/components/test-case/FailedOnlyInput'
 import { TestCaseFilter } from '@/components/test-case/filter/TestCaseFilter'
-import { TestCaseList } from '@/components/test-case/list/TestCaseList'
-import { TestCaseTable } from '@/components/test-case/table/TestCaseTable'
 import { TestCaseDisplayBoundary } from '@/components/test-case/TestCaseDisplayBoundary'
 import { TestCaseFilterContainer } from '@/components/test-case/TestCaseFilterContainer'
 import { TestCaseFilterValue } from '@/components/test-case/TestCaseFilterValue'
@@ -24,6 +22,7 @@ import {
   type TestCaseFilter as TestCaseFilterType,
   TestCaseProvider,
 } from '@/components/test-case/TestCaseProvider'
+import { TestCaseResults } from '@/components/test-case/TestCaseResults'
 import { TestCaseRuleContainer } from '@/components/test-case/TestCaseRuleContainer'
 import { TestCaseStat } from '@/components/test-case/TestCaseStat'
 import { TestCaseStatFiltered } from '@/components/test-case/TestCaseStatFiltered'
@@ -106,7 +105,6 @@ export default async function TestCasePage() {
       },
     ]),
   ) as FilterTotalMap
-
   let totalTest = 0
   let totalFail = 0
   let totalWorldTest = 0
@@ -173,12 +171,10 @@ export default async function TestCasePage() {
                 {value.description}
               </Text>
             </VStack>
-            <TestCaseDisplayBoundary option="type" value="table">
-              <TestCaseTable results={testStatus[key][6]} />
-            </TestCaseDisplayBoundary>
-            <TestCaseDisplayBoundary option="type" value="list">
-              <TestCaseList results={testStatus[key][6]} />
-            </TestCaseDisplayBoundary>
+            <TestCaseResults
+              pageSize={category === 'corpus' ? 250 : undefined}
+              results={testStatus[key][6]}
+            />
           </TestCaseRuleContainer>
           {currentClause !== nextClause && (
             <Box bg="$text" h="1px" mx={['16px', null, null, '60px']} />
@@ -189,11 +185,7 @@ export default async function TestCasePage() {
   })
 
   return (
-    <TestCaseProvider
-      filterMap={filterMap}
-      filterTotalMap={filterTotalMap}
-      testStatusMap={testStatus}
-    >
+    <TestCaseProvider filterMap={filterMap} filterTotalMap={filterTotalMap}>
       <SideBarProvider>
         <Box maxW="1520px" mx="auto" pb="40px" w="100%">
           <VStack

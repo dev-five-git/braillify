@@ -3,222 +3,259 @@
     "input": "coulda",
     "internal": "cda",
     "expected": "9251",
-    "unicode": "⠉⠙⠁"
+    "unicode": "⠉⠙⠁",
+    "world": "⠴⠉⠙⠁⠲"
   },
   {
     "input": "mebbe",
     "internal": "me2e",
     "expected": "1317617",
-    "unicode": "⠍⠑⠆⠑"
+    "unicode": "⠍⠑⠆⠑",
+    "world": "⠴⠍⠑⠆⠑⠲"
   },
   {
     "input": "th'",
     "internal": "th'",
     "expected": "30194",
-    "unicode": "⠞⠓⠄"
+    "unicode": "⠞⠓⠄",
+    "world": "⠴⠞⠓⠄"
   },
   {
     "input": "pinny",
     "internal": "p9ny",
     "expected": "15202961",
-    "unicode": "⠏⠔⠝⠽"
+    "unicode": "⠏⠔⠝⠽",
+    "world": "⠴⠏⠔⠝⠽⠲"
   },
   {
     "input": "depity",
     "internal": "dep;y",
     "expected": "2517154861",
-    "unicode": "⠙⠑⠏⠰⠽"
+    "unicode": "⠙⠑⠏⠰⠽",
+    "world": "⠴⠙⠑⠏⠰⠽⠲"
   },
   {
     "input": "your",
     "internal": "yr",
     "expected": "6123",
-    "unicode": "⠽⠗"
+    "unicode": "⠽⠗",
+    "world": "⠴⠽⠗⠲"
   },
   {
     "input": "wher",
     "internal": ":]",
     "expected": "4959",
-    "unicode": "⠱⠻"
+    "unicode": "⠱⠻",
+    "world": "⠴⠱⠻⠲"
   },
   {
     "input": "somers",
     "internal": "som]s",
     "expected": "1421135914",
-    "unicode": "⠎⠕⠍⠻⠎"
+    "unicode": "⠎⠕⠍⠻⠎",
+    "world": "⠴⠐⠎⠗⠎⠲"
   },
   {
     "input": "theirselves",
     "internal": "_!selves",
     "expected": "564614177391714",
-    "unicode": "⠸⠮⠎⠑⠇⠧⠑⠎"
+    "unicode": "⠸⠮⠎⠑⠇⠧⠑⠎",
+    "world": "⠴⠸⠮⠎⠑⠇⠧⠑⠎⠲"
   },
   {
     "input": "dint",
     "internal": "d9t",
     "expected": "252030",
-    "unicode": "⠙⠔⠞"
+    "unicode": "⠙⠔⠞",
+    "world": "⠴⠙⠔⠞⠲"
   },
   {
     "input": "bofe",
     "internal": "b(e",
     "expected": "35517",
-    "unicode": "⠃⠷⠑"
+    "unicode": "⠃⠷⠑",
+    "world": "⠴⠃⠷⠑⠲"
   },
   {
     "input": "'stracted",
     "internal": "'/ract$",
     "expected": "41223193043",
-    "unicode": "⠄⠌⠗⠁⠉⠞⠫"
+    "unicode": "⠄⠌⠗⠁⠉⠞⠫",
+    "world": "⠄⠴⠌⠗⠁⠉⠞⠫⠲"
   },
   {
     "input": "fayther",
     "internal": "fay!r",
     "expected": "111614623",
-    "unicode": "⠋⠁⠽⠮⠗"
+    "unicode": "⠋⠁⠽⠮⠗",
+    "world": "⠴⠋⠁⠽⠮⠗⠲"
   },
   {
     "input": "distruction",
     "internal": "4truc;n",
     "expected": "5030233794829",
-    "unicode": "⠲⠞⠗⠥⠉⠰⠝"
+    "unicode": "⠲⠞⠗⠥⠉⠰⠝",
+    "world": "⠴⠲⠞⠗⠥⠉⠰⠝⠲"
   },
   {
     "input": "fer",
     "internal": "f]",
     "expected": "1159",
-    "unicode": "⠋⠻"
+    "unicode": "⠋⠻",
+    "world": "⠴⠋⠻⠲"
   },
   {
     "input": "musta",
     "internal": "m/a",
     "expected": "13121",
-    "unicode": "⠍⠌⠁"
+    "unicode": "⠍⠌⠁",
+    "world": "⠴⠍⠌⠁⠲"
   },
   {
     "input": "goodun",
     "internal": "gdun",
     "expected": "27253729",
-    "unicode": "⠛⠙⠥⠝"
+    "unicode": "⠛⠙⠥⠝",
+    "world": "⠴⠛⠙⠥⠝⠲"
   },
   {
     "input": "lyedee",
     "internal": "ly$ee",
     "expected": "761431717",
-    "unicode": "⠇⠽⠫⠑⠑"
+    "unicode": "⠇⠽⠫⠑⠑",
+    "world": "⠴⠇⠽⠫⠑⠑⠲"
   },
   {
     "input": "com'ere",
     "internal": "com']e",
     "expected": "9211345917",
-    "unicode": "⠉⠕⠍⠄⠻⠑"
+    "unicode": "⠉⠕⠍⠄⠻⠑",
+    "world": "⠴⠉⠕⠍⠄⠻⠑⠲"
   },
   {
     "input": "th–",
     "internal": "th,-",
     "expected": "30193236",
-    "unicode": "⠞⠓⠠⠤"
+    "unicode": "⠞⠓⠠⠤",
+    "world": "⠴⠞⠓⠤⠤"
   },
   {
     "input": "say pl...",
     "internal": "say pl444",
     "expected": "141610157505050",
-    "unicode": "⠎⠁⠽⠀⠏⠇⠲⠲⠲"
+    "unicode": "⠎⠁⠽⠀⠏⠇⠲⠲⠲",
+    "world": "⠴⠎⠁⠽ ⠏⠇⠲⠲⠲"
   },
   {
     "input": "Tell me wh-.",
     "internal": ",tell me wh-4",
     "expected": "3230177701317058193650",
-    "unicode": "⠠⠞⠑⠇⠇⠀⠍⠑⠀⠺⠓⠤⠲"
+    "unicode": "⠠⠞⠑⠇⠇⠀⠍⠑⠀⠺⠓⠤⠲",
+    "world": "⠴⠠⠞⠑⠇⠇ ⠍⠑ ⠺⠓⠤⠲"
   },
   {
     "input": "-tion",
     "internal": "-tion",
     "expected": "3630102129",
-    "unicode": "⠤⠞⠊⠕⠝"
+    "unicode": "⠤⠞⠊⠕⠝",
+    "world": "⠤⠴⠞⠊⠕⠝⠲"
   },
   {
     "input": "-ccio",
     "internal": "-ccio",
     "expected": "36991021",
-    "unicode": "⠤⠉⠉⠊⠕"
+    "unicode": "⠤⠉⠉⠊⠕",
+    "world": "⠤⠴⠉⠉⠊⠕⠲"
   },
   {
     "input": "-ean",
     "internal": "-ean",
     "expected": "3617129",
-    "unicode": "⠤⠑⠁⠝"
+    "unicode": "⠤⠑⠁⠝",
+    "world": "⠤⠴⠑⠁⠝⠲"
   },
   {
     "input": "-ence",
     "internal": "-5ce",
     "expected": "3634917",
-    "unicode": "⠤⠢⠉⠑"
+    "unicode": "⠤⠢⠉⠑",
+    "world": "⠤⠴⠢⠉⠑⠲"
   },
   {
     "input": "-ing",
     "internal": "-9g",
     "expected": "362027",
-    "unicode": "⠤⠔⠛"
+    "unicode": "⠤⠔⠛",
+    "world": "⠤⠴⠔⠛⠲"
   },
   {
     "input": "-ount",
     "internal": "-\\nt",
     "expected": "36512930",
-    "unicode": "⠤⠳⠝⠞"
+    "unicode": "⠤⠳⠝⠞",
+    "world": "⠤⠴⠳⠝⠞⠲"
   },
   {
     "input": "-in",
     "internal": "-in",
     "expected": "361029",
-    "unicode": "⠤⠊⠝"
+    "unicode": "⠤⠊⠝",
+    "world": "⠤⠴⠊⠝⠲"
   },
   {
     "input": "-est",
     "internal": "-e/",
     "expected": "361712",
-    "unicode": "⠤⠑⠌"
+    "unicode": "⠤⠑⠌",
+    "world": "⠤⠴⠑⠌⠲"
   },
   {
     "input": "-ed",
     "internal": "-$",
     "expected": "3643",
-    "unicode": "⠤⠫"
+    "unicode": "⠤⠫",
+    "world": "⠤⠴⠫⠲"
   },
   {
     "input": "-ar",
     "internal": "->",
     "expected": "3628",
-    "unicode": "⠤⠜"
+    "unicode": "⠤⠜",
+    "world": "⠤⠴⠁⠗⠲"
   },
   {
     "input": "ar-",
     "internal": ">-",
     "expected": "2836",
-    "unicode": "⠜⠤"
+    "unicode": "⠜⠤",
+    "world": "⠴⠁⠗⠲⠤"
   },
   {
     "input": "be-",
     "internal": "be-",
     "expected": "31736",
-    "unicode": "⠃⠑⠤"
+    "unicode": "⠃⠑⠤",
+    "world": "⠴⠃⠑⠲⠤"
   },
   {
     "input": "-es",
     "internal": "-es",
     "expected": "361714",
-    "unicode": "⠤⠑⠎"
+    "unicode": "⠤⠑⠎",
+    "world": "⠤⠴⠑⠎⠲"
   },
   {
     "input": "-s",
     "internal": "-;s",
     "expected": "364814",
-    "unicode": "⠤⠰⠎"
+    "unicode": "⠤⠰⠎",
+    "world": "⠤⠴⠎⠲"
   },
   {
     "input": "~s",
     "internal": "@9s",
     "expected": "82014",
-    "unicode": "⠈⠔⠎"
+    "unicode": "⠈⠔⠎",
+    "world": "⠈⠔⠴⠎⠲"
   }
 ]

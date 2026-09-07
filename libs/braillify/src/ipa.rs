@@ -6,7 +6,7 @@ use crate::rules::context::EncodingMode;
 use crate::{encode, english, utils, with_encoder};
 
 pub(crate) fn is_ipa_phonetic_symbol(c: char) -> bool {
-    matches!(c, 'θ' | 'ə' | 'æ' | 'ŋ' | 'ː')
+    matches!(c, 'θ' | 'ə' | 'æ' | 'ŋ' | 'ː' | 'ˑ')
 }
 
 /// PDF 제38항 자동 감지 — input의 묶음 패턴 안 IPA 음운 기호로 IPA 컨텍스트 추론.
@@ -210,6 +210,7 @@ pub(crate) fn encode_ipa_char(ch: char) -> Option<Vec<u8>> {
     match ch {
         'ə' => Some(vec![34]),       // ⠢ (점 2+6)
         'ː' => Some(vec![18]),       // ⠒ (점 2+5) — 장음 표시
+        'ˑ' => Some(vec![16, 2]),    // ⠐⠂ — 반장음 부호 (IPA 제2장)
         'θ' => Some(vec![40, 57]),   // ⠨⠹ (점 4+6, 점 1+4+5+6)
         'ŋ' => Some(vec![43]),       // ⠫ (점 1+2+4+6)
         'æ' => Some(vec![41]),       // ⠩ (점 1+4+6)
@@ -261,6 +262,12 @@ mod tests {
     #[case::c_wedge('č', vec![3, 8, 38])]
     fn encodes_ueb_14_4_ipa_table_chars(#[case] ch: char, #[case] expected: Vec<u8>) {
         assert_eq!(encode_ipa_char(ch), Some(expected));
+    }
+
+    #[test]
+    fn encodes_korean_ipa_half_length_mark() {
+        assert_eq!(encode_ipa_char('ˑ'), Some(cells("⠐⠂")));
+        assert!(detect_ipa_context("[aˑ]"));
     }
 
     #[test]

@@ -3,20 +3,23 @@
     "input": "$ 4.50",
     "internal": "@s# d4ej",
     "expected": "81460025501726",
-    "unicode": "⠈⠎⠼⠀⠙⠲⠑⠚"
+    "unicode": "⠈⠎⠼⠀⠙⠲⠑⠚",
+    "world": "⠴⠈⠎ ⠼⠙⠲⠑⠚"
   },
   {
     "input": "10.00",
     "internal": "#aj4jj",
     "expected": "60126502626",
-    "unicode": "⠼⠁⠚⠲⠚⠚"
+    "unicode": "⠼⠁⠚⠲⠚⠚",
+    "world": "⠼⠁⠚⠲⠚⠚"
   },
   {
     "input": ".50",
     "context": "english",
     "internal": "#  4ej",
     "expected": "6000501726",
-    "unicode": "⠼⠀⠀⠲⠑⠚"
+    "unicode": "⠼⠀⠀⠲⠑⠚",
+    "world": "⠲⠼⠑⠚"
   },
   {
     "input": "------",
@@ -30,6 +33,7 @@
     "context": "english",
     "internal": "@s#ae4jj",
     "expected": "81460117502626",
-    "unicode": "⠈⠎⠼⠁⠑⠲⠚⠚"
+    "unicode": "⠈⠎⠼⠁⠑⠲⠚⠚",
+    "world": "⠴⠈⠎⠼⠁⠑⠲⠚⠚"
   }
 ]

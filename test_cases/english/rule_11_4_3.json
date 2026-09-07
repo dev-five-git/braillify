@@ -4,20 +4,23 @@
     "context": "english",
     "internal": "x;9#by",
     "expected": "45482060361",
-    "unicode": "⠭⠰⠔⠼⠃⠽"
+    "unicode": "⠭⠰⠔⠼⠃⠽",
+    "world": "⠴⠭⠘⠼⠃⠽⠲"
   },
   {
     "input": "$x^{2y}$",
     "context": "english",
     "internal": ";;x9<#by>",
     "expected": "48484520356036128",
-    "unicode": "⠰⠰⠭⠔⠣⠼⠃⠽⠜"
+    "unicode": "⠰⠰⠭⠔⠣⠼⠃⠽⠜",
+    "world": "⠴⠈⠎⠴⠭⠈⠢⠸⠣⠼⠃⠽⠐⠴⠈⠎"
   },
   {
     "input": "$x^{\\frac{2}{3}}$",
     "context": "english",
     "internal": "x;9#b/c",
     "expected": "454820603129",
-    "unicode": "⠭⠰⠔⠼⠃⠌⠉"
+    "unicode": "⠭⠰⠔⠼⠃⠌⠉",
+    "world": "⠴⠈⠎⠴⠭⠈⠢⠸⠣⠸⠡⠋⠗⠁⠉⠦⠂⠼⠃⠐⠴⠦⠂⠼⠉⠐⠴⠐⠴⠈⠎"
   }
 ]

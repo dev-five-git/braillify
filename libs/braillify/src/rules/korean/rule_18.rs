@@ -201,6 +201,7 @@ mod tests {
             has_korean_char: true,
             is_all_uppercase: false,
             ascii_starts_at_beginning: false,
+            roman_section_continues_from_previous_word: false,
             skip_count,
             state,
             result,

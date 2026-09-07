@@ -3,360 +3,420 @@
     "input": "antinode",
     "internal": "ant9ode",
     "expected": "1293020212517",
-    "unicode": "⠁⠝⠞⠔⠕⠙⠑"
+    "unicode": "⠁⠝⠞⠔⠕⠙⠑",
+    "world": "⠴⠁⠝⠞⠔⠕⠙⠑⠲"
   },
   {
     "input": "arena",
     "internal": ">5a",
     "expected": "28341",
-    "unicode": "⠜⠢⠁"
+    "unicode": "⠜⠢⠁",
+    "world": "⠴⠜⠢⠁⠲"
   },
   {
     "input": "been",
     "internal": "be5",
     "expected": "31734",
-    "unicode": "⠃⠑⠢"
+    "unicode": "⠃⠑⠢",
+    "world": "⠴⠃⠑⠢⠲"
   },
   {
     "input": "begin",
     "internal": "2g9",
     "expected": "62720",
-    "unicode": "⠆⠛⠔"
+    "unicode": "⠆⠛⠔",
+    "world": "⠴⠆⠛⠔⠲"
   },
   {
     "input": "be'ind",
     "internal": "be'9d",
     "expected": "31742025",
-    "unicode": "⠃⠑⠄⠔⠙"
+    "unicode": "⠃⠑⠄⠔⠙",
+    "world": "⠴⠃⠑⠄⠔⠙⠲"
   },
   {
     "input": "benefit",
     "internal": "b5efit",
     "expected": "33417111030",
-    "unicode": "⠃⠢⠑⠋⠊⠞"
+    "unicode": "⠃⠢⠑⠋⠊⠞",
+    "world": "⠴⠃⠢⠑⠋⠊⠞⠲"
   },
   {
     "input": "binary",
     "internal": "b9>y",
     "expected": "3202861",
-    "unicode": "⠃⠔⠜⠽"
+    "unicode": "⠃⠔⠜⠽",
+    "world": "⠴⠃⠔⠜⠽⠲"
   },
   {
     "input": "binomial",
     "internal": "b9omial",
     "expected": "32021131017",
-    "unicode": "⠃⠔⠕⠍⠊⠁⠇"
+    "unicode": "⠃⠔⠕⠍⠊⠁⠇",
+    "world": "⠴⠃⠔⠕⠍⠊⠁⠇⠲"
   },
   {
     "input": "Blakeney",
     "internal": ",blak5ey",
     "expected": "323715341761",
-    "unicode": "⠠⠃⠇⠁⠅⠢⠑⠽"
+    "unicode": "⠠⠃⠇⠁⠅⠢⠑⠽",
+    "world": "⠴⠠⠃⠇⠁⠅⠢⠑⠽⠲"
   },
   {
     "input": "Caen",
     "internal": ",ca5",
     "expected": "329134",
-    "unicode": "⠠⠉⠁⠢"
+    "unicode": "⠠⠉⠁⠢",
+    "world": "⠴⠠⠉⠁⠢⠲"
   },
   {
     "input": "casino",
     "internal": "cas9o",
     "expected": "91142021",
-    "unicode": "⠉⠁⠎⠔⠕"
+    "unicode": "⠉⠁⠎⠔⠕",
+    "world": "⠴⠉⠁⠎⠔⠕⠲"
   },
   {
     "input": "china",
     "internal": "*9a",
     "expected": "33201",
-    "unicode": "⠡⠔⠁"
+    "unicode": "⠡⠔⠁",
+    "world": "⠴⠡⠔⠁⠲"
   },
   {
     "input": "Chopin",
     "internal": ",*op9",
     "expected": "3233211520",
-    "unicode": "⠠⠡⠕⠏⠔"
+    "unicode": "⠠⠡⠕⠏⠔",
+    "world": "⠴⠠⠡⠕⠏⠔⠲"
   },
   {
     "input": "citizeness",
     "internal": "citiz5ess",
     "expected": "91030105334171414",
-    "unicode": "⠉⠊⠞⠊⠵⠢⠑⠎⠎"
+    "unicode": "⠉⠊⠞⠊⠵⠢⠑⠎⠎",
+    "world": "⠴⠉⠊⠞⠊⠵⠢⠑⠎⠎⠲"
   },
   {
     "input": "deafen",
     "internal": "d1f5",
     "expected": "2521134",
-    "unicode": "⠙⠂⠋⠢"
+    "unicode": "⠙⠂⠋⠢",
+    "world": "⠴⠙⠂⠋⠢⠲"
   },
   {
     "input": "denote",
     "internal": "d5ote",
     "expected": "2534213017",
-    "unicode": "⠙⠢⠕⠞⠑"
+    "unicode": "⠙⠢⠕⠞⠑",
+    "world": "⠴⠙⠢⠕⠞⠑⠲"
   },
   {
     "input": "deny",
     "internal": "d5y",
     "expected": "253461",
-    "unicode": "⠙⠢⠽"
+    "unicode": "⠙⠢⠽",
+    "world": "⠴⠙⠢⠽⠲"
   },
   {
     "input": "disingenuous",
     "internal": "49g5u\\s",
     "expected": "50202734375114",
-    "unicode": "⠲⠔⠛⠢⠥⠳⠎"
+    "unicode": "⠲⠔⠛⠢⠥⠳⠎",
+    "world": "⠴⠲⠔⠛⠢⠥⠳⠎⠲"
   },
   {
     "input": "double-entendre",
     "internal": "d\\ble-5t5dre",
     "expected": "2551371736343034252317",
-    "unicode": "⠙⠳⠃⠇⠑⠤⠢⠞⠢⠙⠗⠑"
+    "unicode": "⠙⠳⠃⠇⠑⠤⠢⠞⠢⠙⠗⠑",
+    "world": "⠴⠙⠳⠃⠇⠑⠤⠢⠞⠢⠙⠗⠑⠲"
   },
   {
     "input": "e'en",
     "internal": "e'5",
     "expected": "17434",
-    "unicode": "⠑⠄⠢"
+    "unicode": "⠑⠄⠢",
+    "world": "⠴⠑⠄⠢⠲"
   },
   {
     "input": "Einstein",
     "internal": ",e9/e9",
     "expected": "321720121720",
-    "unicode": "⠠⠑⠔⠌⠑⠔"
+    "unicode": "⠠⠑⠔⠌⠑⠔",
+    "world": "⠴⠠⠑⠔⠌⠑⠔⠲"
   },
   {
     "input": "enceinte",
     "internal": "5ce9te",
     "expected": "34917203017",
-    "unicode": "⠢⠉⠑⠔⠞⠑"
+    "unicode": "⠢⠉⠑⠔⠞⠑",
+    "world": "⠴⠢⠉⠑⠔⠞⠑⠲"
   },
   {
     "input": "engine",
     "internal": "5g9e",
     "expected": "34272017",
-    "unicode": "⠢⠛⠔⠑"
+    "unicode": "⠢⠛⠔⠑",
+    "world": "⠴⠢⠛⠔⠑⠲"
   },
   {
     "input": "Enid",
     "internal": ",5id",
     "expected": "32341025",
-    "unicode": "⠠⠢⠊⠙"
+    "unicode": "⠠⠢⠊⠙",
+    "world": "⠴⠠⠢⠊⠙⠲"
   },
   {
     "input": "enormous",
     "internal": "5orm\\s",
     "expected": "342123135114",
-    "unicode": "⠢⠕⠗⠍⠳⠎"
+    "unicode": "⠢⠕⠗⠍⠳⠎",
+    "world": "⠴⠢⠕⠗⠍⠳⠎⠲"
   },
   {
     "input": "equinox",
     "internal": "equ9ox",
     "expected": "173137202145",
-    "unicode": "⠑⠟⠥⠔⠕⠭"
+    "unicode": "⠑⠟⠥⠔⠕⠭",
+    "world": "⠴⠑⠟⠥⠔⠕⠭⠲"
   },
   {
     "input": "faint",
     "internal": "fa9t",
     "expected": "1112030",
-    "unicode": "⠋⠁⠔⠞"
+    "unicode": "⠋⠁⠔⠞",
+    "world": "⠴⠋⠁⠔⠞⠲"
   },
   {
     "input": "feminine",
     "internal": "fem99e",
     "expected": "111713202017",
-    "unicode": "⠋⠑⠍⠔⠔⠑"
+    "unicode": "⠋⠑⠍⠔⠔⠑",
+    "world": "⠴⠋⠑⠍⠔⠔⠑⠲"
   },
   {
     "input": "goin'",
     "internal": "go9'",
     "expected": "2721204",
-    "unicode": "⠛⠕⠔⠄"
+    "unicode": "⠛⠕⠔⠄",
+    "world": "⠴⠛⠕⠔⠄"
   },
   {
     "input": "haven't",
     "internal": "hav5't",
     "expected": "1913934430",
-    "unicode": "⠓⠁⠧⠢⠄⠞"
+    "unicode": "⠓⠁⠧⠢⠄⠞",
+    "world": "⠴⠓⠁⠧⠢⠄⠞⠲"
   },
   {
     "input": "henna",
     "internal": "h5na",
     "expected": "1934291",
-    "unicode": "⠓⠢⠝⠁"
+    "unicode": "⠓⠢⠝⠁",
+    "world": "⠴⠓⠢⠝⠁⠲"
   },
   {
     "input": "Inc.",
     "internal": ",9c4",
     "expected": "3220950",
-    "unicode": "⠠⠔⠉⠲"
+    "unicode": "⠠⠔⠉⠲",
+    "world": "⠴⠠⠔⠉⠲"
   },
   {
     "input": "incline",
     "internal": "9cl9e",
     "expected": "20972017",
-    "unicode": "⠔⠉⠇⠔⠑"
+    "unicode": "⠔⠉⠇⠔⠑",
+    "world": "⠴⠔⠉⠇⠔⠑⠲"
   },
   {
     "input": "ingot",
     "internal": "9got",
     "expected": "20272130",
-    "unicode": "⠔⠛⠕⠞"
+    "unicode": "⠔⠛⠕⠞",
+    "world": "⠴⠔⠛⠕⠞⠲"
   },
   {
     "input": "in's",
     "internal": "9's",
     "expected": "20414",
-    "unicode": "⠔⠄⠎"
+    "unicode": "⠔⠄⠎",
+    "world": "⠴⠔⠄⠎⠲"
   },
   {
     "input": "into",
     "internal": "9to",
     "expected": "203021",
-    "unicode": "⠔⠞⠕"
+    "unicode": "⠔⠞⠕",
+    "world": "⠴⠔⠞⠕⠲"
   },
   {
     "input": "maenad",
     "internal": "ma5ad",
     "expected": "13134125",
-    "unicode": "⠍⠁⠢⠁⠙"
+    "unicode": "⠍⠁⠢⠁⠙",
+    "world": "⠴⠍⠁⠢⠁⠙⠲"
   },
   {
     "input": "Montenegro",
     "internal": ",mont5egro",
     "expected": "32132129303417272321",
-    "unicode": "⠠⠍⠕⠝⠞⠢⠑⠛⠗⠕"
+    "unicode": "⠠⠍⠕⠝⠞⠢⠑⠛⠗⠕",
+    "world": "⠴⠠⠍⠕⠝⠞⠢⠑⠛⠗⠕⠲"
   },
   {
     "input": "phoenix",
     "internal": "pho5ix",
     "expected": "151921341045",
-    "unicode": "⠏⠓⠕⠢⠊⠭"
+    "unicode": "⠏⠓⠕⠢⠊⠭",
+    "world": "⠴⠏⠓⠕⠢⠊⠭⠲"
   },
   {
     "input": "p(en)",
     "internal": "p\"<5\">",
     "expected": "151635341628",
-    "unicode": "⠏⠐⠣⠢⠐⠜"
+    "unicode": "⠏⠐⠣⠢⠐⠜",
+    "world": "⠴⠏⠐⠣⠢⠠⠴"
   },
   {
     "input": "p(in)",
     "internal": "p\"<9\">",
     "expected": "151635201628",
-    "unicode": "⠏⠐⠣⠔⠐⠜"
+    "unicode": "⠏⠐⠣⠔⠐⠜",
+    "world": "⠴⠏⠐⠣⠔⠠⠴"
   },
   {
     "input": "prenatal",
     "internal": "pr5atal",
     "expected": "15233413017",
-    "unicode": "⠏⠗⠢⠁⠞⠁⠇"
+    "unicode": "⠏⠗⠢⠁⠞⠁⠇",
+    "world": "⠴⠏⠗⠢⠁⠞⠁⠇⠲"
   },
   {
     "input": "queen",
     "internal": "que5",
     "expected": "31371734",
-    "unicode": "⠟⠥⠑⠢"
+    "unicode": "⠟⠥⠑⠢",
+    "world": "⠴⠟⠥⠑⠢⠲"
   },
   {
     "input": "renew",
     "internal": "r5ew",
     "expected": "23341758",
-    "unicode": "⠗⠢⠑⠺"
+    "unicode": "⠗⠢⠑⠺",
+    "world": "⠴⠗⠢⠑⠺⠲"
   },
   {
     "input": "self-induced",
     "internal": "self-9duc$",
     "expected": "141771136202537943",
-    "unicode": "⠎⠑⠇⠋⠤⠔⠙⠥⠉⠫"
+    "unicode": "⠎⠑⠇⠋⠤⠔⠙⠥⠉⠫",
+    "world": "⠴⠎⠑⠇⠋⠤⠔⠙⠥⠉⠫⠲"
   },
   {
     "input": "shut-ins",
     "internal": "%ut-9s",
     "expected": "413730362014",
-    "unicode": "⠩⠥⠞⠤⠔⠎"
+    "unicode": "⠩⠥⠞⠤⠔⠎",
+    "world": "⠴⠩⠥⠞⠤⠔⠎⠲"
   },
   {
     "input": "to-ing",
     "internal": "to-9g",
     "expected": "3021362027",
-    "unicode": "⠞⠕⠤⠔⠛"
+    "unicode": "⠞⠕⠤⠔⠛",
+    "world": "⠴⠞⠕⠤⠔⠛⠲"
   },
   {
     "input": "within",
     "internal": ")9",
     "expected": "6220",
-    "unicode": "⠾⠔"
+    "unicode": "⠾⠔",
+    "world": "⠴⠾⠔⠲"
   },
   {
     "input": "Athens",
     "internal": ",a!ns",
     "expected": "321462914",
-    "unicode": "⠠⠁⠮⠝⠎"
+    "unicode": "⠠⠁⠮⠝⠎",
+    "world": "⠴⠠⠁⠮⠝⠎⠲"
   },
   {
     "input": "benign",
     "internal": "2nign",
     "expected": "629102729",
-    "unicode": "⠆⠝⠊⠛⠝"
+    "unicode": "⠆⠝⠊⠛⠝",
+    "world": "⠴⠆⠝⠊⠛⠝⠲"
   },
   {
     "input": "business",
     "internal": "busi;s",
     "expected": "33714104814",
-    "unicode": "⠃⠥⠎⠊⠰⠎"
+    "unicode": "⠃⠥⠎⠊⠰⠎",
+    "world": "⠴⠃⠥⠎⠊⠰⠎⠲"
   },
   {
     "input": "cringed",
     "internal": "cr+$",
     "expected": "9234443",
-    "unicode": "⠉⠗⠬⠫"
+    "unicode": "⠉⠗⠬⠫",
+    "world": "⠴⠉⠗⠬⠫⠲"
   },
   {
     "input": "fenced",
     "internal": "f;ed",
     "expected": "11481725",
-    "unicode": "⠋⠰⠑⠙"
+    "unicode": "⠋⠰⠑⠙",
+    "world": "⠴⠋⠰⠑⠙⠲"
   },
   {
     "input": "filename",
     "internal": "file\"n",
     "expected": "11107171629",
-    "unicode": "⠋⠊⠇⠑⠐⠝"
+    "unicode": "⠋⠊⠇⠑⠐⠝",
+    "world": "⠴⠋⠊⠇⠑⠐⠝⠲"
   },
   {
     "input": "forenoon",
     "internal": "=enoon",
     "expected": "631729212129",
-    "unicode": "⠿⠑⠝⠕⠕⠝"
+    "unicode": "⠿⠑⠝⠕⠕⠝",
+    "world": "⠴⠿⠑⠝⠕⠕⠝⠲"
   },
   {
     "input": "Francene",
     "internal": ",fr.ene",
     "expected": "32112340172917",
-    "unicode": "⠠⠋⠗⠨⠑⠝⠑"
+    "unicode": "⠠⠋⠗⠨⠑⠝⠑",
+    "world": "⠴⠠⠋⠗⠨⠑⠝⠑⠲"
   },
   {
     "input": "lament",
     "internal": "la;t",
     "expected": "714830",
-    "unicode": "⠇⠁⠰⠞"
+    "unicode": "⠇⠁⠰⠞",
+    "world": "⠴⠇⠁⠰⠞⠲"
   },
   {
     "input": "ménage",
     "internal": "m^/enage",
     "expected": "132412172912717",
-    "unicode": "⠍⠘⠌⠑⠝⠁⠛⠑"
+    "unicode": "⠍⠘⠌⠑⠝⠁⠛⠑",
+    "world": "⠴⠍⠘⠌⠢⠁⠛⠑⠲"
   },
   {
     "input": "señor",
     "internal": "se^]nor",
     "expected": "14172459292123",
-    "unicode": "⠎⠑⠘⠻⠝⠕⠗"
+    "unicode": "⠎⠑⠘⠻⠝⠕⠗",
+    "world": "⠴⠎⠑⠘⠻⠝⠕⠗⠲"
   },
   {
     "input": "toenail",
     "internal": "toenail",
     "expected": "302117291107",
-    "unicode": "⠞⠕⠑⠝⠁⠊⠇"
+    "unicode": "⠞⠕⠑⠝⠁⠊⠇",
+    "world": "⠴⠞⠕⠑⠝⠁⠊⠇⠲"
   }
 ]

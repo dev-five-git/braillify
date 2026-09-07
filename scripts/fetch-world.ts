@@ -19,7 +19,10 @@
  *  - 동시 요청들은 하나의 세션 (CSRF + JSESSIONID) 을 공유한다.
  *  - 403/401 발생 시 mutex 로 보호된 1회 재bootstrap 후 재시도.
  *
- * Usage: bun run scripts/fetch-world.ts
+ * Usage:
+ *   bun run scripts/fetch-world.ts            # existing PDF-rule fixtures (`world`)
+ *   FETCH_WORLD_DIR=english bun scripts/fetch-world.ts  # one fixture category
+ *   FETCH_WORLD_CORPUS=1 bun scripts/fetch-world.ts  # NIKL corpus (`world`)
  */
 
 import { readdir, readFile, writeFile } from 'node:fs/promises'
@@ -32,9 +35,11 @@ const API_URL = 'https://www.braillekorea.org/braille/brailleProcAjax.do'
 const CONCURRENCY = 8
 /** 각 batch 종료 후 대기 시간 (ms). 0 이면 batch 간 지연 없음. */
 const BATCH_DELAY_MS = 50
+const CORPUS_SAVE_EVERY = 1_000
 const TEST_CASES_DIR = join(import.meta.dirname, '..', 'test_cases')
 
 interface TestCaseEntry {
+  id?: string
   input: string
   internal?: string
   expected?: string
@@ -49,6 +54,7 @@ interface TestAlternative {
   expected: string
   unicode: string
 }
+
 
 interface Session {
   cookies: string
@@ -175,9 +181,14 @@ interface FileStats {
   errors: number
 }
 
+type ProviderField = 'world'
+
 async function processFile(
   filePath: string,
   ref: SessionRef,
+  resultField: ProviderField,
+  limit?: number,
+  preserveExisting = false,
 ): Promise<FileStats> {
   const raw = await readFile(filePath, 'utf-8')
   const entries: TestCaseEntry[] = JSON.parse(raw)
@@ -197,12 +208,18 @@ async function processFile(
       stats.skipped++
       continue
     }
+    if (preserveExisting && e[resultField]) {
+      stats.preserved++
+      continue
+    }
     tasks.push({ idx: i, input: e.input })
   }
+  const requestedTasks = Number.isFinite(limit) ? tasks.slice(0, limit) : tasks
+  let fetchedSinceSave = 0
 
   // CONCURRENCY 개씩 batch.
-  for (let i = 0; i < tasks.length; i += CONCURRENCY) {
-    const chunk = tasks.slice(i, i + CONCURRENCY)
+  for (let i = 0; i < requestedTasks.length; i += CONCURRENCY) {
+    const chunk = requestedTasks.slice(i, i + CONCURRENCY)
     const results = await Promise.allSettled(
       chunk.map((t) => fetchWithRetry(t.input, ref)),
     )
@@ -210,12 +227,13 @@ async function processFile(
       const r = results[j]
       const idx = chunk[j].idx
       if (r.status === 'fulfilled') {
-        entries[idx].world = r.value
+        entries[idx][resultField] = r.value
         stats.fetched++
+        fetchedSinceSave++
       } else {
         // 실패 시 기존 entry.world 보존. 이전에 성공한 결과가
         // 일시 장애로 손실되는 것을 방지.
-        if (entries[idx].world && entries[idx].world !== '') {
+        if (entries[idx][resultField] && entries[idx][resultField] !== '') {
           stats.preserved++
         }
         stats.errors++
@@ -225,7 +243,15 @@ async function processFile(
         )
       }
     }
-    if (BATCH_DELAY_MS > 0 && i + CONCURRENCY < tasks.length) {
+    if (
+      preserveExisting &&
+      fetchedSinceSave >= CORPUS_SAVE_EVERY
+    ) {
+      await writeFile(filePath, `${JSON.stringify(entries, null, 2)}\n`, 'utf8')
+      fetchedSinceSave = 0
+      console.log(`  Checkpoint: ${stats.fetched} responses collected`)
+    }
+    if (BATCH_DELAY_MS > 0 && i + CONCURRENCY < requestedTasks.length) {
       await sleep(BATCH_DELAY_MS)
     }
   }
@@ -235,6 +261,8 @@ async function processFile(
 }
 
 async function main(): Promise<void> {
+  const corpusMode =
+    process.argv.includes('--corpus') || process.env.FETCH_WORLD_CORPUS === '1'
   console.log('Bootstrapping session ...')
   const ref: SessionRef = { current: await bootstrap() }
   console.log(
@@ -245,7 +273,50 @@ async function main(): Promise<void> {
     `  Policy: 성공 시에만 갱신 / skip·실패 시 기존 world 값 보존`,
   )
 
+  if (corpusMode) {
+    const corpusDirectory = join(TEST_CASES_DIR, 'corpus')
+    const corpusFiles = (await readdir(corpusDirectory))
+      .filter((file) => /^sentence_\d+\.json$/.test(file))
+      .sort()
+    const limit = Number.parseInt(process.env.JEOMJASESANG_LIMIT ?? '', 10)
+    const stats: FileStats = {
+      total: 0,
+      fetched: 0,
+      skipped: 0,
+      preserved: 0,
+      errors: 0,
+    }
+    console.log(`\n📁 corpus (${corpusFiles.length} shards, NIKL → world)`)
+    for (const file of corpusFiles) {
+      const remaining = Number.isNaN(limit)
+        ? limit
+        : Math.max(0, limit - stats.fetched)
+      if (remaining === 0) break
+      const fileStats = await processFile(
+        join(corpusDirectory, file),
+        ref,
+        'world',
+        remaining,
+        true,
+      )
+      for (const key of Object.keys(stats) as (keyof FileStats)[]) {
+        stats[key] += fileStats[key]
+      }
+    }
+    console.log(
+      `✅ ${stats.fetched} fetched, ${stats.skipped} skipped, ${stats.errors} errors${stats.preserved > 0 ? `, ${stats.preserved} preserved` : ''} (${stats.total} total)`,
+    )
+    return
+  }
+
   const dirs = await readdir(TEST_CASES_DIR)
+  const requestedDirectory = process.env.FETCH_WORLD_DIR
+  const targetDirs = requestedDirectory
+    ? dirs.filter((dir) => dir === requestedDirectory)
+    : dirs.filter((dir) => dir !== 'corpus')
+  if (requestedDirectory && targetDirs.length === 0) {
+    throw new Error(`Unknown test-case directory: ${requestedDirectory}`)
+  }
   const grand: FileStats = {
     total: 0,
     fetched: 0,
@@ -254,7 +325,7 @@ async function main(): Promise<void> {
     errors: 0,
   }
 
-  for (const dir of dirs) {
+  for (const dir of targetDirs) {
     const dirPath = join(TEST_CASES_DIR, dir)
     let files: string[]
     try {
@@ -271,7 +342,7 @@ async function main(): Promise<void> {
       const filePath = join(dirPath, file)
       process.stdout.write(`  ${file} ... `)
       const start = performance.now()
-      const stats = await processFile(filePath, ref)
+      const stats = await processFile(filePath, ref, 'world')
       const dur = ((performance.now() - start) / 1000).toFixed(1)
       console.log(
         `✓ ${stats.fetched} fetched, ${stats.skipped} skipped, ${stats.errors} errors${stats.preserved > 0 ? `, ${stats.preserved} preserved` : ''} (${stats.total} total) [${dur}s]`,

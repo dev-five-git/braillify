@@ -3,206 +3,239 @@
     "input": "10¢",
     "internal": "#aj@c",
     "expected": "6012689",
-    "unicode": "⠼⠁⠚⠈⠉"
+    "unicode": "⠼⠁⠚⠈⠉",
+    "world": "⠼⠁⠚⠴⠈⠉"
   },
   {
     "input": "99c",
     "internal": "#ii;c",
     "expected": "601010489",
-    "unicode": "⠼⠊⠊⠰⠉"
+    "unicode": "⠼⠊⠊⠰⠉",
+    "world": "⠼⠊⠊⠴⠉⠲"
   },
   {
     "input": "DM8",
     "internal": ",,dm#h",
     "expected": "323225136019",
-    "unicode": "⠠⠠⠙⠍⠼⠓"
+    "unicode": "⠠⠠⠙⠍⠼⠓",
+    "world": "⠴⠠⠠⠙⠍⠼⠓"
   },
   {
     "input": "$6",
     "context": "english",
     "internal": "@s#f",
     "expected": "8146011",
-    "unicode": "⠈⠎⠼⠋"
+    "unicode": "⠈⠎⠼⠋",
+    "world": "⠴⠈⠎⠼⠋"
   },
   {
     "input": "A$40",
     "internal": ",a@s#dj",
     "expected": "321814602526",
-    "unicode": "⠠⠁⠈⠎⠼⠙⠚"
+    "unicode": "⠠⠁⠈⠎⠼⠙⠚",
+    "world": "⠴⠠⠁⠈⠎⠼⠙⠚"
   },
   {
     "input": "$19.95",
     "context": "english",
     "internal": "@s#ai4ie",
     "expected": "81460110501017",
-    "unicode": "⠈⠎⠼⠁⠊⠲⠊⠑"
+    "unicode": "⠈⠎⠼⠁⠊⠲⠊⠑",
+    "world": "⠴⠈⠎⠼⠁⠊⠲⠊⠑"
   },
   {
     "input": "$23,783,200",
     "context": "english",
     "internal": "@s#bc1ghc1bjj",
     "expected": "8146039227199232626",
-    "unicode": "⠈⠎⠼⠃⠉⠂⠛⠓⠉⠂⠃⠚⠚"
+    "unicode": "⠈⠎⠼⠃⠉⠂⠛⠓⠉⠂⠃⠚⠚",
+    "world": "⠴⠈⠎⠼⠃⠉⠂⠛⠓⠉⠂⠃⠚⠚"
   },
   {
     "input": "$2bn (2 billion dollars)",
     "internal": "@s#b;bn \"<#b billion doll>s\">",
     "expected": "8146034832901635603031077102129025217728141628",
-    "unicode": "⠈⠎⠼⠃⠰⠃⠝⠀⠐⠣⠼⠃⠀⠃⠊⠇⠇⠊⠕⠝⠀⠙⠕⠇⠇⠜⠎⠐⠜"
+    "unicode": "⠈⠎⠼⠃⠰⠃⠝⠀⠐⠣⠼⠃⠀⠃⠊⠇⠇⠊⠕⠝⠀⠙⠕⠇⠇⠜⠎⠐⠜",
+    "world": "⠴⠈⠎⠼⠃⠴⠃⠝ ⠐⠣⠼⠃ ⠃⠊⠇⠇⠊⠕⠝ ⠙⠕⠇⠇⠜⠎⠠⠴"
   },
   {
     "input": "US$",
     "internal": ",,us@s",
     "expected": "32323714814",
-    "unicode": "⠠⠠⠥⠎⠈⠎"
+    "unicode": "⠠⠠⠥⠎⠈⠎",
+    "world": "⠴⠠⠠⠥⠎⠈⠎"
   },
   {
     "input": "$X",
     "internal": "@s,x",
     "expected": "8143245",
-    "unicode": "⠈⠎⠠⠭"
+    "unicode": "⠈⠎⠠⠭",
+    "world": "⠴⠈⠎⠴⠠⠭⠲"
   },
   {
     "input": "The $ rose.",
     "internal": ",! @s rose4",
     "expected": "3246081402321141750",
-    "unicode": "⠠⠮⠀⠈⠎⠀⠗⠕⠎⠑⠲"
+    "unicode": "⠠⠮⠀⠈⠎⠀⠗⠕⠎⠑⠲",
+    "world": "⠴⠠⠮ ⠈⠎ ⠗⠕⠎⠑⠲"
   },
   {
     "input": "$hop for $aving$",
     "context": "english",
     "internal": "@shop = @sav+@s",
     "expected": "814192115063081413944814",
-    "unicode": "⠈⠎⠓⠕⠏⠀⠿⠀⠈⠎⠁⠧⠬⠈⠎"
+    "unicode": "⠈⠎⠓⠕⠏⠀⠿⠀⠈⠎⠁⠧⠬⠈⠎",
+    "world": "⠴⠈⠎⠴⠓⠕⠏ ⠿ ⠈⠎⠁⠧⠬⠈⠎"
   },
   {
     "input": "20$00 (20 escudos)",
     "internal": "#bj@s#jj \"<#bj escudos\">",
     "expected": "603268146026260163560326017149372521141628",
-    "unicode": "⠼⠃⠚⠈⠎⠼⠚⠚⠀⠐⠣⠼⠃⠚⠀⠑⠎⠉⠥⠙⠕⠎⠐⠜"
+    "unicode": "⠼⠃⠚⠈⠎⠼⠚⠚⠀⠐⠣⠼⠃⠚⠀⠑⠎⠉⠥⠙⠕⠎⠐⠜",
+    "world": "⠼⠃⠚⠴⠈⠎⠼⠚⠚ ⠦⠄⠼⠃⠚ ⠴⠑⠎⠉⠥⠙⠕⠎⠠⠴"
   },
   {
     "input": "€75",
     "context": "english",
     "internal": "@e#ge",
     "expected": "817602717",
-    "unicode": "⠈⠑⠼⠛⠑"
+    "unicode": "⠈⠑⠼⠛⠑",
+    "world": "⠴⠈⠑⠼⠛⠑"
   },
   {
     "input": "30,00€",
     "context": "english",
     "internal": "#cj1jj@e",
     "expected": "6092622626817",
-    "unicode": "⠼⠉⠚⠂⠚⠚⠈⠑"
+    "unicode": "⠼⠉⠚⠂⠚⠚⠈⠑",
+    "world": "⠼⠉⠚⠂⠚⠚⠴⠈⠑"
   },
   {
     "input": "€ and £ accepted",
     "internal": "@e & @l a3ept$",
     "expected": "817047087011817153043",
-    "unicode": "⠈⠑⠀⠯⠀⠈⠇⠀⠁⠒⠑⠏⠞⠫"
+    "unicode": "⠈⠑⠀⠯⠀⠈⠇⠀⠁⠒⠑⠏⠞⠫",
+    "world": "⠴⠈⠑ ⠴⠯ ⠈⠇ ⠁⠒⠑⠏⠞⠫⠲"
   },
   {
     "input": "6€50",
     "context": "english",
     "internal": "#f@e#ej",
     "expected": "6011817601726",
-    "unicode": "⠼⠋⠈⠑⠼⠑⠚"
+    "unicode": "⠼⠋⠈⠑⠼⠑⠚",
+    "world": "⠼⠋⠴⠈⠑⠼⠑⠚"
   },
   {
     "input": "₣1",
     "context": "english",
     "internal": "@f#a",
     "expected": "811601",
-    "unicode": "⠈⠋⠼⠁"
+    "unicode": "⠈⠋⠼⠁",
+    "world": "⠴⠈⠋⠼⠁"
   },
   {
     "input": "1 € = 6.55957₣",
     "internal": "#a @e \"7 #f4eeieg@f",
     "expected": "60108170165406011501717101727811",
-    "unicode": "⠼⠁⠀⠈⠑⠀⠐⠶⠀⠼⠋⠲⠑⠑⠊⠑⠛⠈⠋"
+    "unicode": "⠼⠁⠀⠈⠑⠀⠐⠶⠀⠼⠋⠲⠑⠑⠊⠑⠛⠈⠋",
+    "world": "⠼⠁ ⠴⠈⠑ ⠒⠒ ⠼⠋⠲⠑⠑⠊⠑⠛⠴⠈⠋"
   },
   {
     "input": "5F coin",
     "internal": "#e,f co9",
     "expected": "60173211092120",
-    "unicode": "⠼⠑⠠⠋⠀⠉⠕⠔"
+    "unicode": "⠼⠑⠠⠋⠀⠉⠕⠔",
+    "world": "⠼⠑⠴⠠⠋ ⠉⠕⠔⠲"
   },
   {
     "input": "₦0.20 = 20 kobo",
     "internal": "@n#j4bj \"7 #bj kobo",
     "expected": "829602650326016540603260521321",
-    "unicode": "⠈⠝⠼⠚⠲⠃⠚⠀⠐⠶⠀⠼⠃⠚⠀⠅⠕⠃⠕"
+    "unicode": "⠈⠝⠼⠚⠲⠃⠚⠀⠐⠶⠀⠼⠃⠚⠀⠅⠕⠃⠕",
+    "world": "⠴⠈⠝⠼⠚⠲⠃⠚ ⠒⠒ ⠼⠃⠚ ⠴⠅⠕⠃⠕⠲"
   },
   {
     "input": "£24",
     "internal": "@l#bd",
     "expected": "8760325",
-    "unicode": "⠈⠇⠼⠃⠙"
+    "unicode": "⠈⠇⠼⠃⠙",
+    "world": "⠴⠈⠇⠼⠃⠙"
   },
   {
     "input": "Ir£",
     "internal": ",ir@l",
     "expected": "32102387",
-    "unicode": "⠠⠊⠗⠈⠇"
+    "unicode": "⠠⠊⠗⠈⠇",
+    "world": "⠴⠠⠊⠗⠈⠇"
   },
   {
     "input": "£3m (3 million pounds)",
     "internal": "@l#cm \"<#c million p.ds\">",
     "expected": "87609130163560901310771021290154025141628",
-    "unicode": "⠈⠇⠼⠉⠍⠀⠐⠣⠼⠉⠀⠍⠊⠇⠇⠊⠕⠝⠀⠏⠨⠙⠎⠐⠜"
+    "unicode": "⠈⠇⠼⠉⠍⠀⠐⠣⠼⠉⠀⠍⠊⠇⠇⠊⠕⠝⠀⠏⠨⠙⠎⠐⠜",
+    "world": "⠴⠈⠇⠼⠉⠴⠍ ⠐⠣⠼⠉ ⠍⠊⠇⠇⠊⠕⠝ ⠏⠨⠙⠎⠠⠴"
   },
   {
     "input": "the £ rose",
     "internal": "! @l rose",
     "expected": "46087023211417",
-    "unicode": "⠮⠀⠈⠇⠀⠗⠕⠎⠑"
+    "unicode": "⠮⠀⠈⠇⠀⠗⠕⠎⠑",
+    "world": "⠴⠮ ⠈⠇ ⠗⠕⠎⠑⠲"
   },
   {
     "input": "£X",
     "internal": "@l,x",
     "expected": "873245",
-    "unicode": "⠈⠇⠠⠭"
+    "unicode": "⠈⠇⠠⠭",
+    "world": "⠴⠈⠇⠴⠠⠭⠲"
   },
   {
     "input": "£7 8s 9d",
     "internal": "@l#g #hs #i;d",
     "expected": "8760270601914060104825",
-    "unicode": "⠈⠇⠼⠛⠀⠼⠓⠎⠀⠼⠊⠰⠙"
+    "unicode": "⠈⠇⠼⠛⠀⠼⠓⠎⠀⠼⠊⠰⠙",
+    "world": "⠴⠈⠇⠼⠛ ⠼⠓⠴⠎ ⠼⠊⠰⠙⠲"
   },
   {
     "input": "£7/8/9",
     "internal": "@l#g_/#h_/#i",
     "expected": "8760275612601956126010",
-    "unicode": "⠈⠇⠼⠛⠸⠌⠼⠓⠸⠌⠼⠊"
+    "unicode": "⠈⠇⠼⠛⠸⠌⠼⠓⠸⠌⠼⠊",
+    "world": "⠴⠈⠇⠼⠛⠸⠌⠼⠓⠸⠌⠼⠊"
   },
   {
     "input": "£7-8-9",
     "internal": "@l#g-#h-#i",
     "expected": "876027366019366010",
-    "unicode": "⠈⠇⠼⠛⠤⠼⠓⠤⠼⠊"
+    "unicode": "⠈⠇⠼⠛⠤⠼⠓⠤⠼⠊",
+    "world": "⠴⠈⠇⠼⠛⠤⠼⠓⠤⠼⠊"
   },
   {
     "input": "2p coin",
     "internal": "#bp co9",
     "expected": "60315092120",
-    "unicode": "⠼⠃⠏⠀⠉⠕⠔"
+    "unicode": "⠼⠃⠏⠀⠉⠕⠔",
+    "world": "⠼⠃⠴⠏ ⠉⠕⠔⠲"
   },
   {
     "input": "R25",
     "internal": ",r#be",
     "expected": "322360317",
-    "unicode": "⠠⠗⠼⠃⠑"
+    "unicode": "⠠⠗⠼⠃⠑",
+    "world": "⠴⠠⠗⠼⠃⠑"
   },
   {
     "input": "R5,70",
     "internal": ",r#e1gj",
     "expected": "3223601722726",
-    "unicode": "⠠⠗⠼⠑⠂⠛⠚"
+    "unicode": "⠠⠗⠼⠑⠂⠛⠚",
+    "world": "⠴⠠⠗⠼⠑⠂⠛⠚"
   },
   {
     "input": "¥360",
     "internal": "@y#cfj",
     "expected": "8616091126",
-    "unicode": "⠈⠽⠼⠉⠋⠚"
+    "unicode": "⠈⠽⠼⠉⠋⠚",
+    "world": "⠴⠈⠽⠼⠉⠋⠚"
   }
 ]

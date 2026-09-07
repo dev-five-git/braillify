@@ -1,0 +1,5 @@
+.gradle/
+build/
+native/
+*.class
+hs_err_pid*

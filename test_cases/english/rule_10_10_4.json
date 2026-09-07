@@ -3,114 +3,133 @@
     "input": "beatitude",
     "internal": "2atitude",
     "expected": "61301030372517",
-    "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑"
+    "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑",
+    "world": "⠴⠆⠁⠞⠊⠞⠥⠙⠑⠲"
   },
   {
     "input": "Beatrix",
     "internal": ",2atrix",
     "expected": "326130231045",
-    "unicode": "⠠⠆⠁⠞⠗⠊⠭"
+    "unicode": "⠠⠆⠁⠞⠗⠊⠭",
+    "world": "⠴⠠⠆⠁⠞⠗⠊⠭⠲"
   },
   {
     "input": "bedraggled",
     "internal": "2dra7l$",
     "expected": "62523154743",
-    "unicode": "⠆⠙⠗⠁⠶⠇⠫"
+    "unicode": "⠆⠙⠗⠁⠶⠇⠫",
+    "world": "⠴⠆⠙⠗⠁⠶⠇⠫⠲"
   },
   {
     "input": "benevolence",
     "internal": "2nevol;e",
     "expected": "62917392174817",
-    "unicode": "⠆⠝⠑⠧⠕⠇⠰⠑"
+    "unicode": "⠆⠝⠑⠧⠕⠇⠰⠑",
+    "world": "⠴⠆⠝⠑⠧⠕⠇⠰⠑⠲"
   },
   {
     "input": "benighted",
     "internal": "2ni<t$",
     "expected": "62910353043",
-    "unicode": "⠆⠝⠊⠣⠞⠫"
+    "unicode": "⠆⠝⠊⠣⠞⠫",
+    "world": "⠴⠆⠝⠊⠣⠞⠫⠲"
   },
   {
     "input": "benign",
     "internal": "2nign",
     "expected": "629102729",
-    "unicode": "⠆⠝⠊⠛⠝"
+    "unicode": "⠆⠝⠊⠛⠝",
+    "world": "⠴⠆⠝⠊⠛⠝⠲"
   },
   {
     "input": "berated",
     "internal": "2rat$",
     "expected": "62313043",
-    "unicode": "⠆⠗⠁⠞⠫"
+    "unicode": "⠆⠗⠁⠞⠫",
+    "world": "⠴⠆⠗⠁⠞⠫⠲"
   },
   {
     "input": "congee",
     "internal": "3gee",
     "expected": "18271717",
-    "unicode": "⠒⠛⠑⠑"
+    "unicode": "⠒⠛⠑⠑",
+    "world": "⠴⠒⠛⠑⠑⠲"
   },
   {
     "input": "congenial",
     "internal": "3g5ial",
     "expected": "1827341017",
-    "unicode": "⠒⠛⠢⠊⠁⠇"
+    "unicode": "⠒⠛⠢⠊⠁⠇",
+    "world": "⠴⠒⠛⠢⠊⠁⠇⠲"
   },
   {
     "input": "dishonesty",
     "internal": "4h\"o/y",
     "expected": "501916211261",
-    "unicode": "⠲⠓⠐⠕⠌⠽"
+    "unicode": "⠲⠓⠐⠕⠌⠽",
+    "world": "⠴⠲⠓⠐⠕⠌⠽⠲"
   },
   {
     "input": "distance",
     "internal": "4t.e",
     "expected": "50304017",
-    "unicode": "⠲⠞⠨⠑"
+    "unicode": "⠲⠞⠨⠑",
+    "world": "⠴⠲⠞⠨⠑⠲"
   },
   {
     "input": "beach",
     "internal": "b1*",
     "expected": "3233",
-    "unicode": "⠃⠂⠡"
+    "unicode": "⠃⠂⠡",
+    "world": "⠴⠃⠂⠡⠲"
   },
   {
     "input": "beautiful",
     "internal": "b1uti;l",
     "expected": "32373010487",
-    "unicode": "⠃⠂⠥⠞⠊⠰⠇"
+    "unicode": "⠃⠂⠥⠞⠊⠰⠇",
+    "world": "⠴⠃⠂⠥⠞⠊⠰⠇⠲"
   },
   {
     "input": "bed",
     "internal": "b$",
     "expected": "343",
-    "unicode": "⠃⠫"
+    "unicode": "⠃⠫",
+    "world": "⠴⠃⠫⠲"
   },
   {
     "input": "benefit",
     "internal": "b5efit",
     "expected": "33417111030",
-    "unicode": "⠃⠢⠑⠋⠊⠞"
+    "unicode": "⠃⠢⠑⠋⠊⠞",
+    "world": "⠴⠃⠢⠑⠋⠊⠞⠲"
   },
   {
     "input": "benzene",
     "internal": "b5z5e",
     "expected": "334533417",
-    "unicode": "⠃⠢⠵⠢⠑"
+    "unicode": "⠃⠢⠵⠢⠑",
+    "world": "⠴⠃⠢⠵⠢⠑⠲"
   },
   {
     "input": "berth",
     "internal": "b]?",
     "expected": "35957",
-    "unicode": "⠃⠻⠹"
+    "unicode": "⠃⠻⠹",
+    "world": "⠴⠃⠻⠹⠲"
   },
   {
     "input": "dish",
     "internal": "di%",
     "expected": "251041",
-    "unicode": "⠙⠊⠩"
+    "unicode": "⠙⠊⠩",
+    "world": "⠴⠙⠊⠩⠲"
   },
   {
     "input": "dishevelled",
     "internal": "di%evell$",
     "expected": "2510411739177743",
-    "unicode": "⠙⠊⠩⠑⠧⠑⠇⠇⠫"
+    "unicode": "⠙⠊⠩⠑⠧⠑⠇⠇⠫",
+    "world": "⠴⠙⠊⠩⠑⠧⠑⠇⠇⠫⠲"
   }
 ]

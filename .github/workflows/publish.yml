@@ -40,11 +40,11 @@ jobs:
         with:
           bun-version: latest
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.0.1
       - name: Install maturin
         run: uv pip install maturin --system
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -157,7 +157,7 @@ jobs:
 
       - name: Setup .NET
         if: matrix.dotnet_arch != 'x86' && matrix.rid != 'osx-x64'
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             9.0.x
@@ -208,6 +208,50 @@ jobs:
         run: dotnet test --no-build -c Release --verbosity normal --framework net9.0 Braillify.Tests/Braillify.Tests.csproj
         working-directory: packages/dotnet
 
+  jvm-test:
+    name: JVM Test - ${{ matrix.native-target }}
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            native-target: linux-x86_64
+          - runner: ubuntu-24.04-arm
+            native-target: linux-aarch64
+          - runner: macos-15-intel
+            native-target: macos-x86_64
+          - runner: macos-15
+            native-target: macos-aarch64
+          - runner: windows-2022
+            native-target: windows-x86_64
+    steps:
+      # pull_request_target에서도 PR 코드를 체크아웃해 실제 JVM 바인딩을 테스트한다.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          allow-unsafe-pr-checkout: true
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request_target' }}
+      - name: Test JVM binding
+        run: ./gradlew test --no-daemon
+        working-directory: packages/jvm
+
   deploy-landing:
     name: Deploy Landing
     runs-on: ubuntu-latest
@@ -215,17 +259,18 @@ jobs:
     needs:
       - test
       - dotnet-test
+      - jvm-test
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.0.1
       - name: Install maturin
         run: uv pip install maturin --system
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -263,6 +308,7 @@ jobs:
       - test
       - dotnet-test
       - go-test
+      - jvm-test
     steps:
       - uses: actions/checkout@v7
       - uses: changepacks/action@main
@@ -305,18 +351,18 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.0.1
       - name: Install maturin
         run: uv pip install maturin --system
       - name: Install
@@ -425,7 +471,7 @@ jobs:
             os: macos
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: 3.x
           architecture: ${{ matrix.python-target || '' }}
@@ -459,11 +505,11 @@ jobs:
         with:
           bun-version: latest
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.14"
       - name: Install uv
-        uses: astral-sh/setup-uv@v8.3.2
+        uses: astral-sh/setup-uv@v10.0.1
       - name: Install maturin
         run: uv pip install maturin --system
       - name: Install
@@ -482,17 +528,40 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           path: packages/node/pkg/*
+      # npm (not bun) performs the publish, and it needs `registry-url` here:
+      # that is what writes the registry line into the job's .npmrc, which is
+      # what npm exchanges the Actions OIDC token against. Without it npm has
+      # no registry to authenticate to and falls back to an anonymous PUT,
+      # which the registry answers with a 404 rather than a 401.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      # Trusted Publishing (OIDC) requires npm >= 11.5.1. Node 24 bundles the
+      # 11.x line but not necessarily a new enough patch, so pin it explicitly
+      # rather than depending on whichever npm the runner image happens to
+      # carry.
+      - name: Ensure npm >= 11.5.1 (OIDC floor)
+        run: npm install -g 'npm@^11'
       # - name: Move artifacts
       #   run: bun run artifacts
       #   working-directory: packages/node
       # - name: List packages
       #   run: ls -R ./npm
       #   working-directory: packages/node
+      # Publishes with Trusted Publishing (OIDC): npm exchanges the job's
+      # `id-token` for a short-lived registry credential, so no NPM_TOKEN is
+      # written to .npmrc. Writing one would actually BREAK this - npm prefers
+      # an explicit `_authToken` and never starts the OIDC exchange when it
+      # finds one.
+      #
+      # This requires a trusted publisher registered for `braillify` on
+      # npmjs.com pointing at dev-five-git/braillify and this workflow file;
+      # without it the registry rejects the exchange.
       - name: Publish
         run: |
           # bun install -g @napi-rs/cli
           bun run build
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
 
           # package.json 의 현재 버전이 이미 npm 에 publish 되어 있으면 nothing to do.
           # (버전을 bump 하면 새 버전은 아직 존재하지 않으므로 정상 publish 됨)
@@ -506,7 +575,6 @@ jobs:
           npm publish --access public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node
       # - name: Upload Asset
       #   uses: owjs3901/upload-github-release-asset@main
@@ -768,7 +836,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "9.0.x"
 
@@ -963,8 +1031,6 @@ jobs:
         with:
           upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/c/Cargo.toml'] }}
           asset_path: "c-artifacts/*.tar.gz"
-          
-
   # go
   go-test:
     name: Go Test - ${{ matrix.platform }}
@@ -1137,7 +1203,7 @@ jobs:
 
       - name: Commit libs + new module tag
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           TAG="packages/go/v${{ steps.version.outputs.version }}"
           if git rev-parse "$TAG" >/dev/null 2>&1; then
@@ -1150,3 +1216,423 @@ jobs:
           git tag "$TAG"
           git push origin main
           git push origin "$TAG"
+
+  # jvm
+  # JVM 릴리스 job은 다른 바인딩 게시 흐름과 섞이지 않도록 파일 맨 아래에 둔다.
+  jvm-native-build:
+    name: JVM Native Build - ${{ matrix.native-target }}
+    runs-on: ${{ matrix.runner }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(needs.changepacks.outputs.changepacks, 'packages/jvm/build.gradle.kts') }}
+    needs:
+      - changepacks
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            native-target: linux-x86_64
+            rust-target: x86_64-unknown-linux-gnu
+            library-name: libbraillify_jvm.so
+            glibc: "2.17"
+          - runner: ubuntu-24.04
+            native-target: linux-aarch64
+            rust-target: aarch64-unknown-linux-gnu
+            library-name: libbraillify_jvm.so
+            glibc: "2.17"
+          - runner: macos-15-intel
+            native-target: macos-x86_64
+            rust-target: x86_64-apple-darwin
+            library-name: libbraillify_jvm.dylib
+            deployment-target: "10.13"
+          - runner: macos-15
+            native-target: macos-aarch64
+            rust-target: aarch64-apple-darwin
+            library-name: libbraillify_jvm.dylib
+            deployment-target: "11.0"
+          - runner: windows-2022
+            native-target: windows-x86_64
+            rust-target: x86_64-pc-windows-msvc
+            library-name: braillify_jvm.dll
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.rust-target }}
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Set up Zig
+        if: matrix.glibc
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.14.1
+
+      - name: Install cargo-zigbuild
+        if: matrix.glibc
+        uses: taiki-e/install-action@v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tool: cargo-zigbuild
+
+      - name: Build Linux native library with glibc 2.17 compatibility
+        if: matrix.glibc
+        run: cargo zigbuild --release -p braillify-jvm --target ${{ matrix.rust-target }}.${{ matrix.glibc }}
+
+      - name: Build macOS or Windows native library
+        if: ${{ !matrix.glibc }}
+        run: cargo build --release -p braillify-jvm --target ${{ matrix.rust-target }}
+        env:
+          MACOSX_DEPLOYMENT_TARGET: ${{ matrix.deployment-target }}
+
+      - name: Inspect Linux ABI and dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          LIBRARY: target/${{ matrix.rust-target }}/release/${{ matrix.library-name }}
+        run: |
+          readelf -d "$LIBRARY"
+          readelf --version-info "$LIBRARY"
+          if readelf --version-info "$LIBRARY" \
+            | grep -oE 'GLIBC_[0-9]+\.[0-9]+' \
+            | sort -Vu \
+            | awk -F'[_.]' '$2 > 2 || ($2 == 2 && $3 > 17) { found = 1 } END { exit !found }'; then
+            echo "::error::$LIBRARY requires a GLIBC symbol newer than 2.17"
+            exit 1
+          fi
+          if [ "${{ matrix.native-target }}" = "linux-x86_64" ]; then
+            ldd "$LIBRARY"
+          fi
+
+      - name: Inspect macOS dependencies
+        if: runner.os == 'macOS'
+        run: otool -L target/${{ matrix.rust-target }}/release/${{ matrix.library-name }}
+
+      - name: Inspect Windows dependencies
+        if: runner.os == 'Windows'
+        run: dumpbin /DEPENDENTS target/${{ matrix.rust-target }}/release/${{ matrix.library-name }}
+
+      - name: Upload native library
+        uses: actions/upload-artifact@v7
+        with:
+          name: jvm-native-${{ matrix.native-target }}
+          path: target/${{ matrix.rust-target }}/release/${{ matrix.library-name }}
+          if-no-files-found: error
+          retention-days: 1
+
+  jvm-jar:
+    name: JVM Fat JAR
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(needs.changepacks.outputs.changepacks, 'packages/jvm/build.gradle.kts') }}
+    needs:
+      - changepacks
+      - jvm-native-build
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Download native libraries
+        uses: actions/download-artifact@v8
+        with:
+          pattern: jvm-native-*
+          path: native-artifacts
+
+      - name: Stage native libraries
+        shell: bash
+        run: |
+          stage_native() {
+            local native_target="$1"
+            local library_name="$2"
+            local library
+            library=$(find "native-artifacts/jvm-native-$native_target" -type f -name "$library_name" -print -quit)
+            if [ -z "$library" ]; then
+              echo "::error::Missing $library_name for $native_target"
+              exit 1
+            fi
+            ./packages/jvm/gradlew -p packages/jvm stageNativeLibrary \
+              -PnativeTarget="$native_target" \
+              -PnativeLibrary="$GITHUB_WORKSPACE/$library" \
+              --no-daemon
+          }
+          stage_native linux-x86_64 libbraillify_jvm.so
+          stage_native linux-aarch64 libbraillify_jvm.so
+          stage_native macos-x86_64 libbraillify_jvm.dylib
+          stage_native macos-aarch64 libbraillify_jvm.dylib
+          stage_native windows-x86_64 braillify_jvm.dll
+
+      - name: Assemble fat JAR
+        run: ./gradlew assembleJvmJar --no-daemon
+        working-directory: packages/jvm
+
+      - name: Verify fat JAR
+        shell: bash
+        run: |
+          JAR=$(find packages/jvm/build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)
+          if [ -z "$JAR" ]; then
+            echo "::error::JVM binary JAR was not created"
+            exit 1
+          fi
+          jar tf "$JAR" | sort > jvm-jar-entries.txt
+          for entry in \
+            META-INF/native/linux-x86_64/libbraillify_jvm.so \
+            META-INF/native/linux-aarch64/libbraillify_jvm.so \
+            META-INF/native/macos-x86_64/libbraillify_jvm.dylib \
+            META-INF/native/macos-aarch64/libbraillify_jvm.dylib \
+            META-INF/native/windows-x86_64/braillify_jvm.dll; do
+            grep -Fx "$entry" jvm-jar-entries.txt >/dev/null || {
+              echo "::error::Missing JAR entry: $entry"
+              exit 1
+            }
+          done
+          if find packages/jvm/build/libs -maxdepth 1 -type f -name '*-debug*' -print -quit | grep -q .; then
+            echo "::error::Debug artifact found in JVM release output"
+            exit 1
+          fi
+          sha256sum "$JAR"
+
+      - name: Upload fat JAR
+        uses: actions/upload-artifact@v7
+        with:
+          name: jvm-fat-jar
+          path: packages/jvm/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 1
+
+  jvm-consumer-test:
+    name: JVM JAR Consumer - ${{ matrix.native-target }} / Java ${{ matrix.java-version }}
+    runs-on: ${{ matrix.runner }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(needs.changepacks.outputs.changepacks, 'packages/jvm/build.gradle.kts') }}
+    needs:
+      - changepacks
+      - jvm-jar
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            native-target: linux-x86_64
+            java-version: "17"
+            path-separator: ":"
+          - runner: ubuntu-24.04-arm
+            native-target: linux-aarch64
+            java-version: "17"
+            path-separator: ":"
+          - runner: macos-15-intel
+            native-target: macos-x86_64
+            java-version: "17"
+            path-separator: ":"
+          - runner: macos-15
+            native-target: macos-aarch64
+            java-version: "17"
+            path-separator: ":"
+          - runner: windows-2022
+            native-target: windows-x86_64
+            java-version: "17"
+            path-separator: ";"
+          - runner: ubuntu-24.04
+            native-target: linux-x86_64
+            java-version: "8"
+            path-separator: ":"
+          - runner: ubuntu-24.04
+            native-target: linux-x86_64
+            java-version: "25"
+            path-separator: ":"
+            java-options: --enable-native-access=ALL-UNNAMED
+    steps:
+      - name: Set up Java ${{ matrix.java-version }}
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java-version }}
+
+      - name: Download fat JAR
+        uses: actions/download-artifact@v8
+        with:
+          name: jvm-fat-jar
+          path: jvm-dist
+
+      - name: Compile and run external consumer
+        shell: bash
+        run: |
+          JAR=$(find jvm-dist -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)
+          if [ -z "$JAR" ]; then
+            echo "::error::JVM binary JAR artifact is missing"
+            exit 1
+          fi
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            JAR=$(cygpath -w "$JAR")
+          fi
+          printf '%s\n' \
+            'import io.github.kdyann.braillify.Braillify;' \
+            'public final class Consumer {' \
+            '  public static void main(String[] args) {' \
+            '    byte[] encoded = Braillify.encode("안녕하세요");' \
+            '    String unicode = Braillify.translateToUnicode("안녕하세요");' \
+            '    String font = Braillify.translateToBrailleFont("안녕하세요");' \
+            '    if (encoded.length == 0 || unicode.isEmpty() || font.isEmpty()) {' \
+            '      throw new AssertionError("Braillify returned an empty result");' \
+            '    }' \
+            '    for (int i = 0; i < unicode.length(); i++) {' \
+            '      char cell = unicode.charAt(i);' \
+            '      if (cell < 0x2800 || cell > 0x28ff) {' \
+            '        throw new AssertionError("Non-braille Unicode result");' \
+            '      }' \
+            '    }' \
+            '  }' \
+            '}' > Consumer.java
+          javac -cp "$JAR" Consumer.java
+          java ${{ matrix.java-options }} -cp "$JAR${{ matrix.path-separator }}." Consumer
+
+      - name: Compile and run Kotlin consumer
+        if: matrix.native-target == 'linux-x86_64' && matrix.java-version == '17'
+        shell: bash
+        run: |
+          JAR=$(find jvm-dist -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' -print -quit)
+          printf '%s\n' \
+            'import io.github.kdyann.braillify.Braillify' \
+            'fun main() {' \
+            '  val encoded = Braillify.encode("안녕하세요")' \
+            '  val unicode = Braillify.translateToUnicode("안녕하세요")' \
+            '  val font = Braillify.translateToBrailleFont("안녕하세요")' \
+            '  check(encoded.isNotEmpty() && unicode.isNotEmpty() && font.isNotEmpty())' \
+            '}' > Consumer.kt
+          kotlinc -jvm-target 1.8 -cp "$JAR" Consumer.kt -include-runtime -d consumer-kotlin.jar
+          java -cp "$JAR:consumer-kotlin.jar" ConsumerKt
+
+  jvm-publish:
+    name: JVM Publish to Maven Central
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(needs.changepacks.outputs.changepacks, 'packages/jvm/build.gradle.kts') }}
+    needs:
+      - changepacks
+      - jvm-native-build
+      - jvm-consumer-test
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Download native libraries
+        uses: actions/download-artifact@v8
+        with:
+          pattern: jvm-native-*
+          path: native-artifacts
+
+      - name: Stage native libraries
+        shell: bash
+        run: |
+          stage_native() {
+            local native_target="$1"
+            local library_name="$2"
+            local library
+            library=$(find "native-artifacts/jvm-native-$native_target" -type f -name "$library_name" -print -quit)
+            if [ -z "$library" ]; then
+              echo "::error::Missing $library_name for $native_target"
+              exit 1
+            fi
+            ./packages/jvm/gradlew -p packages/jvm stageNativeLibrary \
+              -PnativeTarget="$native_target" \
+              -PnativeLibrary="$GITHUB_WORKSPACE/$library" \
+              --no-daemon
+          }
+          stage_native linux-x86_64 libbraillify_jvm.so
+          stage_native linux-aarch64 libbraillify_jvm.so
+          stage_native macos-x86_64 libbraillify_jvm.dylib
+          stage_native macos-aarch64 libbraillify_jvm.dylib
+          stage_native windows-x86_64 braillify_jvm.dll
+
+      - name: Check whether the JVM release already exists
+        id: jvm-release
+        shell: bash
+        run: |
+          VERSION=$(./gradlew properties --no-daemon --console=plain -q | sed -n 's/^version: //p' | head -1)
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not resolve the JVM publication version"
+            exit 1
+          fi
+          POM_URL="https://repo1.maven.org/maven2/io/github/kdyann/braillify/$VERSION/braillify-$VERSION.pom"
+          if curl -fsIL "$POM_URL" >/dev/null; then
+            echo "::notice::io.github.kdyann:braillify:$VERSION is already on Maven Central. Nothing to publish."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+        working-directory: packages/jvm
+
+      - name: Create signed Maven Central bundle
+        if: steps.jvm-release.outputs.exists != 'true'
+        run: ./gradlew createCentralBundle --no-daemon
+        working-directory: packages/jvm
+        env:
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+          MAVEN_SIGNING_PASSWORD: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
+
+      - name: Verify Maven Central bundle
+        if: steps.jvm-release.outputs.exists != 'true'
+        shell: bash
+        run: |
+          test -s packages/jvm/build/central/central-bundle.zip
+          unzip -l packages/jvm/build/central/central-bundle.zip
+          unzip -Z1 packages/jvm/build/central/central-bundle.zip > central-bundle-entries.txt
+          for suffix in .jar .pom -sources.jar -javadoc.jar .asc .md5 .sha1; do
+            grep -F -- "$suffix" central-bundle-entries.txt >/dev/null || {
+              echo "::error::Central bundle is missing an artifact ending in $suffix"
+              exit 1
+            }
+          done
+          sha256sum packages/jvm/build/central/central-bundle.zip
+
+      - name: Generate artifact attestation
+        if: steps.jvm-release.outputs.exists != 'true'
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: packages/jvm/build/central/central-bundle.zip
+
+      - name: Publish and validate on Maven Central Portal
+        if: steps.jvm-release.outputs.exists != 'true'
+        run: ./gradlew publishToCentralPortal --no-daemon
+        working-directory: packages/jvm
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_SIGNING_KEY: ${{ secrets.MAVEN_SIGNING_KEY }}
+          MAVEN_SIGNING_PASSWORD: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
+
+      - name: Upload Central bundle
+        if: steps.jvm-release.outputs.exists != 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: jvm-central-bundle
+          path: packages/jvm/build/central/central-bundle.zip
+          if-no-files-found: error
+          retention-days: 7

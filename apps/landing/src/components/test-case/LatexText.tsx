@@ -94,7 +94,7 @@ export function LatexText({ children }: { children: string }) {
         if (seg.kind === 'text')
           return <Fragment key={idx}>{seg.content}</Fragment>
         const html = renderKatex(seg.content, seg.kind === 'block')
-        return <span dangerouslySetInnerHTML={{ __html: html }} key={idx} />
+        return <span key={idx} dangerouslySetInnerHTML={{ __html: html }} />
       })}
     </>
   )

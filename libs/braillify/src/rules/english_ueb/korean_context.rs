@@ -259,6 +259,27 @@ mod tests {
         assert_eq!(got, expected);
     }
 
+    /// In an open Roman span, UEB §10.5's restricted `con` lower groupsign can
+    /// be reached after earlier letters; the strong-sign cascade does not own it.
+    #[test]
+    fn matches_restricted_lower_groupsign_inside_open_roman_word() {
+        let chars = std::hint::black_box("reconsider")
+            .chars()
+            .collect::<Vec<_>>();
+        let matched = match_korean_prefix(KoreanPrefixInput {
+            word: &chars,
+            pos: 2,
+            wrap_active: true,
+            is_all_uppercase: false,
+            at_entry: false,
+            standalone_wordsign: false,
+        })
+        .expect("internal con groupsign must match");
+
+        assert_eq!(matched.cells, vec![decode_unicode('⠒')]);
+        assert_eq!(matched.consumed, 3);
+    }
+
     #[rstest::rstest]
     #[case::alphabetic_you("you", decode_unicode('⠽'), 3)]
     #[case::strong_this("this", decode_unicode('⠹'), 4)]

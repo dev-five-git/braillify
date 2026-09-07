@@ -3,54 +3,63 @@
     "input": "ba\ncon",
     "internal": "ba-\ncon",
     "expected": "3136\n92129",
-    "unicode": "⠃⠁⠤\n⠉⠕⠝"
+    "unicode": "⠃⠁⠤\n⠉⠕⠝",
+    "world": "⠴⠃⠁⠲\n⠴⠉⠕⠝⠲"
   },
   {
     "input": "\"Dis\ngusting!\"",
     "internal": "8,dis-\ngu/+60",
     "expected": "383225101436\n273712442252",
-    "unicode": "⠦⠠⠙⠊⠎⠤\n⠛⠥⠌⠬⠖⠴"
+    "unicode": "⠦⠠⠙⠊⠎⠤\n⠛⠥⠌⠬⠖⠴",
+    "world": "⠦⠴⠠⠙⠊⠎⠲\n⠴⠛⠥⠌⠬⠖⠦"
   },
   {
     "input": "diso\nbedient",
     "internal": "4o-\nb$i5t",
     "expected": "502136\n343103430",
-    "unicode": "⠲⠕⠤\n⠃⠫⠊⠢⠞"
+    "unicode": "⠲⠕⠤\n⠃⠫⠊⠢⠞",
+    "world": "⠴⠲⠕⠲\n⠴⠃⠫⠊⠢⠞⠲"
   },
   {
     "input": "how\nbeit",
     "internal": "h[-\nbeit",
     "expected": "194236\n3171030",
-    "unicode": "⠓⠪⠤\n⠃⠑⠊⠞"
+    "unicode": "⠓⠪⠤\n⠃⠑⠊⠞",
+    "world": "⠴⠓⠪⠲\n⠴⠃⠑⠊⠞⠲"
   },
   {
     "input": "in\nconvenient",
     "internal": "in-\nconv5i5t",
     "expected": "102936\n921293934103430",
-    "unicode": "⠊⠝⠤\n⠉⠕⠝⠧⠢⠊⠢⠞"
+    "unicode": "⠊⠝⠤\n⠉⠕⠝⠧⠢⠊⠢⠞",
+    "world": "⠴⠊⠝⠲\n⠴⠒⠧⠢⠊⠢⠞⠲"
   },
   {
     "input": "indis\ntinct",
     "internal": "9dis-\nt9ct",
     "expected": "2025101436\n3020930",
-    "unicode": "⠔⠙⠊⠎⠤\n⠞⠔⠉⠞"
+    "unicode": "⠔⠙⠊⠎⠤\n⠞⠔⠉⠞",
+    "world": "⠴⠔⠙⠊⠎⠲\n⠴⠞⠔⠉⠞⠲"
   },
   {
     "input": "(re\ndistribute",
     "internal": "\"<re-\ndi/ribute",
     "expected": "1635231736\n25101223103373017",
-    "unicode": "⠐⠣⠗⠑⠤\n⠙⠊⠌⠗⠊⠃⠥⠞⠑"
+    "unicode": "⠐⠣⠗⠑⠤\n⠙⠊⠌⠗⠊⠃⠥⠞⠑",
+    "world": "⠦⠄⠴⠗⠑⠲\n⠴⠲⠞⠗⠊⠃⠥⠞⠑⠲"
   },
   {
     "input": "un\nbecoming",
     "internal": "un-\nbecom+",
     "expected": "372936\n3179211344",
-    "unicode": "⠥⠝⠤\n⠃⠑⠉⠕⠍⠬"
+    "unicode": "⠥⠝⠤\n⠃⠑⠉⠕⠍⠬",
+    "world": "⠴⠥⠝⠲\n⠴⠆⠉⠕⠍⠬⠲"
   },
   {
     "input": "uncon\ncerned",
     "internal": "uncon-\nc]n$",
     "expected": "37299212936\n9592943",
-    "unicode": "⠥⠝⠉⠕⠝⠤\n⠉⠻⠝⠫"
+    "unicode": "⠥⠝⠉⠕⠝⠤\n⠉⠻⠝⠫",
+    "world": "⠴⠥⠝⠉⠕⠝⠲\n⠴⠉⠻⠝⠫⠲"
   }
 ]

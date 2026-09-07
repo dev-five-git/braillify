@@ -3,36 +3,42 @@
     "input": "Use π in the equation.",
     "internal": ",use .p 9 ! equa;n4",
     "expected": "323714170401502004601731371482950",
-    "unicode": "⠠⠥⠎⠑⠀⠨⠏⠀⠔⠀⠮⠀⠑⠟⠥⠁⠰⠝⠲"
+    "unicode": "⠠⠥⠎⠑⠀⠨⠏⠀⠔⠀⠮⠀⠑⠟⠥⠁⠰⠝⠲",
+    "world": "⠴⠠⠥⠎⠑ ⠨⠏ ⠔ ⠮ ⠑⠟⠥⠁⠰⠝⠲"
   },
   {
     "input": "For Σ read sum.",
     "internal": ",= ,.s r1d sum4",
     "expected": "32630324014023225014371350",
-    "unicode": "⠠⠿⠀⠠⠨⠎⠀⠗⠂⠙⠀⠎⠥⠍⠲"
+    "unicode": "⠠⠿⠀⠠⠨⠎⠀⠗⠂⠙⠀⠎⠥⠍⠲",
+    "world": "⠴⠠⠿ ⠠⠨⠎ ⠗⠂⠙ ⠎⠥⠍⠲"
   },
   {
     "input": "μμ stands for micromicron.",
     "internal": ".m.m /&s = micromicron4",
     "expected": "40134013012471406301310923211310923212950",
-    "unicode": "⠨⠍⠨⠍⠀⠌⠯⠎⠀⠿⠀⠍⠊⠉⠗⠕⠍⠊⠉⠗⠕⠝⠲"
+    "unicode": "⠨⠍⠨⠍⠀⠌⠯⠎⠀⠿⠀⠍⠊⠉⠗⠕⠍⠊⠉⠗⠕⠝⠲",
+    "world": "⠴⠨⠍⠨⠍ ⠌⠯⠎ ⠿ ⠍⠊⠉⠗⠕⠍⠊⠉⠗⠕⠝⠲"
   },
   {
     "input": "She is a member of ΦΒΚ.",
     "internal": ",%e is a memb] ( ,,.f.b.k4",
     "expected": "3241170101401013171335905503232401140340550",
-    "unicode": "⠠⠩⠑⠀⠊⠎⠀⠁⠀⠍⠑⠍⠃⠻⠀⠷⠀⠠⠠⠨⠋⠨⠃⠨⠅⠲"
+    "unicode": "⠠⠩⠑⠀⠊⠎⠀⠁⠀⠍⠑⠍⠃⠻⠀⠷⠀⠠⠠⠨⠋⠨⠃⠨⠅⠲",
+    "world": "⠴⠠⠩⠑ ⠊⠎ ⠁ ⠍⠑⠍⠃⠻ ⠷ ⠠⠠⠨⠋⠨⠃⠨⠅⠲"
   },
   {
     "input": "the Α and the Ω",
     "internal": "! ,.a & ! ,.w",
     "expected": "460324010470460324058",
-    "unicode": "⠮⠀⠠⠨⠁⠀⠯⠀⠮⠀⠠⠨⠺"
+    "unicode": "⠮⠀⠠⠨⠁⠀⠯⠀⠮⠀⠠⠨⠺",
+    "world": "⠴⠮ ⠠⠨⠁ ⠯ ⠮ ⠠⠨⠺⠲"
   },
   {
     "input": "THE Α AND THE Ω",
     "internal": ",,,! .a & ! .w,'",
     "expected": "32323246040104704604058324",
-    "unicode": "⠠⠠⠠⠮⠀⠨⠁⠀⠯⠀⠮⠀⠨⠺⠠⠄"
+    "unicode": "⠠⠠⠠⠮⠀⠨⠁⠀⠯⠀⠮⠀⠨⠺⠠⠄",
+    "world": "⠴⠠⠠⠠⠮ ⠨⠁ ⠯ ⠮ ⠨⠺⠠⠄⠲"
   }
 ]

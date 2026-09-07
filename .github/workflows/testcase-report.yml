@@ -42,24 +42,34 @@ jobs:
           total="$(printf '%s\n' "$clean_report" | awk -F': ' '/총 테스트 케이스/ { gsub(/[^0-9]/, "", $2); print $2; exit }')"
           passed="$(printf '%s\n' "$clean_report" | awk -F': ' '/^성공:/ { gsub(/[^0-9]/, "", $2); print $2; exit }')"
           failed="$(printf '%s\n' "$clean_report" | awk -F': ' '/^실패:/ { gsub(/[^0-9]/, "", $2); print $2; exit }')"
+          corpus_passed="$(printf '%s\n' "$clean_report" | awk '/^corpus:/ { split($2, counts, "/"); gsub(/[^0-9]/, "", counts[1]); print counts[1]; exit }')"
+          corpus_total="$(printf '%s\n' "$clean_report" | awk '/^corpus:/ { split($2, counts, "/"); gsub(/[^0-9]/, "", counts[2]); print counts[2]; exit }')"
 
           total="${total:-0}"
           passed="${passed:-0}"
           failed="${failed:-0}"
+          corpus_passed="${corpus_passed:-0}"
+          corpus_total="${corpus_total:-0}"
           success_rate="0.00"
           if [ "$total" -gt 0 ]; then
             success_rate="$(awk -v passed="$passed" -v total="$total" 'BEGIN { printf "%.2f", passed / total * 100 }')"
+          fi
+          corpus_failed=$((corpus_total - corpus_passed))
+          corpus_success_rate="0.00"
+          if [ "$corpus_total" -gt 0 ]; then
+            corpus_success_rate="$(awk -v passed="$corpus_passed" -v total="$corpus_total" 'BEGIN { printf "%.2f", passed / total * 100 }')"
+          else
+            echo '::error::NIKL corpus summary was not found in the testcase output.'
+            status=1
           fi
 
           {
             echo '### Braillify testcase report'
             echo
-            echo '| Metric | Count |'
-            echo '| --- | ---: |'
-            echo "| Total | $total |"
-            echo "| Passed | $passed |"
-            echo "| Failed | $failed |"
-            echo "| Success rate | $success_rate% |"
+            echo '| Suite | Passed | Total | Failed | Success rate |'
+            echo '| --- | ---: | ---: | ---: | ---: |'
+            echo "| Standard testcases | $passed | $total | $failed | $success_rate% |"
+            echo "| NIKL corpus | $corpus_passed | $corpus_total | $corpus_failed | $corpus_success_rate% |"
             echo
             echo 'Command: `cargo test test_by_testcase -- --nocapture`'
           } > testcase-report.md

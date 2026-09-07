@@ -1,3 +1,4 @@
+/// <reference types="bun" />
 import { expect, test } from 'bun:test'
 
 import { normalizeFracBraces } from './normalizeFracBraces'

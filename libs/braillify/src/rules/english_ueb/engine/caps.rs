@@ -81,6 +81,10 @@ pub(super) fn chemical_formula_caps(chars: &[char]) -> bool {
     chars.len() >= 2
         && !matches!(chars, ['C', 'O'])
         && chars.iter().all(|c| matches!(c, 'C' | 'H' | 'O'))
+        // A repeated element is written with a subscript in chemical notation
+        // (`H₂O`, `CO₂`), not by repeating its capital letter. Thus corporate
+        // initialisms such as `COO`/`CCO` must remain ordinary capitals words.
+        && !chars.windows(2).any(|pair| pair[0] == pair[1])
 }
 
 pub(super) fn encode_letters_literal(chars: &[char]) -> Option<Vec<u8>> {
@@ -549,7 +553,7 @@ pub(super) fn is_letter_pronounced_initialism(chars: &[char]) -> bool {
     matches!(
         word.as_str(),
         "WHO" | "OED" | "US" | "IT" | "MSH" | "DAR" | "EST" | "TEN" | "POW" | "FRS"
-    )
+    ) || super::super::pronunciation::cmudict::has_unambiguous_letter_name_pronunciation(chars)
 }
 
 /// §8.6.3 vs §8.8.2 dispatch: whether a lowercase tail after a capitals-word run
@@ -865,6 +869,19 @@ mod tests {
     #[case::hoch2("HOCH₂", "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃")]
     fn encodes_chemical_formula_capitals_8_8_3(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(enc(text), Some(cells(expected)));
+    }
+
+    #[rstest::rstest]
+    #[case::hydroxide(&['O', 'H'], true)]
+    #[case::three_distinct_elements(&['C', 'H', 'O'], true)]
+    #[case::company_co(&['C', 'O'], false)]
+    #[case::chief_operating_officer(&['C', 'O', 'O'], false)]
+    #[case::chief_commercial_officer(&['C', 'C', 'O'], false)]
+    fn identifies_unsubscripted_chemical_capital_runs(
+        #[case] chars: &[char],
+        #[case] expected: bool,
+    ) {
+        assert_eq!(chemical_formula_caps(chars), expected);
     }
 
     /// §15.3.2: in level-change tone notation, an up/down-step arrow printed before

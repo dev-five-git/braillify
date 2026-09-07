@@ -33,8 +33,23 @@ impl TokenRule for MathExpressionTokenRule {
     }
 }
 
+/// Shared character-emission predicate for a Roman identifier whose `+` must
+/// use the UEB general-symbol cells rather than the Korean math plus cell.
+pub(crate) fn is_roman_plus_identifier(chars: &[char]) -> bool {
+    apply::is_korean_prose_roman_plus_identifier(chars)
+        || apply::has_korean_prefix_roman_plus_annotation(chars)
+        || apply::has_korean_prefix_terminal_roman_plus_identifier(chars)
+}
+
 #[cfg(test)]
 mod tests {
+    use super::apply::{
+        has_korean_prefix_roman_hyphen_suffix, has_korean_prefix_roman_plus_annotation,
+        has_korean_prefix_terminal_roman_plus_identifier, is_korean_prose_acronym_parenthetical,
+        is_korean_prose_roman_hyphen_identifier, is_korean_prose_roman_number_identifier,
+        is_korean_prose_roman_plus_identifier, is_korean_prose_roman_slash_identifier,
+        is_korean_prose_single_letter_slash_phrase,
+    };
     use super::detect::is_math_expression;
     use super::helpers::*;
     use super::*;
@@ -70,6 +85,296 @@ mod tests {
     fn test_is_not_math_plain_english() {
         let chars: Vec<char> = "hello".chars().collect();
         assert!(!is_math_expression(&chars, "hello"));
+    }
+
+    /// Korean rules 28/29/34/35: Roman code/compound surfaces must remain on
+    /// the Roman path in Korean prose, while lowercase algebra and one-letter
+    /// subtraction stay math-owned.
+    #[rstest::rstest]
+    #[case::official_roman_number("D-100", true)]
+    #[case::capital_code("AB-12", true)]
+    #[case::capitalised_compound("Title-Case", true)]
+    #[case::enclosed_code("(ABC)-D", true)]
+    #[case::single_capital_lexical_prefix("K-pop", true)]
+    #[case::single_capital_common_term("X-ray", true)]
+    #[case::single_capital_brand_prefix("K-water", true)]
+    #[case::single_lowercase_brand_prefix("k-water", true)]
+    #[case::mixed_case_digit_code("pH-1", true)]
+    #[case::decimal_model_code("GPT-3.5", true)]
+    #[case::lowercase_algebra("x-1", false)]
+    #[case::uppercase_subtraction("A-B", false)]
+    #[case::function_expression("F(x-1)", false)]
+    fn korean_prose_hyphen_identifier_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            is_korean_prose_roman_hyphen_identifier(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    /// Korean rules 29/35 keep a Roman-led name and its adjoining number in
+    /// one Roman section. A one-letter algebraic variable remains math-owned.
+    #[rstest::rstest]
+    #[case::media_generation("Web3.0", true)]
+    #[case::model_version("GPT3.5", true)]
+    #[case::audio_format("MP3", true)]
+    #[case::mixed_case_measure("pH7", true)]
+    #[case::single_letter_variable("x2", false)]
+    #[case::number_first("3ab", false)]
+    #[case::plain_decimal("3.14", false)]
+    #[case::separator_not_between_digits("Web.3", false)]
+    fn korean_prose_roman_number_identifier_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            is_korean_prose_roman_number_identifier(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::enclosed_code("한글(ABC)-D", true)]
+    #[case::roman_gloss_then_code("한글(Title)-AB", true)]
+    #[case::korean_then_single_capital("하쿠토-R", true)]
+    #[case::korean_then_initialism("기장-KBO", true)]
+    #[case::korean_then_lowercase_word("온다-life", true)]
+    #[case::korean_then_alphanumeric_label("대신-Y2HC", true)]
+    #[case::lowercase_algebra("한글(x-1)", false)]
+    #[case::uppercase_subtraction("한글(A-B)", false)]
+    #[case::korean_then_lowercase_variable("값-x", false)]
+    #[case::korean_then_explicit_expression("값-X+1", false)]
+    #[case::korean_then_number("한-3", false)]
+    fn korean_prefix_roman_hyphen_suffix_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            has_korean_prefix_roman_hyphen_suffix(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    /// Korean rules 29 and 33: a Korean/Roman hyphen boundary stays attached,
+    /// uses the Korean hyphen cell, and opens one Roman section after it.
+    #[rstest::rstest]
+    #[case::single_capital("하쿠토-R", "⠚⠋⠍⠓⠥⠤⠴⠠⠗⠲")]
+    #[case::initialism("기장-KBO", "⠈⠕⠨⠶⠤⠴⠠⠠⠅⠃⠕⠲")]
+    #[case::country_initialism("한-UAE", "⠚⠒⠤⠴⠠⠠⠥⠁⠑⠲")]
+    fn korean_to_roman_hyphen_boundary_stays_prose(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(crate::encode_to_unicode(input).as_deref(), Ok(expected));
+    }
+
+    #[rstest::rstest]
+    #[case::standards_bodies("ISO/IEC", true)]
+    #[case::market_pair("WEMIX/KRW", true)]
+    #[case::aircraft_family("F-5E/F", true)]
+    #[case::roman_model_family("NVMe/TCP", true)]
+    #[case::single_letter_fraction("F/N", false)]
+    #[case::algebraic_fraction("A/B", false)]
+    #[case::numeric_fraction("1/2", false)]
+    #[case::equation_context("X≈F/N", false)]
+    fn korean_prose_slash_identifier_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            is_korean_prose_roman_slash_identifier(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::hardware_wallet("H/W Wallet", true)]
+    #[case::relapsed_refractory_cancer("폐암(R/R ES-SCLC)에서", true)]
+    #[case::lowercase_math_description("F/N ratio", false)]
+    #[case::explicit_equation("X≈F/N Result", false)]
+    #[case::isolated_fraction("F/N", false)]
+    fn single_letter_slash_phrase_requires_a_capital_led_roman_continuation(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+        let index = ir
+            .tokens
+            .iter()
+            .position(|token| matches!(token, Token::Word(word) if word.chars.contains(&'/')))
+            .expect("probe must contain a slash word");
+        let Token::Word(word) = &ir.tokens[index] else {
+            unreachable!("selected token must be a word");
+        };
+
+        assert_eq!(
+            is_korean_prose_single_letter_slash_phrase(&ir.tokens, index, &word.chars),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::hardware_wallet("가 H/W Wallet 나", "⠫⠀⠴⠠⠓⠸⠌⠠⠺⠀⠠⠺⠁⠇⠇⠑⠞⠲⠀⠉")]
+    #[case::relapsed_refractory_cancer("가 R/R ES-SCLC 나", "⠫⠀⠴⠠⠗⠸⠌⠠⠗⠀⠠⠠⠑⠎⠤⠠⠠⠎⠉⠇⠉⠲⠀⠉")]
+    #[case::official_math_rule_29("X ≈ F/N", "⠠⠭⠀⠈⠔⠈⠔⠀⠠⠋⠸⠌⠠⠝")]
+    fn slash_phrase_respects_korean_rule_29_without_stealing_math_rule_29(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(crate::encode_to_unicode(input).as_deref(), Ok(expected));
+    }
+
+    #[rstest::rstest]
+    #[case::service("TV+", true)]
+    #[case::safety_grade("TSP+", true)]
+    #[case::alphanumeric_product("HDR10+", true)]
+    #[case::numeric_parenthetical("ATC+(20017936)", true)]
+    #[case::mixed_case_service("U+tv", true)]
+    #[case::attached_korean_particle("XYZ+는", true)]
+    #[case::number_led_identifier("24K+", true)]
+    #[case::identifier_separator("Model.Name+", true)]
+    #[case::repeated_terminal_plus("UV++++", true)]
+    #[case::contextual_single_letter_grade("A+(우수)", true)]
+    #[case::ascii_single_letter_expression("A+(B)", false)]
+    #[case::one_letter_terminal_identifier("A+", true)]
+    #[case::completed_sum("AB+C", false)]
+    #[case::chemical_expression("SmBa0.5-xCo2O5+d", false)]
+    #[case::lexical_compound("Dog+Yoga", true)]
+    #[case::lowercase_math_functions("sin+cos", false)]
+    #[case::korean_service("U+유모바일", true)]
+    #[case::mixed_script_korean_service("U+한글tv", true)]
+    #[case::one_letter_korean_addition("A+나", true)]
+    fn korean_prose_plus_identifier_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            is_korean_prose_roman_plus_identifier(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::closed_lexical_gloss("도가(Dog+Yoga)", true)]
+    #[case::attached_particle("워케이션(Work+Vacation)은", true)]
+    #[case::single_letter_terminal_label("등급(A+)은", true)]
+    #[case::middle_dot_chained_identifier("상품(Service+)·후속(Next+)는", true)]
+    #[case::math_body("공식(A+B)은", false)]
+    #[case::unclosed("도가(Dog+Yoga", false)]
+    fn korean_prefix_plus_annotation_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            has_korean_prefix_roman_plus_annotation(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::roman_suffix("한글TV+는", true)]
+    #[case::numeric_roman_suffix("한글7GB+는", true)]
+    #[case::completed_sum("한글A+B는", false)]
+    #[case::all_capital_internal_ambiguity("한글X+U는", false)]
+    fn korean_prefix_terminal_plus_suffix_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            has_korean_prefix_terminal_roman_plus_identifier(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::acronym_expansion("ABC(Alpha", true)]
+    #[case::alphanumeric_acronym("S2E(System)", true)]
+    #[case::single_math_function("f(x)", false)]
+    #[case::operator_body("AB(x+1)", false)]
+    fn korean_prose_acronym_parenthetical_grammar(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            is_korean_prose_acronym_parenthetical(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    /// Korean rules 29, 35 and 54 compose the same anonymized-person label
+    /// regardless of whether the following honorific is attached or spaced.
+    #[rstest::rstest]
+    #[case::adult("A(27)", "씨는")]
+    #[case::minor_male("B(11)", "군에게")]
+    #[case::minor_female("C(16)", "양의")]
+    #[case::elected_official("A(31)", "도의원을")]
+    #[case::professor("B(61)", "교수를")]
+    #[case::judge("C(54)", "부장판사에게")]
+    fn spaced_anonymized_person_label_uses_korean_prose_composition(
+        #[case] label: &str,
+        #[case] honorific: &str,
+    ) {
+        let input = format!("{label} {honorific}");
+        let mut expected = encode_anonymized_person_label(&label.chars().collect::<Vec<_>>())
+            .expect("valid anonymized-person label");
+        expected.push(0);
+        expected.extend(crate::encode(honorific).expect("Korean honorific must encode"));
+
+        assert_eq!(
+            crate::encode(&input).expect("prose label must encode"),
+            expected
+        );
+    }
+
+    #[test]
+    fn spaced_function_value_is_not_an_anonymized_person_label() {
+        let input = "A(14) 값";
+        let tokens = crate::rules::token::DocumentIR::parse(input, true).tokens;
+        assert!(!super::apply::next_word_begins_korean_prose_label_context(
+            &tokens, 0
+        ));
+    }
+
+    #[rstest::rstest]
+    #[case::lower_list_item("(x)", false)]
+    #[case::upper_list_item("(A)", false)]
+    #[case::plain_parenthesized_word("(abc)", false)]
+    fn standalone_parenthesized_inputs_keep_baseline_detector_result(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = input.chars().collect();
+        assert_eq!(is_math_expression(&chars, input), expected, "input={input}");
+    }
+
+    #[rstest::rstest]
+    #[case::addition("(x+1)")]
+    #[case::fraction("(a/b)")]
+    #[case::subscript("(x₁)")]
+    fn parenthesized_explicit_expressions_keep_existing_math_result(#[case] input: &str) {
+        let chars: Vec<char> = input.chars().collect();
+        assert!(is_math_expression(&chars, input));
+    }
+
+    #[test]
+    fn rule_34_bare_roman_parenthesis_has_exact_particle_suffix() {
+        let bare = crate::encode("링컨(Lincoln)").expect("bare rule 34 form must encode");
+        let attached =
+            crate::encode("링컨(Lincoln)은").expect("particle-attached rule 34 form must encode");
+        let particle = crate::encode("은").expect("particle must encode");
+
+        assert_eq!(
+            attached.strip_prefix(bare.as_slice()),
+            Some(particle.as_slice())
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::comma("링컨(Lincoln)", "링컨(Lincoln),", ",")]
+    #[case::period("링컨(Lincoln)", "링컨(Lincoln).", ".")]
+    fn rule_54_punctuation_follows_closed_roman_parenthesis_without_resplitting(
+        #[case] bare_input: &str,
+        #[case] with_punctuation: &str,
+        #[case] punctuation: &str,
+    ) {
+        let bare = crate::encode(bare_input).expect("bare rule 34 form must encode");
+        let punctuated =
+            crate::encode(with_punctuation).expect("punctuated rule 54 form must encode");
+        let punctuation = crate::encode(punctuation).expect("punctuation must encode");
+
+        assert_eq!(
+            punctuated.strip_prefix(bare.as_slice()),
+            Some(punctuation.as_slice())
+        );
+    }
+
+    #[test]
+    fn rule_34_alphanumeric_o4o_uses_the_same_bare_and_particle_path() {
+        let bare = crate::encode("표기(O4O)").expect("alphanumeric Roman form must encode");
+        let attached =
+            crate::encode("표기(O4O)는").expect("particle-attached Roman form must encode");
+        let particle = crate::encode("는").expect("particle must encode");
+
+        assert_eq!(
+            attached.strip_prefix(bare.as_slice()),
+            Some(particle.as_slice())
+        );
+        assert!(!bare.windows(2).any(|cells| cells == [0, 0]));
     }
 
     #[test]
@@ -208,6 +513,21 @@ mod tests {
         assert!(split_mixed_math_word(&word, 2, MathContext::default()).is_none());
     }
 
+    #[rstest::rstest]
+    #[case::rule_34_particle("링컨(Lincoln)은")]
+    #[case::rule_54_comma("링컨(Lincoln),")]
+    #[case::alphanumeric_roman("표기(O4O).")]
+    fn split_mixed_math_word_keeps_korean_prefixed_closed_roman_annotation(#[case] input: &str) {
+        let chars: Vec<char> = input.chars().collect();
+        let word = crate::rules::token::WordToken {
+            text: Cow::Borrowed(input),
+            chars: chars.clone(),
+            meta: WordMeta::from_chars(&chars),
+        };
+
+        assert!(split_mixed_math_word(&word, 0, MathContext::default()).is_none());
+    }
+
     fn enc(input: &str) -> Vec<u8> {
         crate::encode(input).unwrap_or_default()
     }
@@ -237,14 +557,28 @@ mod tests {
         assert!(!is_combining_math_mark('a'));
     }
 
-    #[test]
-    fn is_middle_dot_numeric_word_paths() {
-        let chars: Vec<char> = "1·2".chars().collect();
-        assert!(is_middle_dot_numeric_word(&chars));
-        let chars: Vec<char> = "ab".chars().collect();
-        assert!(!is_middle_dot_numeric_word(&chars));
-        let chars: Vec<char> = "".chars().collect();
-        assert!(!is_middle_dot_numeric_word(&chars));
+    #[rstest::rstest]
+    #[case::single_middle_dot("1·2", true)]
+    #[case::multiple_middle_dots("2017·2018·2019·2021", true)]
+    #[case::trailing_comma("4·5,", true)]
+    #[case::letters("ab", false)]
+    #[case::empty("", false)]
+    fn is_middle_dot_numeric_word_paths(#[case] input: &str, #[case] expected: bool) {
+        let chars: Vec<char> = input.chars().collect();
+        assert_eq!(is_middle_dot_numeric_word(&chars), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::numeric_fraction("1/3", true)]
+    #[case::year_range("2023/2024", true)]
+    #[case::leading_decimal(".515", true)]
+    #[case::decimal_range("1.77~5.72", true)]
+    #[case::middle_dot_years("2017·2018·2019·2021", true)]
+    #[case::signed_number("-3", false)]
+    #[case::algebra("1/3+x", false)]
+    fn korean_prose_numeric_notation_paths(#[case] input: &str, #[case] expected: bool) {
+        let chars: Vec<char> = input.chars().collect();
+        assert_eq!(is_korean_prose_numeric_notation(&chars), expected);
     }
 
     #[test]

@@ -14,6 +14,10 @@
 
 use super::korean_context::{KoreanPrefixInput, match_korean_prefix};
 use crate::english::encode_english;
+use std::sync::LazyLock;
+
+static KOREAN_WORD_ENGINE: LazyLock<super::engine::EnglishUebEngine> =
+    LazyLock::new(super::engine::EnglishUebEngine::new);
 
 /// One unit of Korean-context English output: a 제37항-restricted UEB contraction
 /// when one begins at `input.pos`, otherwise the single §28 letter cell.
@@ -27,6 +31,35 @@ pub(crate) struct KoreanSpanUnit {
     /// only for contractions — the single-letter case leaves the counter as-is,
     /// matching the legacy [`super::super::korean::rule_28`] branch structure.
     pub(crate) contracted: bool,
+}
+
+/// Encode a complete ASCII Roman run in Korean context with the shared UEB
+/// contraction engine. Korean rule 37 disables wordsigns and shortforms while
+/// retaining multi-letter groupsigns; the engine entry point enforces that gate.
+#[expect(
+    clippy::too_many_arguments,
+    reason = "the wrapper preserves the engine's independent UEB rule gates"
+)]
+pub(crate) fn encode_korean_word(
+    chars: &[char],
+    suppress_caps: bool,
+    prepend_grade1_indicator: bool,
+    standing_alone: bool,
+    word_initial: bool,
+    digit_adjacent: bool,
+    numeric_grade1_active: bool,
+    apostrophe_joined_lexeme: bool,
+) -> Option<Vec<u8>> {
+    KOREAN_WORD_ENGINE.encode_korean_word(
+        chars,
+        suppress_caps,
+        prepend_grade1_indicator,
+        standing_alone,
+        word_initial,
+        digit_adjacent,
+        numeric_grade1_active,
+        apostrophe_joined_lexeme,
+    )
 }
 
 /// Encode the English unit beginning at `input.pos` to UEB cells.

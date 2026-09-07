@@ -3,186 +3,217 @@
     "input": "When will Will meet us?",
     "internal": ",:5 w ,w meet u8",
     "expected": "3249340580325801317173003738",
-    "unicode": "⠠⠱⠢⠀⠺⠀⠠⠺⠀⠍⠑⠑⠞⠀⠥⠦"
+    "unicode": "⠠⠱⠢⠀⠺⠀⠠⠺⠀⠍⠑⠑⠞⠀⠥⠦",
+    "world": "⠴⠠⠱⠢ ⠺ ⠠⠺ ⠍⠑⠑⠞ ⠥⠦"
   },
   {
     "input": "Every child from here knows Mr More.",
     "internal": ",e * f \"h \"ks ,mr ,m4",
     "expected": "32170330110161901651403213230321350",
-    "unicode": "⠠⠑⠀⠡⠀⠋⠀⠐⠓⠀⠐⠅⠎⠀⠠⠍⠗⠀⠠⠍⠲"
+    "unicode": "⠠⠑⠀⠡⠀⠋⠀⠐⠓⠀⠐⠅⠎⠀⠠⠍⠗⠀⠠⠍⠲",
+    "world": "⠴⠠⠐⠑⠽ ⠡ ⠋ ⠐⠓ ⠐⠅⠎ ⠠⠍⠗ ⠠⠍⠲"
   },
   {
     "input": "\"do re mi fa so\"",
     "internal": "8d re mi fa s0",
     "expected": "38250231701310011101452",
-    "unicode": "⠦⠙⠀⠗⠑⠀⠍⠊⠀⠋⠁⠀⠎⠴"
+    "unicode": "⠦⠙⠀⠗⠑⠀⠍⠊⠀⠋⠁⠀⠎⠴",
+    "world": "⠦⠴⠙⠕ ⠗⠑ ⠍⠊ ⠋⠁ ⠎⠴"
   },
   {
     "input": "That is quite fair and very just.",
     "internal": ",t is q fair & v j4",
     "expected": "3230010140310111102304703902650",
-    "unicode": "⠠⠞⠀⠊⠎⠀⠟⠀⠋⠁⠊⠗⠀⠯⠀⠧⠀⠚⠲"
+    "unicode": "⠠⠞⠀⠊⠎⠀⠟⠀⠋⠁⠊⠗⠀⠯⠀⠧⠀⠚⠲",
+    "world": "⠴⠠⠹⠁⠞ ⠊⠎ ⠟ ⠋⠁⠊⠗ ⠯ ⠧ ⠚⠲"
   },
   {
     "input": "\"People, people who need people\"",
     "internal": "8,p1 p :o ne$ p0",
     "expected": "383215201504921029174301552",
-    "unicode": "⠦⠠⠏⠂⠀⠏⠀⠱⠕⠀⠝⠑⠫⠀⠏⠴"
+    "unicode": "⠦⠠⠏⠂⠀⠏⠀⠱⠕⠀⠝⠑⠫⠀⠏⠴",
+    "world": "⠦⠴⠠⠏⠑⠕⠏⠇⠑⠂ ⠏ ⠱⠕ ⠝⠑⠫ ⠏⠴"
   },
   {
     "input": "I do not like that watering-can!",
     "internal": ",i d n l t wat]+-c6",
     "expected": "321002502907030058130594436922",
-    "unicode": "⠠⠊⠀⠙⠀⠝⠀⠇⠀⠞⠀⠺⠁⠞⠻⠬⠤⠉⠖"
+    "unicode": "⠠⠊⠀⠙⠀⠝⠀⠇⠀⠞⠀⠺⠁⠞⠻⠬⠤⠉⠖",
+    "world": "⠴⠠⠊ ⠙ ⠝ ⠇ ⠞ ⠺⠁⠞⠻⠬⠤⠉⠖"
   },
   {
     "input": "But, would the people rather do the can-can for us?",
     "internal": ",b1 wd ! p r d ! c-c = u8",
     "expected": "3232058250460150230250460936906303738",
-    "unicode": "⠠⠃⠂⠀⠺⠙⠀⠮⠀⠏⠀⠗⠀⠙⠀⠮⠀⠉⠤⠉⠀⠿⠀⠥⠦"
+    "unicode": "⠠⠃⠂⠀⠺⠙⠀⠮⠀⠏⠀⠗⠀⠙⠀⠮⠀⠉⠤⠉⠀⠿⠀⠥⠦",
+    "world": "⠴⠠⠃⠥⠞⠂ ⠺⠙ ⠮ ⠏ ⠗ ⠙ ⠮ ⠉⠤⠉ ⠿ ⠥⠦"
   },
   {
     "input": "\"You so-and-so–go away!\"",
     "internal": "8,y s-&-s,-g away60",
     "expected": "3832610143647361432362701581612252",
-    "unicode": "⠦⠠⠽⠀⠎⠤⠯⠤⠎⠠⠤⠛⠀⠁⠺⠁⠽⠖⠴"
+    "unicode": "⠦⠠⠽⠀⠎⠤⠯⠤⠎⠠⠤⠛⠀⠁⠺⠁⠽⠖⠴",
+    "world": "⠦⠴⠠⠽⠳ ⠎⠤⠯⠤⠎⠠⠤⠛ ⠁⠺⠁⠽⠖⠴"
   },
   {
     "input": "\"I do have some–but I would like more!\"",
     "internal": "8,i d h \"s,-b ,i wd l m60",
     "expected": "38321002501901614323630321005825070132252",
-    "unicode": "⠦⠠⠊⠀⠙⠀⠓⠀⠐⠎⠠⠤⠃⠀⠠⠊⠀⠺⠙⠀⠇⠀⠍⠖⠴"
+    "unicode": "⠦⠠⠊⠀⠙⠀⠓⠀⠐⠎⠠⠤⠃⠀⠠⠊⠀⠺⠙⠀⠇⠀⠍⠖⠴",
+    "world": "⠦⠴⠠⠊ ⠙ ⠓ ⠐⠎⠠⠤⠃ ⠠⠊ ⠺⠙ ⠇ ⠍⠖⠴"
   },
   {
     "input": "You can go–but not yet–𝐣𝐮𝐬𝐭 𝐰𝐚𝐢𝐭!",
     "internal": ",y c g,-b n yet,-^1j ^1wait6",
     "expected": "3261090273236302906117303236242260242581103022",
-    "unicode": "⠠⠽⠀⠉⠀⠛⠠⠤⠃⠀⠝⠀⠽⠑⠞⠠⠤⠘⠂⠚⠀⠘⠂⠺⠁⠊⠞⠖"
+    "unicode": "⠠⠽⠀⠉⠀⠛⠠⠤⠃⠀⠝⠀⠽⠑⠞⠠⠤⠘⠂⠚⠀⠘⠂⠺⠁⠊⠞⠖",
+    "world": "⠴⠠⠽⠳ ⠉ ⠛⠠⠤⠃ ⠝ ⠽⠑⠞⠤⠤ ⠖"
   },
   {
     "input": "last will and testament",
     "internal": "la/ w & te/a;t",
     "expected": "7112058047030171214830",
-    "unicode": "⠇⠁⠌⠀⠺⠀⠯⠀⠞⠑⠌⠁⠰⠞"
+    "unicode": "⠇⠁⠌⠀⠺⠀⠯⠀⠞⠑⠌⠁⠰⠞",
+    "world": "⠴⠇⠁⠌ ⠺ ⠯ ⠞⠑⠌⠁⠰⠞⠲"
   },
   {
     "input": "a child-like manner",
     "internal": "a *-l mann]",
     "expected": "10333670131292959",
-    "unicode": "⠁⠀⠡⠤⠇⠀⠍⠁⠝⠝⠻"
+    "unicode": "⠁⠀⠡⠤⠇⠀⠍⠁⠝⠝⠻",
+    "world": "⠴⠁ ⠡⠤⠇ ⠍⠁⠝⠝⠻⠲"
   },
   {
     "input": "will-o'-the-wisp",
     "internal": "w-o'-!-wisp",
     "expected": "583621436463658101415",
-    "unicode": "⠺⠤⠕⠄⠤⠮⠤⠺⠊⠎⠏"
+    "unicode": "⠺⠤⠕⠄⠤⠮⠤⠺⠊⠎⠏",
+    "world": "⠴⠺⠊⠇⠇⠤⠕⠄⠤⠮⠤⠺⠊⠎⠏⠲"
   },
   {
     "input": "\"Do-It-Yourself\"",
     "internal": "8,d-,x-,yrf0",
     "expected": "383225363245363261231152",
-    "unicode": "⠦⠠⠙⠤⠠⠭⠤⠠⠽⠗⠋⠴"
+    "unicode": "⠦⠠⠙⠤⠠⠭⠤⠠⠽⠗⠋⠴",
+    "world": "⠦⠴⠠⠙⠕⠤⠠⠭⠤⠠⠽⠗⠋⠴"
   },
   {
     "input": "come from–not go to",
     "internal": "come f,-n g to",
     "expected": "921131701132362902703021",
-    "unicode": "⠉⠕⠍⠑⠀⠋⠠⠤⠝⠀⠛⠀⠞⠕"
+    "unicode": "⠉⠕⠍⠑⠀⠋⠠⠤⠝⠀⠛⠀⠞⠕",
+    "world": "⠴⠉⠕⠍⠑ ⠋⠠⠤⠝ ⠛ ⠞⠕⠲"
   },
   {
     "input": "(just say so)",
     "internal": "\"<j say s\">",
     "expected": "1635260141610141628",
-    "unicode": "⠐⠣⠚⠀⠎⠁⠽⠀⠎⠐⠜"
+    "unicode": "⠐⠣⠚⠀⠎⠁⠽⠀⠎⠐⠜",
+    "world": "⠦⠄⠴⠚⠥⠌ ⠎⠁⠽ ⠎⠠⠴"
   },
   {
     "input": "As You Like It",
     "internal": ",z ,y ,l ,x",
     "expected": "325303261032703245",
-    "unicode": "⠠⠵⠀⠠⠽⠀⠠⠇⠀⠠⠭"
+    "unicode": "⠠⠵⠀⠠⠽⠀⠠⠇⠀⠠⠭",
+    "world": "⠴⠠⠁⠎ ⠠⠽ ⠠⠇ ⠠⠭⠲"
   },
   {
     "input": "𝐾𝑛𝑜𝑤𝑙𝑒𝑑𝑔𝑒 𝑖𝑠 𝑝𝑜𝑤𝑒𝑟.",
     "internal": ".7,k is p[]4.'",
     "expected": "405432501014015425950404",
-    "unicode": "⠨⠶⠠⠅⠀⠊⠎⠀⠏⠪⠻⠲⠨⠄"
+    "unicode": "⠨⠶⠠⠅⠀⠊⠎⠀⠏⠪⠻⠲⠨⠄",
+    "world": "⠲"
   },
   {
     "input": "likes and dislikes",
     "internal": "likes & 4likes",
     "expected": "7105171404705071051714",
-    "unicode": "⠇⠊⠅⠑⠎⠀⠯⠀⠲⠇⠊⠅⠑⠎"
+    "unicode": "⠇⠊⠅⠑⠎⠀⠯⠀⠲⠇⠊⠅⠑⠎",
+    "world": "⠴⠇⠊⠅⠑⠎ ⠯ ⠲⠇⠊⠅⠑⠎⠲"
   },
   {
     "input": "childlike and likeness",
     "internal": "*ildlike & like;s",
     "expected": "331072571051704707105174814",
-    "unicode": "⠡⠊⠇⠙⠇⠊⠅⠑⠀⠯⠀⠇⠊⠅⠑⠰⠎"
+    "unicode": "⠡⠊⠇⠙⠇⠊⠅⠑⠀⠯⠀⠇⠊⠅⠑⠰⠎",
+    "world": "⠴⠡⠊⠇⠙⠇⠊⠅⠑ ⠯ ⠇⠊⠅⠑⠰⠎⠲"
   },
   {
     "input": "moreover and evermore",
     "internal": "moreov] & \"emore",
     "expected": "132123172139590470161713212317",
-    "unicode": "⠍⠕⠗⠑⠕⠧⠻⠀⠯⠀⠐⠑⠍⠕⠗⠑"
+    "unicode": "⠍⠕⠗⠑⠕⠧⠻⠀⠯⠀⠐⠑⠍⠕⠗⠑",
+    "world": "⠴⠍⠕⠗⠑⠕⠧⠻ ⠯ ⠐⠑⠍⠕⠗⠑⠲"
   },
   {
     "input": "ℎ𝑎𝑣𝑒𝑠 or have-𝑛𝑜𝑡𝑠?",
     "internal": ".1haves or h-.1nots8",
     "expected": "40219139171402123019364022921301438",
-    "unicode": "⠨⠂⠓⠁⠧⠑⠎⠀⠕⠗⠀⠓⠤⠨⠂⠝⠕⠞⠎⠦"
+    "unicode": "⠨⠂⠓⠁⠧⠑⠎⠀⠕⠗⠀⠓⠤⠨⠂⠝⠕⠞⠎⠦",
+    "world": "⠴⠕⠗ ⠓⠤⠦"
   },
   {
     "input": "\"must have\"s",
     "internal": "8m/ have0s",
     "expected": "381312019139175214",
-    "unicode": "⠦⠍⠌⠀⠓⠁⠧⠑⠴⠎"
+    "unicode": "⠦⠍⠌⠀⠓⠁⠧⠑⠴⠎",
+    "world": "⠦⠴⠍⠌ ⠓⠁⠧⠑⠠⠶⠎⠲"
   },
   {
     "input": "www.doityourself.com",
     "internal": "www4doity\\rself4com",
     "expected": "585858502521103061512314177115092113",
-    "unicode": "⠺⠺⠺⠲⠙⠕⠊⠞⠽⠳⠗⠎⠑⠇⠋⠲⠉⠕⠍"
+    "unicode": "⠺⠺⠺⠲⠙⠕⠊⠞⠽⠳⠗⠎⠑⠇⠋⠲⠉⠕⠍",
+    "world": "⠴⠺⠺⠺⠲⠙⠕⠰⠽⠳⠗⠎⠑⠇⠋⠲⠉⠕⠍⠲"
   },
   {
     "input": "\"but, no buts\"",
     "internal": "8b1 no buts0",
     "expected": "3832029210337301452",
-    "unicode": "⠦⠃⠂⠀⠝⠕⠀⠃⠥⠞⠎⠴"
+    "unicode": "⠦⠃⠂⠀⠝⠕⠀⠃⠥⠞⠎⠴",
+    "world": "⠦⠴⠃⠥⠞⠂ ⠝⠕ ⠃⠥⠞⠎⠴"
   },
   {
     "input": "peoples",
     "internal": "peoples",
     "expected": "1517211571714",
-    "unicode": "⠏⠑⠕⠏⠇⠑⠎"
+    "unicode": "⠏⠑⠕⠏⠇⠑⠎",
+    "world": "⠴⠏⠑⠕⠏⠇⠑⠎⠲"
   },
   {
     "input": "𝑒𝑣𝑒𝑟𝑦day",
     "internal": ".1\"ey.'\"d",
     "expected": "4021617614041625",
-    "unicode": "⠨⠂⠐⠑⠽⠨⠄⠐⠙"
+    "unicode": "⠨⠂⠐⠑⠽⠨⠄⠐⠙",
+    "world": "⠴⠐⠙⠲"
   },
   {
     "input": "quite/very",
     "internal": "quite_/v]y",
     "expected": "31371030175612395961",
-    "unicode": "⠟⠥⠊⠞⠑⠸⠌⠧⠻⠽"
+    "unicode": "⠟⠥⠊⠞⠑⠸⠌⠧⠻⠽",
+    "world": "⠴⠟⠥⠊⠞⠑⠸⠌⠧⠻⠽⠲"
   },
   {
     "input": "d'you",
     "internal": "d'y\\",
     "expected": "2546151",
-    "unicode": "⠙⠄⠽⠳"
+    "unicode": "⠙⠄⠽⠳",
+    "world": "⠴⠙⠄⠽⠳⠲"
   },
   {
     "input": "t'do",
     "internal": "t'do",
     "expected": "3042521",
-    "unicode": "⠞⠄⠙⠕"
+    "unicode": "⠞⠄⠙⠕",
+    "world": "⠴⠞⠄⠙⠕⠲"
   },
   {
     "input": "t'have",
     "internal": "t'have",
     "expected": "3041913917",
-    "unicode": "⠞⠄⠓⠁⠧⠑"
+    "unicode": "⠞⠄⠓⠁⠧⠑",
+    "world": "⠴⠞⠄⠓⠁⠧⠑⠲"
   }
 ]

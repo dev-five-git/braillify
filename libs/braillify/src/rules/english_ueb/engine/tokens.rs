@@ -124,6 +124,44 @@ pub(super) fn token_plain_chars(tokens: &[EnglishToken]) -> Vec<char> {
     chars
 }
 
+/// Whether the word token at `i` belongs to an apostrophe-separated sequence
+/// whose elided spelling is a recorded lexical word (`O'PENing` → `opening`).
+/// This is pronunciation evidence for §10.12.1: the capital run is part of a
+/// spoken word rather than a sequence of separately pronounced initials.
+pub(super) fn apostrophe_joined_recorded_token_word(tokens: &[EnglishToken], i: usize) -> bool {
+    let Some(EnglishToken::Word(current)) = tokens.get(i) else {
+        return false;
+    };
+
+    let apostrophe_at = |index: usize| {
+        matches!(
+            tokens.get(index),
+            Some(EnglishToken::Symbol('\'' | '\u{2019}'))
+        )
+    };
+    let word_at = |index: usize| matches!(tokens.get(index), Some(EnglishToken::Word(_)));
+
+    let mut start = i;
+    while start >= 2 && apostrophe_at(start - 1) && word_at(start - 2) {
+        start -= 2;
+    }
+    let mut end = i;
+    while end + 2 < tokens.len() && apostrophe_at(end + 1) && word_at(end + 2) {
+        end += 2;
+    }
+    if start == end {
+        return false;
+    }
+
+    // `start`/`end` are grown only across alternating Word/Apostrophe tokens.
+    // Reuse the exhaustive token flattener instead of repeating an unreachable
+    // defensive match for the already-proven slice shape.
+    let run_start = token_plain_chars(&tokens[start..i]).len();
+    let joined = token_plain_chars(&tokens[start..=end]);
+    let run_end = run_start + current.len();
+    super::super::pronunciation::apostrophe_elided_recorded_word_at(&joined, run_start, run_end)
+}
+
 pub(super) fn token_plain_chars_preserve_word_division(tokens: &[EnglishToken]) -> Vec<char> {
     let mut chars = Vec::new();
     for token in tokens {
@@ -931,6 +969,14 @@ mod tests {
         // §16.5 column gap detection starts at a space; a non-space token → None.
         let tokens = [EnglishToken::Word("a".chars().collect())];
         assert_eq!(styled_column_gap(&tokens, 0), None);
+    }
+
+    #[test]
+    fn apostrophe_lexeme_lookup_requires_a_word_at_the_requested_index() {
+        assert!(!apostrophe_joined_recorded_token_word(
+            &[EnglishToken::Space],
+            0
+        ));
     }
 
     #[test]

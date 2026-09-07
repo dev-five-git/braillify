@@ -107,6 +107,674 @@ fn is_consecutive_ascii_letter_run(chars: &[char]) -> bool {
             .all(|pair| u32::from(pair[1]) == u32::from(pair[0]) + 1)
 }
 
+/// Whether the characters attached after a Roman closing parenthesis belong
+/// to ordinary prose rather than an alphanumeric/math continuation.
+///
+/// Korean rule 34 explicitly attaches the Korean particle in
+/// `링컨(Lincoln)은`. The same boundary applies to a multiword Roman expansion:
+/// Korean text and sentence punctuation after `)` must remain on the prose
+/// path, while a digit or an ASCII letter keeps the token eligible for math.
+fn is_roman_parenthetical_prose_trailer(chars: impl Iterator<Item = char>) -> bool {
+    chars.into_iter().all(|ch| {
+        is_korean_char(ch)
+            || matches!(
+                ch,
+                ',' | '.' | ';' | ':' | '!' | '?' | '·' | '\'' | '"' | '’' | '”'
+            )
+    })
+}
+
+fn is_roman_hyphen(ch: char) -> bool {
+    matches!(
+        ch,
+        '-' | '\u{2010}' | '\u{2011}' | '\u{2012}' | '\u{2013}' | '\u{2014}'
+    )
+}
+
+fn trim_roman_identifier_edge(chars: &[char]) -> &[char] {
+    let mut start = 0usize;
+    let mut end = chars.len();
+    while start < end
+        && matches!(
+            chars[start],
+            '\'' | '"' | '‘' | '“' | '〈' | '《' | '「' | '『'
+        )
+    {
+        start += 1;
+    }
+    while start < end
+        && matches!(
+            chars[end - 1],
+            ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"' | '’' | '”' | '〉' | '》' | '」' | '』'
+        )
+    {
+        end -= 1;
+    }
+    &chars[start..end]
+}
+
+fn is_decimal_separator_between_digits(chars: &[char], index: usize) -> bool {
+    matches!(chars.get(index), Some('.' | ','))
+        && index > 0
+        && chars.get(index - 1).is_some_and(char::is_ascii_digit)
+        && chars.get(index + 1).is_some_and(char::is_ascii_digit)
+}
+
+/// A Roman-led alphanumeric identifier in ordinary Korean prose, such as
+/// `MP3`, `Web3.0`, or `GPT3.5`.
+///
+/// Korean rules 29 and 35 keep an adjoining Roman letters-sequence and number
+/// in the Roman section.  A decimal point/comma is accepted only between two
+/// digits.  Requiring at least two Roman letters keeps a bare algebraic shape
+/// such as `x2` on the mathematical route; explicit math mode is rejected by
+/// the caller as an additional boundary.
+pub(super) fn is_korean_prose_roman_number_identifier(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    if chars.len() < 3 || !chars.first().is_some_and(char::is_ascii_alphabetic) {
+        return false;
+    }
+
+    let mut letter_count = 0usize;
+    let mut has_digit = false;
+    for (index, ch) in chars.iter().enumerate() {
+        if ch.is_ascii_alphabetic() {
+            letter_count += 1;
+        } else if ch.is_ascii_digit() {
+            has_digit = true;
+        } else if !is_decimal_separator_between_digits(chars, index) {
+            return false;
+        }
+    }
+
+    letter_count >= 2 && has_digit
+}
+
+/// A print token whose numeric prefix is immediately followed by Roman
+/// letters, such as `50bp`, `3.1p`, `1st`, or `3x3`.
+///
+/// Korean rules 29 and 35 transcribe the Roman run and the adjoining number
+/// compositionally.  The same print shape can denote algebra in isolation, so
+/// this predicate describes only the token grammar; the caller additionally
+/// requires Korean prose context and rejects explicit/cued mathematics.
+fn is_korean_prose_numeric_roman_identifier(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    let mut index = 0usize;
+    let mut previous_was_digit = false;
+
+    while let Some(&ch) = chars.get(index) {
+        if ch.is_ascii_digit() {
+            previous_was_digit = true;
+            index += 1;
+            continue;
+        }
+        if matches!(ch, ',' | '.')
+            && previous_was_digit
+            && chars.get(index + 1).is_some_and(char::is_ascii_digit)
+        {
+            previous_was_digit = false;
+            index += 1;
+            continue;
+        }
+        break;
+    }
+
+    index > 0
+        && chars.get(index).is_some_and(char::is_ascii_alphabetic)
+        && chars[index..].iter().all(char::is_ascii_alphanumeric)
+}
+
+/// Korean articles 28, 29, 34 and 35 make an ASCII identifier in Korean prose
+/// Roman text unless the caller selected math mode or the print contains an
+/// unambiguous mathematical operator.  A hyphen alone is not such a signal:
+/// the standard's `D-100` is explicitly Roman+number, and UEB treats hyphenated
+/// Roman compounds as one letters-sequence context.
+///
+/// The surface remains ambiguous for algebra such as `x-1`.  Keep a narrow,
+/// script-based default here: digit-bearing identifiers must begin with a
+/// capital Roman letter or have at least two letters in the leading segment;
+/// letter-only compounds need either a capitalised segment of at least two
+/// letters or the lexical `K-pop`/`x-axis` shape of one-letter prefix followed
+/// by a lowercase word. Thus ordinary lowercase `x-1` and uppercase `A-B`
+/// stay on the math path, while model/code and lexical-compound shapes use
+/// rules 28-35.
+pub(super) fn is_korean_prose_roman_hyphen_identifier(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    if chars.is_empty() {
+        return false;
+    }
+
+    // Rule 34 enclosure followed by a Roman continuation, e.g. `(ABC)-D`.
+    let core = if chars.first() == Some(&'(') {
+        let Some(close) = chars.iter().position(|ch| *ch == ')') else {
+            return false;
+        };
+        let enclosed = &chars[1..close];
+        if enclosed.len() < 2
+            || !enclosed.iter().all(char::is_ascii_uppercase)
+            || !chars.get(close + 1).is_some_and(|ch| is_roman_hyphen(*ch))
+        {
+            return false;
+        }
+        &chars[1..]
+    } else {
+        chars
+    };
+
+    // A parenthetical expansion after the identifier is Roman prose only when
+    // the current fragment starts with letters again.  `F(x-1)` therefore
+    // remains math, while a hyphenated acronym followed by a word expansion is
+    // allowed to continue through subsequent whitespace tokens.
+    let identifier_end = core.iter().position(|ch| *ch == '(').unwrap_or(core.len());
+    if identifier_end < core.len() {
+        let body = &core[identifier_end + 1..];
+        if body.is_empty() || !body.iter().all(char::is_ascii_alphabetic) {
+            return false;
+        }
+    }
+    let identifier = &core[..identifier_end];
+
+    if !identifier.iter().any(|ch| is_roman_hyphen(*ch))
+        || !identifier.iter().enumerate().all(|(index, ch)| {
+            ch.is_ascii_alphanumeric()
+                || is_roman_hyphen(*ch)
+                || *ch == ')'
+                || is_decimal_separator_between_digits(identifier, index)
+        })
+    {
+        return false;
+    }
+
+    let segments = identifier.split(|ch| is_roman_hyphen(*ch));
+    let mut has_digit = false;
+    let mut first_ascii_letter = None;
+    let mut has_capitalised_word_segment = false;
+    let mut first_segment_letter_count = 0usize;
+    let mut first_segment_is_single_letter = false;
+    let mut has_later_lowercase_lexical_segment = false;
+    for (segment_index, raw_segment) in segments.enumerate() {
+        let segment = raw_segment
+            .iter()
+            .copied()
+            .filter(|ch| ch.is_ascii_alphanumeric())
+            .collect::<Vec<_>>();
+        if segment.is_empty() {
+            return false;
+        }
+        has_digit |= segment.iter().any(char::is_ascii_digit);
+        first_ascii_letter =
+            first_ascii_letter.or_else(|| segment.iter().copied().find(char::is_ascii_alphabetic));
+        let letter_count = segment.iter().filter(|ch| ch.is_ascii_alphabetic()).count();
+        has_capitalised_word_segment |= letter_count >= 2
+            && segment
+                .iter()
+                .find(|ch| ch.is_ascii_alphabetic())
+                .is_some_and(|ch| ch.is_ascii_uppercase());
+        if segment_index == 0 {
+            first_segment_letter_count = letter_count;
+            first_segment_is_single_letter = segment.len() == 1 && letter_count == 1;
+        } else if first_segment_is_single_letter {
+            has_later_lowercase_lexical_segment |=
+                letter_count >= 2 && segment.iter().all(char::is_ascii_lowercase);
+        }
+    }
+
+    if has_digit {
+        first_segment_letter_count >= 2
+            || first_ascii_letter.is_some_and(|ch| ch.is_ascii_uppercase())
+    } else {
+        has_capitalised_word_segment
+            || (first_segment_is_single_letter && has_later_lowercase_lexical_segment)
+    }
+}
+
+/// Roman identifier joined by a solidus in ordinary Korean prose.
+///
+/// The solidus is shared by UEB Roman text and mathematical division.  Keep
+/// the mathematical one-letter fraction shapes (`A/B`, `F/N`) on the math
+/// route, and recognize only identifier-like forms that start with a capital
+/// and contain at least one multi-character alphanumeric segment.  This covers
+/// standard prose abbreviations and model families such as `ISO/IEC` and
+/// `F-5E/F` without changing an explicitly selected math context.
+pub(super) fn is_korean_prose_roman_slash_identifier(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    if chars.is_empty()
+        || !chars.first().is_some_and(|ch| ch.is_ascii_uppercase())
+        || !chars.contains(&'/')
+        || !chars.iter().all(|ch| {
+            ch.is_ascii_alphanumeric() || *ch == '/' || is_roman_hyphen(*ch) || *ch == '.'
+        })
+    {
+        return false;
+    }
+
+    let mut has_letter = false;
+    let mut has_multi_character_segment = false;
+    for segment in chars.split(|ch| *ch == '/') {
+        if segment.is_empty() || segment.iter().all(|ch| is_roman_hyphen(*ch) || *ch == '.') {
+            return false;
+        }
+        has_letter |= segment.iter().any(char::is_ascii_alphabetic);
+        has_multi_character_segment |= segment
+            .iter()
+            .filter(|ch| ch.is_ascii_alphanumeric())
+            .count()
+            >= 2;
+    }
+    has_letter && has_multi_character_segment
+}
+
+/// A single-letter solidus initialism can be distinguished from mathematical
+/// division when it begins a capital-led multi-letter Roman phrase, such as
+/// `H/W Wallet` or `R/R ES-SCLC`.  Korean rule 29 keeps consecutive Roman words
+/// in one section, while an isolated `F/N` remains on the math path used by the
+/// official mathematics rule 29 example.
+pub(super) fn is_korean_prose_single_letter_slash_phrase(
+    tokens: &[Token<'_>],
+    index: usize,
+    chars: &[char],
+) -> bool {
+    let has_strong_math_symbol = chars.iter().any(|ch| {
+        math_symbol_shortcut::is_math_symbol_char(*ch)
+            && !matches!(*ch, '\u{00B7}' | '\u{22C5}' | '/' | '_')
+    });
+    if has_strong_math_symbol {
+        return false;
+    }
+
+    let has_single_letter_slash_run = (0..chars.len()).any(|start| {
+        if !chars[start].is_ascii_uppercase()
+            || start
+                .checked_sub(1)
+                .and_then(|before| chars.get(before))
+                .is_some_and(|ch| ch.is_ascii_alphanumeric() || *ch == '/')
+        {
+            return false;
+        }
+
+        let mut cursor = start + 1;
+        let mut slash_count = 0usize;
+        while chars.get(cursor) == Some(&'/')
+            && chars
+                .get(cursor + 1)
+                .is_some_and(|ch| ch.is_ascii_uppercase())
+        {
+            slash_count += 1;
+            cursor += 2;
+        }
+
+        slash_count > 0
+            && !chars
+                .get(cursor)
+                .is_some_and(|ch| ch.is_ascii_alphanumeric() || *ch == '/')
+    });
+    if !has_single_letter_slash_run {
+        return false;
+    }
+
+    let Some(next_word) = next_word_skip_space(tokens, index + 1) else {
+        return false;
+    };
+    let mut next_roman = next_word
+        .chars
+        .iter()
+        .copied()
+        .skip_while(|ch| matches!(*ch, '\'' | '"' | '‘' | '“' | '(' | '[' | '{'))
+        .take_while(|ch| ch.is_ascii_alphanumeric() || is_roman_hyphen(*ch));
+    let Some(first) = next_roman.next() else {
+        return false;
+    };
+    first.is_ascii_uppercase()
+        && next_roman.filter(char::is_ascii_alphabetic).count()
+            + usize::from(first.is_ascii_alphabetic())
+            >= 2
+}
+
+fn is_roman_identifier_head_separator(chars: &[char], index: usize) -> bool {
+    matches!(
+        chars.get(index),
+        Some('.' | '/' | '-' | '‐' | '‑' | '‒' | '–' | '—')
+    ) && index > 0
+        && chars[index - 1].is_ascii_alphanumeric()
+        && chars
+            .get(index + 1)
+            .is_some_and(char::is_ascii_alphanumeric)
+}
+
+/// A Roman identifier ending in one or more plus signs.
+///
+/// The head may combine Roman letters with adjoining digits and the ordinary
+/// identifier separators already covered by Korean rules 29/32/35. A head of
+/// two or more alphanumerics is structurally terminal (`TV+`, `24K+`), and a
+/// repeated plus is likewise not a completed binary addition (`C++`). A
+/// one-letter `A+` is terminal in ordinary prose unless a visible right operand
+/// follows; explicit mathematics is rejected by the caller before this rule.
+fn is_terminal_roman_plus_core(core: &[char], allow_single_letter: bool) -> bool {
+    let plus_start = core
+        .iter()
+        .rposition(|ch| *ch != '+')
+        .map_or(0, |index| index + 1);
+    if plus_start == 0 || plus_start == core.len() {
+        return false;
+    }
+
+    let head = &core[..plus_start];
+    let plus_count = core.len() - plus_start;
+    if head.contains(&'+')
+        || !head.iter().enumerate().all(|(index, ch)| {
+            ch.is_ascii_alphanumeric() || is_roman_identifier_head_separator(head, index)
+        })
+        || !head.iter().any(char::is_ascii_alphabetic)
+    {
+        return false;
+    }
+
+    let alphanumeric_count = head.iter().filter(|ch| ch.is_ascii_alphanumeric()).count();
+    alphanumeric_count >= 2
+        || plus_count >= 2
+        || (allow_single_letter && head.len() == 1 && head[0].is_ascii_uppercase())
+}
+
+fn is_attached_plus_prose_trailer_char(ch: char) -> bool {
+    is_korean_char(ch)
+        || matches!(
+            ch,
+            '(' | ')'
+                | '['
+                | ']'
+                | '{'
+                | '}'
+                | ','
+                | '.'
+                | ';'
+                | ':'
+                | '!'
+                | '?'
+                | '\''
+                | '"'
+                | '‘'
+                | '’'
+                | '“'
+                | '”'
+                | '〈'
+                | '〉'
+                | '《'
+                | '》'
+                | '「'
+                | '」'
+                | '『'
+                | '』'
+        )
+}
+
+fn is_terminal_plus_closer_char(ch: char) -> bool {
+    matches!(
+        ch,
+        ')' | ']'
+            | '}'
+            | ','
+            | '.'
+            | ';'
+            | ':'
+            | '!'
+            | '?'
+            | '\''
+            | '"'
+            | '’'
+            | '”'
+            | '〉'
+            | '》'
+            | '」'
+            | '』'
+    )
+}
+
+/// Roman product, service, or lexical compound using a plus sign.
+///
+/// A completed mathematical addition necessarily has a right operand, whereas
+/// a terminal `+` is a common part of a Roman identifier (`TV+`, `HDR10+`). A
+/// Korean particle or annotation may be attached directly after that core, and
+/// repeated plus signs remain part of the same identifier. A one-letter
+/// terminal form stays on this prose path unless a parenthesized ASCII operand
+/// completes the expression; explicit math mode remains math-owned.
+///
+/// A plus between capital-led Roman words is likewise lexical when at least one
+/// side has a lowercase letter and two or more letters (`Dog+Yoga`).  That
+/// orthographic signal deliberately excludes all-capital algebra-like surfaces
+/// such as `AB+C` and lowercase function sums such as `sin+cos`.  Finally, a
+/// single capital immediately followed by `+` and attached Hangul
+/// (`U+유모바일`) is a Roman brand prefix followed by Korean text; Article 46
+/// would require spaces around a genuine Korean addition.
+pub(super) fn is_korean_prose_roman_plus_identifier(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    if chars.is_empty() {
+        return false;
+    }
+
+    let roman_end = chars
+        .iter()
+        .take_while(|ch| {
+            ch.is_ascii_alphanumeric()
+                || **ch == '+'
+                || matches!(**ch, '.' | '/' | '-' | '‐' | '‑' | '‒' | '–' | '—')
+        })
+        .count();
+    let core = &chars[..roman_end];
+    let trailer = &chars[roman_end..];
+    let korean_led_mixed_trailer = trailer.first().is_some_and(|ch| is_korean_char(*ch))
+        && trailer
+            .iter()
+            .all(|ch| ch.is_ascii_alphanumeric() || is_attached_plus_prose_trailer_char(*ch));
+    let trailer_is_prose = trailer.is_empty()
+        || trailer.first() == Some(&'(')
+        || korean_led_mixed_trailer
+        || trailer
+            .iter()
+            .copied()
+            .all(is_attached_plus_prose_trailer_char);
+    if !trailer_is_prose {
+        return false;
+    }
+
+    let has_korean_trailer = trailer.iter().any(|ch| is_korean_char(*ch));
+    let allow_single_letter = trailer.is_empty()
+        || has_korean_trailer
+        || trailer.iter().copied().all(is_terminal_plus_closer_char);
+    if is_terminal_roman_plus_core(core, allow_single_letter) {
+        return true;
+    }
+
+    if !core.first().is_some_and(|ch| ch.is_ascii_uppercase()) {
+        return false;
+    }
+
+    if !core.contains(&'+') {
+        return false;
+    }
+
+    if !core.iter().all(|ch| ch.is_ascii_alphabetic() || *ch == '+') {
+        return false;
+    }
+
+    let segments = core.split(|ch| *ch == '+').collect::<Vec<_>>();
+    segments.len() >= 2
+        && segments.iter().all(|segment| !segment.is_empty())
+        && segments.iter().any(|segment| {
+            segment.len() >= 2
+                && segment.iter().any(char::is_ascii_lowercase)
+                && segment.iter().all(char::is_ascii_alphabetic)
+        })
+}
+
+/// A Korean word may immediately introduce a parenthesized Roman lexical
+/// compound (`도가(Dog+Yoga)`).  Prove the Korean prefix and a closed Roman
+/// body, then reuse the same plus grammar.  Text following the close must be
+/// ordinary Korean prose or punctuation, never another ASCII operand.
+pub(super) fn has_korean_prefix_roman_plus_annotation(chars: &[char]) -> bool {
+    chars.iter().enumerate().any(|(start, ch)| {
+        if !ch.is_ascii_alphabetic() || !chars[..start].iter().any(|prefix| is_korean_char(*prefix))
+        {
+            return false;
+        }
+
+        let suffix = &chars[start..];
+        let Some(close) = suffix.iter().position(|candidate| *candidate == ')') else {
+            return false;
+        };
+        let trailer = &suffix[close + 1..];
+        close > 0
+            && (is_korean_prose_roman_plus_identifier(&suffix[..close])
+                || is_terminal_roman_plus_core(&suffix[..close], true))
+            && (is_roman_parenthetical_prose_trailer(trailer.iter().copied())
+                || trailer
+                    .first()
+                    .is_some_and(|ch| is_korean_char(*ch) || *ch == '·'))
+    })
+}
+
+/// A Korean lexical prefix may attach directly to a terminal Roman identifier
+/// (`한글TV+는`). Once the first Roman/digit run after Korean is found, reuse
+/// the same terminal-plus grammar. A later operand after an earlier plus is not
+/// a new start, so `한글A+B` remains math-owned.
+pub(super) fn has_korean_prefix_terminal_roman_plus_identifier(chars: &[char]) -> bool {
+    chars.iter().enumerate().any(|(start, ch)| {
+        ch.is_ascii_alphanumeric()
+            && chars[..start].iter().any(|prefix| is_korean_char(*prefix))
+            && start
+                .checked_sub(1)
+                .and_then(|index| chars.get(index))
+                .is_none_or(|previous| !previous.is_ascii_alphanumeric() && *previous != '+')
+            && is_korean_prose_roman_plus_identifier(&chars[start..])
+    })
+}
+
+/// A Korean word may attach directly to a hyphenated Roman identifier in two
+/// directions: an enclosed Roman run can continue after a hyphen
+/// (`한글(ABC)-D`), or the Korean run itself can be followed by a Roman
+/// label (`하쿠토-R`, `기장-KBO`). Korean rule 33 proves that `-` at a
+/// Korean/Roman boundary is punctuation rather than mathematical subtraction;
+/// rules 29 and 35 then own the Roman run.
+///
+/// A single lowercase letter remains ambiguous algebra (`값-x`), and an
+/// explicit operator after the Roman start remains math-owned (`값-x+1`).
+pub(super) fn has_korean_prefix_roman_hyphen_suffix(chars: &[char]) -> bool {
+    for (index, ch) in chars.iter().enumerate() {
+        if ch.is_ascii_alphabetic()
+            && chars[..index]
+                .iter()
+                .any(|prefix| crate::utils::is_korean_char(*prefix))
+            && is_korean_prose_roman_hyphen_identifier(&chars[index..])
+        {
+            return true;
+        }
+    }
+
+    chars.windows(3).enumerate().any(|(index, window)| {
+        if !crate::utils::is_korean_char(window[0])
+            || window[1] != '-'
+            || !window[2].is_ascii_alphabetic()
+        {
+            return false;
+        }
+
+        let roman_tail = &chars[index + 2..];
+        let identifier_len = roman_tail
+            .iter()
+            .take_while(|ch| ch.is_ascii_alphanumeric())
+            .count();
+        let letter_count = roman_tail[..identifier_len]
+            .iter()
+            .filter(|ch| ch.is_ascii_alphabetic())
+            .count();
+        let identifier_is_unambiguous = window[2].is_ascii_uppercase() || letter_count >= 2;
+        let has_explicit_math_operator = roman_tail.iter().any(|ch| {
+            matches!(
+                *ch,
+                '+' | '−'
+                    | '×'
+                    | '÷'
+                    | '='
+                    | '<'
+                    | '>'
+                    | '≤'
+                    | '≥'
+                    | '≠'
+                    | '≈'
+                    | '^'
+                    | '_'
+                    | '/'
+                    | '*'
+                    | '|'
+                    | '∈'
+                    | '∉'
+                    | '⊂'
+                    | '⊃'
+                    | '∧'
+                    | '∨'
+            )
+        });
+
+        identifier_is_unambiguous && !has_explicit_math_operator
+    })
+}
+
+/// Whether a spaced `A(31)`-shaped label is followed by ordinary Korean prose.
+///
+/// A print-space plus a Korean person role (`도의원`, `교수`, `부장판사`)
+/// resolves the same function-notation ambiguity as an honorific does.  The
+/// explicit mathematical value/product cues remain on the math route.  This
+/// predicate deliberately requires a real source space and an all-Korean next
+/// word; attached particles are handled by the narrower label splitter.
+pub(super) fn next_word_begins_korean_prose_label_context(
+    tokens: &[Token<'_>],
+    index: usize,
+) -> bool {
+    if !matches!(tokens.get(index + 1), Some(Token::Space(_)))
+        || next_word_starts_with_math_value_cue(tokens, index)
+    {
+        return false;
+    }
+
+    next_indexed_word_skip_space(tokens, index + 1).is_some_and(|(next_index, word)| {
+        next_index > index + 1
+            && word.chars.iter().any(|ch| is_korean_char(*ch))
+            && word
+                .chars
+                .iter()
+                .all(|ch| is_korean_char(*ch) || matches!(*ch, ',' | '.' | '!' | '?'))
+    })
+}
+
+/// Rule 34 parenthetical Roman prose headed by a multi-character acronym.
+/// Requiring at least two alphanumeric head characters and rejecting math
+/// operators keeps `f(x)` / `A(x+1)` in the math engine.
+pub(super) fn is_korean_prose_acronym_parenthetical(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    let Some(open) = chars.iter().position(|ch| *ch == '(') else {
+        return false;
+    };
+    let head = &chars[..open];
+    if head.len() < 2
+        || !head.iter().all(char::is_ascii_alphanumeric)
+        || !head.iter().any(char::is_ascii_uppercase)
+    {
+        return false;
+    }
+
+    let after_open = &chars[open + 1..];
+    let close = after_open.iter().position(|ch| *ch == ')');
+    let body = close.map_or(after_open, |index| &after_open[..index]);
+    if body.is_empty()
+        || !body
+            .iter()
+            .all(|ch| ch.is_ascii_alphanumeric() || is_roman_hyphen(*ch))
+    {
+        return false;
+    }
+    close.is_none_or(|index| {
+        is_roman_parenthetical_prose_trailer(after_open[index + 1..].iter().copied())
+    })
+}
+
 fn has_ascii_letter_korean_math_suffix(chars: &[char]) -> bool {
     if chars.len() < 3 {
         return false;
@@ -142,6 +810,323 @@ fn prev_word_is_math_product_cue(tokens: &[Token<'_>], index: usize) -> bool {
         .checked_sub(1)
         .and_then(|start| prev_word_skip_space(tokens, start))
         .is_some_and(|word| word.text.as_ref() == "곱")
+}
+
+/// Returns true when `word` is the final fragment of a whitespace-split,
+/// closed Roman parenthetical whose earlier fragments contain letters only.
+///
+/// Korean rules 29 and 34 keep consecutive Roman words in one Roman section
+/// and omit its terminator before the closing parenthesis. UEB 9.7.1 likewise
+/// prints multiword prose inside one paired parenthesis. The token parser keeps
+/// the spaces as separate tokens, so the final `Letters)` fragment must not be
+/// mistaken for a standalone mathematical expression merely because it has a
+/// closing bracket. A lowercase/mixed-case ASCII letter immediately before the
+/// opening parenthesis is excluded so function-call syntax such as `f(x)`
+/// remains math-owned; a complete all-capitals initialism (`WTO(World ...),`)
+/// is the ordinary rule-29/34 prose form.
+fn is_multiword_closed_roman_parenthetical_tail(
+    tokens: &[Token<'_>],
+    index: usize,
+    word: &WordToken<'_>,
+) -> bool {
+    let Some(close) = word.chars.iter().position(|ch| *ch == ')') else {
+        return false;
+    };
+    let body = &word.chars[..close];
+    let trailing = &word.chars[close + 1..];
+    if body.is_empty()
+        || !body.iter().all(char::is_ascii_alphabetic)
+        || !is_roman_parenthetical_prose_trailer(trailing.iter().copied())
+    {
+        return false;
+    }
+
+    let mut cursor = index.checked_sub(1);
+    while let Some(i) = cursor {
+        match tokens.get(i) {
+            Some(Token::Space(_)) => cursor = i.checked_sub(1),
+            Some(Token::Word(previous)) => {
+                let previous_text = previous.text.as_ref();
+                if let Some(open) = previous_text.rfind('(') {
+                    let before = &previous_text[..open];
+                    let after = &previous_text[open + 1..];
+                    if after.is_empty() || !after.chars().all(|ch| ch.is_ascii_alphabetic()) {
+                        return false;
+                    }
+                    let before_is_initialism = before.chars().count() >= 2
+                        && before.chars().all(|ch| ch.is_ascii_uppercase());
+                    if before
+                        .chars()
+                        .next_back()
+                        .is_some_and(|ch| ch.is_ascii_alphabetic())
+                        && !before_is_initialism
+                    {
+                        return false;
+                    }
+                    return before.find(['(', ')']).is_none();
+                }
+                if previous_text.chars().all(|ch| ch.is_ascii_alphabetic()) {
+                    cursor = i.checked_sub(1);
+                } else {
+                    return false;
+                }
+            }
+            _ => return false,
+        }
+    }
+    false
+}
+
+/// Returns true when `word` begins a closed, multiword Roman expansion headed
+/// by a complete all-capitals abbreviation.
+///
+/// Korean rules 29 and 34 make this ordinary Roman prose: the headword starts
+/// a Roman section, and the spaces inside the paired parenthesis do not split
+/// that section. The narrow grammar excludes single variables, digits,
+/// operators, nested brackets, and an alphanumeric continuation after `)` so
+/// mathematical expressions remain owned by the math parser.
+fn is_multiword_closed_roman_parenthetical_head(
+    tokens: &[Token<'_>],
+    index: usize,
+    word: &WordToken<'_>,
+) -> bool {
+    let text = word.text.as_ref();
+    let Some(open) = text.find('(') else {
+        return false;
+    };
+    let head = &text[..open];
+    let first_body_word = &text[open + 1..];
+    if head.chars().count() < 2
+        || !head.chars().all(|ch| ch.is_ascii_uppercase())
+        || first_body_word.is_empty()
+        || !first_body_word.chars().all(|ch| ch.is_ascii_alphabetic())
+    {
+        return false;
+    }
+
+    let mut cursor = index + 1;
+    let mut body_words = 1usize;
+    loop {
+        let mut saw_space = false;
+        while matches!(tokens.get(cursor), Some(Token::Space(_))) {
+            saw_space = true;
+            cursor += 1;
+        }
+        if !saw_space {
+            return false;
+        }
+        let Some(Token::Word(next)) = tokens.get(cursor) else {
+            return false;
+        };
+        let next_text = next.text.as_ref();
+        if let Some(close) = next_text.find(')') {
+            let final_body_word = &next_text[..close];
+            let trailing = &next_text[close + 1..];
+            body_words += 1;
+            return body_words >= 2
+                && !final_body_word.is_empty()
+                && final_body_word.chars().all(|ch| ch.is_ascii_alphabetic())
+                && is_roman_parenthetical_prose_trailer(trailing.chars());
+        }
+        if next_text.is_empty() || !next_text.chars().all(|ch| ch.is_ascii_alphabetic()) {
+            return false;
+        }
+        body_words += 1;
+        cursor += 1;
+    }
+}
+
+/// Returns whether `index` belongs to a complete prose parenthetical that is
+/// attached directly to Korean text.
+///
+/// Korean rules 34 and 54 keep the Korean parenthesis outside the enclosed
+/// Roman section (`링컨(Lincoln)은`: `⠦⠄⠴...⠠⠴`).  The generic mathematics
+/// detector must therefore not take ownership merely because the enclosed
+/// text is an all-capitals identifier, an alphanumeric name, or a decimal.
+/// This scan covers a parenthetical split across whitespace tokens as well as
+/// a digit immediately following its close (`용어(Web)3`).
+///
+/// A one-letter variable and an expression carrying an unambiguous operator
+/// remain math-owned.  This is the structural distinction between the rule-34
+/// prose form and ordinary function/expression notation such as `함수(x+1)`.
+fn is_within_attached_korean_prose_parenthetical(tokens: &[Token<'_>], index: usize) -> bool {
+    #[derive(Clone, Copy)]
+    struct Opening {
+        token_index: usize,
+        char_index: usize,
+        attached_to_korean_prose: bool,
+    }
+
+    fn enclosed_chars(
+        tokens: &[Token<'_>],
+        opening: Opening,
+        close_token_index: usize,
+        close_char_index: usize,
+    ) -> Vec<char> {
+        let mut body = Vec::new();
+        for (token_index, token) in tokens
+            .iter()
+            .enumerate()
+            .take(close_token_index + 1)
+            .skip(opening.token_index)
+        {
+            match token {
+                Token::Word(word) => {
+                    let start = if token_index == opening.token_index {
+                        opening.char_index + 1
+                    } else {
+                        0
+                    };
+                    let end = if token_index == close_token_index {
+                        close_char_index
+                    } else {
+                        word.chars.len()
+                    };
+                    if start <= end && end <= word.chars.len() {
+                        body.extend_from_slice(&word.chars[start..end]);
+                    }
+                }
+                Token::Space(_) => body.push(' '),
+                Token::Mode(_) => {}
+                Token::Fraction(_) | Token::PreEncoded(_) => return Vec::new(),
+            }
+        }
+        body
+    }
+
+    fn is_prose_body(body: &[char]) -> bool {
+        let body = body
+            .iter()
+            .copied()
+            .skip_while(|ch| ch.is_whitespace())
+            .collect::<Vec<_>>();
+        let body = body
+            .iter()
+            .copied()
+            .rev()
+            .skip_while(|ch| ch.is_whitespace())
+            .collect::<Vec<_>>()
+            .into_iter()
+            .rev()
+            .collect::<Vec<_>>();
+        if body.is_empty() || body.iter().any(|ch| matches!(*ch, '(' | ')')) {
+            return false;
+        }
+
+        // Operators which cannot be ordinary punctuation or part of a Roman
+        // identifier make the enclosure an explicit mathematical expression.
+        if body.iter().any(|ch| {
+            matches!(
+                *ch,
+                '=' | '<'
+                    | '>'
+                    | '≤'
+                    | '≥'
+                    | '≠'
+                    | '≈'
+                    | '≡'
+                    | '×'
+                    | '÷'
+                    | '√'
+                    | '∑'
+                    | '∏'
+                    | '∫'
+                    | '∈'
+                    | '∉'
+                    | '⊂'
+                    | '⊃'
+                    | '^'
+                    | '_'
+            )
+        }) {
+            return false;
+        }
+
+        // A Korean explanation inside an attached parenthesis is prose.  Its
+        // embedded Roman/numeric fragments are still handled compositionally
+        // by rules 28-35 after this token rule declines the whole expression.
+        if body.iter().any(|ch| is_korean_char(*ch)) {
+            return true;
+        }
+
+        let numeric_annotation = body.iter().any(char::is_ascii_digit)
+            && body.iter().all(|ch| {
+                ch.is_ascii_digit()
+                    || ch.is_whitespace()
+                    || matches!(*ch, '.' | ',' | '%' | '‰' | '+' | '-' | '−' | '~')
+            });
+        if numeric_annotation {
+            return true;
+        }
+
+        let ascii_alphanumeric_count = body.iter().filter(|ch| ch.is_ascii_alphanumeric()).count();
+        let has_ascii_letter = body.iter().any(char::is_ascii_alphabetic);
+        ascii_alphanumeric_count >= 2
+            && has_ascii_letter
+            && body.iter().all(|ch| {
+                ch.is_ascii_alphanumeric()
+                    || ch.is_whitespace()
+                    || matches!(
+                        *ch,
+                        ',' | '.'
+                            | ':'
+                            | ';'
+                            | '\''
+                            | '’'
+                            | '-'
+                            | '‐'
+                            | '‑'
+                            | '‒'
+                            | '–'
+                            | '—'
+                            | '/'
+                            | '&'
+                            | '·'
+                            | '⋅'
+                    )
+            })
+    }
+
+    let mut openings = Vec::<Opening>::new();
+    for (token_index, token) in tokens.iter().enumerate() {
+        let Token::Word(word) = token else {
+            continue;
+        };
+        for (char_index, ch) in word.chars.iter().copied().enumerate() {
+            match ch {
+                '(' => openings.push(Opening {
+                    token_index,
+                    char_index,
+                    attached_to_korean_prose: {
+                        let prefix = &word.chars[..char_index];
+                        let prefix_contains_korean = prefix.iter().any(|ch| is_korean_char(*ch));
+                        let numeric_prefix = !prefix.is_empty()
+                            && prefix.iter().any(char::is_ascii_digit)
+                            && prefix.iter().all(|ch| {
+                                ch.is_ascii_digit()
+                                    || matches!(*ch, '.' | ',' | '\'' | '’' | '"' | '”' | '‘' | '“')
+                            });
+                        prefix_contains_korean
+                            || (numeric_prefix && has_adjacent_korean_word(tokens, token_index))
+                    },
+                }),
+                ')' => {
+                    let Some(opening) = openings.pop() else {
+                        continue;
+                    };
+                    if opening.attached_to_korean_prose
+                        && opening.token_index <= index
+                        && index <= token_index
+                        && is_prose_body(&enclosed_chars(tokens, opening, token_index, char_index))
+                    {
+                        return true;
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+    false
 }
 
 /// Walks backward from `index - 1`, skipping `Space`, returning whether the
@@ -240,13 +1225,36 @@ fn prev_prev_is_math_or_mixed_context(tokens: &[Token<'_>], index: usize) -> boo
     false
 }
 
-/// Detect a Word that is exactly the logic XOR symbol `⊻` (U+22BB).
+/// Detect one unambiguous set/logic symbol from math rules 60-61.
 ///
-/// PDF 수학 — `A ⊻ B` 패턴에서 양쪽 대문자를 math 변수로 처리하기 위해 사용.
-pub(super) fn is_logic_symbol_word(word: &crate::rules::token::WordToken<'_>) -> bool {
-    word.chars
-        .first()
-        .is_some_and(|c| word.chars.len() == 1 && matches!(*c, '⊻'))
+/// These Unicode signs are not Roman-prose punctuation. A separated adjacent
+/// capital therefore remains a math variable instead of entering UEB grade-1
+/// text (`A ¬ B`, `{x | x ∈ R}`).
+pub(super) fn is_set_or_logic_symbol_word(word: &crate::rules::token::WordToken<'_>) -> bool {
+    word.chars.first().is_some_and(|c| {
+        word.chars.len() == 1
+            && matches!(
+                *c,
+                '¬' | '∈'
+                    | '∋'
+                    | '∉'
+                    | '∌'
+                    | '⊂'
+                    | '⊃'
+                    | '⊄'
+                    | '⊅'
+                    | '∪'
+                    | '∩'
+                    | '∀'
+                    | '∃'
+                    | '∄'
+                    | '∧'
+                    | '∨'
+                    | '⊻'
+                    | '⇒'
+                    | '⇔'
+            )
+    })
 }
 
 /// PDF — Compute leading spaces for a math token inserted at `index` based on
@@ -286,6 +1294,69 @@ pub(super) fn run<'a>(
     };
 
     let text = word.text.as_ref();
+
+    // Preserve the more specific anonymized-person grammar before the general
+    // rule-34 prose-parenthetical guard below.  A Korean name fragment may be
+    // attached before the Roman initial (`모A(61)씨`), so this must split and
+    // retain that prefix rather than merely declining whole-token math.
+    if state.english_indicator
+        && !state.math_mode_active
+        && let Some(replacement) = split_anonymized_person_label(&word.chars)
+    {
+        return Ok(TokenAction::ReplaceMany(replacement));
+    }
+
+    if is_multiword_closed_roman_parenthetical_head(tokens, index, word)
+        || is_multiword_closed_roman_parenthetical_tail(tokens, index, word)
+        || is_within_attached_korean_prose_parenthetical(tokens, index)
+    {
+        return Ok(TokenAction::Noop);
+    }
+
+    // Korean rules 29, 35, 54: in anonymized-person prose, encode the Roman
+    // initial, Korean parentheses and age compositionally even when the
+    // following Korean honorific/role is separated by a print-space.  The
+    // following word is deliberately left as its own token so source spacing
+    // is preserved.
+    if state.english_indicator
+        && !state.math_mode_active
+        && next_word_begins_korean_prose_label_context(tokens, index)
+        && let Some(encoded) = encode_anonymized_person_label(&word.chars)
+    {
+        return Ok(TokenAction::Replace(Token::PreEncoded(encoded)));
+    }
+
+    // In ordinary Korean prose, rules 28-35 own structurally Roman identifiers.
+    // Do this before the generic `letter + operator` math detector: ASCII '-' is
+    // both a math minus candidate and the hyphen used by the official `D-100`.
+    if state.english_indicator
+        && !state.math_mode_active
+        && (is_korean_prose_roman_hyphen_identifier(&word.chars)
+            || is_korean_prose_roman_number_identifier(&word.chars)
+            || is_korean_prose_roman_slash_identifier(&word.chars)
+            || is_korean_prose_single_letter_slash_phrase(tokens, index, &word.chars)
+            || is_korean_prose_roman_plus_identifier(&word.chars)
+            || has_korean_prefix_roman_plus_annotation(&word.chars)
+            || has_korean_prefix_terminal_roman_plus_identifier(&word.chars)
+            || has_korean_prefix_roman_hyphen_suffix(&word.chars)
+            || is_korean_prose_acronym_parenthetical(&word.chars))
+    {
+        return Ok(TokenAction::Noop);
+    }
+
+    // Korean rules 29 and 35 also own a number immediately followed by a Roman
+    // letters-sequence in ordinary Korean prose.  Keep an isolated `3ab` on the
+    // mathematical route, and preserve explicit math mode plus the established
+    // Korean `곱`/`값` cues for genuinely mathematical uses.
+    if state.english_indicator
+        && !state.math_mode_active
+        && has_adjacent_korean_word(tokens, index)
+        && is_korean_prose_numeric_roman_identifier(&word.chars)
+        && !prev_word_is_math_product_cue(tokens, index)
+        && !next_word_starts_with_math_value_cue(tokens, index)
+    {
+        return Ok(TokenAction::Noop);
+    }
 
     // PDF 수학 제60/61항 — `a ≲ b:`, `p ⊻ q:` 같이 단일 letter + 관계기호 + 단일
     // letter + 콜론 패턴의 inline math expression. 콜론 이전까지를 하나의 math
@@ -532,9 +1603,13 @@ pub(super) fn run<'a>(
         }
     }
 
-    // Numeric middle-dot forms in Korean prose (e.g. 3·1 운동) should stay non-math,
-    // while standalone numeric expressions like 6·9 should be routed to math.
-    if is_middle_dot_numeric_word(&word.chars) && has_adjacent_korean_word(tokens, index) {
+    // Korean Rules 43, 47 [appendix], 48, and 50: numeric punctuation in prose
+    // (`3·1 운동`, `1/3 규모`, `.515로`, `1.7~2.4 사이`) remains on the
+    // ordinary number/punctuation path. A standalone expression keeps using
+    // the math engine because there is no adjacent Korean prose context.
+    if (is_middle_dot_numeric_word(&word.chars) || is_korean_prose_numeric_notation(&word.chars))
+        && has_adjacent_korean_word(tokens, index)
+    {
         return Ok(TokenAction::Noop);
     }
 
@@ -554,12 +1629,52 @@ pub(super) fn run<'a>(
         }
     }
 
-    // Logical symbols separated by spaces should still treat uppercase letters as variables.
+    // Math rules 60-61: process a separated right-hand capital while the
+    // set/logic sign is still a Word token.  Once the sign becomes PreEncoded,
+    // neighbour lookup intentionally stops at that boundary and the capital
+    // would otherwise fall through to UEB prose (and gain a grade-1 marker).
+    //
+    // The right token may retain non-alphanumeric punctuation or a Korean
+    // suffix (`R}`, `P는`), but another ASCII letter/digit means it is a Roman
+    // word or identifier rather than one mathematical variable (`Road`).
+    if is_set_or_logic_symbol_word(word)
+        && let Some((right_index, right_word)) = next_indexed_word_skip_space(tokens, index + 1)
+        && right_word
+            .chars
+            .first()
+            .is_some_and(char::is_ascii_uppercase)
+        && right_word.chars[1..]
+            .iter()
+            .all(|ch| crate::utils::is_korean_char(*ch) || !ch.is_ascii_alphanumeric())
+    {
+        let symbol = math_symbol_shortcut::encode_char_math_symbol_shortcut(word.chars[0])?;
+        let upper = right_word.chars[0];
+        let code = crate::english::encode_english(upper.to_ascii_lowercase())?;
+        let mut replacement: Vec<Token<'a>> = vec![Token::PreEncoded(symbol.to_vec())];
+        replacement.extend(tokens[index + 1..right_index].iter().cloned());
+        replacement.push(Token::PreEncoded(vec![32, code]));
+
+        if right_word.chars.len() > 1 {
+            let suffix = right_word.chars[1..].iter().collect::<String>();
+            replacement.push(build_word_token(suffix));
+        }
+
+        return Ok(TokenAction::ReplaceRange(
+            right_index + 1 - index,
+            replacement,
+        ));
+    }
+
+    // Set/logic symbols separated by spaces still own adjacent uppercase math
+    // variables. Emit the capital indicator here so the later UEB token rules
+    // cannot reinterpret the one-letter variable as an alphabetic wordsign.
     if word.chars.len() == 1 && word.chars[0].is_ascii_uppercase() {
         let (prev, next) = prev_next_words(tokens, index);
-        if prev.is_some_and(is_logic_symbol_word) || next.is_some_and(is_logic_symbol_word) {
+        if prev.is_some_and(is_set_or_logic_symbol_word)
+            || next.is_some_and(is_set_or_logic_symbol_word)
+        {
             let code = crate::english::encode_english(word.chars[0].to_ascii_lowercase())?;
-            return Ok(TokenAction::Replace(Token::PreEncoded(vec![code])));
+            return Ok(TokenAction::Replace(Token::PreEncoded(vec![32, code])));
         }
     }
 
@@ -837,6 +1952,188 @@ pub(super) fn run<'a>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[rstest::rstest]
+    #[case::ueb_multiword_parenthetical("plays (such as Romeo and Juliet)", true)]
+    #[case::initialism_prefixed_comma("WTO(World Tourism Organization),", true)]
+    #[case::korean_particle_after_parenthesis("설명(Home Connectivity Alliance)를", true)]
+    #[case::korean_particle_after_quote("설명(Home Connectivity Alliance)’를", true)]
+    #[case::ueb_letter_list("(q, r)", false)]
+    #[case::math_function("f(x)", false)]
+    #[case::operator_interrupts_prose_run("(x + y)", false)]
+    #[case::no_closing_parenthesis("Romeo Juliet", false)]
+    #[case::function_with_spaced_argument("f(x y)", false)]
+    #[case::missing_opening_parenthesis("Romeo Juliet)", false)]
+    #[case::invalid_trailing_digit("(Romeo Juliet)1", false)]
+    #[case::digit_in_final_fragment("(Romeo Juliet2)", false)]
+    #[case::digit_after_opening("(2Romeo Juliet)", false)]
+    #[case::digit_in_earlier_fragment("(Romeo2 Juliet)", false)]
+    #[case::nonletter_earlier_without_opening("Romeo2 Juliet More)", false)]
+    #[case::nested_opening_before_fragment("((Romeo Juliet)", false)]
+    #[case::closing_before_opening(")(Romeo Juliet)", false)]
+    fn recognizes_only_complete_multiword_roman_parenthetical_tails(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+        let index = ir
+            .tokens
+            .iter()
+            .rposition(|token| matches!(token, Token::Word(_)))
+            .expect("probe must contain a word");
+        let Token::Word(word) = &ir.tokens[index] else {
+            unreachable!("selected token must be a word");
+        };
+
+        assert_eq!(
+            is_multiword_closed_roman_parenthetical_tail(&ir.tokens, index, word),
+            expected
+        );
+
+        if expected {
+            let mut state = EncoderState::new(false);
+            assert!(matches!(
+                run(&ir.tokens, index, &mut state).unwrap(),
+                TokenAction::Noop
+            ));
+        }
+    }
+
+    #[rstest::rstest]
+    #[case::initialism_expansion("HCA(Home Connectivity Alliance)", true)]
+    #[case::punctuated_expansion("TB(Top View Battle),", true)]
+    #[case::korean_particle("HCA(Home Connectivity Alliance)를", true)]
+    #[case::quoted_korean_particle("HCA(Home Connectivity Alliance)’를", true)]
+    #[case::single_capital_head("A(Home Connectivity Alliance)", false)]
+    #[case::mixed_case_head("HCa(Home Connectivity Alliance)", false)]
+    #[case::single_word_body("HCA(Alliance)", false)]
+    #[case::digit_in_body("HCA(Home Connectivity2 Alliance)", false)]
+    #[case::operator_in_body("HCA(Home + Alliance)", false)]
+    #[case::nested_parenthesis("HCA((Home Connectivity Alliance))", false)]
+    #[case::alphanumeric_trailer("HCA(Home Connectivity Alliance)1", false)]
+    #[case::unclosed_expansion("HCA(Home Connectivity Alliance", false)]
+    fn recognizes_only_complete_allcaps_multiword_roman_expansion_heads(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+        let index = ir
+            .tokens
+            .iter()
+            .position(|token| matches!(token, Token::Word(_)))
+            .expect("probe must contain a word");
+        let Token::Word(word) = &ir.tokens[index] else {
+            unreachable!("selected token must be a word");
+        };
+
+        assert_eq!(
+            is_multiword_closed_roman_parenthetical_head(&ir.tokens, index, word),
+            expected
+        );
+
+        if expected {
+            let mut state = EncoderState::new(false);
+            assert!(matches!(
+                run(&ir.tokens, index, &mut state).unwrap(),
+                TokenAction::Noop
+            ));
+        }
+    }
+
+    #[rstest::rstest]
+    #[case::roman_followed_by_digit("용어(Web)3", 1)]
+    #[case::roman_then_korean_explanation("기관(KRISS, 원장)", 2)]
+    #[case::numeric_annotation("최고치(2126.14)", 1)]
+    #[case::multiword_roman_name("전환(DT·Digital Transformation)", 2)]
+    #[case::korean_numeric_name("용어2(Version Two)", 2)]
+    #[case::year_with_roman_explanation("보고서 2023(MWC 2023)", 2)]
+    #[case::single_variable("함수(x)", 0)]
+    #[case::lowercase_expression("함수(x+1)", 0)]
+    #[case::uppercase_expression("식(A+B)", 0)]
+    #[case::separated_function("함수 f(x)", 0)]
+    fn recognizes_attached_korean_prose_parenthetical_span(
+        #[case] input: &str,
+        #[case] expected_matching_words: usize,
+    ) {
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+        let matching_indices = ir
+            .tokens
+            .iter()
+            .enumerate()
+            .filter_map(|(index, token)| {
+                matches!(token, Token::Word(_))
+                    .then(|| is_within_attached_korean_prose_parenthetical(&ir.tokens, index))
+                    .is_some_and(|matches| matches)
+                    .then_some(index)
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(matching_indices.len(), expected_matching_words);
+        for index in matching_indices {
+            let mut state = EncoderState::new(false);
+            assert!(matches!(
+                run(&ir.tokens, index, &mut state).unwrap(),
+                TokenAction::Noop
+            ));
+        }
+    }
+
+    /// Korean rules 34 and 54 put the Korean opening parenthesis before the
+    /// Roman indicator; the math route instead starts with a two-cell prose
+    /// separator.  Exercise each accepted body class at the public boundary.
+    #[rstest::rstest]
+    #[case::roman_followed_by_digit("용어(Web)3")]
+    #[case::roman_then_korean_explanation("기관(KRISS, 원장)")]
+    #[case::multiword_roman_name("전환(DT·Digital Transformation)")]
+    #[case::korean_numeric_name("용어2(Version Two)")]
+    #[case::year_with_roman_explanation("보고서 2023(MWC 2023)")]
+    fn attached_korean_prose_parentheses_keep_rule_34_order(#[case] input: &str) {
+        let encoded = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            encoded.contains("⠦⠄⠴"),
+            "Korean opening parenthesis must precede Roman entry: {encoded}"
+        );
+    }
+
+    #[test]
+    fn attached_korean_name_keeps_specialized_anonymized_person_path() {
+        let ir = crate::rules::token::DocumentIR::parse("모A(61)씨", true);
+        let index = ir
+            .tokens
+            .iter()
+            .position(|token| matches!(token, Token::Word(_)))
+            .expect("fixture must contain a word");
+        let mut state = EncoderState::new(true);
+
+        assert!(matches!(
+            run(&ir.tokens, index, &mut state).unwrap(),
+            TokenAction::ReplaceMany(_)
+        ));
+        assert!(
+            crate::encode_to_unicode("모A(61)씨")
+                .expect("fixture must encode")
+                .contains("⠴⠠⠁⠦⠄⠼⠋⠁⠠⠴")
+        );
+    }
+
+    /// Decimal-context spacing recognizes each structural marker independently:
+    /// the parser sentinel, the Rule 12 ellipsis, and a combining math mark.
+    #[rstest::rstest]
+    #[case::unit_separator("a\u{001f}b", "ab", true)]
+    #[case::midline_ellipsis("a⋯b", "ab", true)]
+    #[case::combining_mark("ab", "a\u{0305}", true)]
+    #[case::plain_expression("a+b", "a+b", false)]
+    fn detects_decimal_context_spacing_markers(
+        #[case] text: &str,
+        #[case] chars: &str,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            needs_decimal_context_spacing(text, &chars.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
     use crate::rules::token::{SpaceKind, WordMeta, WordToken};
     use std::borrow::Cow;
 
@@ -857,6 +2154,159 @@ mod tests {
 
     fn space_tok() -> Token<'static> {
         Token::Space(SpaceKind::Regular)
+    }
+
+    #[rstest::rstest]
+    #[case::empty_segment("ISO//IEC")]
+    #[case::punctuation_only_segment("ISO/-./IEC")]
+    fn roman_slash_identifier_rejects_incomplete_segments(#[case] input: &str) {
+        assert!(!is_korean_prose_roman_slash_identifier(
+            &input.chars().collect::<Vec<_>>()
+        ));
+    }
+
+    #[test]
+    fn single_letter_slash_phrase_requires_letters_in_the_following_word() {
+        let tokens = vec![word_tok("H/W"), space_tok(), word_tok("((")];
+        let chars = "H/W".chars().collect::<Vec<_>>();
+
+        assert!(!is_korean_prose_single_letter_slash_phrase(
+            &tokens, 0, &chars
+        ));
+    }
+
+    #[test]
+    fn multiword_parenthetical_tail_stops_at_a_non_word_boundary() {
+        let tokens = vec![
+            Token::PreEncoded(vec![1]),
+            space_tok(),
+            word_tok("Alliance)"),
+        ];
+        let Token::Word(tail) = &tokens[2] else {
+            unreachable!("fixture ends in a word")
+        };
+
+        assert!(!is_multiword_closed_roman_parenthetical_tail(
+            &tokens, 2, tail
+        ));
+    }
+
+    #[test]
+    fn multiword_parenthetical_head_stops_at_a_non_word_boundary() {
+        let tokens = vec![
+            word_tok("HCA(Home"),
+            space_tok(),
+            Token::PreEncoded(vec![1]),
+        ];
+        let Token::Word(head) = &tokens[0] else {
+            unreachable!("fixture begins with a word")
+        };
+
+        assert!(!is_multiword_closed_roman_parenthetical_head(
+            &tokens, 0, head
+        ));
+    }
+
+    #[test]
+    fn attached_prose_parenthetical_rejects_a_preencoded_body() {
+        let tokens = vec![word_tok("한국("), Token::PreEncoded(vec![1]), word_tok(")")];
+
+        assert!(!is_within_attached_korean_prose_parenthetical(&tokens, 1));
+    }
+
+    #[test]
+    fn attached_prose_parenthetical_ignores_mode_tokens_in_its_body() {
+        let tokens = vec![
+            word_tok("한국("),
+            Token::Mode(crate::rules::token::ModeEvent::EnterEnglish),
+            word_tok("Web)"),
+        ];
+
+        assert!(is_within_attached_korean_prose_parenthetical(&tokens, 1));
+    }
+
+    #[rstest::rstest]
+    #[case::enclosed_roman_continuation("한글(ABC)-D", true)]
+    #[case::korean_prefix_before_initialism("기장-KBO", true)]
+    #[case::lowercase_math_variable("값-x", false)]
+    fn korean_roman_hyphen_suffix_is_classified_structurally(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            has_korean_prefix_roman_hyphen_suffix(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::compact_unit("50bp", true)]
+    #[case::decimal_prefix("3.1p", true)]
+    #[case::ordinal("1st", true)]
+    #[case::mixed_case_name("25Project", true)]
+    #[case::digit_after_letter("3x3", true)]
+    #[case::capital_suffix("6G", true)]
+    #[case::trailing_punctuation("50bp,", true)]
+    #[case::letter_first("MP3", false)]
+    #[case::operator("3a+b", false)]
+    #[case::solidus("3/4", false)]
+    #[case::punctuation_before_letter("3.a", false)]
+    #[case::number_only("3", false)]
+    #[case::letters_only("abc", false)]
+    #[case::korean_suffix("3한", false)]
+    fn recognizes_numeric_prefix_roman_identifier_grammar(
+        #[case] text: &str,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            is_korean_prose_numeric_roman_identifier(&text.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::compact_unit("가는 50bp 인상", "50bp", true)]
+    #[case::decimal_prefix("가는 3.1p 표본", "3.1p", true)]
+    #[case::ordinal("가는 1st 항목", "1st", true)]
+    #[case::mixed_case_name("가는 25Project 자료", "25Project", true)]
+    #[case::digit_after_letter("가는 3x3 배열", "3x3", true)]
+    #[case::isolated_expression("3ab", "3ab", false)]
+    #[case::previous_product_cue("곱 3ab 결과", "3ab", false)]
+    #[case::next_value_cue("식은 3ab 값을", "3ab", false)]
+    #[case::explicit_latex("가는 $3ab$ 식", "$3ab$", false)]
+    fn numeric_roman_route_respects_korean_prose_and_math_context(
+        #[case] input: &str,
+        #[case] target: &str,
+        #[case] expected_noop: bool,
+    ) {
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+        let index = ir
+            .tokens
+            .iter()
+            .position(|token| matches!(token, Token::Word(word) if word.text.as_ref() == target))
+            .expect("target word must be tokenized as one word");
+        let mut state = EncoderState::new(true);
+
+        assert_eq!(
+            matches!(
+                run(&ir.tokens, index, &mut state).unwrap(),
+                TokenAction::Noop
+            ),
+            expected_noop
+        );
+    }
+
+    /// The complete token-rule path must preserve both defensive boundaries:
+    /// an unsupported mixed-math glyph falls through, and a leading space with
+    /// no preceding math token is not treated as mixed-math continuation.
+    #[test]
+    fn unsupported_mixed_expression_after_leading_space_falls_through() {
+        let tokens = vec![space_tok(), word_tok("√분산🚀")];
+        let mut state = EncoderState::new(false);
+
+        let action = run(&tokens, 1, &mut state).unwrap();
+
+        assert!(matches!(action, TokenAction::Noop));
     }
 
     // ---------- Direct tests on extracted helpers ----------
@@ -939,21 +2389,35 @@ mod tests {
         assert!(!next_word_starts_with_math_value_cue(&tokens, 0));
     }
 
-    /// `is_logic_symbol_word` — XOR(⊻) 단독 토큰만 true, 그 외는 false.
-    /// Kills: `-> false`, `!=` mutations.
+    /// Only one complete rule-60/61 set or logic sign is accepted.
     #[rstest::rstest]
     #[case::xor_alone("⊻", true)]
-    #[case::wedge_alone("∧", false)]
+    #[case::wedge_alone("∧", true)]
+    #[case::membership_alone("∈", true)]
+    #[case::negation_alone("¬", true)]
+    #[case::ascii_plus("+", false)]
     #[case::xor_then_letter("⊻x", false)]
     #[case::empty_word("", false)]
-    fn is_logic_symbol_word_matches_only_xor(#[case] text: &'static str, #[case] expected: bool) {
+    fn set_or_logic_symbol_word_is_complete(#[case] text: &'static str, #[case] expected: bool) {
         let chars: Vec<char> = text.chars().collect();
         let word = WordToken {
             text: Cow::Borrowed(text),
             meta: WordMeta::from_chars(&chars),
             chars,
         };
-        assert_eq!(is_logic_symbol_word(&word), expected);
+        assert_eq!(is_set_or_logic_symbol_word(&word), expected);
+    }
+
+    /// Math rules 60-61: spaces do not turn a capital operand into UEB prose.
+    #[rstest::rstest]
+    #[case::upper_negation("A ¬ B", "⠠⠁⠀⠈⠔⠀⠠⠃")]
+    #[case::mixed_case_negation("p ¬ Q", "⠏⠀⠈⠔⠀⠠⠟")]
+    #[case::set_builder_membership("{x | x ∈ R}", "⠦⠂⠭⠀⠸⠳⠀⠭⠀⠖⠀⠠⠗⠐⠴")]
+    fn spaced_set_and_logic_operands_stay_math_variables(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(crate::encode_to_unicode(input).as_deref(), Ok(expected));
     }
 
     // ----- Lines 66-110: `a ≲ b:` colon-suffix math merge -----

@@ -7,14 +7,16 @@
   "scripts": {
     "lint": "oxlint . && cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings",
     "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings && cargo clippy --workspace --all-targets -- -D warnings",
-    "test": "bun run test:rust && bun run test:c && bun run test:node && bun run test:python",
+    "test": "bun run test:rust && bun run test:c && bun run test:node && bun run test:python && bun run test:jvm",
     "test:rust": "bun scripts/test-rust.ts",
     "test:node": "bun test",
     "test:python": "cd py-test && uv run --locked pytest",
     "test:c": "bun scripts/test-c.ts",
+    "test:jvm": "cd packages/jvm && ./gradlew test",
     "test:testcase": "cargo test -p braillify test_by_testcase -- --nocapture",
     "preinstall": "uv sync && (cargo install wasm-pack || node -e \"process.exit(0)\") && (pip install maturin || \"process.exit(0)\")",
     "build": "cargo build --release -p braillify && cargo build --release -p braillify-c && bun -F braillify build && cd packages/python && maturin build --release --out dist",
+    "build:jvm": "cd packages/jvm && ./gradlew assembleJvmJar",
     "build:landing": "bun run build && (cargo test test_by_testcase || node -e \"process.exit(0)\") && bun -F landing build",
     "changepacks": "bunx @changepacks/cli",
     "dev": "bun -F landing dev"
@@ -24,11 +26,11 @@
     "apps/landing"
   ],
   "devDependencies": {
-    "@types/bun": "^1.3.14",
-    "@types/node": "^26.1.1",
+    "@types/bun": "^1.4.0",
+    "@types/node": "^26.4.0",
     "braillify": "workspace:*",
-    "eslint-plugin-devup": "^2.0.19",
-    "oxlint": "^1.73.0"
+    "eslint-plugin-devup": "^2.1.0",
+    "oxlint": "^1.80.0"
   },
   "author": "devfive"
 }

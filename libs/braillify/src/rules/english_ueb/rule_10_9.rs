@@ -43,9 +43,81 @@ pub fn whole_word_cells(word: &str) -> Option<Vec<u8>> {
 /// A literal all-letter abbreviation that collides with a pure-letter shortform
 /// needs a grade-1 indicator before normal letter encoding (§10.9.7).
 pub fn is_pure_shortform_abbreviation(word: &str) -> bool {
+    let letters = word.chars().collect::<Vec<_>>();
+    if letters.len() < 2 || !letters.iter().all(char::is_ascii_lowercase) {
+        return false;
+    }
+    let literal_cells = korean_letter_sequence_cells(&letters);
+
     SHORTFORMS
         .values()
-        .any(|abbr| abbr.chars().all(|ch| ch.is_ascii_lowercase()) && *abbr == word)
+        .any(|notation| notation_cells(notation).as_deref() == Some(literal_cells.as_slice()))
+}
+
+/// UEB 5.7.2 and 10.9.7-10.9.8: returns whether an ASCII letters-sequence at
+/// the beginning of a word needs a grade-1 symbol before its capitalization
+/// indicator so it cannot be read as a shortform, or as the beginning of a
+/// longer word containing one.
+///
+/// This compares cells produced by the ordinary rule-37 groupsign encoder with
+/// the complete shortform table. Consequently sequences containing groupsigns
+/// are handled without a second hand-maintained alias list: `FST` collides with
+/// `first` (`f` + `st`), `SHD` with `should`, while `BC` does not collide with
+/// `because` (`be` + `c`). For a proper prefix, the existing 10.9.2-10.9.5
+/// longer-word grammar decides whether that shortform reading is actually
+/// permitted; this is why the official `LLC` is guarded but `LLAMA` is not.
+pub fn requires_grade1_at_word_start(letters: &str) -> bool {
+    let lower = letters.to_ascii_lowercase();
+    let chars = lower.chars().collect::<Vec<_>>();
+    if chars.len() < 2 || !letters.chars().all(|ch| ch.is_ascii_alphabetic()) {
+        return false;
+    }
+
+    for end in 2..=chars.len() {
+        let prefix_cells = korean_letter_sequence_cells(&chars[..end]);
+        for (shortform, notation) in SHORTFORMS.entries() {
+            if notation_cells(notation).as_deref() != Some(prefix_cells.as_slice()) {
+                continue;
+            }
+            if end == chars.len() {
+                return true;
+            }
+
+            let suffix = &chars[end..];
+            // §10.9.5 admits an added `s` for every base shortform except
+            // `abouts`, `almosts`, and `hims`.
+            if suffix == ['s'] && !matches!(*shortform, "about" | "almost" | "him") {
+                return true;
+            }
+
+            let hypothetical = shortform
+                .chars()
+                .chain(suffix.iter().copied())
+                .collect::<Vec<_>>();
+            if longer_use_allowed(&hypothetical, 0, shortform) {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Produce the cells that the real Korean-rule-37 Roman body encoder would emit
+/// for a lowercase ASCII letters-sequence.  Grade-1 collision detection must use
+/// this exact path: a default [`ContractionEngine`] contains no registered rules
+/// and would consequently miss cell-equivalent sequences such as `fst` (`f` +
+/// the `st` groupsign) and `shd` (the `sh` groupsign + `d`).
+fn korean_letter_sequence_cells(letters: &[char]) -> Vec<u8> {
+    super::span::encode_korean_word(
+        letters, true,  // capitalization indicators are compared separately
+        false, // do not recursively prepend grade 1
+        false, // rule 37 suppresses whole-word signs on Roman entry
+        true,  // the sequence begins at a Roman word boundary
+        false, // no adjacent digit in a pure letters-sequence
+        false, // no numeric grade-1 mode in a pure letters-sequence
+        false, // not split by an apostrophe
+    )
+    .expect("a lowercase ASCII letters-sequence must be encodable")
 }
 
 /// Encode a word as the §10.10.2 cell-minimising contraction sequence.
@@ -77,6 +149,7 @@ pub fn encode_with_longer_shortforms(
         false,
         true,
         false,
+        false,
     )
 }
 
@@ -96,6 +169,30 @@ pub fn encode_with_optional_longer_shortforms(
         false,
         allow_longer_shortforms,
         false,
+        false,
+    )
+}
+
+/// Korean rule 37 word body: use UEB multi-letter groupsigns, but do not let a
+/// groupsign that is also a lower wordsign consume the entire first Roman word.
+/// This is a structural gate, not a word-output table: inner groupsigns such as
+/// `en` in `enough` remain available.
+pub(crate) fn encode_korean_groupsigns(
+    word: &[char],
+    contractions: &ContractionEngine,
+    suppress_initial_ing: bool,
+    restricted_prefix_boundary: bool,
+) -> Option<Vec<u8>> {
+    encode_with_constraints(
+        word,
+        contractions,
+        suppress_initial_ing,
+        restricted_prefix_boundary,
+        None,
+        false,
+        false,
+        false,
+        true,
     )
 }
 
@@ -119,6 +216,7 @@ pub fn encode_anglicised_word(
         false,
         true,
         true,
+        false,
     )
 }
 
@@ -159,6 +257,7 @@ pub fn encode_with_division(
             first_line_has_upper_prefix,
             true,
             false,
+            false,
         )?);
         return Some(out);
     }
@@ -170,6 +269,7 @@ pub fn encode_with_division(
         Some(division),
         first_line_has_upper_prefix,
         true,
+        false,
         false,
     )
 }
@@ -187,6 +287,7 @@ fn encode_with_constraints(
     first_line_has_upper_prefix: bool,
     allow_longer_shortforms: bool,
     relax_shortforms: bool,
+    suppress_whole_word_wordsign: bool,
 ) -> Option<Vec<u8>> {
     let n = word.len();
     // §10.11.1: a contraction must not bridge the seam of a compound word. Look up
@@ -240,6 +341,7 @@ fn encode_with_constraints(
             first_line_has_upper_prefix,
             allow_longer_shortforms,
             relax_shortforms,
+            suppress_whole_word_wordsign,
         ) {
             let next = pos + consumed;
             let total = cells.len() + cost[next];
@@ -294,6 +396,7 @@ fn candidate_moves(
     first_line_has_upper_prefix: bool,
     allow_longer_shortforms: bool,
     relax_shortforms: bool,
+    suppress_whole_word_wordsign: bool,
 ) -> Vec<(Vec<u8>, usize, u16)> {
     let mut moves = Vec::new();
     // §10.9 longer-word shortform placement (preferred on a cost tie → priority 0).
@@ -316,6 +419,17 @@ fn candidate_moves(
     }
     let protected_here = inside_protected[pos];
     for m in contractions.matches_at(word, pos) {
+        // Korean rule 37: immediately after the Roman indicator, a lower
+        // wordsign is written with alphabet/multi-letter groupsigns instead.
+        // Reject only a contraction consuming the complete wordsign; inner
+        // groupsigns remain candidates (`enough` keeps `en` and `gh`).
+        if suppress_whole_word_wordsign
+            && pos == 0
+            && m.consumed == word.len()
+            && super::rule_10_5::wordsign(&word.iter().collect::<String>()).is_some()
+        {
+            continue;
+        }
         // §10.11.1: a GROUPSIGN must not bridge a compound-word seam —
         // `an[t·h]ill`, `cart[·h]orse`, `nor[the]ast` spell the bridging digraph
         // out. An initial-letter contraction (§10.7 `upon`, priority 55) and a
@@ -854,6 +968,7 @@ mod tests {
             false,
             false,
             false,
+            false,
         );
         assert!(moves.iter().all(|(cells, consumed, _)| {
             *consumed != pattern.len() || cells != &vec![decode_unicode('⠆')]
@@ -979,6 +1094,7 @@ mod tests {
             &vec![false; word.len()],
             &[],
             None,
+            false,
             false,
             false,
             false,
@@ -1175,6 +1291,7 @@ mod tests {
             false,
             false,
             false,
+            false,
         );
         assert!(moves.iter().any(|(cells_, consumed, priority)| {
             *cells_ == cells("⠼⠮") && *consumed == 1 && *priority == u16::MAX
@@ -1195,6 +1312,7 @@ mod tests {
             None,
             false,
             true,
+            false,
             false,
         );
         assert_eq!(result, None);

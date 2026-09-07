@@ -3,72 +3,84 @@
     "input": "Galahad",
     "internal": ",gala_h",
     "expected": "32271715619",
-    "unicode": "⠠⠛⠁⠇⠁⠸⠓"
+    "unicode": "⠠⠛⠁⠇⠁⠸⠓",
+    "world": "⠴⠠⠛⠁⠇⠁⠸⠓⠲"
   },
   {
     "input": "haddock",
     "internal": "_hdock",
     "expected": "5619252195",
-    "unicode": "⠸⠓⠙⠕⠉⠅"
+    "unicode": "⠸⠓⠙⠕⠉⠅",
+    "world": "⠴⠸⠓⠙⠕⠉⠅⠲"
   },
   {
     "input": "Haddon",
     "internal": ",_hdon",
     "expected": "325619252129",
-    "unicode": "⠠⠸⠓⠙⠕⠝"
+    "unicode": "⠠⠸⠓⠙⠕⠝",
+    "world": "⠴⠠⠸⠓⠙⠕⠝⠲"
   },
   {
     "input": "hadji",
     "internal": "_hji",
     "expected": "56192610",
-    "unicode": "⠸⠓⠚⠊"
+    "unicode": "⠸⠓⠚⠊",
+    "world": "⠴⠸⠓⠚⠊⠲"
   },
   {
     "input": "Hadley",
     "internal": ",_hley",
     "expected": "32561971761",
-    "unicode": "⠠⠸⠓⠇⠑⠽"
+    "unicode": "⠠⠸⠓⠇⠑⠽",
+    "world": "⠴⠠⠸⠓⠇⠑⠽⠲"
   },
   {
     "input": "hadn't",
     "internal": "_hn't",
     "expected": "561929430",
-    "unicode": "⠸⠓⠝⠄⠞"
+    "unicode": "⠸⠓⠝⠄⠞",
+    "world": "⠴⠸⠓⠝⠄⠞⠲"
   },
   {
     "input": "Chad",
     "internal": ",*ad",
     "expected": "3233125",
-    "unicode": "⠠⠡⠁⠙"
+    "unicode": "⠠⠡⠁⠙",
+    "world": "⠴⠠⠡⠁⠙⠲"
   },
   {
     "input": "Hades",
     "internal": ",hades",
     "expected": "32191251714",
-    "unicode": "⠠⠓⠁⠙⠑⠎"
+    "unicode": "⠠⠓⠁⠙⠑⠎",
+    "world": "⠴⠠⠓⠁⠙⠑⠎⠲"
   },
   {
     "input": "Hadrian",
     "internal": ",hadrian",
     "expected": "32191252310129",
-    "unicode": "⠠⠓⠁⠙⠗⠊⠁⠝"
+    "unicode": "⠠⠓⠁⠙⠗⠊⠁⠝",
+    "world": "⠴⠠⠓⠁⠙⠗⠊⠁⠝⠲"
   },
   {
     "input": "menhaden",
     "internal": "m5had5",
     "expected": "13341912534",
-    "unicode": "⠍⠢⠓⠁⠙⠢"
+    "unicode": "⠍⠢⠓⠁⠙⠢",
+    "world": "⠴⠍⠢⠓⠁⠙⠢⠲"
   },
   {
     "input": "shadow",
     "internal": "%ad[",
     "expected": "4112542",
-    "unicode": "⠩⠁⠙⠪"
+    "unicode": "⠩⠁⠙⠪",
+    "world": "⠴⠩⠁⠙⠪⠲"
   },
   {
     "input": "Thaddeus",
     "internal": ",?addeus",
     "expected": "325712525173714",
-    "unicode": "⠠⠹⠁⠙⠙⠑⠥⠎"
+    "unicode": "⠠⠹⠁⠙⠙⠑⠥⠎",
+    "world": "⠴⠠⠹⠁⠙⠙⠑⠥⠎⠲"
   }
 ]

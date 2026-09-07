@@ -16,6 +16,9 @@ pub(crate) fn exit_english(state: &mut EncoderState, needs_continuation: bool) {
     state.is_english = false;
     state.needs_english_continuation = needs_continuation;
     state.roman_number_chain = false;
+    if !needs_continuation {
+        state.roman_section_is_english_context = false;
+    }
 }
 
 /// 영어 모드로 진입하며 로마자표 ⠴ (또는 직전 종료 후 연속표 ⠰)를 emit한다.
@@ -32,7 +35,8 @@ pub(crate) fn enter_english(state: &mut EncoderState, result: &mut Vec<u8>) {
 
 /// 제35항 — 로마자+숫자 연결(`D-100` 등)을 위해 영어 모드를 잠시 내려놓는다.
 pub(crate) fn exit_english_for_roman_number_chain(state: &mut EncoderState) {
-    exit_english(state, false);
+    state.is_english = false;
+    state.needs_english_continuation = false;
     state.roman_number_chain = true;
 }
 

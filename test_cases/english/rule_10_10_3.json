@@ -3,102 +3,119 @@
     "input": "afford",
     "internal": "af=d",
     "expected": "1116325",
-    "unicode": "⠁⠋⠿⠙"
+    "unicode": "⠁⠋⠿⠙",
+    "world": "⠴⠁⠋⠿⠙⠲"
   },
   {
     "input": "bathed",
     "internal": "ba!d",
     "expected": "314625",
-    "unicode": "⠃⠁⠮⠙"
+    "unicode": "⠃⠁⠮⠙",
+    "world": "⠴⠃⠁⠮⠙⠲"
   },
   {
     "input": "calisthenics",
     "internal": "calis!nics",
     "expected": "9171014462910914",
-    "unicode": "⠉⠁⠇⠊⠎⠮⠝⠊⠉⠎"
+    "unicode": "⠉⠁⠇⠊⠎⠮⠝⠊⠉⠎",
+    "world": "⠴⠉⠁⠇⠊⠎⠮⠝⠊⠉⠎⠲"
   },
   {
     "input": "coffee",
     "internal": "c(fee",
     "expected": "955111717",
-    "unicode": "⠉⠷⠋⠑⠑"
+    "unicode": "⠉⠷⠋⠑⠑",
+    "world": "⠴⠉⠷⠋⠑⠑⠲"
   },
   {
     "input": "effort",
     "internal": "ef=t",
     "expected": "17116330",
-    "unicode": "⠑⠋⠿⠞"
+    "unicode": "⠑⠋⠿⠞",
+    "world": "⠴⠑⠋⠿⠞⠲"
   },
   {
     "input": "gathered",
     "internal": "ga!r$",
     "expected": "271462343",
-    "unicode": "⠛⠁⠮⠗⠫"
+    "unicode": "⠛⠁⠮⠗⠫",
+    "world": "⠴⠛⠁⠮⠗⠫⠲"
   },
   {
     "input": "Leander",
     "internal": ",le&]",
     "expected": "327174759",
-    "unicode": "⠠⠇⠑⠯⠻"
+    "unicode": "⠠⠇⠑⠯⠻",
+    "world": "⠴⠠⠇⠑⠯⠻⠲"
   },
   {
     "input": "offer",
     "internal": "(f]",
     "expected": "551159",
-    "unicode": "⠷⠋⠻"
+    "unicode": "⠷⠋⠻",
+    "world": "⠴⠷⠋⠻⠲"
   },
   {
     "input": "office",
     "internal": "(fice",
     "expected": "551110917",
-    "unicode": "⠷⠋⠊⠉⠑"
+    "unicode": "⠷⠋⠊⠉⠑",
+    "world": "⠴⠷⠋⠊⠉⠑⠲"
   },
   {
     "input": "other",
     "internal": "o!r",
     "expected": "214623",
-    "unicode": "⠕⠮⠗"
+    "unicode": "⠕⠮⠗",
+    "world": "⠴⠕⠮⠗⠲"
   },
   {
     "input": "Parthenon",
     "internal": ",p>!non",
     "expected": "32152846292129",
-    "unicode": "⠠⠏⠜⠮⠝⠕⠝"
+    "unicode": "⠠⠏⠜⠮⠝⠕⠝",
+    "world": "⠴⠠⠏⠜⠮⠝⠕⠝⠲"
   },
   {
     "input": "proffer",
     "internal": "pr(f]",
     "expected": "1523551159",
-    "unicode": "⠏⠗⠷⠋⠻"
+    "unicode": "⠏⠗⠷⠋⠻",
+    "world": "⠴⠏⠗⠷⠋⠻⠲"
   },
   {
     "input": "slithered",
     "internal": "sli!r$",
     "expected": "14710462343",
-    "unicode": "⠎⠇⠊⠮⠗⠫"
+    "unicode": "⠎⠇⠊⠮⠗⠫",
+    "world": "⠴⠎⠇⠊⠮⠗⠫⠲"
   },
   {
     "input": "theatre",
     "internal": "!atre",
     "expected": "461302317",
-    "unicode": "⠮⠁⠞⠗⠑"
+    "unicode": "⠮⠁⠞⠗⠑",
+    "world": "⠴⠮⠁⠞⠗⠑⠲"
   },
   {
     "input": "then",
     "internal": "!n",
     "expected": "4629",
-    "unicode": "⠮⠝"
+    "unicode": "⠮⠝",
+    "world": "⠴⠮⠝⠲"
   },
   {
     "input": "weathered",
     "internal": "w1!r$",
     "expected": "582462343",
-    "unicode": "⠺⠂⠮⠗⠫"
+    "unicode": "⠺⠂⠮⠗⠫",
+    "world": "⠴⠺⠂⠮⠗⠫⠲"
   },
   {
     "input": "thence",
     "internal": "?;e",
     "expected": "574817",
-    "unicode": "⠹⠰⠑"
+    "unicode": "⠹⠰⠑",
+    "world": "⠴⠹⠰⠑⠲"
   }
 ]

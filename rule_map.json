@@ -1770,5 +1770,11 @@
   "english/rule_16_5_1": {
     "title": "16.5.1",
     "description": "Line Mode, Guide Dots - Guide dots"
+  },
+  "corpus/sentence": {
+    "title": "NIKL 말뭉치",
+    "description": "NIKL Korean-Korean Braille Parallel Corpus 2025 v1.0",
+    "benchmark": true,
+    "shards": true
   }
 }

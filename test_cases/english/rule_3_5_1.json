@@ -3,42 +3,49 @@
     "input": "Nutritional considerations include:",
     "internal": ",nutri;nal 3sid]a;ns 9clude3",
     "expected": "3229373023104829170181410255914829140209737251718",
-    "unicode": "⠠⠝⠥⠞⠗⠊⠰⠝⠁⠇⠀⠒⠎⠊⠙⠻⠁⠰⠝⠎⠀⠔⠉⠇⠥⠙⠑⠒"
+    "unicode": "⠠⠝⠥⠞⠗⠊⠰⠝⠁⠇⠀⠒⠎⠊⠙⠻⠁⠰⠝⠎⠀⠔⠉⠇⠥⠙⠑⠒",
+    "world": "⠴⠠⠝⠥⠞⠗⠊⠰⠝⠁⠇ ⠒⠎⠊⠙⠻⠁⠰⠝⠎ ⠔⠉⠇⠥⠙⠑⠒"
   },
   {
     "input": "• carbohydrates",
     "internal": "_4 c>bohydrates",
     "expected": "56500928321196125231301714",
-    "unicode": "⠸⠲⠀⠉⠜⠃⠕⠓⠽⠙⠗⠁⠞⠑⠎"
+    "unicode": "⠸⠲⠀⠉⠜⠃⠕⠓⠽⠙⠗⠁⠞⠑⠎",
+    "world": "⠸⠲ ⠴⠉⠜⠃⠕⠓⠽⠙⠗⠁⠞⠑⠎⠲"
   },
   {
     "input": "• protein",
     "internal": "_4 prote9",
     "expected": "56500152321301720",
-    "unicode": "⠸⠲⠀⠏⠗⠕⠞⠑⠔"
+    "unicode": "⠸⠲⠀⠏⠗⠕⠞⠑⠔",
+    "world": "⠸⠲ ⠴⠏⠗⠕⠞⠑⠔⠲"
   },
   {
     "input": "• fat",
     "internal": "_4 fat",
     "expected": "5650011130",
-    "unicode": "⠸⠲⠀⠋⠁⠞"
+    "unicode": "⠸⠲⠀⠋⠁⠞",
+    "world": "⠸⠲ ⠴⠋⠁⠞⠲"
   },
   {
     "input": "• cholesterol",
     "internal": "_4 *ole/]ol",
     "expected": "5650033217171259217",
-    "unicode": "⠸⠲⠀⠡⠕⠇⠑⠌⠻⠕⠇"
+    "unicode": "⠸⠲⠀⠡⠕⠇⠑⠌⠻⠕⠇",
+    "world": "⠸⠲ ⠴⠡⠕⠇⠑⠌⠻⠕⠇⠲"
   },
   {
     "input": "• fiber",
     "internal": "_4 fib]",
     "expected": "565001110359",
-    "unicode": "⠸⠲⠀⠋⠊⠃⠻"
+    "unicode": "⠸⠲⠀⠋⠊⠃⠻",
+    "world": "⠸⠲ ⠴⠋⠊⠃⠻⠲"
   },
   {
     "input": "• sodium",
     "internal": "_4 sodium",
     "expected": "56500142125103713",
-    "unicode": "⠸⠲⠀⠎⠕⠙⠊⠥⠍"
+    "unicode": "⠸⠲⠀⠎⠕⠙⠊⠥⠍",
+    "world": "⠸⠲ ⠴⠎⠕⠙⠊⠥⠍⠲"
   }
 ]

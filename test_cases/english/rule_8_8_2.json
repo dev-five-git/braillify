@@ -3,48 +3,56 @@
     "input": "KBr (potassium bromide)",
     "internal": ",k,br \"<potassium bromide\">",
     "expected": "325323230163515213011414103713032321131025171628",
-    "unicode": "⠠⠅⠠⠃⠗⠀⠐⠣⠏⠕⠞⠁⠎⠎⠊⠥⠍⠀⠃⠗⠕⠍⠊⠙⠑⠐⠜"
+    "unicode": "⠠⠅⠠⠃⠗⠀⠐⠣⠏⠕⠞⠁⠎⠎⠊⠥⠍⠀⠃⠗⠕⠍⠊⠙⠑⠐⠜",
+    "world": "⠴⠠⠠⠅⠃⠠⠄⠗ ⠐⠣⠏⠕⠞⠁⠎⠎⠊⠥⠍ ⠃⠗⠕⠍⠊⠙⠑⠠⠴"
   },
   {
     "input": "BSc (Bachelor of Science)",
     "internal": ",b,sc \"<,ba*elor ( ,sci;e\">",
     "expected": "323321490163532313317721230550321491048171628",
-    "unicode": "⠠⠃⠠⠎⠉⠀⠐⠣⠠⠃⠁⠡⠑⠇⠕⠗⠀⠷⠀⠠⠎⠉⠊⠰⠑⠐⠜"
+    "unicode": "⠠⠃⠠⠎⠉⠀⠐⠣⠠⠃⠁⠡⠑⠇⠕⠗⠀⠷⠀⠠⠎⠉⠊⠰⠑⠐⠜",
+    "world": "⠴⠠⠠⠃⠎⠠⠄⠉ ⠐⠣⠠⠃⠁⠡⠑⠇⠕⠗ ⠷ ⠠⠎⠉⠊⠰⠑⠠⠴"
   },
   {
     "input": "TVOntario",
     "internal": ",,tv,ont>io",
     "expected": "3232303932212930281021",
-    "unicode": "⠠⠠⠞⠧⠠⠕⠝⠞⠜⠊⠕"
+    "unicode": "⠠⠠⠞⠧⠠⠕⠝⠞⠜⠊⠕",
+    "world": "⠴⠠⠠⠞⠧⠕⠠⠄⠝⠞⠜⠊⠕⠲"
   },
   {
     "input": "preSENT",
     "internal": "pre,,s5t",
     "expected": "1523173232143430",
-    "unicode": "⠏⠗⠑⠠⠠⠎⠢⠞"
+    "unicode": "⠏⠗⠑⠠⠠⠎⠢⠞",
+    "world": "⠴⠏⠗⠑⠠⠠⠎⠢⠞⠲"
   },
   {
     "input": "PRESent",
     "internal": ",,pres,'5t",
     "expected": "3232152317143243430",
-    "unicode": "⠠⠠⠏⠗⠑⠎⠠⠄⠢⠞"
+    "unicode": "⠠⠠⠏⠗⠑⠎⠠⠄⠢⠞",
+    "world": "⠴⠠⠠⠏⠗⠑⠎⠠⠄⠢⠞⠲"
   },
   {
     "input": "WoooooooOOOOOOOOooooooo (a ghostly sound)",
     "internal": ",wooooooo,,oooooooo,'ooooooo \"<a <o/ly s.d\">",
     "expected": "3258212121212121213232212121212121212132421212121212121016351035211276101440251628",
-    "unicode": "⠠⠺⠕⠕⠕⠕⠕⠕⠕⠠⠠⠕⠕⠕⠕⠕⠕⠕⠕⠠⠄⠕⠕⠕⠕⠕⠕⠕⠀⠐⠣⠁⠀⠣⠕⠌⠇⠽⠀⠎⠨⠙⠐⠜"
+    "unicode": "⠠⠺⠕⠕⠕⠕⠕⠕⠕⠠⠠⠕⠕⠕⠕⠕⠕⠕⠕⠠⠄⠕⠕⠕⠕⠕⠕⠕⠀⠐⠣⠁⠀⠣⠕⠌⠇⠽⠀⠎⠨⠙⠐⠜",
+    "world": "⠴⠠⠺⠕⠕⠕⠕⠕⠕⠕⠠⠠⠕⠕⠕⠕⠕⠕⠕⠕⠠⠄⠕⠕⠕⠕⠕⠕⠕ ⠐⠣⠁ ⠣⠕⠌⠇⠽ ⠎⠨⠙⠠⠴"
   },
   {
     "input": "MHz",
     "internal": ",m,hz",
     "expected": "3213321953",
-    "unicode": "⠠⠍⠠⠓⠵"
+    "unicode": "⠠⠍⠠⠓⠵",
+    "world": "⠴⠠⠠⠍⠓⠠⠄⠵⠲"
   },
   {
     "input": "ATandT",
     "internal": ",a,t&,t",
     "expected": "3213230473230",
-    "unicode": "⠠⠁⠠⠞⠯⠠⠞"
+    "unicode": "⠠⠁⠠⠞⠯⠠⠞",
+    "world": "⠴⠠⠠⠁⠞⠠⠄⠯⠠⠞⠲"
   }
 ]

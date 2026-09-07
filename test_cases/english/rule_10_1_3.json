@@ -3,24 +3,28 @@
     "input": "US",
     "internal": ",,us",
     "expected": "32323714",
-    "unicode": "⠠⠠⠥⠎"
+    "unicode": "⠠⠠⠥⠎",
+    "world": "⠴⠠⠠⠥⠎⠲"
   },
   {
     "input": "IT",
     "internal": ",,it",
     "expected": "32321030",
-    "unicode": "⠠⠠⠊⠞"
+    "unicode": "⠠⠠⠊⠞",
+    "world": "⠴⠠⠠⠊⠞⠲"
   },
   {
     "input": "CAN Network",
     "internal": ",,c ,net\"w",
     "expected": "323290322917301658",
-    "unicode": "⠠⠠⠉⠀⠠⠝⠑⠞⠐⠺"
+    "unicode": "⠠⠠⠉⠀⠠⠝⠑⠞⠐⠺",
+    "world": "⠴⠠⠠⠉⠁⠝ ⠠⠝⠑⠞⠐⠺⠲"
   },
   {
     "input": "GO Train",
     "internal": ",,g ,tra9",
     "expected": "3232270323023120",
-    "unicode": "⠠⠠⠛⠀⠠⠞⠗⠁⠔"
+    "unicode": "⠠⠠⠛⠀⠠⠞⠗⠁⠔",
+    "world": "⠴⠠⠠⠛⠕ ⠠⠞⠗⠁⠔⠲"
   }
 ]

@@ -3,25 +3,29 @@
     "input": "ON HEALTH AND MEDICINE",
     "internal": ",,,on h1l? & m$ic9e,'",
     "expected": "32323221290192757047013431092017324",
-    "unicode": "⠠⠠⠠⠕⠝⠀⠓⠂⠇⠹⠀⠯⠀⠍⠫⠊⠉⠔⠑⠠⠄"
+    "unicode": "⠠⠠⠠⠕⠝⠀⠓⠂⠇⠹⠀⠯⠀⠍⠫⠊⠉⠔⠑⠠⠄",
+    "world": "⠴⠠⠠⠠⠕⠝ ⠓⠂⠇⠹ ⠯ ⠍⠫⠊⠉⠔⠑⠠⠄⠲"
   },
   {
     "input": "𝐈𝐍𝐃𝐈𝐆𝐄𝐍𝐎𝐔𝐒 𝐓𝐄𝐀𝐒 𝐃𝐄𝐋𝐀𝐘 𝐀𝐆𝐈𝐍𝐆",
     "internal": "^7,,,9dig5\\s t1s delay ag+,'^'",
     "expected": "245432323220251027345114030214025177161012744324244",
-    "unicode": "⠘⠶⠠⠠⠠⠔⠙⠊⠛⠢⠳⠎⠀⠞⠂⠎⠀⠙⠑⠇⠁⠽⠀⠁⠛⠬⠠⠄⠘⠄"
+    "unicode": "⠘⠶⠠⠠⠠⠔⠙⠊⠛⠢⠳⠎⠀⠞⠂⠎⠀⠙⠑⠇⠁⠽⠀⠁⠛⠬⠠⠄⠘⠄",
+    "world": ""
   },
   {
     "input": "(READER'S DIGEST:   August 1998)",
     "internal": "\"<,,r1d]',s ,,dige/3 ,augu/ #aiih\">",
     "expected": "1635323223171255943214032322510271712180003213727371206011010191628",
     "unicode": "⠐⠣⠠⠠⠗⠑⠁⠙⠻⠄⠠⠎⠀⠠⠠⠙⠊⠛⠑⠌⠒⠀⠀⠀⠠⠁⠥⠛⠥⠌⠀⠼⠁⠊⠊⠓⠐⠜",
-    "note": "aligned to current encoder output for input-representable styling"
+    "note": "aligned to current encoder output for input-representable styling",
+    "world": "⠦⠄⠴⠠⠠⠗⠂⠙⠻⠄⠠⠎ ⠠⠠⠙⠊⠛⠑⠌⠒   ⠠⠁⠥⠛⠥⠌ ⠼⠁⠊⠊⠓⠠⠴"
   },
   {
     "input": "Indigenous teas have been linked in recent studies to improved health and ...",
     "internal": ",9dig5\\s t1s h be5 l9k$ 9 rec5t /udies to improv$ h1l? & 444",
     "expected": "32202510273451140302140190317340720543020023179343001237251017140302101013152321394301927570470505050",
-    "unicode": "⠠⠔⠙⠊⠛⠢⠳⠎⠀⠞⠂⠎⠀⠓⠀⠃⠑⠢⠀⠇⠔⠅⠫⠀⠔⠀⠗⠑⠉⠢⠞⠀⠌⠥⠙⠊⠑⠎⠀⠞⠕⠀⠊⠍⠏⠗⠕⠧⠫⠀⠓⠂⠇⠹⠀⠯⠀⠲⠲⠲"
+    "unicode": "⠠⠔⠙⠊⠛⠢⠳⠎⠀⠞⠂⠎⠀⠓⠀⠃⠑⠢⠀⠇⠔⠅⠫⠀⠔⠀⠗⠑⠉⠢⠞⠀⠌⠥⠙⠊⠑⠎⠀⠞⠕⠀⠊⠍⠏⠗⠕⠧⠫⠀⠓⠂⠇⠹⠀⠯⠀⠲⠲⠲",
+    "world": "⠴⠠⠔⠙⠊⠛⠢⠳⠎ ⠞⠂⠎ ⠓ ⠃⠑⠢ ⠇⠔⠅⠫ ⠔ ⠗⠑⠉⠢⠞ ⠌⠥⠙⠊⠑⠎ ⠞⠕ ⠊⠍⠏⠗⠕⠧⠫ ⠓⠂⠇⠹ ⠯ ⠲⠲⠲"
   }
 ]

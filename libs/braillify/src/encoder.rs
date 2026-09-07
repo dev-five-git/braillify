@@ -109,7 +109,13 @@ impl Encoder {
         token_engine.register(Box::new(
             rules::token_rules::historical_gloss_spacing::HistoricalGlossSpacingRule,
         ));
+        token_engine.register(Box::new(
+            rules::token_rules::normalize::NormalizeAsciiAngleBrackets,
+        ));
         token_engine.register(Box::new(rules::token_rules::normalize::NormalizeEllipsis));
+        token_engine.register(Box::new(
+            rules::korean::rule_72::Rule72AttachedMarkerTokenRule,
+        ));
         // PDF 한국어 제33항 — 학술 인용 형식 year-suffix token (1998a,, 1998b;).
         token_engine.register(Box::new(
             rules::token_rules::rule_33_citation::Rule33CitationYearSuffixRule,

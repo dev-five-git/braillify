@@ -3,18 +3,21 @@
     "input": "Ætna",
     "internal": ",a,^6etna",
     "expected": "3213224221730291",
-    "unicode": "⠠⠁⠠⠘⠖⠑⠞⠝⠁"
+    "unicode": "⠠⠁⠠⠘⠖⠑⠞⠝⠁",
+    "world": "⠴⠞⠝⠁⠲"
   },
   {
     "input": "𝑡̶ℎ̶ as in the",
     "internal": ".1t^6h z 9 !",
     "expected": "40230242219053020046",
-    "unicode": "⠨⠂⠞⠘⠖⠓⠀⠵⠀⠔⠀⠮"
+    "unicode": "⠨⠂⠞⠘⠖⠓⠀⠵⠀⠔⠀⠮",
+    "world": "⠴⠁⠎ ⠔ ⠮⠲"
   },
   {
     "input": "T̶h̶ĕssalōnĭan",
     "internal": ",t^6h@+essal@-on@+ian",
     "expected": "323024221984417141417836212984410129",
-    "unicode": "⠠⠞⠘⠖⠓⠈⠬⠑⠎⠎⠁⠇⠈⠤⠕⠝⠈⠬⠊⠁⠝"
+    "unicode": "⠠⠞⠘⠖⠓⠈⠬⠑⠎⠎⠁⠇⠈⠤⠕⠝⠈⠬⠊⠁⠝",
+    "world": "⠴⠠⠞⠄⠳⠭⠴⠒⠒⠖⠄⠰⠓⠄⠳⠭⠴⠒⠒⠖⠄⠈⠬⠑⠎⠎⠁⠇⠘⠈⠤⠕⠝⠈⠬⠊⠁⠝⠲"
   }
 ]

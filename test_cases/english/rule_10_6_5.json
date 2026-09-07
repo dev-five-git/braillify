@@ -3,546 +3,637 @@
     "input": "abbé",
     "internal": "a2^/e",
     "expected": "16241217",
-    "unicode": "⠁⠆⠘⠌⠑"
+    "unicode": "⠁⠆⠘⠌⠑",
+    "world": "⠴⠁⠃⠃"
   },
   {
     "input": "accept",
     "internal": "a3ept",
     "expected": "118171530",
-    "unicode": "⠁⠒⠑⠏⠞"
+    "unicode": "⠁⠒⠑⠏⠞",
+    "world": "⠴⠁⠒⠑⠏⠞⠲"
   },
   {
     "input": "account",
     "internal": "a3.t",
     "expected": "1184030",
-    "unicode": "⠁⠒⠨⠞"
+    "unicode": "⠁⠒⠨⠞",
+    "world": "⠴⠁⠒⠨⠞⠲"
   },
   {
     "input": "acreage",
     "internal": "acr1ge",
     "expected": "192322717",
-    "unicode": "⠁⠉⠗⠂⠛⠑"
+    "unicode": "⠁⠉⠗⠂⠛⠑",
+    "world": "⠴⠁⠉⠗⠂⠛⠑⠲"
   },
   {
     "input": "affirm",
     "internal": "a6irm",
     "expected": "122102313",
-    "unicode": "⠁⠖⠊⠗⠍"
+    "unicode": "⠁⠖⠊⠗⠍",
+    "world": "⠴⠁⠖⠊⠗⠍⠲"
   },
   {
     "input": "aggressive",
     "internal": "a7ressive",
     "expected": "15423171414103917",
-    "unicode": "⠁⠶⠗⠑⠎⠎⠊⠧⠑"
+    "unicode": "⠁⠶⠗⠑⠎⠎⠊⠧⠑",
+    "world": "⠴⠁⠶⠗⠑⠎⠎⠊⠧⠑⠲"
   },
   {
     "input": "agreeable",
     "internal": "agre1ble",
     "expected": "127231723717",
-    "unicode": "⠁⠛⠗⠑⠂⠃⠇⠑"
+    "unicode": "⠁⠛⠗⠑⠂⠃⠇⠑",
+    "world": "⠴⠁⠛⠗⠑⠂⠃⠇⠑⠲"
   },
   {
     "input": "areas",
     "internal": ">1s",
     "expected": "28214",
-    "unicode": "⠜⠂⠎"
+    "unicode": "⠜⠂⠎",
+    "world": "⠴⠜⠂⠎⠲"
   },
   {
     "input": "arpeggio",
     "internal": ">pe7io",
     "expected": "281517541021",
-    "unicode": "⠜⠏⠑⠶⠊⠕"
+    "unicode": "⠜⠏⠑⠶⠊⠕",
+    "world": "⠴⠜⠏⠑⠶⠊⠕⠲"
   },
   {
     "input": "baccalaureate",
     "internal": "ba3alaur1te",
     "expected": "3118171372323017",
-    "unicode": "⠃⠁⠒⠁⠇⠁⠥⠗⠂⠞⠑"
+    "unicode": "⠃⠁⠒⠁⠇⠁⠥⠗⠂⠞⠑",
+    "world": "⠴⠃⠁⠒⠁⠇⠁⠥⠗⠂⠞⠑⠲"
   },
   {
     "input": "beat",
     "internal": "b1t",
     "expected": "3230",
-    "unicode": "⠃⠂⠞"
+    "unicode": "⠃⠂⠞",
+    "world": "⠴⠃⠂⠞⠲"
   },
   {
     "input": "begging",
     "internal": "be7+",
     "expected": "3175444",
-    "unicode": "⠃⠑⠶⠬"
+    "unicode": "⠃⠑⠶⠬",
+    "world": "⠴⠃⠑⠶⠬⠲"
   },
   {
     "input": "borealis",
     "internal": "bor1lis",
     "expected": "32123271014",
-    "unicode": "⠃⠕⠗⠂⠇⠊⠎"
+    "unicode": "⠃⠕⠗⠂⠇⠊⠎",
+    "world": "⠴⠃⠕⠗⠂⠇⠊⠎⠲"
   },
   {
     "input": "bubble",
     "internal": "bu2le",
     "expected": "3376717",
-    "unicode": "⠃⠥⠆⠇⠑"
+    "unicode": "⠃⠥⠆⠇⠑",
+    "world": "⠴⠃⠥⠆⠇⠑⠲"
   },
   {
     "input": "bureau",
     "internal": "bur1u",
     "expected": "33723237",
-    "unicode": "⠃⠥⠗⠂⠥"
+    "unicode": "⠃⠥⠗⠂⠥",
+    "world": "⠴⠃⠥⠗⠂⠥⠲"
   },
   {
     "input": "Caribbean",
     "internal": ",c>i21n",
     "expected": "32928106229",
-    "unicode": "⠠⠉⠜⠊⠆⠂⠝"
+    "unicode": "⠠⠉⠜⠊⠆⠂⠝",
+    "world": "⠴⠠⠉⠜⠊⠆⠂⠝⠲"
   },
   {
     "input": "caveat",
     "internal": "cav1t",
     "expected": "9139230",
-    "unicode": "⠉⠁⠧⠂⠞"
+    "unicode": "⠉⠁⠧⠂⠞",
+    "world": "⠴⠉⠁⠧⠂⠞⠲"
   },
   {
     "input": "create",
     "internal": "cr1te",
     "expected": "92323017",
-    "unicode": "⠉⠗⠂⠞⠑"
+    "unicode": "⠉⠗⠂⠞⠑",
+    "world": "⠴⠉⠗⠂⠞⠑⠲"
   },
   {
     "input": "creation",
     "internal": "cr1;n",
     "expected": "92324829",
-    "unicode": "⠉⠗⠂⠰⠝"
+    "unicode": "⠉⠗⠂⠰⠝",
+    "world": "⠴⠉⠗⠂⠰⠝⠲"
   },
   {
     "input": "disease",
     "internal": "41se",
     "expected": "5021417",
-    "unicode": "⠲⠂⠎⠑"
+    "unicode": "⠲⠂⠎⠑",
+    "world": "⠴⠲⠂⠎⠑⠲"
   },
   {
     "input": "doggone",
     "internal": "do7\"o",
     "expected": "2521541621",
-    "unicode": "⠙⠕⠶⠐⠕"
+    "unicode": "⠙⠕⠶⠐⠕",
+    "world": "⠴⠙⠕⠶⠐⠕⠲"
   },
   {
     "input": "eggnog",
     "internal": "e7nog",
     "expected": "1754292127",
-    "unicode": "⠑⠶⠝⠕⠛"
+    "unicode": "⠑⠶⠝⠕⠛",
+    "world": "⠴⠑⠶⠝⠕⠛⠲"
   },
   {
     "input": "epicurean",
     "internal": "epicur1n",
     "expected": "17151093723229",
-    "unicode": "⠑⠏⠊⠉⠥⠗⠂⠝"
+    "unicode": "⠑⠏⠊⠉⠥⠗⠂⠝",
+    "world": "⠴⠑⠏⠊⠉⠥⠗⠂⠝⠲"
   },
   {
     "input": "flaccid",
     "internal": "fla3id",
     "expected": "1171181025",
-    "unicode": "⠋⠇⠁⠒⠊⠙"
+    "unicode": "⠋⠇⠁⠒⠊⠙",
+    "world": "⠴⠋⠇⠁⠒⠊⠙⠲"
   },
   {
     "input": "genealogy",
     "internal": "g51logy",
     "expected": "273427212761",
-    "unicode": "⠛⠢⠂⠇⠕⠛⠽"
+    "unicode": "⠛⠢⠂⠇⠕⠛⠽",
+    "world": "⠴⠛⠢⠂⠇⠕⠛⠽⠲"
   },
   {
     "input": "Hanseatic",
     "internal": ",hans1tic",
     "expected": "321912914230109",
-    "unicode": "⠠⠓⠁⠝⠎⠂⠞⠊⠉"
+    "unicode": "⠠⠓⠁⠝⠎⠂⠞⠊⠉",
+    "world": "⠴⠠⠓⠁⠝⠎⠂⠞⠊⠉⠲"
   },
   {
     "input": "head",
     "internal": "h1d",
     "expected": "19225",
-    "unicode": "⠓⠂⠙"
+    "unicode": "⠓⠂⠙",
+    "world": "⠴⠓⠂⠙⠲"
   },
   {
     "input": "Judaean",
     "internal": ",juda1n",
     "expected": "322637251229",
-    "unicode": "⠠⠚⠥⠙⠁⠂⠝"
+    "unicode": "⠠⠚⠥⠙⠁⠂⠝",
+    "world": "⠴⠠⠚⠥⠙⠁⠂⠝⠲"
   },
   {
     "input": "likeable",
     "internal": "lik1ble",
     "expected": "710523717",
-    "unicode": "⠇⠊⠅⠂⠃⠇⠑"
+    "unicode": "⠇⠊⠅⠂⠃⠇⠑",
+    "world": "⠴⠇⠊⠅⠂⠃⠇⠑⠲"
   },
   {
     "input": "Liliaceae",
     "internal": ",liliac1e",
     "expected": "3271071019217",
-    "unicode": "⠠⠇⠊⠇⠊⠁⠉⠂⠑"
+    "unicode": "⠠⠇⠊⠇⠊⠁⠉⠂⠑",
+    "world": "⠴⠠⠇⠊⠇⠊⠁⠉⠂⠑⠲"
   },
   {
     "input": "lineage",
     "internal": "l91ge",
     "expected": "72022717",
-    "unicode": "⠇⠔⠂⠛⠑"
+    "unicode": "⠇⠔⠂⠛⠑",
+    "world": "⠴⠇⠔⠂⠛⠑⠲"
   },
   {
     "input": "mecca",
     "internal": "me3a",
     "expected": "1317181",
-    "unicode": "⠍⠑⠒⠁"
+    "unicode": "⠍⠑⠒⠁",
+    "world": "⠴⠍⠑⠒⠁⠲"
   },
   {
     "input": "Minneapolis",
     "internal": ",m9n1polis",
     "expected": "321320292152171014",
-    "unicode": "⠠⠍⠔⠝⠂⠏⠕⠇⠊⠎"
+    "unicode": "⠠⠍⠔⠝⠂⠏⠕⠇⠊⠎",
+    "world": "⠴⠠⠍⠔⠝⠂⠏⠕⠇⠊⠎⠲"
   },
   {
     "input": "Montreal",
     "internal": ",montr1l",
     "expected": "32132129302327",
-    "unicode": "⠠⠍⠕⠝⠞⠗⠂⠇"
+    "unicode": "⠠⠍⠕⠝⠞⠗⠂⠇",
+    "world": "⠴⠠⠍⠕⠝⠞⠗⠂⠇⠲"
   },
   {
     "input": "motheaten",
     "internal": "mo?1t5",
     "expected": "13215723034",
-    "unicode": "⠍⠕⠹⠂⠞⠢"
+    "unicode": "⠍⠕⠹⠂⠞⠢",
+    "world": "⠴⠍⠕⠹⠂⠞⠢⠲"
   },
   {
     "input": "muffin",
     "internal": "mu69",
     "expected": "13372220",
-    "unicode": "⠍⠥⠖⠔"
+    "unicode": "⠍⠥⠖⠔",
+    "world": "⠴⠍⠥⠖⠔⠲"
   },
   {
     "input": "Neapolitan",
     "internal": ",n1politan",
     "expected": "32292152171030129",
-    "unicode": "⠠⠝⠂⠏⠕⠇⠊⠞⠁⠝"
+    "unicode": "⠠⠝⠂⠏⠕⠇⠊⠞⠁⠝",
+    "world": "⠴⠠⠝⠂⠏⠕⠇⠊⠞⠁⠝⠲"
   },
   {
     "input": "northeast",
     "internal": "nor?1/",
     "expected": "29212357212",
-    "unicode": "⠝⠕⠗⠹⠂⠌"
+    "unicode": "⠝⠕⠗⠹⠂⠌",
+    "world": "⠴⠝⠕⠗⠹⠂⠌⠲"
   },
   {
     "input": "occupy",
     "internal": "o3upy",
     "expected": "2118371561",
-    "unicode": "⠕⠒⠥⠏⠽"
+    "unicode": "⠕⠒⠥⠏⠽",
+    "world": "⠴⠕⠒⠥⠏⠽⠲"
   },
   {
     "input": "oceanic",
     "internal": "oc1nic",
     "expected": "219229109",
-    "unicode": "⠕⠉⠂⠝⠊⠉"
+    "unicode": "⠕⠉⠂⠝⠊⠉",
+    "world": "⠴⠕⠉⠂⠝⠊⠉⠲"
   },
   {
     "input": "oleaginous",
     "internal": "ol1g9\\s",
     "expected": "217227205114",
-    "unicode": "⠕⠇⠂⠛⠔⠳⠎"
+    "unicode": "⠕⠇⠂⠛⠔⠳⠎",
+    "world": "⠴⠕⠇⠂⠛⠔⠳⠎⠲"
   },
   {
     "input": "orgeat",
     "internal": "org1t",
     "expected": "212327230",
-    "unicode": "⠕⠗⠛⠂⠞"
+    "unicode": "⠕⠗⠛⠂⠞",
+    "world": "⠴⠕⠗⠛⠂⠞⠲"
   },
   {
     "input": "paean",
     "internal": "pa1n",
     "expected": "151229",
-    "unicode": "⠏⠁⠂⠝"
+    "unicode": "⠏⠁⠂⠝",
+    "world": "⠴⠏⠁⠂⠝⠲"
   },
   {
     "input": "pancreas",
     "internal": "pancr1s",
     "expected": "15129923214",
-    "unicode": "⠏⠁⠝⠉⠗⠂⠎"
+    "unicode": "⠏⠁⠝⠉⠗⠂⠎",
+    "world": "⠴⠏⠁⠝⠉⠗⠂⠎⠲"
   },
   {
     "input": "peaceable",
     "internal": "p1c1ble",
     "expected": "152923717",
-    "unicode": "⠏⠂⠉⠂⠃⠇⠑"
+    "unicode": "⠏⠂⠉⠂⠃⠇⠑",
+    "world": "⠴⠏⠂⠉⠂⠃⠇⠑⠲"
   },
   {
     "input": "peanut",
     "internal": "p1nut",
     "expected": "152293730",
-    "unicode": "⠏⠂⠝⠥⠞"
+    "unicode": "⠏⠂⠝⠥⠞",
+    "world": "⠴⠏⠂⠝⠥⠞⠲"
   },
   {
     "input": "rabbi",
     "internal": "ra2i",
     "expected": "231610",
-    "unicode": "⠗⠁⠆⠊"
+    "unicode": "⠗⠁⠆⠊",
+    "world": "⠴⠗⠁⠆⠊⠲"
   },
   {
     "input": "really",
     "internal": "r1lly",
     "expected": "2327761",
-    "unicode": "⠗⠂⠇⠇⠽"
+    "unicode": "⠗⠂⠇⠇⠽",
+    "world": "⠴⠗⠂⠇⠇⠽⠲"
   },
   {
     "input": "réchauffé",
     "internal": "r^/e*au6^/e",
     "expected": "232412173313722241217",
-    "unicode": "⠗⠘⠌⠑⠡⠁⠥⠖⠘⠌⠑"
+    "unicode": "⠗⠘⠌⠑⠡⠁⠥⠖⠘⠌⠑",
+    "world": "⠴⠗⠘⠌⠑⠡⠁⠥⠋⠋"
   },
   {
     "input": "Seamus",
     "internal": ",s1mus",
     "expected": "32142133714",
-    "unicode": "⠠⠎⠂⠍⠥⠎"
+    "unicode": "⠠⠎⠂⠍⠥⠎",
+    "world": "⠴⠠⠎⠂⠍⠥⠎⠲"
   },
   {
     "input": "Sean",
     "internal": ",s1n",
     "expected": "3214229",
-    "unicode": "⠠⠎⠂⠝"
+    "unicode": "⠠⠎⠂⠝",
+    "world": "⠴⠠⠎⠂⠝⠲"
   },
   {
     "input": "seashore",
     "internal": "s1%ore",
     "expected": "14241212317",
-    "unicode": "⠎⠂⠩⠕⠗⠑"
+    "unicode": "⠎⠂⠩⠕⠗⠑",
+    "world": "⠴⠎⠂⠩⠕⠗⠑⠲"
   },
   {
     "input": "Seattle",
     "internal": ",s1ttle",
     "expected": "321423030717",
-    "unicode": "⠠⠎⠂⠞⠞⠇⠑"
+    "unicode": "⠠⠎⠂⠞⠞⠇⠑",
+    "world": "⠴⠠⠎⠂⠞⠞⠇⠑⠲"
   },
   {
     "input": "Sheffield",
     "internal": ",%e6ield",
     "expected": "324117221017725",
-    "unicode": "⠠⠩⠑⠖⠊⠑⠇⠙"
+    "unicode": "⠠⠩⠑⠖⠊⠑⠇⠙",
+    "world": "⠴⠠⠩⠑⠖⠊⠑⠇⠙⠲"
   },
   {
     "input": "sheriffs",
     "internal": "%]i6s",
     "expected": "4159102214",
-    "unicode": "⠩⠻⠊⠖⠎"
+    "unicode": "⠩⠻⠊⠖⠎",
+    "world": "⠴⠩⠻⠊⠖⠎⠲"
   },
   {
     "input": "speakeasy",
     "internal": "sp1k1sy",
     "expected": "14152521461",
-    "unicode": "⠎⠏⠂⠅⠂⠎⠽"
+    "unicode": "⠎⠏⠂⠅⠂⠎⠽",
+    "world": "⠴⠎⠏⠂⠅⠂⠎⠽⠲"
   },
   {
     "input": "tableau",
     "internal": "tabl1u",
     "expected": "30137237",
-    "unicode": "⠞⠁⠃⠇⠂⠥"
+    "unicode": "⠞⠁⠃⠇⠂⠥",
+    "world": "⠴⠞⠁⠃⠇⠂⠥⠲"
   },
   {
     "input": "tobacco",
     "internal": "toba3o",
     "expected": "3021311821",
-    "unicode": "⠞⠕⠃⠁⠒⠕"
+    "unicode": "⠞⠕⠃⠁⠒⠕",
+    "world": "⠴⠞⠕⠃⠁⠒⠕⠲"
   },
   {
     "input": "toreador",
     "internal": "tor1dor",
     "expected": "3021232252123",
-    "unicode": "⠞⠕⠗⠂⠙⠕⠗"
+    "unicode": "⠞⠕⠗⠂⠙⠕⠗",
+    "world": "⠴⠞⠕⠗⠂⠙⠕⠗⠲"
   },
   {
     "input": "Yeats",
     "internal": ",y1ts",
     "expected": "326123014",
-    "unicode": "⠠⠽⠂⠞⠎"
+    "unicode": "⠠⠽⠂⠞⠎",
+    "world": "⠴⠠⠽⠂⠞⠎⠲"
   },
   {
     "input": "afford",
     "internal": "af=d",
     "expected": "1116325",
-    "unicode": "⠁⠋⠿⠙"
+    "unicode": "⠁⠋⠿⠙",
+    "world": "⠴⠁⠋⠿⠙⠲"
   },
   {
     "input": "appear",
     "internal": "appe>",
     "expected": "115151728",
-    "unicode": "⠁⠏⠏⠑⠜"
+    "unicode": "⠁⠏⠏⠑⠜",
+    "world": "⠴⠁⠏⠏⠑⠜⠲"
   },
   {
     "input": "arccosine",
     "internal": ">ccos9e",
     "expected": "289921142017",
-    "unicode": "⠜⠉⠉⠕⠎⠔⠑"
+    "unicode": "⠜⠉⠉⠕⠎⠔⠑",
+    "world": "⠴⠜⠉⠉⠕⠎⠔⠑⠲"
   },
   {
     "input": "bacchanal",
     "internal": "bac*anal",
     "expected": "3193312917",
-    "unicode": "⠃⠁⠉⠡⠁⠝⠁⠇"
+    "unicode": "⠃⠁⠉⠡⠁⠝⠁⠇",
+    "world": "⠴⠃⠁⠉⠡⠁⠝⠁⠇⠲"
   },
   {
     "input": "bear",
     "internal": "be>",
     "expected": "31728",
-    "unicode": "⠃⠑⠜"
+    "unicode": "⠃⠑⠜",
+    "world": "⠴⠃⠑⠜⠲"
   },
   {
     "input": "beatitude",
     "internal": "2atitude",
     "expected": "61301030372517",
-    "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑"
+    "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑",
+    "world": "⠴⠆⠁⠞⠊⠞⠥⠙⠑⠲"
   },
   {
     "input": "Beatrice",
     "internal": ",2atrice",
     "expected": "3261302310917",
-    "unicode": "⠠⠆⠁⠞⠗⠊⠉⠑"
+    "unicode": "⠠⠆⠁⠞⠗⠊⠉⠑",
+    "world": "⠴⠠⠆⠁⠞⠗⠊⠉⠑⠲"
   },
   {
     "input": "cinéaste",
     "internal": "c9^/ea/e",
     "expected": "92024121711217",
-    "unicode": "⠉⠔⠘⠌⠑⠁⠌⠑"
+    "unicode": "⠉⠔⠘⠌⠑⠁⠌⠑",
+    "world": "⠴⠉⠔⠘⠌⠑⠁⠌⠑⠲"
   },
   {
     "input": "coffee",
     "internal": "c(fee",
     "expected": "955111717",
-    "unicode": "⠉⠷⠋⠑⠑"
+    "unicode": "⠉⠷⠋⠑⠑",
+    "world": "⠴⠉⠷⠋⠑⠑⠲"
   },
   {
     "input": "dumbbell",
     "internal": "dumbbell",
     "expected": "253713331777",
-    "unicode": "⠙⠥⠍⠃⠃⠑⠇⠇"
+    "unicode": "⠙⠥⠍⠃⠃⠑⠇⠇",
+    "world": "⠴⠙⠥⠍⠃⠃⠑⠇⠇⠲"
   },
   {
     "input": "'ead",
     "internal": "'ead",
     "expected": "417125",
-    "unicode": "⠄⠑⠁⠙"
+    "unicode": "⠄⠑⠁⠙",
+    "world": "⠄⠴⠑⠁⠙⠲"
   },
   {
     "input": "east",
     "internal": "ea/",
     "expected": "17112",
-    "unicode": "⠑⠁⠌"
+    "unicode": "⠑⠁⠌",
+    "world": "⠴⠑⠁⠌⠲"
   },
   {
     "input": "ebb",
     "internal": "ebb",
     "expected": "1733",
-    "unicode": "⠑⠃⠃"
+    "unicode": "⠑⠃⠃",
+    "world": "⠴⠑⠃⠃⠲"
   },
   {
     "input": "ebb-tide",
     "internal": "ebb-tide",
     "expected": "17333630102517",
-    "unicode": "⠑⠃⠃⠤⠞⠊⠙⠑"
+    "unicode": "⠑⠃⠃⠤⠞⠊⠙⠑",
+    "world": "⠴⠑⠃⠃⠤⠞⠊⠙⠑⠲"
   },
   {
     "input": "hideaway",
     "internal": "hideaway",
     "expected": "19102517158161",
-    "unicode": "⠓⠊⠙⠑⠁⠺⠁⠽"
+    "unicode": "⠓⠊⠙⠑⠁⠺⠁⠽",
+    "world": "⠴⠓⠊⠙⠑⠁⠺⠁⠽⠲"
   },
   {
     "input": "idea(s)",
     "internal": "idea\"<s\">",
     "expected": "10251711635141628",
-    "unicode": "⠊⠙⠑⠁⠐⠣⠎⠐⠜"
+    "unicode": "⠊⠙⠑⠁⠐⠣⠎⠐⠜",
+    "world": "⠴⠊⠙⠑⠁⠐⠣⠎⠠⠴"
   },
   {
     "input": "Leander",
     "internal": ",le&]",
     "expected": "327174759",
-    "unicode": "⠠⠇⠑⠯⠻"
+    "unicode": "⠠⠇⠑⠯⠻",
+    "world": "⠴⠠⠇⠑⠯⠻⠲"
   },
   {
     "input": "limeade",
     "internal": "limeade",
     "expected": "710131712517",
-    "unicode": "⠇⠊⠍⠑⠁⠙⠑"
+    "unicode": "⠇⠊⠍⠑⠁⠙⠑",
+    "world": "⠴⠇⠊⠍⠑⠁⠙⠑⠲"
   },
   {
     "input": "mah-jongg",
     "internal": "mah-j;gg",
     "expected": "131193626482727",
-    "unicode": "⠍⠁⠓⠤⠚⠰⠛⠛"
+    "unicode": "⠍⠁⠓⠤⠚⠰⠛⠛",
+    "world": "⠴⠍⠁⠓⠤⠚⠰⠛⠛⠲"
   },
   {
     "input": "man-eater",
     "internal": "man-eat]",
     "expected": "13129361713059",
-    "unicode": "⠍⠁⠝⠤⠑⠁⠞⠻"
+    "unicode": "⠍⠁⠝⠤⠑⠁⠞⠻",
+    "world": "⠴⠍⠁⠝⠤⠑⠁⠞⠻⠲"
   },
   {
     "input": "pineapple",
     "internal": "p9eapple",
     "expected": "15201711515717",
-    "unicode": "⠏⠔⠑⠁⠏⠏⠇⠑"
+    "unicode": "⠏⠔⠑⠁⠏⠏⠇⠑",
+    "world": "⠴⠏⠔⠑⠁⠏⠏⠇⠑⠲"
   },
   {
     "input": "robb'd",
     "internal": "robb'd",
     "expected": "232133425",
-    "unicode": "⠗⠕⠃⠃⠄⠙"
+    "unicode": "⠗⠕⠃⠃⠄⠙",
+    "world": "⠴⠗⠕⠃⠃⠄⠙⠲"
   },
   {
     "input": "saccharine",
     "internal": "sac*>9e",
     "expected": "141933282017",
-    "unicode": "⠎⠁⠉⠡⠜⠔⠑"
+    "unicode": "⠎⠁⠉⠡⠜⠔⠑",
+    "world": "⠴⠎⠁⠉⠡⠜⠔⠑⠲"
   },
   {
     "input": "sea-green",
     "internal": "sea-gre5",
     "expected": "141713627231734",
-    "unicode": "⠎⠑⠁⠤⠛⠗⠑⠢"
+    "unicode": "⠎⠑⠁⠤⠛⠗⠑⠢",
+    "world": "⠴⠎⠑⠁⠤⠛⠗⠑⠢⠲"
   },
   {
     "input": "sheriff's",
     "internal": "%]iff's",
     "expected": "4159101111414",
-    "unicode": "⠩⠻⠊⠋⠋⠄⠎"
+    "unicode": "⠩⠻⠊⠋⠋⠄⠎",
+    "world": "⠴⠩⠻⠊⠋⠋⠄⠎⠲"
   },
   {
     "input": "snuff",
     "internal": "snuff",
     "expected": "1429371111",
-    "unicode": "⠎⠝⠥⠋⠋"
+    "unicode": "⠎⠝⠥⠋⠋",
+    "world": "⠴⠎⠝⠥⠋⠋⠲"
   },
   {
     "input": "sou'east",
     "internal": "s\\'ea/",
     "expected": "1451417112",
-    "unicode": "⠎⠳⠄⠑⠁⠌"
+    "unicode": "⠎⠳⠄⠑⠁⠌",
+    "world": "⠴⠎⠳⠄⠑⠁⠌⠲"
   },
   {
     "input": "stiff𝑙𝑦",
     "internal": "/iff.1ly",
     "expected": "12101111402761",
-    "unicode": "⠌⠊⠋⠋⠨⠂⠇⠽"
+    "unicode": "⠌⠊⠋⠋⠨⠂⠇⠽",
+    "world": "⠴⠌⠊⠋⠋"
   },
   {
     "input": "subbasement",
     "internal": "subbase;t",
     "expected": "143733114174830",
-    "unicode": "⠎⠥⠃⠃⠁⠎⠑⠰⠞"
+    "unicode": "⠎⠥⠃⠃⠁⠎⠑⠰⠞",
+    "world": "⠴⠎⠥⠃⠃⠁⠎⠑⠰⠞⠲"
   },
   {
     "input": "tea",
     "internal": "tea",
     "expected": "30171",
-    "unicode": "⠞⠑⠁"
+    "unicode": "⠞⠑⠁",
+    "world": "⠴⠞⠑⠁⠲"
   },
   {
     "input": "theatre",
     "internal": "!atre",
     "expected": "461302317",
-    "unicode": "⠮⠁⠞⠗⠑"
+    "unicode": "⠮⠁⠞⠗⠑",
+    "world": "⠴⠮⠁⠞⠗⠑⠲"
   }
 ]

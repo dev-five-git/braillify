@@ -3,78 +3,91 @@
     "input": "the set of real numbers, ℜ",
     "internal": "! set ( r1l numb]s1 @2;,r",
     "expected": "460141730055023270293713359142086483223",
-    "unicode": "⠮⠀⠎⠑⠞⠀⠷⠀⠗⠂⠇⠀⠝⠥⠍⠃⠻⠎⠂⠀⠈⠆⠰⠠⠗"
+    "unicode": "⠮⠀⠎⠑⠞⠀⠷⠀⠗⠂⠇⠀⠝⠥⠍⠃⠻⠎⠂⠀⠈⠆⠰⠠⠗",
+    "world": "⠴⠮ ⠎⠑⠞ ⠷ ⠗⠂⠇ ⠝⠥⠍⠃⠻⠎⠂"
   },
   {
     "input": "𝑝neumonia",
     "internal": ".2pneumonia",
     "expected": "40615291737132129101",
-    "unicode": "⠨⠆⠏⠝⠑⠥⠍⠕⠝⠊⠁"
+    "unicode": "⠨⠆⠏⠝⠑⠥⠍⠕⠝⠊⠁",
+    "world": "⠴⠝⠑⠥⠍⠕⠝⠊⠁⠲"
   },
   {
     "input": "8 chickens!",
     "internal": "#h *ick5s6",
     "expected": "60190331095341422",
-    "unicode": "⠼⠓⠀⠡⠊⠉⠅⠢⠎⠖"
+    "unicode": "⠼⠓⠀⠡⠊⠉⠅⠢⠎⠖",
+    "world": "⠼⠓ ⠴⠡⠊⠉⠅⠢⠎⠖"
   },
   {
     "input": "story̲   stori̲es",
     "internal": "/or_2y   /or_2ies",
     "expected": "12212356661000122123566101714",
-    "unicode": "⠌⠕⠗⠸⠆⠽⠀⠀⠀⠌⠕⠗⠸⠆⠊⠑⠎"
+    "unicode": "⠌⠕⠗⠸⠆⠽⠀⠀⠀⠌⠕⠗⠸⠆⠊⠑⠎",
+    "world": "⠴⠌⠕⠗⠽⠄⠳⠭⠴⠒⠒⠆⠄   ⠌⠕⠗⠊⠄⠳⠭⠴⠒⠒⠆⠄⠑⠎⠲"
   },
   {
     "input": "24 should be 3̲4̲",
     "internal": "#bd %d 2 _2#cd",
     "expected": "603250412506056660925",
-    "unicode": "⠼⠃⠙⠀⠩⠙⠀⠆⠀⠸⠆⠼⠉⠙"
+    "unicode": "⠼⠃⠙⠀⠩⠙⠀⠆⠀⠸⠆⠼⠉⠙",
+    "world": "⠼⠃⠙ ⠴⠩⠙ ⠃⠑ ⠼⠉⠼⠙"
   },
   {
     "input": "𝐛right 𝐛lue 𝐛all",
     "internal": "^2b\"r ^2blue ^2ball",
     "expected": "24631623024637371702463177",
-    "unicode": "⠘⠆⠃⠐⠗⠀⠘⠆⠃⠇⠥⠑⠀⠘⠆⠃⠁⠇⠇"
+    "unicode": "⠘⠆⠃⠐⠗⠀⠘⠆⠃⠇⠥⠑⠀⠘⠆⠃⠁⠇⠇",
+    "world": "⠴⠐⠗ ⠃⠇⠥⠑ ⠃⠁⠇⠇⠲"
   },
   {
     "input": "27.̲9",
     "internal": "#bg_24#i",
     "expected": "60327566506010",
-    "unicode": "⠼⠃⠛⠸⠆⠲⠼⠊"
+    "unicode": "⠼⠃⠛⠸⠆⠲⠼⠊",
+    "world": "⠼⠃⠛⠲⠊"
   },
   {
     "input": "Stop! May I help?",
     "internal": ",/op6 ,may ,i help8",
     "expected": "321221152203213161032100191771538",
-    "unicode": "⠠⠌⠕⠏⠖⠀⠠⠍⠁⠽⠀⠠⠊⠀⠓⠑⠇⠏⠦"
+    "unicode": "⠠⠌⠕⠏⠖⠀⠠⠍⠁⠽⠀⠠⠊⠀⠓⠑⠇⠏⠦",
+    "world": "⠴⠠⠌⠕⠏⠖ ⠠⠍⠁⠽ ⠠⠊ ⠓⠑⠇⠏⠦"
   },
   {
     "input": "83%̲",
     "internal": "#hc_2.0",
     "expected": "601995664052",
-    "unicode": "⠼⠓⠉⠸⠆⠨⠴"
+    "unicode": "⠼⠓⠉⠸⠆⠨⠴",
+    "world": "⠼⠓⠉⠴⠏"
   },
   {
     "input": "It will cost $45 not €45.",
     "internal": ",x w co/ @s#de n @e#de4",
     "expected": "32450580921120814602517029081760251750",
-    "unicode": "⠠⠭⠀⠺⠀⠉⠕⠌⠀⠈⠎⠼⠙⠑⠀⠝⠀⠈⠑⠼⠙⠑⠲"
+    "unicode": "⠠⠭⠀⠺⠀⠉⠕⠌⠀⠈⠎⠼⠙⠑⠀⠝⠀⠈⠑⠼⠙⠑⠲",
+    "world": "⠴⠠⠊⠞ ⠺ ⠉⠕⠌ ⠈⠎⠼⠙⠑ ⠝ ⠈⠑⠼⠙⠑⠲"
   },
   {
     "input": "For help, click the ? icon.",
     "internal": ",= help1 click ! ;8 icon4",
     "expected": "32630191771520971095046048380109212950",
-    "unicode": "⠠⠿⠀⠓⠑⠇⠏⠂⠀⠉⠇⠊⠉⠅⠀⠮⠀⠰⠦⠀⠊⠉⠕⠝⠲"
+    "unicode": "⠠⠿⠀⠓⠑⠇⠏⠂⠀⠉⠇⠊⠉⠅⠀⠮⠀⠰⠦⠀⠊⠉⠕⠝⠲",
+    "world": "⠴⠠⠿ ⠓⠑⠇⠏⠂ ⠉⠇⠊⠉⠅ ⠮ ⠰⠦ ⠊⠉⠕⠝⠲"
   },
   {
     "input": "change 𝑦 to 𝑖",
     "internal": "*ange .2;y to .2i",
     "expected": "3312927170406486103021040610",
-    "unicode": "⠡⠁⠝⠛⠑⠀⠨⠆⠰⠽⠀⠞⠕⠀⠨⠆⠊"
+    "unicode": "⠡⠁⠝⠛⠑⠀⠨⠆⠰⠽⠀⠞⠕⠀⠨⠆⠊",
+    "world": "⠴⠡⠁⠝⠛⠑ ⠰⠽ ⠞⠕"
   },
   {
     "input": "5𝟓 not 5𝟔",
     "internal": "#e^2#e n #e^2#f",
     "expected": "60172466017029060172466011",
-    "unicode": "⠼⠑⠘⠆⠼⠑⠀⠝⠀⠼⠑⠘⠆⠼⠋"
+    "unicode": "⠼⠑⠘⠆⠼⠑⠀⠝⠀⠼⠑⠘⠆⠼⠋",
+    "world": "⠼⠑ ⠴⠝⠕⠞ ⠼⠑"
   }
 ]

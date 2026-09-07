@@ -3,132 +3,154 @@
     "input": "b–e",
     "internal": ";b,-;e",
     "expected": "48332364817",
-    "unicode": "⠰⠃⠠⠤⠰⠑"
+    "unicode": "⠰⠃⠠⠤⠰⠑",
+    "world": "⠴⠃⠠⠤⠰⠑⠲"
   },
   {
     "input": "b-1",
     "internal": ";b-#a",
     "expected": "48336601",
-    "unicode": "⠰⠃⠤⠼⠁"
+    "unicode": "⠰⠃⠤⠼⠁",
+    "world": "⠴⠃⠤⠼⠁"
   },
   {
     "input": "B-team",
     "internal": ";,b-t1m",
     "expected": "483233630213",
-    "unicode": "⠰⠠⠃⠤⠞⠂⠍"
+    "unicode": "⠰⠠⠃⠤⠞⠂⠍",
+    "world": "⠴⠠⠃⠤⠞⠂⠍⠲"
   },
   {
     "input": "ev-er-y-which-way",
     "internal": "ev-]-;y-:-way",
     "expected": "1739365936486136493658161",
-    "unicode": "⠑⠧⠤⠻⠤⠰⠽⠤⠱⠤⠺⠁⠽"
+    "unicode": "⠑⠧⠤⠻⠤⠰⠽⠤⠱⠤⠺⠁⠽",
+    "world": "⠴⠑⠧⠤⠻⠤⠰⠽⠤⠱⠤⠺⠁⠽⠲"
   },
   {
     "input": "ending in –s or –es",
     "internal": "5d+ 9 ,-;s or ,-es",
     "expected": "34254402003236481402123032361714",
-    "unicode": "⠢⠙⠬⠀⠔⠀⠠⠤⠰⠎⠀⠕⠗⠀⠠⠤⠑⠎"
+    "unicode": "⠢⠙⠬⠀⠔⠀⠠⠤⠰⠎⠀⠕⠗⠀⠠⠤⠑⠎",
+    "world": "⠴⠢⠙⠬ ⠔ ⠠⠤⠰⠎ ⠕⠗ ⠠⠤⠑⠎⠲"
   },
   {
     "input": "V–VII",
     "internal": ";,v,-,,vii",
     "expected": "48323932363232391010",
-    "unicode": "⠰⠠⠧⠠⠤⠠⠠⠧⠊⠊"
+    "unicode": "⠰⠠⠧⠠⠤⠠⠠⠧⠊⠊",
+    "world": "⠴⠠⠧⠠⠤⠠⠠⠧⠊⠊⠲"
   },
   {
     "input": "viii-x",
     "internal": "viii-;x",
     "expected": "39101010364845",
-    "unicode": "⠧⠊⠊⠊⠤⠰⠭"
+    "unicode": "⠧⠊⠊⠊⠤⠰⠭",
+    "world": "⠴⠧⠊⠊⠊⠤⠰⠭⠲"
   },
   {
     "input": "What have you d–",
     "internal": ",:at h y ;d,-",
     "expected": "3249130019061048253236",
-    "unicode": "⠠⠱⠁⠞⠀⠓⠀⠽⠀⠰⠙⠠⠤"
+    "unicode": "⠠⠱⠁⠞⠀⠓⠀⠽⠀⠰⠙⠠⠤",
+    "world": "⠴⠠⠱⠁⠞ ⠓ ⠽ ⠙⠤⠤"
   },
   {
     "input": "What have you d…",
     "internal": ",:at h y ;d444",
     "expected": "324913001906104825505050",
-    "unicode": "⠠⠱⠁⠞⠀⠓⠀⠽⠀⠰⠙⠲⠲⠲"
+    "unicode": "⠠⠱⠁⠞⠀⠓⠀⠽⠀⠰⠙⠲⠲⠲",
+    "world": "⠴⠠⠱⠁⠞ ⠓ ⠽ ⠙⠲⠲⠲"
   },
   {
     "input": "p. 7",
     "internal": ";p4 #g",
     "expected": "48155006027",
-    "unicode": "⠰⠏⠲⠀⠼⠛"
+    "unicode": "⠰⠏⠲⠀⠼⠛",
+    "world": "⠴⠏⠲ ⠼⠛"
   },
   {
     "input": "p.7",
     "internal": "p4#g",
     "expected": "15506027",
-    "unicode": "⠏⠲⠼⠛"
+    "unicode": "⠏⠲⠼⠛",
+    "world": "⠴⠏⠲⠼⠛"
   },
   {
     "input": "p7",
     "internal": "p#g",
     "expected": "156027",
-    "unicode": "⠏⠼⠛"
+    "unicode": "⠏⠼⠛",
+    "world": "⠴⠏⠼⠛"
   },
   {
     "input": "the letters \"a\" to \"g\"",
     "internal": "! lrs 8a0 to 8;g0",
     "expected": "4607231403815203021038482752",
-    "unicode": "⠮⠀⠇⠗⠎⠀⠦⠁⠴⠀⠞⠕⠀⠦⠰⠛⠴"
+    "unicode": "⠮⠀⠇⠗⠎⠀⠦⠁⠴⠀⠞⠕⠀⠦⠰⠛⠴",
+    "world": "⠴⠮ ⠇⠗⠎ ⠦⠁⠴ ⠞⠕ ⠦⠰⠛⠦"
   },
   {
     "input": "Sections (h) and (i).",
     "internal": ",sec;ns \"<;h\"> & \"<i\">4",
     "expected": "321417948291401635481916280470163510162850",
-    "unicode": "⠠⠎⠑⠉⠰⠝⠎⠀⠐⠣⠰⠓⠐⠜⠀⠯⠀⠐⠣⠊⠐⠜⠲"
+    "unicode": "⠠⠎⠑⠉⠰⠝⠎⠀⠐⠣⠰⠓⠐⠜⠀⠯⠀⠐⠣⠊⠐⠜⠲",
+    "world": "⠴⠠⠎⠑⠉⠰⠝⠎ ⠐⠣⠰⠓⠐⠜ ⠯ ⠐⠣⠊⠠⠴⠲"
   },
   {
     "input": "Did 'e 'n' Ma get to 't?",
     "internal": ",did ';e ';n' ,ma get to ';t8",
     "expected": "32251025044817044829403213102717300302104483038",
-    "unicode": "⠠⠙⠊⠙⠀⠄⠰⠑⠀⠄⠰⠝⠄⠀⠠⠍⠁⠀⠛⠑⠞⠀⠞⠕⠀⠄⠰⠞⠦"
+    "unicode": "⠠⠙⠊⠙⠀⠄⠰⠑⠀⠄⠰⠝⠄⠀⠠⠍⠁⠀⠛⠑⠞⠀⠞⠕⠀⠄⠰⠞⠦",
+    "world": "⠴⠠⠙⠊⠙ ⠄⠰⠑ ⠄⠰⠝⠄ ⠠⠍⠁ ⠛⠑⠞ ⠞⠕ ⠄⠰⠞⠦"
   },
   {
     "input": "c/o maître d'",
     "internal": "c_/o ma^%itre ;d'",
     "expected": "95612210131244110302317048254",
-    "unicode": "⠉⠸⠌⠕⠀⠍⠁⠘⠩⠊⠞⠗⠑⠀⠰⠙⠄"
+    "unicode": "⠉⠸⠌⠕⠀⠍⠁⠘⠩⠊⠞⠗⠑⠀⠰⠙⠄",
+    "world": "⠴⠉⠸⠌⠕ ⠍⠁⠘⠩⠊⠞⠗⠑ ⠙⠄"
   },
   {
     "input": "the people's right",
     "internal": "! p's \"r",
     "expected": "4601541401623",
-    "unicode": "⠮⠀⠏⠄⠎⠀⠐⠗"
+    "unicode": "⠮⠀⠏⠄⠎⠀⠐⠗",
+    "world": "⠴⠮ ⠏⠄⠎ ⠐⠗⠲"
   },
   {
     "input": "p's and q's.",
     "internal": ";p's & ;q's4",
     "expected": "48154140470483141450",
-    "unicode": "⠰⠏⠄⠎⠀⠯⠀⠰⠟⠄⠎⠲"
+    "unicode": "⠰⠏⠄⠎⠀⠯⠀⠰⠟⠄⠎⠲",
+    "world": "⠴⠏⠄⠎ ⠯ ⠰⠟⠄⠎⠲"
   },
   {
     "input": "letter d",
     "internal": "lr ;d",
     "expected": "72304825",
-    "unicode": "⠇⠗⠀⠰⠙"
+    "unicode": "⠇⠗⠀⠰⠙",
+    "world": "⠴⠇⠗ ⠙⠲"
   },
   {
     "input": "\"X marks the spot.\"",
     "internal": "8;,x m>ks ! spot40",
     "expected": "38483245013285140460141521305052",
-    "unicode": "⠦⠰⠠⠭⠀⠍⠜⠅⠎⠀⠮⠀⠎⠏⠕⠞⠲⠴"
+    "unicode": "⠦⠰⠠⠭⠀⠍⠜⠅⠎⠀⠮⠀⠎⠏⠕⠞⠲⠴",
+    "world": "⠦⠴⠠⠭ ⠍⠜⠅⠎ ⠮ ⠎⠏⠕⠞⠲⠴"
   },
   {
     "input": "Dr J. F. Smith, M.D.",
     "internal": ",dr ;,j4 ;,f4 ,smi?1 ,m4,d4",
     "expected": "3225230483226500483211500321413105720321350322550",
-    "unicode": "⠠⠙⠗⠀⠰⠠⠚⠲⠀⠰⠠⠋⠲⠀⠠⠎⠍⠊⠹⠂⠀⠠⠍⠲⠠⠙⠲"
+    "unicode": "⠠⠙⠗⠀⠰⠠⠚⠲⠀⠰⠠⠋⠲⠀⠠⠎⠍⠊⠹⠂⠀⠠⠍⠲⠠⠙⠲",
+    "world": "⠴⠠⠙⠗ ⠰⠠⠚⠲ ⠰⠠⠋⠲ ⠠⠎⠍⠊⠹⠂ ⠠⠍⠲⠠⠙⠲"
   },
   {
     "input": "s-p-e-l-l-i-n-g",
     "internal": ";;s-p-e-l-l-i-n-g",
     "expected": "48481436153617367367361036293627",
-    "unicode": "⠰⠰⠎⠤⠏⠤⠑⠤⠇⠤⠇⠤⠊⠤⠝⠤⠛"
+    "unicode": "⠰⠰⠎⠤⠏⠤⠑⠤⠇⠤⠇⠤⠊⠤⠝⠤⠛",
+    "world": "⠴⠎⠤⠰⠏⠤⠰⠑⠤⠰⠇⠤⠰⠇⠤⠊⠤⠰⠝⠤⠰⠛⠲"
   }
 ]

@@ -3,18 +3,21 @@
     "input": "but-ton",
     "internal": "but-ton",
     "expected": "3373036302129",
-    "unicode": "⠃⠥⠞⠤⠞⠕⠝"
+    "unicode": "⠃⠥⠞⠤⠞⠕⠝",
+    "world": "⠴⠃⠥⠞⠤⠞⠕⠝⠲"
   },
   {
     "input": "be–have",
     "internal": "be,-have",
     "expected": "31732361913917",
-    "unicode": "⠃⠑⠠⠤⠓⠁⠧⠑"
+    "unicode": "⠃⠑⠠⠤⠓⠁⠧⠑",
+    "world": "⠴⠃⠑⠠⠤⠓⠲"
   },
   {
     "input": "dis as ter",
     "internal": "dis as t]",
     "expected": "251014011403059",
-    "unicode": "⠙⠊⠎⠀⠁⠎⠀⠞⠻"
+    "unicode": "⠙⠊⠎⠀⠁⠎⠀⠞⠻",
+    "world": "⠴⠙⠊⠎ ⠵ ⠞⠻⠲"
   }
 ]

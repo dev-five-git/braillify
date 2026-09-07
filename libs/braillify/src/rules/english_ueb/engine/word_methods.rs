@@ -7,6 +7,19 @@ impl EnglishUebEngine {
         ctx: WordContext,
         out: &mut Vec<u8>,
     ) -> Option<()> {
+        self.encode_word_with_apostrophe_lexeme(chars, ctx, false, out)
+    }
+
+    /// Encode a word with evidence that an adjacent apostrophe-separated run
+    /// reconstructs one lexical word.  Only the mixed-case capitals prefix uses
+    /// this evidence; ordinary words follow [`Self::encode_word`] unchanged.
+    pub(super) fn encode_word_with_apostrophe_lexeme(
+        &self,
+        chars: &[char],
+        ctx: WordContext,
+        apostrophe_joined_lexeme: bool,
+        out: &mut Vec<u8>,
+    ) -> Option<()> {
         let WordContext {
             standing_alone,
             upper_usable,
@@ -63,7 +76,12 @@ impl EnglishUebEngine {
             return Some(());
         }
         if !suppress_caps && classify_caps(chars).is_none() {
-            return self.encode_mixed_case(chars, allow_longer_shortforms, out);
+            return self.encode_mixed_case(
+                chars,
+                allow_longer_shortforms,
+                apostrophe_joined_lexeme,
+                out,
+            );
         }
         if shortform_usable && super::super::rule_10_9::is_pure_shortform_abbreviation(&word) {
             out.push(GRADE1);
@@ -186,6 +204,7 @@ impl EnglishUebEngine {
         &self,
         chars: &[char],
         allow_longer_shortforms: bool,
+        apostrophe_joined_lexeme: bool,
         out: &mut Vec<u8>,
     ) -> Option<()> {
         if allow_longer_shortforms && let Some(boundary) = initial_caps_shortform_boundary(chars) {
@@ -194,7 +213,12 @@ impl EnglishUebEngine {
             out.extend([CAPITAL, CAPITAL]);
             out.extend(cells);
             out.extend([CAPITAL, decode_unicode('⠄')]);
-            self.encode_mixed_case(&chars[boundary..], allow_longer_shortforms, out)?;
+            self.encode_mixed_case(
+                &chars[boundary..],
+                allow_longer_shortforms,
+                apostrophe_joined_lexeme,
+                out,
+            )?;
             return Some(());
         }
         let camel_subunit_start = camel_title_subunit_after_caps_prefix(chars);
@@ -214,7 +238,12 @@ impl EnglishUebEngine {
                     allow_longer_shortforms,
                 )?,
             );
-            self.encode_mixed_case(&chars[subunit_start..], allow_longer_shortforms, out)?;
+            self.encode_mixed_case(
+                &chars[subunit_start..],
+                allow_longer_shortforms,
+                apostrophe_joined_lexeme,
+                out,
+            )?;
             return Some(());
         }
         let initial_caps = chars.iter().take_while(|c| c.is_uppercase()).count();
@@ -355,8 +384,28 @@ impl EnglishUebEngine {
                 return Some(());
             }
             out.extend([CAPITAL, CAPITAL]);
-            for c in &chars[..initial_caps] {
-                out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+            if apostrophe_joined_lexeme {
+                // §10.6.8: `en`/`in` and the other permitted groupsigns remain
+                // available inside capital mode when the letters belong to an
+                // ordinarily pronounced word.  §10.12.1 initialisms retain the
+                // literal path because they have no lexical-word evidence.
+                let lower_prefix: Vec<char> = chars[..initial_caps]
+                    .iter()
+                    .map(|c| c.to_ascii_lowercase())
+                    .collect();
+                out.extend(
+                    super::super::rule_10_9::encode_with_optional_longer_shortforms(
+                        &lower_prefix,
+                        &self.contractions,
+                        false,
+                        false,
+                        false,
+                    )?,
+                );
+            } else {
+                for c in &chars[..initial_caps] {
+                    out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+                }
             }
             out.extend([CAPITAL, decode_unicode('⠄')]);
             let lower: Vec<char> = suffix.iter().flat_map(|c| c.to_lowercase()).collect();
@@ -513,6 +562,10 @@ mod tests {
     #[case::bachelor_science("BSc", "⠠⠃⠠⠎⠉")]
     #[case::megahertz("MHz", "⠠⠍⠠⠓⠵")]
     #[case::potassium_chloride("KCl", "⠠⠅⠠⠉⠇")]
+    // §10.6.8/§10.12.1: the apostrophe-elided spelling is the recorded word
+    // `opening`, so `PEN` is a capitalised word segment, not initials, and keeps
+    // the `en` groupsign inside capitals-word mode.
+    #[case::apostrophe_joined_lexeme("O'PENing", "⠠⠕⠄⠠⠠⠏⠢⠠⠄⠬")]
     #[case::chemical_subscript("HOCH₂", "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃")]
     fn encodes_mixed_case_words_8_2(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(enc(text), Some(cells(expected)));
@@ -800,6 +853,7 @@ mod tests {
             .encode_mixed_case(
                 &['f', 'o', 'u', 'n', 'D', 'A', 't', 'i', 'o', 'n'],
                 true,
+                false,
                 &mut out,
             )
             .unwrap();
@@ -814,6 +868,7 @@ mod tests {
             .encode_mixed_case(
                 &['f', 'o', 'u', 'n', 'D', 'A', 't', 'i', 'o', 'n'],
                 true,
+                false,
                 &mut out,
             )
             .unwrap();
@@ -905,5 +960,29 @@ mod tests {
                 .is_some()
         );
         assert!(!out.is_empty());
+    }
+
+    #[test]
+    fn standing_all_caps_longer_shortform_collision_gets_grade1() {
+        // UEB 5.7.2/10.9.8: LLC begins with the `little` shortform cells but is
+        // not itself a complete pure-letter shortform abbreviation.
+        let ctx = WordContext {
+            standing_alone: true,
+            upper_usable: true,
+            shortform_usable: true,
+            allow_longer_shortforms: true,
+            lower_usable: true,
+            suppress_caps: false,
+            word_initial: true,
+            restricted_prefix_boundary: true,
+            digit_adjacent: false,
+        };
+        let mut out = Vec::new();
+
+        EnglishUebEngine::new()
+            .encode_word(&['L', 'L', 'C'], ctx, &mut out)
+            .expect("ASCII acronym must encode");
+
+        assert!(out.starts_with(&[GRADE1, CAPITAL, CAPITAL]));
     }
 }

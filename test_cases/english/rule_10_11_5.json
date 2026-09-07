@@ -3,474 +3,553 @@
     "input": "abbreviate",
     "internal": "a2reviate",
     "expected": "162317391013017",
-    "unicode": "⠁⠆⠗⠑⠧⠊⠁⠞⠑"
+    "unicode": "⠁⠆⠗⠑⠧⠊⠁⠞⠑",
+    "world": "⠴⠁⠆⠗⠑⠧⠊⠁⠞⠑⠲"
   },
   {
     "input": "accent",
     "internal": "a35t",
     "expected": "1183430",
-    "unicode": "⠁⠒⠢⠞"
+    "unicode": "⠁⠒⠢⠞",
+    "world": "⠴⠁⠒⠢⠞⠲"
   },
   {
     "input": "affect",
     "internal": "a6ect",
     "expected": "12217930",
-    "unicode": "⠁⠖⠑⠉⠞"
+    "unicode": "⠁⠖⠑⠉⠞",
+    "world": "⠴⠁⠖⠑⠉⠞⠲"
   },
   {
     "input": "aggressive",
     "internal": "a7ressive",
     "expected": "15423171414103917",
-    "unicode": "⠁⠶⠗⠑⠎⠎⠊⠧⠑"
+    "unicode": "⠁⠶⠗⠑⠎⠎⠊⠧⠑",
+    "world": "⠴⠁⠶⠗⠑⠎⠎⠊⠧⠑⠲"
   },
   {
     "input": "aqueduct",
     "internal": "aqu$uct",
     "expected": "131374337930",
-    "unicode": "⠁⠟⠥⠫⠥⠉⠞"
+    "unicode": "⠁⠟⠥⠫⠥⠉⠞",
+    "world": "⠴⠁⠟⠥⠫⠥⠉⠞⠲"
   },
   {
     "input": "arise",
     "internal": ">ise",
     "expected": "28101417",
-    "unicode": "⠜⠊⠎⠑"
+    "unicode": "⠜⠊⠎⠑",
+    "world": "⠴⠜⠊⠎⠑⠲"
   },
   {
     "input": "Benedict",
     "internal": ",b5$ict",
     "expected": "323344310930",
-    "unicode": "⠠⠃⠢⠫⠊⠉⠞"
+    "unicode": "⠠⠃⠢⠫⠊⠉⠞",
+    "world": "⠴⠠⠃⠢⠫⠊⠉⠞⠲"
   },
   {
     "input": "deduce",
     "internal": "d$uce",
     "expected": "254337917",
-    "unicode": "⠙⠫⠥⠉⠑"
+    "unicode": "⠙⠫⠥⠉⠑",
+    "world": "⠴⠙⠫⠥⠉⠑⠲"
   },
   {
     "input": "denominate",
     "internal": "d5om9ate",
     "expected": "253421132013017",
-    "unicode": "⠙⠢⠕⠍⠔⠁⠞⠑"
+    "unicode": "⠙⠢⠕⠍⠔⠁⠞⠑",
+    "world": "⠴⠙⠢⠕⠍⠔⠁⠞⠑⠲"
   },
   {
     "input": "denote",
     "internal": "d5ote",
     "expected": "2534213017",
-    "unicode": "⠙⠢⠕⠞⠑"
+    "unicode": "⠙⠢⠕⠞⠑",
+    "world": "⠴⠙⠢⠕⠞⠑⠲"
   },
   {
     "input": "denouement",
     "internal": "d5\\e;t",
     "expected": "253451174830",
-    "unicode": "⠙⠢⠳⠑⠰⠞"
+    "unicode": "⠙⠢⠳⠑⠰⠞",
+    "world": "⠴⠙⠢⠳⠑⠰⠞⠲"
   },
   {
     "input": "denounce",
     "internal": "d5\\nce",
     "expected": "25345129917",
-    "unicode": "⠙⠢⠳⠝⠉⠑"
+    "unicode": "⠙⠢⠳⠝⠉⠑",
+    "world": "⠴⠙⠢⠳⠝⠉⠑⠲"
   },
   {
     "input": "derail",
     "internal": "d]ail",
     "expected": "25591107",
-    "unicode": "⠙⠻⠁⠊⠇"
+    "unicode": "⠙⠻⠁⠊⠇",
+    "world": "⠴⠙⠻⠁⠊⠇⠲"
   },
   {
     "input": "deregister",
     "internal": "d]egi/]",
     "expected": "25591727101259",
-    "unicode": "⠙⠻⠑⠛⠊⠌⠻"
+    "unicode": "⠙⠻⠑⠛⠊⠌⠻",
+    "world": "⠴⠙⠻⠑⠛⠊⠌⠻⠲"
   },
   {
     "input": "derivable",
     "internal": "d]ivable",
     "expected": "2559103913717",
-    "unicode": "⠙⠻⠊⠧⠁⠃⠇⠑"
+    "unicode": "⠙⠻⠊⠧⠁⠃⠇⠑",
+    "world": "⠴⠙⠻⠊⠧⠁⠃⠇⠑⠲"
   },
   {
     "input": "derogatory",
     "internal": "d]ogatory",
     "expected": "25592127130212361",
-    "unicode": "⠙⠻⠕⠛⠁⠞⠕⠗⠽"
+    "unicode": "⠙⠻⠕⠛⠁⠞⠕⠗⠽",
+    "world": "⠴⠙⠻⠕⠛⠁⠞⠕⠗⠽⠲"
   },
   {
     "input": "edacious",
     "internal": "$aci\\s",
     "expected": "4319105114",
-    "unicode": "⠫⠁⠉⠊⠳⠎"
+    "unicode": "⠫⠁⠉⠊⠳⠎",
+    "world": "⠴⠫⠁⠉⠊⠳⠎⠲"
   },
   {
     "input": "edict",
     "internal": "$ict",
     "expected": "4310930",
-    "unicode": "⠫⠊⠉⠞"
+    "unicode": "⠫⠊⠉⠞",
+    "world": "⠴⠫⠊⠉⠞⠲"
   },
   {
     "input": "edition",
     "internal": "$i;n",
     "expected": "43104829",
-    "unicode": "⠫⠊⠰⠝"
+    "unicode": "⠫⠊⠰⠝",
+    "world": "⠴⠫⠊⠰⠝⠲"
   },
   {
     "input": "educe",
     "internal": "$uce",
     "expected": "4337917",
-    "unicode": "⠫⠥⠉⠑"
+    "unicode": "⠫⠥⠉⠑",
+    "world": "⠴⠫⠥⠉⠑⠲"
   },
   {
     "input": "effaceable",
     "internal": "e6ac1ble",
     "expected": "17221923717",
-    "unicode": "⠑⠖⠁⠉⠂⠃⠇⠑"
+    "unicode": "⠑⠖⠁⠉⠂⠃⠇⠑",
+    "world": "⠴⠑⠖⠁⠉⠂⠃⠇⠑⠲"
   },
   {
     "input": "effect",
     "internal": "e6ect",
     "expected": "172217930",
-    "unicode": "⠑⠖⠑⠉⠞"
+    "unicode": "⠑⠖⠑⠉⠞",
+    "world": "⠴⠑⠖⠑⠉⠞⠲"
   },
   {
     "input": "enormous",
     "internal": "5orm\\s",
     "expected": "342123135114",
-    "unicode": "⠢⠕⠗⠍⠳⠎"
+    "unicode": "⠢⠕⠗⠍⠳⠎",
+    "world": "⠴⠢⠕⠗⠍⠳⠎⠲"
   },
   {
     "input": "enounce",
     "internal": "5\\nce",
     "expected": "345129917",
-    "unicode": "⠢⠳⠝⠉⠑"
+    "unicode": "⠢⠳⠝⠉⠑",
+    "world": "⠴⠢⠳⠝⠉⠑⠲"
   },
   {
     "input": "enumerate",
     "internal": "5um]ate",
     "expected": "3437135913017",
-    "unicode": "⠢⠥⠍⠻⠁⠞⠑"
+    "unicode": "⠢⠥⠍⠻⠁⠞⠑",
+    "world": "⠴⠢⠥⠍⠻⠁⠞⠑⠲"
   },
   {
     "input": "erase",
     "internal": "]ase",
     "expected": "5911417",
-    "unicode": "⠻⠁⠎⠑"
+    "unicode": "⠻⠁⠎⠑",
+    "world": "⠴⠻⠁⠎⠑⠲"
   },
   {
     "input": "erosion",
     "internal": "]o.n",
     "expected": "59214029",
-    "unicode": "⠻⠕⠨⠝"
+    "unicode": "⠻⠕⠨⠝",
+    "world": "⠴⠻⠕⠨⠝⠲"
   },
   {
     "input": "froward",
     "internal": "fr[>d",
     "expected": "1123422825",
-    "unicode": "⠋⠗⠪⠜⠙"
+    "unicode": "⠋⠗⠪⠜⠙",
+    "world": "⠴⠋⠗⠪⠜⠙⠲"
   },
   {
     "input": "irredentist",
     "internal": "irr$5ti/",
     "expected": "1023234334301012",
-    "unicode": "⠊⠗⠗⠫⠢⠞⠊⠌"
+    "unicode": "⠊⠗⠗⠫⠢⠞⠊⠌",
+    "world": "⠴⠊⠗⠗⠫⠢⠞⠊⠌⠲"
   },
   {
     "input": "malediction",
     "internal": "mal$ic;n",
     "expected": "1317431094829",
-    "unicode": "⠍⠁⠇⠫⠊⠉⠰⠝"
+    "unicode": "⠍⠁⠇⠫⠊⠉⠰⠝",
+    "world": "⠴⠍⠁⠇⠫⠊⠉⠰⠝⠲"
   },
   {
     "input": "mistake",
     "internal": "mi/ake",
     "expected": "1310121517",
-    "unicode": "⠍⠊⠌⠁⠅⠑"
+    "unicode": "⠍⠊⠌⠁⠅⠑",
+    "world": "⠴⠍⠊⠌⠁⠅⠑⠲"
   },
   {
     "input": "mistrust",
     "internal": "mi/ru/",
     "expected": "131012233712",
-    "unicode": "⠍⠊⠌⠗⠥⠌"
+    "unicode": "⠍⠊⠌⠗⠥⠌",
+    "world": "⠴⠍⠊⠌⠗⠥⠌⠲"
   },
   {
     "input": "multinomial",
     "internal": "mult9omial",
     "expected": "13377302021131017",
-    "unicode": "⠍⠥⠇⠞⠔⠕⠍⠊⠁⠇"
+    "unicode": "⠍⠥⠇⠞⠔⠕⠍⠊⠁⠇",
+    "world": "⠴⠍⠥⠇⠞⠔⠕⠍⠊⠁⠇⠲"
   },
   {
     "input": "pandemonium",
     "internal": "p&emonium",
     "expected": "154717132129103713",
-    "unicode": "⠏⠯⠑⠍⠕⠝⠊⠥⠍"
+    "unicode": "⠏⠯⠑⠍⠕⠝⠊⠥⠍",
+    "world": "⠴⠏⠯⠑⠍⠕⠝⠊⠥⠍⠲"
   },
   {
     "input": "perinatal",
     "internal": "p]9atal",
     "expected": "15592013017",
-    "unicode": "⠏⠻⠔⠁⠞⠁⠇"
+    "unicode": "⠏⠻⠔⠁⠞⠁⠇",
+    "world": "⠴⠏⠻⠔⠁⠞⠁⠇⠲"
   },
   {
     "input": "predate",
     "internal": "pr$ate",
     "expected": "15234313017",
-    "unicode": "⠏⠗⠫⠁⠞⠑"
+    "unicode": "⠏⠗⠫⠁⠞⠑",
+    "world": "⠴⠏⠗⠫⠁⠞⠑⠲"
   },
   {
     "input": "predecease",
     "internal": "pr$ec1se",
     "expected": "15234317921417",
-    "unicode": "⠏⠗⠫⠑⠉⠂⠎⠑"
+    "unicode": "⠏⠗⠫⠑⠉⠂⠎⠑",
+    "world": "⠴⠏⠗⠫⠑⠉⠂⠎⠑⠲"
   },
   {
     "input": "predecessor",
     "internal": "pr$ecessor",
     "expected": "1523431791714142123",
-    "unicode": "⠏⠗⠫⠑⠉⠑⠎⠎⠕⠗"
+    "unicode": "⠏⠗⠫⠑⠉⠑⠎⠎⠕⠗",
+    "world": "⠴⠏⠗⠫⠑⠉⠑⠎⠎⠕⠗⠲"
   },
   {
     "input": "predestine",
     "internal": "pr$e/9e",
     "expected": "15234317122017",
-    "unicode": "⠏⠗⠫⠑⠌⠔⠑"
+    "unicode": "⠏⠗⠫⠑⠌⠔⠑",
+    "world": "⠴⠏⠗⠫⠑⠌⠔⠑⠲"
   },
   {
     "input": "predicament",
     "internal": "pr$ica;t",
     "expected": "15234310914830",
-    "unicode": "⠏⠗⠫⠊⠉⠁⠰⠞"
+    "unicode": "⠏⠗⠫⠊⠉⠁⠰⠞",
+    "world": "⠴⠏⠗⠫⠊⠉⠁⠰⠞⠲"
   },
   {
     "input": "prediction",
     "internal": "pr$ic;n",
     "expected": "1523431094829",
-    "unicode": "⠏⠗⠫⠊⠉⠰⠝"
+    "unicode": "⠏⠗⠫⠊⠉⠰⠝",
+    "world": "⠴⠏⠗⠫⠊⠉⠰⠝⠲"
   },
   {
     "input": "predominate",
     "internal": "pr$om9ate",
     "expected": "15234321132013017",
-    "unicode": "⠏⠗⠫⠕⠍⠔⠁⠞⠑"
+    "unicode": "⠏⠗⠫⠕⠍⠔⠁⠞⠑",
+    "world": "⠴⠏⠗⠫⠕⠍⠔⠁⠞⠑⠲"
   },
   {
     "input": "prerequisite",
     "internal": "pr]equisite",
     "expected": "1523591731371014103017",
-    "unicode": "⠏⠗⠻⠑⠟⠥⠊⠎⠊⠞⠑"
+    "unicode": "⠏⠗⠻⠑⠟⠥⠊⠎⠊⠞⠑",
+    "world": "⠴⠏⠗⠻⠑⠟⠥⠊⠎⠊⠞⠑⠲"
   },
   {
     "input": "prerogative",
     "internal": "pr]ogative",
     "expected": "1523592127130103917",
-    "unicode": "⠏⠗⠻⠕⠛⠁⠞⠊⠧⠑"
+    "unicode": "⠏⠗⠻⠕⠛⠁⠞⠊⠧⠑",
+    "world": "⠴⠏⠗⠻⠕⠛⠁⠞⠊⠧⠑⠲"
   },
   {
     "input": "profanity",
     "internal": "pr(an;y",
     "expected": "1523551294861",
-    "unicode": "⠏⠗⠷⠁⠝⠰⠽"
+    "unicode": "⠏⠗⠷⠁⠝⠰⠽",
+    "world": "⠴⠏⠗⠷⠁⠝⠰⠽⠲"
   },
   {
     "input": "professor",
     "internal": "pr(essor",
     "expected": "1523551714142123",
-    "unicode": "⠏⠗⠷⠑⠎⠎⠕⠗"
+    "unicode": "⠏⠗⠷⠑⠎⠎⠕⠗",
+    "world": "⠴⠏⠗⠷⠑⠎⠎⠕⠗⠲"
   },
   {
     "input": "profile",
     "internal": "pr(ile",
     "expected": "15235510717",
-    "unicode": "⠏⠗⠷⠊⠇⠑"
+    "unicode": "⠏⠗⠷⠊⠇⠑",
+    "world": "⠴⠏⠗⠷⠊⠇⠑⠲"
   },
   {
     "input": "profoundly",
     "internal": "pr(.dly",
     "expected": "1523554025761",
-    "unicode": "⠏⠗⠷⠨⠙⠇⠽"
+    "unicode": "⠏⠗⠷⠨⠙⠇⠽",
+    "world": "⠴⠏⠗⠷⠨⠙⠇⠽⠲"
   },
   {
     "input": "profusion",
     "internal": "pr(u.n",
     "expected": "152355374029",
-    "unicode": "⠏⠗⠷⠥⠨⠝"
+    "unicode": "⠏⠗⠷⠥⠨⠝",
+    "world": "⠴⠏⠗⠷⠥⠨⠝⠲"
   },
   {
     "input": "redact",
     "internal": "r$act",
     "expected": "23431930",
-    "unicode": "⠗⠫⠁⠉⠞"
+    "unicode": "⠗⠫⠁⠉⠞",
+    "world": "⠴⠗⠫⠁⠉⠞⠲"
   },
   {
     "input": "rededicate",
     "internal": "r$$icate",
     "expected": "23434310913017",
-    "unicode": "⠗⠫⠫⠊⠉⠁⠞⠑"
+    "unicode": "⠗⠫⠫⠊⠉⠁⠞⠑",
+    "world": "⠴⠗⠫⠫⠊⠉⠁⠞⠑⠲"
   },
   {
     "input": "redeemable",
     "internal": "r$eemable",
     "expected": "234317171313717",
-    "unicode": "⠗⠫⠑⠑⠍⠁⠃⠇⠑"
+    "unicode": "⠗⠫⠑⠑⠍⠁⠃⠇⠑",
+    "world": "⠴⠗⠫⠑⠑⠍⠁⠃⠇⠑⠲"
   },
   {
     "input": "redouble",
     "internal": "r$\\ble",
     "expected": "2343513717",
-    "unicode": "⠗⠫⠳⠃⠇⠑"
+    "unicode": "⠗⠫⠳⠃⠇⠑",
+    "world": "⠴⠗⠫⠳⠃⠇⠑⠲"
   },
   {
     "input": "renege",
     "internal": "r5ege",
     "expected": "2334172717",
-    "unicode": "⠗⠢⠑⠛⠑"
+    "unicode": "⠗⠢⠑⠛⠑",
+    "world": "⠴⠗⠢⠑⠛⠑⠲"
   },
   {
     "input": "renegotiate",
     "internal": "r5egotiate",
     "expected": "2334172721301013017",
-    "unicode": "⠗⠢⠑⠛⠕⠞⠊⠁⠞⠑"
+    "unicode": "⠗⠢⠑⠛⠕⠞⠊⠁⠞⠑",
+    "world": "⠴⠗⠢⠑⠛⠕⠞⠊⠁⠞⠑⠲"
   },
   {
     "input": "renewable",
     "internal": "r5ewable",
     "expected": "2334175813717",
-    "unicode": "⠗⠢⠑⠺⠁⠃⠇⠑"
+    "unicode": "⠗⠢⠑⠺⠁⠃⠇⠑",
+    "world": "⠴⠗⠢⠑⠺⠁⠃⠇⠑⠲"
   },
   {
     "input": "renumber",
     "internal": "r5umb]",
     "expected": "23343713359",
-    "unicode": "⠗⠢⠥⠍⠃⠻"
+    "unicode": "⠗⠢⠥⠍⠃⠻",
+    "world": "⠴⠗⠢⠥⠍⠃⠻⠲"
   },
   {
     "input": "reread",
     "internal": "r]1d",
     "expected": "2359225",
-    "unicode": "⠗⠻⠂⠙"
+    "unicode": "⠗⠻⠂⠙",
+    "world": "⠴⠗⠻⠂⠙⠲"
   },
   {
     "input": "sedate",
     "internal": "s$ate",
     "expected": "144313017",
-    "unicode": "⠎⠫⠁⠞⠑"
+    "unicode": "⠎⠫⠁⠞⠑",
+    "world": "⠴⠎⠫⠁⠞⠑⠲"
   },
   {
     "input": "Vandyke",
     "internal": ",v&yke",
     "expected": "32394761517",
-    "unicode": "⠠⠧⠯⠽⠅⠑"
+    "unicode": "⠠⠧⠯⠽⠅⠑",
+    "world": "⠴⠠⠧⠯⠽⠅⠑⠲"
   },
   {
     "input": "aerofoil",
     "internal": "a]ofoil",
     "expected": "159211121107",
-    "unicode": "⠁⠻⠕⠋⠕⠊⠇"
+    "unicode": "⠁⠻⠕⠋⠕⠊⠇",
+    "world": "⠴⠁⠻⠕⠋⠕⠊⠇⠲"
   },
   {
     "input": "antitype",
     "internal": "antitype",
     "expected": "129301030611517",
-    "unicode": "⠁⠝⠞⠊⠞⠽⠏⠑"
+    "unicode": "⠁⠝⠞⠊⠞⠽⠏⠑",
+    "world": "⠴⠁⠝⠞⠊⠞⠽⠏⠑⠲"
   },
   {
     "input": "biofeedback",
     "internal": "biofe$back",
     "expected": "310211117433195",
-    "unicode": "⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅"
+    "unicode": "⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅",
+    "world": "⠴⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅⠲"
   },
   {
     "input": "centimeter",
     "internal": "c5timet]",
     "expected": "934301013173059",
-    "unicode": "⠉⠢⠞⠊⠍⠑⠞⠻"
+    "unicode": "⠉⠢⠞⠊⠍⠑⠞⠻",
+    "world": "⠴⠉⠢⠞⠊⠍⠑⠞⠻⠲"
   },
   {
     "input": "cofounder",
     "internal": "cof.d]",
     "expected": "92111402559",
-    "unicode": "⠉⠕⠋⠨⠙⠻"
+    "unicode": "⠉⠕⠋⠨⠙⠻",
+    "world": "⠴⠉⠕⠋⠨⠙⠻⠲"
   },
   {
     "input": "disulphide",
     "internal": "disulphide",
     "expected": "2510143771519102517",
-    "unicode": "⠙⠊⠎⠥⠇⠏⠓⠊⠙⠑"
+    "unicode": "⠙⠊⠎⠥⠇⠏⠓⠊⠙⠑",
+    "world": "⠴⠙⠊⠎⠥⠇⠏⠓⠊⠙⠑⠲"
   },
   {
     "input": "filofax",
     "internal": "filofax",
     "expected": "111072111145",
-    "unicode": "⠋⠊⠇⠕⠋⠁⠭"
+    "unicode": "⠋⠊⠇⠕⠋⠁⠭",
+    "world": "⠴⠋⠊⠇⠕⠋⠁⠭⠲"
   },
   {
     "input": "gasometer",
     "internal": "gasomet]",
     "expected": "271142113173059",
-    "unicode": "⠛⠁⠎⠕⠍⠑⠞⠻"
+    "unicode": "⠛⠁⠎⠕⠍⠑⠞⠻",
+    "world": "⠴⠛⠁⠎⠕⠍⠑⠞⠻⠲"
   },
   {
     "input": "inessential",
     "internal": "9ess5tial",
     "expected": "2017141434301017",
-    "unicode": "⠔⠑⠎⠎⠢⠞⠊⠁⠇"
+    "unicode": "⠔⠑⠎⠎⠢⠞⠊⠁⠇",
+    "world": "⠴⠔⠑⠎⠎⠢⠞⠊⠁⠇⠲"
   },
   {
     "input": "infrared",
     "internal": "9frar$",
     "expected": "20112312343",
-    "unicode": "⠔⠋⠗⠁⠗⠫"
+    "unicode": "⠔⠋⠗⠁⠗⠫",
+    "world": "⠴⠔⠋⠗⠁⠗⠫⠲"
   },
   {
     "input": "kilowatt",
     "internal": "kilowatt",
     "expected": "5107215813030",
-    "unicode": "⠅⠊⠇⠕⠺⠁⠞⠞"
+    "unicode": "⠅⠊⠇⠕⠺⠁⠞⠞",
+    "world": "⠴⠅⠊⠇⠕⠺⠁⠞⠞⠲"
   },
   {
     "input": "microfilm",
     "internal": "microfilm",
     "expected": "1310923211110713",
-    "unicode": "⠍⠊⠉⠗⠕⠋⠊⠇⠍"
+    "unicode": "⠍⠊⠉⠗⠕⠋⠊⠇⠍",
+    "world": "⠴⠍⠊⠉⠗⠕⠋⠊⠇⠍⠲"
   },
   {
     "input": "prounion",
     "internal": "prounion",
     "expected": "1523213729102129",
-    "unicode": "⠏⠗⠕⠥⠝⠊⠕⠝"
+    "unicode": "⠏⠗⠕⠥⠝⠊⠕⠝",
+    "world": "⠴⠏⠗⠕⠥⠝⠊⠕⠝⠲"
   },
   {
     "input": "retroflex",
     "internal": "retroflex",
     "expected": "23173023211171745",
-    "unicode": "⠗⠑⠞⠗⠕⠋⠇⠑⠭"
+    "unicode": "⠗⠑⠞⠗⠕⠋⠇⠑⠭",
+    "world": "⠴⠗⠑⠞⠗⠕⠋⠇⠑⠭⠲"
   },
   {
     "input": "riboflavin",
     "internal": "riboflav9",
     "expected": "231032111713920",
-    "unicode": "⠗⠊⠃⠕⠋⠇⠁⠧⠔"
+    "unicode": "⠗⠊⠃⠕⠋⠇⠁⠧⠔",
+    "world": "⠴⠗⠊⠃⠕⠋⠇⠁⠧⠔⠲"
   },
   {
     "input": "styrofoam",
     "internal": "/yrofoam",
     "expected": "126123211121113",
-    "unicode": "⠌⠽⠗⠕⠋⠕⠁⠍"
+    "unicode": "⠌⠽⠗⠕⠋⠕⠁⠍",
+    "world": "⠴⠌⠽⠗⠕⠋⠕⠁⠍⠲"
   },
   {
     "input": "subbasement",
     "internal": "subbase;t",
     "expected": "143733114174830",
-    "unicode": "⠎⠥⠃⠃⠁⠎⠑⠰⠞"
+    "unicode": "⠎⠥⠃⠃⠁⠎⠑⠰⠞",
+    "world": "⠴⠎⠥⠃⠃⠁⠎⠑⠰⠞⠲"
   },
   {
     "input": "unamended",
     "internal": "unam5d$",
     "expected": "3729113342543",
-    "unicode": "⠥⠝⠁⠍⠢⠙⠫"
+    "unicode": "⠥⠝⠁⠍⠢⠙⠫",
+    "world": "⠴⠥⠝⠁⠍⠢⠙⠫⠲"
   },
   {
     "input": "underived",
     "internal": "und]iv$",
     "expected": "37292559103943",
-    "unicode": "⠥⠝⠙⠻⠊⠧⠫"
+    "unicode": "⠥⠝⠙⠻⠊⠧⠫",
+    "world": "⠴⠥⠝⠙⠻⠊⠧⠫⠲"
   }
 ]

@@ -3,108 +3,126 @@
     "input": "above\nground",
     "internal": "abv-\ngr.d",
     "expected": "133936\n27234025",
-    "unicode": "⠁⠃⠧⠤\n⠛⠗⠨⠙"
+    "unicode": "⠁⠃⠧⠤\n⠛⠗⠨⠙",
+    "world": "⠴⠁⠃⠧⠲\n⠴⠛⠗⠨⠙⠲"
   },
   {
     "input": "after\nimage",
     "internal": "aft]-\nimage",
     "expected": "111305936\n101312717",
-    "unicode": "⠁⠋⠞⠻⠤\n⠊⠍⠁⠛⠑"
+    "unicode": "⠁⠋⠞⠻⠤\n⠊⠍⠁⠛⠑",
+    "world": "⠴⠁⠋⠲\n⠴⠊⠍⠁⠛⠑⠲"
   },
   {
     "input": "befriend\ning.\"",
     "internal": "2fri5d-\n9g40",
     "expected": "6112310342536\n20275052",
-    "unicode": "⠆⠋⠗⠊⠢⠙⠤\n⠔⠛⠲⠴"
+    "unicode": "⠆⠋⠗⠊⠢⠙⠤\n⠔⠛⠲⠴",
+    "world": "⠴⠆⠋⠗⠲\n⠴⠔⠛⠲⠦"
   },
   {
     "input": "blind\ned?)",
     "internal": "bl9d-\n$8\">",
     "expected": "37202536\n43381628",
-    "unicode": "⠃⠇⠔⠙⠤\n⠫⠦⠐⠜"
+    "unicode": "⠃⠇⠔⠙⠤\n⠫⠦⠐⠜",
+    "world": "⠴⠃⠇⠲\n⠴⠫⠦⠠⠴"
   },
   {
     "input": "blind\nness",
     "internal": "bl-\nness",
     "expected": "3736\n29171414",
-    "unicode": "⠃⠇⠤\n⠝⠑⠎⠎"
+    "unicode": "⠃⠇⠤\n⠝⠑⠎⠎",
+    "world": "⠴⠃⠇⠲\n⠴⠝⠑⠎⠎⠲"
   },
   {
     "input": "friend\nliness",
     "internal": "fr-\nli;s",
     "expected": "112336\n7104814",
-    "unicode": "⠋⠗⠤\n⠇⠊⠰⠎"
+    "unicode": "⠋⠗⠤\n⠇⠊⠰⠎",
+    "world": "⠴⠋⠗⠲\n⠴⠇⠊⠰⠎⠲"
   },
   {
     "input": "girl\nfriend",
     "internal": "girl-\nfr",
     "expected": "271023736\n1123",
-    "unicode": "⠛⠊⠗⠇⠤\n⠋⠗"
+    "unicode": "⠛⠊⠗⠇⠤\n⠋⠗",
+    "world": "⠴⠛⠊⠗⠇⠲\n⠴⠋⠗⠲"
   },
   {
     "input": "Good\nall",
     "internal": ",good-\nall",
     "expected": "322721212536\n177",
-    "unicode": "⠠⠛⠕⠕⠙⠤\n⠁⠇⠇"
+    "unicode": "⠠⠛⠕⠕⠙⠤\n⠁⠇⠇",
+    "world": "⠴⠠⠛⠙⠲\n⠴⠁⠇⠇⠲"
   },
   {
     "input": "Good\nwood",
     "internal": ",gd-\nwood",
     "expected": "32272536\n58212125",
-    "unicode": "⠠⠛⠙⠤\n⠺⠕⠕⠙"
+    "unicode": "⠠⠛⠙⠤\n⠺⠕⠕⠙",
+    "world": "⠴⠠⠛⠙⠲\n⠴⠺⠕⠕⠙⠲"
   },
   {
     "input": "grand\nchildren",
     "internal": "gr&-\n*n",
     "expected": "27234736\n3329",
-    "unicode": "⠛⠗⠯⠤\n⠡⠝"
+    "unicode": "⠛⠗⠯⠤\n⠡⠝",
+    "world": "⠴⠛⠗⠯⠲\n⠴⠡⠝⠲"
   },
   {
     "input": "Hap\ngood",
     "internal": ",hap-\ngood",
     "expected": "321911536\n27212125",
-    "unicode": "⠠⠓⠁⠏⠤\n⠛⠕⠕⠙"
+    "unicode": "⠠⠓⠁⠏⠤\n⠛⠕⠕⠙",
+    "world": "⠴⠠⠓⠁⠏⠲\n⠴⠛⠙⠲"
   },
   {
     "input": "herein\nafter",
     "internal": "\"h9-\naf",
     "expected": "16192036\n111",
-    "unicode": "⠐⠓⠔⠤\n⠁⠋"
+    "unicode": "⠐⠓⠔⠤\n⠁⠋",
+    "world": "⠴⠐⠓⠔⠲\n⠴⠁⠋⠲"
   },
   {
     "input": "herein\nbelow",
     "internal": "\"h9-\nbel[",
     "expected": "16192036\n317742",
-    "unicode": "⠐⠓⠔⠤\n⠃⠑⠇⠪"
+    "unicode": "⠐⠓⠔⠤\n⠃⠑⠇⠪",
+    "world": "⠴⠐⠓⠔⠲\n⠴⠆⠇⠲"
   },
   {
     "input": "immediate\nly",
     "internal": "imm-\nly",
     "expected": "10131336\n761",
-    "unicode": "⠊⠍⠍⠤\n⠇⠽"
+    "unicode": "⠊⠍⠍⠤\n⠇⠽",
+    "world": "⠴⠊⠍⠍⠲\n⠴⠇⠽⠲"
   },
   {
     "input": "Letter\nman",
     "internal": ",lr-\nman",
     "expected": "3272336\n13129",
-    "unicode": "⠠⠇⠗⠤\n⠍⠁⠝"
+    "unicode": "⠠⠇⠗⠤\n⠍⠁⠝",
+    "world": "⠴⠠⠇⠗⠲\n⠴⠍⠁⠝⠲"
   },
   {
     "input": "Link\nletter",
     "internal": ",l9k-\nlett]",
     "expected": "32720536\n717303059",
-    "unicode": "⠠⠇⠔⠅⠤\n⠇⠑⠞⠞⠻"
+    "unicode": "⠠⠇⠔⠅⠤\n⠇⠑⠞⠞⠻",
+    "world": "⠴⠠⠇⠔⠅⠲\n⠴⠇⠗⠲"
   },
   {
     "input": "pre\nconceived",
     "internal": "pre-\nconceiv$",
     "expected": "15231736\n92129917103943",
-    "unicode": "⠏⠗⠑⠤\n⠉⠕⠝⠉⠑⠊⠧⠫"
+    "unicode": "⠏⠗⠑⠤\n⠉⠕⠝⠉⠑⠊⠧⠫",
+    "world": "⠴⠏⠗⠑⠲\n⠴⠒⠉⠧⠙⠲"
   },
   {
     "input": "un\nnecessary",
     "internal": "un-\nnec",
     "expected": "372936\n29179",
-    "unicode": "⠥⠝⠤\n⠝⠑⠉"
+    "unicode": "⠥⠝⠤\n⠝⠑⠉",
+    "world": "⠴⠥⠝⠲\n⠴⠝⠑⠉⠲"
   }
 ]

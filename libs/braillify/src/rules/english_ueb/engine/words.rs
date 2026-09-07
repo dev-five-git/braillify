@@ -674,10 +674,10 @@ mod tests {
     #[test]
     fn encodes_standalone_shortform_collision_with_grade1() {
         // §8.7: an all-caps word that collides with a multi-letter shortform yet
-        // is NOT itself a pure shortform abbreviation (`BC` shares letters with
-        // the `bc`="because" wordsign) takes a grade-1 indicator before the caps
-        // marker so it reads as literal letters.
-        let out = enc("BC").expect("should encode");
+        // is not itself a complete shortform abbreviation (`LLC` begins with the
+        // `ll`="little" shortform) takes a grade-1 indicator before the caps marker
+        // so it reads as literal letters. UEB 10.9.8 gives `LLC` as the example.
+        let out = enc("LLC").expect("should encode");
         assert_eq!(out.first(), Some(&GRADE1));
     }
 }

@@ -3,42 +3,49 @@
     "input": "\"Sudden!\"",
     "internal": "8,sudd560",
     "expected": "383214372525342252",
-    "unicode": "⠦⠠⠎⠥⠙⠙⠢⠖⠴"
+    "unicode": "⠦⠠⠎⠥⠙⠙⠢⠖⠴",
+    "world": "⠦⠴⠠⠎⠥⠙⠙⠢⠖⠴"
   },
   {
     "input": "\"Comin'?\"",
     "internal": "8,com9'80",
     "expected": "3832921132043852",
-    "unicode": "⠦⠠⠉⠕⠍⠔⠄⠦⠴"
+    "unicode": "⠦⠠⠉⠕⠍⠔⠄⠦⠴",
+    "world": "⠦⠴⠠⠉⠕⠍⠔⠄⠦⠴"
   },
   {
     "input": "linen…",
     "internal": "l95444",
     "expected": "72034505050",
-    "unicode": "⠇⠔⠢⠲⠲⠲"
+    "unicode": "⠇⠔⠢⠲⠲⠲",
+    "world": "⠴⠇⠔⠢⠲⠲⠲"
   },
   {
     "input": "𝑏𝑒𝑖𝑛'",
     "internal": ".129'",
     "expected": "4026204",
-    "unicode": "⠨⠂⠆⠔⠄"
+    "unicode": "⠨⠂⠆⠔⠄",
+    "world": "⠄"
   },
   {
     "input": "(bein')",
     "internal": "\"<29'\">",
     "expected": "163562041628",
-    "unicode": "⠐⠣⠆⠔⠄⠐⠜"
+    "unicode": "⠐⠣⠆⠔⠄⠐⠜",
+    "world": "⠦⠄⠴⠆⠔⠄⠠⠴"
   },
   {
     "input": "bein'",
     "internal": "2in'",
     "expected": "610294",
-    "unicode": "⠆⠊⠝⠄"
+    "unicode": "⠆⠊⠝⠄",
+    "world": "⠴⠆⠔⠄"
   },
   {
     "input": "«bein'»",
     "internal": "_82in'_0",
     "expected": "56386102945652",
-    "unicode": "⠸⠦⠆⠊⠝⠄⠸⠴"
+    "unicode": "⠸⠦⠆⠊⠝⠄⠸⠴",
+    "world": "⠴⠆⠔⠄"
   }
 ]

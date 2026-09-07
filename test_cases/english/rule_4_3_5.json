@@ -3,12 +3,14 @@
     "input": "aegis",
     "internal": "aegis",
     "expected": "117271014",
-    "unicode": "⠁⠑⠛⠊⠎"
+    "unicode": "⠁⠑⠛⠊⠎",
+    "world": "⠴⠁⠑⠛⠊⠎⠲"
   },
   {
     "input": "amoeba",
     "internal": "amoeba",
     "expected": "113211731",
-    "unicode": "⠁⠍⠕⠑⠃⠁"
+    "unicode": "⠁⠍⠕⠑⠃⠁",
+    "world": "⠴⠁⠍⠕⠑⠃⠁⠲"
   }
 ]

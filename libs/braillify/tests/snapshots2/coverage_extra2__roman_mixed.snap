@@ -3,5 +3,5 @@ source: libs/braillify/tests/coverage_extra2.rs
 expression: rendered
 ---
 input  = "VIII과 IX"
-unicode = ok: "⠴⠠⠠⠧⠊⠊⠊⠲⠈⠧⠀⠠⠠⠴⠊⠭⠲"
-bytes   = ok: [52, 32, 32, 39, 10, 10, 10, 50, 8, 39, 0, 32, 32, 52, 10, 45, 50]
+unicode = ok: "⠴⠠⠠⠧⠊⠊⠊⠲⠈⠧⠀⠴⠠⠠⠊⠭⠲"
+bytes   = ok: [52, 32, 32, 39, 10, 10, 10, 50, 8, 39, 0, 52, 32, 32, 10, 45, 50]

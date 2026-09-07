@@ -4,12 +4,14 @@
     "context": "english",
     "internal": ".<;8.>",
     "expected": "403548384028",
-    "unicode": "⠨⠣⠰⠦⠨⠜"
+    "unicode": "⠨⠣⠰⠦⠨⠜",
+    "world": "⠦⠆⠦⠰⠴"
   },
   {
     "input": "Use single quotes ‘ and ’.",
     "internal": ",use s+le quotes ;,8 & ,04",
     "expected": "3237141701444717031372130171404832380470325250",
-    "unicode": "⠠⠥⠎⠑⠀⠎⠬⠇⠑⠀⠟⠥⠕⠞⠑⠎⠀⠰⠠⠦⠀⠯⠀⠠⠴⠲"
+    "unicode": "⠠⠥⠎⠑⠀⠎⠬⠇⠑⠀⠟⠥⠕⠞⠑⠎⠀⠰⠠⠦⠀⠯⠀⠠⠴⠲",
+    "world": "⠴⠠⠥⠎⠑ ⠎⠬⠇⠑ ⠟⠥⠕⠞⠑⠎ ⠠⠦ ⠯ ⠄⠲"
   }
 ]

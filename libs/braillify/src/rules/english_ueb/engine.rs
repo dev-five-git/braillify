@@ -193,6 +193,106 @@ impl EnglishUebEngine {
         Self { contractions }
     }
 
+    /// Encode one Roman word embedded in Korean text according to Korean rule 37.
+    ///
+    /// At a rule-37 Roman entry, whole-word signs and shortforms are suppressed
+    /// while UEB multi-letter groupsigns remain. The restriction applies only to
+    /// the English word immediately preceded by the Roman indicator, so later
+    /// standalone words in that section (and a rule-39 return to English-dominant
+    /// context) use ordinary UEB wordsigns and shortforms. Keeping both paths on
+    /// the same contraction engine makes rule 10 preference and morphology gates
+    /// identical. Roman mode transitions remain the Korean engine's job.
+    #[expect(
+        clippy::too_many_arguments,
+        reason = "the independent UEB context flags mirror distinct rule gates"
+    )]
+    pub(crate) fn encode_korean_word(
+        &self,
+        chars: &[char],
+        suppress_caps: bool,
+        prepend_grade1_indicator: bool,
+        standing_alone: bool,
+        word_initial: bool,
+        digit_adjacent: bool,
+        numeric_grade1_active: bool,
+        apostrophe_joined_lexeme: bool,
+    ) -> Option<Vec<u8>> {
+        let mut out = Vec::new();
+        if prepend_grade1_indicator {
+            out.push(GRADE1);
+        }
+
+        let lower: Vec<char> = chars.iter().flat_map(|ch| ch.to_lowercase()).collect();
+
+        // UEB 5.6.1-5.6.2 and 6.5.3: a numeric indicator establishes grade-1
+        // mode through a resumed Roman letters-sequence, so no contraction may
+        // follow an internal number (`Kep1er`). A number-first Korean token
+        // instead inserts rule 29's Roman indicator before its letters. In that
+        // latter shape, UEB 10.4.2 still spells a complete `ch/sh/th/wh/ou/st`
+        // sequence because its one-cell groupsign would be read as a word.
+        let complete_strong_sequence_would_be_word = digit_adjacent
+            && !word_initial
+            && matches!(
+                lower.as_slice(),
+                ['c', 'h'] | ['s', 'h'] | ['t', 'h'] | ['w', 'h'] | ['o', 'u'] | ['s', 't']
+            );
+        if numeric_grade1_active || complete_strong_sequence_would_be_word {
+            match classify_caps(chars) {
+                _ if suppress_caps => {}
+                Some(Caps::None) => {}
+                Some(Caps::Single) => out.push(CAPITAL),
+                Some(Caps::Word) => out.extend([CAPITAL, CAPITAL]),
+                None => {
+                    for &ch in chars {
+                        if ch.is_ascii_uppercase() {
+                            out.push(CAPITAL);
+                        }
+                        out.push(crate::english::encode_english(ch.to_ascii_lowercase()).ok()?);
+                    }
+                    return Some(out);
+                }
+            }
+            for &ch in chars {
+                out.push(crate::english::encode_english(ch.to_ascii_lowercase()).ok()?);
+            }
+            return Some(out);
+        }
+
+        let lower_word: String = lower.iter().collect();
+        if !standing_alone && super::rule_10_5::wordsign(&lower_word).is_some() {
+            if !suppress_caps {
+                let caps = classify_caps(chars)?;
+                let indicator_count =
+                    usize::from(caps != Caps::None) + usize::from(caps == Caps::Word);
+                out.extend(std::iter::repeat_n(CAPITAL, indicator_count));
+            }
+            out.extend(super::rule_10_9::encode_korean_groupsigns(
+                &lower,
+                &self.contractions,
+                word_initial,
+                word_initial,
+            )?);
+            return Some(out);
+        }
+        self.encode_word_with_apostrophe_lexeme(
+            chars,
+            WordContext {
+                standing_alone,
+                upper_usable: standing_alone,
+                shortform_usable: standing_alone,
+                allow_longer_shortforms: standing_alone,
+                lower_usable: standing_alone,
+                suppress_caps,
+                word_initial,
+                restricted_prefix_boundary: word_initial,
+                digit_adjacent,
+            },
+            apostrophe_joined_lexeme,
+            &mut out,
+        )?;
+        Some(out)
+    }
+
     /// Encode a token stream. Returns `None` if any token is unsupported
     /// (a number, a symbol, or a mixed-case word), so the legacy path — which
     /// handles those — takes over. `explicit_english` is true only under an
@@ -796,6 +896,115 @@ impl EnglishUebEngine {
 #[cfg(test)]
 mod test_support {
     use super::*;
+
+    /// Korean rule 37's official `Can you ...` and UEB 10.5.1's official
+    /// `... YOU CAN ...` exercise every capitals classification while Korean
+    /// mode spells the wordsign through the shared UEB engine.
+    #[rstest::rstest]
+    #[case::lowercase("you", 0)]
+    #[case::initial_capital("Can", 1)]
+    #[case::capitals_word("CAN", 2)]
+    fn korean_non_standalone_wordsign_preserves_capitals_extent(
+        #[case] input: &str,
+        #[case] expected_capitals: usize,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(&chars, false, false, false, true, false, false, false)
+            .expect("ASCII Roman word must encode");
+
+        assert_eq!(
+            encoded.iter().take_while(|cell| **cell == CAPITAL).count(),
+            expected_capitals
+        );
+    }
+
+    /// Korean rule 37 suppresses contractions only in the English word directly
+    /// preceded by the Roman indicator. Later standalone words use ordinary UEB
+    /// shortforms (UEB 10.9).
+    #[rstest::rstest]
+    #[case::good("good", "⠛⠙")]
+    #[case::little("little", "⠇⠇")]
+    #[case::today("today", "⠞⠙")]
+    fn korean_roman_section_continuation_uses_shortforms(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(&chars, false, false, true, true, false, false, false)
+            .expect("ASCII Roman word must encode");
+
+        assert_eq!(encoded, cells(expected));
+    }
+
+    #[test]
+    fn korean_rule_37_entry_still_suppresses_shortform() {
+        let chars = "good".chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(&chars, false, false, false, true, false, false, false)
+            .expect("ASCII Roman word must encode");
+
+        assert_eq!(encoded, cells("⠛⠕⠕⠙"));
+    }
+
+    #[rstest::rstest]
+    #[case::ordinal_st("st", "⠎⠞")]
+    #[case::ordinal_th("th", "⠞⠓")]
+    #[case::unit_year("yr", "⠽⠗")]
+    #[case::capital_ordinal("ST", "⠠⠠⠎⠞")]
+    fn numeric_grade1_mode_spells_korean_context_letters(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(&chars, false, false, false, false, true, true, false)
+            .expect("ASCII Roman suffix must encode");
+
+        assert_eq!(encoded, cells(expected));
+    }
+
+    #[rstest::rstest]
+    #[case::still_wordsign_collision("st", "⠎⠞")]
+    #[case::out_wordsign_collision("ou", "⠕⠥")]
+    #[case::er_is_not_a_wordsign("er", "⠻")]
+    #[case::gh_is_not_a_wordsign("gh", "⠣")]
+    fn number_first_roman_entry_applies_strong_groupsign_word_collision(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(&chars, false, false, false, false, true, false, false)
+            .expect("ASCII Roman suffix must encode");
+
+        assert_eq!(encoded, cells(expected));
+    }
+
+    #[rstest::rstest]
+    #[case::mixed_capitalization(false, "⠁⠠⠃")]
+    #[case::caps_suppressed(true, "⠁⠃")]
+    fn numeric_grade1_mode_spells_mixed_case_letters(
+        #[case] suppress_caps: bool,
+        #[case] expected: &str,
+    ) {
+        let chars = "aB".chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(
+                &chars,
+                suppress_caps,
+                false,
+                false,
+                false,
+                true,
+                true,
+                false,
+            )
+            .expect("mixed-case numeric continuation must encode");
+
+        assert_eq!(encoded, cells(expected));
+    }
 
     pub(super) fn enc(text: &str) -> Option<Vec<u8>> {
         super::super::try_encode(text)

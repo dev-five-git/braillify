@@ -1,6 +1,6 @@
 [package]
 name = "braillify-c"
-version = "0.1.0"
+version = "0.1.2"
 edition.workspace = true
 rust-version.workspace = true
 description = "C ABI bindings for Braillify"

@@ -3,180 +3,210 @@
     "input": "Airedale",
     "internal": ",airedale",
     "expected": "321102317251717",
-    "unicode": "⠠⠁⠊⠗⠑⠙⠁⠇⠑"
+    "unicode": "⠠⠁⠊⠗⠑⠙⠁⠇⠑",
+    "world": "⠴⠠⠁⠊⠗⠑⠙⠁⠇⠑⠲"
   },
   {
     "input": "Bighorn",
     "internal": ",bighorn",
     "expected": "323102719212329",
-    "unicode": "⠠⠃⠊⠛⠓⠕⠗⠝"
+    "unicode": "⠠⠃⠊⠛⠓⠕⠗⠝",
+    "world": "⠴⠠⠃⠊⠛⠓⠕⠗⠝⠲"
   },
   {
     "input": "blowhard",
     "internal": "bl[h>d",
     "expected": "3742192825",
-    "unicode": "⠃⠇⠪⠓⠜⠙"
+    "unicode": "⠃⠇⠪⠓⠜⠙",
+    "world": "⠴⠃⠇⠪⠓⠜⠙⠲"
   },
   {
     "input": "bottleneck",
     "internal": "bottleneck",
     "expected": "3213030717291795",
-    "unicode": "⠃⠕⠞⠞⠇⠑⠝⠑⠉⠅"
+    "unicode": "⠃⠕⠞⠞⠇⠑⠝⠑⠉⠅",
+    "world": "⠴⠃⠕⠞⠞⠇⠑⠝⠑⠉⠅⠲"
   },
   {
     "input": "carthorse",
     "internal": "c>thorse",
     "expected": "928301921231417",
-    "unicode": "⠉⠜⠞⠓⠕⠗⠎⠑"
+    "unicode": "⠉⠜⠞⠓⠕⠗⠎⠑",
+    "world": "⠴⠉⠜⠞⠓⠕⠗⠎⠑⠲"
   },
   {
     "input": "cowherd",
     "internal": "c[h]d",
     "expected": "942195925",
-    "unicode": "⠉⠪⠓⠻⠙"
+    "unicode": "⠉⠪⠓⠻⠙",
+    "world": "⠴⠉⠪⠓⠻⠙⠲"
   },
   {
     "input": "dumbbell",
     "internal": "dumbbell",
     "expected": "253713331777",
-    "unicode": "⠙⠥⠍⠃⠃⠑⠇⠇"
+    "unicode": "⠙⠥⠍⠃⠃⠑⠇⠇",
+    "world": "⠴⠙⠥⠍⠃⠃⠑⠇⠇⠲"
   },
   {
     "input": "egghead",
     "internal": "e7h1d",
     "expected": "175419225",
-    "unicode": "⠑⠶⠓⠂⠙"
+    "unicode": "⠑⠶⠓⠂⠙",
+    "world": "⠴⠑⠶⠓⠂⠙⠲"
   },
   {
     "input": "fathead",
     "internal": "fath1d",
     "expected": "1113019225",
-    "unicode": "⠋⠁⠞⠓⠂⠙"
+    "unicode": "⠋⠁⠞⠓⠂⠙",
+    "world": "⠴⠋⠁⠞⠓⠂⠙⠲"
   },
   {
     "input": "flearidden",
     "internal": "fl1ridd5",
     "expected": "11722310252534",
-    "unicode": "⠋⠇⠂⠗⠊⠙⠙⠢"
+    "unicode": "⠋⠇⠂⠗⠊⠙⠙⠢",
+    "world": "⠴⠋⠇⠂⠗⠊⠙⠙⠢⠲"
   },
   {
     "input": "grasshopper",
     "internal": "grasshopp]",
     "expected": "2723114141921151559",
-    "unicode": "⠛⠗⠁⠎⠎⠓⠕⠏⠏⠻"
+    "unicode": "⠛⠗⠁⠎⠎⠓⠕⠏⠏⠻",
+    "world": "⠴⠛⠗⠁⠎⠎⠓⠕⠏⠏⠻⠲"
   },
   {
     "input": "hideaway",
     "internal": "hideaway",
     "expected": "19102517158161",
-    "unicode": "⠓⠊⠙⠑⠁⠺⠁⠽"
+    "unicode": "⠓⠊⠙⠑⠁⠺⠁⠽",
+    "world": "⠴⠓⠊⠙⠑⠁⠺⠁⠽⠲"
   },
   {
     "input": "indiarubber",
     "internal": "9diaru2]",
     "expected": "20251012337659",
-    "unicode": "⠔⠙⠊⠁⠗⠥⠆⠻"
+    "unicode": "⠔⠙⠊⠁⠗⠥⠆⠻",
+    "world": "⠴⠔⠙⠊⠁⠗⠥⠆⠻⠲"
   },
   {
     "input": "insofar",
     "internal": "9sof>",
     "expected": "2014211128",
-    "unicode": "⠔⠎⠕⠋⠜"
+    "unicode": "⠔⠎⠕⠋⠜",
+    "world": "⠴⠔⠎⠕⠋⠜⠲"
   },
   {
     "input": "Jamestown",
     "internal": ",jamest[n",
     "expected": "32261131714304229",
-    "unicode": "⠠⠚⠁⠍⠑⠎⠞⠪⠝"
+    "unicode": "⠠⠚⠁⠍⠑⠎⠞⠪⠝",
+    "world": "⠴⠠⠚⠁⠍⠑⠎⠞⠪⠝⠲"
   },
   {
     "input": "kettledrum",
     "internal": "kettledrum",
     "expected": "517303071725233713",
-    "unicode": "⠅⠑⠞⠞⠇⠑⠙⠗⠥⠍"
+    "unicode": "⠅⠑⠞⠞⠇⠑⠙⠗⠥⠍",
+    "world": "⠴⠅⠑⠞⠞⠇⠑⠙⠗⠥⠍⠲"
   },
   {
     "input": "longhand",
     "internal": "l;gh&",
     "expected": "748271947",
-    "unicode": "⠇⠰⠛⠓⠯"
+    "unicode": "⠇⠰⠛⠓⠯",
+    "world": "⠴⠇⠰⠛⠓⠯⠲"
   },
   {
     "input": "northeast",
     "internal": "nor?1/",
     "expected": "29212357212",
-    "unicode": "⠝⠕⠗⠹⠂⠌"
+    "unicode": "⠝⠕⠗⠹⠂⠌",
+    "world": "⠴⠝⠕⠗⠹⠂⠌⠲"
   },
   {
     "input": "painstaking",
     "internal": "pa9stak+",
     "expected": "1512014301544",
-    "unicode": "⠏⠁⠔⠎⠞⠁⠅⠬"
+    "unicode": "⠏⠁⠔⠎⠞⠁⠅⠬",
+    "world": "⠴⠏⠁⠔⠎⠞⠁⠅⠬⠲"
   },
   {
     "input": "photoflash",
     "internal": "photofla%",
     "expected": "1519213021117141",
-    "unicode": "⠏⠓⠕⠞⠕⠋⠇⠁⠩"
+    "unicode": "⠏⠓⠕⠞⠕⠋⠇⠁⠩",
+    "world": "⠴⠏⠓⠕⠞⠕⠋⠇⠁⠩⠲"
   },
   {
     "input": "pineapple",
     "internal": "p9eapple",
     "expected": "15201711515717",
-    "unicode": "⠏⠔⠑⠁⠏⠏⠇⠑"
+    "unicode": "⠏⠔⠑⠁⠏⠏⠇⠑",
+    "world": "⠴⠏⠔⠑⠁⠏⠏⠇⠑⠲"
   },
   {
     "input": "rawhide",
     "internal": "rawhide",
     "expected": "2315819102517",
-    "unicode": "⠗⠁⠺⠓⠊⠙⠑"
+    "unicode": "⠗⠁⠺⠓⠊⠙⠑",
+    "world": "⠴⠗⠁⠺⠓⠊⠙⠑⠲"
   },
   {
     "input": "Southend",
     "internal": ",s\\?5d",
     "expected": "321451573425",
-    "unicode": "⠠⠎⠳⠹⠢⠙"
+    "unicode": "⠠⠎⠳⠹⠢⠙",
+    "world": "⠴⠠⠎⠳⠹⠢⠙⠲"
   },
   {
     "input": "stateroom",
     "internal": "/ateroom",
     "expected": "121301723212113",
-    "unicode": "⠌⠁⠞⠑⠗⠕⠕⠍"
+    "unicode": "⠌⠁⠞⠑⠗⠕⠕⠍",
+    "world": "⠴⠌⠁⠞⠑⠗⠕⠕⠍⠲"
   },
   {
     "input": "storeroom",
     "internal": "/oreroom",
     "expected": "1221231723212113",
-    "unicode": "⠌⠕⠗⠑⠗⠕⠕⠍"
+    "unicode": "⠌⠕⠗⠑⠗⠕⠕⠍",
+    "world": "⠴⠌⠕⠗⠑⠗⠕⠕⠍⠲"
   },
   {
     "input": "stronghold",
     "internal": "/r;ghold",
     "expected": "122348271921725",
-    "unicode": "⠌⠗⠰⠛⠓⠕⠇⠙"
+    "unicode": "⠌⠗⠰⠛⠓⠕⠇⠙",
+    "world": "⠴⠌⠗⠰⠛⠓⠕⠇⠙⠲"
   },
   {
     "input": "sweetheart",
     "internal": "sweethe>t",
     "expected": "145817173019172830",
-    "unicode": "⠎⠺⠑⠑⠞⠓⠑⠜⠞"
+    "unicode": "⠎⠺⠑⠑⠞⠓⠑⠜⠞",
+    "world": "⠴⠎⠺⠑⠑⠞⠓⠑⠜⠞⠲"
   },
   {
     "input": "tearoom",
     "internal": "t1room",
     "expected": "30223212113",
-    "unicode": "⠞⠂⠗⠕⠕⠍"
+    "unicode": "⠞⠂⠗⠕⠕⠍",
+    "world": "⠴⠞⠂⠗⠕⠕⠍⠲"
   },
   {
     "input": "toenail",
     "internal": "toenail",
     "expected": "302117291107",
-    "unicode": "⠞⠕⠑⠝⠁⠊⠇"
+    "unicode": "⠞⠕⠑⠝⠁⠊⠇",
+    "world": "⠴⠞⠕⠑⠝⠁⠊⠇⠲"
   },
   {
     "input": "wiseacre",
     "internal": "wiseacre",
     "expected": "58101417192317",
-    "unicode": "⠺⠊⠎⠑⠁⠉⠗⠑"
+    "unicode": "⠺⠊⠎⠑⠁⠉⠗⠑",
+    "world": "⠴⠺⠊⠎⠑⠁⠉⠗⠑⠲"
   }
 ]

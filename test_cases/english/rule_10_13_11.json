@@ -3,48 +3,56 @@
     "input": "care\nfully",
     "internal": "c>e-\nfully",
     "expected": "9281736\n11377761",
-    "unicode": "⠉⠜⠑⠤\n⠋⠥⠇⠇⠽"
+    "unicode": "⠉⠜⠑⠤\n⠋⠥⠇⠇⠽",
+    "world": "⠴⠉⠜⠑⠲\n⠴⠋⠥⠇⠇⠽⠲"
   },
   {
     "input": "CE\nMENT.)",
     "internal": ",,ce-\nm5t4\">",
     "expected": "323291736\n133430501628",
-    "unicode": "⠠⠠⠉⠑⠤\n⠍⠢⠞⠲⠐⠜"
+    "unicode": "⠠⠠⠉⠑⠤\n⠍⠢⠞⠲⠐⠜",
+    "world": "⠴⠠⠠⠉⠑⠲\n⠴⠠⠠⠍⠢⠞⠲⠠⠴"
   },
   {
     "input": "confu\nsion?",
     "internal": "3fu-\nsion8",
     "expected": "18113736\n1410212938",
-    "unicode": "⠒⠋⠥⠤\n⠎⠊⠕⠝⠦"
+    "unicode": "⠒⠋⠥⠤\n⠎⠊⠕⠝⠦",
+    "world": "⠴⠒⠋⠥⠲\n⠴⠎⠊⠕⠝⠦"
   },
   {
     "input": "expres\nsionless",
     "internal": "expres-\nsion.s",
     "expected": "17451523171436\n141021294014",
-    "unicode": "⠑⠭⠏⠗⠑⠎⠤\n⠎⠊⠕⠝⠨⠎"
+    "unicode": "⠑⠭⠏⠗⠑⠎⠤\n⠎⠊⠕⠝⠨⠎",
+    "world": "⠴⠑⠭⠏⠗⠑⠎⠲\n⠴⠎⠊⠕⠝⠨⠎⠲"
   },
   {
     "input": "funda\nmentally",
     "internal": "funda-\nm5tally",
     "expected": "11372925136\n13343017761",
-    "unicode": "⠋⠥⠝⠙⠁⠤\n⠍⠢⠞⠁⠇⠇⠽"
+    "unicode": "⠋⠥⠝⠙⠁⠤\n⠍⠢⠞⠁⠇⠇⠽",
+    "world": "⠴⠋⠥⠝⠙⠁⠲\n⠴⠍⠢⠞⠁⠇⠇⠽⠲"
   },
   {
     "input": "reli\nance",
     "internal": "reli-\nance",
     "expected": "231771036\n129917",
-    "unicode": "⠗⠑⠇⠊⠤\n⠁⠝⠉⠑"
+    "unicode": "⠗⠑⠇⠊⠤\n⠁⠝⠉⠑",
+    "world": "⠴⠗⠑⠇⠊⠲\n⠴⠁⠝⠉⠑⠲"
   },
   {
     "input": "rota\ntions",
     "internal": "rota-\ntions",
     "expected": "232130136\n3010212914",
-    "unicode": "⠗⠕⠞⠁⠤\n⠞⠊⠕⠝⠎"
+    "unicode": "⠗⠕⠞⠁⠤\n⠞⠊⠕⠝⠎",
+    "world": "⠴⠗⠕⠞⠁⠲\n⠴⠞⠊⠕⠝⠎⠲"
   },
   {
     "input": "vital\nity",
     "internal": "vital-\nity",
     "expected": "3910301736\n103061",
-    "unicode": "⠧⠊⠞⠁⠇⠤\n⠊⠞⠽"
+    "unicode": "⠧⠊⠞⠁⠇⠤\n⠊⠞⠽",
+    "world": "⠴⠧⠊⠞⠁⠇⠲\n⠴⠊⠞⠽⠲"
   }
 ]

@@ -3,132 +3,154 @@
     "input": "& þe aungil seide to hem, nyle Ȝee dreeden, lo soþli I euangelise to Ȝou a gret ioȜe þat shall be to alle puple.",
     "internal": "@& #!e aungil seide to hem1 nyle #yee dreeden1 lo so#!li ,i euangelise to #you a gret io#ye #!at shall be to alle puple4",
     "expected": "84706046170137292710701417102517030210191713202961717060611717025231717251729207210142160467100321001737129271771014170302106061213701027231730010216061170604613001419177031703021017717015371571750",
-    "unicode": "⠈⠯⠀⠼⠮⠑⠀⠁⠥⠝⠛⠊⠇⠀⠎⠑⠊⠙⠑⠀⠞⠕⠀⠓⠑⠍⠂⠀⠝⠽⠇⠑⠀⠼⠽⠑⠑⠀⠙⠗⠑⠑⠙⠑⠝⠂⠀⠇⠕⠀⠎⠕⠼⠮⠇⠊⠀⠠⠊⠀⠑⠥⠁⠝⠛⠑⠇⠊⠎⠑⠀⠞⠕⠀⠼⠽⠕⠥⠀⠁⠀⠛⠗⠑⠞⠀⠊⠕⠼⠽⠑⠀⠼⠮⠁⠞⠀⠎⠓⠁⠇⠇⠀⠃⠑⠀⠞⠕⠀⠁⠇⠇⠑⠀⠏⠥⠏⠇⠑⠲"
+    "unicode": "⠈⠯⠀⠼⠮⠑⠀⠁⠥⠝⠛⠊⠇⠀⠎⠑⠊⠙⠑⠀⠞⠕⠀⠓⠑⠍⠂⠀⠝⠽⠇⠑⠀⠼⠽⠑⠑⠀⠙⠗⠑⠑⠙⠑⠝⠂⠀⠇⠕⠀⠎⠕⠼⠮⠇⠊⠀⠠⠊⠀⠑⠥⠁⠝⠛⠑⠇⠊⠎⠑⠀⠞⠕⠀⠼⠽⠕⠥⠀⠁⠀⠛⠗⠑⠞⠀⠊⠕⠼⠽⠑⠀⠼⠮⠁⠞⠀⠎⠓⠁⠇⠇⠀⠃⠑⠀⠞⠕⠀⠁⠇⠇⠑⠀⠏⠥⠏⠇⠑⠲",
+    "world": "⠈⠯ ⠴⠑ ⠁⠥⠝⠛⠊⠇ ⠎⠑⠊⠙⠑ ⠞⠕ ⠓⠑⠍⠂ ⠝⠽⠇⠑ ⠠⠼⠽⠑⠑ ⠙⠗⠑⠫⠢⠂ ⠇⠕ ⠎⠕⠼⠮⠇⠊ ⠠⠊ ⠑⠥⠁⠝⠛⠑⠇⠊⠎⠑ ⠞⠕ ⠠⠼⠽⠳ ⠁ ⠛⠗⠑⠞ ⠊⠕⠠⠼⠽⠑ ⠼⠮⠁⠞ ⠩ ⠆ ⠞⠕ ⠁⠇⠇⠑ ⠏⠥⠏⠇⠑⠲"
   },
   {
     "input": "al (all)",
     "internal": ";al \"<all\">",
     "expected": "4817016351771628",
-    "unicode": "⠰⠁⠇⠀⠐⠣⠁⠇⠇⠐⠜"
+    "unicode": "⠰⠁⠇⠀⠐⠣⠁⠇⠇⠐⠜",
+    "world": "⠴⠁⠇ ⠐⠣⠁⠇⠇⠠⠴"
   },
   {
     "input": "bothe (both)",
     "internal": "bo! \"<bo?\">",
     "expected": "3214601635321571628",
-    "unicode": "⠃⠕⠮⠀⠐⠣⠃⠕⠹⠐⠜"
+    "unicode": "⠃⠕⠮⠀⠐⠣⠃⠕⠹⠐⠜",
+    "world": "⠴⠃⠕⠮ ⠐⠣⠃⠕⠹⠠⠴"
   },
   {
     "input": "citye (city)",
     "internal": "c;ye \"<c;y\">",
     "expected": "948611701635948611628",
-    "unicode": "⠉⠰⠽⠑⠀⠐⠣⠉⠰⠽⠐⠜"
+    "unicode": "⠉⠰⠽⠑⠀⠐⠣⠉⠰⠽⠐⠜",
+    "world": "⠴⠉⠰⠽⠑ ⠐⠣⠉⠰⠽⠠⠴"
   },
   {
     "input": "could (cold)",
     "internal": "c\\ld \"<cold\">",
     "expected": "951725016359217251628",
-    "unicode": "⠉⠳⠇⠙⠀⠐⠣⠉⠕⠇⠙⠐⠜"
+    "unicode": "⠉⠳⠇⠙⠀⠐⠣⠉⠕⠇⠙⠐⠜",
+    "world": "⠴⠉⠙ ⠐⠣⠉⠕⠇⠙⠠⠴"
   },
   {
     "input": "daynty (dainty)",
     "internal": "\"dnty \"<da9ty\">",
     "expected": "1625293061016352512030611628",
-    "unicode": "⠐⠙⠝⠞⠽⠀⠐⠣⠙⠁⠔⠞⠽⠐⠜"
+    "unicode": "⠐⠙⠝⠞⠽⠀⠐⠣⠙⠁⠔⠞⠽⠐⠜",
+    "world": "⠴⠐⠙⠝⠞⠽ ⠐⠣⠙⠁⠔⠞⠽⠠⠴"
   },
   {
     "input": "dolefull (doleful)",
     "internal": "dole;ll \"<dole;l\">",
     "expected": "252171748770163525217174871628",
-    "unicode": "⠙⠕⠇⠑⠰⠇⠇⠀⠐⠣⠙⠕⠇⠑⠰⠇⠐⠜"
+    "unicode": "⠙⠕⠇⠑⠰⠇⠇⠀⠐⠣⠙⠕⠇⠑⠰⠇⠐⠜",
+    "world": "⠴⠙⠕⠇⠑⠰⠇⠇ ⠐⠣⠙⠕⠇⠑⠰⠇⠠⠴"
   },
   {
     "input": "fful (full)",
     "internal": "fful \"<full\">",
     "expected": "1111377016351137771628",
-    "unicode": "⠋⠋⠥⠇⠀⠐⠣⠋⠥⠇⠇⠐⠜"
+    "unicode": "⠋⠋⠥⠇⠀⠐⠣⠋⠥⠇⠇⠐⠜",
+    "world": "⠴⠋⠰⠇ ⠐⠣⠋⠥⠇⠇⠠⠴"
   },
   {
     "input": "forthe (forth)",
     "internal": "=! \"<=?\">",
     "expected": "63460163563571628",
-    "unicode": "⠿⠮⠀⠐⠣⠿⠹⠐⠜"
+    "unicode": "⠿⠮⠀⠐⠣⠿⠹⠐⠜",
+    "world": "⠴⠿⠮ ⠐⠣⠿⠹⠠⠴"
   },
   {
     "input": "gentillesse",
     "internal": "g5til.se",
     "expected": "273430107401417",
-    "unicode": "⠛⠢⠞⠊⠇⠨⠎⠑"
+    "unicode": "⠛⠢⠞⠊⠇⠨⠎⠑",
+    "world": "⠴⠛⠢⠞⠊⠇⠨⠎⠑⠲"
   },
   {
     "input": "gentlenes (gentleness)",
     "internal": "g5tl5es \"<g5tle;s\">",
     "expected": "27343073417140163527343071748141628",
-    "unicode": "⠛⠢⠞⠇⠢⠑⠎⠀⠐⠣⠛⠢⠞⠇⠑⠰⠎⠐⠜"
+    "unicode": "⠛⠢⠞⠇⠢⠑⠎⠀⠐⠣⠛⠢⠞⠇⠑⠰⠎⠐⠜",
+    "world": "⠴⠛⠢⠞⠇⠢⠑⠎ ⠐⠣⠛⠢⠞⠇⠑⠰⠎⠠⠴"
   },
   {
     "input": "hadde",
     "internal": "_hde",
     "expected": "56192517",
-    "unicode": "⠸⠓⠙⠑"
+    "unicode": "⠸⠓⠙⠑",
+    "world": "⠴⠸⠓⠙⠑⠲"
   },
   {
     "input": "heathenesse (heathendom)",
     "internal": "h1!;se \"<h1!ndom\">",
     "expected": "192464814170163519246292521131628",
-    "unicode": "⠓⠂⠮⠰⠎⠑⠀⠐⠣⠓⠂⠮⠝⠙⠕⠍⠐⠜"
+    "unicode": "⠓⠂⠮⠰⠎⠑⠀⠐⠣⠓⠂⠮⠝⠙⠕⠍⠐⠜",
+    "world": "⠴⠓⠂⠮⠝⠑⠎⠎⠑ ⠐⠣⠓⠂⠮⠝⠙⠕⠍⠠⠴"
   },
   {
     "input": "loue (love)",
     "internal": "l\\e \"<love\">",
     "expected": "751170163572139171628",
-    "unicode": "⠇⠳⠑⠀⠐⠣⠇⠕⠧⠑⠐⠜"
+    "unicode": "⠇⠳⠑⠀⠐⠣⠇⠕⠧⠑⠐⠜",
+    "world": "⠴⠇⠳⠑ ⠐⠣⠇⠕⠧⠑⠠⠴"
   },
   {
     "input": "monethe (month)",
     "internal": "m\"o! \"<mon?\">",
     "expected": "1316214601635132129571628",
-    "unicode": "⠍⠐⠕⠮⠀⠐⠣⠍⠕⠝⠹⠐⠜"
+    "unicode": "⠍⠐⠕⠮⠀⠐⠣⠍⠕⠝⠹⠐⠜",
+    "world": "⠴⠍⠕⠝⠑⠞⠓⠑ ⠐⠣⠍⠕⠝⠹⠠⠴"
   },
   {
     "input": "onely (only)",
     "internal": "\"oly \"<only\">",
     "expected": "16217610163521297611628",
-    "unicode": "⠐⠕⠇⠽⠀⠐⠣⠕⠝⠇⠽⠐⠜"
+    "unicode": "⠐⠕⠇⠽⠀⠐⠣⠕⠝⠇⠽⠐⠜",
+    "world": "⠴⠐⠕⠇⠽ ⠐⠣⠕⠝⠇⠽⠠⠴"
   },
   {
     "input": "ouer (over)",
     "internal": "\\] \"<ov]\">",
     "expected": "5159016352139591628",
-    "unicode": "⠳⠻⠀⠐⠣⠕⠧⠻⠐⠜"
+    "unicode": "⠳⠻⠀⠐⠣⠕⠧⠻⠐⠜",
+    "world": "⠴⠳⠻ ⠐⠣⠕⠧⠻⠠⠴"
   },
   {
     "input": "sones (sons)",
     "internal": "s\"os \"<sons\">",
     "expected": "1416211401635142129141628",
-    "unicode": "⠎⠐⠕⠎⠀⠐⠣⠎⠕⠝⠎⠐⠜"
+    "unicode": "⠎⠐⠕⠎⠀⠐⠣⠎⠕⠝⠎⠐⠜",
+    "world": "⠴⠎⠐⠕⠎ ⠐⠣⠎⠕⠝⠎⠠⠴"
   },
   {
     "input": "soone",
     "internal": "soone",
     "expected": "1421212917",
-    "unicode": "⠎⠕⠕⠝⠑"
+    "unicode": "⠎⠕⠕⠝⠑",
+    "world": "⠴⠎⠕⠕⠝⠑⠲"
   },
   {
     "input": "swolewith (swallows)",
     "internal": "swole) \"<swall[s\">",
     "expected": "1458217176201635145817742141628",
-    "unicode": "⠎⠺⠕⠇⠑⠾⠀⠐⠣⠎⠺⠁⠇⠇⠪⠎⠐⠜"
+    "unicode": "⠎⠺⠕⠇⠑⠾⠀⠐⠣⠎⠺⠁⠇⠇⠪⠎⠐⠜",
+    "world": "⠴⠎⠺⠕⠇⠑⠾ ⠐⠣⠎⠺⠁⠇⠇⠪⠎⠠⠴"
   },
   {
     "input": "worlde",
     "internal": "_we",
     "expected": "565817",
-    "unicode": "⠸⠺⠑"
+    "unicode": "⠸⠺⠑",
+    "world": "⠴⠸⠺⠑⠲"
   },
   {
     "input": "yoonge",
     "internal": "yoonge",
     "expected": "612121292717",
-    "unicode": "⠽⠕⠕⠝⠛⠑"
+    "unicode": "⠽⠕⠕⠝⠛⠑",
+    "world": "⠴⠽⠕⠰⠛⠑⠲"
   }
 ]

@@ -63,10 +63,11 @@ impl BrailleRule for Rule40 {
         // (rule_69.rs:174-181 matches() + 184-196 apply() 참조)
 
         if !ctx.state.is_number {
-            // 제43항: skip prefix after continuation characters (. or ,)
-            let needs_prefix = ctx
-                .prev_char()
-                .is_none_or(|prev| !is_number_continuation(prev));
+            // 제43항: 마침표/쉼표가 *숫자 사이*에 있을 때에만 뒤 수표를
+            // 생략한다. `M.2`, `No.1`, `2만,4142`처럼 문장 부호의 왼쪽이
+            // 숫자가 아닌 경우에는 제40항에 따라 새 수표를 적는다.
+            let needs_prefix =
+                !is_number_continuation(ctx.word_chars, ctx.index, ctx.state.english_indicator);
             if needs_prefix {
                 ctx.emit(NUMBER_INDICATOR);
                 // 제61항: apostrophe/right single quote before number emits ⠄ after 수표
@@ -85,10 +86,28 @@ impl BrailleRule for Rule40 {
     }
 }
 
-/// Check if the previous character is a continuation character (. or ,)
-/// that should suppress the number indicator on the next digit.
-pub fn is_number_continuation(prev: char) -> bool {
-    prev == '.' || prev == ','
+/// Return whether the digit at `index` follows `digit + (. or ,)`.
+///
+/// 제43항의 적용 조건은 문장 부호 자체가 아니라 그 문장 부호가 두 숫자
+/// 사이에 놓였는지이다. 따라서 로마자나 한글 뒤의 마침표/쉼표는 새 숫자
+/// 묶음의 수표를 생략하지 않는다.
+pub fn is_number_continuation(word_chars: &[char], index: usize, in_korean_document: bool) -> bool {
+    if index == 0 || !matches!(word_chars[index - 1], '.' | ',') {
+        return false;
+    }
+
+    if in_korean_document {
+        return index >= 2 && word_chars[index - 2].is_numeric();
+    }
+
+    // UEB 6.3.1: numeric mode continues through a sequence of full stops or
+    // commas. It can therefore span `4..7`, but it was never established in
+    // an identifier such as `M.2`.
+    word_chars[..index]
+        .iter()
+        .rev()
+        .find(|ch| !matches!(ch, '.' | ','))
+        .is_some_and(|ch| ch.is_numeric())
 }
 
 #[cfg(test)]
@@ -110,14 +129,51 @@ mod tests {
         assert!(encode_digit('a').is_err());
     }
 
-    /// `is_number_continuation` — `.` / `,` 만 숫자 흐름에 포함.
+    /// 제43항 — `.` / `,`가 실제로 숫자 사이에 있을 때만 숫자 흐름에 포함.
     #[rstest::rstest]
-    #[case::period('.', true)]
-    #[case::comma(',', true)]
-    #[case::space(' ', false)]
-    #[case::hyphen('-', false)]
-    fn continuation_chars(#[case] ch: char, #[case] expected: bool) {
-        assert_eq!(is_number_continuation(ch), expected);
+    #[case::korean_decimal("3.9", 2, true, true)]
+    #[case::korean_grouped("1,000", 2, true, true)]
+    #[case::korean_repeated_period("4..7", 3, true, false)]
+    #[case::ueb_repeated_period("4..7", 3, false, true)]
+    #[case::roman_period("M.2", 2, false, false)]
+    #[case::roman_period_in_korean("M.2", 2, true, false)]
+    #[case::roman_comma("X,1", 2, true, false)]
+    #[case::korean_comma("2만,4142", 3, true, false)]
+    #[case::leading_period(".47", 1, false, false)]
+    #[case::hyphen("3-4", 2, false, false)]
+    #[case::first_digit("7", 0, false, false)]
+    fn continuation_chars(
+        #[case] input: &str,
+        #[case] index: usize,
+        #[case] in_korean_document: bool,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            is_number_continuation(
+                &input.chars().collect::<Vec<_>>(),
+                index,
+                in_korean_document,
+            ),
+            expected
+        );
+    }
+
+    /// 제35항/제40항/제43항 — 로마자 뒤 마침표는 숫자 사이의 소수점이
+    /// 아니므로 뒤 숫자에는 수표를 새로 적는다.
+    #[rstest::rstest]
+    #[case::capital_identifier("가 M.2 나", "⠍⠲⠼⠃")]
+    #[case::all_caps_identifier("가 NO.1 나", "⠕⠲⠼⠁")]
+    #[case::korean_before_comma("가 2만,4142명 나", "⠑⠒⠐⠼⠙")]
+    #[case::ueb_multiple_periods("4..7", "⠼⠙⠲⠲⠛")]
+    fn non_numeric_left_side_does_not_suppress_number_indicator(
+        #[case] input: &str,
+        #[case] expected_fragment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            actual.contains(expected_fragment),
+            "missing rule-40 number indicator in {actual}"
+        );
     }
 
     /// PDF 제40항 + 제69항 — numeric prefix followed by ASCII unit (kg, cm, etc.)

@@ -3,48 +3,56 @@
     "input": "the vowels are: a, e, i, o and u",
     "internal": "! v[els >e3 a1 ;e1 i1 o & ;u",
     "expected": "4603942177140281718012048172010202104704837",
-    "unicode": "⠮⠀⠧⠪⠑⠇⠎⠀⠜⠑⠒⠀⠁⠂⠀⠰⠑⠂⠀⠊⠂⠀⠕⠀⠯⠀⠰⠥"
+    "unicode": "⠮⠀⠧⠪⠑⠇⠎⠀⠜⠑⠒⠀⠁⠂⠀⠰⠑⠂⠀⠊⠂⠀⠕⠀⠯⠀⠰⠥",
+    "world": "⠴⠮ ⠧⠪⠑⠇⠎ ⠜⠑⠒ ⠁⠂ ⠰⠑⠂ ⠊⠂ ⠕ ⠯ ⠰⠥⠲"
   },
   {
     "input": "Mrs X and Mr O",
     "internal": ",mrs ;,x & ,mr ,o",
     "expected": "321323140483245047032132303221",
-    "unicode": "⠠⠍⠗⠎⠀⠰⠠⠭⠀⠯⠀⠠⠍⠗⠀⠠⠕"
+    "unicode": "⠠⠍⠗⠎⠀⠰⠠⠭⠀⠯⠀⠠⠍⠗⠀⠠⠕",
+    "world": "⠴⠠⠍⠗⠎ ⠰⠠⠭ ⠯ ⠠⠍⠗ ⠠⠕⠲"
   },
   {
     "input": "J. S. Bach",
     "internal": ";,j4 ;,s4 ,ba*",
     "expected": "483226500483214500323133",
-    "unicode": "⠰⠠⠚⠲⠀⠰⠠⠎⠲⠀⠠⠃⠁⠡"
+    "unicode": "⠰⠠⠚⠲⠀⠰⠠⠎⠲⠀⠠⠃⠁⠡",
+    "world": "⠴⠠⠚⠲ ⠰⠠⠎⠲ ⠠⠃⠁⠡⠲"
   },
   {
     "input": "22b   22B   22p",
     "internal": "#bb;b   #bb,b   #bbp",
     "expected": "60334830006033323000603315",
-    "unicode": "⠼⠃⠃⠰⠃⠀⠀⠀⠼⠃⠃⠠⠃⠀⠀⠀⠼⠃⠃⠏"
+    "unicode": "⠼⠃⠃⠰⠃⠀⠀⠀⠼⠃⠃⠠⠃⠀⠀⠀⠼⠃⠃⠏",
+    "world": "⠼⠃⠃⠴⠃   ⠼⠃⠃⠠⠃   ⠼⠃⠃⠏⠲"
   },
   {
     "input": "adagio e cantabile",
     "internal": "adagio ;e cantabile",
     "expected": "12512710210481709129301310717",
-    "unicode": "⠁⠙⠁⠛⠊⠕⠀⠰⠑⠀⠉⠁⠝⠞⠁⠃⠊⠇⠑"
+    "unicode": "⠁⠙⠁⠛⠊⠕⠀⠰⠑⠀⠉⠁⠝⠞⠁⠃⠊⠇⠑",
+    "world": "⠴⠁⠙⠁⠛⠊⠕ ⠰⠑ ⠉⠁⠝⠞⠁⠃⠊⠇⠑⠲"
   },
   {
     "input": "Add either ? or ! to each sentence.",
     "internal": ",add ei ;8 or 6 to ea* s5t;e4",
     "expected": "3212525017100483802123022030210171330143430481750",
-    "unicode": "⠠⠁⠙⠙⠀⠑⠊⠀⠰⠦⠀⠕⠗⠀⠖⠀⠞⠕⠀⠑⠁⠡⠀⠎⠢⠞⠰⠑⠲"
+    "unicode": "⠠⠁⠙⠙⠀⠑⠊⠀⠰⠦⠀⠕⠗⠀⠖⠀⠞⠕⠀⠑⠁⠡⠀⠎⠢⠞⠰⠑⠲",
+    "world": "⠴⠠⠁⠙⠙ ⠑⠊ ⠰⠦ ⠕⠗ ⠖ ⠞⠕ ⠑⠁⠡ ⠎⠢⠞⠰⠑⠲"
   },
   {
     "input": "In Smith⁵⁶ we find …",
     "internal": ",9 ,smi?;9#ef we f9d 444",
     "expected": "32200321413105748206017110581701120250505050",
-    "unicode": "⠠⠔⠀⠠⠎⠍⠊⠹⠰⠔⠼⠑⠋⠀⠺⠑⠀⠋⠔⠙⠀⠲⠲⠲"
+    "unicode": "⠠⠔⠀⠠⠎⠍⠊⠹⠰⠔⠼⠑⠋⠀⠺⠑⠀⠋⠔⠙⠀⠲⠲⠲",
+    "world": "⠴⠠⠊⠝ ⠠⠎⠍⠊⠹⠘⠼⠑⠋ ⠺⠑ ⠋⠔⠙ ⠲⠲⠲"
   },
   {
     "input": "jim@take2.com",
     "internal": "jim@atake#b4;com",
     "expected": "26101381301517603504892113",
-    "unicode": "⠚⠊⠍⠈⠁⠞⠁⠅⠑⠼⠃⠲⠰⠉⠕⠍"
+    "unicode": "⠚⠊⠍⠈⠁⠞⠁⠅⠑⠼⠃⠲⠰⠉⠕⠍",
+    "world": "⠴⠚⠊⠍⠈⠁⠞⠁⠅⠑⠼⠃⠲⠰⠉⠕⠍⠲"
   }
 ]

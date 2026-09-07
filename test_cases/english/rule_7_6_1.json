@@ -3,18 +3,21 @@
     "input": "“Why is that?” he asked.",
     "internal": "8,:y is t80 he ask$4",
     "expected": "3832496101014030385201917011454350",
-    "unicode": "⠦⠠⠱⠽⠀⠊⠎⠀⠞⠦⠴⠀⠓⠑⠀⠁⠎⠅⠫⠲"
+    "unicode": "⠦⠠⠱⠽⠀⠊⠎⠀⠞⠦⠴⠀⠓⠑⠀⠁⠎⠅⠫⠲",
+    "world": "⠦⠴⠠⠱⠽ ⠊⠎ ⠞⠦⠴ ⠓⠑ ⠁⠎⠅⠫⠲"
   },
   {
     "input": "the play \"Hamlet\"",
     "internal": "! play 8,hamlet0",
     "expected": "46015716103832191137173052",
-    "unicode": "⠮⠀⠏⠇⠁⠽⠀⠦⠠⠓⠁⠍⠇⠑⠞⠴"
+    "unicode": "⠮⠀⠏⠇⠁⠽⠀⠦⠠⠓⠁⠍⠇⠑⠞⠴",
+    "world": "⠴⠮ ⠏⠇⠁⠽ ⠦⠠⠓⠁⠍⠇⠑⠞⠦"
   },
   {
     "input": "“yes”es and “no”s",
     "internal": "8yes0es & 8no0s",
     "expected": "3861171452171404703829215214",
-    "unicode": "⠦⠽⠑⠎⠴⠑⠎⠀⠯⠀⠦⠝⠕⠴⠎"
+    "unicode": "⠦⠽⠑⠎⠴⠑⠎⠀⠯⠀⠦⠝⠕⠴⠎",
+    "world": "⠦⠴⠽⠑⠎⠠⠶⠑⠎ ⠯ ⠦⠝⠕⠠⠶⠎⠲"
   }
 ]

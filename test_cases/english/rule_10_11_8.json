@@ -3,48 +3,56 @@
     "input": "areaway",
     "internal": ">1way",
     "expected": "28258161",
-    "unicode": "⠜⠂⠺⠁⠽"
+    "unicode": "⠜⠂⠺⠁⠽",
+    "world": "⠴⠜⠂⠺⠁⠽⠲"
   },
   {
     "input": "ebbing",
     "internal": "e2+",
     "expected": "17644",
-    "unicode": "⠑⠆⠬"
+    "unicode": "⠑⠆⠬",
+    "world": "⠴⠑⠆⠬⠲"
   },
   {
     "input": "eggplant",
     "internal": "e7plant",
     "expected": "175415712930",
-    "unicode": "⠑⠶⠏⠇⠁⠝⠞"
+    "unicode": "⠑⠶⠏⠇⠁⠝⠞",
+    "world": "⠴⠑⠶⠏⠇⠁⠝⠞⠲"
   },
   {
     "input": "ideas",
     "internal": "id1s",
     "expected": "1025214",
-    "unicode": "⠊⠙⠂⠎"
+    "unicode": "⠊⠙⠂⠎",
+    "world": "⠴⠊⠙⠂⠎⠲"
   },
   {
     "input": "seaman",
     "internal": "s1man",
     "expected": "14213129",
-    "unicode": "⠎⠂⠍⠁⠝"
+    "unicode": "⠎⠂⠍⠁⠝",
+    "world": "⠴⠎⠂⠍⠁⠝⠲"
   },
   {
     "input": "seashore",
     "internal": "s1%ore",
     "expected": "14241212317",
-    "unicode": "⠎⠂⠩⠕⠗⠑"
+    "unicode": "⠎⠂⠩⠕⠗⠑",
+    "world": "⠴⠎⠂⠩⠕⠗⠑⠲"
   },
   {
     "input": "stiffly",
     "internal": "/i6ly",
     "expected": "121022761",
-    "unicode": "⠌⠊⠖⠇⠽"
+    "unicode": "⠌⠊⠖⠇⠽",
+    "world": "⠴⠌⠊⠖⠇⠽⠲"
   },
   {
     "input": "teatime",
     "internal": "t1\"t",
     "expected": "3021630",
-    "unicode": "⠞⠂⠐⠞"
+    "unicode": "⠞⠂⠐⠞",
+    "world": "⠴⠞⠂⠐⠞⠲"
   }
 ]

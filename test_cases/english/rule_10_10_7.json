@@ -3,114 +3,133 @@
     "input": "adhered",
     "internal": "adh]$",
     "expected": "125195943",
-    "unicode": "⠁⠙⠓⠻⠫"
+    "unicode": "⠁⠙⠓⠻⠫",
+    "world": "⠴⠁⠙⠓⠻⠫⠲"
   },
   {
     "input": "adherent",
     "internal": "adh]5t",
     "expected": "12519593430",
-    "unicode": "⠁⠙⠓⠻⠢⠞"
+    "unicode": "⠁⠙⠓⠻⠢⠞",
+    "world": "⠴⠁⠙⠓⠻⠢⠞⠲"
   },
   {
     "input": "adherer",
     "internal": "adh]]",
     "expected": "125195959",
-    "unicode": "⠁⠙⠓⠻⠻"
+    "unicode": "⠁⠙⠓⠻⠻",
+    "world": "⠴⠁⠙⠓⠻⠻⠲"
   },
   {
     "input": "cohered",
     "internal": "coh]$",
     "expected": "921195943",
-    "unicode": "⠉⠕⠓⠻⠫"
+    "unicode": "⠉⠕⠓⠻⠫",
+    "world": "⠴⠉⠕⠓⠻⠫⠲"
   },
   {
     "input": "component",
     "internal": "compon5t",
     "expected": "921131521293430",
-    "unicode": "⠉⠕⠍⠏⠕⠝⠢⠞"
+    "unicode": "⠉⠕⠍⠏⠕⠝⠢⠞",
+    "world": "⠴⠉⠕⠍⠏⠕⠝⠢⠞⠲"
   },
   {
     "input": "effulgent",
     "internal": "e6ulg5t",
     "expected": "1722377273430",
-    "unicode": "⠑⠖⠥⠇⠛⠢⠞"
+    "unicode": "⠑⠖⠥⠇⠛⠢⠞",
+    "world": "⠴⠑⠖⠥⠇⠛⠢⠞⠲"
   },
   {
     "input": "heredity",
     "internal": "h]$;y",
     "expected": "1959434861",
-    "unicode": "⠓⠻⠫⠰⠽"
+    "unicode": "⠓⠻⠫⠰⠽",
+    "world": "⠴⠓⠻⠫⠰⠽⠲"
   },
   {
     "input": "onerous",
     "internal": "on]\\s",
     "expected": "2129595114",
-    "unicode": "⠕⠝⠻⠳⠎"
+    "unicode": "⠕⠝⠻⠳⠎",
+    "world": "⠴⠕⠝⠻⠳⠎⠲"
   },
   {
     "input": "opponent",
     "internal": "oppon5t",
     "expected": "21151521293430",
-    "unicode": "⠕⠏⠏⠕⠝⠢⠞"
+    "unicode": "⠕⠏⠏⠕⠝⠢⠞",
+    "world": "⠴⠕⠏⠏⠕⠝⠢⠞⠲"
   },
   {
     "input": "Parthian",
     "internal": ",p>?ian",
     "expected": "3215285710129",
-    "unicode": "⠠⠏⠜⠹⠊⠁⠝"
+    "unicode": "⠠⠏⠜⠹⠊⠁⠝",
+    "world": "⠴⠠⠏⠜⠹⠊⠁⠝⠲"
   },
   {
     "input": "poisoned",
     "internal": "poison$",
     "expected": "15211014212943",
-    "unicode": "⠏⠕⠊⠎⠕⠝⠫"
+    "unicode": "⠏⠕⠊⠎⠕⠝⠫",
+    "world": "⠴⠏⠕⠊⠎⠕⠝⠫⠲"
   },
   {
     "input": "prisoner",
     "internal": "prison]",
     "expected": "15231014212959",
-    "unicode": "⠏⠗⠊⠎⠕⠝⠻"
+    "unicode": "⠏⠗⠊⠎⠕⠝⠻",
+    "world": "⠴⠏⠗⠊⠎⠕⠝⠻⠲"
   },
   {
     "input": "shadow",
     "internal": "%ad[",
     "expected": "4112542",
-    "unicode": "⠩⠁⠙⠪"
+    "unicode": "⠩⠁⠙⠪",
+    "world": "⠴⠩⠁⠙⠪⠲"
   },
   {
     "input": "sooner",
     "internal": "soon]",
     "expected": "1421212959",
-    "unicode": "⠎⠕⠕⠝⠻"
+    "unicode": "⠎⠕⠕⠝⠻",
+    "world": "⠴⠎⠕⠕⠝⠻⠲"
   },
   {
     "input": "stoned",
     "internal": "/on$",
     "expected": "12212943",
-    "unicode": "⠌⠕⠝⠫"
+    "unicode": "⠌⠕⠝⠫",
+    "world": "⠴⠌⠕⠝⠫⠲"
   },
   {
     "input": "telephoned",
     "internal": "telephon$",
     "expected": "30177171519212943",
-    "unicode": "⠞⠑⠇⠑⠏⠓⠕⠝⠫"
+    "unicode": "⠞⠑⠇⠑⠏⠓⠕⠝⠫",
+    "world": "⠴⠞⠑⠇⠑⠏⠓⠕⠝⠫⠲"
   },
   {
     "input": "Thaddeus",
     "internal": ",?addeus",
     "expected": "325712525173714",
-    "unicode": "⠠⠹⠁⠙⠙⠑⠥⠎"
+    "unicode": "⠠⠹⠁⠙⠙⠑⠥⠎",
+    "world": "⠴⠠⠹⠁⠙⠙⠑⠥⠎⠲"
   },
   {
     "input": "toner",
     "internal": "ton]",
     "expected": "30212959",
-    "unicode": "⠞⠕⠝⠻"
+    "unicode": "⠞⠕⠝⠻",
+    "world": "⠴⠞⠕⠝⠻⠲"
   },
   {
     "input": "advanced",
     "internal": "adv.ed",
     "expected": "12539401725",
-    "unicode": "⠁⠙⠧⠨⠑⠙"
+    "unicode": "⠁⠙⠧⠨⠑⠙",
+    "world": "⠴⠁⠙⠧⠨⠑⠙⠲"
   }
 ]

@@ -3,6 +3,7 @@
     "input": "INTER\nNATIONAL",
     "internal": ",,9t]-\nna;nal",
     "expected": "323220305936\n291482917",
-    "unicode": "⠠⠠⠔⠞⠻⠤\n⠝⠁⠰⠝⠁⠇"
+    "unicode": "⠠⠠⠔⠞⠻⠤\n⠝⠁⠰⠝⠁⠇",
+    "world": "⠴⠠⠠⠔⠞⠻⠲\n⠴⠠⠠⠝⠁⠰⠝⠁⠇⠲"
   }
 ]

@@ -19,6 +19,112 @@ struct WordContext<'a> {
     remaining_words: &'a [&'a str],
 }
 
+/// Rule 29/35: a following print word which begins with Roman text or a number
+/// continues the same Roman section across its intervening print space.
+fn next_word_starts_roman_or_number(remaining_words: &[&str]) -> bool {
+    remaining_words
+        .first()
+        .and_then(|word| word.chars().next())
+        .is_some_and(|ch| ch.is_ascii_alphanumeric())
+}
+
+fn is_opening_english_phrase_enclosure(ch: char) -> bool {
+    matches!(ch, '(' | '[' | '{' | '‘' | '“' | '"')
+}
+
+fn is_closing_english_phrase_enclosure(ch: char) -> bool {
+    matches!(ch, ')' | ']' | '}' | '’' | '”' | '"')
+}
+
+/// Decide whether the Roman section beginning in `tokens[start_index]` has an
+/// independently visible English-phrase context.
+///
+/// Korean rule 37 expands the six UEB lower wordsigns when Roman material is
+/// mentioned inside Korean prose. The NIKL's rule consultation distinguishes
+/// that case from an English title or sentence, where UEB 10.5 applies. We use
+/// only print structure available to a plain-text encoder: at least two Roman
+/// print words plus either sentence/title capitalization or a paired-enclosure
+/// boundary. A lowercase metalinguistic list such as the rule-37 attachment
+/// (`be, his, was, were의 ...`) therefore remains Korean context.
+fn roman_section_has_english_phrase_context(tokens: &[Token<'_>], start_index: usize) -> bool {
+    let mut started = false;
+    let mut roman_word_count = 0usize;
+    let mut has_uppercase = false;
+    let mut has_enclosure_boundary = false;
+
+    for token in tokens.iter().skip(start_index) {
+        let Token::Word(word) = token else {
+            if matches!(token, Token::Space(_) | Token::Mode(_)) {
+                continue;
+            }
+            if started {
+                break;
+            }
+            continue;
+        };
+
+        let scan_start = if started {
+            let Some(first_script) = word
+                .chars
+                .iter()
+                .position(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(*ch))
+            else {
+                continue;
+            };
+            if crate::utils::is_korean_char(word.chars[first_script]) {
+                break;
+            }
+            let Some(first_roman) = word.chars[first_script..]
+                .iter()
+                .position(|ch| ch.is_ascii_alphabetic())
+                .map(|offset| first_script + offset)
+            else {
+                continue;
+            };
+            first_roman
+        } else {
+            let Some(first_roman) = word.chars.iter().position(|ch| ch.is_ascii_alphabetic())
+            else {
+                continue;
+            };
+            first_roman
+        };
+
+        if !started {
+            has_enclosure_boundary |= word.chars[..scan_start]
+                .iter()
+                .rev()
+                .take_while(|ch| !ch.is_ascii_alphanumeric() && !crate::utils::is_korean_char(**ch))
+                .any(|ch| is_opening_english_phrase_enclosure(*ch));
+        }
+
+        let section_end = word.chars[scan_start..]
+            .iter()
+            .position(|ch| crate::utils::is_korean_char(*ch))
+            .map_or(word.chars.len(), |offset| scan_start + offset);
+        let roman_slice = &word.chars[scan_start..section_end];
+        // `scan_start` is selected from an ASCII alphabetic position above, so
+        // this slice necessarily contains at least that Roman letter.
+        let last_roman = roman_slice
+            .iter()
+            .rposition(|ch| ch.is_ascii_alphabetic())
+            .expect("Roman section starts at an ASCII alphabetic character");
+
+        started = true;
+        roman_word_count += 1;
+        has_uppercase |= roman_slice.iter().any(|ch| ch.is_ascii_uppercase());
+        has_enclosure_boundary |= roman_slice[last_roman + 1..]
+            .iter()
+            .any(|ch| is_closing_english_phrase_enclosure(*ch));
+
+        if section_end < word.chars.len() {
+            break;
+        }
+    }
+
+    roman_word_count >= 2 && (has_uppercase || has_enclosure_boundary)
+}
+
 /// 토큰의 byte 슬라이스가 한글표(⠸⠷) 점형과 일치하는지.
 fn is_hangul_wrap_start(token: &Token<'_>) -> bool {
     matches!(token, Token::PreEncoded(bytes) if bytes.as_slice() == HANGUL_WRAP_START_BYTES)
@@ -85,6 +191,187 @@ fn token_is_math_word(token: Option<&Token<'_>>) -> bool {
         }
         Token::PreEncoded(_) => true,
         _ => false,
+    }
+}
+
+/// Find the word governed by a run of UEB grade-1/capital mode markers.
+///
+/// Korean rule 29 requires the roman indicator before the roman text, while
+/// rule 28 appendix places UEB capitalization indicators immediately before
+/// the capitalized roman word. Token rewriting may discover capitalization
+/// before the character emitter discovers a new roman section, so the emitter
+/// must establish roman mode before it emits these UEB prefix markers.
+fn roman_word_after_prefix<'a>(
+    tokens: &'a [Token<'a>],
+    prefix_index: usize,
+) -> Option<&'a WordToken<'a>> {
+    for token in tokens.iter().skip(prefix_index + 1) {
+        match token {
+            Token::Mode(
+                ModeEvent::Grade1Indicator | ModeEvent::CapsWord | ModeEvent::CapsPassageStart,
+            ) => continue,
+            Token::Word(word) => return Some(word),
+            _ => return None,
+        }
+    }
+    None
+}
+
+fn current_word_at_or_after<'a>(
+    tokens: &'a [Token<'a>],
+    index: usize,
+) -> Option<&'a WordToken<'a>> {
+    for token in tokens.iter().skip(index) {
+        match token {
+            Token::Mode(_) => continue,
+            Token::Word(word) => return Some(word),
+            _ => return None,
+        }
+    }
+    None
+}
+
+fn is_separated_from_previous_word(tokens: &[Token<'_>], index: usize) -> bool {
+    let mut saw_space = false;
+    for token in tokens[..index].iter().rev() {
+        match token {
+            Token::Mode(_) => {}
+            Token::Space(_) => saw_space = true,
+            Token::Word(_) => return saw_space,
+            _ => return false,
+        }
+    }
+    false
+}
+
+fn previous_word_index_before(tokens: &[Token<'_>], index: usize) -> Option<usize> {
+    tokens[..index]
+        .iter()
+        .rposition(|token| matches!(token, Token::Word(_)))
+}
+
+fn matching_group_open(close: char) -> Option<char> {
+    match close {
+        ')' => Some('('),
+        ']' => Some('['),
+        '}' => Some('{'),
+        '’' => Some('‘'),
+        '”' => Some('“'),
+        '〉' => Some('〈'),
+        '》' => Some('《'),
+        '」' => Some('「'),
+        '』' => Some('『'),
+        '】' => Some('【'),
+        '〕' => Some('〔'),
+        '〗' => Some('〖'),
+        '〙' => Some('〘'),
+        '〛' => Some('〚'),
+        _ => None,
+    }
+}
+
+fn closed_enclosure_before_contains_ascii(tokens: &[Token<'_>], index: usize) -> bool {
+    let Some(previous_index) = previous_word_index_before(tokens, index) else {
+        return false;
+    };
+    let Token::Word(previous) = &tokens[previous_index] else {
+        unreachable!("previous_word_index_before returns a Word token");
+    };
+
+    let mut end = previous.chars.len();
+    while end > 0 && matches!(previous.chars[end - 1], ',' | ':' | ';' | '.' | '!' | '?') {
+        end -= 1;
+    }
+    let Some(&closer) = previous.chars.get(end.saturating_sub(1)) else {
+        return false;
+    };
+    let Some(opener) = matching_group_open(closer) else {
+        return false;
+    };
+
+    let mut nesting = 1usize;
+    let mut contains_ascii = false;
+    for token_index in (0..=previous_index).rev() {
+        let Token::Word(word) = &tokens[token_index] else {
+            if matches!(tokens[token_index], Token::Space(_) | Token::Mode(_)) {
+                continue;
+            }
+            return false;
+        };
+        let word_end = if token_index == previous_index {
+            end - 1
+        } else {
+            word.chars.len()
+        };
+        for &ch in word.chars[..word_end].iter().rev() {
+            if ch == closer {
+                nesting += 1;
+            } else if ch == opener {
+                nesting -= 1;
+                if nesting == 0 {
+                    return contains_ascii;
+                }
+            } else if ch.is_ascii_alphabetic() {
+                contains_ascii = true;
+            }
+        }
+    }
+    false
+}
+
+/// Rule 34's closing enclosure ends the enclosed Roman item without a Roman
+/// terminator.  If the next whitespace-delimited item starts directly with
+/// Roman text, rule 29 opens a new Roman section.  A following enclosure is
+/// excluded so the official rule-32 list `(a), (e), (i)` remains one Roman
+/// section and may use UEB grade-1 indicators for its single letters.
+fn starts_new_roman_section_after_closed_enclosure(tokens: &[Token<'_>], index: usize) -> bool {
+    if !is_separated_from_previous_word(tokens, index) {
+        return false;
+    }
+    let Some(current) = current_word_at_or_after(tokens, index) else {
+        return false;
+    };
+
+    let current_starts_roman = current
+        .chars
+        .iter()
+        .copied()
+        .find(|ch| !matches!(ch, '‘' | '“' | '\'' | '"'))
+        .is_some_and(|ch| ch.is_ascii_alphabetic());
+    if !current_starts_roman {
+        return false;
+    }
+    closed_enclosure_before_contains_ascii(tokens, index)
+}
+
+fn enter_roman_before_ueb_prefix(
+    tokens: &[Token<'_>],
+    prefix_index: usize,
+    event: ModeEvent,
+    state: &mut EncoderState,
+    result: &mut Vec<u8>,
+) {
+    let is_ueb_prefix = matches!(
+        event,
+        ModeEvent::Grade1Indicator | ModeEvent::CapsWord | ModeEvent::CapsPassageStart
+    );
+    let roman_word =
+        roman_word_after_prefix(tokens, prefix_index).filter(|word| word.meta.starts_with_ascii);
+
+    if is_ueb_prefix
+        && state.english_indicator
+        && !state.is_english
+        && let Some(word) = roman_word
+    {
+        // Use the shared rule-29/35 transition so a capital word after a number
+        // in the same roman section (`KBS 1 TV`) resumes without a second
+        // roman indicator, while a genuinely new section receives one.
+        roman_mode::enter_english_if_starting(
+            state,
+            &word.chars,
+            word.meta.has_ascii_alphabetic,
+            result,
+        );
     }
 }
 
@@ -170,7 +457,35 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
                     result.push(0);
                 }
             }
-            Token::Mode(event) => emit_mode_event(*event, &mut ir.state, &mut result),
+            Token::Mode(event) => {
+                let starts_new_roman_section =
+                    starts_new_roman_section_after_closed_enclosure(&ir.tokens, idx);
+                let event = if *event == ModeEvent::EnterEnglishContinue && starts_new_roman_section
+                {
+                    ModeEvent::EnterEnglish
+                } else {
+                    *event
+                };
+                if starts_new_roman_section {
+                    ir.state.needs_english_continuation = false;
+                }
+                let opens_fresh_roman_section = !ir.state.is_english
+                    && !ir.state.roman_number_chain
+                    && !ir.state.needs_english_continuation
+                    && matches!(
+                        event,
+                        ModeEvent::EnterEnglish
+                            | ModeEvent::Grade1Indicator
+                            | ModeEvent::CapsWord
+                            | ModeEvent::CapsPassageStart
+                    );
+                if opens_fresh_roman_section {
+                    ir.state.roman_section_is_english_context =
+                        roman_section_has_english_phrase_context(&ir.tokens, idx);
+                }
+                enter_roman_before_ueb_prefix(&ir.tokens, idx, event, &mut ir.state, &mut result);
+                emit_mode_event(event, &mut ir.state, &mut result);
+            }
             Token::Fraction(frac) => {
                 if let Some(ref w) = frac.whole {
                     result.extend(fraction::encode_mixed_fraction(
@@ -238,10 +553,230 @@ fn word_context<'a>(word_texts: &'a [&'a str], word_index: usize) -> WordContext
     }
 }
 
+/// Whether the next word token is separated from the current word by print
+/// whitespace. Token rewrites can insert mode/pre-encoded tokens between the
+/// two words, so inspect the whole intervening token span rather than only the
+/// immediate successor.
+fn has_space_before_next_word(tokens: &[Token<'_>], token_index: usize) -> bool {
+    let mut saw_space = false;
+    for token in tokens.iter().skip(token_index + 1) {
+        match token {
+            Token::Space(_) => saw_space = true,
+            Token::Word(_) => return saw_space,
+            _ => {}
+        }
+    }
+    false
+}
+
+fn matching_group_close(ch: char) -> Option<char> {
+    match ch {
+        '(' => Some(')'),
+        '[' => Some(']'),
+        '{' => Some('}'),
+        '〈' => Some('〉'),
+        '《' => Some('》'),
+        '「' => Some('」'),
+        '『' => Some('』'),
+        '【' => Some('】'),
+        '〔' => Some('〕'),
+        '〖' => Some('〗'),
+        '〘' => Some('〙'),
+        '〚' => Some('〛'),
+        '‘' => Some('’'),
+        '“' => Some('”'),
+        _ => None,
+    }
+}
+
+/// Rule 33's printed `Umm ...이라고` example treats a whitespace-separated
+/// ellipsis as the punctuation ending the Roman run, so the preceding Roman
+/// terminator is still omitted. Accept the Unicode ellipsis forms and the
+/// three-full-stop print spelling as the same punctuation grammar.
+fn word_starts_with_rule_33_ellipsis(word: &WordToken<'_>) -> bool {
+    matches!(word.chars.first(), Some('…' | '⋯')) || word.chars.starts_with(&['.', '.', '.'])
+}
+
+/// Korean rules 29, 32, and 35: print whitespace around a colon does not split
+/// a Roman section when the colon is followed by another Roman/number item.
+/// The tokenizer represents `Alpha : Beta` as three words, so prove the item
+/// after the standalone colon before treating the colon as UEB punctuation.
+fn spaced_colon_connects_roman_items(tokens: &[Token<'_>], colon_index: usize) -> bool {
+    let Some(Token::Word(colon)) = tokens.get(colon_index) else {
+        return false;
+    };
+    if colon.chars.as_slice() != [':'] {
+        return false;
+    }
+
+    tokens
+        .iter()
+        .skip(colon_index + 1)
+        .find_map(|token| match token {
+            Token::Space(_) | Token::Mode(_) => None,
+            Token::Word(word) => Some(
+                word.chars
+                    .iter()
+                    .find(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(**ch))
+                    .is_some_and(|ch| ch.is_ascii_alphanumeric()),
+            ),
+            _ => Some(false),
+        })
+        .unwrap_or(false)
+}
+
+/// UEB 3.1.1 and Korean rule 29 keep an ampersand inside a spaced Roman name
+/// or phrase (`Marks & Spencer`, `Scan & Solution`).  The tokenizer makes the
+/// ampersand its own word, so prove a Roman word on both sides before allowing
+/// it to bridge the current Roman section.  A right-hand word may be attached
+/// directly to the sign (`Mining &Development`).
+fn spaced_ampersand_connects_roman_words(tokens: &[Token<'_>], ampersand_index: usize) -> bool {
+    let Some(Token::Word(ampersand)) = tokens.get(ampersand_index) else {
+        return false;
+    };
+    if ampersand.chars.first() != Some(&'&') {
+        return false;
+    }
+
+    let left_is_roman = tokens[..ampersand_index]
+        .iter()
+        .rev()
+        .find_map(|token| match token {
+            Token::Space(_) | Token::Mode(_) => None,
+            Token::Word(word) => Some(
+                word.chars
+                    .iter()
+                    .rev()
+                    .find(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(**ch))
+                    .is_some_and(|ch| ch.is_ascii_alphanumeric()),
+            ),
+            _ => Some(false),
+        })
+        .unwrap_or(false);
+    if !left_is_roman {
+        return false;
+    }
+
+    if ampersand
+        .chars
+        .get(1)
+        .is_some_and(|ch| ch.is_ascii_alphabetic())
+    {
+        return true;
+    }
+    if ampersand.chars.len() != 1 {
+        return false;
+    }
+
+    tokens
+        .iter()
+        .skip(ampersand_index + 1)
+        .find_map(|token| match token {
+            Token::Space(_) | Token::Mode(_) => None,
+            Token::Word(word) => Some(
+                word.chars
+                    .iter()
+                    .find(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(**ch))
+                    .is_some_and(|ch| ch.is_ascii_alphabetic()),
+            ),
+            _ => Some(false),
+        })
+        .unwrap_or(false)
+}
+
+/// Rule 29 keeps consecutive Roman/number text in one section even across
+/// print spaces. A separated enclosure continues that section only when the
+/// *complete* enclosure is Roman/number text. This distinguishes
+/// `GRI (Global Reporting Initiative)` from `Poison (모래성)` and from a mixed
+/// gloss such as `TVB (Television - 전시광파유한공사)`.
+fn separated_symbol_continues_roman_section(tokens: &[Token<'_>], token_index: usize) -> bool {
+    let next_word = tokens
+        .iter()
+        .enumerate()
+        .skip(token_index + 1)
+        .find_map(|(index, token)| match token {
+            Token::Word(word) => Some((index, word)),
+            _ => None,
+        });
+    let Some((next_word_index, next_word)) = next_word else {
+        return false;
+    };
+
+    if next_word.chars.first() == Some(&'&')
+        && spaced_ampersand_connects_roman_words(tokens, next_word_index)
+    {
+        return true;
+    }
+
+    if word_starts_with_rule_33_ellipsis(next_word) {
+        return true;
+    }
+
+    if spaced_colon_connects_roman_items(tokens, next_word_index) {
+        return true;
+    }
+
+    // Rule 35: punctuation may introduce a numeric continuation (`'23`).
+    if next_word
+        .chars
+        .iter()
+        .find(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(**ch))
+        .is_some_and(char::is_ascii_digit)
+    {
+        return true;
+    }
+
+    let Some(opening) = next_word.chars.first().copied() else {
+        return false;
+    };
+    let Some(closing) = matching_group_close(opening) else {
+        return false;
+    };
+
+    let mut depth = 0usize;
+    let mut saw_roman_or_number = false;
+    let mut saw_korean = false;
+    for token in tokens.iter().skip(token_index + 1) {
+        match token {
+            Token::Space(_) | Token::Mode(_) => continue,
+            Token::Word(word) => {
+                for ch in word.chars.iter().copied() {
+                    if ch == opening {
+                        depth += 1;
+                        continue;
+                    }
+                    if ch == closing {
+                        // The first scanned character is the matching opener,
+                        // and the function returns as soon as that level closes.
+                        depth -= 1;
+                        if depth == 0 {
+                            return saw_roman_or_number && !saw_korean;
+                        }
+                        continue;
+                    }
+                    if depth > 0 {
+                        saw_roman_or_number |= ch.is_ascii_alphanumeric();
+                        saw_korean |= crate::utils::is_korean_char(ch);
+                    }
+                }
+            }
+            _ => return false,
+        }
+    }
+    false
+}
+
 fn emit_mode_event(event: ModeEvent, state: &mut EncoderState, result: &mut Vec<u8>) {
     match event {
         ModeEvent::EnterEnglish => {
-            result.push(52);
+            // Korean rule 29 uses one Roman section for consecutive Roman
+            // text. Token-level capitalization can discover a later word and
+            // request entry again after the character emitter has already kept
+            // that section open; make the explicit event idempotent at the
+            // authoritative emit-state boundary.
+            if !state.is_english {
+                result.push(52);
+            }
             state.is_english = true;
             state.needs_english_continuation = false;
             state.roman_number_chain = false;
@@ -284,6 +819,7 @@ fn apply_core_encoding_rules(
     is_all_uppercase: bool,
     has_korean_char: bool,
     ascii_starts_at_beginning: bool,
+    roman_section_continues_from_previous_word: bool,
     state: &mut EncoderState,
     skip_count: &mut usize,
     remaining_words: &[&str],
@@ -299,6 +835,7 @@ fn apply_core_encoding_rules(
         has_korean_char,
         is_all_uppercase,
         ascii_starts_at_beginning,
+        roman_section_continues_from_previous_word,
         skip_count,
         state,
         result,
@@ -315,12 +852,13 @@ fn apply_inter_character_rules(
     is_all_uppercase: bool,
     has_korean_char: bool,
     ascii_starts_at_beginning: bool,
+    roman_section_continues_from_previous_word: bool,
     state: &mut EncoderState,
     skip_count: &mut usize,
     remaining_words: &[&str],
     prev_word: &str,
     result: &mut Vec<u8>,
-) -> Result<(), String> {
+) -> Result<crate::rules::traits::RuleResult, String> {
     let mut ctx = RuleContext {
         word_chars,
         index,
@@ -330,12 +868,12 @@ fn apply_inter_character_rules(
         has_korean_char,
         is_all_uppercase,
         ascii_starts_at_beginning,
+        roman_section_continues_from_previous_word,
         skip_count,
         state,
         result,
     };
-    engine.apply_phase(Phase::InterCharacter, &mut ctx)?;
-    Ok(())
+    engine.apply_phase(Phase::InterCharacter, &mut ctx)
 }
 
 fn emit_word(
@@ -349,6 +887,7 @@ fn emit_word(
 ) -> Result<(), String> {
     let prev_word = context.prev_word;
     let remaining_words = context.remaining_words;
+    let next_word_is_separated = has_space_before_next_word(all_tokens, token_index);
     // 다음 비공백 토큰이 한글표(⠸⠷)이면 영어 모드를 끊지 않는다 (제39항).
     let next_is_hangul_wrap = next_non_space_is_hangul_wrap_start(all_tokens, token_index);
     // 직전 비공백 토큰이 한글 종료표(⠸⠾)이면 이 토큰의 시작 문장부호도
@@ -366,13 +905,40 @@ fn emit_word(
         let has_ascii_alphabetic = meta.has_ascii_alphabetic;
 
         if word_chars.first().is_some_and(|ch| ch.is_ascii_digit())
-            && let Some((numeric, unit, consumed)) = parse_numeric_ascii_unit_prefix(word_chars)
+            && !state.is_english
+            && let Some((numeric, mut unit, consumed)) = parse_numeric_ascii_unit_prefix(word_chars)
             && consumed == word_chars.len()
         {
+            let continues_roman_section = next_word_starts_roman_or_number(remaining_words);
+            if continues_roman_section && unit.last() == Some(&crate::unicode::decode_unicode('⠲'))
+            {
+                unit.pop();
+            }
             let mut encoded = crate::encode(&numeric)?;
             encoded.extend(unit);
             result.extend(encoded);
+            state.is_english = continues_roman_section;
+            state.needs_english_continuation = false;
             return Ok(());
+        }
+
+        if starts_new_roman_section_after_closed_enclosure(all_tokens, token_index) {
+            state.needs_english_continuation = false;
+        }
+
+        // Korean Rule 35 keeps a Roman-led alphanumeric chain in the same
+        // Roman section across whitespace (`MP4 Player`).  While the final
+        // digit temporarily leaves `is_english` false, `roman_number_chain`
+        // records that the next Roman word is a continuation rather than a new
+        // Rule-37 entry word.
+        let roman_section_continues_from_previous_word =
+            state.is_english || state.roman_number_chain;
+        let starts_fresh_roman_section = !roman_section_continues_from_previous_word
+            && !state.needs_english_continuation
+            && has_ascii_alphabetic;
+        if starts_fresh_roman_section {
+            state.roman_section_is_english_context =
+                roman_section_has_english_phrase_context(all_tokens, token_index);
         }
 
         // English entry (제28/35/39항) — 로마자표/연속표 emit + 영어 모드 전환.
@@ -401,6 +967,10 @@ fn emit_word(
                     CharType::Number(_) => {
                         roman_mode::exit_english_for_roman_number_chain(state);
                     }
+                    CharType::MathSymbol('+')
+                        if crate::rules::token_rules::math_expression::is_roman_plus_identifier(
+                            word_chars,
+                        ) => {}
                     CharType::Symbol(sym) => {
                         // 한글 wrap 직후의 첫 디지털 표기 기호(. / @ # _ : -)는
                         // 영어 컨텍스트의 연속으로 본다. 예) "www.대통령.kr"에서
@@ -424,9 +994,12 @@ fn emit_word(
 
                         if prev_wrap_eng_continuation
                             || next_wrap_eng_continuation
+                            || (*sym == '&'
+                                && spaced_ampersand_connects_roman_words(all_tokens, token_index))
                             || english_logic::should_render_symbol_as_english(
                                 state.english_indicator,
                                 state.is_english,
+                                state.doc_summary.is_english_majority,
                                 &state.parenthesis_stack,
                                 *sym,
                                 word_chars,
@@ -448,7 +1021,7 @@ fn emit_word(
                         } else {
                             roman_mode::exit_english(
                                 state,
-                                english_logic::should_request_continuation(*sym),
+                                *sym != ')' && english_logic::should_request_continuation(*sym),
                             );
                         }
                     }
@@ -463,12 +1036,35 @@ fn emit_word(
             if state.roman_number_chain && !state.is_english {
                 match &char_type {
                     CharType::English(_) => {
-                        // PDF — roman_number_chain 안 digit 뒤 letter는 영어 연속 표지(⠰)를
-                        // 부착해 letter임을 명시한다 (digit과 혼동 방지).
-                        result.push(48);
+                        // Korean rule 35 keeps adjacent Roman letters and digits in
+                        // one Roman section. Under UEB 6.5.2, lowercase a-j still
+                        // need grade 1 after a digit because their cells are numeric;
+                        // a capital indicator or a lowercase k-z cell is sufficient
+                        // for every other Roman letter class.
+                        if matches!(*c, 'a'..='j') {
+                            result.push(crate::rules::korean::rule_29::ENGLISH_CONTINUATION);
+                        }
                         roman_mode::resume_english_from_roman_number_chain(state);
                     }
                     CharType::Number(_) => {}
+                    CharType::MathSymbol('+')
+                        if crate::rules::token_rules::math_expression::is_roman_plus_identifier(
+                            word_chars,
+                        ) =>
+                    {
+                        roman_mode::resume_english_from_roman_number_chain(state);
+                    }
+                    CharType::Symbol(symbol)
+                        if crate::rules::korean::rule_69::is_compatibility_unit_presentation(
+                            *symbol,
+                        ) || (*symbol == '-'
+                            && word_chars
+                                .get(i + 1)
+                                .is_some_and(|next| next.is_ascii_alphanumeric()))
+                            || (*symbol == '*'
+                                && english_logic::is_attached_ascii_roman_asterisk(
+                                    word_chars, i,
+                                )) => {}
                     _ => {
                         state.roman_number_chain = false;
                     }
@@ -494,6 +1090,7 @@ fn emit_word(
                 is_all_uppercase,
                 has_korean_char,
                 ascii_starts_at_beginning,
+                roman_section_continues_from_previous_word,
                 state,
                 &mut skip_count,
                 remaining_words,
@@ -522,6 +1119,7 @@ fn emit_word(
                     is_all_uppercase,
                     has_korean_char,
                     ascii_starts_at_beginning,
+                    roman_section_continues_from_previous_word,
                     state,
                     &mut skip_count,
                     remaining_words,
@@ -565,8 +1163,13 @@ fn emit_word(
                     || crate::symbol_shortcut::is_symbol_char(ch)
                     || crate::utils::is_korean_char(ch))
             });
+            let starts_with_roman_letter = next_word
+                .chars()
+                .find(|ch| ch.is_ascii_alphabetic() || crate::utils::is_korean_char(*ch))
+                .is_some_and(|ch| ch.is_ascii_alphabetic());
             let is_single_letter_word = ascii_letters.len() == 1
                 && !next_word.chars().any(|ch| ch.is_ascii_digit())
+                && starts_with_roman_letter
                 && !has_invalid_symbol;
 
             if is_single_letter_word
@@ -578,7 +1181,22 @@ fn emit_word(
                     match next_type {
                         CharType::English(_) | CharType::Number(_) => {}
                         CharType::Symbol(sym) => {
-                            if state.english_indicator
+                            let separated_continuation = next_word_is_separated
+                                && separated_symbol_continues_roman_section(
+                                    all_tokens,
+                                    token_index,
+                                );
+                            // Rule 33/34 terminator omission applies when the
+                            // punctuation is attached to the Roman run. If the
+                            // print has whitespace first (`Poison (모래성)`),
+                            // Rule 29 closes the Roman run before that space.
+                            if next_word_is_separated && !separated_continuation {
+                                result.push(50);
+                                roman_mode::exit_english(state, false);
+                            } else if separated_continuation && sym == '&' {
+                                // A standalone ampersand joining Roman words is
+                                // itself part of the current Roman section.
+                            } else if state.english_indicator
                                 && state.is_english
                                 && english_logic::is_english_symbol(sym)
                             {
@@ -698,6 +1316,15 @@ mod tests {
         engine
     }
 
+    fn word_token(text: &'static str) -> Token<'static> {
+        let chars = text.chars().collect::<Vec<_>>();
+        Token::Word(WordToken {
+            text: Cow::Borrowed(text),
+            chars: chars.clone(),
+            meta: super::super::token::WordMeta::from_chars(&chars),
+        })
+    }
+
     /// Helper: round-trip test via emit(parse(text)) == encode(text)
     fn assert_round_trip(text: &str) {
         let mut ir = DocumentIR::parse(text, english_indicator(text));
@@ -715,6 +1342,273 @@ mod tests {
             "round-trip mismatch for {:?}\n  emit:   {:?}\n  encode: {:?}",
             text, emitted, expected
         );
+    }
+
+    #[rstest::rstest]
+    #[case::capitalized_parenthetical("논문(Frontiers in Drug Delivery)에", "Frontiers", true)]
+    #[case::capitalized_unenclosed("Nuclear Week in Parliament에 참석했다.", "Nuclear", true)]
+    #[case::lowercase_enclosed("제목(plain words in context)이다.", "plain", true)]
+    #[case::rule_37_metalinguistic_list("be, his, was, were의 약자를 바르게 쓰시오.", "be,", false)]
+    #[case::single_roman_annotation("논문(Cell)이 발표됐다.", "논문(Cell)이", false)]
+    #[case::numeric_word_before_phrase("123 Alpha Beta", "123", true)]
+    #[case::numeric_word_inside_phrase("Alpha 123 Beta", "Alpha", true)]
+    #[case::korean_word_ends_phrase("Alpha 한국 Beta", "Alpha", false)]
+    fn recognizes_structural_english_phrase_context(
+        #[case] input: &str,
+        #[case] first_roman_word: &str,
+        #[case] expected: bool,
+    ) {
+        let ir = DocumentIR::parse(input, true);
+        let start_index = ir
+            .tokens
+            .iter()
+            .position(
+                |token| matches!(token, Token::Word(word) if word.text.contains(first_roman_word)),
+            )
+            .expect("test phrase must have a first Roman word");
+
+        assert_eq!(
+            roman_section_has_english_phrase_context(&ir.tokens, start_index),
+            expected
+        );
+    }
+
+    #[test]
+    fn english_phrase_scan_handles_non_text_boundaries() {
+        let tokens = vec![
+            word_token("Alpha"),
+            Token::Space(SpaceKind::Regular),
+            word_token("Beta"),
+            Token::PreEncoded(vec![1]),
+        ];
+        let leading_boundary = vec![
+            Token::PreEncoded(vec![1]),
+            word_token("Alpha"),
+            Token::Space(SpaceKind::Regular),
+            word_token("Beta"),
+        ];
+
+        assert!(roman_section_has_english_phrase_context(&tokens, 0));
+        assert!(roman_section_has_english_phrase_context(
+            &leading_boundary,
+            0
+        ));
+    }
+
+    #[test]
+    fn previous_word_separation_scan_crosses_mode_markers() {
+        let tokens = vec![
+            word_token("Alpha"),
+            Token::Space(SpaceKind::Regular),
+            Token::Mode(ModeEvent::CapsWord),
+        ];
+
+        assert!(is_separated_from_previous_word(&tokens, tokens.len()));
+        assert!(!is_separated_from_previous_word(&tokens, 1));
+    }
+
+    #[test]
+    fn current_word_lookup_handles_hard_boundaries_and_end_of_stream() {
+        assert!(current_word_at_or_after(&[Token::PreEncoded(vec![1])], 0).is_none());
+        assert!(current_word_at_or_after(&[], 0).is_none());
+    }
+
+    #[rstest::rstest]
+    #[case::parenthesis('(', ')')]
+    #[case::square_bracket('[', ']')]
+    #[case::curly_brace('{', '}')]
+    #[case::single_quote('‘', '’')]
+    #[case::double_quote('“', '”')]
+    #[case::single_angle('〈', '〉')]
+    #[case::double_angle('《', '》')]
+    #[case::corner_bracket('「', '」')]
+    #[case::white_corner_bracket('『', '』')]
+    #[case::lenticular_bracket('【', '】')]
+    #[case::tortoise_shell_bracket('〔', '〕')]
+    #[case::white_lenticular_bracket('〖', '〗')]
+    #[case::white_tortoise_shell_bracket('〘', '〙')]
+    #[case::white_square_bracket('〚', '〛')]
+    fn enclosure_delimiter_pairs_are_bidirectional(#[case] opening: char, #[case] closing: char) {
+        assert_eq!(matching_group_open(closing), Some(opening));
+        assert_eq!(matching_group_close(opening), Some(closing));
+    }
+
+    #[rstest::rstest]
+    #[case::no_previous_word(None, false)]
+    #[case::empty_previous(Some(""), false)]
+    #[case::punctuation_only_previous(Some("..."), false)]
+    #[case::nested_enclosure(Some("((A))"), true)]
+    #[case::missing_opener(Some("A)"), false)]
+    fn closed_enclosure_scans_only_a_complete_ascii_group(
+        #[case] previous: Option<&'static str>,
+        #[case] expected: bool,
+    ) {
+        let tokens = previous.map_or_else(
+            || vec![Token::Space(SpaceKind::Regular)],
+            |text| vec![word_token(text)],
+        );
+
+        assert_eq!(
+            closed_enclosure_before_contains_ascii(&tokens, tokens.len()),
+            expected
+        );
+    }
+
+    #[test]
+    fn new_section_probe_handles_a_mode_prefix_without_a_current_word() {
+        let tokens = vec![
+            word_token("(A)"),
+            Token::Space(SpaceKind::Regular),
+            Token::Mode(ModeEvent::CapsWord),
+        ];
+
+        assert!(!starts_new_roman_section_after_closed_enclosure(&tokens, 2));
+    }
+
+    #[test]
+    fn spaced_colon_rejects_non_words_and_non_textual_right_boundaries() {
+        assert!(!spaced_colon_connects_roman_items(
+            &[Token::Space(SpaceKind::Regular)],
+            0
+        ));
+        let tokens = vec![
+            word_token(":"),
+            Token::Space(SpaceKind::Regular),
+            Token::PreEncoded(vec![1]),
+        ];
+        assert!(!spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[rstest::rstest]
+    #[case::non_word_at_index("non_word")]
+    #[case::non_textual_left_boundary("non_text_left")]
+    #[case::non_roman_left_word("korean_left")]
+    #[case::malformed_attached_suffix("long_ampersand")]
+    #[case::non_textual_right_boundary("non_text_right")]
+    fn spaced_ampersand_rejects_incomplete_roman_neighbors(#[case] scenario: &str) {
+        let (tokens, index) = match scenario {
+            "non_word" => (vec![Token::Space(SpaceKind::Regular)], 0),
+            "non_text_left" => (
+                vec![
+                    Token::PreEncoded(vec![1]),
+                    Token::Space(SpaceKind::Regular),
+                    word_token("&"),
+                ],
+                2,
+            ),
+            "korean_left" => (
+                vec![
+                    word_token("한국"),
+                    Token::Space(SpaceKind::Regular),
+                    word_token("&"),
+                ],
+                2,
+            ),
+            "long_ampersand" => (
+                vec![
+                    word_token("Alpha"),
+                    Token::Space(SpaceKind::Regular),
+                    word_token("&?"),
+                ],
+                2,
+            ),
+            "non_text_right" => (
+                vec![
+                    word_token("Alpha"),
+                    Token::Space(SpaceKind::Regular),
+                    word_token("&"),
+                    Token::Space(SpaceKind::Regular),
+                    Token::PreEncoded(vec![1]),
+                ],
+                2,
+            ),
+            _ => unreachable!("unknown fixture"),
+        };
+
+        assert!(!spaced_ampersand_connects_roman_words(&tokens, index));
+    }
+
+    #[rstest::rstest]
+    #[case::no_following_word("no_next", false)]
+    #[case::empty_following_word("empty", false)]
+    #[case::nested_complete_group("nested", true)]
+    #[case::non_textual_group_body("non_text", false)]
+    #[case::unclosed_group("unclosed", false)]
+    fn separated_symbol_requires_a_complete_roman_group(
+        #[case] scenario: &str,
+        #[case] expected: bool,
+    ) {
+        let tokens = match scenario {
+            "no_next" => vec![word_token("Alpha")],
+            "empty" => vec![
+                word_token("Alpha"),
+                Token::Space(SpaceKind::Regular),
+                word_token(""),
+            ],
+            "nested" => vec![
+                word_token("Alpha"),
+                Token::Space(SpaceKind::Regular),
+                word_token("((Beta))"),
+            ],
+            "non_text" => vec![
+                word_token("Alpha"),
+                Token::Space(SpaceKind::Regular),
+                word_token("("),
+                Token::PreEncoded(vec![1]),
+            ],
+            "unclosed" => vec![
+                word_token("Alpha"),
+                Token::Space(SpaceKind::Regular),
+                word_token("(Beta"),
+            ],
+            _ => unreachable!("unknown fixture"),
+        };
+
+        assert_eq!(
+            separated_symbol_continues_roman_section(&tokens, 0),
+            expected
+        );
+    }
+
+    #[test]
+    fn slash_forces_a_terminator_before_leaving_roman_mode() {
+        let mut ir = DocumentIR::parse("ABC/한글", true);
+        let mut engine = make_char_engine();
+
+        let output = emit(&mut ir, &mut engine).expect("mixed Roman/Korean word must encode");
+
+        assert!(output.contains(&crate::unicode::decode_unicode('⠲')));
+        assert!(!ir.state.is_english);
+    }
+
+    #[test]
+    fn forced_symbol_between_adjacent_word_tokens_terminates_roman_mode() {
+        let tokens = vec![word_token("ABC"), word_token("/")];
+        let Token::Word(word) = &tokens[0] else {
+            unreachable!("fixture begins with a word")
+        };
+        let remaining_words = ["/"];
+        let mut state = EncoderState::new(true);
+        state.is_english = true;
+        let mut engine = make_char_engine();
+        let mut result = Vec::new();
+
+        emit_word(
+            word,
+            0,
+            &mut state,
+            &mut engine,
+            &tokens,
+            WordContext {
+                prev_word: "",
+                remaining_words: &remaining_words,
+            },
+            &mut result,
+        )
+        .expect("Roman word must encode");
+
+        assert_eq!(result.last(), Some(&50));
+        assert!(!state.is_english);
     }
 
     // ── Step 1-3: Basic token tests ──
@@ -767,6 +1661,292 @@ mod tests {
         let mut engine = make_char_engine();
         let out = emit(&mut ir, &mut engine).unwrap();
         assert_eq!(out, vec![52, 48, 32, 32, 32, 32, 32, 32, 4, 48]);
+    }
+
+    /// Korean rules 28 appendix and 29: in Korean prose the roman indicator
+    /// precedes the UEB capital-word indicator (`0,,KTX`, not `,,0KTX`).
+    #[test]
+    fn roman_indicator_precedes_capital_prefix_without_explicit_entry_token() {
+        let chars = "KTX".chars().collect::<Vec<_>>();
+        let mut ir = DocumentIR {
+            tokens: vec![
+                Token::Mode(ModeEvent::CapsWord),
+                Token::Word(WordToken {
+                    text: Cow::Borrowed("KTX"),
+                    chars: chars.clone(),
+                    meta: super::super::token::WordMeta::from_chars(&chars),
+                }),
+            ],
+            state: EncoderState::new(true),
+        };
+        let mut engine = make_char_engine();
+
+        let out = emit(&mut ir, &mut engine).unwrap();
+
+        assert!(out.starts_with(&[52, 32, 32]));
+    }
+
+    #[test]
+    fn explicit_roman_entry_is_not_duplicated_before_capital_prefix() {
+        let chars = "KTX".chars().collect::<Vec<_>>();
+        let mut ir = DocumentIR {
+            tokens: vec![
+                Token::Mode(ModeEvent::EnterEnglish),
+                Token::Mode(ModeEvent::CapsWord),
+                Token::Word(WordToken {
+                    text: Cow::Borrowed("KTX"),
+                    chars: chars.clone(),
+                    meta: super::super::token::WordMeta::from_chars(&chars),
+                }),
+            ],
+            state: EncoderState::new(true),
+        };
+        let mut engine = make_char_engine();
+
+        let out = emit(&mut ir, &mut engine).unwrap();
+
+        assert!(out.starts_with(&[52, 32, 32]));
+        assert_eq!(out.iter().filter(|byte| **byte == 52).count(), 1);
+    }
+
+    /// Korean rule 29: consecutive Roman text shares one Roman section. A
+    /// token-level rediscovery of capitalization must not emit a second entry
+    /// when the final character emitter is still in that section.
+    #[test]
+    fn repeated_explicit_roman_entry_is_idempotent_in_active_section() {
+        let new_chars = "NEW".chars().collect::<Vec<_>>();
+        let york_chars = "YORK".chars().collect::<Vec<_>>();
+        let mut ir = DocumentIR {
+            tokens: vec![
+                Token::Mode(ModeEvent::EnterEnglish),
+                Token::Mode(ModeEvent::CapsWord),
+                Token::Word(WordToken {
+                    text: Cow::Borrowed("NEW"),
+                    chars: new_chars.clone(),
+                    meta: super::super::token::WordMeta::from_chars(&new_chars),
+                }),
+                Token::Space(SpaceKind::Regular),
+                Token::Mode(ModeEvent::EnterEnglish),
+                Token::Mode(ModeEvent::CapsWord),
+                Token::Word(WordToken {
+                    text: Cow::Borrowed("YORK"),
+                    chars: york_chars.clone(),
+                    meta: super::super::token::WordMeta::from_chars(&york_chars),
+                }),
+            ],
+            state: EncoderState::new(true),
+        };
+        let mut engine = make_char_engine();
+
+        let out = emit(&mut ir, &mut engine).unwrap();
+
+        assert_eq!(out.iter().filter(|byte| **byte == 52).count(), 1);
+    }
+
+    /// Rules 29 and 33: whitespace closes the Roman run before a following
+    /// parenthetical; Rule 34's omission is only for an attached enclosure.
+    #[rstest::rstest]
+    #[case::ordinary_word("Poison (모래성)", "⠝⠲⠀")]
+    #[case::mixed_roman_korean_gloss("그룹 TVB (Television - 전시광파유한공사)", "⠃⠲⠀")]
+    #[case::roman_number_chain("8PM (최초)", "⠍⠲⠀")]
+    fn spaced_parenthetical_follows_a_closed_roman_run(
+        #[case] input: &str,
+        #[case] expected_boundary: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            actual.contains(expected_boundary),
+            "missing Rule 29 terminator at spaced boundary: {actual}"
+        );
+    }
+
+    /// Rules 29 and 34: an enclosure closes its own Roman item without a
+    /// terminator, but a following unenclosed Roman item starts a new section.
+    #[rstest::rstest]
+    #[case::capitalized_after_comma("가는 설명(ABC), Next 나다", "⠠⠴⠐⠀⠴⠠⠝")]
+    #[case::all_caps_after_parenthesis("가는 설명(ABC) XYZ 나다", "⠠⠴⠀⠴⠠⠠⠭")]
+    #[case::quoted_title_after_parenthesis("가는 설명(ABC) ‘Title’ 나다", "⠠⠴⠀⠠⠦⠴⠠⠞")]
+    #[case::multiword_parenthesis("가는 설명(Alpha Beta) XYZ 나다", "⠠⠴⠀⠴⠠⠠⠭")]
+    #[case::multiword_quote("가는 ‘Alpha Beta’, ‘Title’ 나다", "⠄⠐⠀⠠⠦⠴⠠⠞")]
+    #[case::mixed_quote("가는 ‘설명 ABC’, XYZ 나다", "⠴⠄⠐⠀⠴⠠⠠⠭")]
+    fn unenclosed_roman_after_closed_enclosure_starts_a_new_section(
+        #[case] input: &str,
+        #[case] expected_boundary: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            actual.contains(expected_boundary),
+            "missing new Rule-29 Roman section: {actual}"
+        );
+    }
+
+    /// Rule 32's official sequence keeps the successively enclosed single
+    /// letters in one Roman section; `e` still takes its UEB grade-1 marker.
+    #[test]
+    fn successive_enclosed_single_letters_remain_one_roman_section() {
+        let actual = crate::encode_to_unicode("모음에는 (a), (e), (i)가 있다.")
+            .expect("official Rule-32 example must encode");
+
+        assert_eq!(
+            actual
+                .chars()
+                .filter(|cell| *cell == crate::unicode::encode_unicode(52))
+                .count(),
+            1
+        );
+        assert!(actual.contains("⠐⠣⠰⠑⠐⠜"));
+    }
+
+    /// Rules 29, 34, and 35 keep a pure Roman enclosure or a following number
+    /// inside the active Roman section.
+    #[rstest::rstest]
+    #[case::pure_roman_expansion("기준 GRI (Global Reporting Initiative) Standards", "⠊⠲⠀")]
+    #[case::roman_parenthetical("노래 Back for More (with Anitta)", "⠍⠲⠀")]
+    #[case::number_continuation("대회 May Circuit '23에서", "⠞⠲⠀")]
+    #[case::ascii_ellipsis("머뭇거리며 Umm ...이라고 말했다", "⠍⠍⠲⠀")]
+    #[case::unicode_ellipsis("머뭇거리며 Umm …이라고 말했다", "⠍⠍⠲⠀")]
+    #[case::midline_ellipsis("머뭇거리며 Umm ⋯이라고 말했다", "⠍⠍⠲⠀")]
+    fn separated_roman_or_number_continuation_stays_in_the_section(
+        #[case] input: &str,
+        #[case] forbidden_boundary: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            !actual.contains(forbidden_boundary),
+            "Roman section closed too early: {actual}"
+        );
+    }
+
+    /// Korean rules 29, 32, and 35: a standalone print colon between Roman
+    /// items is UEB punctuation inside one Roman section, even when spaces
+    /// surround it.
+    #[rstest::rstest]
+    #[case::capitalized_words("가 Alpha : Beta 나")]
+    #[case::uppercase_and_number("가 URL : 393 나")]
+    #[case::mixed_case_and_number("가 Id : 7 나")]
+    fn spaced_colon_between_roman_items_remains_inside_section(#[case] input: &str) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            actual.contains("⠀⠒⠀"),
+            "colon was not rendered as UEB punctuation: {actual}"
+        );
+        assert!(
+            !actual.contains("⠲⠀⠐⠂⠀⠴"),
+            "colon split one Roman section: {actual}"
+        );
+    }
+
+    /// UEB 3.1.1 and Korean rule 29: a spaced ampersand connecting Roman words
+    /// neither closes the section before itself nor starts a new one after it.
+    #[rstest::rstest]
+    #[case::official_name("가 Marks & Spencer 나")]
+    #[case::technical_phrase("가 3D Scan & Solution 나")]
+    #[case::attached_right_word("가 EV Mining &Development 나")]
+    fn spaced_ampersand_bridges_one_roman_section(#[case] input: &str) {
+        let ir = DocumentIR::parse(input, true);
+        let ampersand_index = ir
+            .tokens
+            .iter()
+            .position(
+                |token| matches!(token, Token::Word(word) if word.chars.first() == Some(&'&')),
+            )
+            .expect("ampersand token");
+        assert!(
+            spaced_ampersand_connects_roman_words(&ir.tokens, ampersand_index),
+            "test input must contain a structurally Roman ampersand"
+        );
+
+        let actual = crate::encode_to_unicode(input).expect("Roman phrase must encode");
+        assert!(actual.contains("⠈⠯"), "ampersand missing: {actual}");
+        assert!(
+            !actual.contains("⠲⠀⠈⠯") && !actual.contains("⠈⠯⠀⠴"),
+            "ampersand split the Roman section: {actual}"
+        );
+    }
+
+    /// Rule 29: a Korean word containing one embedded Roman letter is not a
+    /// standalone one-letter Roman continuation.
+    #[rstest::rstest]
+    #[case::parenthesized_letter("KODEX 골드선물(H)", "⠭⠲⠀")]
+    #[case::korean_word_with_letter("ABB FIA 포뮬러E", "⠁⠲⠀")]
+    #[case::following_model_name("SUV 모델X", "⠧⠲⠀")]
+    fn korean_word_with_one_roman_letter_closes_the_previous_section(
+        #[case] input: &str,
+        #[case] expected_boundary: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            actual.contains(expected_boundary),
+            "missing Roman terminator before Korean word: {actual}"
+        );
+    }
+
+    /// Rule 29: a separated one-letter Roman name remains part of the same
+    /// Roman section when it starts the next print word. A directly attached
+    /// Korean suffix or gloss does not change that Roman-first boundary.
+    #[rstest::rstest]
+    #[case::korean_particle("Global X가")]
+    #[case::korean_classifier("WBC B조")]
+    #[case::korean_gloss("DAY6 Young K(영케이)")]
+    fn roman_initial_single_letter_with_korean_suffix_continues_section(#[case] input: &str) {
+        let actual = crate::encode_to_unicode(input).expect("input must encode");
+        assert!(
+            actual.contains("⠀⠰"),
+            "separated Roman initial did not continue the active section: {actual}"
+        );
+    }
+
+    /// Korean rule 35 PDF example: numbers do not split a roman section, so
+    /// the later capital word resumes without another roman indicator.
+    #[test]
+    fn capital_prefix_after_roman_number_chain_does_not_reenter_roman_mode() {
+        let out = encode("KBS 1 TV 좀 켜 주세요.").unwrap();
+
+        assert_eq!(out.iter().filter(|byte| **byte == 52).count(), 1);
+    }
+
+    /// UEB 5.6.1/6.5.1-6.5.2 through the rule-29/35 character route. `A` is only
+    /// the Roman-chain routing scaffold for the PDF's exact `3b`, `3B`, and `3m`
+    /// suffixes; those cases directly cover lowercase a-j grade 1, capitalization,
+    /// and unmarked lowercase k-z. Comparison starts immediately after the route's
+    /// single Roman indicator, so another occurrence cannot satisfy the assertion.
+    #[rstest::rstest]
+    #[case::braille4all("Braille4All", "⠠⠃⠗⠁⠊⠇⠇⠑⠼⠙⠠⠁⠇⠇")]
+    #[case::m4g("M4G", "⠠⠍⠼⠙⠠⠛")]
+    #[case::w1n("W1N", "⠠⠺⠼⠁⠠⠝")]
+    #[case::lower_a_to_j("A3b", "⠠⠁⠼⠉⠰⠃")]
+    #[case::uppercase("A3B", "⠠⠁⠼⠉⠠⠃")]
+    #[case::lower_k_to_z("A3m", "⠠⠁⠼⠉⠍")]
+    fn numeric_grade1_mode_continues_into_pdf_roman_examples(
+        #[case] surface: &str,
+        #[case] expected_ueb: &str,
+    ) {
+        let output = encode(&format!("가({surface})")).unwrap();
+        let expected_ueb = expected_ueb
+            .chars()
+            .map(crate::unicode::decode_unicode)
+            .collect::<Vec<_>>();
+        let roman_start = output
+            .iter()
+            .position(|cell| *cell == crate::rules::korean::rule_29::ROMAN_INDICATOR)
+            .expect("Korean wrapper must enter one Roman section")
+            + 1;
+
+        assert_eq!(
+            output.get(roman_start..roman_start + expected_ueb.len()),
+            Some(expected_ueb.as_slice())
+        );
+    }
+
+    /// UEB 6.5.2 full-encoder controls for the three Roman letter classes after
+    /// a digit: lowercase a-j needs grade 1, capitals use their capital indicator,
+    /// and lowercase k-z needs no additional indicator.
+    #[rstest::rstest]
+    #[case::lower_a_to_j("3b", "⠼⠉⠰⠃")]
+    #[case::uppercase("3B", "⠼⠉⠠⠃")]
+    #[case::lower_k_to_z("3m", "⠼⠉⠍")]
+    fn numeric_grade1_letter_class_pdf_controls(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
     }
 
     #[test]

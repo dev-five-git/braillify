@@ -79,6 +79,13 @@ fn is_punct_only(chars: &[char]) -> bool {
         .all(|c| !c.is_ascii_alphabetic() && !is_korean_char(*c) && !c.is_ascii_digit())
 }
 
+fn same_token_rule39_context_allowed(
+    is_english_majority: bool,
+    dot_delimited_domain_label: bool,
+) -> bool {
+    is_english_majority || dot_delimited_domain_label
+}
+
 /// 같은 토큰 내에서 좌측을 거슬러 처음 만나는 letter가 ASCII 영문인지.
 /// 한글을 먼저 만나거나, 영문도 한글도 없으면 false.
 fn same_token_left_is_english(left_chars: &[char]) -> bool {
@@ -267,6 +274,27 @@ fn count_script_words(tokens: &[Token<'_>]) -> (usize, usize) {
     (english_words, korean_words)
 }
 
+/// Rule 39 applies to a Roman-main sentence, not merely a Korean sentence that
+/// contains a long Roman citation. The first lexical script is a stable matrix-
+/// language signal: the PDF's Roman-main examples begin in Roman script, while
+/// its Korean domain-name example is handled by the same-token domain rule.
+fn document_begins_in_roman_script(tokens: &[Token<'_>]) -> bool {
+    tokens.iter().find_map(|token| {
+        let Token::Word(word) = token else {
+            return None;
+        };
+        word.chars.iter().find_map(|ch| {
+            if ch.is_ascii_alphabetic() {
+                Some(true)
+            } else if is_korean_char(*ch) {
+                Some(false)
+            } else {
+                None
+            }
+        })
+    }) == Some(true)
+}
+
 /// Compute all document-level English-Korean predicates once per encode call.
 pub fn compute_document_summary(tokens: &[Token<'_>]) -> DocumentSummary {
     let candidates = scan_english_context_candidates(tokens);
@@ -275,9 +303,11 @@ pub fn compute_document_summary(tokens: &[Token<'_>]) -> DocumentSummary {
     }
 
     let (english_words, korean_words) = count_script_words(tokens);
-    let is_english_majority = english_words >= korean_words.max(1);
+    let is_roman_main =
+        document_begins_in_roman_script(tokens) && english_words >= korean_words.max(1);
+    let is_english_majority = is_roman_main;
     let is_english_dominant =
-        english_words >= 10 && english_words >= korean_words.saturating_mul(5);
+        is_roman_main && english_words >= 10 && english_words >= korean_words.saturating_mul(5);
     let has_english_context_for_korean = candidates.has_same_token_context
         || (candidates.has_boundary_candidate && is_english_majority);
 
@@ -295,8 +325,9 @@ pub fn compute_document_summary(tokens: &[Token<'_>]) -> DocumentSummary {
 ///    예: "김치", "반찬)". 인접 word token이 모두 영어이면서 _문서 전체가 영어 다수_
 ///    일 때만 wrap. (한글 주도 문장에 영어가 끼인 경우는 wrap 대상 아님.)
 /// 2. **양쪽 토큰 내부** — segment의 양쪽이 같은 토큰 내 영어 letter로 둘러싸였다.
-///    예: "www.대통령.kr"의 "대통령". 양쪽이 영어 letter이면 wrap.
-///    (단일 단어 내부 패턴은 문서 비율과 무관하게 항상 적용한다.)
+///    문서가 영어 다수이면 wrap한다. 한국어 주도 문장에서는 제39항을 임의로
+///    확장하지 않고, 공식 예제 `www.대통령.kr`처럼 양쪽이 점으로 구분된 도메인
+///    label만 구조적으로 보존한다.
 ///
 /// 두 케이스가 _혼합_된 경우(한쪽은 token boundary, 다른 쪽은 same-token letter)는
 /// 영어 어절 + 한국어 조사/어미 결합(예: "be는")일 가능성이 높으므로 wrap하지 않는다.
@@ -317,7 +348,12 @@ fn segment_in_english_context_with_majority<'a>(
         return boundary_segment_wrap(tokens, token_index, is_english_majority);
     }
     if !left_at_boundary && !right_at_boundary {
-        return same_token_left_is_english(left_slice) && same_token_right_is_english(right_slice);
+        let has_roman_on_both_sides =
+            same_token_left_is_english(left_slice) && same_token_right_is_english(right_slice);
+        let dot_delimited_domain_label =
+            left_slice.last() == Some(&'.') && right_slice.first() == Some(&'.');
+        return has_roman_on_both_sides
+            && same_token_rule39_context_allowed(is_english_majority, dot_delimited_domain_label);
     }
     false
 }
@@ -510,6 +546,33 @@ mod tests {
         // The "123" word's first_script_char Some('1') hits `_ => {}` (not counted).
     }
 
+    #[rstest::rstest]
+    #[case::roman_main("2024 What is 김치 in English?", true)]
+    #[case::korean_main_with_long_roman_citation(
+        "익수다의 주요 ADC 프로그램은 IKS012(Anti-Folate Receptor Alpha (FRa)) ADC와 함께한다.",
+        false
+    )]
+    #[case::korean_domain_exception("대통령실 주소는 www.대통령.kr이다.", false)]
+    fn detects_the_matrix_script_from_the_first_lexical_script(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+        assert_eq!(document_begins_in_roman_script(&ir.tokens), expected);
+    }
+
+    #[test]
+    fn korean_main_sentence_does_not_become_rule_39_from_a_long_roman_citation() {
+        let input =
+            "익수다의 주요 ADC 프로그램은 IKS012(Anti-Folate Receptor Alpha (FRa)) ADC와 함께한다.";
+        let ir = crate::rules::token::DocumentIR::parse(input, true);
+
+        let summary = compute_document_summary(&ir.tokens);
+
+        assert!(!summary.is_english_majority);
+        assert!(!summary.is_english_dominant);
+    }
+
     /// english_dominant_korean_wrap:311 — `(true, true) =>` arm of the boundary
     /// match. Korean segment fills the whole word (both slices empty/punct-only),
     /// AND prev/next tokens are English-only words. is_english_majority required true.
@@ -534,22 +597,47 @@ mod tests {
         );
     }
 
-    /// english_dominant_korean_wrap:316 — `(false, false) =>` arm of the boundary
-    /// match. Korean segment is sandwiched within same-token English letters.
-    /// Both `left_at_boundary` and `right_at_boundary` are false because the
-    /// surrounding chars include English letters.
+    /// Rule 39's same-token branch still requires a Roman-main document, except
+    /// for the PDF's dot-delimited `www.대통령.kr` domain structure.
     #[test]
-    fn segment_within_same_token_english_letters() {
-        // "www.대통령.kr" — Korean chars '대통령' surrounded by 'w'/'k' letters
-        // (separated by '.'). same_token_*_is_english returns true on both sides.
+    fn pdf_domain_label_wraps_without_english_majority() {
         let token = word("www.대통령.kr");
         let tokens = vec![token.clone()];
         let kor_word = unwrap_word(&tokens[0]);
         let result = build_wrapped_replacement(kor_word, &tokens, 0, false);
-        // Inner same-token English context should wrap regardless of majority.
+        assert!(result.is_some());
+    }
+
+    #[rstest::rstest]
+    #[case::english_majority(true, false, true)]
+    #[case::dot_delimited_domain(false, true, true)]
+    #[case::neither(false, false, false)]
+    fn same_token_rule39_gate_requires_dominance_or_domain(
+        #[case] is_english_majority: bool,
+        #[case] dot_delimited_domain_label: bool,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            same_token_rule39_context_allowed(is_english_majority, dot_delimited_domain_label),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::question("What is 김치 in English?")]
+    #[case::domain("대통령실의 누리집 주소는 www.대통령.kr이다.")]
+    #[case::definition(
+        "Banchan (Korean: 반찬) are small side dishes served along with cooked rice in Korean cuisine."
+    )]
+    fn full_encoder_preserves_rule39_pdf_controls(#[case] input: &str) {
+        let actual = crate::encode_to_unicode(input).expect("rule 39 PDF example must encode");
         assert!(
-            result.is_some(),
-            "Korean segment within same-token English letters should wrap"
+            actual.contains("⠸⠷"),
+            "missing Korean opening marker: {actual}"
+        );
+        assert!(
+            actual.contains("⠸⠾"),
+            "missing Korean closing marker: {actual}"
         );
     }
 

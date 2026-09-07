@@ -3,72 +3,84 @@
     "input": "Afrikaans",
     "internal": "\"(af'",
     "expected": "16551114",
-    "unicode": "⠐⠷⠁⠋⠄"
+    "unicode": "⠐⠷⠁⠋⠄",
+    "world": "⠴⠠⠁⠋⠗⠊⠅⠁⠁⠝⠎⠲"
   },
   {
     "input": "French",
     "internal": "\"(fr'",
     "expected": "165511234",
-    "unicode": "⠐⠷⠋⠗⠄"
+    "unicode": "⠐⠷⠋⠗⠄",
+    "world": "⠴⠠⠋⠗⠢⠡⠲"
   },
   {
     "input": "German",
     "internal": "\"(de'",
     "expected": "165525174",
-    "unicode": "⠐⠷⠙⠑⠄"
+    "unicode": "⠐⠷⠙⠑⠄",
+    "world": "⠴⠠⠛⠻⠍⠁⠝⠲"
   },
   {
     "input": "Greek (International)",
     "internal": "\"(gr'",
     "expected": "165527234",
-    "unicode": "⠐⠷⠛⠗⠄"
+    "unicode": "⠐⠷⠛⠗⠄",
+    "world": "⠴⠠⠛⠗⠑⠑⠅ ⠐⠣⠠⠔⠞⠻⠝⠁⠰⠝⠁⠇⠠⠴"
   },
   {
     "input": "Greek (Modern)",
     "internal": "\"(el'",
     "expected": "16551774",
-    "unicode": "⠐⠷⠑⠇⠄"
+    "unicode": "⠐⠷⠑⠇⠄",
+    "world": "⠴⠠⠛⠗⠑⠑⠅ ⠐⠣⠠⠍⠕⠙⠻⠝⠠⠴"
   },
   {
     "input": "Indonesian",
     "internal": "\"(id'",
     "expected": "165510254",
-    "unicode": "⠐⠷⠊⠙⠄"
+    "unicode": "⠐⠷⠊⠙⠄",
+    "world": "⠴⠠⠔⠙⠕⠝⠑⠎⠊⠁⠝⠲"
   },
   {
     "input": "Italian",
     "internal": "\"(it'",
     "expected": "165510304",
-    "unicode": "⠐⠷⠊⠞⠄"
+    "unicode": "⠐⠷⠊⠞⠄",
+    "world": "⠴⠠⠊⠞⠁⠇⠊⠁⠝⠲"
   },
   {
     "input": "Japanese",
     "internal": "\"(ja'",
     "expected": "16552614",
-    "unicode": "⠐⠷⠚⠁⠄"
+    "unicode": "⠐⠷⠚⠁⠄",
+    "world": "⠴⠠⠚⠁⠏⠁⠝⠑⠎⠑⠲"
   },
   {
     "input": "Northern Sotho (Pedi, Sepedi)",
     "internal": "\"(nso'",
     "expected": "16552914214",
-    "unicode": "⠐⠷⠝⠎⠕⠄"
+    "unicode": "⠐⠷⠝⠎⠕⠄",
+    "world": "⠴⠠⠝⠕⠗⠮⠗⠝ ⠠⠎⠕⠹⠕ ⠐⠣⠠⠏⠫⠊⠂ ⠠⠎⠑⠏⠫⠊⠠⠴"
   },
   {
     "input": "Spanish",
     "internal": "\"(es'",
     "expected": "165517144",
-    "unicode": "⠐⠷⠑⠎⠄"
+    "unicode": "⠐⠷⠑⠎⠄",
+    "world": "⠴⠠⠎⠏⠁⠝⠊⠩⠲"
   },
   {
     "input": "Tswana",
     "internal": "\"(tn'",
     "expected": "165530294",
-    "unicode": "⠐⠷⠞⠝⠄"
+    "unicode": "⠐⠷⠞⠝⠄",
+    "world": "⠴⠠⠞⠎⠺⠁⠝⠁⠲"
   },
   {
     "input": "Venda",
     "internal": "\"(ve'",
     "expected": "165539174",
-    "unicode": "⠐⠷⠧⠑⠄"
+    "unicode": "⠐⠷⠧⠑⠄",
+    "world": "⠴⠠⠧⠢⠙⠁⠲"
   }
 ]

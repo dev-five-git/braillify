@@ -100,6 +100,32 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
         return false;
     }
 
+    // Korean rules 33 and 35: a letter-led Roman/number identifier remains
+    // Roman text when ordinary prose punctuation follows it. The punctuation
+    // alone must not turn `MP3`-shaped text into a mathematical expression.
+    if let Some((trailing, core)) = chars.split_last()
+        && matches!(*trailing, ',' | ';' | ':' | '.')
+        && core.first().is_some_and(|ch| ch.is_ascii_alphabetic())
+        && core.iter().any(|ch| ch.is_ascii_digit())
+        && core.iter().all(|ch| ch.is_ascii_alphanumeric())
+    {
+        return false;
+    }
+
+    // PDF 제33·34·69항: 숫자+로마자 단위와 바로 뒤의 종료표 생략 문장부호는
+    // 수식이 아니라 하나의 국어 문장 내 단위 표기다. 일반 operator/symbol 판정보다
+    // 먼저 배제해야 `173cm,` 같은 토큰이 comma 때문에 수식 경로로 우회하지 않는다.
+    if let Some(consumed) =
+        crate::rules::korean::rule_69::parse_numeric_ascii_unit_expression(chars)
+        && (consumed == chars.len()
+            || (consumed + 1 == chars.len()
+                && chars.get(consumed).is_some_and(|symbol| {
+                    crate::english_logic::should_skip_terminator_for_symbol(*symbol)
+                })))
+    {
+        return false;
+    }
+
     // Slash-only numeric tokens: 2-part (N/M) is a fraction expression for any digit count;
     // 3-or-more parts (e.g. 2024/12/31) is a date/range and stays non-math.
     if !has_letters && chars.contains(&'/') && chars.iter().all(|c| c.is_ascii_digit() || *c == '/')
@@ -242,13 +268,6 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     // Digit-then-letter transition at start of word (like "3ab" → math multiplication)
     // But NOT letter-then-digit (like "MP3" which is NOT math)
     if chars.len() >= 2 && chars[0].is_ascii_digit() {
-        // PDF 제69항: 숫자+단위 (180cm, 5kg, 1in 등)은 math가 아닌 단위 표기로 처리.
-        if let Some((_, _, consumed)) =
-            crate::rules::korean::rule_69::parse_numeric_ascii_unit_prefix(chars)
-            && consumed == chars.len()
-        {
-            return false;
-        }
         // PDF 제33항 — 학술 인용 형식: `YYYYa`, `YYYYa,`, `YYYYa;` (4자리+년도+단일
         // 알파벳 suffix + 구두점). 이런 토큰은 수학 곱셈이 아닌 영어 모드 인용
         // 표기이므로 math expression이 아니다.
@@ -304,5 +323,35 @@ mod tests {
     fn is_math_expression_bracket_digit() {
         let chars: Vec<char> = "3}".chars().collect();
         assert!(super::is_math_expression(&chars, "3}"));
+    }
+
+    /// Rules 33/34/69: punctuation which suppresses a Roman terminator remains
+    /// attached to the compact unit token without turning the unit into math.
+    #[rstest::rstest]
+    #[case::ordinary_unit("180cm", false)]
+    #[case::derived_kilometre("80km", false)]
+    #[case::derived_milligram("240mg", false)]
+    #[case::derived_kilowatt("30kW", false)]
+    #[case::derived_megahertz("96.7MHz", false)]
+    #[case::derived_hectare("15.2ha", false)]
+    #[case::unit_before_comma("173cm,", false)]
+    #[case::unit_before_closing_parenthesis("20kg)", false)]
+    #[case::unit_before_period("130m.", false)]
+    #[case::ambiguous_product_before_comma("3ab,", true)]
+    fn compact_rule69_unit_with_boundary_is_not_math(#[case] input: &str, #[case] expected: bool) {
+        let chars = input.chars().collect::<Vec<_>>();
+        assert_eq!(super::is_math_expression(&chars, input), expected);
+    }
+
+    /// Rules 33/35: trailing prose punctuation preserves the same non-math
+    /// classification as the underlying letter-led Roman/number identifier.
+    #[rstest::rstest]
+    #[case::comma("MP3,")]
+    #[case::mixed_case_comma("RX350h,")]
+    #[case::colon("A4:")]
+    #[case::period("KF94.")]
+    fn roman_number_identifier_with_prose_punctuation_is_not_math(#[case] input: &str) {
+        let chars = input.chars().collect::<Vec<_>>();
+        assert!(!super::is_math_expression(&chars, input));
     }
 }

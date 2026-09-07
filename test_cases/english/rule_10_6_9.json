@@ -3,18 +3,21 @@
     "input": "Aix-en-Provence",
     "internal": ",aix-en-,prov;e",
     "expected": "32110453617293632152321394817",
-    "unicode": "⠠⠁⠊⠭⠤⠑⠝⠤⠠⠏⠗⠕⠧⠰⠑"
+    "unicode": "⠠⠁⠊⠭⠤⠑⠝⠤⠠⠏⠗⠕⠧⠰⠑",
+    "world": "⠴⠠⠁⠊⠭⠤⠑⠝⠤⠠⠏⠗⠕⠧⠰⠑⠲"
   },
   {
     "input": "Chou En-lai",
     "internal": ",*\\ ,en-lai",
     "expected": "3233510321729367110",
-    "unicode": "⠠⠡⠳⠀⠠⠑⠝⠤⠇⠁⠊"
+    "unicode": "⠠⠡⠳⠀⠠⠑⠝⠤⠇⠁⠊",
+    "world": "⠴⠠⠡⠳ ⠠⠑⠝⠤⠇⠁⠊⠲"
   },
   {
     "input": "en route",
     "internal": "en r\\te",
     "expected": "1729023513017",
-    "unicode": "⠑⠝⠀⠗⠳⠞⠑"
+    "unicode": "⠑⠝⠀⠗⠳⠞⠑",
+    "world": "⠴⠑⠝ ⠗⠳⠞⠑⠲"
   }
 ]

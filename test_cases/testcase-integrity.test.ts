@@ -188,7 +188,33 @@ function runConversionTests(dir: string, label: string) {
   })
 }
 
+function runShardedIntegrityTests(dir: string, label: string) {
+  const testFiles = loadTestCases(dir)
+
+  describe(`${label} sharded test case integrity`, () => {
+    for (const { file, entries } of testFiles) {
+      test(`${file} has valid standard entries`, () => {
+        expect(entries.length).toBeGreaterThan(0)
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i]
+          const alternatives = alternativeTriples(entry)
+          expect(alternatives.length).toBeGreaterThan(0)
+          for (const { internal, expected, unicode } of alternatives) {
+            expect(internal).not.toBe('')
+            expect(expected).not.toBe('')
+            expect(unicode).not.toBe('')
+            const converted = convert(internal)
+            expect(converted.expected).toBe(expected)
+            expect(converted.unicode).toBe(unicode)
+          }
+        }
+      })
+    }
+  })
+}
+
 runIntegrityTests('korean', 'Korean')
 runIntegrityTests('math', 'Math')
+runShardedIntegrityTests('corpus', 'Corpus')
 runConversionTests('korean', 'Korean')
 runConversionTests('math', 'Math')

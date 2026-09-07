@@ -1,8 +1,9 @@
-//! 제41항 — 숫자 또는 로마자 구간에서 쉼표는 ⠂(2)으로 적는다.
+//! 제41항 — 숫자 사이에 붙어 나오는 쉼표는 ⠂(2)으로 적는다.
 //!
-//! When a comma appears between digits (e.g., "1,000") or between ASCII letters
-//! and alphanumeric characters, it uses the numeric comma ⠂ instead of the
-//! standard Korean comma ⠐.
+//! When a comma is attached between digits (e.g., "1,000"), it uses the numeric
+//! comma ⠂ instead of the standard Korean comma ⠐. A whitespace boundary means
+//! the comma is ordinary punctuation under rule 49, not an attached numeric
+//! comma under this rule.
 //!
 //! Reference: 2024 Korean Braille Standard, Chapter 5, Section 11, Article 41
 
@@ -15,7 +16,7 @@ pub static META: RuleMeta = RuleMeta {
     subsection: None,
     name: "numeric_comma",
     standard_ref: "2024 Korean Braille Standard, Ch.5 Sec.11 Art.41",
-    description: "Comma between digits/letters uses ⠂ (2) instead of standard comma",
+    description: "Attached comma within a numeric/ASCII sequence uses ⠂ (2)",
 };
 
 /// Numeric comma braille code.
@@ -23,7 +24,7 @@ const NUMERIC_COMMA: u8 = 2; // ⠂
 
 /// Plugin struct for the rule engine.
 ///
-/// Handles comma encoding in numeric/English context.
+/// Handles attached comma encoding in numeric/English context.
 /// Runs before generic punctuation (rule_49) to intercept commas.
 pub struct Rule41;
 
@@ -49,7 +50,9 @@ impl BrailleRule for Rule41 {
         }
 
         let (has_numeric_prefix, has_ascii_prefix) = scan_prefix(ctx.word_chars, ctx.index);
-        let next_char = get_next_char(ctx);
+        // 제41항의 "붙어 나오는" 경계만 본다. `remaining_words`까지
+        // 건너뛰면 `1, 2`의 일반 쉼표를 숫자 쉼표로 오분류한다.
+        let next_char = ctx.word_chars.get(ctx.index + 1).copied();
         let next_is_digit = next_char.is_some_and(|ch| ch.is_ascii_digit());
         let next_is_ascii = next_char.is_some_and(|ch| ch.is_ascii_alphabetic());
         let next_is_alphanumeric = next_is_digit || next_is_ascii;
@@ -75,15 +78,6 @@ fn scan_prefix(word_chars: &[char], index: usize) -> (bool, bool) {
     {
         Some(prev) => (prev.is_ascii_digit(), prev.is_ascii_alphabetic()),
         None => (false, false),
-    }
-}
-
-/// Get the next character (within word or from next word).
-fn get_next_char(ctx: &RuleContext) -> Option<char> {
-    if ctx.index + 1 < ctx.word_chars.len() {
-        Some(ctx.word_chars[ctx.index + 1])
-    } else {
-        ctx.remaining_words.first().and_then(|w| w.chars().next())
     }
 }
 
@@ -121,7 +115,7 @@ mod tests {
         assert!(!Rule41.matches(&ctx));
     }
 
-    /// 제41항 — 숫자/로마자 구간 안의 쉼표는 숫자 쉼표 규칙이 잡는다.
+    /// 제41항 숫자 쉼표와 UEB의 같은-token 로마자 쉼표 경로.
     #[rstest::rstest]
     #[case::between_digits("1,000", 1)]
     #[case::between_ascii_letters("A,B", 1)]
@@ -131,6 +125,45 @@ mod tests {
         let ctx = owned.ctx_at(index);
 
         assert!(Rule41.matches(&ctx));
+    }
+
+    #[rstest::rstest]
+    // PDF physical p.209: `제5열 버튼(3, 7 혹은 S)`.
+    #[case::music_button_list("3,", "7")]
+    // PDF physical p.142: `1/3, 2/3의 길이`.
+    #[case::music_fraction_list("1/3,", "2/3의")]
+    fn rule41_does_not_cross_whitespace_token_boundaries(
+        #[case] current_word: &str,
+        #[case] next_word: &str,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(current_word, false)
+            .with_remaining_words([next_word]);
+        let comma_index = current_word
+            .chars()
+            .position(|ch| ch == ',')
+            .expect("test word must contain a comma");
+        let ctx = owned.ctx_at(comma_index);
+
+        assert!(!Rule41.matches(&ctx));
+    }
+
+    /// 제41항/제49항 PDF 예제를 전체 인코더로 통과시켜 붙은 숫자 쉼표와
+    /// 일반 한글 쉼표의 서로 다른 셀을 함께 고정한다.
+    #[rstest::rstest]
+    #[case::rule41_grouped_number("9,375명", '⠂')]
+    #[case::rule41_verse_reference("창세기 12,1-9", '⠂')]
+    #[case::rule49_korean_list("근면, 검소, 협동은 우리 겨레의 미덕이다.", '⠐')]
+    fn full_encoder_preserves_pdf_comma_boundaries(
+        #[case] input: &str,
+        #[case] expected_comma: char,
+    ) {
+        let comma_byte = input.find(',').expect("PDF example must contain comma");
+        let prefix = crate::encode_to_unicode(&input[..comma_byte]).expect("prefix must encode");
+        let actual = crate::encode_to_unicode(input).expect("PDF example must encode");
+        let comma_cell = actual.chars().nth(prefix.chars().count());
+
+        assert!(actual.starts_with(&prefix));
+        assert_eq!(comma_cell, Some(expected_comma));
     }
 
     /// rule_41 line 75 — `j -= 1;` when prev char is a space (continues backward scan).

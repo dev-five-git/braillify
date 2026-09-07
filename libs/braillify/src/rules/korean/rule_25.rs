@@ -134,6 +134,7 @@ mod tests {
             has_korean_char: false,
             is_all_uppercase: false,
             ascii_starts_at_beginning: false,
+            roman_section_continues_from_previous_word: false,
             skip_count: &mut skip_count,
             state: &mut state,
             result: &mut result,

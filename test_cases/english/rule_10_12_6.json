@@ -3,60 +3,70 @@
     "input": "Bighorn",
     "internal": ",bighorn",
     "expected": "323102719212329",
-    "unicode": "⠠⠃⠊⠛⠓⠕⠗⠝"
+    "unicode": "⠠⠃⠊⠛⠓⠕⠗⠝",
+    "world": "⠴⠠⠃⠊⠛⠓⠕⠗⠝⠲"
   },
   {
     "input": "chemotherapy",
     "internal": "*emo!rapy",
     "expected": "33171321462311561",
-    "unicode": "⠡⠑⠍⠕⠮⠗⠁⠏⠽"
+    "unicode": "⠡⠑⠍⠕⠮⠗⠁⠏⠽",
+    "world": "⠴⠡⠑⠍⠕⠮⠗⠁⠏⠽⠲"
   },
   {
     "input": "Hades",
     "internal": ",hades",
     "expected": "32191251714",
-    "unicode": "⠠⠓⠁⠙⠑⠎"
+    "unicode": "⠠⠓⠁⠙⠑⠎",
+    "world": "⠴⠠⠓⠁⠙⠑⠎⠲"
   },
   {
     "input": "Hermione",
     "internal": ",h]mione",
     "expected": "3219591310212917",
-    "unicode": "⠠⠓⠻⠍⠊⠕⠝⠑"
+    "unicode": "⠠⠓⠻⠍⠊⠕⠝⠑",
+    "world": "⠴⠠⠓⠻⠍⠊⠕⠝⠑⠲"
   },
   {
     "input": "Mortimer",
     "internal": ",mortim]",
     "expected": "3213212330101359",
-    "unicode": "⠠⠍⠕⠗⠞⠊⠍⠻"
+    "unicode": "⠠⠍⠕⠗⠞⠊⠍⠻",
+    "world": "⠴⠠⠍⠕⠗⠞⠊⠍⠻⠲"
   },
   {
     "input": "Newhaven",
     "internal": ",newhav5",
     "expected": "322917581913934",
-    "unicode": "⠠⠝⠑⠺⠓⠁⠧⠢"
+    "unicode": "⠠⠝⠑⠺⠓⠁⠧⠢",
+    "world": "⠴⠠⠝⠑⠺⠓⠁⠧⠢⠲"
   },
   {
     "input": "OED",
     "internal": ",,oed",
     "expected": "3232211725",
-    "unicode": "⠠⠠⠕⠑⠙"
+    "unicode": "⠠⠠⠕⠑⠙",
+    "world": "⠴⠠⠠⠕⠫⠲"
   },
   {
     "input": "Stalingrad",
     "internal": ",/al9grad",
     "expected": "321217202723125",
-    "unicode": "⠠⠌⠁⠇⠔⠛⠗⠁⠙"
+    "unicode": "⠠⠌⠁⠇⠔⠛⠗⠁⠙",
+    "world": "⠴⠠⠌⠁⠇⠔⠛⠗⠁⠙⠲"
   },
   {
     "input": "US",
     "internal": ",,us",
     "expected": "32323714",
-    "unicode": "⠠⠠⠥⠎"
+    "unicode": "⠠⠠⠥⠎",
+    "world": "⠴⠠⠠⠥⠎⠲"
   },
   {
     "input": "Vietnamese",
     "internal": ",vietnamese",
     "expected": "323910173029113171417",
-    "unicode": "⠠⠧⠊⠑⠞⠝⠁⠍⠑⠎⠑"
+    "unicode": "⠠⠧⠊⠑⠞⠝⠁⠍⠑⠎⠑",
+    "world": "⠴⠠⠧⠊⠑⠞⠝⠁⠍⠑⠎⠑⠲"
   }
 ]

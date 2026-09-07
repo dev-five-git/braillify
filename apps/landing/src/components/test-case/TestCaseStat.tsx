@@ -31,7 +31,10 @@ function CompetitorStat({ label, total, fail }: CompetitorStatProps) {
   )
 }
 
-interface TestCaseStatProps extends ComponentProps<typeof Center<'div'>> {
+interface TestCaseStatProps extends Omit<
+  ComponentProps<typeof Center<'div'>>,
+  'as'
+> {
   showTotal?: boolean
   colorPercentage?: boolean
   total: number

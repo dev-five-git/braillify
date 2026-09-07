@@ -3,18 +3,21 @@
     "input": "1st",
     "internal": "#ast",
     "expected": "6011430",
-    "unicode": "⠼⠁⠎⠞"
+    "unicode": "⠼⠁⠎⠞",
+    "world": "⠼⠁⠴⠎⠞⠲"
   },
   {
     "input": "shopping4you",
     "internal": "%opp+#dyou",
     "expected": "41211515446025612137",
-    "unicode": "⠩⠕⠏⠏⠬⠼⠙⠽⠕⠥"
+    "unicode": "⠩⠕⠏⠏⠬⠼⠙⠽⠕⠥",
+    "world": "⠴⠩⠕⠏⠏⠬⠼⠙⠽⠕⠥⠲"
   },
   {
     "input": "4starhotel@webnet.com",
     "internal": "#dstarhotel@awebnet4com",
     "expected": "6025143012319213017781581732917305092113",
-    "unicode": "⠼⠙⠎⠞⠁⠗⠓⠕⠞⠑⠇⠈⠁⠺⠑⠃⠝⠑⠞⠲⠉⠕⠍"
+    "unicode": "⠼⠙⠎⠞⠁⠗⠓⠕⠞⠑⠇⠈⠁⠺⠑⠃⠝⠑⠞⠲⠉⠕⠍",
+    "world": "⠼⠙⠴⠌⠜⠓⠕⠞⠑⠇⠈⠁⠺⠑⠃⠝⠑⠞⠲⠉⠕⠍⠲"
   }
 ]

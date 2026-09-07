@@ -3,126 +3,147 @@
     "input": "hereupon",
     "internal": "\"h^u",
     "expected": "16192437",
-    "unicode": "⠐⠓⠘⠥"
+    "unicode": "⠐⠓⠘⠥",
+    "world": "⠴⠐⠓⠘⠥⠲"
   },
   {
     "input": "thereby",
     "internal": "\"!by",
     "expected": "1646361",
-    "unicode": "⠐⠮⠃⠽"
+    "unicode": "⠐⠮⠃⠽",
+    "world": "⠴⠐⠮⠃⠽⠲"
   },
   {
     "input": "therefore",
     "internal": "\"!=e",
     "expected": "16466317",
-    "unicode": "⠐⠮⠿⠑"
+    "unicode": "⠐⠮⠿⠑",
+    "world": "⠴⠐⠮⠿⠑⠲"
   },
   {
     "input": "therein",
     "internal": "\"!9",
     "expected": "164620",
-    "unicode": "⠐⠮⠔"
+    "unicode": "⠐⠮⠔",
+    "world": "⠴⠐⠮⠔⠲"
   },
   {
     "input": "thereupon",
     "internal": "\"!^u",
     "expected": "16462437",
-    "unicode": "⠐⠮⠘⠥"
+    "unicode": "⠐⠮⠘⠥",
+    "world": "⠴⠐⠮⠘⠥⠲"
   },
   {
     "input": "whereupon",
     "internal": "\":^u",
     "expected": "16492437",
-    "unicode": "⠐⠱⠘⠥"
+    "unicode": "⠐⠱⠘⠥",
+    "world": "⠴⠐⠱⠘⠥⠲"
   },
   {
     "input": "whosesoever",
     "internal": "^:so\"e",
     "expected": "244914211617",
-    "unicode": "⠘⠱⠎⠕⠐⠑"
+    "unicode": "⠘⠱⠎⠕⠐⠑",
+    "world": "⠴⠘⠱⠎⠕⠐⠑⠲"
   },
   {
     "input": "upon these shores",
     "internal": "^u ^! %ores",
     "expected": "24370244604121231714",
-    "unicode": "⠘⠥⠀⠘⠮⠀⠩⠕⠗⠑⠎"
+    "unicode": "⠘⠥⠀⠘⠮⠀⠩⠕⠗⠑⠎",
+    "world": "⠴⠘⠥ ⠘⠮ ⠩⠕⠗⠑⠎⠲"
   },
   {
     "input": "Whose are those?",
     "internal": ",^: >e ^?8",
     "expected": "322449028170245738",
-    "unicode": "⠠⠘⠱⠀⠜⠑⠀⠘⠹⠦"
+    "unicode": "⠠⠘⠱⠀⠜⠑⠀⠘⠹⠦",
+    "world": "⠴⠠⠘⠱ ⠜⠑ ⠘⠹⠦"
   },
   {
     "input": "bothered",
     "internal": "bo!r$",
     "expected": "321462343",
-    "unicode": "⠃⠕⠮⠗⠫"
+    "unicode": "⠃⠕⠮⠗⠫",
+    "world": "⠴⠃⠕⠮⠗⠫⠲"
   },
   {
     "input": "coupon",
     "internal": "c\\pon",
     "expected": "951152129",
-    "unicode": "⠉⠳⠏⠕⠝"
+    "unicode": "⠉⠳⠏⠕⠝",
+    "world": "⠴⠉⠳⠏⠕⠝⠲"
   },
   {
     "input": "Dupont",
     "internal": ",dupont",
     "expected": "32253715212930",
-    "unicode": "⠠⠙⠥⠏⠕⠝⠞"
+    "unicode": "⠠⠙⠥⠏⠕⠝⠞",
+    "world": "⠴⠠⠙⠥⠏⠕⠝⠞⠲"
   },
   {
     "input": "ethereal",
     "internal": "e!r1l",
     "expected": "17462327",
-    "unicode": "⠑⠮⠗⠂⠇"
+    "unicode": "⠑⠮⠗⠂⠇",
+    "world": "⠴⠑⠮⠗⠂⠇⠲"
   },
   {
     "input": "hypotheses",
     "internal": "hypo!ses",
     "expected": "1961152146141714",
-    "unicode": "⠓⠽⠏⠕⠮⠎⠑⠎"
+    "unicode": "⠓⠽⠏⠕⠮⠎⠑⠎",
+    "world": "⠴⠓⠽⠏⠕⠮⠎⠑⠎⠲"
   },
   {
     "input": "isothere",
     "internal": "iso!re",
     "expected": "101421462317",
-    "unicode": "⠊⠎⠕⠮⠗⠑"
+    "unicode": "⠊⠎⠕⠮⠗⠑",
+    "world": "⠴⠊⠎⠕⠮⠗⠑⠲"
   },
   {
     "input": "smithereens",
     "internal": "smi!re5s",
     "expected": "1413104623173414",
-    "unicode": "⠎⠍⠊⠮⠗⠑⠢⠎"
+    "unicode": "⠎⠍⠊⠮⠗⠑⠢⠎",
+    "world": "⠴⠎⠍⠊⠮⠗⠑⠢⠎⠲"
   },
   {
     "input": "spathose",
     "internal": "spa?ose",
     "expected": "1415157211417",
-    "unicode": "⠎⠏⠁⠹⠕⠎⠑"
+    "unicode": "⠎⠏⠁⠹⠕⠎⠑",
+    "world": "⠴⠎⠏⠁⠹⠕⠎⠑⠲"
   },
   {
     "input": "Theresa",
     "internal": ",!resa",
     "expected": "32462317141",
-    "unicode": "⠠⠮⠗⠑⠎⠁"
+    "unicode": "⠠⠮⠗⠑⠎⠁",
+    "world": "⠴⠠⠮⠗⠑⠎⠁⠲"
   },
   {
     "input": "Theseus",
     "internal": ",!seus",
     "expected": "324614173714",
-    "unicode": "⠠⠮⠎⠑⠥⠎"
+    "unicode": "⠠⠮⠎⠑⠥⠎",
+    "world": "⠴⠠⠮⠎⠑⠥⠎⠲"
   },
   {
     "input": "Thoseby",
     "internal": ",?oseby",
     "expected": "3257211417361",
-    "unicode": "⠠⠹⠕⠎⠑⠃⠽"
+    "unicode": "⠠⠹⠕⠎⠑⠃⠽",
+    "world": "⠴⠠⠹⠕⠎⠑⠃⠽⠲"
   },
   {
     "input": "withered",
     "internal": ")]$",
     "expected": "625943",
-    "unicode": "⠾⠻⠫"
+    "unicode": "⠾⠻⠫",
+    "world": "⠴⠾⠻⠫⠲"
   }
 ]

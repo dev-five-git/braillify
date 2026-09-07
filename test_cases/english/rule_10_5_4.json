@@ -3,30 +3,35 @@
     "input": "It was enough–more than enough.",
     "internal": ",x 0 5,-m ?an 5\\<4",
     "expected": "3245052034323613057129034513550",
-    "unicode": "⠠⠭⠀⠴⠀⠢⠠⠤⠍⠀⠹⠁⠝⠀⠢⠳⠣⠲"
+    "unicode": "⠠⠭⠀⠴⠀⠢⠠⠤⠍⠀⠹⠁⠝⠀⠢⠳⠣⠲",
+    "world": "⠴⠠⠊⠞ ⠴ ⠢⠠⠤⠍ ⠹⠁⠝ ⠢⠳⠣⠲"
   },
   {
     "input": "We had enough–5.",
     "internal": ",we _h 5,-#e4",
     "expected": "325817056190343236601750",
-    "unicode": "⠠⠺⠑⠀⠸⠓⠀⠢⠠⠤⠼⠑⠲"
+    "unicode": "⠠⠺⠑⠀⠸⠓⠀⠢⠠⠤⠼⠑⠲",
+    "world": "⠴⠠⠺⠑ ⠸⠓ ⠢⠳⠣⠤⠤⠼⠑⠲"
   },
   {
     "input": "\"That's enough!\"–in a firm voice",
     "internal": "8,t's 560,-in a firm voice",
     "expected": "383230414034225232361029010111023130392110917",
-    "unicode": "⠦⠠⠞⠄⠎⠀⠢⠖⠴⠠⠤⠊⠝⠀⠁⠀⠋⠊⠗⠍⠀⠧⠕⠊⠉⠑"
+    "unicode": "⠦⠠⠞⠄⠎⠀⠢⠖⠴⠠⠤⠊⠝⠀⠁⠀⠋⠊⠗⠍⠀⠧⠕⠊⠉⠑",
+    "world": "⠦⠴⠠⠹⠁⠞⠄⠎ ⠢⠳⠣⠖⠴⠠⠤⠔ ⠁ ⠋⠊⠗⠍ ⠧⠕⠊⠉⠑⠲"
   },
   {
     "input": "Take enough.",
     "internal": ",take 5\\<4",
     "expected": "32301517034513550",
-    "unicode": "⠠⠞⠁⠅⠑⠀⠢⠳⠣⠲"
+    "unicode": "⠠⠞⠁⠅⠑⠀⠢⠳⠣⠲",
+    "world": "⠴⠠⠞⠁⠅⠑ ⠢⠳⠣⠲"
   },
   {
     "input": "‘Is that “in”?–in style, I mean.’",
     "internal": ",8,is t 8908,-in /yle1 ,i m1n4,0",
     "expected": "32383210140300382052383236102901261717203210013229503252",
-    "unicode": "⠠⠦⠠⠊⠎⠀⠞⠀⠦⠔⠴⠦⠠⠤⠊⠝⠀⠌⠽⠇⠑⠂⠀⠠⠊⠀⠍⠂⠝⠲⠠⠴"
+    "unicode": "⠠⠦⠠⠊⠎⠀⠞⠀⠦⠔⠴⠦⠠⠤⠊⠝⠀⠌⠽⠇⠑⠂⠀⠠⠊⠀⠍⠂⠝⠲⠠⠴",
+    "world": "⠠⠦⠴⠠⠊⠎ ⠞ ⠦⠔⠴⠦⠠⠤⠔ ⠌⠽⠇⠑⠂ ⠠⠊ ⠍⠂⠝⠲⠄"
   }
 ]

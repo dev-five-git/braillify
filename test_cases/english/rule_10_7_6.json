@@ -3,252 +3,294 @@
     "input": "acetone",
     "internal": "acet\"o",
     "expected": "1917301621",
-    "unicode": "⠁⠉⠑⠞⠐⠕"
+    "unicode": "⠁⠉⠑⠞⠐⠕",
+    "world": "⠴⠁⠉⠑⠞⠐⠕⠲"
   },
   {
     "input": "atonement",
     "internal": "at\"o;t",
     "expected": "13016214830",
-    "unicode": "⠁⠞⠐⠕⠰⠞"
+    "unicode": "⠁⠞⠐⠕⠰⠞",
+    "world": "⠴⠁⠞⠐⠕⠰⠞⠲"
   },
   {
     "input": "baloney",
     "internal": "bal\"oy",
     "expected": "317162161",
-    "unicode": "⠃⠁⠇⠐⠕⠽"
+    "unicode": "⠃⠁⠇⠐⠕⠽",
+    "world": "⠴⠃⠁⠇⠐⠕⠽⠲"
   },
   {
     "input": "bygone",
     "internal": "byg\"o",
     "expected": "361271621",
-    "unicode": "⠃⠽⠛⠐⠕"
+    "unicode": "⠃⠽⠛⠐⠕",
+    "world": "⠴⠃⠽⠛⠐⠕⠲"
   },
   {
     "input": "cone",
     "internal": "c\"o",
     "expected": "91621",
-    "unicode": "⠉⠐⠕"
+    "unicode": "⠉⠐⠕",
+    "world": "⠴⠉⠐⠕⠲"
   },
   {
     "input": "demonetise",
     "internal": "dem\"otise",
     "expected": "251713162130101417",
-    "unicode": "⠙⠑⠍⠐⠕⠞⠊⠎⠑"
+    "unicode": "⠙⠑⠍⠐⠕⠞⠊⠎⠑",
+    "world": "⠴⠙⠑⠍⠐⠕⠞⠊⠎⠑⠲"
   },
   {
     "input": "dishonesty",
     "internal": "4h\"o/y",
     "expected": "501916211261",
-    "unicode": "⠲⠓⠐⠕⠌⠽"
+    "unicode": "⠲⠓⠐⠕⠌⠽",
+    "world": "⠴⠲⠓⠐⠕⠌⠽⠲"
   },
   {
     "input": "done",
     "internal": "d\"o",
     "expected": "251621",
-    "unicode": "⠙⠐⠕"
+    "unicode": "⠙⠐⠕",
+    "world": "⠴⠙⠐⠕⠲"
   },
   {
     "input": "everyone",
     "internal": "\"ey\"o",
     "expected": "1617611621",
-    "unicode": "⠐⠑⠽⠐⠕"
+    "unicode": "⠐⠑⠽⠐⠕",
+    "world": "⠴⠐⠑⠽⠐⠕⠲"
   },
   {
     "input": "honey",
     "internal": "h\"oy",
     "expected": "19162161",
-    "unicode": "⠓⠐⠕⠽"
+    "unicode": "⠓⠐⠕⠽",
+    "world": "⠴⠓⠐⠕⠽⠲"
   },
   {
     "input": "Jones",
     "internal": ",j\"os",
     "expected": "3226162114",
-    "unicode": "⠠⠚⠐⠕⠎"
+    "unicode": "⠠⠚⠐⠕⠎",
+    "world": "⠴⠠⠚⠐⠕⠎⠲"
   },
   {
     "input": "lonesome",
     "internal": "l\"o\"s",
     "expected": "716211614",
-    "unicode": "⠇⠐⠕⠐⠎"
+    "unicode": "⠇⠐⠕⠐⠎",
+    "world": "⠴⠇⠐⠕⠐⠎⠲"
   },
   {
     "input": "Mulroney",
     "internal": ",mulr\"oy",
     "expected": "321337723162161",
-    "unicode": "⠠⠍⠥⠇⠗⠐⠕⠽"
+    "unicode": "⠠⠍⠥⠇⠗⠐⠕⠽",
+    "world": "⠴⠠⠍⠥⠇⠗⠐⠕⠽⠲"
   },
   {
     "input": "one-sided",
     "internal": "\"o-sid$",
     "expected": "16213614102543",
-    "unicode": "⠐⠕⠤⠎⠊⠙⠫"
+    "unicode": "⠐⠕⠤⠎⠊⠙⠫",
+    "world": "⠴⠐⠕⠤⠎⠊⠙⠫⠲"
   },
   {
     "input": "oneness",
     "internal": "\"o;s",
     "expected": "16214814",
-    "unicode": "⠐⠕⠰⠎"
+    "unicode": "⠐⠕⠰⠎",
+    "world": "⠴⠐⠕⠰⠎⠲"
   },
   {
     "input": "phone",
     "internal": "ph\"o",
     "expected": "15191621",
-    "unicode": "⠏⠓⠐⠕"
+    "unicode": "⠏⠓⠐⠕",
+    "world": "⠴⠏⠓⠐⠕⠲"
   },
   {
     "input": "scone",
     "internal": "sc\"o",
     "expected": "1491621",
-    "unicode": "⠎⠉⠐⠕"
+    "unicode": "⠎⠉⠐⠕",
+    "world": "⠴⠎⠉⠐⠕⠲"
   },
   {
     "input": "stonework",
     "internal": "/\"o\"w",
     "expected": "1216211658",
-    "unicode": "⠌⠐⠕⠐⠺"
+    "unicode": "⠌⠐⠕⠐⠺",
+    "world": "⠴⠌⠐⠕⠐⠺⠲"
   },
   {
     "input": "stoney",
     "internal": "/\"oy",
     "expected": "12162161",
-    "unicode": "⠌⠐⠕⠽"
+    "unicode": "⠌⠐⠕⠽",
+    "world": "⠴⠌⠐⠕⠽⠲"
   },
   {
     "input": "anemone",
     "internal": "anemone",
     "expected": "1291713212917",
-    "unicode": "⠁⠝⠑⠍⠕⠝⠑"
+    "unicode": "⠁⠝⠑⠍⠕⠝⠑",
+    "world": "⠴⠁⠝⠑⠍⠕⠝⠑⠲"
   },
   {
     "input": "baroness",
     "internal": "b>o;s",
     "expected": "328214814",
-    "unicode": "⠃⠜⠕⠰⠎"
+    "unicode": "⠃⠜⠕⠰⠎",
+    "world": "⠴⠃⠜⠕⠰⠎⠲"
   },
   {
     "input": "baronet",
     "internal": "b>onet",
     "expected": "32821291730",
-    "unicode": "⠃⠜⠕⠝⠑⠞"
+    "unicode": "⠃⠜⠕⠝⠑⠞",
+    "world": "⠴⠃⠜⠕⠝⠑⠞⠲"
   },
   {
     "input": "Boone",
     "internal": ",boone",
     "expected": "32321212917",
-    "unicode": "⠠⠃⠕⠕⠝⠑"
+    "unicode": "⠠⠃⠕⠕⠝⠑",
+    "world": "⠴⠠⠃⠕⠕⠝⠑⠲"
   },
   {
     "input": "Cantonese",
     "internal": ",cantonese",
     "expected": "329129302129171417",
-    "unicode": "⠠⠉⠁⠝⠞⠕⠝⠑⠎⠑"
+    "unicode": "⠠⠉⠁⠝⠞⠕⠝⠑⠎⠑",
+    "world": "⠴⠠⠉⠁⠝⠞⠕⠝⠑⠎⠑⠲"
   },
   {
     "input": "colonel",
     "internal": "colonel",
     "expected": "92172129177",
-    "unicode": "⠉⠕⠇⠕⠝⠑⠇"
+    "unicode": "⠉⠕⠇⠕⠝⠑⠇",
+    "world": "⠴⠉⠕⠇⠕⠝⠑⠇⠲"
   },
   {
     "input": "Conestoga",
     "internal": ",3e/oga",
     "expected": "3218171221271",
-    "unicode": "⠠⠒⠑⠌⠕⠛⠁"
+    "unicode": "⠠⠒⠑⠌⠕⠛⠁",
+    "world": "⠴⠠⠒⠑⠌⠕⠛⠁⠲"
   },
   {
     "input": "crooner",
     "internal": "croon]",
     "expected": "92321212959",
-    "unicode": "⠉⠗⠕⠕⠝⠻"
+    "unicode": "⠉⠗⠕⠕⠝⠻",
+    "world": "⠴⠉⠗⠕⠕⠝⠻⠲"
   },
   {
     "input": "cushioned",
     "internal": "cu%ion$",
     "expected": "9374110212943",
-    "unicode": "⠉⠥⠩⠊⠕⠝⠫"
+    "unicode": "⠉⠥⠩⠊⠕⠝⠫",
+    "world": "⠴⠉⠥⠩⠊⠕⠝⠫⠲"
   },
   {
     "input": "Donegal",
     "internal": ",donegal",
     "expected": "32252129172717",
-    "unicode": "⠠⠙⠕⠝⠑⠛⠁⠇"
+    "unicode": "⠠⠙⠕⠝⠑⠛⠁⠇",
+    "world": "⠴⠠⠙⠕⠝⠑⠛⠁⠇⠲"
   },
   {
     "input": "erroneous",
     "internal": "]rone\\s",
     "expected": "59232129175114",
-    "unicode": "⠻⠗⠕⠝⠑⠳⠎"
+    "unicode": "⠻⠗⠕⠝⠑⠳⠎",
+    "world": "⠴⠻⠗⠕⠝⠑⠳⠎⠲"
   },
   {
     "input": "Hermione",
     "internal": ",h]mione",
     "expected": "3219591310212917",
-    "unicode": "⠠⠓⠻⠍⠊⠕⠝⠑"
+    "unicode": "⠠⠓⠻⠍⠊⠕⠝⠑",
+    "world": "⠴⠠⠓⠻⠍⠊⠕⠝⠑⠲"
   },
   {
     "input": "Indonesia",
     "internal": ",9donesia",
     "expected": "32202521291714101",
-    "unicode": "⠠⠔⠙⠕⠝⠑⠎⠊⠁"
+    "unicode": "⠠⠔⠙⠕⠝⠑⠎⠊⠁",
+    "world": "⠴⠠⠔⠙⠕⠝⠑⠎⠊⠁⠲"
   },
   {
     "input": "krone",
     "internal": "krone",
     "expected": "523212917",
-    "unicode": "⠅⠗⠕⠝⠑"
+    "unicode": "⠅⠗⠕⠝⠑",
+    "world": "⠴⠅⠗⠕⠝⠑⠲"
   },
   {
     "input": "Monet",
     "internal": ",monet",
     "expected": "321321291730",
-    "unicode": "⠠⠍⠕⠝⠑⠞"
+    "unicode": "⠠⠍⠕⠝⠑⠞",
+    "world": "⠴⠠⠍⠕⠝⠑⠞⠲"
   },
   {
     "input": "onerous",
     "internal": "on]\\s",
     "expected": "2129595114",
-    "unicode": "⠕⠝⠻⠳⠎"
+    "unicode": "⠕⠝⠻⠳⠎",
+    "world": "⠴⠕⠝⠻⠳⠎⠲"
   },
   {
     "input": "phonetic",
     "internal": "phonetic",
     "expected": "151921291730109",
-    "unicode": "⠏⠓⠕⠝⠑⠞⠊⠉"
+    "unicode": "⠏⠓⠕⠝⠑⠞⠊⠉",
+    "world": "⠴⠏⠓⠕⠝⠑⠞⠊⠉⠲"
   },
   {
     "input": "pioneer",
     "internal": "pione]",
     "expected": "151021291759",
-    "unicode": "⠏⠊⠕⠝⠑⠻"
+    "unicode": "⠏⠊⠕⠝⠑⠻",
+    "world": "⠴⠏⠊⠕⠝⠑⠻⠲"
   },
   {
     "input": "poisoned",
     "internal": "poison$",
     "expected": "15211014212943",
-    "unicode": "⠏⠕⠊⠎⠕⠝⠫"
+    "unicode": "⠏⠕⠊⠎⠕⠝⠫",
+    "world": "⠴⠏⠕⠊⠎⠕⠝⠫⠲"
   },
   {
     "input": "Rhône",
     "internal": ",rh^%one",
     "expected": "3223192441212917",
-    "unicode": "⠠⠗⠓⠘⠩⠕⠝⠑"
+    "unicode": "⠠⠗⠓⠘⠩⠕⠝⠑",
+    "world": "⠴⠠⠗⠓⠘⠩⠐⠕⠲"
   },
   {
     "input": "Rooney",
     "internal": ",rooney",
     "expected": "32232121291761",
-    "unicode": "⠠⠗⠕⠕⠝⠑⠽"
+    "unicode": "⠠⠗⠕⠕⠝⠑⠽",
+    "world": "⠴⠠⠗⠕⠕⠝⠑⠽⠲"
   },
   {
     "input": "sooner",
     "internal": "soon]",
     "expected": "1421212959",
-    "unicode": "⠎⠕⠕⠝⠻"
+    "unicode": "⠎⠕⠕⠝⠻",
+    "world": "⠴⠎⠕⠕⠝⠻⠲"
   },
   {
     "input": "stoned",
     "internal": "/on$",
     "expected": "12212943",
-    "unicode": "⠌⠕⠝⠫"
+    "unicode": "⠌⠕⠝⠫",
+    "world": "⠴⠌⠕⠝⠫⠲"
   }
 ]

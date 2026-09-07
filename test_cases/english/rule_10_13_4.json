@@ -3,24 +3,28 @@
     "input": "men\ningitis",
     "internal": "m5-\n9gitis",
     "expected": "133436\n202710301014",
-    "unicode": "⠍⠢⠤\n⠔⠛⠊⠞⠊⠎"
+    "unicode": "⠍⠢⠤\n⠔⠛⠊⠞⠊⠎",
+    "world": "⠴⠍⠢⠲\n⠴⠔⠛⠊⠞⠊⠎⠲"
   },
   {
     "input": "night\ningale",
     "internal": "ni<t-\n9gale",
     "expected": "2910353036\n20271717",
-    "unicode": "⠝⠊⠣⠞⠤\n⠔⠛⠁⠇⠑"
+    "unicode": "⠝⠊⠣⠞⠤\n⠔⠛⠁⠇⠑",
+    "world": "⠴⠝⠊⠣⠞⠲\n⠴⠔⠛⠁⠇⠑⠲"
   },
   {
     "input": "shower\ning.)",
     "internal": "%[]-\n9g4\">",
     "expected": "41425936\n2027501628",
-    "unicode": "⠩⠪⠻⠤\n⠔⠛⠲⠐⠜"
+    "unicode": "⠩⠪⠻⠤\n⠔⠛⠲⠐⠜",
+    "world": "⠴⠩⠪⠻⠲\n⠴⠔⠛⠲⠠⠴"
   },
   {
     "input": "Smith\nInge",
     "internal": ",smi?-\n,9ge",
     "expected": "321413105736\n32202717",
-    "unicode": "⠠⠎⠍⠊⠹⠤\n⠠⠔⠛⠑"
+    "unicode": "⠠⠎⠍⠊⠹⠤\n⠠⠔⠛⠑",
+    "world": "⠴⠠⠎⠍⠊⠹⠲\n⠴⠠⠔⠛⠑⠲"
   }
 ]

@@ -3,18 +3,21 @@
     "input": "chieftainess",
     "internal": "*iefta9ess",
     "expected": "3310171130120171414",
-    "unicode": "⠡⠊⠑⠋⠞⠁⠔⠑⠎⠎"
+    "unicode": "⠡⠊⠑⠋⠞⠁⠔⠑⠎⠎",
+    "world": "⠴⠡⠊⠑⠋⠞⠁⠔⠑⠎⠎⠲"
   },
   {
     "input": "citizeness",
     "internal": "citiz5ess",
     "expected": "91030105334171414",
-    "unicode": "⠉⠊⠞⠊⠵⠢⠑⠎⠎"
+    "unicode": "⠉⠊⠞⠊⠵⠢⠑⠎⠎",
+    "world": "⠴⠉⠊⠞⠊⠵⠢⠑⠎⠎⠲"
   },
   {
     "input": "heatheness",
     "internal": "h1!ness",
     "expected": "1924629171414",
-    "unicode": "⠓⠂⠮⠝⠑⠎⠎"
+    "unicode": "⠓⠂⠮⠝⠑⠎⠎",
+    "world": "⠴⠓⠂⠮⠝⠑⠎⠎⠲"
   }
 ]

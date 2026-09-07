@@ -101,6 +101,19 @@ function unicodeForms(entry: TestCaseEntry): string[] {
   return entry.unicode ? [entry.unicode] : []
 }
 
+/**
+ * 점자세상 API는 한글 모드로만 호출된다. 입력 경계의 영문자에 붙는
+ * UI용 영문 시작/끝 표지는 점역 규칙 결과가 아니므로 비교에서만 제외한다.
+ * 끝 표지(⠲)는 문장부호와 같으므로 입력이 영문자로 끝날 때만 제거한다.
+ * 원본 `world` 값은 절대 변경하지 않는다.
+ */
+function normalizeWorldForComparison(world: string, input: string): string {
+  let normalized = world
+  if (/^[A-Za-z]/.test(input)) normalized = normalized.replace(/^⠴/, '')
+  if (/[A-Za-z]$/.test(input)) normalized = normalized.replace(/⠲$/, '')
+  return normalized
+}
+
 async function processFile(
   filePath: string,
   relPath: string,
@@ -131,7 +144,8 @@ async function processFile(
     }
 
     s.measured++
-    if (pdfForms.includes(entry.world)) {
+    const normalizedWorld = normalizeWorldForComparison(entry.world, entry.input)
+    if (pdfForms.includes(normalizedWorld)) {
       s.match++
     } else {
       s.mismatch++
@@ -141,7 +155,7 @@ async function processFile(
           line: lineNumber,
           input: entry.input,
           pdf: pdfForms.join(' / '),
-          world: entry.world,
+          world: normalizedWorld,
         })
       }
     }
@@ -159,6 +173,9 @@ async function main() {
   for (const dirent of dirs) {
     if (!dirent.isDirectory()) continue
     const dir = dirent.name
+    // NIKL 병렬 말뭉치는 별도 sentence-level benchmark가 `world` 필드를
+    // 직접 읽어 측정한다. 규정 fixture 리포트에 섞지 않는다.
+    if (dir === 'corpus') continue
     const dirPath = join(TEST_CASES_DIR, dir)
     const files = await readdir(dirPath)
     const jsonFiles = files.filter((f) => f.endsWith('.json')).sort()
@@ -187,7 +204,7 @@ async function main() {
   lines.push('- 비교 기준: PDF 규정 (2024 개정 한국 점자 규정)')
   lines.push('  - PDF 정답 = test_cases JSON 의 `unicode` 필드')
   lines.push('  - 점자세상 결과 = test_cases JSON 의 `world` 필드 (fetch-world.ts 가 braillekorea.org API 에서 수집)')
-  lines.push('- 비교 방식: 단순 유니코드 문자열 동치 (`world === unicode`)')
+  lines.push('- 비교 방식: 유니코드 문자열 동치. 입력 경계가 영문자인 경우에만 API의 외곽 영문 시작(⠴)/끝(⠲) 표지를 비교에서 제외한다.')
   lines.push('- Skip 정책: LaTeX 변형, 빈 input, world 미수집, unicode 미정의 항목 제외')
   lines.push('')
 

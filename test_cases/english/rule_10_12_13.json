@@ -3,42 +3,49 @@
     "input": "t-n",
     "internal": ";t-;n",
     "expected": "4830364829",
-    "unicode": "⠰⠞⠤⠰⠝"
+    "unicode": "⠰⠞⠤⠰⠝",
+    "world": "⠴⠞⠤⠰⠝⠲"
   },
   {
     "input": "J----y",
     "internal": ";,j----;y",
     "expected": "483226363636364861",
-    "unicode": "⠰⠠⠚⠤⠤⠤⠤⠰⠽"
+    "unicode": "⠰⠠⠚⠤⠤⠤⠤⠰⠽",
+    "world": "⠴⠠⠚⠽⠲"
   },
   {
     "input": "s–",
     "internal": ";s,-",
     "expected": "48143236",
-    "unicode": "⠰⠎⠠⠤"
+    "unicode": "⠰⠎⠠⠤",
+    "world": "⠴⠎⠤⠤"
   },
   {
     "input": "S—",
     "internal": ";,s\",-",
     "expected": "483214163236",
-    "unicode": "⠰⠠⠎⠐⠠⠤"
+    "unicode": "⠰⠠⠎⠐⠠⠤",
+    "world": "⠴⠠⠎⠤⠤"
   },
   {
     "input": "n...ce",
     "internal": "n444ce",
     "expected": "29505050917",
-    "unicode": "⠝⠲⠲⠲⠉⠑"
+    "unicode": "⠝⠲⠲⠲⠉⠑",
+    "world": "⠴⠝⠲⠲⠲⠉⠑⠲"
   },
   {
     "input": "fr...nd",
     "internal": "fr444nd",
     "expected": "11235050502925",
-    "unicode": "⠋⠗⠲⠲⠲⠝⠙"
+    "unicode": "⠋⠗⠲⠲⠲⠝⠙",
+    "world": "⠴⠋⠗⠲⠲⠲⠝⠙⠲"
   },
   {
     "input": "w...ghed",
     "internal": "w444<$",
     "expected": "585050503543",
-    "unicode": "⠺⠲⠲⠲⠣⠫"
+    "unicode": "⠺⠲⠲⠲⠣⠫",
+    "world": "⠴⠺⠲⠲⠲⠣⠫⠲"
   }
 ]

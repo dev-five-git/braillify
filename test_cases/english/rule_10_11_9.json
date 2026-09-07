@@ -3,132 +3,154 @@
     "input": "aerial",
     "internal": "a]ial",
     "expected": "1591017",
-    "unicode": "⠁⠻⠊⠁⠇"
+    "unicode": "⠁⠻⠊⠁⠇",
+    "world": "⠴⠁⠻⠊⠁⠇⠲"
   },
   {
     "input": "aerobic",
     "internal": "a]obic",
     "expected": "159213109",
-    "unicode": "⠁⠻⠕⠃⠊⠉"
+    "unicode": "⠁⠻⠕⠃⠊⠉",
+    "world": "⠴⠁⠻⠕⠃⠊⠉⠲"
   },
   {
     "input": "Baedeker",
     "internal": ",ba$ek]",
     "expected": "32314317559",
-    "unicode": "⠠⠃⠁⠫⠑⠅⠻"
+    "unicode": "⠠⠃⠁⠫⠑⠅⠻",
+    "world": "⠴⠠⠃⠁⠫⠑⠅⠻⠲"
   },
   {
     "input": "Betws-y-Coed",
     "internal": ",betws-;y-,co$",
     "expected": "32317305814364861363292143",
-    "unicode": "⠠⠃⠑⠞⠺⠎⠤⠰⠽⠤⠠⠉⠕⠫"
+    "unicode": "⠠⠃⠑⠞⠺⠎⠤⠰⠽⠤⠠⠉⠕⠫",
+    "world": "⠴⠠⠃⠑⠞⠺⠎⠤⠰⠽⠤⠠⠉⠕⠫⠲"
   },
   {
     "input": "Blaenau Ffestiniog",
     "internal": ",bla5au ,ffe/9iog",
     "expected": "32371341370321111171220102127",
-    "unicode": "⠠⠃⠇⠁⠢⠁⠥⠀⠠⠋⠋⠑⠌⠔⠊⠕⠛"
+    "unicode": "⠠⠃⠇⠁⠢⠁⠥⠀⠠⠋⠋⠑⠌⠔⠊⠕⠛",
+    "world": "⠴⠠⠃⠇⠁⠢⠁⠥ ⠠⠋⠋⠑⠌⠔⠊⠕⠛⠲"
   },
   {
     "input": "Caernarvon",
     "internal": ",ca]n>von",
     "expected": "3291592928392129",
-    "unicode": "⠠⠉⠁⠻⠝⠜⠧⠕⠝"
+    "unicode": "⠠⠉⠁⠻⠝⠜⠧⠕⠝",
+    "world": "⠴⠠⠉⠁⠻⠝⠜⠧⠕⠝⠲"
   },
   {
     "input": "Daedalus",
     "internal": ",da$alus",
     "expected": "3225143173714",
-    "unicode": "⠠⠙⠁⠫⠁⠇⠥⠎"
+    "unicode": "⠠⠙⠁⠫⠁⠇⠥⠎",
+    "world": "⠴⠠⠙⠁⠫⠁⠇⠥⠎⠲"
   },
   {
     "input": "diaeresis",
     "internal": "dia]esis",
     "expected": "251015917141014",
-    "unicode": "⠙⠊⠁⠻⠑⠎⠊⠎"
+    "unicode": "⠙⠊⠁⠻⠑⠎⠊⠎",
+    "world": "⠴⠙⠊⠁⠻⠑⠎⠊⠎⠲"
   },
   {
     "input": "encyclopaedia",
     "internal": "5cyclopa$ia",
     "expected": "34961972115143101",
-    "unicode": "⠢⠉⠽⠉⠇⠕⠏⠁⠫⠊⠁"
+    "unicode": "⠢⠉⠽⠉⠇⠕⠏⠁⠫⠊⠁",
+    "world": "⠴⠢⠉⠽⠉⠇⠕⠏⠁⠫⠊⠁⠲"
   },
   {
     "input": "faerie",
     "internal": "fa]ie",
     "expected": "111591017",
-    "unicode": "⠋⠁⠻⠊⠑"
+    "unicode": "⠋⠁⠻⠊⠑",
+    "world": "⠴⠋⠁⠻⠊⠑⠲"
   },
   {
     "input": "Goering",
     "internal": ",go]+",
     "expected": "3227215944",
-    "unicode": "⠠⠛⠕⠻⠬"
+    "unicode": "⠠⠛⠕⠻⠬",
+    "world": "⠴⠠⠛⠕⠻⠬⠲"
   },
   {
     "input": "Gruenfeld",
     "internal": ",gru5feld",
     "expected": "32272337341117725",
-    "unicode": "⠠⠛⠗⠥⠢⠋⠑⠇⠙"
+    "unicode": "⠠⠛⠗⠥⠢⠋⠑⠇⠙",
+    "world": "⠴⠠⠛⠗⠥⠢⠋⠑⠇⠙⠲"
   },
   {
     "input": "Judaean",
     "internal": ",juda1n",
     "expected": "322637251229",
-    "unicode": "⠠⠚⠥⠙⠁⠂⠝"
+    "unicode": "⠠⠚⠥⠙⠁⠂⠝",
+    "world": "⠴⠠⠚⠥⠙⠁⠂⠝⠲"
   },
   {
     "input": "Liliaceae",
     "internal": ",liliac1e",
     "expected": "3271071019217",
-    "unicode": "⠠⠇⠊⠇⠊⠁⠉⠂⠑"
+    "unicode": "⠠⠇⠊⠇⠊⠁⠉⠂⠑",
+    "world": "⠴⠠⠇⠊⠇⠊⠁⠉⠂⠑⠲"
   },
   {
     "input": "maenad",
     "internal": "ma5ad",
     "expected": "13134125",
-    "unicode": "⠍⠁⠢⠁⠙"
+    "unicode": "⠍⠁⠢⠁⠙",
+    "world": "⠴⠍⠁⠢⠁⠙⠲"
   },
   {
     "input": "Oedipus",
     "internal": ",o$ipus",
     "expected": "32214310153714",
-    "unicode": "⠠⠕⠫⠊⠏⠥⠎"
+    "unicode": "⠠⠕⠫⠊⠏⠥⠎",
+    "world": "⠴⠠⠕⠫⠊⠏⠥⠎⠲"
   },
   {
     "input": "orthopaedic",
     "internal": "or?opa$ic",
     "expected": "2123572115143109",
-    "unicode": "⠕⠗⠹⠕⠏⠁⠫⠊⠉"
+    "unicode": "⠕⠗⠹⠕⠏⠁⠫⠊⠉",
+    "world": "⠴⠕⠗⠹⠕⠏⠁⠫⠊⠉⠲"
   },
   {
     "input": "paean",
     "internal": "pa1n",
     "expected": "151229",
-    "unicode": "⠏⠁⠂⠝"
+    "unicode": "⠏⠁⠂⠝",
+    "world": "⠴⠏⠁⠂⠝⠲"
   },
   {
     "input": "phoenix",
     "internal": "pho5ix",
     "expected": "151921341045",
-    "unicode": "⠏⠓⠕⠢⠊⠭"
+    "unicode": "⠏⠓⠕⠢⠊⠭",
+    "world": "⠴⠏⠓⠕⠢⠊⠭⠲"
   },
   {
     "input": "Schoenberg",
     "internal": ",s*o5b]g",
     "expected": "321433213435927",
-    "unicode": "⠠⠎⠡⠕⠢⠃⠻⠛"
+    "unicode": "⠠⠎⠡⠕⠢⠃⠻⠛",
+    "world": "⠴⠠⠎⠡⠕⠢⠃⠻⠛⠲"
   },
   {
     "input": "subpoena",
     "internal": "subpo5a",
     "expected": "143731521341",
-    "unicode": "⠎⠥⠃⠏⠕⠢⠁"
+    "unicode": "⠎⠥⠃⠏⠕⠢⠁",
+    "world": "⠴⠎⠥⠃⠏⠕⠢⠁⠲"
   },
   {
     "input": "færie",
     "internal": "fa^6erie",
     "expected": "111242217231017",
-    "unicode": "⠋⠁⠘⠖⠑⠗⠊⠑"
+    "unicode": "⠋⠁⠘⠖⠑⠗⠊⠑",
+    "world": "⠴⠋⠁⠘⠖⠑⠗⠊⠑⠲"
   }
 ]

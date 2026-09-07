@@ -13,6 +13,9 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '\u{F000}' => &[decode_unicode('⠸'), decode_unicode('⠦'), decode_unicode('⠦'), decode_unicode('⠄')],
     '…' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')],
     '⋯' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')],
+    // 제53항 [다만] — 점 개수를 밝혀야 하는 줄임표는 묵자의 점 수만큼
+    // ⠠을 적는다. U+2025 TWO DOT LEADER visibly carries two points.
+    '‥' => &[decode_unicode('⠠'), decode_unicode('⠠')],
     '!' => &[decode_unicode('⠖')],
     '.' => &[decode_unicode('⠲')],
     ',' => &[decode_unicode('⠐')],
@@ -69,6 +72,9 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '□' => &[decode_unicode('⠸'),decode_unicode('⠶'), decode_unicode('⠇')],
     '•' => &[decode_unicode('⠸'),decode_unicode('⠲')],
     'ː' => &[decode_unicode('⠠'), decode_unicode('⠄')],
+    // 국제음성기호 제2장 — U+02D1 MODIFIER LETTER HALF TRIANGULAR COLON,
+    // 반장음 부호. IPA 문맥 밖에서도 이 Unicode scalar is unambiguous.
+    'ˑ' => &[decode_unicode('⠐'), decode_unicode('⠂')],
     '〃' => &[decode_unicode('⠴'), decode_unicode('⠴')],
     // PDF 제60항 [붙임 1] — 참조 기호 ※ (U+203B).
     '※' => &[decode_unicode('⠸'), decode_unicode('⠔')],
@@ -81,7 +87,7 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
 /// gates *which* symbols are English-eligible and does NOT duplicate the point
 /// shapes. (Whether a given `:`/`,` is actually rendered English in 제39항 영-한
 /// wrap context is decided by `english_logic::should_render_symbol_as_english`.)
-const ENGLISH_SYMBOL_CHARS: [char; 5] = ['(', ')', ',', '-', ':'];
+const ENGLISH_SYMBOL_CHARS: [char; 6] = ['(', ')', ',', '-', ':', '…'];
 
 pub fn encode_char_symbol_shortcut(text: char) -> Result<&'static [u8], String> {
     if let Some(code) = SHORTCUT_MAP.get(&text) {
@@ -128,6 +134,7 @@ mod test {
     #[case('\'')]
     #[case('~')]
     #[case('…')]
+    #[case('‥')]
     #[case('!')]
     #[case('.')]
     #[case(',')]
@@ -143,8 +150,18 @@ mod test {
     #[case('①')]
     #[case('ⓐ')]
     #[case('￦')]
+    #[case('ˑ')]
     pub fn test_is_symbol_char(#[case] ch: char) {
         assert!(is_symbol_char(ch));
+    }
+
+    #[rstest::rstest]
+    #[case::two_dot_leader('‥', "⠠⠠")]
+    #[case::ipa_half_length('ˑ', "⠐⠂")]
+    fn extended_standard_marks_have_pdf_defined_cells(#[case] input: char, #[case] expected: &str) {
+        let actual = encode_char_symbol_shortcut(input).unwrap();
+        let expected = expected.chars().map(decode_unicode).collect::<Vec<_>>();
+        assert_eq!(actual, expected);
     }
 
     #[rstest::rstest]

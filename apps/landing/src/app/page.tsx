@@ -130,7 +130,7 @@ export default function HomePage() {
             >
               <Box
                 aria-hidden="true"
-                aspectRatio="838/341"
+                aspectRatio="838/363"
                 bg="$text"
                 maskImage="url(/images/home/hero.svg)"
                 maskPosition="start"

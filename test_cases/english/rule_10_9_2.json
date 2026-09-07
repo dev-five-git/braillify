@@ -3,198 +3,231 @@
     "input": "aboveground",
     "internal": "abvgr.d",
     "expected": "133927234025",
-    "unicode": "⠁⠃⠧⠛⠗⠨⠙"
+    "unicode": "⠁⠃⠧⠛⠗⠨⠙",
+    "world": "⠴⠁⠃⠧⠛⠗⠨⠙⠲"
   },
   {
     "input": "LetterMen",
     "internal": ",lr,m5",
     "expected": "32723321334",
-    "unicode": "⠠⠇⠗⠠⠍⠢"
+    "unicode": "⠠⠇⠗⠠⠍⠢",
+    "world": "⠴⠠⠇⠗⠠⠍⠢⠲"
   },
   {
     "input": "Friendly Islands",
     "internal": ",frly ,isl&s",
     "expected": "321123761032101474714",
-    "unicode": "⠠⠋⠗⠇⠽⠀⠠⠊⠎⠇⠯⠎"
+    "unicode": "⠠⠋⠗⠇⠽⠀⠠⠊⠎⠇⠯⠎",
+    "world": "⠴⠠⠋⠗⠇⠽ ⠠⠊⠎⠇⠯⠎⠲"
   },
   {
     "input": "godchildren",
     "internal": "god*n",
     "expected": "2721253329",
-    "unicode": "⠛⠕⠙⠡⠝"
+    "unicode": "⠛⠕⠙⠡⠝",
+    "world": "⠴⠛⠕⠙⠡⠝⠲"
   },
   {
     "input": "goodafternoon",
     "internal": "gdafn",
     "expected": "272511129",
-    "unicode": "⠛⠙⠁⠋⠝"
+    "unicode": "⠛⠙⠁⠋⠝",
+    "world": "⠴⠛⠙⠁⠋⠝⠲"
   },
   {
     "input": "Quicker Delivery",
     "internal": ",qk] ,deliv]y",
     "expected": "32315590322517710395961",
-    "unicode": "⠠⠟⠅⠻⠀⠠⠙⠑⠇⠊⠧⠻⠽"
+    "unicode": "⠠⠟⠅⠻⠀⠠⠙⠑⠇⠊⠧⠻⠽",
+    "world": "⠴⠠⠟⠅⠻ ⠠⠙⠑⠇⠊⠧⠻⠽⠲"
   },
   {
     "input": "repaid",
     "internal": "repd",
     "expected": "23171525",
-    "unicode": "⠗⠑⠏⠙"
+    "unicode": "⠗⠑⠏⠙",
+    "world": "⠴⠗⠑⠏⠙⠲"
   },
   {
     "input": "suchlike",
     "internal": "s*like",
     "expected": "1433710517",
-    "unicode": "⠎⠡⠇⠊⠅⠑"
+    "unicode": "⠎⠡⠇⠊⠅⠑",
+    "world": "⠴⠎⠡⠇⠊⠅⠑⠲"
   },
   {
     "input": "Mr Letterman could've quickly rebrailled the Aftercare Newsletter.",
     "internal": ",mr ,lrman cd've qkly rebrld ! ,afc>e ,newslr4",
     "expected": "32132303272313129092543917031576102317323725046032111928170322917581472350",
-    "unicode": "⠠⠍⠗⠀⠠⠇⠗⠍⠁⠝⠀⠉⠙⠄⠧⠑⠀⠟⠅⠇⠽⠀⠗⠑⠃⠗⠇⠙⠀⠮⠀⠠⠁⠋⠉⠜⠑⠀⠠⠝⠑⠺⠎⠇⠗⠲"
+    "unicode": "⠠⠍⠗⠀⠠⠇⠗⠍⠁⠝⠀⠉⠙⠄⠧⠑⠀⠟⠅⠇⠽⠀⠗⠑⠃⠗⠇⠙⠀⠮⠀⠠⠁⠋⠉⠜⠑⠀⠠⠝⠑⠺⠎⠇⠗⠲",
+    "world": "⠴⠠⠍⠗ ⠠⠇⠗⠍⠁⠝ ⠉⠙⠄⠧⠑ ⠟⠅⠇⠽ ⠗⠑⠃⠗⠇⠙ ⠮ ⠠⠁⠋⠉⠜⠑ ⠠⠝⠑⠺⠎⠇⠗⠲"
   },
   {
     "input": "I am brailling the newsletters' headlines.",
     "internal": ",i am braill+ ! newslrs' h1dl9es4",
     "expected": "3210011303231107744046029175814723144019225720171450",
-    "unicode": "⠠⠊⠀⠁⠍⠀⠃⠗⠁⠊⠇⠇⠬⠀⠮⠀⠝⠑⠺⠎⠇⠗⠎⠄⠀⠓⠂⠙⠇⠔⠑⠎⠲"
+    "unicode": "⠠⠊⠀⠁⠍⠀⠃⠗⠁⠊⠇⠇⠬⠀⠮⠀⠝⠑⠺⠎⠇⠗⠎⠄⠀⠓⠂⠙⠇⠔⠑⠎⠲",
+    "world": "⠴⠠⠊ ⠁⠍ ⠃⠗⠁⠊⠇⠇⠬ ⠮ ⠝⠑⠺⠎⠇⠗⠎⠄ ⠓⠂⠙⠇⠔⠑⠎⠲"
   },
   {
     "input": "littl𝐞𝐫",
     "internal": "littl^1]",
     "expected": "7103030724259",
-    "unicode": "⠇⠊⠞⠞⠇⠘⠂⠻"
+    "unicode": "⠇⠊⠞⠞⠇⠘⠂⠻",
+    "world": "⠴⠇⠊⠞⠞⠇"
   },
   {
     "input": "print/braille",
     "internal": "pr9t_/braille",
     "expected": "1523203056123231107717",
-    "unicode": "⠏⠗⠔⠞⠸⠌⠃⠗⠁⠊⠇⠇⠑"
+    "unicode": "⠏⠗⠔⠞⠸⠌⠃⠗⠁⠊⠇⠇⠑",
+    "world": "⠴⠏⠗⠔⠞⠸⠌⠃⠗⠁⠊⠇⠇⠑⠲"
   },
   {
     "input": "𝑢𝑛necessary",
     "internal": ".1un.'necess>y",
     "expected": "4023729404291791714142861",
-    "unicode": "⠨⠂⠥⠝⠨⠄⠝⠑⠉⠑⠎⠎⠜⠽"
+    "unicode": "⠨⠂⠥⠝⠨⠄⠝⠑⠉⠑⠎⠎⠜⠽",
+    "world": "⠴⠝⠑⠉⠲"
   },
   {
     "input": "www.afterschool.gov",
     "internal": "www4aft]s*ool4gov",
     "expected": "58585850111305914332121750272139",
-    "unicode": "⠺⠺⠺⠲⠁⠋⠞⠻⠎⠡⠕⠕⠇⠲⠛⠕⠧"
+    "unicode": "⠺⠺⠺⠲⠁⠋⠞⠻⠎⠡⠕⠕⠇⠲⠛⠕⠧",
+    "world": "⠴⠺⠺⠺⠲⠁⠋⠞⠻⠎⠡⠕⠕⠇⠲⠛⠕⠧⠲"
   },
   {
     "input": "aftereffect",
     "internal": "aft]e6ect",
     "expected": "1113059172217930",
-    "unicode": "⠁⠋⠞⠻⠑⠖⠑⠉⠞"
+    "unicode": "⠁⠋⠞⠻⠑⠖⠑⠉⠞",
+    "world": "⠴⠁⠋⠞⠻⠑⠖⠑⠉⠞⠲"
   },
   {
     "input": "afterimage",
     "internal": "aft]image",
     "expected": "1113059101312717",
-    "unicode": "⠁⠋⠞⠻⠊⠍⠁⠛⠑"
+    "unicode": "⠁⠋⠞⠻⠊⠍⠁⠛⠑",
+    "world": "⠴⠁⠋⠞⠻⠊⠍⠁⠛⠑⠲"
   },
   {
     "input": "blinded",
     "internal": "bl9d$",
     "expected": "37202543",
-    "unicode": "⠃⠇⠔⠙⠫"
+    "unicode": "⠃⠇⠔⠙⠫",
+    "world": "⠴⠃⠇⠔⠙⠫⠲"
   },
   {
     "input": "blinding",
     "internal": "bl9d+",
     "expected": "37202544",
-    "unicode": "⠃⠇⠔⠙⠬"
+    "unicode": "⠃⠇⠔⠙⠬",
+    "world": "⠴⠃⠇⠔⠙⠬⠲"
   },
   {
     "input": "befriended",
     "internal": "2fri5d$",
     "expected": "6112310342543",
-    "unicode": "⠆⠋⠗⠊⠢⠙⠫"
+    "unicode": "⠆⠋⠗⠊⠢⠙⠫",
+    "world": "⠴⠆⠋⠗⠊⠢⠙⠫⠲"
   },
   {
     "input": "friendy",
     "internal": "fri5dy",
     "expected": "112310342561",
-    "unicode": "⠋⠗⠊⠢⠙⠽"
+    "unicode": "⠋⠗⠊⠢⠙⠽",
+    "world": "⠴⠋⠗⠊⠢⠙⠽⠲"
   },
   {
     "input": "abouts",
     "internal": "ab\\ts",
     "expected": "13513014",
-    "unicode": "⠁⠃⠳⠞⠎"
+    "unicode": "⠁⠃⠳⠞⠎",
+    "world": "⠴⠁⠃⠳⠞⠎⠲"
   },
   {
     "input": "acrosses",
     "internal": "acrosses",
     "expected": "19232114141714",
-    "unicode": "⠁⠉⠗⠕⠎⠎⠑⠎"
+    "unicode": "⠁⠉⠗⠕⠎⠎⠑⠎",
+    "world": "⠴⠁⠉⠗⠕⠎⠎⠑⠎⠲"
   },
   {
     "input": "againe",
     "internal": "aga9e",
     "expected": "12712017",
-    "unicode": "⠁⠛⠁⠔⠑"
+    "unicode": "⠁⠛⠁⠔⠑",
+    "world": "⠴⠁⠛⠁⠔⠑⠲"
   },
   {
     "input": "almosts",
     "internal": "almo/s",
     "expected": "1713211214",
-    "unicode": "⠁⠇⠍⠕⠌⠎"
+    "unicode": "⠁⠇⠍⠕⠌⠎",
+    "world": "⠴⠁⠇⠍⠕⠌⠎⠲"
   },
   {
     "input": "hims",
     "internal": "hims",
     "expected": "19101314",
-    "unicode": "⠓⠊⠍⠎"
+    "unicode": "⠓⠊⠍⠎",
+    "world": "⠴⠓⠊⠍⠎⠲"
   },
   {
     "input": "hereinbefore",
     "internal": "\"h9be=e",
     "expected": "1619203176317",
-    "unicode": "⠐⠓⠔⠃⠑⠿⠑"
+    "unicode": "⠐⠓⠔⠃⠑⠿⠑",
+    "world": "⠴⠐⠓⠔⠃⠑⠿⠑⠲"
   },
   {
     "input": "hereinbelow",
     "internal": "\"h9bel[",
     "expected": "161920317742",
-    "unicode": "⠐⠓⠔⠃⠑⠇⠪"
+    "unicode": "⠐⠓⠔⠃⠑⠇⠪",
+    "world": "⠴⠐⠓⠔⠃⠑⠇⠪⠲"
   },
   {
     "input": "inbetween",
     "internal": "9betwe5",
     "expected": "2031730581734",
-    "unicode": "⠔⠃⠑⠞⠺⠑⠢"
+    "unicode": "⠔⠃⠑⠞⠺⠑⠢",
+    "world": "⠴⠔⠃⠑⠞⠺⠑⠢⠲"
   },
   {
     "input": "misconceived",
     "internal": "misconceiv$",
     "expected": "13101492129917103943",
-    "unicode": "⠍⠊⠎⠉⠕⠝⠉⠑⠊⠧⠫"
+    "unicode": "⠍⠊⠎⠉⠕⠝⠉⠑⠊⠧⠫",
+    "world": "⠴⠍⠊⠎⠉⠕⠝⠉⠑⠊⠧⠫⠲"
   },
   {
     "input": "\"couldx\"",
     "internal": "8c\\ldx0",
     "expected": "389517254552",
-    "unicode": "⠦⠉⠳⠇⠙⠭⠴"
+    "unicode": "⠦⠉⠳⠇⠙⠭⠴",
+    "world": "⠦⠴⠉⠳⠇⠙⠭⠴"
   },
   {
     "input": "Himalayas",
     "internal": ",himalayas",
     "expected": "3219101317161114",
-    "unicode": "⠠⠓⠊⠍⠁⠇⠁⠽⠁⠎"
+    "unicode": "⠠⠓⠊⠍⠁⠇⠁⠽⠁⠎",
+    "world": "⠴⠠⠓⠊⠍⠁⠇⠁⠽⠁⠎⠲"
   },
   {
     "input": "Suchet",
     "internal": ",su*et",
     "expected": "321437331730",
-    "unicode": "⠠⠎⠥⠡⠑⠞"
+    "unicode": "⠠⠎⠥⠡⠑⠞",
+    "world": "⠴⠠⠎⠥⠡⠑⠞⠲"
   },
   {
     "input": "Yourcenar",
     "internal": ",y\\rc5>",
     "expected": "3261512393428",
-    "unicode": "⠠⠽⠳⠗⠉⠢⠜"
+    "unicode": "⠠⠽⠳⠗⠉⠢⠜",
+    "world": "⠴⠠⠽⠳⠗⠉⠢⠜⠲"
   }
 ]

@@ -4,49 +4,57 @@
     "context": "english",
     "internal": "#fj ^j",
     "expected": "60112602426",
-    "unicode": "⠼⠋⠚⠀⠘⠚"
+    "unicode": "⠼⠋⠚⠀⠘⠚",
+    "world": "⠼⠋⠚ ⠴⠙"
   },
   {
     "input": "21°C",
     "internal": "#ba^j,c",
     "expected": "60312426329",
-    "unicode": "⠼⠃⠁⠘⠚⠠⠉"
+    "unicode": "⠼⠃⠁⠘⠚⠠⠉",
+    "world": "⠼⠃⠁⠴⠙⠰⠠⠉⠲"
   },
   {
     "input": "70° F",
     "internal": "#gj^j ;,f",
     "expected": "60272624260483211",
-    "unicode": "⠼⠛⠚⠘⠚⠀⠰⠠⠋"
+    "unicode": "⠼⠛⠚⠘⠚⠀⠰⠠⠋",
+    "world": "⠼⠛⠚⠴⠙ ⠴⠠⠋⠲"
   },
   {
     "input": "°C",
     "internal": "^j,c",
     "expected": "2426329",
-    "unicode": "⠘⠚⠠⠉"
+    "unicode": "⠘⠚⠠⠉",
+    "world": "⠴⠙⠰⠠⠉⠲"
   },
   {
     "input": "X°",
     "internal": ",x^j",
     "expected": "32452426",
-    "unicode": "⠠⠭⠘⠚"
+    "unicode": "⠠⠭⠘⠚",
+    "world": "⠴⠠⠭⠴⠙"
   },
   {
     "input": "250°, 350°, or 450°?",
     "internal": "#bej^j1 #cej^j1 or #dej^j8",
     "expected": "603172624262060917262426202123060251726242638",
-    "unicode": "⠼⠃⠑⠚⠘⠚⠂⠀⠼⠉⠑⠚⠘⠚⠂⠀⠕⠗⠀⠼⠙⠑⠚⠘⠚⠦"
+    "unicode": "⠼⠃⠑⠚⠘⠚⠂⠀⠼⠉⠑⠚⠘⠚⠂⠀⠕⠗⠀⠼⠙⠑⠚⠘⠚⠦",
+    "world": "⠼⠃⠑⠚⠴⠙⠐ ⠼⠉⠑⠚⠴⠙⠐ ⠴⠕⠗ ⠼⠙⠑⠚⠴⠙⠦"
   },
   {
     "input": "33°51′35.9″S",
     "context": "english",
     "internal": "#cc^j#ea7#ce4i77,s",
     "expected": "60992426601715460917501054543214",
-    "unicode": "⠼⠉⠉⠘⠚⠼⠑⠁⠶⠼⠉⠑⠲⠊⠶⠶⠠⠎"
+    "unicode": "⠼⠉⠉⠘⠚⠼⠑⠁⠶⠼⠉⠑⠲⠊⠶⠶⠠⠎",
+    "world": "⠼⠉⠉⠴⠙⠼⠑⠁⠴⠤⠼⠉⠑⠲⠊⠴⠤⠤⠰⠠⠎⠲"
   },
   {
     "input": "151° 12' 40\" E",
     "internal": "#aea^j #ab' #dj,7 ;,e",
     "expected": "6011712426060134060252632540483217",
-    "unicode": "⠼⠁⠑⠁⠘⠚⠀⠼⠁⠃⠄⠀⠼⠙⠚⠠⠶⠀⠰⠠⠑"
+    "unicode": "⠼⠁⠑⠁⠘⠚⠀⠼⠁⠃⠄⠀⠼⠙⠚⠠⠶⠀⠰⠠⠑",
+    "world": "⠼⠁⠑⠁⠴⠙ ⠼⠁⠃⠄ ⠼⠙⠚⠦ ⠴⠠⠑⠲"
   }
 ]

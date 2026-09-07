@@ -3,207 +3,241 @@
     "input": "U.S.A.",
     "internal": ",u4,s4,a4",
     "expected": "32375032145032150",
-    "unicode": "⠠⠥⠲⠠⠎⠲⠠⠁⠲"
+    "unicode": "⠠⠥⠲⠠⠎⠲⠠⠁⠲",
+    "world": "⠴⠠⠥⠲⠠⠎⠲⠠⠁⠲"
   },
   {
     "input": "W..c.ster",
     "internal": ",w44c4/]",
     "expected": "325850509501259",
-    "unicode": "⠠⠺⠲⠲⠉⠲⠌⠻"
+    "unicode": "⠠⠺⠲⠲⠉⠲⠌⠻",
+    "world": "⠴⠠⠺⠲⠲⠉⠲⠌⠻⠲"
   },
   {
     "input": "What ...?",
     "internal": ",:at 4448",
     "expected": "3249130050505038",
-    "unicode": "⠠⠱⠁⠞⠀⠲⠲⠲⠦"
+    "unicode": "⠠⠱⠁⠞⠀⠲⠲⠲⠦",
+    "world": "⠴⠠⠱⠁⠞ ⠲⠲⠲⠦"
   },
   {
     "input": "Why?",
     "internal": ",:y8",
     "expected": "32496138",
-    "unicode": "⠠⠱⠽⠦"
+    "unicode": "⠠⠱⠽⠦",
+    "world": "⠴⠠⠱⠽⠦"
   },
   {
     "input": "2.5%",
     "context": "english",
     "internal": "#b4e.0",
     "expected": "60350174052",
-    "unicode": "⠼⠃⠲⠑⠨⠴"
+    "unicode": "⠼⠃⠲⠑⠨⠴",
+    "world": "⠼⠃⠲⠑⠴⠏"
   },
   {
     "input": "2,5%",
     "context": "english",
     "internal": "#b1e.0",
     "expected": "6032174052",
-    "unicode": "⠼⠃⠂⠑⠨⠴"
+    "unicode": "⠼⠃⠂⠑⠨⠴",
+    "world": "⠼⠃⠂⠑⠴⠏"
   },
   {
     "input": "Yes, please.",
     "internal": ",yes1 pl1se4",
     "expected": "32611714201572141750",
-    "unicode": "⠠⠽⠑⠎⠂⠀⠏⠇⠂⠎⠑⠲"
+    "unicode": "⠠⠽⠑⠎⠂⠀⠏⠇⠂⠎⠑⠲",
+    "world": "⠴⠠⠽⠑⠎⠂ ⠏⠇⠂⠎⠑⠲"
   },
   {
     "input": "No, never!",
     "internal": ",no1 n\"e6",
     "expected": "3229212029161722",
-    "unicode": "⠠⠝⠕⠂⠀⠝⠐⠑⠖"
+    "unicode": "⠠⠝⠕⠂⠀⠝⠐⠑⠖",
+    "world": "⠴⠠⠝⠕⠂ ⠝⠐⠑⠖"
   },
   {
     "input": "Shopping list:  red, green and yellow peppers; onions; sweet potatoes (or yams).",
     "internal": ",%opp+ li/3 r$1 gre5 & yell[ pepp]s2 onions2 sweet potatoes \"<or yams\">4",
     "expected": "32412115154407101218023432027231734047061177742015171515591460212910212914601458171730015213013021171401635212306111314162850",
-    "unicode": "⠠⠩⠕⠏⠏⠬⠀⠇⠊⠌⠒⠀⠗⠫⠂⠀⠛⠗⠑⠢⠀⠯⠀⠽⠑⠇⠇⠪⠀⠏⠑⠏⠏⠻⠎⠆⠀⠕⠝⠊⠕⠝⠎⠆⠀⠎⠺⠑⠑⠞⠀⠏⠕⠞⠁⠞⠕⠑⠎⠀⠐⠣⠕⠗⠀⠽⠁⠍⠎⠐⠜⠲"
+    "unicode": "⠠⠩⠕⠏⠏⠬⠀⠇⠊⠌⠒⠀⠗⠫⠂⠀⠛⠗⠑⠢⠀⠯⠀⠽⠑⠇⠇⠪⠀⠏⠑⠏⠏⠻⠎⠆⠀⠕⠝⠊⠕⠝⠎⠆⠀⠎⠺⠑⠑⠞⠀⠏⠕⠞⠁⠞⠕⠑⠎⠀⠐⠣⠕⠗⠀⠽⠁⠍⠎⠐⠜⠲",
+    "world": "⠴⠠⠩⠕⠏⠏⠬ ⠇⠊⠌⠒  ⠗⠫⠂ ⠛⠗⠑⠢ ⠯ ⠽⠑⠇⠇⠪ ⠏⠑⠏⠏⠻⠎⠆ ⠕⠝⠊⠕⠝⠎⠆ ⠎⠺⠑⠑⠞ ⠏⠕⠞⠁⠞⠕⠑⠎ ⠐⠣⠕⠗ ⠽⠁⠍⠎⠠⠴⠲"
   },
   {
     "input": "4:30",
     "context": "english",
     "internal": "#d3#cj",
     "expected": "60251860926",
-    "unicode": "⠼⠙⠒⠼⠉⠚"
+    "unicode": "⠼⠙⠒⠼⠉⠚",
+    "world": "⠼⠙⠐⠂⠼⠉⠚"
   },
   {
     "input": "STOP!!",
     "internal": ",,/op66",
     "expected": "32321221152222",
-    "unicode": "⠠⠠⠌⠕⠏⠖⠖"
+    "unicode": "⠠⠠⠌⠕⠏⠖⠖",
+    "world": "⠴⠠⠠⠌⠕⠏⠖⠖"
   },
   {
     "input": "(See above.)",
     "internal": "\"<,see abv4\">",
     "expected": "16353214171701339501628",
-    "unicode": "⠐⠣⠠⠎⠑⠑⠀⠁⠃⠧⠲⠐⠜"
+    "unicode": "⠐⠣⠠⠎⠑⠑⠀⠁⠃⠧⠲⠐⠜",
+    "world": "⠦⠄⠴⠠⠎⠑⠑ ⠁⠃⠧⠲⠠⠴"
   },
   {
     "input": "noun(s)",
     "internal": "n\\n\"<s\">",
     "expected": "2951291635141628",
-    "unicode": "⠝⠳⠝⠐⠣⠎⠐⠜"
+    "unicode": "⠝⠳⠝⠐⠣⠎⠐⠜",
+    "world": "⠴⠝⠳⠝⠐⠣⠎⠠⠴"
   },
   {
     "input": "in b) and f)",
     "internal": "9 ;b\"> & ;f\">",
     "expected": "2004831628047048111628",
-    "unicode": "⠔⠀⠰⠃⠐⠜⠀⠯⠀⠰⠋⠐⠜"
+    "unicode": "⠔⠀⠰⠃⠐⠜⠀⠯⠀⠰⠋⠐⠜",
+    "world": "⠴⠊⠝ ⠰⠃⠐⠜ ⠯ ⠰⠋⠠⠴"
   },
   {
     "input": "Balance:  ($52.68)",
     "internal": ",bal.e3 \"<@s#eb4fh\">",
     "expected": "3231740171801635814601735011191628",
-    "unicode": "⠠⠃⠁⠇⠨⠑⠒⠀⠐⠣⠈⠎⠼⠑⠃⠲⠋⠓⠐⠜"
+    "unicode": "⠠⠃⠁⠇⠨⠑⠒⠀⠐⠣⠈⠎⠼⠑⠃⠲⠋⠓⠐⠜",
+    "world": "⠴⠠⠃⠁⠇⠨⠑⠒  ⠦⠄⠈⠎⠼⠑⠃⠲⠋⠓⠠⠴"
   },
   {
     "input": "Plaintiff stated, \"[m]y causes is [𝑠𝑖𝑐] just.\"",
     "internal": ",pla9tiff /at$1 8.<m.>y causes is .<.1sic.> j40",
     "expected": "32157120301011110121304320384035134028610913714171401014040354021410940280265052",
-    "unicode": "⠠⠏⠇⠁⠔⠞⠊⠋⠋⠀⠌⠁⠞⠫⠂⠀⠦⠨⠣⠍⠨⠜⠽⠀⠉⠁⠥⠎⠑⠎⠀⠊⠎⠀⠨⠣⠨⠂⠎⠊⠉⠨⠜⠀⠚⠲⠴"
+    "unicode": "⠠⠏⠇⠁⠔⠞⠊⠋⠋⠀⠌⠁⠞⠫⠂⠀⠦⠨⠣⠍⠨⠜⠽⠀⠉⠁⠥⠎⠑⠎⠀⠊⠎⠀⠨⠣⠨⠂⠎⠊⠉⠨⠜⠀⠚⠲⠴",
+    "world": "⠴⠠⠏⠇⠁⠔⠞⠊⠋⠋ ⠌⠁⠞⠫⠂ ⠦⠨⠣⠍⠨⠜⠽ ⠉⠁⠥⠎⠑⠎ ⠊⠎ ⠨⠣⠎⠊⠉⠨⠜ ⠚⠲⠦"
   },
   {
     "input": "Jan Swan <swanj@iafrica.com>",
     "internal": ",jan ,swan @<swanj@aiafrica4com@>",
     "expected": "32261290321458129083514581292681101112310915092113828",
-    "unicode": "⠠⠚⠁⠝⠀⠠⠎⠺⠁⠝⠀⠈⠣⠎⠺⠁⠝⠚⠈⠁⠊⠁⠋⠗⠊⠉⠁⠲⠉⠕⠍⠈⠜"
+    "unicode": "⠠⠚⠁⠝⠀⠠⠎⠺⠁⠝⠀⠈⠣⠎⠺⠁⠝⠚⠈⠁⠊⠁⠋⠗⠊⠉⠁⠲⠉⠕⠍⠈⠜",
+    "world": "⠴⠠⠚⠁⠝ ⠠⠎⠺⠁⠝ ⠈⠣⠎⠺⠁⠝⠚⠈⠁⠊⠁⠋⠗⠊⠉⠁⠲⠉⠕⠍⠢⠢"
   },
   {
     "input": "primary colours {red, blue, yellow}",
     "internal": "prim>y col\\rs _<r$1 blue1 yell[_>",
     "expected": "152310132861092175123140563523432037371720611777425628",
-    "unicode": "⠏⠗⠊⠍⠜⠽⠀⠉⠕⠇⠳⠗⠎⠀⠸⠣⠗⠫⠂⠀⠃⠇⠥⠑⠂⠀⠽⠑⠇⠇⠪⠸⠜"
+    "unicode": "⠏⠗⠊⠍⠜⠽⠀⠉⠕⠇⠳⠗⠎⠀⠸⠣⠗⠫⠂⠀⠃⠇⠥⠑⠂⠀⠽⠑⠇⠇⠪⠸⠜",
+    "world": "⠴⠏⠗⠊⠍⠜⠽ ⠉⠕⠇⠳⠗⠎ ⠸⠣⠗⠫⠂ ⠃⠇⠥⠑⠂ ⠽⠑⠇⠇⠪⠐⠴"
   },
   {
     "input": "he/she",
     "internal": "he_/%e",
     "expected": "191756124117",
-    "unicode": "⠓⠑⠸⠌⠩⠑"
+    "unicode": "⠓⠑⠸⠌⠩⠑",
+    "world": "⠴⠓⠑⠸⠌⠩⠑⠲"
   },
   {
     "input": "b/fast",
     "internal": "b_/fa/",
     "expected": "3561211112",
-    "unicode": "⠃⠸⠌⠋⠁⠌"
+    "unicode": "⠃⠸⠌⠋⠁⠌",
+    "world": "⠴⠃⠸⠌⠋⠁⠌⠲"
   },
   {
     "input": "9/11",
     "internal": "#i_/#aa",
     "expected": "601056126011",
-    "unicode": "⠼⠊⠸⠌⠼⠁⠁"
+    "unicode": "⠼⠊⠸⠌⠼⠁⠁",
+    "world": "⠼⠊⠸⠌⠼⠁⠁"
   },
   {
     "input": "Jan/Feb",
     "internal": ",jan_/,feb",
     "expected": "322612956123211173",
-    "unicode": "⠠⠚⠁⠝⠸⠌⠠⠋⠑⠃"
+    "unicode": "⠠⠚⠁⠝⠸⠌⠠⠋⠑⠃",
+    "world": "⠴⠠⠚⠁⠝⠸⠌⠠⠋⠑⠃⠲"
   },
   {
     "input": "his Gaza Strip / West Bank tour",
     "internal": "8 ,gaza ,/rip _/ ,we/ ,bank t\\r",
     "expected": "380322715310321223101505612032581712032312950305123",
-    "unicode": "⠦⠀⠠⠛⠁⠵⠁⠀⠠⠌⠗⠊⠏⠀⠸⠌⠀⠠⠺⠑⠌⠀⠠⠃⠁⠝⠅⠀⠞⠳⠗"
+    "unicode": "⠦⠀⠠⠛⠁⠵⠁⠀⠠⠌⠗⠊⠏⠀⠸⠌⠀⠠⠺⠑⠌⠀⠠⠃⠁⠝⠅⠀⠞⠳⠗",
+    "world": "⠴⠓⠊⠎ ⠠⠛⠁⠵⠁ ⠠⠌⠗⠊⠏ ⠸⠌ ⠠⠺⠑⠌ ⠠⠃⠁⠝⠅ ⠞⠳⠗⠲"
   },
   {
     "input": "c:\\desktop",
     "internal": "c3_*desktop",
     "expected": "91856332517145302115",
-    "unicode": "⠉⠒⠸⠡⠙⠑⠎⠅⠞⠕⠏"
+    "unicode": "⠉⠒⠸⠡⠙⠑⠎⠅⠞⠕⠏",
+    "world": "⠴⠉⠒⠸⠡⠙⠑⠎⠅⠞⠕⠏⠲"
   },
   {
     "input": "self-control",
     "internal": "self-3trol",
     "expected": "141771136183023217",
-    "unicode": "⠎⠑⠇⠋⠤⠒⠞⠗⠕⠇"
+    "unicode": "⠎⠑⠇⠋⠤⠒⠞⠗⠕⠇",
+    "world": "⠴⠎⠑⠇⠋⠤⠒⠞⠗⠕⠇⠲"
   },
   {
     "input": "tied 1-1",
     "internal": "ti$ #a-#a",
     "expected": "301043060136601",
-    "unicode": "⠞⠊⠫⠀⠼⠁⠤⠼⠁"
+    "unicode": "⠞⠊⠫⠀⠼⠁⠤⠼⠁",
+    "world": "⠴⠞⠊⠫ ⠼⠁⠤⠼⠁"
   },
   {
     "input": "forty-one or -two",
     "internal": "=ty-\"o or -two",
     "expected": "63306136162102123036305821",
-    "unicode": "⠿⠞⠽⠤⠐⠕⠀⠕⠗⠀⠤⠞⠺⠕"
+    "unicode": "⠿⠞⠽⠤⠐⠕⠀⠕⠗⠀⠤⠞⠺⠕",
+    "world": "⠴⠿⠞⠽⠤⠐⠕ ⠕⠗ ⠤⠞⠺⠕⠲"
   },
   {
     "input": "320-foot wingspan",
     "internal": "#cbj-foot w+span",
     "expected": "6093263611212130058441415129",
-    "unicode": "⠼⠉⠃⠚⠤⠋⠕⠕⠞⠀⠺⠬⠎⠏⠁⠝"
+    "unicode": "⠼⠉⠃⠚⠤⠋⠕⠕⠞⠀⠺⠬⠎⠏⠁⠝",
+    "world": "⠼⠉⠃⠚⠤⠴⠋⠕⠕⠞ ⠺⠬⠎⠏⠁⠝⠲"
   },
   {
     "input": "five- or six-pointed star",
     "internal": "five- or six-po9t$ />",
     "expected": "111039173602123014104536152120304301228",
-    "unicode": "⠋⠊⠧⠑⠤⠀⠕⠗⠀⠎⠊⠭⠤⠏⠕⠔⠞⠫⠀⠌⠜"
+    "unicode": "⠋⠊⠧⠑⠤⠀⠕⠗⠀⠎⠊⠭⠤⠏⠕⠔⠞⠫⠀⠌⠜",
+    "world": "⠴⠋⠊⠧⠑⠤ ⠕⠗ ⠎⠊⠭⠤⠏⠕⠔⠞⠫ ⠌⠜⠲"
   },
   {
     "input": "add -s",
     "internal": "add -;s",
     "expected": "125250364814",
-    "unicode": "⠁⠙⠙⠀⠤⠰⠎"
+    "unicode": "⠁⠙⠙⠀⠤⠰⠎",
+    "world": "⠴⠁⠙⠙ ⠤⠰⠎⠲"
   },
   {
     "input": "add –s",
     "internal": "add ,-;s",
     "expected": "12525032364814",
-    "unicode": "⠁⠙⠙⠀⠠⠤⠰⠎"
+    "unicode": "⠁⠙⠙⠀⠠⠤⠰⠎",
+    "world": "⠴⠁⠙⠙ ⠠⠤⠰⠎⠲"
   },
   {
     "input": "Mr J----",
     "internal": ",mr ;,j----",
     "expected": "321323048322636363636",
-    "unicode": "⠠⠍⠗⠀⠰⠠⠚⠤⠤⠤⠤"
+    "unicode": "⠠⠍⠗⠀⠰⠠⠚⠤⠤⠤⠤",
+    "world": "⠴⠠⠍⠗ ⠰⠠⠚⠲"
   },
   {
     "input": "Mr J–",
     "internal": ",mr ;,j,-",
     "expected": "32132304832263236",
-    "unicode": "⠠⠍⠗⠀⠰⠠⠚⠠⠤"
+    "unicode": "⠠⠍⠗⠀⠰⠠⠚⠠⠤",
+    "world": "⠴⠠⠍⠗ ⠰⠠⠚⠤⠤"
   },
   {
     "input": "\"Ask Ms. —, she will know.\"",
     "internal": "8,ask ,ms4 ,-1 %e w \"k40",
     "expected": "383211450321314500323620411705801655052",
-    "unicode": "⠦⠠⠁⠎⠅⠀⠠⠍⠎⠲⠀⠠⠤⠂⠀⠩⠑⠀⠺⠀⠐⠅⠲⠴"
+    "unicode": "⠦⠠⠁⠎⠅⠀⠠⠍⠎⠲⠀⠠⠤⠂⠀⠩⠑⠀⠺⠀⠐⠅⠲⠴",
+    "world": "⠦⠴⠠⠁⠎⠅ ⠠⠍⠎⠲ ⠠⠤⠂ ⠩⠑ ⠺ ⠐⠅⠲⠴"
   }
 ]

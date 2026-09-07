@@ -3,120 +3,140 @@
     "input": "not in here",
     "internal": "n 9 \"h",
     "expected": "2902001619",
-    "unicode": "⠝⠀⠔⠀⠐⠓"
+    "unicode": "⠝⠀⠔⠀⠐⠓",
+    "world": "⠴⠝⠕⠞ ⠔ ⠐⠓⠲"
   },
   {
     "input": "In or out?",
     "internal": ",9 or \\8",
     "expected": "32200212305138",
-    "unicode": "⠠⠔⠀⠕⠗⠀⠳⠦"
+    "unicode": "⠠⠔⠀⠕⠗⠀⠳⠦",
+    "world": "⠴⠠⠊⠝ ⠕⠗ ⠳⠦"
   },
   {
     "input": "GO ALL IN",
     "internal": ",,,g all 9,'",
     "expected": "323232270177020324",
-    "unicode": "⠠⠠⠠⠛⠀⠁⠇⠇⠀⠔⠠⠄"
+    "unicode": "⠠⠠⠠⠛⠀⠁⠇⠇⠀⠔⠠⠄",
+    "world": "⠴⠠⠠⠠⠛⠕ ⠁⠇⠇ ⠊⠝⠠⠄⠲"
   },
   {
     "input": "in't",
     "internal": "9't",
     "expected": "20430",
-    "unicode": "⠔⠄⠞"
+    "unicode": "⠔⠄⠞",
+    "world": "⠴⠔⠄⠞⠲"
   },
   {
     "input": "mother-in-law",
     "internal": "\"m-9-law",
     "expected": "16133620367158",
-    "unicode": "⠐⠍⠤⠔⠤⠇⠁⠺"
+    "unicode": "⠐⠍⠤⠔⠤⠇⠁⠺",
+    "world": "⠴⠐⠍⠤⠔⠤⠇⠁⠺⠲"
   },
   {
     "input": "listen-in",
     "internal": "li/5-9",
     "expected": "71012343620",
-    "unicode": "⠇⠊⠌⠢⠤⠔"
+    "unicode": "⠇⠊⠌⠢⠤⠔",
+    "world": "⠴⠇⠊⠌⠢⠤⠔⠲"
   },
   {
     "input": "Listen!—In this case …",
     "internal": ",li/56,-,9 ? case 444",
     "expected": "327101234223236322005709114170505050",
-    "unicode": "⠠⠇⠊⠌⠢⠖⠠⠤⠠⠔⠀⠹⠀⠉⠁⠎⠑⠀⠲⠲⠲"
+    "unicode": "⠠⠇⠊⠌⠢⠖⠠⠤⠠⠔⠀⠹⠀⠉⠁⠎⠑⠀⠲⠲⠲",
+    "world": "⠴⠠⠇⠊⠌⠢⠖⠠⠤⠠⠔ ⠹ ⠉⠁⠎⠑ ⠲⠲⠲"
   },
   {
     "input": "\"teach-in\"",
     "internal": "8t1*-90",
     "expected": "3830233362052",
-    "unicode": "⠦⠞⠂⠡⠤⠔⠴"
+    "unicode": "⠦⠞⠂⠡⠤⠔⠴",
+    "world": "⠦⠴⠞⠂⠡⠤⠔⠴"
   },
   {
     "input": "IN-DEPTH",
     "internal": ",,9-,,dep?",
     "expected": "32322036323225171557",
-    "unicode": "⠠⠠⠔⠤⠠⠠⠙⠑⠏⠹"
+    "unicode": "⠠⠠⠔⠤⠠⠠⠙⠑⠏⠹",
+    "world": "⠴⠠⠠⠔⠤⠠⠠⠙⠑⠏⠹⠲"
   },
   {
     "input": "(\"In no way.\")",
     "internal": "\"<8,9 no way40\">",
     "expected": "16353832200292105816150521628",
-    "unicode": "⠐⠣⠦⠠⠔⠀⠝⠕⠀⠺⠁⠽⠲⠴⠐⠜"
+    "unicode": "⠐⠣⠦⠠⠔⠀⠝⠕⠀⠺⠁⠽⠲⠴⠐⠜",
+    "world": "⠦⠄⠦⠴⠠⠊⠝ ⠝⠕ ⠺⠁⠽⠲⠴⠠⠴"
   },
   {
     "input": "𝑓𝑎𝑑𝑒 𝑖𝑛",
     "internal": ".1fade .19",
     "expected": "4021112517040220",
-    "unicode": "⠨⠂⠋⠁⠙⠑⠀⠨⠂⠔"
+    "unicode": "⠨⠂⠋⠁⠙⠑⠀⠨⠂⠔",
+    "world": ""
   },
   {
     "input": "-𝑖𝑛",
     "internal": "-.19",
     "expected": "3640220",
-    "unicode": "⠤⠨⠂⠔"
+    "unicode": "⠤⠨⠂⠔",
+    "world": "⠤"
   },
   {
     "input": "𝐼𝑛 𝑡ℎ𝑒 𝑏𝑜𝑥",
     "internal": ".7,9 ! box.'",
     "expected": "40543220046032145404",
-    "unicode": "⠨⠶⠠⠔⠀⠮⠀⠃⠕⠭⠨⠄"
+    "unicode": "⠨⠶⠠⠔⠀⠮⠀⠃⠕⠭⠨⠄",
+    "world": ""
   },
   {
     "input": "𝐚𝐟𝐭𝐞𝐫 𝐛𝐞𝐟𝐨𝐫𝐞 𝐛𝐞𝐭𝐰𝐞𝐞𝐧 𝐢𝐧",
     "internal": "^7af 2f 2t 9^'",
     "expected": "245411106110630020244",
-    "unicode": "⠘⠶⠁⠋⠀⠆⠋⠀⠆⠞⠀⠔⠘⠄"
+    "unicode": "⠘⠶⠁⠋⠀⠆⠋⠀⠆⠞⠀⠔⠘⠄",
+    "world": ""
   },
   {
     "input": "[open tn]In the table …[close tn]",
     "internal": "@.<,9 ! table 444@.>",
     "expected": "84035322004603013717050505084028",
-    "unicode": "⠈⠨⠣⠠⠔⠀⠮⠀⠞⠁⠃⠇⠑⠀⠲⠲⠲⠈⠨⠜"
+    "unicode": "⠈⠨⠣⠠⠔⠀⠮⠀⠞⠁⠃⠇⠑⠀⠲⠲⠲⠈⠨⠜",
+    "world": "⠦⠆⠴⠕⠏⠢ ⠞⠝⠨⠜⠠⠔ ⠮ ⠞⠁⠃⠇⠑ ⠲⠲⠲⠨⠣⠉⠇⠕⠎⠑ ⠰⠞⠝⠰⠴"
   },
   {
     "input": "<in file>",
     "internal": "@<9 file@>",
     "expected": "8352001110717828",
-    "unicode": "⠈⠣⠔⠀⠋⠊⠇⠑⠈⠜"
+    "unicode": "⠈⠣⠔⠀⠋⠊⠇⠑⠈⠜",
+    "world": "⠔⠔⠴⠊⠝ ⠋⠊⠇⠑⠢⠢"
   },
   {
     "input": "in/out",
     "internal": "9_/\\t",
     "expected": "2056125130",
-    "unicode": "⠔⠸⠌⠳⠞"
+    "unicode": "⠔⠸⠌⠳⠞",
+    "world": "⠴⠔⠸⠌⠳⠞⠲"
   },
   {
     "input": "Come in, stay in.",
     "internal": ",come in1 /ay in4",
     "expected": "3292113170102920121610102950",
-    "unicode": "⠠⠉⠕⠍⠑⠀⠊⠝⠂⠀⠌⠁⠽⠀⠊⠝⠲"
+    "unicode": "⠠⠉⠕⠍⠑⠀⠊⠝⠂⠀⠌⠁⠽⠀⠊⠝⠲",
+    "world": "⠴⠠⠉⠕⠍⠑ ⠊⠝⠂ ⠌⠁⠽ ⠊⠝⠲"
   },
   {
     "input": "\"In any case\"",
     "internal": "8,in any case0",
     "expected": "38321029012961091141752",
-    "unicode": "⠦⠠⠊⠝⠀⠁⠝⠽⠀⠉⠁⠎⠑⠴"
+    "unicode": "⠦⠠⠊⠝⠀⠁⠝⠽⠀⠉⠁⠎⠑⠴",
+    "world": "⠦⠴⠠⠊⠝ ⠁⠝⠽ ⠉⠁⠎⠑⠴"
   },
   {
     "input": "‘Is that “in”?’",
     "internal": ",8,is t 8in08,0",
     "expected": "3238321014030038102952383252",
-    "unicode": "⠠⠦⠠⠊⠎⠀⠞⠀⠦⠊⠝⠴⠦⠠⠴"
+    "unicode": "⠠⠦⠠⠊⠎⠀⠞⠀⠦⠊⠝⠴⠦⠠⠴",
+    "world": "⠠⠦⠴⠠⠊⠎ ⠞ ⠦⠊⠝⠦⠦⠄"
   }
 ]

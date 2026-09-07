@@ -3,96 +3,112 @@
     "input": "blithesome",
     "internal": "bli!\"s",
     "expected": "3710461614",
-    "unicode": "⠃⠇⠊⠮⠐⠎"
+    "unicode": "⠃⠇⠊⠮⠐⠎",
+    "world": "⠴⠃⠇⠊⠮⠐⠎⠲"
   },
   {
     "input": "chromosome",
     "internal": "*romo\"s",
     "expected": "33232113211614",
-    "unicode": "⠡⠗⠕⠍⠕⠐⠎"
+    "unicode": "⠡⠗⠕⠍⠕⠐⠎",
+    "world": "⠴⠡⠗⠕⠍⠕⠐⠎⠲"
   },
   {
     "input": "fearsome",
     "internal": "fe>\"s",
     "expected": "1117281614",
-    "unicode": "⠋⠑⠜⠐⠎"
+    "unicode": "⠋⠑⠜⠐⠎",
+    "world": "⠴⠋⠑⠜⠐⠎⠲"
   },
   {
     "input": "handsome",
     "internal": "h&\"s",
     "expected": "19471614",
-    "unicode": "⠓⠯⠐⠎"
+    "unicode": "⠓⠯⠐⠎",
+    "world": "⠴⠓⠯⠐⠎⠲"
   },
   {
     "input": "handsomer",
     "internal": "h&\"sr",
     "expected": "1947161423",
-    "unicode": "⠓⠯⠐⠎⠗"
+    "unicode": "⠓⠯⠐⠎⠗",
+    "world": "⠴⠓⠯⠐⠎⠗⠲"
   },
   {
     "input": "lonesomest",
     "internal": "l\"o\"s/",
     "expected": "71621161412",
-    "unicode": "⠇⠐⠕⠐⠎⠌"
+    "unicode": "⠇⠐⠕⠐⠎⠌",
+    "world": "⠴⠇⠐⠕⠐⠎⠌⠲"
   },
   {
     "input": "somebody",
     "internal": "\"sbody",
     "expected": "16143212561",
-    "unicode": "⠐⠎⠃⠕⠙⠽"
+    "unicode": "⠐⠎⠃⠕⠙⠽",
+    "world": "⠴⠐⠎⠃⠕⠙⠽⠲"
   },
   {
     "input": "somesuch",
     "internal": "\"ss*",
     "expected": "16141433",
-    "unicode": "⠐⠎⠎⠡"
+    "unicode": "⠐⠎⠎⠡",
+    "world": "⠴⠐⠎⠎⠡⠲"
   },
   {
     "input": "somewhere",
     "internal": "\"s\":",
     "expected": "16141649",
-    "unicode": "⠐⠎⠐⠱"
+    "unicode": "⠐⠎⠐⠱",
+    "world": "⠴⠐⠎⠐⠱⠲"
   },
   {
     "input": "twosome",
     "internal": "two\"s",
     "expected": "3058211614",
-    "unicode": "⠞⠺⠕⠐⠎"
+    "unicode": "⠞⠺⠕⠐⠎",
+    "world": "⠴⠞⠺⠕⠐⠎⠲"
   },
   {
     "input": "blossomed (blossom)",
     "internal": "blossom$ \"<blossom\">",
     "expected": "37211414211343016353721141421131628",
-    "unicode": "⠃⠇⠕⠎⠎⠕⠍⠫⠀⠐⠣⠃⠇⠕⠎⠎⠕⠍⠐⠜"
+    "unicode": "⠃⠇⠕⠎⠎⠕⠍⠫⠀⠐⠣⠃⠇⠕⠎⠎⠕⠍⠐⠜",
+    "world": "⠴⠃⠇⠕⠎⠎⠕⠍⠫ ⠐⠣⠃⠇⠕⠎⠎⠕⠍⠠⠴"
   },
   {
     "input": "gasometer",
     "internal": "gasomet]",
     "expected": "271142113173059",
-    "unicode": "⠛⠁⠎⠕⠍⠑⠞⠻"
+    "unicode": "⠛⠁⠎⠕⠍⠑⠞⠻",
+    "world": "⠴⠛⠁⠎⠕⠍⠑⠞⠻⠲"
   },
   {
     "input": "isometric",
     "internal": "isometric",
     "expected": "10142113173023109",
-    "unicode": "⠊⠎⠕⠍⠑⠞⠗⠊⠉"
+    "unicode": "⠊⠎⠕⠍⠑⠞⠗⠊⠉",
+    "world": "⠴⠊⠎⠕⠍⠑⠞⠗⠊⠉⠲"
   },
   {
     "input": "ransomed (ransom)",
     "internal": "ransom$ \"<ransom\">",
     "expected": "231291421134301635231291421131628",
-    "unicode": "⠗⠁⠝⠎⠕⠍⠫⠀⠐⠣⠗⠁⠝⠎⠕⠍⠐⠜"
+    "unicode": "⠗⠁⠝⠎⠕⠍⠫⠀⠐⠣⠗⠁⠝⠎⠕⠍⠐⠜",
+    "world": "⠴⠗⠁⠝⠎⠕⠍⠫ ⠐⠣⠗⠁⠝⠎⠕⠍⠠⠴"
   },
   {
     "input": "somersault",
     "internal": "som]sault",
     "expected": "1421135914137730",
-    "unicode": "⠎⠕⠍⠻⠎⠁⠥⠇⠞"
+    "unicode": "⠎⠕⠍⠻⠎⠁⠥⠇⠞",
+    "world": "⠴⠎⠕⠍⠻⠎⠁⠥⠇⠞⠲"
   },
   {
     "input": "Somerset",
     "internal": ",som]set",
     "expected": "3214211359141730",
-    "unicode": "⠠⠎⠕⠍⠻⠎⠑⠞"
+    "unicode": "⠠⠎⠕⠍⠻⠎⠑⠞",
+    "world": "⠴⠠⠎⠕⠍⠻⠎⠑⠞⠲"
   }
 ]

@@ -3,318 +3,371 @@
     "input": "afford",
     "internal": "af=d",
     "expected": "1116325",
-    "unicode": "⠁⠋⠿⠙"
+    "unicode": "⠁⠋⠿⠙",
+    "world": "⠴⠁⠋⠿⠙⠲"
   },
   {
     "input": "andante",
     "internal": "&ante",
     "expected": "471293017",
-    "unicode": "⠯⠁⠝⠞⠑"
+    "unicode": "⠯⠁⠝⠞⠑",
+    "world": "⠴⠯⠁⠝⠞⠑⠲"
   },
   {
     "input": "Athens",
     "internal": ",a!ns",
     "expected": "321462914",
-    "unicode": "⠠⠁⠮⠝⠎"
+    "unicode": "⠠⠁⠮⠝⠎",
+    "world": "⠴⠠⠁⠮⠝⠎⠲"
   },
   {
     "input": "bathed",
     "internal": "ba!d",
     "expected": "314625",
-    "unicode": "⠃⠁⠮⠙"
+    "unicode": "⠃⠁⠮⠙",
+    "world": "⠴⠃⠁⠮⠙⠲"
   },
   {
     "input": "bother",
     "internal": "bo!r",
     "expected": "3214623",
-    "unicode": "⠃⠕⠮⠗"
+    "unicode": "⠃⠕⠮⠗",
+    "world": "⠴⠃⠕⠮⠗⠲"
   },
   {
     "input": "coffee",
     "internal": "c(fee",
     "expected": "955111717",
-    "unicode": "⠉⠷⠋⠑⠑"
+    "unicode": "⠉⠷⠋⠑⠑",
+    "world": "⠴⠉⠷⠋⠑⠑⠲"
   },
   {
     "input": "comfort",
     "internal": "com=t",
     "expected": "921136330",
-    "unicode": "⠉⠕⠍⠿⠞"
+    "unicode": "⠉⠕⠍⠿⠞",
+    "world": "⠴⠉⠕⠍⠿⠞⠲"
   },
   {
     "input": "England",
     "internal": ",5gl&",
     "expected": "323427747",
-    "unicode": "⠠⠢⠛⠇⠯"
+    "unicode": "⠠⠢⠛⠇⠯",
+    "world": "⠴⠠⠢⠛⠇⠯⠲"
   },
   {
     "input": "Esther",
     "internal": ",es!r",
     "expected": "3217144623",
-    "unicode": "⠠⠑⠎⠮⠗"
+    "unicode": "⠠⠑⠎⠮⠗",
+    "world": "⠴⠠⠑⠎⠮⠗⠲"
   },
   {
     "input": "forgo",
     "internal": "=go",
     "expected": "632721",
-    "unicode": "⠿⠛⠕"
+    "unicode": "⠿⠛⠕",
+    "world": "⠴⠿⠛⠕⠲"
   },
   {
     "input": "forthwith",
     "internal": "=?)",
     "expected": "635762",
-    "unicode": "⠿⠹⠾"
+    "unicode": "⠿⠹⠾",
+    "world": "⠴⠿⠹⠾⠲"
   },
   {
     "input": "Fortran",
     "internal": ",=tran",
     "expected": "32633023129",
-    "unicode": "⠠⠿⠞⠗⠁⠝"
+    "unicode": "⠠⠿⠞⠗⠁⠝",
+    "world": "⠴⠠⠿⠞⠗⠁⠝⠲"
   },
   {
     "input": "furthest",
     "internal": "fur!/",
     "expected": "1137234612",
-    "unicode": "⠋⠥⠗⠮⠌"
+    "unicode": "⠋⠥⠗⠮⠌",
+    "world": "⠴⠋⠥⠗⠮⠌⠲"
   },
   {
     "input": "Geoffrey",
     "internal": ",ge(frey",
     "expected": "3227175511231761",
-    "unicode": "⠠⠛⠑⠷⠋⠗⠑⠽"
+    "unicode": "⠠⠛⠑⠷⠋⠗⠑⠽",
+    "world": "⠴⠠⠛⠑⠷⠋⠗⠑⠽⠲"
   },
   {
     "input": "grandad",
     "internal": "gr&ad",
     "expected": "272347125",
-    "unicode": "⠛⠗⠯⠁⠙"
+    "unicode": "⠛⠗⠯⠁⠙",
+    "world": "⠴⠛⠗⠯⠁⠙⠲"
   },
   {
     "input": "grandmother",
     "internal": "gr&\"m",
     "expected": "2723471613",
-    "unicode": "⠛⠗⠯⠐⠍"
+    "unicode": "⠛⠗⠯⠐⠍",
+    "world": "⠴⠛⠗⠯⠐⠍⠲"
   },
   {
     "input": "lofty",
     "internal": "l(ty",
     "expected": "7553061",
-    "unicode": "⠇⠷⠞⠽"
+    "unicode": "⠇⠷⠞⠽",
+    "world": "⠴⠇⠷⠞⠽⠲"
   },
   {
     "input": "Matthew",
     "internal": ",mat!w",
     "expected": "32131304658",
-    "unicode": "⠠⠍⠁⠞⠮⠺"
+    "unicode": "⠠⠍⠁⠞⠮⠺",
+    "world": "⠴⠠⠍⠁⠞⠮⠺⠲"
   },
   {
     "input": "meander",
     "internal": "me&]",
     "expected": "13174759",
-    "unicode": "⠍⠑⠯⠻"
+    "unicode": "⠍⠑⠯⠻",
+    "world": "⠴⠍⠑⠯⠻⠲"
   },
   {
     "input": "merchandise",
     "internal": "m]*&ise",
     "expected": "13593347101417",
-    "unicode": "⠍⠻⠡⠯⠊⠎⠑"
+    "unicode": "⠍⠻⠡⠯⠊⠎⠑",
+    "world": "⠴⠍⠻⠡⠯⠊⠎⠑⠲"
   },
   {
     "input": "nevertheless",
     "internal": "n\"e!.s",
     "expected": "291617464014",
-    "unicode": "⠝⠐⠑⠮⠨⠎"
+    "unicode": "⠝⠐⠑⠮⠨⠎",
+    "world": "⠴⠝⠐⠑⠮⠨⠎⠲"
   },
   {
     "input": "often",
     "internal": "(t5",
     "expected": "553034",
-    "unicode": "⠷⠞⠢"
+    "unicode": "⠷⠞⠢",
+    "world": "⠴⠷⠞⠢⠲"
   },
   {
     "input": "pandemic",
     "internal": "p&emic",
     "expected": "15471713109",
-    "unicode": "⠏⠯⠑⠍⠊⠉"
+    "unicode": "⠏⠯⠑⠍⠊⠉",
+    "world": "⠴⠏⠯⠑⠍⠊⠉⠲"
   },
   {
     "input": "pandowdy",
     "internal": "p&[dy",
     "expected": "1547422561",
-    "unicode": "⠏⠯⠪⠙⠽"
+    "unicode": "⠏⠯⠪⠙⠽",
+    "world": "⠴⠏⠯⠪⠙⠽⠲"
   },
   {
     "input": "Parthenon",
     "internal": ",p>!non",
     "expected": "32152846292129",
-    "unicode": "⠠⠏⠜⠮⠝⠕⠝"
+    "unicode": "⠠⠏⠜⠮⠝⠕⠝",
+    "world": "⠴⠠⠏⠜⠮⠝⠕⠝⠲"
   },
   {
     "input": "Pforzheimer",
     "internal": ",p=zheim]",
     "expected": "321563531917101359",
-    "unicode": "⠠⠏⠿⠵⠓⠑⠊⠍⠻"
+    "unicode": "⠠⠏⠿⠵⠓⠑⠊⠍⠻",
+    "world": "⠴⠠⠏⠿⠵⠓⠑⠊⠍⠻⠲"
   },
   {
     "input": "pianoforte",
     "internal": "piano=te",
     "expected": "151012921633017",
-    "unicode": "⠏⠊⠁⠝⠕⠿⠞⠑"
+    "unicode": "⠏⠊⠁⠝⠕⠿⠞⠑",
+    "world": "⠴⠏⠊⠁⠝⠕⠿⠞⠑⠲"
   },
   {
     "input": "profane",
     "internal": "pr(ane",
     "expected": "15235512917",
-    "unicode": "⠏⠗⠷⠁⠝⠑"
+    "unicode": "⠏⠗⠷⠁⠝⠑",
+    "world": "⠴⠏⠗⠷⠁⠝⠑⠲"
   },
   {
     "input": "roof",
     "internal": "ro(",
     "expected": "232155",
-    "unicode": "⠗⠕⠷"
+    "unicode": "⠗⠕⠷",
+    "world": "⠴⠗⠕⠷⠲"
   },
   {
     "input": "scythe",
     "internal": "scy!",
     "expected": "1496146",
-    "unicode": "⠎⠉⠽⠮"
+    "unicode": "⠎⠉⠽⠮",
+    "world": "⠴⠎⠉⠽⠮⠲"
   },
   {
     "input": "sofa",
     "internal": "s(a",
     "expected": "14551",
-    "unicode": "⠎⠷⠁"
+    "unicode": "⠎⠷⠁",
+    "world": "⠴⠎⠷⠁⠲"
   },
   {
     "input": "Swithin",
     "internal": ",s)9",
     "expected": "32146220",
-    "unicode": "⠠⠎⠾⠔"
+    "unicode": "⠠⠎⠾⠔",
+    "world": "⠴⠠⠎⠾⠔⠲"
   },
   {
     "input": "theatre",
     "internal": "!atre",
     "expected": "461302317",
-    "unicode": "⠮⠁⠞⠗⠑"
+    "unicode": "⠮⠁⠞⠗⠑",
+    "world": "⠴⠮⠁⠞⠗⠑⠲"
   },
   {
     "input": "thee",
     "internal": "!e",
     "expected": "4617",
-    "unicode": "⠮⠑"
+    "unicode": "⠮⠑",
+    "world": "⠴⠮⠑⠲"
   },
   {
     "input": "Theresa",
     "internal": ",!resa",
     "expected": "32462317141",
-    "unicode": "⠠⠮⠗⠑⠎⠁"
+    "unicode": "⠠⠮⠗⠑⠎⠁",
+    "world": "⠴⠠⠮⠗⠑⠎⠁⠲"
   },
   {
     "input": "tofu",
     "internal": "t(u",
     "expected": "305537",
-    "unicode": "⠞⠷⠥"
+    "unicode": "⠞⠷⠥",
+    "world": "⠴⠞⠷⠥⠲"
   },
   {
     "input": "whereof",
     "internal": "\":(",
     "expected": "164955",
-    "unicode": "⠐⠱⠷"
+    "unicode": "⠐⠱⠷",
+    "world": "⠴⠐⠱⠷⠲"
   },
   {
     "input": "withe",
     "internal": ")e",
     "expected": "6217",
-    "unicode": "⠾⠑"
+    "unicode": "⠾⠑",
+    "world": "⠴⠾⠑⠲"
   },
   {
     "input": "without",
     "internal": ")\\t",
     "expected": "625130",
-    "unicode": "⠾⠳⠞"
+    "unicode": "⠾⠳⠞",
+    "world": "⠴⠾⠳⠞⠲"
   },
   {
     "input": "with a knowledge of and respect for the rules",
     "internal": ") a k ( & respect = ! rules",
     "expected": "620105055047023171415179300630460233771714",
-    "unicode": "⠾⠀⠁⠀⠅⠀⠷⠀⠯⠀⠗⠑⠎⠏⠑⠉⠞⠀⠿⠀⠮⠀⠗⠥⠇⠑⠎"
+    "unicode": "⠾⠀⠁⠀⠅⠀⠷⠀⠯⠀⠗⠑⠎⠏⠑⠉⠞⠀⠿⠀⠮⠀⠗⠥⠇⠑⠎",
+    "world": "⠴⠾ ⠁ ⠅ ⠷ ⠯ ⠗⠑⠎⠏⠑⠉⠞ ⠿ ⠮ ⠗⠥⠇⠑⠎⠲"
   },
   {
     "input": "Thelma's roof will withstand the force of the wind and/or the rain.",
     "internal": ",!lma's ro( w )/& ! =ce ( ! w9d &_/or ! ra94",
     "expected": "324671314140232155058062124704606391705504605820250475612212304602312050",
-    "unicode": "⠠⠮⠇⠍⠁⠄⠎⠀⠗⠕⠷⠀⠺⠀⠾⠌⠯⠀⠮⠀⠿⠉⠑⠀⠷⠀⠮⠀⠺⠔⠙⠀⠯⠸⠌⠕⠗⠀⠮⠀⠗⠁⠔⠲"
+    "unicode": "⠠⠮⠇⠍⠁⠄⠎⠀⠗⠕⠷⠀⠺⠀⠾⠌⠯⠀⠮⠀⠿⠉⠑⠀⠷⠀⠮⠀⠺⠔⠙⠀⠯⠸⠌⠕⠗⠀⠮⠀⠗⠁⠔⠲",
+    "world": "⠴⠠⠮⠇⠍⠁⠄⠎ ⠗⠕⠷ ⠺ ⠾⠌⠯ ⠮ ⠿⠉⠑ ⠷ ⠮ ⠺⠔⠙ ⠯⠸⠌⠕⠗ ⠮ ⠗⠁⠔⠲"
   },
   {
     "input": "Andy Vandyke proofread the profile.",
     "internal": ",&y ,v&yke pro(r1d ! pr(ile4",
     "expected": "3247610323947615170152321552322504601523551071750",
-    "unicode": "⠠⠯⠽⠀⠠⠧⠯⠽⠅⠑⠀⠏⠗⠕⠷⠗⠂⠙⠀⠮⠀⠏⠗⠷⠊⠇⠑⠲"
+    "unicode": "⠠⠯⠽⠀⠠⠧⠯⠽⠅⠑⠀⠏⠗⠕⠷⠗⠂⠙⠀⠮⠀⠏⠗⠷⠊⠇⠑⠲",
+    "world": "⠴⠠⠯⠽ ⠠⠧⠯⠽⠅⠑ ⠏⠗⠕⠷⠗⠂⠙ ⠮ ⠏⠗⠷⠊⠇⠑⠲"
   },
   {
     "input": "out-of-the-way",
     "internal": "\\-(-!-way",
     "expected": "51365536463658161",
-    "unicode": "⠳⠤⠷⠤⠮⠤⠺⠁⠽"
+    "unicode": "⠳⠤⠷⠤⠮⠤⠺⠁⠽",
+    "world": "⠴⠳⠤⠷⠤⠮⠤⠺⠁⠽⠲"
   },
   {
     "input": "apartheid",
     "internal": "a\"pheid",
     "expected": "1161519171025",
-    "unicode": "⠁⠐⠏⠓⠑⠊⠙"
+    "unicode": "⠁⠐⠏⠓⠑⠊⠙",
+    "world": "⠴⠁⠐⠏⠓⠑⠊⠙⠲"
   },
   {
     "input": "biofeedback",
     "internal": "biofe$back",
     "expected": "310211117433195",
-    "unicode": "⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅"
+    "unicode": "⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅",
+    "world": "⠴⠃⠊⠕⠋⠑⠫⠃⠁⠉⠅⠲"
   },
   {
     "input": "chifforobe",
     "internal": "*i6orobe",
     "expected": "331022212321317",
-    "unicode": "⠡⠊⠖⠕⠗⠕⠃⠑"
+    "unicode": "⠡⠊⠖⠕⠗⠕⠃⠑",
+    "world": "⠴⠡⠊⠖⠕⠗⠕⠃⠑⠲"
   },
   {
     "input": "insofar",
     "internal": "9sof>",
     "expected": "2014211128",
-    "unicode": "⠔⠎⠕⠋⠜"
+    "unicode": "⠔⠎⠕⠋⠜",
+    "world": "⠴⠔⠎⠕⠋⠜⠲"
   },
   {
     "input": "microfilm",
     "internal": "microfilm",
     "expected": "1310923211110713",
-    "unicode": "⠍⠊⠉⠗⠕⠋⠊⠇⠍"
+    "unicode": "⠍⠊⠉⠗⠕⠋⠊⠇⠍",
+    "world": "⠴⠍⠊⠉⠗⠕⠋⠊⠇⠍⠲"
   },
   {
     "input": "northeast",
     "internal": "nor?1/",
     "expected": "29212357212",
-    "unicode": "⠝⠕⠗⠹⠂⠌"
+    "unicode": "⠝⠕⠗⠹⠂⠌",
+    "world": "⠴⠝⠕⠗⠹⠂⠌⠲"
   },
   {
     "input": "Sontheimer",
     "internal": ",sontheim]",
     "expected": "32142129301917101359",
-    "unicode": "⠠⠎⠕⠝⠞⠓⠑⠊⠍⠻"
+    "unicode": "⠠⠎⠕⠝⠞⠓⠑⠊⠍⠻",
+    "world": "⠴⠠⠎⠕⠝⠞⠓⠑⠊⠍⠻⠲"
   },
   {
     "input": "sweetheart",
     "internal": "sweethe>t",
     "expected": "145817173019172830",
-    "unicode": "⠎⠺⠑⠑⠞⠓⠑⠜⠞"
+    "unicode": "⠎⠺⠑⠑⠞⠓⠑⠜⠞",
+    "world": "⠴⠎⠺⠑⠑⠞⠓⠑⠜⠞⠲"
   },
   {
     "input": "thence",
     "internal": "?;e",
     "expected": "574817",
-    "unicode": "⠹⠰⠑"
+    "unicode": "⠹⠰⠑",
+    "world": "⠴⠹⠰⠑⠲"
   },
   {
     "input": "twofold",
     "internal": "twofold",
     "expected": "3058211121725",
-    "unicode": "⠞⠺⠕⠋⠕⠇⠙"
+    "unicode": "⠞⠺⠕⠋⠕⠇⠙",
+    "world": "⠴⠞⠺⠕⠋⠕⠇⠙⠲"
   }
 ]

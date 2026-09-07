@@ -3,120 +3,140 @@
     "input": "advanced",
     "internal": "adv.ed",
     "expected": "12539401725",
-    "unicode": "⠁⠙⠧⠨⠑⠙"
+    "unicode": "⠁⠙⠧⠨⠑⠙",
+    "world": "⠴⠁⠙⠧⠨⠑⠙⠲"
   },
   {
     "input": "aright",
     "internal": "a\"r",
     "expected": "11623",
-    "unicode": "⠁⠐⠗"
+    "unicode": "⠁⠐⠗",
+    "world": "⠴⠁⠐⠗⠲"
   },
   {
     "input": "bastion",
     "internal": "bas;n",
     "expected": "31144829",
-    "unicode": "⠃⠁⠎⠰⠝"
+    "unicode": "⠃⠁⠎⠰⠝",
+    "world": "⠴⠃⠁⠎⠰⠝⠲"
   },
   {
     "input": "coherence",
     "internal": "coh];e",
     "expected": "92119594817",
-    "unicode": "⠉⠕⠓⠻⠰⠑"
+    "unicode": "⠉⠕⠓⠻⠰⠑",
+    "world": "⠴⠉⠕⠓⠻⠰⠑⠲"
   },
   {
     "input": "Congo",
     "internal": ",3go",
     "expected": "32182721",
-    "unicode": "⠠⠒⠛⠕"
+    "unicode": "⠠⠒⠛⠕",
+    "world": "⠴⠠⠒⠛⠕⠲"
   },
   {
     "input": "congratulate",
     "internal": "3gratulate",
     "expected": "18272313037713017",
-    "unicode": "⠒⠛⠗⠁⠞⠥⠇⠁⠞⠑"
+    "unicode": "⠒⠛⠗⠁⠞⠥⠇⠁⠞⠑",
+    "world": "⠴⠒⠛⠗⠁⠞⠥⠇⠁⠞⠑⠲"
   },
   {
     "input": "congruity",
     "internal": "3gru;y",
     "expected": "182723374861",
-    "unicode": "⠒⠛⠗⠥⠰⠽"
+    "unicode": "⠒⠛⠗⠥⠰⠽",
+    "world": "⠴⠒⠛⠗⠥⠰⠽⠲"
   },
   {
     "input": "dancer",
     "internal": "d.er",
     "expected": "25401723",
-    "unicode": "⠙⠨⠑⠗"
+    "unicode": "⠙⠨⠑⠗",
+    "world": "⠴⠙⠨⠑⠗⠲"
   },
   {
     "input": "dispirited",
     "internal": "di_s$",
     "expected": "2510561443",
-    "unicode": "⠙⠊⠸⠎⠫"
+    "unicode": "⠙⠊⠸⠎⠫",
+    "world": "⠴⠙⠊⠸⠎⠫⠲"
   },
   {
     "input": "distinct",
     "internal": "4t9ct",
     "expected": "503020930",
-    "unicode": "⠲⠞⠔⠉⠞"
+    "unicode": "⠲⠞⠔⠉⠞",
+    "world": "⠴⠲⠞⠔⠉⠞⠲"
   },
   {
     "input": "disturbed",
     "internal": "4turb$",
     "expected": "50303723343",
-    "unicode": "⠲⠞⠥⠗⠃⠫"
+    "unicode": "⠲⠞⠥⠗⠃⠫",
+    "world": "⠴⠲⠞⠥⠗⠃⠫⠲"
   },
   {
     "input": "happiness",
     "internal": "happi;s",
     "expected": "1911515104814",
-    "unicode": "⠓⠁⠏⠏⠊⠰⠎"
+    "unicode": "⠓⠁⠏⠏⠊⠰⠎",
+    "world": "⠴⠓⠁⠏⠏⠊⠰⠎⠲"
   },
   {
     "input": "meander",
     "internal": "me&]",
     "expected": "13174759",
-    "unicode": "⠍⠑⠯⠻"
+    "unicode": "⠍⠑⠯⠻",
+    "world": "⠴⠍⠑⠯⠻⠲"
   },
   {
     "input": "named",
     "internal": "\"nd",
     "expected": "162925",
-    "unicode": "⠐⠝⠙"
+    "unicode": "⠐⠝⠙",
+    "world": "⠴⠐⠝⠙⠲"
   },
   {
     "input": "oneness",
     "internal": "\"o;s",
     "expected": "16214814",
-    "unicode": "⠐⠕⠰⠎"
+    "unicode": "⠐⠕⠰⠎",
+    "world": "⠴⠐⠕⠰⠎⠲"
   },
   {
     "input": "thence",
     "internal": "?;e",
     "expected": "574817",
-    "unicode": "⠹⠰⠑"
+    "unicode": "⠹⠰⠑",
+    "world": "⠴⠹⠰⠑⠲"
   },
   {
     "input": "timer",
     "internal": "\"tr",
     "expected": "163023",
-    "unicode": "⠐⠞⠗"
+    "unicode": "⠐⠞⠗",
+    "world": "⠴⠐⠞⠗⠲"
   },
   {
     "input": "vengeance",
     "internal": "v5ge.e",
     "expected": "393427174017",
-    "unicode": "⠧⠢⠛⠑⠨⠑"
+    "unicode": "⠧⠢⠛⠑⠨⠑",
+    "world": "⠴⠧⠢⠛⠑⠨⠑⠲"
   },
   {
     "input": "wither",
     "internal": ")]",
     "expected": "6259",
-    "unicode": "⠾⠻"
+    "unicode": "⠾⠻",
+    "world": "⠴⠾⠻⠲"
   },
   {
     "input": "captainess",
     "internal": "capta9ess",
     "expected": "911530120171414",
-    "unicode": "⠉⠁⠏⠞⠁⠔⠑⠎⠎"
+    "unicode": "⠉⠁⠏⠞⠁⠔⠑⠎⠎",
+    "world": "⠴⠉⠁⠏⠞⠁⠊⠔⠑⠎⠎⠲"
   }
 ]

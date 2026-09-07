@@ -3,54 +3,63 @@
     "input": "With love, XXOO",
     "internal": ",) love1 ,,xxoo",
     "expected": "32620721391720323245452121",
-    "unicode": "⠠⠾⠀⠇⠕⠧⠑⠂⠀⠠⠠⠭⠭⠕⠕"
+    "unicode": "⠠⠾⠀⠇⠕⠧⠑⠂⠀⠠⠠⠭⠭⠕⠕",
+    "world": "⠴⠠⠾ ⠇⠕⠧⠑⠂ ⠠⠠⠭⠭⠕⠕⠲"
   },
   {
     "input": "Sealed with a X",
     "internal": ",s1l$ ) a ;,x",
     "expected": "32142743062010483245",
-    "unicode": "⠠⠎⠂⠇⠫⠀⠾⠀⠁⠀⠰⠠⠭"
+    "unicode": "⠠⠎⠂⠇⠫⠀⠾⠀⠁⠀⠰⠠⠭",
+    "world": "⠴⠠⠎⠂⠇⠫ ⠾ ⠁ ⠰⠠⠭⠲"
   },
   {
     "input": "Illiterate people usually signed their name with an X.",
     "internal": ",illit]ate p usually sign$ _! \"n ) an ;,x4",
     "expected": "321077103059130170150371437177610141027294305646016290620129048324550",
-    "unicode": "⠠⠊⠇⠇⠊⠞⠻⠁⠞⠑⠀⠏⠀⠥⠎⠥⠁⠇⠇⠽⠀⠎⠊⠛⠝⠫⠀⠸⠮⠀⠐⠝⠀⠾⠀⠁⠝⠀⠰⠠⠭⠲"
+    "unicode": "⠠⠊⠇⠇⠊⠞⠻⠁⠞⠑⠀⠏⠀⠥⠎⠥⠁⠇⠇⠽⠀⠎⠊⠛⠝⠫⠀⠸⠮⠀⠐⠝⠀⠾⠀⠁⠝⠀⠰⠠⠭⠲",
+    "world": "⠴⠠⠊⠇⠇⠊⠞⠻⠁⠞⠑ ⠏ ⠥⠎⠥⠁⠇⠇⠽ ⠎⠊⠛⠝⠫ ⠸⠮ ⠐⠝ ⠾ ⠁⠝ ⠰⠠⠭⠲"
   },
   {
     "input": "a 4x4 vehicle",
     "internal": "a #dx#d vehicle",
     "expected": "1060254560250391719109717",
-    "unicode": "⠁⠀⠼⠙⠭⠼⠙⠀⠧⠑⠓⠊⠉⠇⠑"
+    "unicode": "⠁⠀⠼⠙⠭⠼⠙⠀⠧⠑⠓⠊⠉⠇⠑",
+    "world": "⠴⠁ ⠼⠙⠭⠼⠙ ⠧⠑⠓⠊⠉⠇⠑⠲"
   },
   {
     "input": "a 2×4 board",
     "internal": "a #b\"8#d bo>d",
     "expected": "106031638602503212825",
-    "unicode": "⠁⠀⠼⠃⠐⠦⠼⠙⠀⠃⠕⠜⠙"
+    "unicode": "⠁⠀⠼⠃⠐⠦⠼⠙⠀⠃⠕⠜⠙",
+    "world": "⠴⠁ ⠼⠃⠐⠦⠼⠙ ⠃⠕⠜⠙⠲"
   },
   {
     "input": "15×15×20 cm",
     "internal": "#ae\"8#ae\"8#bj cm",
     "expected": "601171638601171638603260913",
-    "unicode": "⠼⠁⠑⠐⠦⠼⠁⠑⠐⠦⠼⠃⠚⠀⠉⠍"
+    "unicode": "⠼⠁⠑⠐⠦⠼⠁⠑⠐⠦⠼⠃⠚⠀⠉⠍",
+    "world": "⠼⠁⠑⠡⠼⠁⠑⠡⠼⠃⠚ ⠴⠉⠍⠲"
   },
   {
     "input": "The room is 12 ft. × 16 ft.",
     "internal": ",! room is #ab ft4 \"8 #af ft4",
     "expected": "324602321211301014060130113050016380601110113050",
-    "unicode": "⠠⠮⠀⠗⠕⠕⠍⠀⠊⠎⠀⠼⠁⠃⠀⠋⠞⠲⠀⠐⠦⠀⠼⠁⠋⠀⠋⠞⠲"
+    "unicode": "⠠⠮⠀⠗⠕⠕⠍⠀⠊⠎⠀⠼⠁⠃⠀⠋⠞⠲⠀⠐⠦⠀⠼⠁⠋⠀⠋⠞⠲",
+    "world": "⠴⠠⠮ ⠗⠕⠕⠍ ⠊⠎ ⠼⠁⠃ ⠋⠞⠲ ⠐⠦ ⠼⠁⠋ ⠋⠞⠲"
   },
   {
     "input": "a 10× lens",
     "internal": "a #aj\"8 l5s",
     "expected": "10601261638073414",
-    "unicode": "⠁⠀⠼⠁⠚⠐⠦⠀⠇⠢⠎"
+    "unicode": "⠁⠀⠼⠁⠚⠐⠦⠀⠇⠢⠎",
+    "world": "⠴⠁ ⠼⠁⠚⠐⠦ ⠇⠢⠎⠲"
   },
   {
     "input": "Labrador × Poodle",
     "internal": ",labrador \"8 ,poodle",
     "expected": "327132312521230163803215212125717",
-    "unicode": "⠠⠇⠁⠃⠗⠁⠙⠕⠗⠀⠐⠦⠀⠠⠏⠕⠕⠙⠇⠑"
+    "unicode": "⠠⠇⠁⠃⠗⠁⠙⠕⠗⠀⠐⠦⠀⠠⠏⠕⠕⠙⠇⠑",
+    "world": "⠴⠠⠇⠁⠃⠗⠁⠙⠕⠗ ⠐⠦ ⠠⠏⠕⠕⠙⠇⠑⠲"
   }
 ]

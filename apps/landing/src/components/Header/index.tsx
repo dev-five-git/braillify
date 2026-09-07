@@ -70,7 +70,7 @@ export default function Header() {
             style={{ cursor: isIntersectingHome ? 'default' : 'pointer' }}
           >
             <Box
-              aspectRatio="122.87/50.00"
+              aspectRatio="838/363"
               bg="$text"
               h={['32px', null, null, '50px']}
               maskImage="url(/images/home/hero.svg)"

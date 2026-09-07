@@ -3,78 +3,91 @@
     "input": "WHO",
     "internal": ",,who",
     "expected": "3232581921",
-    "unicode": "⠠⠠⠺⠓⠕"
+    "unicode": "⠠⠠⠺⠓⠕",
+    "world": "⠴⠠⠠⠱⠕⠲"
   },
   {
     "input": "OED",
     "internal": ",,oed",
     "expected": "3232211725",
-    "unicode": "⠠⠠⠕⠑⠙"
+    "unicode": "⠠⠠⠕⠑⠙",
+    "world": "⠴⠠⠠⠕⠫⠲"
   },
   {
     "input": "kwh or kWh",
     "internal": "kwh or k,wh",
     "expected": "558190212305325819",
-    "unicode": "⠅⠺⠓⠀⠕⠗⠀⠅⠠⠺⠓"
+    "unicode": "⠅⠺⠓⠀⠕⠗⠀⠅⠠⠺⠓",
+    "world": "⠴⠅⠱ ⠕⠗ ⠅⠠⠱⠲"
   },
   {
     "input": "CH6-1234",
     "internal": ",,ch#f-#abcd",
     "expected": "32329196011366013925",
-    "unicode": "⠠⠠⠉⠓⠼⠋⠤⠼⠁⠃⠉⠙"
+    "unicode": "⠠⠠⠉⠓⠼⠋⠤⠼⠁⠃⠉⠙",
+    "world": "⠴⠠⠠⠉⠓⠼⠋⠤⠼⠁⠃⠉⠙"
   },
   {
     "input": "W2N 6CH",
     "internal": ",w#b,n #f,,ch",
     "expected": "32586033229060113232919",
-    "unicode": "⠠⠺⠼⠃⠠⠝⠀⠼⠋⠠⠠⠉⠓"
+    "unicode": "⠠⠺⠼⠃⠠⠝⠀⠼⠋⠠⠠⠉⠓",
+    "world": "⠴⠠⠺⠼⠃⠠⠝ ⠼⠋⠠⠠⠉⠓⠲"
   },
   {
     "input": "US",
     "internal": ",,us",
     "expected": "32323714",
-    "unicode": "⠠⠠⠥⠎"
+    "unicode": "⠠⠠⠥⠎",
+    "world": "⠴⠠⠠⠥⠎⠲"
   },
   {
     "input": "MSH",
     "internal": ",,msh",
     "expected": "3232131419",
-    "unicode": "⠠⠠⠍⠎⠓"
+    "unicode": "⠠⠠⠍⠎⠓",
+    "world": "⠴⠠⠠⠍⠩⠲"
   },
   {
     "input": "DAR",
     "internal": ",,dar",
     "expected": "323225123",
-    "unicode": "⠠⠠⠙⠁⠗"
+    "unicode": "⠠⠠⠙⠁⠗",
+    "world": "⠴⠠⠠⠙⠜⠲"
   },
   {
     "input": "EST",
     "internal": ",,est",
     "expected": "3232171430",
-    "unicode": "⠠⠠⠑⠎⠞"
+    "unicode": "⠠⠠⠑⠎⠞",
+    "world": "⠴⠠⠠⠑⠌⠲"
   },
   {
     "input": "TEN/gh",
     "internal": ",,ten_/gh",
     "expected": "323230172956122719",
-    "unicode": "⠠⠠⠞⠑⠝⠸⠌⠛⠓"
+    "unicode": "⠠⠠⠞⠑⠝⠸⠌⠛⠓",
+    "world": "⠴⠠⠠⠞⠢⠸⠌⠣⠲"
   },
   {
     "input": "ChE",
     "internal": ",ch,e",
     "expected": "329193217",
-    "unicode": "⠠⠉⠓⠠⠑"
+    "unicode": "⠠⠉⠓⠠⠑",
+    "world": "⠴⠠⠡⠠⠑⠲"
   },
   {
     "input": "MCh",
     "internal": ",m,ch",
     "expected": "321332919",
-    "unicode": "⠠⠍⠠⠉⠓"
+    "unicode": "⠠⠍⠠⠉⠓",
+    "world": "⠴⠠⠠⠍⠉⠠⠄⠓⠲"
   },
   {
     "input": "POW",
     "internal": ",,pow",
     "expected": "3232152158",
-    "unicode": "⠠⠠⠏⠕⠺"
+    "unicode": "⠠⠠⠏⠕⠺",
+    "world": "⠴⠠⠠⠏⠪⠲"
   }
 ]

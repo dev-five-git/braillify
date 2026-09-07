@@ -200,6 +200,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "braillify-go"
+version = "2.0.0"
+dependencies = [
+ "braillify",
+]
+
+[[package]]
 name = "braillify-c"
 version = "0.1.2"
 dependencies = [

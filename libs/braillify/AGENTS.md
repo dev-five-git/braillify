@@ -20,6 +20,7 @@ src/
 │   └── jungsong.rs     # Medial vowels
 ├── english.rs          # English letter encoding
 ├── english_logic.rs    # English context detection
+├── hanja.rs            # 한자 → 한국어 음독 표 (Unihan kHangul, resources/hanja-readings.txt)
 ├── number.rs           # Number encoding
 ├── fraction.rs         # Fraction handling (Unicode + LaTeX)
 ├── math_symbol_shortcut.rs  # PHF math symbol lookup table
@@ -226,15 +227,18 @@ fn unicode_superscripts_parse_ok(#[values('\u{2070}', '\u{00B9}', '\u{00B2}')] c
 ## TESTING
 
 ```bash
-cargo test                           # All tests (390+ unit + 14 integration)
-cargo test test_by_testcase          # Full testcase suite (2419 cases)
+cargo test --release -p braillify    # All tests (4600+ unit + integration)
+cargo test --release -p braillify --lib -- test_by_testcase --nocapture
 cargo fmt && cargo clippy            # Format + lint
-bun test test_cases/                 # JSON integrity checks (14163 assertions)
+bun test test_cases/                 # JSON integrity checks (packages/node/pkg 빌드 필요)
 ```
 
-Test cases in `test_cases/korean/*.json` and `test_cases/math/*.json`.
+규정 fixture 는 `test_cases/{korean,math,english}/*.json` 이고, 그와 별개로
+`test_cases/{2021,2022,2023,2024,2025}_corpus/sentence_*.json` 에 국립국어원
+한국어-한국점자 병렬 말뭉치 46만 7121문장이 들어 있다. 말뭉치는 `rule_map.json` 에서
+`benchmark: true` 로 표시되어 **pass/fail 에 들어가지 않고 정확도만 보고**한다.
 
-**Current status: 2419/2419 passing (100% PDF 규정 준수, 0 known failures).**
+**Current status: 규정 fixture 5141/5141 (100%), 말뭉치 454,792/467,121 (97.36%).**
 
 `KNOWN_FAILURES` 상수는 더 이상 존재하지 않는다. raw `encode()` 가 모든 testcase 에서
 PDF 정답과 byte-동일 결과를 낸다. 새로 추가되는 testcase 도 같은 기준을 만족해야 한다.
@@ -249,11 +253,35 @@ cargo bench -p braillify --bench encode_math
 # 메모리 프로파일 (dhat)
 cargo bench -p braillify --bench memory_dhat --features dhat-heap
 
-# 외부 점역기 비교 (점자세상 / 점사랑 7.0)
-bun run scripts/world-bench.ts        # PDF 정답 일치율 측정
-bun run scripts/jeomsarang-bench.ts
+# 외부 점역기 비교 — 규정 fixture
+bun run scripts/world-bench.ts            # 점자세상
+bun run scripts/jeomsarang-bench.ts       # 점사랑 (BrailleTransLibrary)
+
+# 외부 점역기 비교 — 말뭉치
+bun run scripts/jeomjasesang-corpus-bench.ts
+bun run scripts/jeomsarang-corpus-bench.ts
+
+# braillify / 점자세상 / 점사랑 3종 동시 측정 + 교차표
+cargo run --release -p braillify --example three_way_bench
+
+# 로마자 구간 표지(제29·33·35항) 회귀 안전망 — 4유형 개별 추적
+cargo run --release -p braillify --example roman_marker_bench
 ```
+
+`roman_marker_bench` 는 로마자표/종료표의 과잉·누락을 따로 센다. 이 넷은 서로 반대
+방향이라 총 정확도만 보면 한쪽을 고치며 다른 쪽을 망가뜨려도 드러나지 않는다. 구간
+상태 기계를 건드릴 때에는 반드시 이 네 수치를 함께 본다.
 
 벤치 결과: `bench/BASELINE.md`, `bench/FINAL_REPORT.md`,
 `bench/WORLD_BENCH.md`, `bench/JEOMSARANG_BENCH.md`,
+`bench/JEOMJASESANG_CORPUS_BENCH.md`, `bench/JEOMSARANG_CORPUS_BENCH.md`,
 `bench/FINAL_BENCHMARK_COMPARISON.md` 참고.
+
+## 로마자 구간 상태
+
+로마자표 ⠴ · 종료표 ⠲ · 연속표 ⠰ 의 상태는 `EncoderState` 의 `is_english`,
+`needs_english_continuation`, `roman_number_chain` 세 플래그가 들고 있다.
+**프로덕션 코드에서 이 셋을 직접 대입하지 않는다** — 전부 `rules/roman_mode.rs` 의
+동사를 거친다. 그 모듈이 `debug_assert_consistent` 로 "구간이 열린 채 연속표 예약"과
+"구간이 열린 채 숫자 다리" 조합을 막는다. 이 불변식을 깨면 다음 로마자 어절에서
+로마자표가 잘못 붙거나 빠진다.

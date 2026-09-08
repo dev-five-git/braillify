@@ -103,9 +103,16 @@ impl BrailleRule for RuleEnglishSymbol {
         // Korean rules 34 and 54: when a Korean prose item (optionally ending
         // in an attached Arabic number) introduces a Roman explanation, the
         // Korean opening parenthesis is written before the Roman indicator.
+        // Rule 34's `링컨(Lincoln)은` order does not depend on whether print
+        // attaches the parenthesis or separates it by a space (`링컨 (Lincoln)`).
         // A parenthesis reached while a Roman section is already active stays
-        // UEB punctuation (`ABC(def)`), as does ordinary function notation.
-        if *sym == '(' && !ctx.state.is_english {
+        // UEB punctuation (`ABC(def)`), as does ordinary function notation,
+        // and so does an enclosure that runs straight on into Roman letters
+        // (`폐쇄회로(CC)TV`): rule 32 keeps that whole sequence in one section.
+        if *sym == '('
+            && !ctx.state.is_english
+            && !english_logic::closed_parenthesis_continues_into_roman(ctx.word_chars, ctx.index)
+        {
             let prefix = &ctx.word_chars[..ctx.index];
             let prefix_contains_korean = prefix.iter().any(|ch| utils::is_korean_char(*ch));
             let numeric_prefix = !prefix.is_empty()
@@ -114,10 +121,47 @@ impl BrailleRule for RuleEnglishSymbol {
                     ch.is_ascii_digit()
                         || matches!(*ch, '.' | ',' | '\'' | '’' | '"' | '”' | '‘' | '“')
                 });
+            let spaced_roman_word_enclosure = prefix
+                .iter()
+                .all(|ch| matches!(*ch, '\'' | '’' | '"' | '”' | '‘' | '“'))
+                && english_logic::closed_parenthesis_encloses_roman_word(
+                    ctx.word_chars,
+                    ctx.index,
+                    ctx.remaining_words,
+                );
             let previous_word_is_korean = ctx.prev_word.chars().any(utils::is_korean_char);
-            if prefix_contains_korean || (numeric_prefix && previous_word_is_korean) {
+            if prefix_contains_korean
+                || ((numeric_prefix || spaced_roman_word_enclosure) && previous_word_is_korean)
+            {
                 use_english_symbol = false;
             }
+        }
+
+        // 제33항은 점형이 다른 문장 부호를 "로마자와 한글 사이"에서만 한글 점자로
+        // 적게 한다. 제35항의 로마자+숫자 연결(`A100,` `DA5,Inc`)은 종료표 없이
+        // 로마자 구간 안에 남아 있으므로, 뒤에 로마자 항목이 이어지면 제32항에
+        // 따라 UEB 점형을 유지한다 — 규정 예 `1998a, 1998b;`와 같은 자리다.
+        // 뒤가 순수 숫자(`Cs-134, 137`)이면 그 숫자는 한글 수표 항목이므로
+        // 여기서 로마자 구간이 끝난다.
+        let next_item_continues_roman = if let Some(next) = ctx.next_char() {
+            next.is_ascii_alphanumeric()
+                && !english_logic::begins_korean_mode_number(
+                    ctx.word_chars[ctx.index + 1..].iter().copied(),
+                )
+        } else {
+            ctx.remaining_words.first().is_some_and(|w| {
+                w.chars()
+                    .next()
+                    .is_some_and(|ch| ch.is_ascii_alphanumeric())
+                    && !english_logic::begins_korean_mode_number(w.chars())
+            })
+        };
+        if !use_english_symbol
+            && matches!(*sym, ',' | ':' | ';')
+            && ctx.state.roman_number_chain
+            && next_item_continues_roman
+        {
+            use_english_symbol = true;
         }
 
         // 제39항 영-한 wrap context: 단어 끝의 영어 모드 유지 가능 기호(. , : ;)
@@ -153,8 +197,7 @@ impl BrailleRule for RuleEnglishSymbol {
                 && !ctx.state.roman_number_chain
             {
                 ctx.emit(52);
-                ctx.state.is_english = true;
-                ctx.state.needs_english_continuation = false;
+                crate::rules::roman_mode::set_section_open_keeping_number_chain(ctx.state, true);
             }
             let encoded = if *sym == '\'' {
                 // `use_english_symbol` is true here only for an ASCII apostrophe

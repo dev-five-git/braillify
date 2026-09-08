@@ -269,6 +269,15 @@ fn is_semantic_ascii_minus(ctx: &RuleContext) -> bool {
     prev_ends_operand && next_starts_number && has_other_math_operator
 }
 
+fn is_roman_grade_minus(ctx: &RuleContext) -> bool {
+    ctx.state.english_indicator
+        && ctx.state.is_english
+        && ctx
+            .next_char()
+            .is_none_or(|next| !next.is_ascii_alphanumeric())
+        && crate::rules::token_rules::math_expression::is_roman_minus_grade(ctx.word_chars)
+}
+
 impl BrailleRule for RuleMath {
     fn meta(&self) -> &'static RuleMeta {
         &META
@@ -280,10 +289,18 @@ impl BrailleRule for RuleMath {
 
     fn matches(&self, ctx: &RuleContext) -> bool {
         matches!(ctx.char_type, CharType::MathSymbol(_))
-            || (matches!(ctx.char_type, CharType::Symbol('-')) && is_semantic_ascii_minus(ctx))
+            || (matches!(ctx.char_type, CharType::Symbol('-'))
+                && (is_semantic_ascii_minus(ctx) || is_roman_grade_minus(ctx)))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
+        // UEB 3.17.1 minus inside a Roman grade (`AA-`): same section, `⠐⠤`.
+        if matches!(ctx.char_type, CharType::Symbol('-')) && is_roman_grade_minus(ctx) {
+            let encoded = crate::rules::english_ueb::rule_3::encode_symbol('\u{2212}')
+                .ok_or_else(|| "UEB minus sign must be defined".to_string())?;
+            ctx.emit_slice(&encoded);
+            return Ok(RuleResult::Consumed);
+        }
         let c = match ctx.char_type {
             CharType::MathSymbol(c) => *c,
             CharType::Symbol('-') if is_semantic_ascii_minus(ctx) => '\u{2212}',
@@ -466,6 +483,7 @@ mod tests {
     #[case::roman_annotation_on_left("레트로(RETRO)+뉴트로", 10, true)]
     #[case::korean_annotations_on_both_sides("AI(인공지능)+DX(디지털전환)", 8, true)]
     #[case::mixed_script_right_operand("밀레니얼+Z세대", 4, true)]
+    #[case::article_example_radius("반지름×3.14이다", 3, false)]
     #[case::signed_parenthetical("기업(+5p)의", 3, false)]
     #[case::numeric_sum("행사(1+1)이다", 4, false)]
     #[case::brand_particle("디즈니+와", 3, false)]

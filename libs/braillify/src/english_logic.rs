@@ -2,6 +2,8 @@ use crate::{symbol_shortcut, utils};
 
 /// 규칙 33~35에서 종료표(⠲)를 생략해야 하는 기호 모음.
 /// 기호 앞뒤에서는 로마자 종료표를 생략한다.
+/// 가운뎃점(·)은 제33항의 "점형이 다른 문장 부호"에 속하므로(통일영어점자에
+/// 대응 점형이 없음) 그 앞에서 종료표를 적지 않고 한글 점형 ⠐⠆으로 적는다.
 pub(crate) fn should_skip_terminator_for_symbol(symbol: char) -> bool {
     matches!(
         symbol,
@@ -25,6 +27,7 @@ pub(crate) fn should_skip_terminator_for_symbol(symbol: char) -> bool {
             | ':'
             | ';'
             | '―'
+            | '·'
     )
 }
 
@@ -75,19 +78,27 @@ pub(crate) fn requires_single_letter_continuation(letter: char) -> bool {
 }
 
 fn is_ascii_letter_or_digit(ch: Option<char>) -> bool {
-    ch.is_some_and(|c| c.is_ascii_alphanumeric())
+    ch.is_some_and(is_roman_section_letter_or_digit)
 }
 
-/// Whether a following print item starts with a number and then crosses
-/// directly into Korean text, without an intervening Roman unit/identifier.
+/// 제30·31항: a Greek letter is written inside the same 로마자표/종료표
+/// section as Roman letters, so every section-boundary test treats it as a
+/// Roman-section letter.
+pub(crate) fn is_roman_section_letter_or_digit(ch: char) -> bool {
+    ch.is_ascii_alphanumeric() || crate::rules::korean::rule_31::is_greek_letter(ch)
+}
+
+/// Whether a following print item is a number written in Korean numeric mode
+/// rather than Roman-section text: it starts with digits and no Roman letter
+/// follows the numeric prefix (`27)가`, `2050년`, `0.25%p`, `27`).
 ///
-/// Korean rule 33 changes a comma to the Korean punctuation sign only at an
-/// actual Roman-to-Korean boundary.  Looking for Korean anywhere later in the
-/// whitespace-delimited item is too broad: in `173cm, 68kg의`, the comma is
-/// followed first by the Roman measurement `68kg`, and the particle `의` is a
-/// later boundary.  Numeric grouping/decimal punctuation remains part of the
-/// numeric prefix (`1,000년`, `3.5년`).
-fn begins_numeric_then_korean(chars: impl Iterator<Item = char>) -> bool {
+/// Korean rule 33 changes a comma to the Korean punctuation sign at a
+/// Roman-to-Korean boundary, and a separated bare number is Korean 수표 text
+/// (rule 35 keeps only an attached Roman+number chain in the section).  A
+/// number-led Roman item (`1998b` in the rule-33 example, `68kg`, `4DX`) still
+/// continues the section.  Numeric grouping/decimal punctuation remains part
+/// of the numeric prefix (`1,000년`, `3.5년`).
+pub(crate) fn begins_korean_mode_number(chars: impl Iterator<Item = char>) -> bool {
     let mut chars = chars.peekable();
     if !chars.peek().is_some_and(char::is_ascii_digit) {
         return false;
@@ -99,10 +110,11 @@ fn begins_numeric_then_korean(chars: impl Iterator<Item = char>) -> bool {
         {
             continue;
         }
-        return utils::is_korean_char(ch);
+        return !(ch.is_ascii_alphabetic()
+            || crate::rules::korean::rule_69::is_compatibility_unit_presentation(ch));
     }
 
-    false
+    true
 }
 
 /// Returns whether `index` is an ampersand inside a complete sequence of
@@ -231,7 +243,7 @@ pub(crate) fn prev_ascii_letter_or_digit(word_chars: &[char], index: usize) -> b
     let mut j = index;
     while j > 0 {
         let ch = word_chars[j - 1];
-        if ch.is_ascii_alphanumeric() {
+        if is_roman_section_letter_or_digit(ch) {
             return true;
         }
         if symbol_shortcut::is_english_symbol_char(ch) {
@@ -251,7 +263,7 @@ pub(crate) fn next_ascii_letter_or_digit(
     let mut j = index + 1;
     while j < word_chars.len() {
         let ch = word_chars[j];
-        if ch.is_ascii_alphanumeric() {
+        if is_roman_section_letter_or_digit(ch) {
             return true;
         }
         if symbol_shortcut::is_english_symbol_char(ch) {
@@ -263,7 +275,7 @@ pub(crate) fn next_ascii_letter_or_digit(
 
     for word in remaining_words {
         for ch in word.chars() {
-            if ch.is_ascii_alphanumeric() {
+            if is_roman_section_letter_or_digit(ch) {
                 return true;
             }
             if symbol_shortcut::is_english_symbol_char(ch) {
@@ -279,15 +291,19 @@ pub(crate) fn next_ascii_letter_or_digit(
 /// Korean rule 46's `BMI(체질량 지수)` example assigns the attached, closed
 /// parenthesis to Korean punctuation even though it follows a Roman run. Scan
 /// the complete balanced enclosure because its Korean content can begin after
-/// a number, a Roman expansion, or a print-space boundary. Pure Roman/number
-/// enclosures remain eligible for rule 32's UEB punctuation.
-fn closed_parenthesis_contains_korean(
+/// a number, a Roman expansion, or a print-space boundary. Rule 32 gives UEB
+/// punctuation only to notation *between* the Roman indicator and terminator,
+/// so an enclosure holding no Roman letters at all (`BSI(73)`, `KOTRA(2022)`)
+/// is likewise Korean punctuation; only a Roman-letter body (`ABC(def)`)
+/// stays inside the Roman section.
+fn closed_parenthesis_is_korean_punctuation(
     word_chars: &[char],
     index: usize,
     remaining_words: &[&str],
 ) -> bool {
     let mut depth = 1usize;
     let mut contains_korean = false;
+    let mut contains_roman_letter = false;
     let tail = word_chars
         .iter()
         .skip(index + 1)
@@ -300,14 +316,74 @@ fn closed_parenthesis_contains_korean(
             ')' => {
                 depth -= 1;
                 if depth == 0 {
-                    return contains_korean;
+                    return contains_korean || !contains_roman_letter;
                 }
             }
             _ if utils::is_korean_char(ch) => contains_korean = true,
+            _ if ch.is_ascii_alphabetic() => contains_roman_letter = true,
             _ => {}
         }
     }
 
+    false
+}
+
+/// Whether the balanced enclosure opened at `index` holds a Roman word or
+/// abbreviation of at least two letters (`(Lincoln)`, `(PF)`), as opposed to
+/// rule 32's letter list `(a), (e), (i)`, whose enclosures stay UEB
+/// punctuation inside one Roman section.
+pub(crate) fn closed_parenthesis_encloses_roman_word(
+    word_chars: &[char],
+    index: usize,
+    remaining_words: &[&str],
+) -> bool {
+    let mut depth = 1usize;
+    let mut roman_letters = 0usize;
+    let tail = word_chars
+        .iter()
+        .skip(index + 1)
+        .copied()
+        .chain(remaining_words.iter().flat_map(|word| word.chars()));
+
+    for ch in tail {
+        match ch {
+            '(' => depth += 1,
+            ')' => {
+                depth -= 1;
+                if depth == 0 {
+                    return roman_letters >= 2;
+                }
+            }
+            _ if ch.is_ascii_alphabetic() => roman_letters += 1,
+            _ => {}
+        }
+    }
+
+    false
+}
+
+/// Whether the balanced enclosure opened at `index` is followed *directly* by
+/// Roman letters in the same print word (`폐쇄회로(CC)TV`, `(QD)OLED`). The
+/// enclosure and the trailing letters then form one Roman sequence, so the
+/// Roman section opens before the parenthesis and the pair is UEB punctuation
+/// (rule 32); a print space or Korean text after the closing parenthesis keeps
+/// rule 34's Korean parenthesis order (`링컨(Lincoln)은`).
+pub(crate) fn closed_parenthesis_continues_into_roman(word_chars: &[char], index: usize) -> bool {
+    let mut depth = 1usize;
+    for (offset, ch) in word_chars.iter().enumerate().skip(index + 1) {
+        match ch {
+            '(' => depth += 1,
+            ')' => {
+                depth -= 1;
+                if depth == 0 {
+                    return word_chars
+                        .get(offset + 1)
+                        .is_some_and(char::is_ascii_alphabetic);
+                }
+            }
+            _ => {}
+        }
+    }
     false
 }
 
@@ -352,9 +428,10 @@ pub(crate) fn should_render_symbol_as_english(
     match symbol {
         '(' => {
             (is_english_majority
-                || !closed_parenthesis_contains_korean(word_chars, index, remaining_words))
+                || !closed_parenthesis_is_korean_punctuation(word_chars, index, remaining_words))
                 && is_ascii_letter_or_digit(next_char)
-                && !prev_char.is_some_and(utils::is_korean_char)
+                && (!prev_char.is_some_and(utils::is_korean_char)
+                    || closed_parenthesis_continues_into_roman(word_chars, index))
         }
         ')' => parenthesis_stack.last().copied().unwrap_or(false),
         // UEB 3.1.1 prints an ampersand without ending and restarting
@@ -366,6 +443,9 @@ pub(crate) fn should_render_symbol_as_english(
         // attached Roman example `M*A*S*H`. Preserve that one Roman section;
         // Korean Rule 60 continues to own standalone and non-Roman asterisks.
         '*' => is_attached_ascii_roman_asterisk(word_chars, index),
+        // 제71항 [다만] wraps `®`/`™` only where they touch Hangul; attached to
+        // a Roman word (`Jeep®`) the sign stays inside the open 제29항 section.
+        '®' | '™' => is_english && prev_char.is_some_and(|ch| ch.is_ascii_alphanumeric()),
         // UEB 8.4.2 keeps the apostrophe inside the Roman word in its
         // `O'Hara`, `DON'T`, and `THAT'S` examples. Capitals-word mode may
         // terminate at this nonalphabetic symbol, but the surrounding Roman
@@ -391,19 +471,19 @@ pub(crate) fn should_render_symbol_as_english(
                 return false;
             }
 
-            let next_word_is_digit_led_korean = if index + 1 < word_chars.len() {
-                begins_numeric_then_korean(word_chars[index + 1..].iter().copied())
+            let next_item_is_korean_mode_number = if index + 1 < word_chars.len() {
+                begins_korean_mode_number(word_chars[index + 1..].iter().copied())
             } else {
                 remaining_words
                     .first()
-                    .is_some_and(|word| begins_numeric_then_korean(word.chars()))
+                    .is_some_and(|word| begins_korean_mode_number(word.chars()))
             };
-            if next_word_is_digit_led_korean {
+            if next_item_is_korean_mode_number {
                 // Korean rule 33: punctuation whose UEB and Korean cells
                 // differ is written as Korean punctuation at a Roman-to-
                 // Korean boundary. Limit the whole-token lookahead to a
-                // digit-led Korean word: Roman-led mixed words such as
-                // `LG유플러스` continue the Roman list and are not this case.
+                // digit-led item without Roman letters: Roman-led mixed
+                // words such as `LG유플러스` continue the Roman list.
                 return false;
             }
 
@@ -430,7 +510,9 @@ pub(crate) fn should_render_symbol_as_english(
             // number-led item (`0-Zone`, `777-300ER`) has not entered Roman
             // mode yet: its first Roman indicator belongs immediately before
             // the first letter, never before an earlier hyphen.
-            prev_ascii && next_ascii && (is_english || roman_started_before_hyphen)
+            (prev_ascii && next_ascii && (is_english || roman_started_before_hyphen))
+                || (is_english
+                    && crate::rules::token_rules::math_expression::is_roman_minus_grade(word_chars))
         }
         '/' | '@' | '#' | '.' | '_' | ':' => {
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
@@ -442,6 +524,13 @@ pub(crate) fn should_render_symbol_as_english(
                 // word; an already-open section proves its left Roman item,
                 // while this lookahead proves the right Roman/number item.
                 || (symbol == ':' && is_english && word_chars == [':'] && next_ascii)
+                // 제32항/제34항: a colon closing a bracketed Roman item
+                // (`(MAVE:)`) is still inside the enclosure, not between
+                // Roman and Hangul, so 제33항's Korean cell does not apply.
+                || (symbol == ':'
+                    && is_english
+                    && prev_ascii
+                    && matches!(next_char, Some(')' | ']' | '}')))
                 || (symbol == '/' && prev_char == Some('/') && next_ascii)
                 || (symbol == '/' && next_char == Some('/') && prev_ascii)
         }
@@ -457,6 +546,14 @@ pub(crate) fn should_keep_english_mode_for_symbol(
 ) -> bool {
     if !is_digital_notation_symbol(symbol) || !has_digital_notation_signature(word_chars) {
         return false;
+    }
+    // 제74항 digital notation (`https://`, `a@b.c`) is one Roman section: its
+    // separators never close it while the address still continues.
+    if word_chars[index + 1..]
+        .iter()
+        .any(|ch| ch.is_ascii_alphanumeric())
+    {
+        return true;
     }
 
     should_render_symbol_as_english(
@@ -561,8 +658,10 @@ mod tests {
         false
     )]
     #[case::pure_roman_body("ABC(def)", 3, &[], true, true, false, true)]
-    #[case::pure_number_body("BSI(73)", 3, &[], true, true, false, true)]
+    #[case::pure_number_body("BSI(73)", 3, &[], true, true, false, false)]
     #[case::unclosed_body("ABC(def", 3, &["한글"], true, true, false, true)]
+    #[case::korean_head_roman_continues("폐쇄회로(CC)TV와", 4, &[], true, false, false, true)]
+    #[case::korean_head_korean_follows("링컨(Lincoln)은", 2, &[], true, false, false, false)]
     #[case::nested_korean_body(
         "BIT(BT(바이오)+IT(정보))",
         3,
@@ -616,7 +715,7 @@ mod tests {
     /// `should_render_symbol_as_english` for ',' — 양쪽 ASCII + 영어 컨텍스트 둘 다 필요.
     #[rstest::rstest]
     #[case::both_ascii_in_english_mode("A,B", true, true)]
-    #[case::compatibility_unit_in_english_mode("㎿,30", true, true)]
+    #[case::compatibility_unit_in_english_mode("㎿,30㎿", true, true)]
     #[case::not_in_english_mode("A,B", false, false)]
     #[case::korean_neighbor("가,B", true, false)]
     fn should_render_symbol_as_english_for_comma_requires_ascii_neighbors(
@@ -665,14 +764,16 @@ mod tests {
         ));
     }
 
-    /// Korean rule 33 classifies a comma before a digit-led Korean word from
-    /// the complete following token. A Roman-led mixed word remains Roman
-    /// context at the boundary.
+    /// Korean rule 33 classifies a comma before a Korean-mode number item from
+    /// the complete following token: a bare number (with or without Korean)
+    /// is written with the 수표, so the comma is Korean punctuation, while a
+    /// Roman-led or number-led Roman item continues the section.
     #[rstest::rstest]
     #[case::digit_led_korean("2000년대", false)]
     #[case::grouped_digit_led_korean("2,000년대", false)]
     #[case::decimal_digit_led_korean("3.5년", false)]
-    #[case::pure_number("2000", true)]
+    #[case::pure_number("2000", false)]
+    #[case::number_led_roman_item("1998b", true)]
     #[case::roman_word("Beta", true)]
     #[case::roman_led_mixed_word("LG유플러스", true)]
     #[case::numeric_roman_unit_before_korean_particle("68kg의", true)]

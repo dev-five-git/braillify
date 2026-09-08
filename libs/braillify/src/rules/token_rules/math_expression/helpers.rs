@@ -624,14 +624,53 @@ fn is_closed_roman_annotation_suffix(chars: &[char]) -> bool {
     let body = &chars[1..close];
     let trailing = &chars[close + 1..];
 
+    let is_section_letter =
+        |c: &char| c.is_ascii_alphabetic() || crate::rules::korean::rule_31::is_greek_letter(*c);
     !body.is_empty()
-        && body.iter().any(|c| c.is_ascii_alphabetic())
+        && body.iter().any(is_section_letter)
         && body
             .iter()
-            .all(|c| c.is_ascii_alphanumeric() || matches!(*c, '-' | '\'' | '.'))
+            .all(|c| is_section_letter(c) || c.is_ascii_digit() || matches!(*c, '-' | '\'' | '.'))
         && trailing
             .iter()
             .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+}
+
+/// 제34항 attaches a bracket to the Korean word it annotates and 제54항 keeps the
+/// bracket closed onto its contents, so `목요일(6/4)`, `일대일(1:1)` and
+/// `1500m(1)` are Korean-mode annotations written with 한글 괄호. Only a body of
+/// digits joined by ordinary marks qualifies; an operator or a letter leaves the
+/// parenthetical to the math engine (`정수(x+1)`).
+fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
+    if chars.first() != Some(&'(') {
+        return false;
+    }
+    let Some(close) = chars.iter().position(|c| *c == ')') else {
+        return false;
+    };
+    let body = &chars[1..close];
+    let trailing = &chars[close + 1..];
+    body.iter().any(char::is_ascii_digit)
+        && body
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(*c, '/' | ':' | '.' | ',' | '~' | '\u{223C}'))
+        && trailing
+            .iter()
+            .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+}
+
+/// 제49항 붙임표 `⠤` follows print spacing, and 제55항 [다만] keeps an affix
+/// hyphen with its word: `코로나-19`, `화성-12형` attach a 붙임표, not a
+/// spaced 제46항 minus sign.
+fn is_hyphenated_number_suffix(chars: &[char]) -> bool {
+    let Some(('-', digits)) = chars.split_first().map(|(head, rest)| (*head, rest)) else {
+        return false;
+    };
+    !digits.is_empty()
+        && digits.first().is_some_and(char::is_ascii_digit)
+        && digits
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(*c, '.' | ','))
 }
 
 pub(super) fn split_mixed_math_word(
@@ -684,7 +723,10 @@ pub(super) fn split_mixed_math_word(
         if !prefix_all_korean || !suffix_no_korean {
             return None;
         }
-        if is_closed_roman_annotation_suffix(suffix_chars) {
+        if is_closed_roman_annotation_suffix(suffix_chars)
+            || is_closed_numeric_annotation_suffix(suffix_chars)
+            || is_hyphenated_number_suffix(suffix_chars)
+        {
             return None;
         }
         let suffix_text: String = suffix_chars.iter().collect();

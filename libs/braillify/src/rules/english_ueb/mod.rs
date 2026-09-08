@@ -20,6 +20,7 @@ pub mod parser;
 pub mod pronunciation;
 pub mod rule_10_1;
 pub mod rule_10_11;
+pub mod rule_10_12;
 pub mod rule_10_13;
 pub mod rule_10_2;
 pub mod rule_10_3;

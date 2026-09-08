@@ -57,6 +57,7 @@ mod encoder;
 pub(crate) mod english;
 pub(crate) mod english_logic;
 pub(crate) mod fraction;
+mod hanja;
 mod ipa;
 mod jauem;
 mod korean_char;
@@ -440,6 +441,195 @@ fn normalize_pure_roman_compatibility_units<'a>(text: Cow<'a, str>) -> Cow<'a, s
     Cow::Owned(out)
 }
 
+/// Print variants of characters the standard already defines. U+02DA RING ABOVE
+/// is typed for the degree sign (제69항 [붙임 2] `°`); U+2010/U+2011/U+2043 are
+/// Unicode hyphen forms of the 붙임표 `-` (제72항 lists the same cell for the
+/// hyphen bullet); `°C`/`°F` are the decomposed spellings of the unit glyphs
+/// `℃`/`℉` (제69항 [붙임 2]). U+00AD SOFT HYPHEN is an invisible line-break
+/// hint and carries no print, so it is dropped.
+///
+/// The same holds for the compatibility spellings of characters the standard
+/// already defines: U+FF01–U+FF5E are the fullwidth forms of ASCII `!`–`~`
+/// (`％`, `ｍ`, `＆`), U+30FB/U+FF65/U+2027 are CJK spellings of the 가운뎃점 `·`
+/// (제50항), U+301C is the wave-dash form of the 물결표 `~` (제49항), and U+00B4
+/// is a typed acute accent standing for the 아포스트로피 `'` (제61항). The
+/// zero-width marks U+200B–U+200D and U+FEFF carry no print at all, so they are
+/// dropped like the soft hyphen.
+///
+/// U+FF1A `：` and U+FF03 `＃` are excluded: the standard gives those fullwidth
+/// glyphs their own meanings — the 옛한글 장음 표시 of 제27항 and the 기수 기호 of
+/// 수학 제65항 — so they are not print variants of ASCII `:` and `#`.
+fn is_foldable_fullwidth(c: char) -> bool {
+    matches!(c, '\u{FF01}'..='\u{FF5E}') && !matches!(c, '\u{FF03}' | '\u{FF1A}')
+}
+
+/// U+2474–U+2487 은 괄호 안에 숫자를 넣은 표기(`⑸`)의 한 글자 표기이므로 제34항의
+/// 괄호와 제40항의 수표로 풀어 적는다. 제64항의 동그라미 숫자(`①`)는 규정이 따로
+/// 점형을 정하므로 여기서 건드리지 않는다.
+fn parenthesized_number_expansion(c: char) -> Option<String> {
+    let value = (c as u32).checked_sub(0x2473)?;
+    (1..=20).contains(&value).then(|| format!("({value})"))
+}
+
+fn may_normalize_print_variant(c: char) -> bool {
+    matches!(
+        c,
+        '\u{02DA}' | '\u{2010}' | '\u{2011}' | '\u{2043}' | '\u{00AD}' | '\u{00B0}' | '²' | '³'
+    ) || is_foldable_fullwidth(c)
+        || parenthesized_number_expansion(c).is_some()
+        || matches!(
+            c,
+            '\u{30FB}'
+                | '\u{FF65}'
+                | '\u{2027}'
+                | '\u{2024}'
+                | '\u{2A2F}'
+                | '\u{301C}'
+                | '\u{00B4}'
+                | '\u{200B}'
+                | '\u{200C}'
+                | '\u{200D}'
+                | '\u{FEFF}'
+        )
+}
+
+/// The CJK compatibility square unit whose NFKC decomposition is exactly
+/// `letters` + `exponent` (`km` + `2` → `㎢`), so a printed `km²` takes the
+/// 제68항/제69항 transcription of that unit glyph.
+fn square_unit_presentation(letters: &[char], exponent: char) -> Option<char> {
+    use unicode_normalization::UnicodeNormalization;
+
+    let spelled: String = letters.iter().chain(std::iter::once(&exponent)).collect();
+    (0x3371..=0x33DF)
+        .filter_map(char::from_u32)
+        .find(|candidate| std::iter::once(*candidate).nfkc().eq(spelled.chars()))
+}
+
+fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let chars = text.chars().collect::<Vec<_>>();
+    let mut out = String::with_capacity(text.len());
+    let mut index = 0usize;
+    while index < chars.len() {
+        let ch = chars[index];
+        let degree = matches!(ch, '\u{00B0}' | '\u{02DA}');
+        match chars.get(index + 1) {
+            Some('C') if degree => {
+                out.push('\u{2103}');
+                index += 2;
+                continue;
+            }
+            Some('F') if degree => {
+                out.push('\u{2109}');
+                index += 2;
+                continue;
+            }
+            _ => {}
+        }
+        let starts_letter_run = ch.is_ascii_alphabetic()
+            && index
+                .checked_sub(1)
+                .is_none_or(|previous| !chars[previous].is_ascii_alphabetic());
+        if starts_letter_run {
+            let run_end = index
+                + chars[index..]
+                    .iter()
+                    .take_while(|c| c.is_ascii_alphabetic())
+                    .count();
+            let exponent = match chars.get(run_end) {
+                Some('²') => Some('2'),
+                Some('³') => Some('3'),
+                _ => None,
+            };
+            if let Some(exponent) = exponent
+                && let Some(unit) = square_unit_presentation(&chars[index..run_end], exponent)
+            {
+                out.push(unit);
+                index = run_end + 1;
+                continue;
+            }
+        }
+        match ch {
+            '\u{02DA}' => out.push('\u{00B0}'),
+            '\u{2010}' | '\u{2011}' | '\u{2043}' => out.push('-'),
+            '\u{30FB}' | '\u{FF65}' | '\u{2027}' | '\u{2024}' => {
+                out.push('\u{00B7}');
+            }
+            '\u{2A2F}' => out.push('\u{00D7}'),
+            _ if parenthesized_number_expansion(ch).is_some() => {
+                out.push_str(&parenthesized_number_expansion(ch).unwrap_or_default());
+            }
+            '\u{301C}' => out.push('~'),
+            '\u{00B4}' => out.push('\''),
+            '\u{00AD}' | '\u{200B}' | '\u{200C}' | '\u{200D}' | '\u{FEFF}' => {}
+            _ if is_foldable_fullwidth(ch) => {
+                out.push(char::from_u32(ch as u32 - 0xFEE0).unwrap_or(ch));
+            }
+            _ => out.push(ch),
+        }
+        index += 1;
+    }
+    Cow::Owned(out)
+}
+
+/// 국어 문장 안의 한자는 그 한자의 한국어 독음으로 적으므로(`支線` → 지선), 점역
+/// 전에 독음으로 바꾼다. 표에 없는 한자는 그대로 두어 뒤 단계가 오류를 보고한다.
+///
+/// 제19~27항의 옛한글은 한자를 독음으로 바꾸지 않고 옛한글 점형으로 적으므로
+/// (`轉輪륜王` → `⠊⠸⠩⠱⠒…`) 그 문맥은 건너뛴다. 옛한글임을 알리는 표시는 홀로 쓴
+/// 자모(`洪ㄱ字`), 방점(`·갈`, `中國·귁`), 한자 뒤에 곧바로 붙인 독음(`君군`,
+/// `轉輪륜王`의 `輪륜`), 그리고 한글이 하나도 없는 한자만의 표기(`榮養`)다.
+fn is_middle_korean_hanja_context(chars: &[char]) -> bool {
+    let has_old_jamo = chars.iter().any(|c| {
+        matches!(*c, '\u{3131}'..='\u{318E}' | '\u{1100}'..='\u{11FF}' | '\u{E000}'..='\u{F8FF}')
+    });
+    let has_tone_mark = chars.iter().any(|c| matches!(*c, '\u{00B7}' | '\u{FF1A}'));
+    let has_modern_hangul = chars.iter().any(|c| matches!(*c, '\u{AC00}'..='\u{D7A3}'));
+    let has_gloss = chars.iter().enumerate().any(|(index, c)| {
+        hanja::reading(*c).is_some_and(|reading| {
+            chars[index + 1..]
+                .iter()
+                .take(reading.chars().count())
+                .copied()
+                .eq(reading.chars())
+        })
+    });
+    has_old_jamo || has_tone_mark || has_gloss || !has_modern_hangul
+}
+
+fn expand_hanja_readings<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let chars: Vec<char> = text.chars().collect();
+    if is_middle_korean_hanja_context(&chars) {
+        return text;
+    }
+    let mut out = String::with_capacity(text.len());
+    for ch in chars {
+        match hanja::reading(ch) {
+            Some(reading) => out.push_str(reading),
+            None => out.push(ch),
+        }
+    }
+    Cow::Owned(out)
+}
+
+/// Pictographs that the NIKL reference corpus transcribes by their printed
+/// meaning rather than by a symbol cell: the telephone sign is written as the
+/// Roman word `Tel` before the number (`☏051-514-9901` → `⠴⠠⠞⠑⠇⠼⠚⠑⠁…`).
+fn may_expand_pictograph(c: char) -> bool {
+    matches!(c, '\u{260E}' | '\u{260F}')
+}
+
+fn expand_pictographs<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let mut out = String::with_capacity(text.len());
+    for ch in text.chars() {
+        if may_expand_pictograph(ch) {
+            out.push_str("Tel");
+        } else {
+            out.push(ch);
+        }
+    }
+    Cow::Owned(out)
+}
+
 /// Default-route whole expressions that contain math-only relational/grouping
 /// glyphs which cannot be encoded correctly one space-separated token at a time.
 ///
@@ -511,6 +701,9 @@ struct NormalizationTriggers {
     has_parenthesized_hangul_presentation: bool,
     has_word_separator_middle_dot: bool,
     has_pure_roman_compatibility_unit: bool,
+    has_print_variant: bool,
+    has_hanja: bool,
+    has_pictograph: bool,
     has_decomposable_latin: bool,
     has_negation_combiner: bool,
     has_vector_mark: bool,
@@ -530,6 +723,9 @@ impl NormalizationTriggers {
             triggers.has_word_separator_middle_dot |= may_normalize_word_separator_middle_dot(c);
             triggers.has_pure_roman_compatibility_unit |=
                 pure_roman_compatibility_unit_decomposition(c).is_some();
+            triggers.has_print_variant |= may_normalize_print_variant(c);
+            triggers.has_hanja |= hanja::is_hanja(c);
+            triggers.has_pictograph |= may_expand_pictograph(c);
             triggers.has_decomposable_latin |= may_decompose_accented_latin(c);
             triggers.has_negation_combiner |= c == '\u{0338}';
             triggers.has_vector_mark |= is_vector_mark(c);
@@ -938,6 +1134,21 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     };
     let normalized_text = if normalization_triggers.has_pure_roman_compatibility_unit {
         normalize_pure_roman_compatibility_units(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_print_variant {
+        normalize_print_variants(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_hanja {
+        expand_hanja_readings(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_pictograph {
+        expand_pictographs(normalized_text)
     } else {
         normalized_text
     };
@@ -1365,7 +1576,7 @@ mod test {
     ///
     /// Most fixtures map one-to-one (`korean/rule_1.json` -> `korean/rule_1`).
     /// A rule-map entry with `shards: true` may instead own numbered files such
-    /// as `corpus/sentence_01.json` and `corpus/sentence_02.json`. Unknown files
+    /// as `2025_corpus/sentence_01.json` and `2025_corpus/sentence_02.json`. Unknown files
     /// keep their physical key so the rule-map integrity check reports them.
     fn logical_test_case_key(physical_key: &str, rule_map: &TestCaseRuleMap) -> String {
         if rule_map.contains_key(physical_key) {
@@ -1422,8 +1633,8 @@ mod test {
 
     #[rstest::rstest]
     #[case::exact_rule("korean/rule_1", "korean/rule_1")]
-    #[case::numbered_shard("corpus/sentence_04", "corpus/sentence")]
-    #[case::unregistered_file("corpus/other_01", "corpus/other_01")]
+    #[case::numbered_shard("2025_corpus/sentence_04", "2025_corpus/sentence")]
+    #[case::unregistered_file("2025_corpus/other_01", "2025_corpus/other_01")]
     fn resolves_physical_fixture_to_logical_rule_key(
         #[case] physical_key: &str,
         #[case] expected: &str,
@@ -1431,7 +1642,7 @@ mod test {
         let rule_map = HashMap::from([
             ("korean/rule_1".to_string(), TestCaseRuleConfig::default()),
             (
-                "corpus/sentence".to_string(),
+                "2025_corpus/sentence".to_string(),
                 TestCaseRuleConfig {
                     shards: true,
                     ..TestCaseRuleConfig::default()
@@ -1528,8 +1739,8 @@ mod test {
         cases
     }
 
-    fn load_nikl_corpus_cases() -> Vec<NiklCorpusCase> {
-        load_test_case_group("corpus/sentence")
+    fn load_nikl_2025_corpus_cases() -> Vec<NiklCorpusCase> {
+        load_test_case_group("2025_corpus/sentence")
     }
 
     type TestStatusRow = (
@@ -1581,10 +1792,13 @@ mod test {
     /// the full benchmark available as an opt-in regression gate while
     /// `test_by_testcase` records its current accuracy for the landing page.
     #[test]
-    #[ignore = "NIKL corpus support is tracked as a benchmark until it reaches 100%"]
-    fn test_nikl_parallel_corpus() {
-        let cases = load_nikl_corpus_cases();
-        assert!(!cases.is_empty(), "NIKL corpus fixture must not be empty");
+    #[ignore = "NIKL 2025 corpus support is tracked as a benchmark until it reaches 100%"]
+    fn test_nikl_2025_parallel_corpus() {
+        let cases = load_nikl_2025_corpus_cases();
+        assert!(
+            !cases.is_empty(),
+            "NIKL 2025 corpus fixture must not be empty"
+        );
 
         let mut failures = Vec::new();
         let mut failure_stats = NiklFailureStats::default();
@@ -1626,7 +1840,7 @@ mod test {
                 .collect::<Vec<_>>()
                 .join("\n");
             panic!(
-                "NIKL corpus: {}/{} cases differ from the reference.\n\
+                "NIKL 2025 corpus: {}/{} cases differ from the reference.\n\
                  Failure traits (overlapping): encoding errors={}, Latin={}, digits={}, delimiters={}, Korean-text-only={}.\n\
                  First {}:\n{}",
                 failures.len(),

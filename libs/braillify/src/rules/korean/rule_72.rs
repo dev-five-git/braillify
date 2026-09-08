@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use crate::char_struct::CharType;
 use crate::rules::RuleMeta;
 use crate::rules::context::{EncodingMode, RuleContext};
-use crate::rules::token::{SpaceKind, Token, WordMeta, WordToken};
+use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 
@@ -88,6 +88,16 @@ fn is_triangle_geometry_expression(chars: &[char]) -> bool {
     }
 }
 
+fn another_marker_item_exists(tokens: &[Token<'_>], index: usize) -> bool {
+    tokens.iter().enumerate().any(|(i, token)| {
+        i != index
+            && matches!(
+                token,
+                Token::Word(word) if matches!(word.chars.first(), Some('△' | '▲' | '▴'))
+            )
+    })
+}
+
 fn owned_word(text: String) -> Token<'static> {
     let chars = text.chars().collect::<Vec<_>>();
     let meta = WordMeta::from_chars(&chars);
@@ -98,9 +108,11 @@ fn owned_word(text: String) -> Token<'static> {
     })
 }
 
-/// 제72항 글머리 기호가 항목 내용에 붙은 일반 텍스트를, 수식 판정보다
-/// 먼저 `기호 + 한 칸 + 내용`으로 복원한다. 수학 제40·42·43항 문법은
-/// 위의 구조 판정으로 제외한다.
+/// 제72항 글머리 기호가 항목 내용에 붙은 일반 텍스트를, 수식 판정보다 먼저
+/// `기호`와 `내용`으로 가른다. 제72항의 예제는 모두 묵자에 한 칸이 있는 꼴
+/// (`□ 2021 세계한국어한마당`)이고 규정은 칸을 새로 넣으라고 하지 않으므로,
+/// 묵자에 칸이 없으면 붙여 적는다. 수학 제40·42·43항 문법은 아래 구조 판정으로
+/// 제외한다.
 pub struct Rule72AttachedMarkerTokenRule;
 
 impl TokenRule for Rule72AttachedMarkerTokenRule {
@@ -134,14 +146,18 @@ impl TokenRule for Rule72AttachedMarkerTokenRule {
         if word.chars.get(1) == Some(&marker) {
             return Ok(TokenAction::Noop);
         }
-        if marker == '△' && is_triangle_geometry_expression(&word.chars) {
+        // 수학 제42·43항의 관계식은 한 토큰 안에서 이어지므로, 같은 문장에
+        // 다른 `△` 항목이 따로 있으면 제72항의 글머리 기호 나열이다.
+        if marker == '△'
+            && is_triangle_geometry_expression(&word.chars)
+            && !another_marker_item_exists(tokens, index)
+        {
             return Ok(TokenAction::Noop);
         }
 
         let rest = word.chars[1..].iter().collect::<String>();
         Ok(TokenAction::ReplaceMany(vec![
             owned_word(marker.to_string()),
-            Token::Space(SpaceKind::Regular),
             owned_word(rest),
         ]))
     }
@@ -203,9 +219,6 @@ impl BrailleRule for Rule72 {
         };
         let encoded = encode_unicode_cells(unicode);
         ctx.emit_slice(&encoded);
-        if tight_before_content {
-            ctx.emit(0);
-        }
         Ok(RuleResult::Consumed)
     }
 }
@@ -245,23 +258,31 @@ mod tests {
         assert_eq!(output, encode_unicode_cells(expected));
     }
 
+    fn cell_after_triangle_marker(input: &str) -> Option<char> {
+        let encoded = crate::encode_to_unicode(input).expect("encodes");
+        let at = encoded.find("⠸⠬").expect("triangle marker is emitted");
+        encoded[at + "⠸⠬".len()..].chars().next()
+    }
+
     #[rstest::rstest]
-    #[case::outline("△문화", "△ 문화")]
-    #[case::filled("▲문화", "△ 문화")]
-    #[case::small_filled("▴문화", "△ 문화")]
-    #[case::roman_item("목록은 △R&D이다", "목록은 △ R&D이다")]
-    #[case::numeric_item("목록은 △2025년이다", "목록은 △ 2025년이다")]
-    #[case::quoted_item("목록은 △‘첫째’이다", "목록은 △ ‘첫째’이다")]
-    #[case::roman_token("목록은 △AI", "목록은 △ AI")]
-    #[case::numeric_token("목록은 △2025", "목록은 △ 2025")]
-    fn attached_triangle_list_markers_supply_the_rule_72_boundary(
-        #[case] input: &str,
-        #[case] standard_print: &str,
-    ) {
-        assert_eq!(
-            crate::encode_to_unicode(input),
-            crate::encode_to_unicode(standard_print)
-        );
+    #[case::outline("△문화")]
+    #[case::filled("▲문화")]
+    #[case::small_filled("▴문화")]
+    #[case::roman_item("목록은 △R&D이다")]
+    #[case::numeric_item("목록은 △2025년이다")]
+    #[case::quoted_item("목록은 △‘첫째’이다")]
+    #[case::roman_token("목록은 △AI")]
+    #[case::numeric_token("목록은 △2025")]
+    fn attached_triangle_list_markers_stay_attached(#[case] input: &str) {
+        assert_ne!(cell_after_triangle_marker(input), Some('\u{2800}'));
+    }
+
+    #[rstest::rstest]
+    #[case::outline("△ 문화")]
+    #[case::roman_item("목록은 △ R&D이다")]
+    #[case::numeric_token("목록은 △ 2025")]
+    fn spaced_triangle_list_markers_keep_their_blank(#[case] input: &str) {
+        assert_eq!(cell_after_triangle_marker(input), Some('\u{2800}'));
     }
 
     #[test]
@@ -270,14 +291,14 @@ mod tests {
     }
 
     #[test]
-    fn list_marker_after_attached_previous_item_still_supplies_right_boundary() {
+    fn list_marker_between_attached_items_emits_the_marker_alone() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("첫째△둘째", false);
         let mut ctx = owned.ctx_at(2);
 
         let outcome = Rule72.apply(&mut ctx).unwrap();
 
         assert!(matches!(outcome, RuleResult::Consumed));
-        assert_eq!(&*ctx.result, &encode_unicode_cells("⠸⠬⠀"));
+        assert_eq!(&*ctx.result, &encode_unicode_cells("⠸⠬"));
     }
 
     #[test]

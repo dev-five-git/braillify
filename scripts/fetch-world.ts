@@ -274,10 +274,14 @@ async function main(): Promise<void> {
   )
 
   if (corpusMode) {
-    const corpusDirectory = join(TEST_CASES_DIR, 'corpus')
-    const corpusFiles = (await readdir(corpusDirectory))
-      .filter((file) => /^sentence_\d+\.json$/.test(file))
+    const requestedCorpus = process.env.FETCH_WORLD_CORPUS_DIR
+    const corpusDirectories = (await readdir(TEST_CASES_DIR))
+      .filter((entry) => /^\d{4}_corpus$/.test(entry))
+      .filter((entry) => !requestedCorpus || requestedCorpus.split(',').includes(entry))
       .sort()
+    if (corpusDirectories.length === 0) {
+      throw new Error(`No corpus directory matched: ${requestedCorpus ?? '*_corpus'}`)
+    }
     const limit = Number.parseInt(process.env.JEOMJASESANG_LIMIT ?? '', 10)
     const stats: FileStats = {
       total: 0,
@@ -286,21 +290,31 @@ async function main(): Promise<void> {
       preserved: 0,
       errors: 0,
     }
-    console.log(`\n📁 corpus (${corpusFiles.length} shards, NIKL → world)`)
-    for (const file of corpusFiles) {
-      const remaining = Number.isNaN(limit)
-        ? limit
-        : Math.max(0, limit - stats.fetched)
-      if (remaining === 0) break
-      const fileStats = await processFile(
-        join(corpusDirectory, file),
-        ref,
-        'world',
-        remaining,
-        true,
+    for (const corpusDirectory of corpusDirectories) {
+      const corpusFiles = (await readdir(join(TEST_CASES_DIR, corpusDirectory)))
+        .filter((file) => /^sentence_\d+\.json$/.test(file))
+        .sort()
+      console.log(
+        `\n📁 ${corpusDirectory} (${corpusFiles.length} shards, NIKL → world)`,
       )
-      for (const key of Object.keys(stats) as (keyof FileStats)[]) {
-        stats[key] += fileStats[key]
+      for (const file of corpusFiles) {
+        const remaining = Number.isNaN(limit)
+          ? limit
+          : Math.max(0, limit - stats.fetched)
+        if (remaining === 0) break
+        const fileStats = await processFile(
+          join(TEST_CASES_DIR, corpusDirectory, file),
+          ref,
+          'world',
+          remaining,
+          true,
+        )
+        for (const key of Object.keys(stats) as (keyof FileStats)[]) {
+          stats[key] += fileStats[key]
+        }
+        console.log(
+          `  ${file}: ${fileStats.fetched} fetched, ${fileStats.errors} errors, ${fileStats.preserved} preserved`,
+        )
       }
     }
     console.log(
@@ -313,7 +327,7 @@ async function main(): Promise<void> {
   const requestedDirectory = process.env.FETCH_WORLD_DIR
   const targetDirs = requestedDirectory
     ? dirs.filter((dir) => dir === requestedDirectory)
-    : dirs.filter((dir) => dir !== 'corpus')
+    : dirs.filter((dir) => !dir.endsWith('_corpus'))
   if (requestedDirectory && targetDirs.length === 0) {
     throw new Error(`Unknown test-case directory: ${requestedDirectory}`)
   }

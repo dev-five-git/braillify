@@ -39,6 +39,7 @@ const ASCII_UNIT_MAPPINGS: &[(&str, &str)] = &[
     ("GB", "⠴⠠⠠⠛⠃⠲"),
     ("m", "⠴⠍⠲"),
     ("h", "⠴⠓⠲"),
+    ("s", "⠴⠎⠲"),
 ];
 
 /// Roman unit symbols printed in the Rule 69 / science-braille unit tables
@@ -56,7 +57,10 @@ const SI_PREFIXES: &[&str] = &[
     "E", "Z", "Y", "R", "Q",
 ];
 
-const PERCENT_ABBREVIATION_MAPPINGS: &[(&str, &str)] = &[("%ile", "⠴⠏⠞"), ("%p", "⠴⠏⠏")];
+// 제69항 [붙임 2] `%p` = `⠴⠏⠏`; a printed capital `P` keeps the same unit
+// form with UEB 8.3's capital indicator before that letter.
+const PERCENT_ABBREVIATION_MAPPINGS: &[(&str, &str)] =
+    &[("%ile", "⠴⠏⠞"), ("%p", "⠴⠏⠏"), ("%P", "⠴⠏⠠⠏")];
 
 const SEPARATED_SYMBOLS: &[char] = &['%', '‰', '°', '℃', '℉'];
 
@@ -116,7 +120,9 @@ pub(crate) fn is_compatibility_unit_presentation(c: char) -> bool {
 /// and a lower groupsign cannot consume the whole entry run (`in` is spelled
 /// `i`-`n`, while the same `in` may contract inside `min`).
 fn encode_rule_69_unit_letters(letters: &[char]) -> Result<Vec<u8>, String> {
-    match encode_korean_word(letters, false, false, false, true, false, false, false) {
+    match encode_korean_word(
+        letters, false, false, false, false, true, false, false, false, false,
+    ) {
         Some(encoded) => Ok(encoded),
         None => Err(format!(
             "cannot encode rule 69 Roman unit letters: {}",
@@ -215,11 +221,17 @@ fn is_numeric_or_unit_context(ctx: &RuleContext) -> bool {
     {
         numeric_start -= 1;
     }
+    // 제35항 `D-100`: a Roman-led identifier keeps its hyphenated number in
+    // the Roman chain, so letters after that number (`FA-50PL`) are not a unit.
+    let mut identifier_head = numeric_start;
+    if identifier_head > 0 && ctx.word_chars[identifier_head - 1] == '-' {
+        identifier_head -= 1;
+    }
     let compact_numeric_prefix = numeric_start < ctx.index
         && ctx.word_chars[numeric_start..ctx.index]
             .iter()
             .any(char::is_ascii_digit)
-        && numeric_start
+        && identifier_head
             .checked_sub(1)
             .and_then(|index| ctx.word_chars.get(index))
             .is_none_or(|previous| !previous.is_ascii_alphabetic());
@@ -492,7 +504,7 @@ fn encode_percent_abbreviation(word: &[char], index: usize) -> Option<(Vec<u8>, 
         if !chars_start_with_ascii(tail, abbr) {
             continue;
         }
-        if *abbr == "%p"
+        if matches!(*abbr, "%p" | "%P")
             && tail
                 .get(abbr.len())
                 .is_some_and(|ch| ch.is_ascii_alphabetic())
@@ -555,6 +567,19 @@ pub(crate) fn parse_numeric_ascii_unit_expression(word: &[char]) -> Option<usize
         let mut component_has_unit = false;
         if let Some((_, unit_len)) = encode_complete_numeric_ascii_unit(word, cursor) {
             cursor += unit_len;
+            saw_unit = true;
+            component_has_unit = true;
+        } else if word
+            .get(cursor)
+            .is_some_and(|symbol| SINGLE_MAPPINGS.iter().any(|(unit, _)| unit == symbol))
+        {
+            cursor += 1;
+            // 제69항 [붙임 2] unit symbol followed by a Roman qualifier
+            // (`38°N`, `15°Bx`) is still one measurement, not a formula.
+            cursor += word[cursor..]
+                .iter()
+                .take_while(|ch| ch.is_ascii_alphabetic())
+                .count();
             saw_unit = true;
             component_has_unit = true;
         }
@@ -742,11 +767,7 @@ impl BrailleRule for Rule69 {
             let mut encoded = crate::encode(&numeric)?;
             encoded.extend(unit);
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            if continues {
-                ctx.state.roman_number_chain = false;
-            }
+            crate::rules::roman_mode::resolve_section_after_unit(ctx.state, continues);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -763,11 +784,7 @@ impl BrailleRule for Rule69 {
             }
             trim_recent_english_indicator(ctx.result);
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            if continues {
-                ctx.state.roman_number_chain = false;
-            }
+            crate::rules::roman_mode::resolve_section_after_unit(ctx.state, continues);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -812,8 +829,7 @@ impl BrailleRule for Rule69 {
             );
 
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = false;
-            ctx.state.needs_english_continuation = false;
+            crate::rules::roman_mode::close_section_keeping_number_chain(ctx.state);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -839,9 +855,7 @@ impl BrailleRule for Rule69 {
             // component and must retain their existing closed state. Only a
             // continuation across a print space needs to survive into the next
             // Word token.
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            ctx.state.roman_number_chain = false;
+            crate::rules::roman_mode::set_section_open(ctx.state, continues);
             return Ok(RuleResult::Consumed);
         }
 

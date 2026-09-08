@@ -243,19 +243,24 @@ pub(super) fn is_korean_prose_roman_hyphen_identifier(chars: &[char]) -> bool {
         return false;
     }
 
-    // Rule 34 enclosure followed by a Roman continuation, e.g. `(ABC)-D`.
+    // Rule 34 enclosure: either the whole identifier is enclosed (`(K-POP)`,
+    // or the opening fragment `(K-POP` of a multiword parenthetical), or the
+    // enclosure is followed by a Roman continuation, e.g. `(ABC)-D`.
     let core = if chars.first() == Some(&'(') {
-        let Some(close) = chars.iter().position(|ch| *ch == ')') else {
-            return false;
-        };
-        let enclosed = &chars[1..close];
-        if enclosed.len() < 2
-            || !enclosed.iter().all(char::is_ascii_uppercase)
-            || !chars.get(close + 1).is_some_and(|ch| is_roman_hyphen(*ch))
-        {
-            return false;
+        match chars.iter().position(|ch| *ch == ')') {
+            None => &chars[1..],
+            Some(close) if close + 1 == chars.len() => &chars[1..close],
+            Some(close) => {
+                let enclosed = &chars[1..close];
+                if enclosed.len() < 2
+                    || !enclosed.iter().all(char::is_ascii_uppercase)
+                    || !chars.get(close + 1).is_some_and(|ch| is_roman_hyphen(*ch))
+                {
+                    return false;
+                }
+                &chars[1..]
+            }
         }
-        &chars[1..]
     } else {
         chars
     };
@@ -364,10 +369,10 @@ pub(super) fn is_korean_prose_roman_slash_identifier(chars: &[char]) -> bool {
 }
 
 /// A single-letter solidus initialism can be distinguished from mathematical
-/// division when it begins a capital-led multi-letter Roman phrase, such as
-/// `H/W Wallet` or `R/R ES-SCLC`.  Korean rule 29 keeps consecutive Roman words
-/// in one section, while an isolated `F/N` remains on the math path used by the
-/// official mathematics rule 29 example.
+/// division by 제52항 [붙임 1], which joins 대비되는 어구 across the solidus
+/// (`먹이다/먹히다`): a capital-led run such as `A/S`, `B/C` or `H/W` is that
+/// contrast phrase, so 제37항 wraps it as one Roman section instead of dividing.
+/// A following lowercase-led Roman word still marks real division (`F/N a`).
 pub(super) fn is_korean_prose_single_letter_slash_phrase(
     tokens: &[Token<'_>],
     index: usize,
@@ -412,7 +417,7 @@ pub(super) fn is_korean_prose_single_letter_slash_phrase(
     }
 
     let Some(next_word) = next_word_skip_space(tokens, index + 1) else {
-        return false;
+        return true;
     };
     let mut next_roman = next_word
         .chars
@@ -421,7 +426,7 @@ pub(super) fn is_korean_prose_single_letter_slash_phrase(
         .skip_while(|ch| matches!(*ch, '\'' | '"' | '‘' | '“' | '(' | '[' | '{'))
         .take_while(|ch| ch.is_ascii_alphanumeric() || is_roman_hyphen(*ch));
     let Some(first) = next_roman.next() else {
-        return false;
+        return next_word.chars.iter().any(|ch| is_korean_char(*ch));
     };
     first.is_ascii_uppercase()
         && next_roman.filter(char::is_ascii_alphabetic).count()
@@ -472,6 +477,37 @@ fn is_terminal_roman_plus_core(core: &[char], allow_single_letter: bool) -> bool
     alphanumeric_count >= 2
         || plus_count >= 2
         || (allow_single_letter && head.len() == 1 && head[0].is_ascii_uppercase())
+}
+
+/// A capitals grade or rating ending in one minus sign (`AA-`, `BBB-`).
+///
+/// UEB 3.17.1 writes the minus of non-technical material as `⠐⠤`, and Korean
+/// rule 32 keeps it inside the Roman section like the terminal plus of `A+`.
+/// The head is two or three capitals (a single letter is 제68항's grade
+/// notation) and the sign closes the item, so no right operand can turn it
+/// into 제46항 subtraction.
+pub(super) fn is_korean_prose_roman_minus_grade(chars: &[char]) -> bool {
+    let chars = trim_roman_identifier_edge(chars);
+    let Some(minus) = chars.iter().position(|ch| *ch == '-') else {
+        return false;
+    };
+    let head_len = chars[..minus]
+        .iter()
+        .rev()
+        .take_while(|ch| ch.is_ascii_uppercase())
+        .count();
+    let before_head = &chars[..minus - head_len];
+    let trailer = &chars[minus + 1..];
+    let closers = trailer
+        .iter()
+        .take_while(|ch| is_terminal_plus_closer_char(**ch))
+        .count();
+    (2..=3).contains(&head_len)
+        && before_head
+            .iter()
+            .all(|ch| is_korean_char(*ch) || matches!(ch, '(' | '[' | '{' | '‘' | '“' | '\'' | '"'))
+        && (trailer.is_empty() || closers > 0)
+        && trailer[closers..].iter().all(|ch| is_korean_char(*ch))
 }
 
 fn is_attached_plus_prose_trailer_char(ch: char) -> bool {
@@ -537,11 +573,12 @@ fn is_terminal_plus_closer_char(ch: char) -> bool {
 /// terminal form stays on this prose path unless a parenthesized ASCII operand
 /// completes the expression; explicit math mode remains math-owned.
 ///
-/// A plus between capital-led Roman words is likewise lexical when at least one
-/// side has a lowercase letter and two or more letters (`Dog+Yoga`).  That
-/// orthographic signal deliberately excludes all-capital algebra-like surfaces
-/// such as `AB+C` and lowercase function sums such as `sin+cos`.  Finally, a
-/// single capital immediately followed by `+` and attached Hangul
+/// A plus between letter-led Roman items is likewise lexical (`Dog+Yoga`,
+/// `SF+AW`, `X+U`): in Korean prose such a pair is a product or brand name and
+/// Korean rule 32 keeps it inside one Roman section with the UEB plus. Only a
+/// single lowercase letter on either side keeps the algebraic reading of 수학
+/// 제12항 (`x+y`), and a digit-led left operand (`7+UP`, `1+2a`) is a sum.
+/// Finally, a single capital immediately followed by `+` and attached Hangul
 /// (`U+유모바일`) is a Roman brand prefix followed by Korean text; Article 46
 /// would require spaces around a genuine Korean addition.
 pub(super) fn is_korean_prose_roman_plus_identifier(chars: &[char]) -> bool {
@@ -591,17 +628,21 @@ pub(super) fn is_korean_prose_roman_plus_identifier(chars: &[char]) -> bool {
         return false;
     }
 
-    if !core.iter().all(|ch| ch.is_ascii_alphabetic() || *ch == '+') {
+    if !core
+        .iter()
+        .all(|ch| ch.is_ascii_alphanumeric() || *ch == '+')
+    {
         return false;
     }
 
+    // Korean rule 32 + UEB 3.17: a plus joining letter-led Roman items
+    // (`SF+AW`, `X+U`, `DNA+BIG3`) is part of one Roman identifier. Only a
+    // single lowercase letter keeps the algebraic reading (`x+y`, 수학 제12항).
     let segments = core.split(|ch| *ch == '+').collect::<Vec<_>>();
     segments.len() >= 2
-        && segments.iter().all(|segment| !segment.is_empty())
-        && segments.iter().any(|segment| {
-            segment.len() >= 2
-                && segment.iter().any(char::is_ascii_lowercase)
-                && segment.iter().all(char::is_ascii_alphabetic)
+        && segments.iter().all(|segment| {
+            segment.first().is_some_and(char::is_ascii_alphabetic)
+                && !(segment.len() == 1 && segment[0].is_ascii_lowercase())
         })
 }
 
@@ -1106,8 +1147,13 @@ fn is_within_attached_korean_prose_parenthetical(tokens: &[Token<'_>], index: us
                                 ch.is_ascii_digit()
                                     || matches!(*ch, '.' | ',' | '\'' | '’' | '"' | '”' | '‘' | '“')
                             });
+                        let quote_only_prefix = prefix
+                            .iter()
+                            .all(|ch| matches!(*ch, '\'' | '’' | '"' | '”' | '‘' | '“'));
                         prefix_contains_korean
                             || (numeric_prefix && has_adjacent_korean_word(tokens, token_index))
+                            || (quote_only_prefix
+                                && adjacent_korean_word_flags(tokens, token_index).0)
                     },
                 }),
                 ')' => {
@@ -1336,6 +1382,7 @@ pub(super) fn run<'a>(
             || is_korean_prose_roman_slash_identifier(&word.chars)
             || is_korean_prose_single_letter_slash_phrase(tokens, index, &word.chars)
             || is_korean_prose_roman_plus_identifier(&word.chars)
+            || is_korean_prose_roman_minus_grade(&word.chars)
             || has_korean_prefix_roman_plus_annotation(&word.chars)
             || has_korean_prefix_terminal_roman_plus_identifier(&word.chars)
             || has_korean_prefix_roman_hyphen_suffix(&word.chars)

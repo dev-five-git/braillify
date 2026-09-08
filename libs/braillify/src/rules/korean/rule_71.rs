@@ -38,14 +38,34 @@ fn should_wrap_information_symbol(ctx: &RuleContext) -> bool {
         return true;
     }
 
-    let prev_has_korean =
-        !ctx.prev_word.is_empty() && ctx.prev_word.chars().any(crate::utils::is_korean_char);
-    let next_has_korean = ctx
+    // 제71항 [다만]: the standalone sign is wrapped when it touches Korean
+    // text.  Only the letter adjacent to the sign decides (`Mining &
+    // Development)가` bridges two Roman words, so the open Roman section
+    // already covers the ampersand).
+    let is_letter_like =
+        |ch: &char| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(*ch);
+    let prev_ends_korean = ctx
+        .prev_word
+        .chars()
+        .rev()
+        .find(is_letter_like)
+        .is_some_and(crate::utils::is_korean_char);
+    let next_starts_korean = ctx
         .remaining_words
         .first()
-        .is_some_and(|word| !word.is_empty() && word.chars().any(crate::utils::is_korean_char));
+        .and_then(|word| word.chars().find(is_letter_like))
+        .is_some_and(crate::utils::is_korean_char);
 
-    prev_has_korean || next_has_korean
+    prev_ends_korean || next_starts_korean
+}
+
+/// 제71항 [다만] wraps a sign that "한글과 혼동되는" position; `®`/`™` attached
+/// to a Roman word (`Jeep®`) sits inside the open 제29항 section, where UEB
+/// 3.1 reads its own cells and no re-entry indicator is needed.
+fn follows_roman_word_in_open_section(ctx: &RuleContext) -> bool {
+    matches!(ctx.current_char(), '®' | '™')
+        && ctx.state.is_english
+        && ctx.prev_char().is_some_and(|ch| ch.is_ascii_alphanumeric())
 }
 
 /// UEB 3.1.1 writes `&` directly between attached ASCII-letter segments
@@ -126,9 +146,7 @@ impl BrailleRule for Rule71 {
             // between the two printed-adjacent items.
             if !ctx.state.is_english {
                 if ctx.state.english_dominant_no_indicator {
-                    ctx.state.is_english = true;
-                    ctx.state.needs_english_continuation = false;
-                    ctx.state.roman_number_chain = false;
+                    crate::rules::roman_mode::mark_section_open(ctx.state);
                 } else {
                     crate::rules::roman_mode::enter_english(ctx.state, ctx.result);
                 }
@@ -137,10 +155,15 @@ impl BrailleRule for Rule71 {
         } else if should_wrap_information_symbol(ctx)
             && matches!(ctx.current_char(), '&' | '¶' | '©' | '®' | '™')
             && !is_attached_roman_ampersand(ctx)
+            && !follows_roman_word_in_open_section(ctx)
         {
             encoded.push(crate::unicode::decode_unicode('⠴'));
             encoded.extend(encode_unicode_cells(unicode));
-            encoded.push(crate::unicode::decode_unicode('⠲'));
+            // 제35항 (규정 예 `헌법§1①`): a digit directly after the wrapped
+            // sign continues the section, so the terminator is omitted.
+            if !ctx.next_char().is_some_and(|ch| ch.is_ascii_digit()) {
+                encoded.push(crate::unicode::decode_unicode('⠲'));
+            }
         } else {
             encoded = encode_unicode_cells(unicode);
         }

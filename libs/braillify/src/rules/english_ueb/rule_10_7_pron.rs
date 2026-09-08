@@ -131,6 +131,12 @@ impl InitialContractionPronunciationRule {
         }
         let er_e_idx = pos + 2; // the `e` of the trailing `er` in `e·v·e·r`
         let prons = self.provider.pronunciations(full);
+        if prons.is_empty() {
+            // 사전에 없는 합성어·고유명사(`cantilever`)는 철자로 판정한다. `ever`가
+            // 낱말 끝에 오고 앞이 자음이면 그 `er`는 강세를 받을 수 없는 어미이므로
+            // §10.7 의 `ever` 꼴이다. 낱말 끝이 아니면(`Everest`) 어미가 아니다.
+            return pos + 4 == word.len();
+        }
         super::pronunciation::aligner::trailing_er_is_unstressed(word, er_e_idx, &prons)
     }
 
@@ -211,9 +217,15 @@ impl InitialContractionPronunciationRule {
             || is_safe_suffix(&after.iter().collect::<String>());
         if key == "one" {
             // §10.7.6: use `one` in compounds/derivatives (`stonework`,
-            // `demonetise`, `lonesomest`) when not preceded by `o`; require a real
-            // following component/suffix so monomorphemes like `anemone` still spell.
-            pos > 0 && word[pos - 1] != 'o' && !after.is_empty() && after_ok
+            // `demonetise`, `lonesomest`) when not preceded by `o`; a following
+            // component must be a real word/suffix (`after_ok`). Word-final `one`
+            // in an unknown word (`ZEROBASEONE`, `homezone`) is read as the /oʊn/
+            // unit under §10.12.7, except after `i`, whose `io` diphthong voices
+            // the `e` (`pensione`, cf. §10.7.6 `Hermione`, `pioneer`); known
+            // `-one` words such as `anemone` never reach this recovery.
+            (pos == 0 || !matches!(word[pos - 1], 'o' | 'i'))
+                && !(pos == 0 && after.is_empty())
+                && after_ok
         } else if pos == 0 {
             // Word-initial unit: `some`·such, `time`·ously, `name`·able, `where`·of.
             // A bare key alone is a known word (handled by phonology), so a valid
@@ -272,7 +284,9 @@ impl ContractionRule for InitialContractionPronunciationRule {
             if *key == "ever" && pos > 0 && word[pos - 1] == 'i' {
                 continue;
             }
-            if *key == "one" && pos > 0 && matches!(word[pos - 1], 'a' | 'e' | 'i' | 'o' | 'u') {
+            // §10.7.6 excludes only a preceding `o` (`Boone`, `Rooney`); after
+            // another vowel the pronunciation gates decide (`someone`, `anyone`).
+            if *key == "one" && pos > 0 && word[pos - 1] == 'o' {
                 continue;
             }
             if *key == "one" && word.get(end..) == Some(&['s', 's']) {

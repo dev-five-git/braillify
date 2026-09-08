@@ -147,6 +147,13 @@ impl BrailleRule for Rule49 {
             return Ok(RuleResult::Consumed);
         }
 
+        // 제40항 + 제48항: a number that begins with its decimal point (`.846`)
+        // still opens with the 수표, so the point is written by rule 40 after
+        // the 수표 (⠼⠲⠓⠙⠋) and emits nothing here.
+        if super::rule_40::is_leading_decimal_point(ctx.word_chars, ctx.index) {
+            return Ok(RuleResult::Consumed);
+        }
+
         if *c == '×'
             && ctx.word_len() == 1
             && ctx.prev_word.is_empty()

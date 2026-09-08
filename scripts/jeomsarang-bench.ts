@@ -1,8 +1,9 @@
 /**
- * Benchmark: 점사랑 7.0 (BrailleLove.exe) 정답률 측정.
+ * Benchmark: 점사랑 (BrailleTransLibrary) 정답률 측정.
  *
- * test_cases/**.json 의 모든 entry 를 순회하며, `jeomsarang` 필드 (점사랑 GUI
- * 결과) 가 PDF 정답 (`unicode` 필드) 과 얼마나 일치하는지 통계를 낸다.
+ * test_cases 의 규정 fixture entry 를 순회하며, `jeomsarang` 필드 (점사랑
+ * 점역 라이브러리 결과) 가 PDF 정답 (`unicode` 필드) 과 얼마나 일치하는지
+ * 통계를 낸다. 말뭉치(`*_corpus`)는 jeomsarang-corpus-bench.ts 가 담당한다.
  *
  * 비교 방식은 world-bench.ts 와 동일 (단순 유니코드 문자열 동치).
  *
@@ -158,6 +159,7 @@ async function main() {
   for (const dirent of dirs) {
     if (!dirent.isDirectory()) continue
     const dir = dirent.name
+    if (dir.endsWith('_corpus')) continue
     const dirPath = join(TEST_CASES_DIR, dir)
     const files = await readdir(dirPath)
     const jsonFiles = files.filter((f) => f.endsWith('.json')).sort()
@@ -177,13 +179,13 @@ async function main() {
   await mkdir(dirname(REPORT_PATH), { recursive: true })
 
   const lines: string[] = []
-  lines.push('# 점사랑 7.0 (BrailleLove) 정답률 벤치마크')
+  lines.push('# 점사랑 (BrailleTransLibrary) 정답률 벤치마크')
   lines.push('')
   lines.push(`- 측정일: ${new Date().toISOString().slice(0, 10)}`)
   lines.push('- 비교 기준: PDF 규정 (2024 개정 한국 점자 규정)')
   lines.push('  - PDF 정답 = test_cases JSON 의 `unicode` 필드')
   lines.push(
-    '  - 점사랑 결과 = test_cases JSON 의 `jeomsarang` 필드 (fetch-jeomsarang.py 가 GUI 자동화로 수집)',
+    '  - 점사랑 결과 = test_cases JSON 의 `jeomsarang` 필드 (BrailleTransLibrary DLL 로 직접 점역)',
   )
   lines.push('- 비교 방식: 단순 유니코드 문자열 동치 (`jeomsarang === unicode`)')
   lines.push('- Skip 정책: LaTeX 변형, 빈 input, jeomsarang 미수집, unicode 미정의 항목 제외')

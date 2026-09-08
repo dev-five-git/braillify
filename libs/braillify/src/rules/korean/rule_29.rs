@@ -22,6 +22,9 @@ pub const ROMAN_INDICATOR: u8 = 52;
 /// English continuation indicator (연속표) ⠰.
 pub const ENGLISH_CONTINUATION: u8 = 48;
 
+/// Roman terminator (로마자 종료표) ⠲.
+pub const ROMAN_TERMINATOR: u8 = 50;
+
 #[cfg(test)]
 mod tests {
     use super::*;

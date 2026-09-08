@@ -195,13 +195,16 @@ impl EnglishUebEngine {
 
     /// Encode one Roman word embedded in Korean text according to Korean rule 37.
     ///
-    /// At a rule-37 Roman entry, whole-word signs and shortforms are suppressed
-    /// while UEB multi-letter groupsigns remain. The restriction applies only to
-    /// the English word immediately preceded by the Roman indicator, so later
-    /// standalone words in that section (and a rule-39 return to English-dominant
-    /// context) use ordinary UEB wordsigns and shortforms. Keeping both paths on
-    /// the same contraction engine makes rule 10 preference and morphology gates
-    /// identical. Roman mode transitions remain the Korean engine's job.
+    /// At a rule-37 Roman entry, the listed whole-word signs are suppressed
+    /// (`standing_alone`) while UEB multi-letter groupsigns remain. The
+    /// restriction applies only to the English word immediately preceded by the
+    /// Roman indicator, so later standalone words in that section (and a
+    /// rule-39 return to English-dominant context) use ordinary UEB wordsigns.
+    /// Rule 37 lists wordsigns only, so a §10.9 shortform is governed by the
+    /// separate `shortform_usable` (§2.6 standing alone) gate even for the
+    /// entry word. Keeping both paths on the same contraction engine makes rule
+    /// 10 preference and morphology gates identical. Roman mode transitions
+    /// remain the Korean engine's job.
     #[expect(
         clippy::too_many_arguments,
         reason = "the independent UEB context flags mirror distinct rule gates"
@@ -212,10 +215,12 @@ impl EnglishUebEngine {
         suppress_caps: bool,
         prepend_grade1_indicator: bool,
         standing_alone: bool,
+        shortform_usable: bool,
         word_initial: bool,
         digit_adjacent: bool,
         numeric_grade1_active: bool,
         apostrophe_joined_lexeme: bool,
+        letter_initialism: bool,
     ) -> Option<Vec<u8>> {
         let mut out = Vec::new();
         if prepend_grade1_indicator {
@@ -230,13 +235,15 @@ impl EnglishUebEngine {
         // instead inserts rule 29's Roman indicator before its letters. In that
         // latter shape, UEB 10.4.2 still spells a complete `ch/sh/th/wh/ou/st`
         // sequence because its one-cell groupsign would be read as a word.
+        // UEB 10.12.1 (`letter_initialism`, decided by the Korean caller) spells
+        // an abbreviation pronounced as letters the same way.
         let complete_strong_sequence_would_be_word = digit_adjacent
             && !word_initial
             && matches!(
                 lower.as_slice(),
                 ['c', 'h'] | ['s', 'h'] | ['t', 'h'] | ['w', 'h'] | ['o', 'u'] | ['s', 't']
             );
-        if numeric_grade1_active || complete_strong_sequence_would_be_word {
+        if numeric_grade1_active || complete_strong_sequence_would_be_word || letter_initialism {
             match classify_caps(chars) {
                 _ if suppress_caps => {}
                 Some(Caps::None) => {}
@@ -279,8 +286,8 @@ impl EnglishUebEngine {
             WordContext {
                 standing_alone,
                 upper_usable: standing_alone,
-                shortform_usable: standing_alone,
-                allow_longer_shortforms: standing_alone,
+                shortform_usable,
+                allow_longer_shortforms: shortform_usable,
                 lower_usable: standing_alone,
                 suppress_caps,
                 word_initial,
@@ -910,7 +917,9 @@ mod test_support {
     ) {
         let chars = input.chars().collect::<Vec<_>>();
         let encoded = EnglishUebEngine::new()
-            .encode_korean_word(&chars, false, false, false, true, false, false, false)
+            .encode_korean_word(
+                &chars, false, false, false, false, true, false, false, false, false,
+            )
             .expect("ASCII Roman word must encode");
 
         assert_eq!(
@@ -919,30 +928,45 @@ mod test_support {
         );
     }
 
-    /// Korean rule 37 suppresses contractions only in the English word directly
-    /// preceded by the Roman indicator. Later standalone words use ordinary UEB
-    /// shortforms (UEB 10.9).
+    /// Korean rule 37 lists wordsigns only, so a standing-alone entry word keeps
+    /// its UEB 10.9 shortform whether or not wordsigns are gated off.
     #[rstest::rstest]
-    #[case::good("good", "⠛⠙")]
-    #[case::little("little", "⠇⠇")]
-    #[case::today("today", "⠞⠙")]
-    fn korean_roman_section_continuation_uses_shortforms(
+    #[case::good_continuation("good", true, "⠛⠙")]
+    #[case::little_continuation("little", true, "⠇⠇")]
+    #[case::today_continuation("today", true, "⠞⠙")]
+    #[case::good_entry("good", false, "⠛⠙")]
+    #[case::first_entry("first", false, "⠋⠌")]
+    fn korean_roman_word_uses_shortforms(
         #[case] input: &str,
+        #[case] standing_alone: bool,
         #[case] expected: &str,
     ) {
         let chars = input.chars().collect::<Vec<_>>();
         let encoded = EnglishUebEngine::new()
-            .encode_korean_word(&chars, false, false, true, true, false, false, false)
+            .encode_korean_word(
+                &chars,
+                false,
+                false,
+                standing_alone,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+            )
             .expect("ASCII Roman word must encode");
 
         assert_eq!(encoded, cells(expected));
     }
 
     #[test]
-    fn korean_rule_37_entry_still_suppresses_shortform() {
+    fn korean_rule_37_entry_without_shortform_boundary_spells_word() {
         let chars = "good".chars().collect::<Vec<_>>();
         let encoded = EnglishUebEngine::new()
-            .encode_korean_word(&chars, false, false, false, true, false, false, false)
+            .encode_korean_word(
+                &chars, false, false, false, false, true, false, false, false, false,
+            )
             .expect("ASCII Roman word must encode");
 
         assert_eq!(encoded, cells("⠛⠕⠕⠙"));
@@ -959,7 +983,9 @@ mod test_support {
     ) {
         let chars = input.chars().collect::<Vec<_>>();
         let encoded = EnglishUebEngine::new()
-            .encode_korean_word(&chars, false, false, false, false, true, true, false)
+            .encode_korean_word(
+                &chars, false, false, false, false, false, true, true, false, false,
+            )
             .expect("ASCII Roman suffix must encode");
 
         assert_eq!(encoded, cells(expected));
@@ -976,8 +1002,39 @@ mod test_support {
     ) {
         let chars = input.chars().collect::<Vec<_>>();
         let encoded = EnglishUebEngine::new()
-            .encode_korean_word(&chars, false, false, false, false, true, false, false)
+            .encode_korean_word(
+                &chars, false, false, false, false, false, true, false, false, false,
+            )
             .expect("ASCII Roman suffix must encode");
+
+        assert_eq!(encoded, cells(expected));
+    }
+
+    /// UEB 10.12.1: an initialism keeps its capitals-word indicator but takes no
+    /// contraction (`MOU` is not `⠍⠳`); inside a capitals passage the indicator
+    /// is already carried by the passage.
+    #[rstest::rstest]
+    #[case::capitals_word(false, "⠠⠠⠍⠕⠥")]
+    #[case::inside_capitals_passage(true, "⠍⠕⠥")]
+    fn letter_initialism_spells_capitals_without_contraction(
+        #[case] suppress_caps: bool,
+        #[case] expected: &str,
+    ) {
+        let chars = "MOU".chars().collect::<Vec<_>>();
+        let encoded = EnglishUebEngine::new()
+            .encode_korean_word(
+                &chars,
+                suppress_caps,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+            )
+            .expect("initialism must encode");
 
         assert_eq!(encoded, cells(expected));
     }
@@ -997,8 +1054,10 @@ mod test_support {
                 false,
                 false,
                 false,
+                false,
                 true,
                 true,
+                false,
                 false,
             )
             .expect("mixed-case numeric continuation must encode");

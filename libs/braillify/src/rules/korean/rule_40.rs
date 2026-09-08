@@ -77,6 +77,15 @@ impl BrailleRule for Rule40 {
                 {
                     ctx.emit(4);
                 }
+                // 제48항: a number opening with its decimal point (`.846`) takes
+                // the point after the 수표 (rule 49 leaves that point unwritten).
+                if ctx
+                    .index
+                    .checked_sub(1)
+                    .is_some_and(|point| is_leading_decimal_point(ctx.word_chars, point))
+                {
+                    ctx.emit(crate::unicode::decode_unicode('⠲'));
+                }
             }
             ctx.state.is_number = true;
         }
@@ -84,6 +93,18 @@ impl BrailleRule for Rule40 {
         ctx.emit(digit);
         Ok(RuleResult::Consumed)
     }
+}
+
+/// Whether the `.` at `index` opens a number (`.846`, `(.5)`): a digit follows
+/// it and nothing alphanumeric precedes it, so it is a decimal point rather
+/// than a sentence-final period or an abbreviation dot (`No.1`).
+pub fn is_leading_decimal_point(word_chars: &[char], index: usize) -> bool {
+    word_chars.get(index) == Some(&'.')
+        && word_chars.get(index + 1).is_some_and(char::is_ascii_digit)
+        && !index
+            .checked_sub(1)
+            .and_then(|before| word_chars.get(before))
+            .is_some_and(|prev| prev.is_alphanumeric() || *prev == '.')
 }
 
 /// Return whether the digit at `index` follows `digit + (. or ,)`.

@@ -9,8 +9,29 @@
 - `packages/python/` — Python 바인딩 (maturin)
 - `apps/landing/` — Next.js 랜딩 페이지
 - `test_cases/` — 점자 변환 테스트 케이스 (JSON)
+  - `korean/`, `math/`, `english/` — 규정 fixture. 100% 통과가 기준
+  - `2021_corpus/` … `2025_corpus/` — 국립국어원 병렬 말뭉치 46만 7121문장.
+    `rule_map.json` 에서 `benchmark: true` 라 pass/fail 이 아니라 정확도만 본다
+- `questions/` — 규정만으로 정할 수 없어 국립국어원에 물을 항목 (pure text, 하나씩)
+- `bench/` — 외부 점역기(점자세상·점사랑) 비교 보고서
 - `docs/` — 2024 개정 한국 점자 규정 PDF
 - `braillove-case-collector/` — 점자 내부표기 → 숫자/유니코드 변환기
+
+### 말뭉치·경쟁사 자료 수집
+
+```bash
+# NIKL 말뭉치 임포트 (반드시 절대경로로 — 상대경로면 정리 단계가 shard 를 지운다)
+powershell -File scripts/import-nikl-corpus.ps1 `
+  -ArchivePath "<절대경로>\NIKL_KB_2024_v1.0.zip" `
+  -OutputDirectory "<절대경로>\test_cases\2024_corpus"
+
+# 점자세상 (HTTP API)
+bun run scripts/fetch-world.ts                       # 규정 fixture
+FETCH_WORLD_CORPUS=1 bun run scripts/fetch-world.ts  # 말뭉치 (FETCH_WORLD_CORPUS_DIR 로 연도 지정)
+
+# 점사랑 (BrailleTransLibrary-*.zip DLL 직접 호출, Windows + .NET Framework csc 필요)
+bun run scripts/fetch-jeomsarang-lib.ts
+```
 
 ## 빌드 & 테스트
 

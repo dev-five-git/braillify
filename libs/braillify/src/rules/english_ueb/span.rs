@@ -45,20 +45,24 @@ pub(crate) fn encode_korean_word(
     suppress_caps: bool,
     prepend_grade1_indicator: bool,
     standing_alone: bool,
+    shortform_usable: bool,
     word_initial: bool,
     digit_adjacent: bool,
     numeric_grade1_active: bool,
     apostrophe_joined_lexeme: bool,
+    letter_initialism: bool,
 ) -> Option<Vec<u8>> {
     KOREAN_WORD_ENGINE.encode_korean_word(
         chars,
         suppress_caps,
         prepend_grade1_indicator,
         standing_alone,
+        shortform_usable,
         word_initial,
         digit_adjacent,
         numeric_grade1_active,
         apostrophe_joined_lexeme,
+        letter_initialism,
     )
 }
 

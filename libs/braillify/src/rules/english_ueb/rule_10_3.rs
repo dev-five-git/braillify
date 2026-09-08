@@ -17,6 +17,11 @@ static STRONG: phf::Map<&'static str, u8> = phf_map! {
     "with" => decode_unicode('⠾'),
 };
 
+/// Whether `word` (lowercase) is itself one of the five §10.3 strong contractions.
+pub fn is_strong_contraction_word(word: &str) -> bool {
+    STRONG.contains_key(word)
+}
+
 /// §10.3 strong contraction rule.
 pub struct StrongContractionRule;
 

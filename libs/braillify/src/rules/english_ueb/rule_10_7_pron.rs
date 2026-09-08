@@ -132,10 +132,16 @@ impl InitialContractionPronunciationRule {
         let er_e_idx = pos + 2; // the `e` of the trailing `er` in `e·v·e·r`
         let prons = self.provider.pronunciations(full);
         if prons.is_empty() {
-            // 사전에 없는 합성어·고유명사(`cantilever`)는 철자로 판정한다. `ever`가
-            // 낱말 끝에 오고 앞이 자음이면 그 `er`는 강세를 받을 수 없는 어미이므로
-            // §10.7 의 `ever` 꼴이다. 낱말 끝이 아니면(`Everest`) 어미가 아니다.
-            return pos + 4 == word.len();
+            // 사전에 없는 합성어·고유명사(`cantilever`, `Clevers`)는 철자로 판정한다.
+            // `ever`가 낱말 끝이거나 굴절 어미 `s` 하나만 남기고 끝나며 앞이 자음이면
+            // 그 `er`는 강세를 받을 수 없는 어미이므로 §10.7 의 `ever` 꼴이다. 뒤에
+            // 다른 글자가 더 붙으면 그 `ver`가 강세를 받을 수 있어(`e·ver·sion`,
+            // `re·ver·ify`, `Guine·vere`, `Monte·ver·di`) 약자를 쓰지 않는다.
+            return match word.len() - (pos + 4) {
+                0 => true,
+                1 => word[pos + 4] == 's',
+                _ => false,
+            };
         }
         super::pronunciation::aligner::trailing_er_is_unstressed(word, er_e_idx, &prons)
     }
@@ -232,8 +238,12 @@ impl InitialContractionPronunciationRule {
             // non-empty remainder is required.
             !after.is_empty() && after_ok
         } else if after.is_empty() {
-            // Word-final unit: `blithe`·some, `tea`·time, `your`·name.
-            self.is_word(&word[..pos])
+            // Word-final unit: `blithe`·some, `tea`·time, `your`·name. A base that
+            // is not itself a word still exposes the morpheme when it ends in the
+            // combining-form linking vowel `o` (`exo`·some, `azoto`·some,
+            // `lipo`·some) — the `o` closes the preceding element, so the final
+            // four letters cannot be a chance spill from it.
+            self.is_word(&word[..pos]) || (key == "some" && pos > 1 && word[pos - 1] == 'o')
         } else if matches!(key, "some" | "time")
             && is_safe_suffix(&after.iter().collect::<String>())
         {

@@ -53,14 +53,16 @@ where
         return ONTAB;
     }
 
-    // Multi-char word: check context
-    let is_first_with_ja = char_index == 0 && word_chars[1] == '자';
+    // Multi-char word: check context. 제10항 의 예는 모두 `[ㅅ떠디이]` 처럼 발음
+    // 표기 안에 자모가 **끼어** 있다. 낱말의 첫 글자로 나오는 자모는 뒤 말에 붙어
+    // 인쇄되더라도 그 말의 일부가 아니라 앞세운 글머리 자모이므로 제8항 온표를 쓴다.
+    let starts_word = char_index == 0;
 
-    let prev_is_symbol_or_start = char_index == 0 || is_symbol(word_chars[char_index - 1]);
+    let prev_is_symbol_or_start = starts_word || is_symbol(word_chars[char_index - 1]);
     let next_is_symbol_or_end = char_index == word_len - 1 || is_symbol(word_chars[char_index + 1]);
     let is_bordered_by_symbols = prev_is_symbol_or_start && next_is_symbol_or_end;
 
-    if is_first_with_ja || is_bordered_by_symbols || !has_korean_char {
+    if starts_word || is_bordered_by_symbols || !has_korean_char {
         ONTAB // 제8항: standalone context
     } else {
         WORD_ATTACHED_PREFIX // 제10항: attached to Korean word

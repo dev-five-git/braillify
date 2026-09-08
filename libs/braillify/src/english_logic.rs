@@ -451,7 +451,10 @@ pub(crate) fn should_render_symbol_as_english(
         // terminate at this nonalphabetic symbol, but the surrounding Roman
         // section does not. Detached quotes and digit measurement marks stay
         // on their existing punctuation routes.
-        '\'' => {
+        // U+2019 은 같은 아포스트로피의 활자체 표기다(`I’m`). 로마자 낱말 안에서는
+        // 제61항의 아포스트로피이지 제54항의 닫는 따옴표가 아니므로, 위 예와 같은
+        // 자리(로마자 글자 사이)에서는 UEB 점형을 쓴다.
+        '\'' | '\u{2019}' => {
             prev_char.is_some_and(|ch| ch.is_ascii_alphabetic())
                 && word_chars
                     .get(index + 1)

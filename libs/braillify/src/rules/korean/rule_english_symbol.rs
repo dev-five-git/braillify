@@ -199,12 +199,13 @@ impl BrailleRule for RuleEnglishSymbol {
                 ctx.emit(52);
                 crate::rules::roman_mode::set_section_open_keeping_number_chain(ctx.state, true);
             }
-            let encoded = if *sym == '\'' {
-                // `use_english_symbol` is true here only for an ASCII apostrophe
-                // immediately between ASCII letters. Keep that narrow UEB 8.4.2
-                // role local instead of making detached straight quotes globally
-                // eligible for the UEB apostrophe cell.
-                crate::rules::english_ueb::rule_7::encode_punctuation(*sym)
+            let encoded = if matches!(*sym, '\'' | '\u{2019}') {
+                // `use_english_symbol` is true here only for an apostrophe
+                // immediately between ASCII letters — the straight form or its
+                // typographic U+2019 spelling. Keep that narrow UEB 8.4.2 role
+                // local instead of making detached quotes globally eligible for
+                // the UEB apostrophe cell.
+                crate::rules::english_ueb::rule_7::encode_punctuation('\'')
             } else {
                 symbol_shortcut::encode_english_char_symbol_shortcut(*sym)
             };

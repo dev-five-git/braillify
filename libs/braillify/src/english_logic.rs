@@ -517,6 +517,18 @@ pub(crate) fn should_render_symbol_as_english(
                 || (is_english
                     && crate::rules::token_rules::math_expression::is_roman_minus_grade(word_chars))
         }
+        // 제49항: 항목 번호의 온점(`4.PMP`, `30.FC`)은 앞의 숫자에 딸린 것이지
+        // 뒤 로마자의 것이 아니다. 이 온점을 로마자 구간에 넣으면 로마자표가
+        // 온점보다 앞서 나와 순서가 뒤집힌다.
+        '.' if word_chars[..index]
+            .last()
+            .is_some_and(|ch| ch.is_ascii_digit())
+            && word_chars
+                .get(index + 1)
+                .is_some_and(|ch| ch.is_ascii_uppercase()) =>
+        {
+            false
+        }
         '/' | '@' | '#' | '.' | '_' | ':' => {
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
             let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words);

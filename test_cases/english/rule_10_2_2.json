@@ -4,41 +4,47 @@
     "internal": "?'d",
     "expected": "57425",
     "unicode": "⠹⠄⠙",
-    "world": "⠴⠹⠄⠙⠲"
+    "world": "⠴⠹⠄⠙⠲",
+    "jeomsarang": "⠞⠓⠊⠎⠄⠙"
   },
   {
     "input": "which'll",
     "internal": ":'ll",
     "expected": "49477",
     "unicode": "⠱⠄⠇⠇",
-    "world": "⠴⠱⠄⠇⠇⠲"
+    "world": "⠴⠱⠄⠇⠇⠲",
+    "jeomsarang": "⠺⠓⠊⠉⠓⠄⠇⠇"
   },
   {
     "input": "still's",
     "internal": "/'s",
     "expected": "12414",
     "unicode": "⠌⠄⠎",
-    "world": "⠴⠌⠄⠎⠲"
+    "world": "⠴⠌⠄⠎⠲",
+    "jeomsarang": "⠎⠞⠊⠇⠇⠄⠎"
   },
   {
     "input": "which've",
     "internal": ":'ve",
     "expected": "4943917",
     "unicode": "⠱⠄⠧⠑",
-    "world": "⠴⠱⠄⠧⠑⠲"
+    "world": "⠴⠱⠄⠧⠑⠲",
+    "jeomsarang": "⠺⠓⠊⠉⠓⠄⠧⠑"
   },
   {
     "input": "Julia Child's recipe",
     "internal": ",julia ,*'s recipe",
     "expected": "322637710103233414023179101517",
     "unicode": "⠠⠚⠥⠇⠊⠁⠀⠠⠡⠄⠎⠀⠗⠑⠉⠊⠏⠑",
-    "world": "⠴⠠⠚⠥⠇⠊⠁ ⠠⠡⠄⠎ ⠗⠑⠉⠊⠏⠑⠲"
+    "world": "⠴⠠⠚⠥⠇⠊⠁ ⠠⠡⠄⠎ ⠗⠑⠉⠊⠏⠑⠲",
+    "jeomsarang": "⠠⠚⠥⠇⠊⠁⠀⠠⠉⠓⠊⠇⠙⠄⠎⠀⠗⠑⠉⠊⠏⠑"
   },
   {
     "input": "this'n",
     "internal": "?is'n",
     "expected": "571014429",
     "unicode": "⠹⠊⠎⠄⠝",
-    "world": "⠴⠹⠊⠎⠄⠝⠲"
+    "world": "⠴⠹⠊⠎⠄⠝⠲",
+    "jeomsarang": "⠞⠓⠊⠎⠄⠝"
   }
 ]

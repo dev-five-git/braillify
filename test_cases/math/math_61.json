@@ -15,7 +15,7 @@
     "expected": "820",
     "unicode": "⠈⠔",
     "world": "⠴⠈⠎⠸⠡⠴⠎⠊⠍⠈⠎",
-    "jeomsarang": "⠈⠎⠸⠡⠎⠊⠍⠈⠎"
+    "jeomsarang": "⠈⠲⠈⠳⠎⠊⠍⠈⠲"
   },
   {
     "input": "¬",
@@ -33,7 +33,7 @@
     "expected": "820",
     "unicode": "⠈⠔",
     "world": "⠴⠈⠎⠸⠡⠴⠝⠑⠛⠈⠎",
-    "jeomsarang": "⠈⠎⠸⠡⠝⠑⠛⠈⠎"
+    "jeomsarang": "⠈⠲⠈⠳\n⠑⠛⠈⠲"
   },
   {
     "input": "~p",
@@ -42,7 +42,7 @@
     "expected": "82015",
     "unicode": "⠈⠔⠏",
     "world": "⠈⠔⠴⠏⠲",
-    "jeomsarang": "⠈⠔⠏⠲"
+    "jeomsarang": "⠤⠤⠏"
   },
   {
     "input": "$\\sim p$",
@@ -51,7 +51,7 @@
     "expected": "82015",
     "unicode": "⠈⠔⠏",
     "world": "⠴⠈⠎⠸⠡⠴⠎⠊⠍ ⠰⠏⠈⠎",
-    "jeomsarang": "⠈⠎⠸⠡⠎⠊⠍⠀⠏⠈⠎"
+    "jeomsarang": "⠈⠲⠈⠳⠎⠊⠍⠀⠏⠈⠲"
   },
   {
     "input": "P∨¬P",
@@ -60,7 +60,7 @@
     "expected": "321506008203215",
     "unicode": "⠠⠏⠀⠼⠀⠈⠔⠠⠏",
     "world": "⠴⠠⠏⠈⠖⠈⠹⠠⠏⠲",
-    "jeomsarang": "⠴⠠⠏⠑⠕⠏⠇⠑⠼⠈⠒⠠⠏⠲"
+    "jeomsarang": "⠠⠏⠼⠈⠒⠠⠏"
   },
   {
     "input": "$P \\lor \\neg P$",
@@ -69,7 +69,7 @@
     "expected": "321506008203215",
     "unicode": "⠠⠏⠀⠼⠀⠈⠔⠠⠏",
     "world": "⠴⠈⠎⠴⠠⠏ ⠸⠡⠇⠕⠗ ⠸⠡⠝⠑⠛ ⠰⠠⠏⠈⠎",
-    "jeomsarang": "⠈⠎⠠⠏⠀⠸⠡⠇⠕⠗⠀⠸⠡⠝⠑⠛⠀⠠⠏⠈⠎"
+    "jeomsarang": "⠈⠲⠠⠏⠀⠈⠳⠇⠕⠗⠀⠈⠳\n⠑⠛⠀⠠⠏⠈⠲"
   },
   {
     "input": "→",
@@ -96,7 +96,7 @@
     "expected": "1501821031",
     "unicode": "⠏⠀⠒⠕⠀⠟",
     "world": "⠴⠏ ⠰⠳⠕ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠰⠳⠕⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠒⠕⠀⠟"
   },
   {
     "input": "$p \\to q$",
@@ -132,7 +132,7 @@
     "expected": "150181821031",
     "unicode": "⠏⠀⠒⠒⠕⠀⠟",
     "world": "⠴⠏ ⠰⠳⠶⠕ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠒⠒⠕⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠒⠒⠕⠀⠟"
   },
   {
     "input": "$p \\Rightarrow q$",
@@ -168,7 +168,7 @@
     "expected": "15040181821031",
     "unicode": "⠏⠀⠨⠒⠒⠕⠀⠟",
     "world": "⠴⠏ ⠰⠳⠶⠕⠄⠳⠭⠴⠒⠒⠦⠄ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠒⠒⠕⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠒⠒⠕⠀⠟"
   },
   {
     "input": "$p \\nRightarrow q$",
@@ -204,7 +204,7 @@
     "expected": "150421821031",
     "unicode": "⠏⠀⠪⠒⠕⠀⠟",
     "world": "⠴⠏ ⠄⠳⠭⠆⠂⠔⠲⠄ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠪⠒⠕⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠪⠒⠕⠀⠟"
   },
   {
     "input": "$p \\leftrightarrow q$",
@@ -240,7 +240,7 @@
     "expected": "23042181821014",
     "unicode": "⠗⠀⠪⠒⠒⠕⠀⠎",
     "world": "⠴⠗ ⠄⠳⠭⠆⠂⠙⠲⠄ ⠰⠎⠲",
-    "jeomsarang": "⠴⠗⠀⠪⠶⠕⠀⠰⠎⠲"
+    "jeomsarang": "⠗⠀⠪⠶⠕⠀⠎"
   },
   {
     "input": "$r \\Leftrightarrow s$",
@@ -276,7 +276,7 @@
     "expected": "150425421031",
     "unicode": "⠏⠀⠪⠶⠕⠀⠟",
     "world": "⠴⠏ ⠘⠸⠶ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠀⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠀⠀⠟"
   },
   {
     "input": "$p \\rightleftarrows q$",
@@ -312,7 +312,7 @@
     "expected": "15057031",
     "unicode": "⠏⠀⠹⠀⠟",
     "world": "⠴⠏ ⠈⠦ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠹⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠹⠀⠟"
   },
   {
     "input": "$p \\land q$",
@@ -348,7 +348,7 @@
     "expected": "15060031",
     "unicode": "⠏⠀⠼⠀⠟",
     "world": "⠴⠏ ⠈⠖ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠼⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠼⠀⠟"
   },
   {
     "input": "$p \\lor q$",
@@ -384,7 +384,7 @@
     "expected": "1506036031162052155003210379530523150218370521550310106332212905231509530359211050",
     "unicode": "⠏⠀⠼⠤⠀⠟⠐⠂⠀⠴⠏⠲⠀⠠⠊⠥⠉⠵⠀⠴⠟⠲⠕⠈⠥⠀⠴⠏⠲⠟⠀⠊⠿⠠⠕⠝⠀⠴⠟⠲⠉⠵⠀⠣⠉⠕⠊⠲",
     "world": "⠴⠏ ⠄⠳⠭⠆⠆⠃⠃⠄ ⠰⠟⠒ ⠰⠏⠲ ⠠⠊⠥⠉⠵ ⠴⠟⠲⠕⠈⠥ ⠴⠏⠲⠟ ⠊⠿⠠⠕⠝ ⠴⠟⠲⠉⠵ ⠣⠉⠕⠊⠲",
-    "jeomsarang": "⠴⠏⠀⠴⠠⠭⠕⠗⠀⠟⠒⠀⠰⠏⠲⠀⠠⠊⠥⠉⠵⠀⠴⠟⠲⠕⠈⠥⠀⠴⠏⠲⠟⠀⠊⠿⠠⠕⠝⠀⠴⠟⠲⠉⠵⠀⠣⠉⠕⠊⠲"
+    "jeomsarang": "⠴⠏⠀⠴⠠⠭⠕⠗⠀⠟⠒⠀⠏⠲⠀⠠⠊⠥⠉⠵⠀⠴⠟⠲⠕⠈⠥⠀⠴⠏⠲⠟⠀⠊⠿⠠⠕⠝⠀⠴⠟⠲⠉⠵⠀⠣⠉⠕⠊⠲"
   },
   {
     "input": "$p \\veebar q$: $p$ 또는 $q$이고 $p$인 동시에 $q$는 아니다.",
@@ -420,7 +420,7 @@
     "expected": "150241821031",
     "unicode": "⠏⠀⠘⠒⠕⠀⠟",
     "world": "⠴⠏ ⠰⠳⠩ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠰⠳⠩⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠘⠒⠕⠀⠟"
   },
   {
     "input": "$p \\downarrow q$",
@@ -456,7 +456,7 @@
     "expected": "150481821031",
     "unicode": "⠏⠀⠰⠒⠕⠀⠟",
     "world": "⠴⠏ ⠰⠳⠬ ⠰⠟⠲",
-    "jeomsarang": "⠴⠏⠀⠰⠳⠬⠀⠰⠟⠲"
+    "jeomsarang": "⠏⠀⠰⠒⠕⠀⠟"
   },
   {
     "input": "$p \\uparrow q$",
@@ -492,7 +492,7 @@
     "expected": "40445015384552",
     "unicode": "⠨⠄⠭⠀⠏⠦⠭⠴",
     "world": "⠴⠭ ⠏⠐⠣⠭⠠⠴",
-    "jeomsarang": "⠨⠄⠭⠀⠏⠐⠣⠭⠐⠜⠲"
+    "jeomsarang": "⠨⠄⠭⠀⠏⠶⠭⠶"
   },
   {
     "input": "$\\forall x\\,p(x)$",
@@ -528,7 +528,7 @@
     "expected": "403445015384552",
     "unicode": "⠨⠢⠭⠀⠏⠦⠭⠴",
     "world": "⠴⠭ ⠏⠐⠣⠭⠠⠴",
-    "jeomsarang": "⠨⠢⠭⠀⠏⠐⠣⠭⠐⠜⠲"
+    "jeomsarang": "⠨⠢⠭⠀⠏⠶⠭⠶"
   },
   {
     "input": "$\\exists x\\,p(x)$",
@@ -564,7 +564,7 @@
     "expected": "40403445",
     "unicode": "⠨⠨⠢⠭",
     "world": "⠴⠭⠲",
-    "jeomsarang": "⠨⠨⠢⠭⠲"
+    "jeomsarang": "⠨⠨⠢⠭"
   },
   {
     "input": "$\\nexists x$",

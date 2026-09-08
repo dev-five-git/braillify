@@ -6,7 +6,7 @@
     "expected": "32401",
     "unicode": "⠠⠨⠁",
     "world": "⠴⠠⠨⠁⠲",
-    "jeomsarang": "⠠⠨⠁⠲"
+    "jeomsarang": "⠨⠁"
   },
   {
     "input": "$Α$",
@@ -15,7 +15,7 @@
     "expected": "32401",
     "unicode": "⠠⠨⠁",
     "world": "⠴⠈⠎⠴⠠⠨⠁⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠁⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠁⠈⠲"
   },
   {
     "input": "α",
@@ -24,7 +24,7 @@
     "expected": "401",
     "unicode": "⠨⠁",
     "world": "⠴⠨⠁⠲",
-    "jeomsarang": "⠨⠁⠲"
+    "jeomsarang": "⠈⠁"
   },
   {
     "input": "$\\alpha$",
@@ -42,7 +42,7 @@
     "expected": "32403",
     "unicode": "⠠⠨⠃",
     "world": "⠴⠠⠨⠃⠲",
-    "jeomsarang": "⠠⠨⠃⠲"
+    "jeomsarang": "⠨⠃"
   },
   {
     "input": "$Β$",
@@ -51,7 +51,7 @@
     "expected": "32403",
     "unicode": "⠠⠨⠃",
     "world": "⠴⠈⠎⠴⠠⠨⠃⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠃⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠃⠈⠲"
   },
   {
     "input": "β",
@@ -60,7 +60,7 @@
     "expected": "403",
     "unicode": "⠨⠃",
     "world": "⠴⠨⠃⠲",
-    "jeomsarang": "⠨⠃⠲"
+    "jeomsarang": "⠈⠃"
   },
   {
     "input": "$\\beta$",
@@ -78,7 +78,7 @@
     "expected": "324027",
     "unicode": "⠠⠨⠛",
     "world": "⠴⠠⠨⠛⠲",
-    "jeomsarang": "⠠⠨⠛⠲"
+    "jeomsarang": "⠨⠛"
   },
   {
     "input": "$\\Gamma$",
@@ -96,7 +96,7 @@
     "expected": "4027",
     "unicode": "⠨⠛",
     "world": "⠴⠨⠛⠲",
-    "jeomsarang": "⠨⠛⠲"
+    "jeomsarang": "⠈⠛"
   },
   {
     "input": "$\\gamma$",
@@ -114,7 +114,7 @@
     "expected": "324025",
     "unicode": "⠠⠨⠙",
     "world": "⠴⠠⠨⠙⠲",
-    "jeomsarang": "⠠⠨⠙⠲"
+    "jeomsarang": "⠨⠙"
   },
   {
     "input": "$\\Delta$",
@@ -132,7 +132,7 @@
     "expected": "4025",
     "unicode": "⠨⠙",
     "world": "⠴⠨⠙⠲",
-    "jeomsarang": "⠨⠙⠲"
+    "jeomsarang": "⠈⠙"
   },
   {
     "input": "$\\delta$",
@@ -150,7 +150,7 @@
     "expected": "324017",
     "unicode": "⠠⠨⠑",
     "world": "⠴⠠⠨⠑⠲",
-    "jeomsarang": "⠠⠨⠑⠲"
+    "jeomsarang": "⠨⠑"
   },
   {
     "input": "$Ε$",
@@ -159,7 +159,7 @@
     "expected": "324017",
     "unicode": "⠠⠨⠑",
     "world": "⠴⠈⠎⠴⠠⠨⠑⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠑⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠑⠈⠲"
   },
   {
     "input": "ε",
@@ -168,7 +168,7 @@
     "expected": "4017",
     "unicode": "⠨⠑",
     "world": "⠴⠨⠑⠲",
-    "jeomsarang": "⠨⠑⠲"
+    "jeomsarang": "⠈⠑"
   },
   {
     "input": "$\\epsilon$",
@@ -186,7 +186,7 @@
     "expected": "324053",
     "unicode": "⠠⠨⠵",
     "world": "⠴⠠⠨⠵⠲",
-    "jeomsarang": "⠠⠨⠵⠲"
+    "jeomsarang": "⠨⠵"
   },
   {
     "input": "$Ζ$",
@@ -195,7 +195,7 @@
     "expected": "324053",
     "unicode": "⠠⠨⠵",
     "world": "⠴⠈⠎⠴⠠⠨⠵⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠵⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠵⠈⠲"
   },
   {
     "input": "ζ",
@@ -204,7 +204,7 @@
     "expected": "4053",
     "unicode": "⠨⠵",
     "world": "⠴⠨⠵⠲",
-    "jeomsarang": "⠨⠵⠲"
+    "jeomsarang": "⠈⠵"
   },
   {
     "input": "$\\zeta$",
@@ -222,7 +222,7 @@
     "expected": "324049",
     "unicode": "⠠⠨⠱",
     "world": "⠴⠠⠨⠱⠲",
-    "jeomsarang": "⠠⠨⠱⠲"
+    "jeomsarang": "⠨⠱"
   },
   {
     "input": "$Η$",
@@ -231,7 +231,7 @@
     "expected": "324049",
     "unicode": "⠠⠨⠱",
     "world": "⠴⠈⠎⠴⠠⠨⠱⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠱⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠱⠈⠲"
   },
   {
     "input": "η",
@@ -240,7 +240,7 @@
     "expected": "4049",
     "unicode": "⠨⠱",
     "world": "⠴⠨⠱⠲",
-    "jeomsarang": "⠨⠱⠲"
+    "jeomsarang": "⠈⠱"
   },
   {
     "input": "$\\eta$",
@@ -258,7 +258,7 @@
     "expected": "324057",
     "unicode": "⠠⠨⠹",
     "world": "⠴⠠⠨⠹⠲",
-    "jeomsarang": "⠠⠨⠹⠲"
+    "jeomsarang": "⠨⠹"
   },
   {
     "input": "$\\Theta$",
@@ -276,7 +276,7 @@
     "expected": "4057",
     "unicode": "⠨⠹",
     "world": "⠴⠨⠹⠲",
-    "jeomsarang": "⠨⠹⠲"
+    "jeomsarang": "⠈⠹"
   },
   {
     "input": "$\\theta$",
@@ -294,7 +294,7 @@
     "expected": "324010",
     "unicode": "⠠⠨⠊",
     "world": "⠴⠠⠨⠊⠲",
-    "jeomsarang": "⠠⠨⠊⠲"
+    "jeomsarang": "⠨⠊"
   },
   {
     "input": "$Ι$",
@@ -303,7 +303,7 @@
     "expected": "324010",
     "unicode": "⠠⠨⠊",
     "world": "⠴⠈⠎⠴⠠⠨⠊⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠊⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠊⠈⠲"
   },
   {
     "input": "ι",
@@ -312,7 +312,7 @@
     "expected": "4010",
     "unicode": "⠨⠊",
     "world": "⠴⠨⠊⠲",
-    "jeomsarang": "⠨⠊⠲"
+    "jeomsarang": "⠈⠊"
   },
   {
     "input": "$\\iota$",
@@ -330,7 +330,7 @@
     "expected": "32405",
     "unicode": "⠠⠨⠅",
     "world": "⠴⠠⠨⠅⠲",
-    "jeomsarang": "⠠⠨⠅⠲"
+    "jeomsarang": "⠨⠅"
   },
   {
     "input": "$Κ$",
@@ -339,7 +339,7 @@
     "expected": "32405",
     "unicode": "⠠⠨⠅",
     "world": "⠴⠈⠎⠴⠠⠨⠅⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠅⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠅⠈⠲"
   },
   {
     "input": "κ",
@@ -348,7 +348,7 @@
     "expected": "405",
     "unicode": "⠨⠅",
     "world": "⠴⠨⠅⠲",
-    "jeomsarang": "⠨⠅⠲"
+    "jeomsarang": "⠈⠅"
   },
   {
     "input": "$\\kappa$",
@@ -366,7 +366,7 @@
     "expected": "32407",
     "unicode": "⠠⠨⠇",
     "world": "⠴⠠⠨⠇⠲",
-    "jeomsarang": "⠠⠨⠇⠲"
+    "jeomsarang": "⠨⠇"
   },
   {
     "input": "$\\Lambda$",
@@ -384,7 +384,7 @@
     "expected": "407",
     "unicode": "⠨⠇",
     "world": "⠴⠨⠇⠲",
-    "jeomsarang": "⠨⠇⠲"
+    "jeomsarang": "⠈⠇"
   },
   {
     "input": "$\\lambda$",
@@ -402,7 +402,7 @@
     "expected": "324013",
     "unicode": "⠠⠨⠍",
     "world": "⠴⠠⠨⠍⠲",
-    "jeomsarang": "⠠⠨⠍⠲"
+    "jeomsarang": "⠨⠍"
   },
   {
     "input": "$Μ$",
@@ -411,7 +411,7 @@
     "expected": "324013",
     "unicode": "⠠⠨⠍",
     "world": "⠴⠈⠎⠴⠠⠨⠍⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠍⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠍⠈⠲"
   },
   {
     "input": "μ",
@@ -420,7 +420,7 @@
     "expected": "4013",
     "unicode": "⠨⠍",
     "world": "⠴⠨⠍⠲",
-    "jeomsarang": "⠨⠍⠲"
+    "jeomsarang": "⠈⠍"
   },
   {
     "input": "$\\mu$",
@@ -438,7 +438,7 @@
     "expected": "324029",
     "unicode": "⠠⠨⠝",
     "world": "⠴⠠⠨⠝⠲",
-    "jeomsarang": "⠠⠨⠝⠲"
+    "jeomsarang": "⠨⠝"
   },
   {
     "input": "$Ν$",
@@ -447,7 +447,7 @@
     "expected": "324029",
     "unicode": "⠠⠨⠝",
     "world": "⠴⠈⠎⠴⠠⠨⠝⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠝⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠝⠈⠲"
   },
   {
     "input": "ν",
@@ -456,7 +456,7 @@
     "expected": "4029",
     "unicode": "⠨⠝",
     "world": "⠴⠨⠝⠲",
-    "jeomsarang": "⠨⠝⠲"
+    "jeomsarang": "⠈⠝"
   },
   {
     "input": "$\\nu$",
@@ -474,7 +474,7 @@
     "expected": "324045",
     "unicode": "⠠⠨⠭",
     "world": "⠴⠠⠨⠭⠲",
-    "jeomsarang": "⠠⠨⠭⠲"
+    "jeomsarang": "⠨⠭"
   },
   {
     "input": "$\\Xi$",
@@ -492,7 +492,7 @@
     "expected": "4045",
     "unicode": "⠨⠭",
     "world": "⠴⠨⠭⠲",
-    "jeomsarang": "⠨⠭⠲"
+    "jeomsarang": "⠈⠭"
   },
   {
     "input": "$\\xi$",
@@ -510,7 +510,7 @@
     "expected": "324021",
     "unicode": "⠠⠨⠕",
     "world": "⠴⠠⠨⠕⠲",
-    "jeomsarang": "⠠⠨⠕⠲"
+    "jeomsarang": "⠨⠕"
   },
   {
     "input": "$Ο$",
@@ -519,7 +519,7 @@
     "expected": "324021",
     "unicode": "⠠⠨⠕",
     "world": "⠴⠈⠎⠴⠠⠨⠕⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠕⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠕⠈⠲"
   },
   {
     "input": "ο",
@@ -528,7 +528,7 @@
     "expected": "4021",
     "unicode": "⠨⠕",
     "world": "⠴⠨⠕⠲",
-    "jeomsarang": "⠨⠕⠲"
+    "jeomsarang": "⠈⠕"
   },
   {
     "input": "$\\omicron$",
@@ -546,7 +546,7 @@
     "expected": "324015",
     "unicode": "⠠⠨⠏",
     "world": "⠴⠠⠨⠏⠲",
-    "jeomsarang": "⠠⠨⠏⠲"
+    "jeomsarang": "⠨⠏"
   },
   {
     "input": "$\\Pi$",
@@ -564,7 +564,7 @@
     "expected": "4015",
     "unicode": "⠨⠏",
     "world": "⠴⠨⠏⠲",
-    "jeomsarang": "⠨⠏⠲"
+    "jeomsarang": "⠈⠏"
   },
   {
     "input": "$\\pi$",
@@ -582,7 +582,7 @@
     "expected": "324023",
     "unicode": "⠠⠨⠗",
     "world": "⠴⠠⠨⠗⠲",
-    "jeomsarang": "⠠⠨⠗⠲"
+    "jeomsarang": "⠨⠗"
   },
   {
     "input": "$Ρ$",
@@ -591,7 +591,7 @@
     "expected": "324023",
     "unicode": "⠠⠨⠗",
     "world": "⠴⠈⠎⠴⠠⠨⠗⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠗⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠗⠈⠲"
   },
   {
     "input": "ρ",
@@ -600,7 +600,7 @@
     "expected": "4023",
     "unicode": "⠨⠗",
     "world": "⠴⠨⠗⠲",
-    "jeomsarang": "⠨⠗⠲"
+    "jeomsarang": "⠈⠗"
   },
   {
     "input": "$\\rho$",
@@ -618,7 +618,7 @@
     "expected": "324014",
     "unicode": "⠠⠨⠎",
     "world": "⠴⠠⠨⠎⠲",
-    "jeomsarang": "⠠⠨⠎⠲"
+    "jeomsarang": "⠨⠎"
   },
   {
     "input": "$\\Sigma$",
@@ -636,7 +636,7 @@
     "expected": "4014",
     "unicode": "⠨⠎",
     "world": "⠴⠨⠎⠲",
-    "jeomsarang": "⠨⠎⠲"
+    "jeomsarang": "⠈⠎"
   },
   {
     "input": "$\\sigma$",
@@ -654,7 +654,7 @@
     "expected": "324030",
     "unicode": "⠠⠨⠞",
     "world": "⠴⠠⠨⠞⠲",
-    "jeomsarang": "⠠⠨⠞⠲"
+    "jeomsarang": "⠨⠞"
   },
   {
     "input": "$Τ$",
@@ -663,7 +663,7 @@
     "expected": "324030",
     "unicode": "⠠⠨⠞",
     "world": "⠴⠈⠎⠴⠠⠨⠞⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠞⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠞⠈⠲"
   },
   {
     "input": "τ",
@@ -672,7 +672,7 @@
     "expected": "4030",
     "unicode": "⠨⠞",
     "world": "⠴⠨⠞⠲",
-    "jeomsarang": "⠨⠞⠲"
+    "jeomsarang": "⠈⠞"
   },
   {
     "input": "$\\tau$",
@@ -690,7 +690,7 @@
     "expected": "324037",
     "unicode": "⠠⠨⠥",
     "world": "⠴⠠⠨⠥⠲",
-    "jeomsarang": "⠠⠨⠥⠲"
+    "jeomsarang": "⠨⠥"
   },
   {
     "input": "$\\Upsilon$",
@@ -708,7 +708,7 @@
     "expected": "4037",
     "unicode": "⠨⠥",
     "world": "⠴⠨⠥⠲",
-    "jeomsarang": "⠨⠥⠲"
+    "jeomsarang": "⠈⠥"
   },
   {
     "input": "$\\upsilon$",
@@ -726,7 +726,7 @@
     "expected": "324011",
     "unicode": "⠠⠨⠋",
     "world": "⠴⠠⠨⠋⠲",
-    "jeomsarang": "⠠⠨⠋⠲"
+    "jeomsarang": "⠨⠋"
   },
   {
     "input": "$\\Phi$",
@@ -744,7 +744,7 @@
     "expected": "4011",
     "unicode": "⠨⠋",
     "world": "⠴⠨⠋⠲",
-    "jeomsarang": "⠨⠋⠲"
+    "jeomsarang": "⠈⠋"
   },
   {
     "input": "$\\phi$",
@@ -762,7 +762,7 @@
     "expected": "324047",
     "unicode": "⠠⠨⠯",
     "world": "⠴⠠⠨⠯⠲",
-    "jeomsarang": "⠠⠨⠯⠲"
+    "jeomsarang": "⠨⠯"
   },
   {
     "input": "$Χ$",
@@ -771,7 +771,7 @@
     "expected": "324047",
     "unicode": "⠠⠨⠯",
     "world": "⠴⠈⠎⠴⠠⠨⠯⠈⠎",
-    "jeomsarang": "⠴⠈⠎⠠⠨⠯⠈⠎"
+    "jeomsarang": "⠴⠈⠎⠨⠯⠈⠲"
   },
   {
     "input": "χ",
@@ -780,7 +780,7 @@
     "expected": "4047",
     "unicode": "⠨⠯",
     "world": "⠴⠨⠯⠲",
-    "jeomsarang": "⠨⠯⠲"
+    "jeomsarang": "⠈⠯"
   },
   {
     "input": "$\\chi$",
@@ -798,7 +798,7 @@
     "expected": "324061",
     "unicode": "⠠⠨⠽",
     "world": "⠴⠠⠨⠽⠲",
-    "jeomsarang": "⠠⠨⠽⠲"
+    "jeomsarang": "⠨⠽"
   },
   {
     "input": "$\\Psi$",
@@ -816,7 +816,7 @@
     "expected": "4061",
     "unicode": "⠨⠽",
     "world": "⠴⠨⠽⠲",
-    "jeomsarang": "⠨⠽⠲"
+    "jeomsarang": "⠈⠽"
   },
   {
     "input": "$\\psi$",
@@ -834,7 +834,7 @@
     "expected": "324058",
     "unicode": "⠠⠨⠺",
     "world": "⠴⠠⠨⠺⠲",
-    "jeomsarang": "⠠⠨⠺⠲"
+    "jeomsarang": "⠨⠺"
   },
   {
     "input": "$\\Omega$",
@@ -852,7 +852,7 @@
     "expected": "4058",
     "unicode": "⠨⠺",
     "world": "⠴⠨⠺⠲",
-    "jeomsarang": "⠨⠺⠲"
+    "jeomsarang": "⠈⠺"
   },
   {
     "input": "$\\omega$",
@@ -870,7 +870,7 @@
     "expected": "2445323732130524012040350290102326354900403124010058043344608132632213750",
     "unicode": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠁⠂⠀⠨⠃⠲⠝⠀⠊⠗⠚⠣⠱⠀⠀⠨⠃⠌⠨⠁⠀⠀⠺⠀⠫⠃⠄⠮⠀⠈⠍⠚⠠⠕⠥⠲",
     "world": "⠘⠭⠠⠥⠠⠍ ⠴⠨⠁⠂ ⠨⠃⠲⠝ ⠊⠗⠚⠣⠱ ⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠸⠣⠨⠁⠸⠜⠸⠣⠨⠃⠐⠴⠴⠈⠎ ⠺ ⠫⠃⠄⠮ ⠈⠍⠚⠠⠕⠥⠲",
-    "jeomsarang": ""
+    "jeomsarang": "⠘⠭⠠⠥⠠⠍⠀⠴⠈⠁⠂⠀⠈⠃⠲⠝⠀⠊⠗⠚⠣⠱⠀⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠦⠂⠈⠁⠐⠴⠦⠂⠈⠃⠐⠴⠴⠈⠎⠀⠺⠀⠫⠃⠄⠮⠀⠈⠍⠚⠠⠕⠥⠲"
   },
   {
     "input": "복소수 ω가 ω²-ω+1=0 을 만족할 때",
@@ -879,7 +879,7 @@
     "expected": "2445323732130524058504300405824603204058346011818602600460171840452620321023",
     "unicode": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠺⠲⠫⠀⠀⠨⠺⠘⠼⠃⠔⠨⠺⠢⠼⠁⠒⠒⠼⠚⠀⠀⠮⠀⠑⠒⠨⠭⠚⠂⠀⠠⠊⠗",
     "world": "⠘⠭⠠⠥⠠⠍ ⠴⠨⠺⠲⠫ ⠴⠨⠺⠘⠼⠃⠤⠨⠺⠢⠼⠁⠒⠒⠼⠚ ⠮ ⠑⠒⠨⠭⠚⠂ ⠠⠊⠗",
-    "jeomsarang": "⠘⠭⠠⠥⠠⠍⠀⠴⠨⠺⠲⠫⠀⠴⠨⠺⠘⠼⠃⠤⠨⠺⠐⠖⠼⠁⠒⠒⠼⠚⠀⠮⠀⠑⠒⠨⠭⠚⠂⠀⠠⠊⠗"
+    "jeomsarang": "⠘⠭⠠⠥⠠⠍⠀⠴⠈⠺⠲⠸⠷⠫⠀⠴⠈⠺⠘⠼⠃⠤⠈⠺⠰⠖⠼⠁⠒⠒⠼⠚⠀⠮⠀⠑⠒⠨⠭⠚⠂⠀⠠⠊⠗"
   },
   {
     "input": "복소수 $\\omega$가 $\\omega^2-\\omega+1=0$ 을 만족할 때",

@@ -42,7 +42,7 @@
     "expected": "4522",
     "unicode": "⠭⠖",
     "world": "⠴⠭⠖",
-    "jeomsarang": "⠴⠭⠖"
+    "jeomsarang": "⠭⠖"
   },
   {
     "input": "$x!$",
@@ -60,7 +60,7 @@
     "expected": "2922",
     "unicode": "⠝⠖",
     "world": "⠴⠝⠖",
-    "jeomsarang": "⠴⠝⠖"
+    "jeomsarang": "⠝⠖"
   },
   {
     "input": "$n!$",
@@ -96,7 +96,7 @@
     "expected": "38609295222",
     "unicode": "⠦⠼⠉⠝⠴⠖",
     "world": "⠦⠄⠼⠉⠴⠝⠠⠴⠖",
-    "jeomsarang": "⠐⠣⠼⠉⠴⠝⠐⠜⠖"
+    "jeomsarang": "⠶⠼⠉⠝⠶⠖"
   },
   {
     "input": "$(3n)!$",
@@ -114,7 +114,7 @@
     "expected": "6092212601722",
     "unicode": "⠼⠉⠖⠌⠼⠑⠖",
     "world": "⠴⠈⠎⠸⠡⠴⠋⠗⠁⠉⠦⠂⠼⠑⠖⠐⠴⠦⠂⠼⠉⠖⠐⠴⠈⠎",
-    "jeomsarang": ""
+    "jeomsarang": "⠈⠲⠈⠳⠋⠗⠁⠉⠪⠼⠑⠖⠻⠪⠼⠉⠖⠻⠈⠲"
   },
   {
     "input": "ₙ𝑃ᵣ",
@@ -123,7 +123,7 @@
     "expected": "3215552902362",
     "unicode": "⠠⠏⠷⠝⠀⠗⠾",
     "world": "⠰⠴⠝",
-    "jeomsarang": "⠀⠙⠽⠁⠄⠀"
+    "jeomsarang": "⠀⠠⠏⠀"
   },
   {
     "input": "$\\,_nP_r$",
@@ -141,7 +141,7 @@
     "expected": "321555609060162",
     "unicode": "⠠⠏⠷⠼⠉⠀⠼⠁⠾",
     "world": "⠰⠼⠉⠰⠼⠁",
-    "jeomsarang": "⠰⠼⠉⠙⠽⠁⠄⠰⠼⠁"
+    "jeomsarang": "⠰⠼⠉⠠⠏⠲⠰⠼⠁"
   },
   {
     "input": "$\\,_3P_1$",
@@ -159,7 +159,7 @@
     "expected": "6033215556027060362",
     "unicode": "⠼⠃⠠⠏⠷⠼⠛⠀⠼⠃⠾",
     "world": "⠼⠃ ⠰⠼⠛⠰⠼⠃",
-    "jeomsarang": "⠼⠃⠀⠠⠶⠀⠙⠽⠁⠄⠰⠼⠃",
+    "jeomsarang": "⠼⠃⠀⠠⠶⠠⠏⠲⠰⠼⠃",
     "context": "math"
   },
   {
@@ -178,7 +178,7 @@
     "expected": "32155529206010232060162",
     "unicode": "⠠⠏⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
     "world": "⠰⠴⠝⠔⠼⠁⠰⠔⠼⠁",
-    "jeomsarang": "⠀⠰⠔⠰⠼⠁⠙⠽⠁⠄⠀⠰⠔⠰⠼⠁"
+    "jeomsarang": "⠀⠰⠔⠰⠼⠁⠠⠏⠀⠰⠔⠰⠼⠁"
   },
   {
     "input": "$\\,_{n-1}P_{r-1}$",
@@ -196,7 +196,7 @@
     "expected": "329552902362",
     "unicode": "⠠⠉⠷⠝⠀⠗⠾",
     "world": "⠰⠴⠝",
-    "jeomsarang": "⠀⠙⠧⠗⠃⠄⠀"
+    "jeomsarang": "⠀⠠⠉⠀"
   },
   {
     "input": "$\\,_nC_r$",
@@ -214,7 +214,7 @@
     "expected": "32955609060362",
     "unicode": "⠠⠉⠷⠼⠉⠀⠼⠃⠾",
     "world": "⠰⠼⠉⠰⠼⠃",
-    "jeomsarang": "⠰⠼⠉⠙⠧⠗⠃⠄⠰⠼⠃"
+    "jeomsarang": "⠰⠼⠉⠠⠉⠲⠰⠼⠃"
   },
   {
     "input": "$\\,_3C_2$",
@@ -232,7 +232,7 @@
     "expected": "3295529206010232060162",
     "unicode": "⠠⠉⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
     "world": "⠰⠴⠝⠔⠼⠁⠰⠔⠼⠁",
-    "jeomsarang": "⠀⠰⠔⠰⠼⠁⠙⠧⠗⠃⠄⠀⠰⠔⠰⠼⠁"
+    "jeomsarang": "⠀⠰⠔⠰⠼⠁⠠⠉⠀⠰⠔⠰⠼⠁"
   },
   {
     "input": "$\\,_{n-1}C_{r-1}$",
@@ -250,7 +250,7 @@
     "expected": "6033295529206010232060162",
     "unicode": "⠼⠃⠠⠉⠷⠝⠔⠼⠁⠀⠗⠔⠼⠁⠾",
     "world": "⠼⠃ ⠰⠴⠝⠔⠼⠁⠰⠔⠼⠁",
-    "jeomsarang": "⠼⠃⠀⠀⠰⠔⠰⠼⠁⠙⠧⠗⠃⠄⠀⠰⠔⠰⠼⠁",
+    "jeomsarang": "⠼⠃⠀⠀⠰⠔⠰⠼⠁⠠⠉⠀⠰⠔⠰⠼⠁",
     "context": "math"
   },
   {
@@ -269,7 +269,7 @@
     "expected": "324015552902362",
     "unicode": "⠠⠨⠏⠷⠝⠀⠗⠾",
     "world": "⠰⠴⠝⠠⠨⠏",
-    "jeomsarang": "⠀⠠⠨⠏⠀"
+    "jeomsarang": "⠀⠨⠏⠀"
   },
   {
     "input": "$\\,_n\\Pi_r$",
@@ -287,7 +287,7 @@
     "expected": "324015556027060362",
     "unicode": "⠠⠨⠏⠷⠼⠛⠀⠼⠃⠾",
     "world": "⠰⠼⠛⠴⠠⠨⠏⠰⠼⠃",
-    "jeomsarang": "⠠⠶⠠⠨⠏⠲⠰⠼⠃"
+    "jeomsarang": "⠠⠶⠨⠏⠲⠰⠼⠃"
   },
   {
     "input": "$\\,_7\\Pi_2$",
@@ -305,7 +305,7 @@
     "expected": "3219552902362",
     "unicode": "⠠⠓⠷⠝⠀⠗⠾",
     "world": "⠰⠴⠝",
-    "jeomsarang": "⠀⠙⠧⠗⠆⠀"
+    "jeomsarang": "⠀⠠⠓⠀"
   },
   {
     "input": "$\\,_nH_r$",
@@ -323,7 +323,7 @@
     "expected": "3219556027060362",
     "unicode": "⠠⠓⠷⠼⠛⠀⠼⠃⠾",
     "world": "⠰⠼⠛⠰⠼⠃",
-    "jeomsarang": "⠠⠶⠀⠙⠧⠗⠆⠰⠼⠃"
+    "jeomsarang": "⠠⠶⠠⠓⠲⠰⠼⠃"
   },
   {
     "input": "$\\,_7H_2$",

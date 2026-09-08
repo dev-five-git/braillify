@@ -4,125 +4,143 @@
     "internal": "th,-",
     "expected": "30193236",
     "unicode": "⠞⠓⠠⠤",
-    "world": "⠴⠞⠓⠤⠤"
+    "world": "⠴⠞⠓⠤⠤",
+    "jeomsarang": "⠞⠓⠲⠤"
   },
   {
     "input": "say pl...",
     "internal": "say pl444",
     "expected": "141610157505050",
     "unicode": "⠎⠁⠽⠀⠏⠇⠲⠲⠲",
-    "world": "⠴⠎⠁⠽ ⠏⠇⠲⠲⠲"
+    "world": "⠴⠎⠁⠽ ⠏⠇⠲⠲⠲",
+    "jeomsarang": "⠎⠁⠽⠀⠏⠇⠲⠲⠲"
   },
   {
     "input": "Tell me wh-.",
     "internal": ",tell me wh-4",
     "expected": "3230177701317058193650",
     "unicode": "⠠⠞⠑⠇⠇⠀⠍⠑⠀⠺⠓⠤⠲",
-    "world": "⠴⠠⠞⠑⠇⠇ ⠍⠑ ⠺⠓⠤⠲"
+    "world": "⠴⠠⠞⠑⠇⠇ ⠍⠑ ⠺⠓⠤⠲",
+    "jeomsarang": "⠠⠞⠑⠇⠇⠀⠍⠑⠀⠺⠓⠤⠲"
   },
   {
     "input": "-tion",
     "internal": "-tion",
     "expected": "3630102129",
     "unicode": "⠤⠞⠊⠕⠝",
-    "world": "⠤⠴⠞⠊⠕⠝⠲"
+    "world": "⠤⠴⠞⠊⠕⠝⠲",
+    "jeomsarang": "⠤⠞⠊⠕⠝"
   },
   {
     "input": "-ccio",
     "internal": "-ccio",
     "expected": "36991021",
     "unicode": "⠤⠉⠉⠊⠕",
-    "world": "⠤⠴⠉⠉⠊⠕⠲"
+    "world": "⠤⠴⠉⠉⠊⠕⠲",
+    "jeomsarang": "⠤⠉⠉⠊⠕"
   },
   {
     "input": "-ean",
     "internal": "-ean",
     "expected": "3617129",
     "unicode": "⠤⠑⠁⠝",
-    "world": "⠤⠴⠑⠁⠝⠲"
+    "world": "⠤⠴⠑⠁⠝⠲",
+    "jeomsarang": "⠤⠑⠁⠝"
   },
   {
     "input": "-ence",
     "internal": "-5ce",
     "expected": "3634917",
     "unicode": "⠤⠢⠉⠑",
-    "world": "⠤⠴⠢⠉⠑⠲"
+    "world": "⠤⠴⠢⠉⠑⠲",
+    "jeomsarang": "⠤⠑⠝⠉⠑"
   },
   {
     "input": "-ing",
     "internal": "-9g",
     "expected": "362027",
     "unicode": "⠤⠔⠛",
-    "world": "⠤⠴⠔⠛⠲"
+    "world": "⠤⠴⠔⠛⠲",
+    "jeomsarang": "⠤⠊⠝⠛"
   },
   {
     "input": "-ount",
     "internal": "-\\nt",
     "expected": "36512930",
     "unicode": "⠤⠳⠝⠞",
-    "world": "⠤⠴⠳⠝⠞⠲"
+    "world": "⠤⠴⠳⠝⠞⠲",
+    "jeomsarang": "⠤⠕⠥⠝⠞"
   },
   {
     "input": "-in",
     "internal": "-in",
     "expected": "361029",
     "unicode": "⠤⠊⠝",
-    "world": "⠤⠴⠊⠝⠲"
+    "world": "⠤⠴⠊⠝⠲",
+    "jeomsarang": "⠤⠊⠝"
   },
   {
     "input": "-est",
     "internal": "-e/",
     "expected": "361712",
     "unicode": "⠤⠑⠌",
-    "world": "⠤⠴⠑⠌⠲"
+    "world": "⠤⠴⠑⠌⠲",
+    "jeomsarang": "⠤⠑⠎⠞"
   },
   {
     "input": "-ed",
     "internal": "-$",
     "expected": "3643",
     "unicode": "⠤⠫",
-    "world": "⠤⠴⠫⠲"
+    "world": "⠤⠴⠫⠲",
+    "jeomsarang": "⠤⠑⠙"
   },
   {
     "input": "-ar",
     "internal": "->",
     "expected": "3628",
     "unicode": "⠤⠜",
-    "world": "⠤⠴⠁⠗⠲"
+    "world": "⠤⠴⠁⠗⠲",
+    "jeomsarang": "⠤⠁⠗"
   },
   {
     "input": "ar-",
     "internal": ">-",
     "expected": "2836",
     "unicode": "⠜⠤",
-    "world": "⠴⠁⠗⠲⠤"
+    "world": "⠴⠁⠗⠲⠤",
+    "jeomsarang": "⠁⠗⠤"
   },
   {
     "input": "be-",
     "internal": "be-",
     "expected": "31736",
     "unicode": "⠃⠑⠤",
-    "world": "⠴⠃⠑⠲⠤"
+    "world": "⠴⠃⠑⠲⠤",
+    "jeomsarang": "⠃⠑⠤"
   },
   {
     "input": "-es",
     "internal": "-es",
     "expected": "361714",
     "unicode": "⠤⠑⠎",
-    "world": "⠤⠴⠑⠎⠲"
+    "world": "⠤⠴⠑⠎⠲",
+    "jeomsarang": "⠤⠑⠎"
   },
   {
     "input": "-s",
     "internal": "-;s",
     "expected": "364814",
     "unicode": "⠤⠰⠎",
-    "world": "⠤⠴⠎⠲"
+    "world": "⠤⠴⠎⠲",
+    "jeomsarang": "⠤⠎"
   },
   {
     "input": "~s",
     "internal": "@9s",
     "expected": "82014",
     "unicode": "⠈⠔⠎",
-    "world": "⠈⠔⠴⠎⠲"
+    "world": "⠈⠔⠴⠎⠲",
+    "jeomsarang": "⠤⠤⠎"
   }
 ]

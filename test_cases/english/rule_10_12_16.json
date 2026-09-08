@@ -4,181 +4,207 @@
     "internal": ";d-;d-\"d",
     "expected": "4825364825361625",
     "unicode": "⠰⠙⠤⠰⠙⠤⠐⠙",
-    "world": "⠴⠙⠤⠙⠤⠐⠙⠲"
+    "world": "⠴⠙⠤⠙⠤⠐⠙⠲",
+    "jeomsarang": "⠙⠤⠙⠤⠙⠁⠽"
   },
   {
     "input": "ch-child",
     "internal": "ch-*",
     "expected": "9193633",
     "unicode": "⠉⠓⠤⠡",
-    "world": "⠴⠉⠓⠤⠡⠲"
+    "world": "⠴⠉⠓⠤⠡⠲",
+    "jeomsarang": "⠉⠓⠤⠉⠓⠊⠇⠙"
   },
   {
     "input": "y-y-you",
     "internal": ";y-;y-y",
     "expected": "48613648613661",
     "unicode": "⠰⠽⠤⠰⠽⠤⠽",
-    "world": "⠴⠽⠤⠰⠽⠤⠽⠲"
+    "world": "⠴⠽⠤⠰⠽⠤⠽⠲",
+    "jeomsarang": "⠽⠤⠽⠤⠽⠕⠥"
   },
   {
     "input": "b...but",
     "internal": "b444but",
     "expected": "350505033730",
     "unicode": "⠃⠲⠲⠲⠃⠥⠞",
-    "world": "⠴⠃⠲⠲⠲⠃⠥⠞⠲"
+    "world": "⠴⠃⠲⠲⠲⠃⠥⠞⠲",
+    "jeomsarang": "⠃⠲⠲⠲⠃⠥⠞"
   },
   {
     "input": "c-c-c-conceive",
     "internal": ";c-;c-;c-3cv",
     "expected": "48936489364893618939",
     "unicode": "⠰⠉⠤⠰⠉⠤⠰⠉⠤⠒⠉⠧",
-    "world": "⠴⠉⠤⠰⠉⠤⠰⠉⠤⠒⠉⠧⠲"
+    "world": "⠴⠉⠤⠰⠉⠤⠰⠉⠤⠒⠉⠧⠲",
+    "jeomsarang": "⠉⠤⠉⠤⠉⠤⠉⠕⠝⠉⠑⠊⠧⠑"
   },
   {
     "input": "st-st-stay",
     "internal": "st-st-/ay",
     "expected": "14303614303612161",
     "unicode": "⠎⠞⠤⠎⠞⠤⠌⠁⠽",
-    "world": "⠴⠎⠞⠤⠎⠞⠤⠌⠁⠽⠲"
+    "world": "⠴⠎⠞⠤⠎⠞⠤⠌⠁⠽⠲",
+    "jeomsarang": "⠎⠞⠤⠎⠞⠤⠎⠞⠁⠽"
   },
   {
     "input": "s-s-stutter",
     "internal": ";s-;s-/utt]",
     "expected": "4814364814361237303059",
     "unicode": "⠰⠎⠤⠰⠎⠤⠌⠥⠞⠞⠻",
-    "world": "⠴⠎⠤⠰⠎⠤⠌⠥⠞⠞⠻⠲"
+    "world": "⠴⠎⠤⠰⠎⠤⠌⠥⠞⠞⠻⠲",
+    "jeomsarang": "⠎⠤⠎⠤⠎⠞⠥⠞⠞⠑⠗"
   },
   {
     "input": "g-good",
     "internal": ";g-gd",
     "expected": "4827362725",
     "unicode": "⠰⠛⠤⠛⠙",
-    "world": "⠴⠛⠤⠛⠙⠲"
+    "world": "⠴⠛⠤⠛⠙⠲",
+    "jeomsarang": "⠛⠤⠛⠕⠕⠙"
   },
   {
     "input": "qu-quick",
     "internal": "qu-qk",
     "expected": "313736315",
     "unicode": "⠟⠥⠤⠟⠅",
-    "world": "⠴⠟⠥⠤⠟⠅⠲"
+    "world": "⠴⠟⠥⠤⠟⠅⠲",
+    "jeomsarang": "⠟⠥⠤⠟⠥⠊⠉⠅"
   },
   {
     "input": "m-m-m-mine",
     "internal": ";m-;m-;m-m9e",
     "expected": "481336481336481336132017",
     "unicode": "⠰⠍⠤⠰⠍⠤⠰⠍⠤⠍⠔⠑",
-    "world": "⠴⠍⠤⠰⠍⠤⠰⠍⠤⠍⠔⠑⠲"
+    "world": "⠴⠍⠤⠰⠍⠤⠰⠍⠤⠍⠔⠑⠲",
+    "jeomsarang": "⠍⠤⠍⠤⠍⠤⠍⠊⠝⠑"
   },
   {
     "input": "wh-where",
     "internal": "wh-\":",
     "expected": "5819361649",
     "unicode": "⠺⠓⠤⠐⠱",
-    "world": "⠴⠺⠓⠤⠐⠱⠲"
+    "world": "⠴⠺⠓⠤⠐⠱⠲",
+    "jeomsarang": "⠺⠓⠤⠺⠓⠑⠗⠑"
   },
   {
     "input": "f-f-father",
     "internal": ";f-;f-\"f",
     "expected": "4811364811361611",
     "unicode": "⠰⠋⠤⠰⠋⠤⠐⠋",
-    "world": "⠴⠋⠤⠰⠋⠤⠐⠋⠲"
+    "world": "⠴⠋⠤⠰⠋⠤⠐⠋⠲",
+    "jeomsarang": "⠋⠤⠋⠤⠋⠁⠞⠓⠑⠗"
   },
   {
     "input": "th-the",
     "internal": "th-!",
     "expected": "30193646",
     "unicode": "⠞⠓⠤⠮",
-    "world": "⠴⠞⠓⠤⠮⠲"
+    "world": "⠴⠞⠓⠤⠮⠲",
+    "jeomsarang": "⠞⠓⠤⠞⠓⠑"
   },
   {
     "input": "de-ce-ce-cease",
     "internal": "de-ce-ce-c1se",
     "expected": "2517369173691736921417",
     "unicode": "⠙⠑⠤⠉⠑⠤⠉⠑⠤⠉⠂⠎⠑",
-    "world": "⠴⠙⠑⠤⠉⠑⠤⠉⠑⠤⠉⠂⠎⠑⠲"
+    "world": "⠴⠙⠑⠤⠉⠑⠤⠉⠑⠤⠉⠂⠎⠑⠲",
+    "jeomsarang": "⠙⠑⠤⠉⠑⠤⠉⠑⠤⠉⠑⠁⠎⠑"
   },
   {
     "input": "s-s-s-s-super-st-stition",
     "internal": ";;s-s-s-s-;'sup]-st-/i;n",
     "expected": "48481436143614361436484143715593614303612104829",
     "unicode": "⠰⠰⠎⠤⠎⠤⠎⠤⠎⠤⠰⠄⠎⠥⠏⠻⠤⠎⠞⠤⠌⠊⠰⠝",
-    "world": "⠴⠎⠤⠰⠎⠤⠰⠎⠤⠰⠎⠤⠎⠥⠏⠻⠤⠎⠞⠤⠌⠊⠰⠝⠲"
+    "world": "⠴⠎⠤⠰⠎⠤⠰⠎⠤⠰⠎⠤⠎⠥⠏⠻⠤⠎⠞⠤⠌⠊⠰⠝⠲",
+    "jeomsarang": "⠎⠤⠎⠤⠎⠤⠎⠤⠎⠥⠏⠑⠗⠤⠎⠞⠤⠎⠞⠊⠞⠊⠕⠝"
   },
   {
     "input": "th-these",
     "internal": "th-^!",
     "expected": "3019362446",
     "unicode": "⠞⠓⠤⠘⠮",
-    "world": "⠴⠞⠓⠤⠘⠮⠲"
+    "world": "⠴⠞⠓⠤⠘⠮⠲",
+    "jeomsarang": "⠞⠓⠤⠞⠓⠑⠎⠑"
   },
   {
     "input": "g-ghost",
     "internal": ";g-<o/",
     "expected": "482736352112",
     "unicode": "⠰⠛⠤⠣⠕⠌",
-    "world": "⠴⠛⠤⠣⠕⠌⠲"
+    "world": "⠴⠛⠤⠣⠕⠌⠲",
+    "jeomsarang": "⠛⠤⠛⠓⠕⠎⠞"
   },
   {
     "input": "gr-ground",
     "internal": "gr-gr.d",
     "expected": "27233627234025",
     "unicode": "⠛⠗⠤⠛⠗⠨⠙",
-    "world": "⠴⠛⠗⠤⠛⠗⠨⠙⠲"
+    "world": "⠴⠛⠗⠤⠛⠗⠨⠙⠲",
+    "jeomsarang": "⠛⠗⠤⠛⠗⠕⠥⠝⠙"
   },
   {
     "input": "lea-leave",
     "internal": "lea-l1ve",
     "expected": "717136723917",
     "unicode": "⠇⠑⠁⠤⠇⠂⠧⠑",
-    "world": "⠴⠇⠑⠁⠤⠇⠂⠧⠑⠲"
+    "world": "⠴⠇⠑⠁⠤⠇⠂⠧⠑⠲",
+    "jeomsarang": "⠇⠑⠁⠤⠇⠑⠁⠧⠑"
   },
   {
     "input": "m-must",
     "internal": ";m-m/",
     "expected": "4813361312",
     "unicode": "⠰⠍⠤⠍⠌",
-    "world": "⠴⠍⠤⠍⠌⠲"
+    "world": "⠴⠍⠤⠍⠌⠲",
+    "jeomsarang": "⠍⠤⠍⠥⠎⠞"
   },
   {
     "input": "w-what",
     "internal": ";w-:at",
     "expected": "48583649130",
     "unicode": "⠰⠺⠤⠱⠁⠞",
-    "world": "⠴⠺⠤⠱⠁⠞⠲"
+    "world": "⠴⠺⠤⠱⠁⠞⠲",
+    "jeomsarang": "⠺⠤⠺⠓⠁⠞"
   },
   {
     "input": "c-can't",
     "internal": ";c-c't",
     "expected": "489369430",
     "unicode": "⠰⠉⠤⠉⠄⠞",
-    "world": "⠴⠉⠤⠉⠄⠞⠲"
+    "world": "⠴⠉⠤⠉⠄⠞⠲",
+    "jeomsarang": "⠉⠤⠉⠁⠝⠄⠞"
   },
   {
     "input": "w-was",
     "internal": ";w-was",
     "expected": "48583658114",
     "unicode": "⠰⠺⠤⠺⠁⠎",
-    "world": "⠴⠺⠤⠺⠁⠎⠲"
+    "world": "⠴⠺⠤⠺⠁⠎⠲",
+    "jeomsarang": "⠺⠤⠺⠁⠎"
   },
   {
     "input": "ch-ch-children",
     "internal": "ch-ch-*n",
     "expected": "91936919363329",
     "unicode": "⠉⠓⠤⠉⠓⠤⠡⠝",
-    "world": "⠴⠉⠓⠤⠉⠓⠤⠡⠝⠲"
+    "world": "⠴⠉⠓⠤⠉⠓⠤⠡⠝⠲",
+    "jeomsarang": "⠉⠓⠤⠉⠓⠤⠉⠓⠊⠇⠙⠗⠑⠝"
   },
   {
     "input": "th-themselves",
     "internal": "th-!mvs",
     "expected": "30193646133914",
     "unicode": "⠞⠓⠤⠮⠍⠧⠎",
-    "world": "⠴⠞⠓⠤⠮⠍⠧⠎⠲"
+    "world": "⠴⠞⠓⠤⠮⠍⠧⠎⠲",
+    "jeomsarang": "⠞⠓⠤⠞⠓⠑⠍⠎⠑⠇⠧⠑⠎"
   },
   {
     "input": "b-b-below",
     "internal": ";b-;b-2l",
     "expected": "483364833667",
     "unicode": "⠰⠃⠤⠰⠃⠤⠆⠇",
-    "world": "⠴⠃⠤⠰⠃⠤⠆⠇⠲"
+    "world": "⠴⠃⠤⠰⠃⠤⠆⠇⠲",
+    "jeomsarang": "⠃⠤⠃⠤⠃⠑⠇⠕⠺"
   }
 ]

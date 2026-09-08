@@ -4,83 +4,95 @@
     "internal": ",home\"w3",
     "expected": "3219211317165818",
     "unicode": "⠠⠓⠕⠍⠑⠐⠺⠒",
-    "world": "⠴⠠⠓⠕⠍⠑⠐⠺⠒"
+    "world": "⠴⠠⠓⠕⠍⠑⠐⠺⠒",
+    "jeomsarang": "⠠⠓⠕⠍⠑⠺⠕⠗⠅⠒"
   },
   {
     "input": "✓ 1.  14",
     "internal": "@% #a4 #ad",
     "expected": "841060150060125",
     "unicode": "⠈⠩⠀⠼⠁⠲⠀⠼⠁⠙",
-    "world": "⠼⠁⠲  ⠼⠁⠙"
+    "world": "⠼⠁⠲  ⠼⠁⠙",
+    "jeomsarang": "⠀⠀⠼⠁⠲⠀⠀⠼⠁⠙"
   },
   {
     "input": "✓ 2.  25",
     "internal": "@% #b4 #be",
     "expected": "841060350060317",
     "unicode": "⠈⠩⠀⠼⠃⠲⠀⠼⠃⠑",
-    "world": "⠼⠃⠲  ⠼⠃⠑"
+    "world": "⠼⠃⠲  ⠼⠃⠑",
+    "jeomsarang": "⠀⠀⠼⠃⠲⠀⠀⠼⠃⠑"
   },
   {
     "input": "3.  42",
     "internal": "#c4 #db",
     "expected": "60950060253",
     "unicode": "⠼⠉⠲⠀⠼⠙⠃",
-    "world": "⠼⠉⠲  ⠼⠙⠃"
+    "world": "⠼⠉⠲  ⠼⠙⠃",
+    "jeomsarang": "⠼⠉⠲⠀⠀⠼⠙⠃"
   },
   {
     "input": "✓ 4.  11",
     "internal": "@% #d4 #aa",
     "expected": "841060255006011",
     "unicode": "⠈⠩⠀⠼⠙⠲⠀⠼⠁⠁",
-    "world": "⠼⠙⠲  ⠼⠁⠁"
+    "world": "⠼⠙⠲  ⠼⠁⠁",
+    "jeomsarang": "⠀⠀⠼⠙⠲⠀⠀⠼⠁⠁"
   },
   {
     "input": "J. Hadfield",
     "internal": ";,j4 ,_hfield",
     "expected": "483226500325619111017725",
     "unicode": "⠰⠠⠚⠲⠀⠠⠸⠓⠋⠊⠑⠇⠙",
-    "world": "⠴⠠⠚⠲ ⠠⠸⠓⠋⠊⠑⠇⠙⠲"
+    "world": "⠴⠠⠚⠲ ⠠⠸⠓⠋⠊⠑⠇⠙⠲",
+    "jeomsarang": "⠠⠚⠲⠀⠠⠓⠁⠙⠋⠊⠑⠇⠙"
   },
   {
     "input": "Sample ballot:",
     "internal": ",sample ballot3",
     "expected": "32141131571703177213018",
     "unicode": "⠠⠎⠁⠍⠏⠇⠑⠀⠃⠁⠇⠇⠕⠞⠒",
-    "world": "⠴⠠⠎⠁⠍⠏⠇⠑ ⠃⠁⠇⠇⠕⠞⠒"
+    "world": "⠴⠠⠎⠁⠍⠏⠇⠑ ⠃⠁⠇⠇⠕⠞⠒",
+    "jeomsarang": "⠠⠎⠁⠍⠏⠇⠑⠀⠃⠁⠇⠇⠕⠞⠒"
   },
   {
     "input": "S. Marino",
     "internal": ";,s4 ,m>9o",
     "expected": "4832145003213282021",
     "unicode": "⠰⠠⠎⠲⠀⠠⠍⠜⠔⠕",
-    "world": "⠴⠠⠎⠲ ⠠⠍⠜⠔⠕⠲"
+    "world": "⠴⠠⠎⠲ ⠠⠍⠜⠔⠕⠲",
+    "jeomsarang": "⠠⠎⠲⠀⠠⠍⠁⠗⠊⠝⠕"
   },
   {
     "input": "I. Wong ✓",
     "internal": ",i4 ,w;g @%",
     "expected": "3210500325848270841",
     "unicode": "⠠⠊⠲⠀⠠⠺⠰⠛⠀⠈⠩",
-    "world": "⠴⠠⠊⠲ ⠠⠺⠰⠛"
+    "world": "⠴⠠⠊⠲ ⠠⠺⠰⠛",
+    "jeomsarang": "⠠⠊⠲⠀⠠⠺⠕⠝⠛⠀⠀"
   },
   {
     "input": "[Their✓ There] son is kind.",
     "internal": ".<,_!@% ,\"!.> son is k9d4",
     "expected": "40353256468410321646402801421290101405202550",
     "unicode": "⠨⠣⠠⠸⠮⠈⠩⠀⠠⠐⠮⠨⠜⠀⠎⠕⠝⠀⠊⠎⠀⠅⠔⠙⠲",
-    "world": "⠦⠆⠴⠠⠸⠮⠈⠩ ⠠⠐⠮⠨⠜ ⠎⠕⠝ ⠊⠎ ⠅⠔⠙⠲"
+    "world": "⠦⠆⠴⠠⠸⠮⠈⠩ ⠠⠐⠮⠨⠜ ⠎⠕⠝ ⠊⠎ ⠅⠔⠙⠲",
+    "jeomsarang": "⠠⠶⠠⠞⠓⠑⠊⠗⠀⠀⠠⠞⠓⠑⠗⠑⠶⠄⠀⠎⠕⠝⠀⠊⠎⠀⠅⠊⠝⠙⠲"
   },
   {
     "input": "I will go [yesterday ✓tomorrow].",
     "internal": ",i w g .<ye/]\"d @%tomorr[.>4",
     "expected": "321005802704035611712591625084130211321232342402850",
     "unicode": "⠠⠊⠀⠺⠀⠛⠀⠨⠣⠽⠑⠌⠻⠐⠙⠀⠈⠩⠞⠕⠍⠕⠗⠗⠪⠨⠜⠲",
-    "world": "⠴⠠⠊ ⠺ ⠛ ⠨⠣⠽⠑⠌⠻⠐⠙ ⠈⠩⠞⠕⠍⠕⠗⠗⠪⠰⠴⠲"
+    "world": "⠴⠠⠊ ⠺ ⠛ ⠨⠣⠽⠑⠌⠻⠐⠙ ⠈⠩⠞⠕⠍⠕⠗⠗⠪⠰⠴⠲",
+    "jeomsarang": "⠠⠊⠀⠺⠊⠇⠇⠀⠛⠕⠀⠠⠶⠽⠑⠎⠞⠑⠗⠙⠁⠽⠀⠀⠞⠕⠍⠕⠗⠗⠕⠺⠶⠄⠲"
   },
   {
     "input": "The [child✓ children] is happy.",
     "internal": ",! .<*ild@% *n.> is happy4",
     "expected": "324604035331072584103329402801014019115156150",
     "unicode": "⠠⠮⠀⠨⠣⠡⠊⠇⠙⠈⠩⠀⠡⠝⠨⠜⠀⠊⠎⠀⠓⠁⠏⠏⠽⠲",
-    "world": "⠴⠠⠮ ⠨⠣⠡⠊⠇⠙⠈⠩ ⠡⠝⠨⠜ ⠊⠎ ⠓⠁⠏⠏⠽⠲"
+    "world": "⠴⠠⠮ ⠨⠣⠡⠊⠇⠙⠈⠩ ⠡⠝⠨⠜ ⠊⠎ ⠓⠁⠏⠏⠽⠲",
+    "jeomsarang": "⠠⠞⠓⠑⠀⠠⠶⠉⠓⠊⠇⠙⠀⠀⠉⠓⠊⠇⠙⠗⠑⠝⠶⠄⠀⠊⠎⠀⠓⠁⠏⠏⠽⠲"
   }
 ]

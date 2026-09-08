@@ -4,48 +4,55 @@
     "internal": ",clem;eau",
     "expected": "329717134817137",
     "unicode": "⠠⠉⠇⠑⠍⠰⠑⠁⠥",
-    "world": "⠴⠠⠉⠇⠑⠍⠰⠑⠁⠥⠲"
+    "world": "⠴⠠⠉⠇⠑⠍⠰⠑⠁⠥⠲",
+    "jeomsarang": "⠠⠉⠇⠑⠍⠑⠝⠉⠑⠁⠥"
   },
   {
     "input": "commenced",
     "internal": "comm;ed",
     "expected": "9211313481725",
     "unicode": "⠉⠕⠍⠍⠰⠑⠙",
-    "world": "⠴⠉⠕⠍⠍⠰⠑⠙⠲"
+    "world": "⠴⠉⠕⠍⠍⠰⠑⠙⠲",
+    "jeomsarang": "⠉⠕⠍⠍⠑⠝⠉⠑⠙"
   },
   {
     "input": "experienced",
     "internal": "exp]i;ed",
     "expected": "1745155910481725",
     "unicode": "⠑⠭⠏⠻⠊⠰⠑⠙",
-    "world": "⠴⠑⠭⠏⠻⠊⠰⠑⠙⠲"
+    "world": "⠴⠑⠭⠏⠻⠊⠰⠑⠙⠲",
+    "jeomsarang": "⠑⠭⠏⠑⠗⠊⠑⠝⠉⠑⠙"
   },
   {
     "input": "influenceable",
     "internal": "9flu;eable",
     "expected": "2011737481713717",
     "unicode": "⠔⠋⠇⠥⠰⠑⠁⠃⠇⠑",
-    "world": "⠴⠔⠋⠇⠥⠰⠑⠁⠃⠇⠑⠲"
+    "world": "⠴⠔⠋⠇⠥⠰⠑⠁⠃⠇⠑⠲",
+    "jeomsarang": "⠊⠝⠋⠇⠥⠑⠝⠉⠑⠁⠃⠇⠑"
   },
   {
     "input": "silenceable",
     "internal": "sil;eable",
     "expected": "14107481713717",
     "unicode": "⠎⠊⠇⠰⠑⠁⠃⠇⠑",
-    "world": "⠴⠎⠊⠇⠰⠑⠁⠃⠇⠑⠲"
+    "world": "⠴⠎⠊⠇⠰⠑⠁⠃⠇⠑⠲",
+    "jeomsarang": "⠎⠊⠇⠑⠝⠉⠑⠁⠃⠇⠑"
   },
   {
     "input": "silencer",
     "internal": "sil;er",
     "expected": "14107481723",
     "unicode": "⠎⠊⠇⠰⠑⠗",
-    "world": "⠴⠎⠊⠇⠰⠑⠗⠲"
+    "world": "⠴⠎⠊⠇⠰⠑⠗⠲",
+    "jeomsarang": "⠎⠊⠇⠑⠝⠉⠑⠗"
   },
   {
     "input": "Spencer",
     "internal": ",sp;er",
     "expected": "321415481723",
     "unicode": "⠠⠎⠏⠰⠑⠗",
-    "world": "⠴⠠⠎⠏⠰⠑⠗⠲"
+    "world": "⠴⠠⠎⠏⠰⠑⠗⠲",
+    "jeomsarang": "⠠⠎⠏⠑⠝⠉⠑⠗"
   }
 ]

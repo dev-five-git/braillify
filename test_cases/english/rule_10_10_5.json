@@ -4,62 +4,71 @@
     "internal": "bac*anal",
     "expected": "3193312917",
     "unicode": "⠃⠁⠉⠡⠁⠝⠁⠇",
-    "world": "⠴⠃⠁⠉⠡⠁⠝⠁⠇⠲"
+    "world": "⠴⠃⠁⠉⠡⠁⠝⠁⠇⠲",
+    "jeomsarang": "⠃⠁⠉⠉⠓⠁⠝⠁⠇"
   },
   {
     "input": "bear",
     "internal": "be>",
     "expected": "31728",
     "unicode": "⠃⠑⠜",
-    "world": "⠴⠃⠑⠜⠲"
+    "world": "⠴⠃⠑⠜⠲",
+    "jeomsarang": "⠃⠑⠁⠗"
   },
   {
     "input": "fear",
     "internal": "fe>",
     "expected": "111728",
     "unicode": "⠋⠑⠜",
-    "world": "⠴⠋⠑⠜⠲"
+    "world": "⠴⠋⠑⠜⠲",
+    "jeomsarang": "⠋⠑⠁⠗"
   },
   {
     "input": "heart",
     "internal": "he>t",
     "expected": "19172830",
     "unicode": "⠓⠑⠜⠞",
-    "world": "⠴⠓⠑⠜⠞⠲"
+    "world": "⠴⠓⠑⠜⠞⠲",
+    "jeomsarang": "⠓⠑⠁⠗⠞"
   },
   {
     "input": "nearly",
     "internal": "ne>ly",
     "expected": "291728761",
     "unicode": "⠝⠑⠜⠇⠽",
-    "world": "⠴⠝⠑⠜⠇⠽⠲"
+    "world": "⠴⠝⠑⠜⠇⠽⠲",
+    "jeomsarang": "⠝⠑⠁⠗⠇⠽"
   },
   {
     "input": "nuclear",
     "internal": "nucle>",
     "expected": "2937971728",
     "unicode": "⠝⠥⠉⠇⠑⠜",
-    "world": "⠴⠝⠥⠉⠇⠑⠜⠲"
+    "world": "⠴⠝⠥⠉⠇⠑⠜⠲",
+    "jeomsarang": "⠝⠥⠉⠇⠑⠁⠗"
   },
   {
     "input": "saccharine",
     "internal": "sac*>9e",
     "expected": "141933282017",
     "unicode": "⠎⠁⠉⠡⠜⠔⠑",
-    "world": "⠴⠎⠁⠉⠡⠜⠔⠑⠲"
+    "world": "⠴⠎⠁⠉⠡⠜⠔⠑⠲",
+    "jeomsarang": "⠎⠁⠉⠉⠓⠁⠗⠊⠝⠑"
   },
   {
     "input": "sting",
     "internal": "/+",
     "expected": "1244",
     "unicode": "⠌⠬",
-    "world": "⠴⠌⠬⠲"
+    "world": "⠴⠌⠬⠲",
+    "jeomsarang": "⠎⠞⠊⠝⠛"
   },
   {
     "input": "egghead",
     "internal": "e7h1d",
     "expected": "175419225",
     "unicode": "⠑⠶⠓⠂⠙",
-    "world": "⠴⠑⠶⠓⠂⠙⠲"
+    "world": "⠴⠑⠶⠓⠂⠙⠲",
+    "jeomsarang": "⠑⠛⠛⠓⠑⠁⠙"
   }
 ]

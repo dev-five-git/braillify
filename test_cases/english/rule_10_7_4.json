@@ -4,153 +4,175 @@
     "internal": "ass\"eate",
     "expected": "11414161713017",
     "unicode": "⠁⠎⠎⠐⠑⠁⠞⠑",
-    "world": "⠴⠁⠎⠎⠐⠑⠁⠞⠑⠲"
+    "world": "⠴⠁⠎⠎⠐⠑⠁⠞⠑⠲",
+    "jeomsarang": "⠁⠎⠎⠑⠧⠑⠗⠁⠞⠑"
   },
   {
     "input": "beverage",
     "internal": "b\"eage",
     "expected": "3161712717",
     "unicode": "⠃⠐⠑⠁⠛⠑",
-    "world": "⠴⠃⠐⠑⠁⠛⠑⠲"
+    "world": "⠴⠃⠐⠑⠁⠛⠑⠲",
+    "jeomsarang": "⠃⠑⠧⠑⠗⠁⠛⠑"
   },
   {
     "input": "Everest",
     "internal": ",\"ee/",
     "expected": "3216171712",
     "unicode": "⠠⠐⠑⠑⠌",
-    "world": "⠴⠠⠐⠑⠑⠌⠲"
+    "world": "⠴⠠⠐⠑⠑⠌⠲",
+    "jeomsarang": "⠠⠑⠧⠑⠗⠑⠎⠞"
   },
   {
     "input": "everything",
     "internal": "\"ey?+",
     "expected": "1617615744",
     "unicode": "⠐⠑⠽⠹⠬",
-    "world": "⠴⠐⠑⠽⠹⠬⠲"
+    "world": "⠴⠐⠑⠽⠹⠬⠲",
+    "jeomsarang": "⠑⠧⠑⠗⠽⠞⠓⠊⠝⠛"
   },
   {
     "input": "fever",
     "internal": "f\"e",
     "expected": "111617",
     "unicode": "⠋⠐⠑",
-    "world": "⠴⠋⠐⠑⠲"
+    "world": "⠴⠋⠐⠑⠲",
+    "jeomsarang": "⠋⠑⠧⠑⠗"
   },
   {
     "input": "irreverence",
     "internal": "irr\"e;e",
     "expected": "10232316174817",
     "unicode": "⠊⠗⠗⠐⠑⠰⠑",
-    "world": "⠴⠊⠗⠗⠐⠑⠰⠑⠲"
+    "world": "⠴⠊⠗⠗⠐⠑⠰⠑⠲",
+    "jeomsarang": "⠊⠗⠗⠑⠧⠑⠗⠑⠝⠉⠑"
   },
   {
     "input": "nevertheless",
     "internal": "n\"e!.s",
     "expected": "291617464014",
     "unicode": "⠝⠐⠑⠮⠨⠎",
-    "world": "⠴⠝⠐⠑⠮⠨⠎⠲"
+    "world": "⠴⠝⠐⠑⠮⠨⠎⠲",
+    "jeomsarang": "⠝⠑⠧⠑⠗⠞⠓⠑⠇⠑⠎⠎"
   },
   {
     "input": "reverend",
     "internal": "r\"e5d",
     "expected": "2316173425",
     "unicode": "⠗⠐⠑⠢⠙",
-    "world": "⠴⠗⠐⠑⠢⠙⠲"
+    "world": "⠴⠗⠐⠑⠢⠙⠲",
+    "jeomsarang": "⠗⠑⠧⠑⠗⠑⠝⠙"
   },
   {
     "input": "several",
     "internal": "s\"eal",
     "expected": "14161717",
     "unicode": "⠎⠐⠑⠁⠇",
-    "world": "⠴⠎⠐⠑⠁⠇⠲"
+    "world": "⠴⠎⠐⠑⠁⠇⠲",
+    "jeomsarang": "⠎⠑⠧⠑⠗⠁⠇"
   },
   {
     "input": "Severn",
     "internal": ",s\"en",
     "expected": "3214161729",
     "unicode": "⠠⠎⠐⠑⠝",
-    "world": "⠴⠠⠎⠐⠑⠝⠲"
+    "world": "⠴⠠⠎⠐⠑⠝⠲",
+    "jeomsarang": "⠠⠎⠑⠧⠑⠗⠝"
   },
   {
     "input": "Unilever",
     "internal": ",unil\"e",
     "expected": "3237291071617",
     "unicode": "⠠⠥⠝⠊⠇⠐⠑",
-    "world": "⠴⠠⠥⠝⠊⠇⠐⠑⠲"
+    "world": "⠴⠠⠥⠝⠊⠇⠐⠑⠲",
+    "jeomsarang": "⠠⠥⠝⠊⠇⠑⠧⠑⠗"
   },
   {
     "input": "believer",
     "internal": "2liev]",
     "expected": "6710173959",
     "unicode": "⠆⠇⠊⠑⠧⠻",
-    "world": "⠴⠆⠇⠊⠑⠧⠻⠲"
+    "world": "⠴⠆⠇⠊⠑⠧⠻⠲",
+    "jeomsarang": "⠃⠑⠇⠊⠑⠧⠑⠗"
   },
   {
     "input": "eversion",
     "internal": "ev].n",
     "expected": "1739594029",
     "unicode": "⠑⠧⠻⠨⠝",
-    "world": "⠴⠑⠧⠻⠨⠝⠲"
+    "world": "⠴⠑⠧⠻⠨⠝⠲",
+    "jeomsarang": "⠑⠧⠑⠗⠎⠊⠕⠝"
   },
   {
     "input": "Guinevere",
     "internal": ",gu9ev]e",
     "expected": "3227372017395917",
     "unicode": "⠠⠛⠥⠔⠑⠧⠻⠑",
-    "world": "⠴⠠⠛⠥⠔⠑⠧⠻⠑⠲"
+    "world": "⠴⠠⠛⠥⠔⠑⠧⠻⠑⠲",
+    "jeomsarang": "⠠⠛⠥⠊⠝⠑⠧⠑⠗⠑"
   },
   {
     "input": "McKeever",
     "internal": ",mc,keev]",
     "expected": "3213932517173959",
     "unicode": "⠠⠍⠉⠠⠅⠑⠑⠧⠻",
-    "world": "⠴⠠⠍⠉⠠⠅⠑⠑⠧⠻⠲"
+    "world": "⠴⠠⠍⠉⠠⠅⠑⠑⠧⠻⠲",
+    "jeomsarang": "⠠⠍⠉⠠⠅⠑⠑⠧⠑⠗"
   },
   {
     "input": "Monteverdi",
     "internal": ",montev]di",
     "expected": "32132129301739592510",
     "unicode": "⠠⠍⠕⠝⠞⠑⠧⠻⠙⠊",
-    "world": "⠴⠠⠍⠕⠝⠞⠑⠧⠻⠙⠊⠲"
+    "world": "⠴⠠⠍⠕⠝⠞⠑⠧⠻⠙⠊⠲",
+    "jeomsarang": "⠠⠍⠕⠝⠞⠑⠧⠑⠗⠙⠊"
   },
   {
     "input": "persevere",
     "internal": "p]sev]e",
     "expected": "15591417395917",
     "unicode": "⠏⠻⠎⠑⠧⠻⠑",
-    "world": "⠴⠏⠻⠎⠑⠧⠻⠑⠲"
+    "world": "⠴⠏⠻⠎⠑⠧⠻⠑⠲",
+    "jeomsarang": "⠏⠑⠗⠎⠑⠧⠑⠗⠑"
   },
   {
     "input": "reverberate",
     "internal": "rev]b]ate",
     "expected": "2317395935913017",
     "unicode": "⠗⠑⠧⠻⠃⠻⠁⠞⠑",
-    "world": "⠴⠗⠑⠧⠻⠃⠻⠁⠞⠑⠲"
+    "world": "⠴⠗⠑⠧⠻⠃⠻⠁⠞⠑⠲",
+    "jeomsarang": "⠗⠑⠧⠑⠗⠃⠑⠗⠁⠞⠑"
   },
   {
     "input": "revere",
     "internal": "rev]e",
     "expected": "2317395917",
     "unicode": "⠗⠑⠧⠻⠑",
-    "world": "⠴⠗⠑⠧⠻⠑⠲"
+    "world": "⠴⠗⠑⠧⠻⠑⠲",
+    "jeomsarang": "⠗⠑⠧⠑⠗⠑"
   },
   {
     "input": "reverify",
     "internal": "rev]ify",
     "expected": "23173959101161",
     "unicode": "⠗⠑⠧⠻⠊⠋⠽",
-    "world": "⠴⠗⠑⠧⠻⠊⠋⠽⠲"
+    "world": "⠴⠗⠑⠧⠻⠊⠋⠽⠲",
+    "jeomsarang": "⠗⠑⠧⠑⠗⠊⠋⠽"
   },
   {
     "input": "severity",
     "internal": "sev];y",
     "expected": "141739594861",
     "unicode": "⠎⠑⠧⠻⠰⠽",
-    "world": "⠴⠎⠑⠧⠻⠰⠽⠲"
+    "world": "⠴⠎⠑⠧⠻⠰⠽⠲",
+    "jeomsarang": "⠎⠑⠧⠑⠗⠊⠞⠽"
   },
   {
     "input": "thievery",
     "internal": "?iev]y",
     "expected": "571017395961",
     "unicode": "⠹⠊⠑⠧⠻⠽",
-    "world": "⠴⠹⠊⠑⠧⠻⠽⠲"
+    "world": "⠴⠹⠊⠑⠧⠻⠽⠲",
+    "jeomsarang": "⠞⠓⠊⠑⠧⠑⠗⠽"
   }
 ]

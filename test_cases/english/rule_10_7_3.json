@@ -4,83 +4,95 @@
     "internal": ",gala_h",
     "expected": "32271715619",
     "unicode": "⠠⠛⠁⠇⠁⠸⠓",
-    "world": "⠴⠠⠛⠁⠇⠁⠸⠓⠲"
+    "world": "⠴⠠⠛⠁⠇⠁⠸⠓⠲",
+    "jeomsarang": "⠠⠛⠁⠇⠁⠓⠁⠙"
   },
   {
     "input": "haddock",
     "internal": "_hdock",
     "expected": "5619252195",
     "unicode": "⠸⠓⠙⠕⠉⠅",
-    "world": "⠴⠸⠓⠙⠕⠉⠅⠲"
+    "world": "⠴⠸⠓⠙⠕⠉⠅⠲",
+    "jeomsarang": "⠓⠁⠙⠙⠕⠉⠅"
   },
   {
     "input": "Haddon",
     "internal": ",_hdon",
     "expected": "325619252129",
     "unicode": "⠠⠸⠓⠙⠕⠝",
-    "world": "⠴⠠⠸⠓⠙⠕⠝⠲"
+    "world": "⠴⠠⠸⠓⠙⠕⠝⠲",
+    "jeomsarang": "⠠⠓⠁⠙⠙⠕⠝"
   },
   {
     "input": "hadji",
     "internal": "_hji",
     "expected": "56192610",
     "unicode": "⠸⠓⠚⠊",
-    "world": "⠴⠸⠓⠚⠊⠲"
+    "world": "⠴⠸⠓⠚⠊⠲",
+    "jeomsarang": "⠓⠁⠙⠚⠊"
   },
   {
     "input": "Hadley",
     "internal": ",_hley",
     "expected": "32561971761",
     "unicode": "⠠⠸⠓⠇⠑⠽",
-    "world": "⠴⠠⠸⠓⠇⠑⠽⠲"
+    "world": "⠴⠠⠸⠓⠇⠑⠽⠲",
+    "jeomsarang": "⠠⠓⠁⠙⠇⠑⠽"
   },
   {
     "input": "hadn't",
     "internal": "_hn't",
     "expected": "561929430",
     "unicode": "⠸⠓⠝⠄⠞",
-    "world": "⠴⠸⠓⠝⠄⠞⠲"
+    "world": "⠴⠸⠓⠝⠄⠞⠲",
+    "jeomsarang": "⠓⠁⠙⠝⠄⠞"
   },
   {
     "input": "Chad",
     "internal": ",*ad",
     "expected": "3233125",
     "unicode": "⠠⠡⠁⠙",
-    "world": "⠴⠠⠡⠁⠙⠲"
+    "world": "⠴⠠⠡⠁⠙⠲",
+    "jeomsarang": "⠠⠉⠓⠁⠙"
   },
   {
     "input": "Hades",
     "internal": ",hades",
     "expected": "32191251714",
     "unicode": "⠠⠓⠁⠙⠑⠎",
-    "world": "⠴⠠⠓⠁⠙⠑⠎⠲"
+    "world": "⠴⠠⠓⠁⠙⠑⠎⠲",
+    "jeomsarang": "⠠⠓⠁⠙⠑⠎"
   },
   {
     "input": "Hadrian",
     "internal": ",hadrian",
     "expected": "32191252310129",
     "unicode": "⠠⠓⠁⠙⠗⠊⠁⠝",
-    "world": "⠴⠠⠓⠁⠙⠗⠊⠁⠝⠲"
+    "world": "⠴⠠⠓⠁⠙⠗⠊⠁⠝⠲",
+    "jeomsarang": "⠠⠓⠁⠙⠗⠊⠁⠝"
   },
   {
     "input": "menhaden",
     "internal": "m5had5",
     "expected": "13341912534",
     "unicode": "⠍⠢⠓⠁⠙⠢",
-    "world": "⠴⠍⠢⠓⠁⠙⠢⠲"
+    "world": "⠴⠍⠢⠓⠁⠙⠢⠲",
+    "jeomsarang": "⠍⠑⠝⠓⠁⠙⠑⠝"
   },
   {
     "input": "shadow",
     "internal": "%ad[",
     "expected": "4112542",
     "unicode": "⠩⠁⠙⠪",
-    "world": "⠴⠩⠁⠙⠪⠲"
+    "world": "⠴⠩⠁⠙⠪⠲",
+    "jeomsarang": "⠎⠓⠁⠙⠕⠺"
   },
   {
     "input": "Thaddeus",
     "internal": ",?addeus",
     "expected": "325712525173714",
     "unicode": "⠠⠹⠁⠙⠙⠑⠥⠎",
-    "world": "⠴⠠⠹⠁⠙⠙⠑⠥⠎⠲"
+    "world": "⠴⠠⠹⠁⠙⠙⠑⠥⠎⠲",
+    "jeomsarang": "⠠⠞⠓⠁⠙⠙⠑⠥⠎"
   }
 ]

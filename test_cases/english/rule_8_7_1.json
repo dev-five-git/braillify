@@ -4,21 +4,24 @@
     "internal": "8,s80",
     "expected": "3832143852",
     "unicode": "⠦⠠⠎⠦⠴",
-    "world": "⠦⠴⠠⠎⠕⠦⠴"
+    "world": "⠦⠴⠠⠎⠕⠦⠴",
+    "jeomsarang": "⠦⠠⠎⠕⠦⠴"
   },
   {
     "input": "(July)",
     "internal": "\"<,july\">",
     "expected": "16353226377611628",
     "unicode": "⠐⠣⠠⠚⠥⠇⠽⠐⠜",
-    "world": "⠦⠄⠴⠠⠚⠥⠇⠽⠠⠴"
+    "world": "⠦⠄⠴⠠⠚⠥⠇⠽⠠⠴",
+    "jeomsarang": "⠶⠠⠚⠥⠇⠽⠶"
   },
   {
     "input": "B-U-S",
     "internal": ";;,b-,u-,s",
     "expected": "4848323363237363214",
     "unicode": "⠰⠰⠠⠃⠤⠠⠥⠤⠠⠎",
-    "world": "⠴⠠⠃⠤⠰⠠⠥⠤⠰⠠⠎⠲"
+    "world": "⠴⠠⠃⠤⠰⠠⠥⠤⠰⠠⠎⠲",
+    "jeomsarang": "⠠⠃⠤⠠⠥⠤⠠⠎"
   },
   {
     "input": "[Σ]",
@@ -26,76 +29,87 @@
     "internal": ".<,.s.>",
     "expected": "40353240144028",
     "unicode": "⠨⠣⠠⠨⠎⠨⠜",
-    "world": "⠦⠆⠴⠠⠨⠎⠰⠴"
+    "world": "⠦⠆⠴⠠⠨⠎⠰⠴",
+    "jeomsarang": "⠦⠆⠨⠎⠶⠄"
   },
   {
     "input": "𝑉𝑜𝑦𝑎𝑔𝑒 À 𝑁𝑖𝑐𝑒",
     "internal": ".7,voyage ,^*a ,nice.'",
     "expected": "40543239216112717032243310322910917404",
     "unicode": "⠨⠶⠠⠧⠕⠽⠁⠛⠑⠀⠠⠘⠡⠁⠀⠠⠝⠊⠉⠑⠨⠄",
-    "world": ""
+    "world": "",
+    "jeomsarang": "⠠⠧⠕⠽⠁⠛⠑⠀⠀⠠⠝⠊⠉⠑"
   },
   {
     "input": "'TIS",
     "internal": "',,tis",
     "expected": "43232301014",
     "unicode": "⠄⠠⠠⠞⠊⠎",
-    "world": "⠄⠴⠠⠠⠞⠊⠎⠲"
+    "world": "⠄⠴⠠⠠⠞⠊⠎⠲",
+    "jeomsarang": "⠠⠦⠠⠠⠞⠊⠎"
   },
   {
     "input": "CD",
     "internal": ";,,cd",
     "expected": "483232925",
     "unicode": "⠰⠠⠠⠉⠙",
-    "world": "⠴⠰⠠⠠⠉⠙⠲"
+    "world": "⠴⠰⠠⠠⠉⠙⠲",
+    "jeomsarang": "⠠⠠⠉⠙"
   },
   {
     "input": "\"SHHHH!\"",
     "internal": "8,,%hhh60",
     "expected": "383232411919192252",
     "unicode": "⠦⠠⠠⠩⠓⠓⠓⠖⠴",
-    "world": "⠦⠴⠠⠠⠩⠓⠓⠓⠖⠴"
+    "world": "⠦⠴⠠⠠⠩⠓⠓⠓⠖⠴",
+    "jeomsarang": "⠦⠠⠠⠎⠓⠓⠓⠓⠖⠴"
   },
   {
     "input": "Hippity-HOP",
     "internal": ",hipp;y-,,hop",
     "expected": "32191015154861363232192115",
     "unicode": "⠠⠓⠊⠏⠏⠰⠽⠤⠠⠠⠓⠕⠏",
-    "world": "⠴⠠⠓⠊⠏⠏⠰⠽⠤⠠⠠⠓⠕⠏⠲"
+    "world": "⠴⠠⠓⠊⠏⠏⠰⠽⠤⠠⠠⠓⠕⠏⠲",
+    "jeomsarang": "⠠⠓⠊⠏⠏⠊⠞⠽⠤⠠⠠⠓⠕⠏"
   },
   {
     "input": "𝐑𝐄𝐒𝐎𝐋𝐕𝐄𝐃",
     "internal": "^1,,resolv$",
     "expected": "24232322317142173943",
     "unicode": "⠘⠂⠠⠠⠗⠑⠎⠕⠇⠧⠫",
-    "world": ""
+    "world": "",
+    "jeomsarang": "⠠⠠⠗⠑⠎⠕⠇⠧⠑⠙"
   },
   {
     "input": "ÉTUDE",
     "internal": ",,^/etude",
     "expected": "323224121730372517",
     "unicode": "⠠⠠⠘⠌⠑⠞⠥⠙⠑",
-    "world": "⠴⠠⠠⠞⠥⠙⠑⠲"
+    "world": "⠴⠠⠠⠞⠥⠙⠑⠲",
+    "jeomsarang": "⠠⠠⠞⠥⠙⠑"
   },
   {
     "input": "Unified English Braille (UEB)",
     "internal": ",unifi$ ,5gli% ,brl \"<,,ueb\">",
     "expected": "323729101110430323427710410323237016353232371731628",
     "unicode": "⠠⠥⠝⠊⠋⠊⠫⠀⠠⠢⠛⠇⠊⠩⠀⠠⠃⠗⠇⠀⠐⠣⠠⠠⠥⠑⠃⠐⠜",
-    "world": "⠴⠠⠥⠝⠊⠋⠊⠫ ⠠⠢⠛⠇⠊⠩ ⠠⠃⠗⠇ ⠐⠣⠠⠠⠥⠑⠃⠠⠴"
+    "world": "⠴⠠⠥⠝⠊⠋⠊⠫ ⠠⠢⠛⠇⠊⠩ ⠠⠃⠗⠇ ⠐⠣⠠⠠⠥⠑⠃⠠⠴",
+    "jeomsarang": "⠠⠥⠝⠊⠋⠊⠑⠙⠀⠠⠑⠝⠛⠇⠊⠎⠓⠀⠠⠃⠗⠁⠊⠇⠇⠑⠀⠶⠠⠠⠥⠑⠃⠶"
   },
   {
     "input": "AC SMITH",
     "internal": ";,,ac ,,smi?",
     "expected": "483232190323214131057",
     "unicode": "⠰⠠⠠⠁⠉⠀⠠⠠⠎⠍⠊⠹",
-    "world": "⠴⠰⠠⠠⠁⠉ ⠠⠠⠎⠍⠊⠹⠲"
+    "world": "⠴⠰⠠⠠⠁⠉ ⠠⠠⠎⠍⠊⠹⠲",
+    "jeomsarang": "⠠⠠⠁⠉⠀⠠⠠⠎⠍⠊⠞⠓"
   },
   {
     "input": "V-NECK SWEATERS FOR SALE!",
     "internal": ";,,,v-neck sw1t]s = sale6,'",
     "expected": "483232323936291795014582305914063014171722324",
     "unicode": "⠰⠠⠠⠠⠧⠤⠝⠑⠉⠅⠀⠎⠺⠂⠞⠻⠎⠀⠿⠀⠎⠁⠇⠑⠖⠠⠄",
-    "world": "⠴⠰⠠⠠⠠⠧⠤⠝⠑⠉⠅ ⠎⠺⠂⠞⠻⠎ ⠿ ⠎⠁⠇⠑⠠⠄⠖"
+    "world": "⠴⠰⠠⠠⠠⠧⠤⠝⠑⠉⠅ ⠎⠺⠂⠞⠻⠎ ⠿ ⠎⠁⠇⠑⠠⠄⠖",
+    "jeomsarang": "⠠⠧⠤⠠⠠⠝⠑⠉⠅⠀⠠⠠⠎⠺⠑⠁⠞⠑⠗⠎⠀⠠⠠⠋⠕⠗⠀⠠⠠⠎⠁⠇⠑⠖"
   }
 ]

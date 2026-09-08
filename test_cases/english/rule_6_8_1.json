@@ -4,14 +4,16 @@
     "internal": "@s# d4ej",
     "expected": "81460025501726",
     "unicode": "⠈⠎⠼⠀⠙⠲⠑⠚",
-    "world": "⠴⠈⠎ ⠼⠙⠲⠑⠚"
+    "world": "⠴⠈⠎ ⠼⠙⠲⠑⠚",
+    "jeomsarang": "⠴⠈⠎⠀⠼⠙⠲⠑⠚"
   },
   {
     "input": "10.00",
     "internal": "#aj4jj",
     "expected": "60126502626",
     "unicode": "⠼⠁⠚⠲⠚⠚",
-    "world": "⠼⠁⠚⠲⠚⠚"
+    "world": "⠼⠁⠚⠲⠚⠚",
+    "jeomsarang": "⠼⠁⠚⠲⠚⠚"
   },
   {
     "input": ".50",
@@ -19,14 +21,16 @@
     "internal": "#  4ej",
     "expected": "6000501726",
     "unicode": "⠼⠀⠀⠲⠑⠚",
-    "world": "⠲⠼⠑⠚"
+    "world": "⠲⠼⠑⠚",
+    "jeomsarang": "⠲⠼⠑⠚"
   },
   {
     "input": "------",
     "context": "english",
     "internal": "\"3333333",
     "expected": "1618181818181818",
-    "unicode": "⠐⠒⠒⠒⠒⠒⠒⠒"
+    "unicode": "⠐⠒⠒⠒⠒⠒⠒⠒",
+    "jeomsarang": "⠤⠤⠤⠤⠤⠤"
   },
   {
     "input": "$15.00",
@@ -34,6 +38,7 @@
     "internal": "@s#ae4jj",
     "expected": "81460117502626",
     "unicode": "⠈⠎⠼⠁⠑⠲⠚⠚",
-    "world": "⠴⠈⠎⠼⠁⠑⠲⠚⠚"
+    "world": "⠴⠈⠎⠼⠁⠑⠲⠚⠚",
+    "jeomsarang": "⠴⠈⠎⠼⠁⠑⠲⠚⠚"
   }
 ]

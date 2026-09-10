@@ -172,7 +172,7 @@ export default async function TestCasePage() {
               </Text>
             </VStack>
             <TestCaseResults
-              pageSize={category === 'corpus' ? 250 : undefined}
+              pageSize={category?.endsWith('_corpus') ? 250 : undefined}
               results={testStatus[key][6]}
             />
           </TestCaseRuleContainer>

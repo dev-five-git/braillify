@@ -96,4 +96,24 @@ mod tests {
     fn a_token_that_is_not_a_word_is_left_alone() {
         assert!(noop_for(&[Token::PreEncoded(vec![1])]));
     }
+
+    #[test]
+    fn an_index_past_the_end_is_left_alone() {
+        assert!(noop_for(&[]));
+    }
+
+    /// 제18항: the abbreviation is written, and an opening quote before it or a
+    /// particle after it is kept as its own token.
+    #[rstest::rstest]
+    #[case::bare("그리고")]
+    #[case::quoted("\u{201C}그리고")]
+    #[case::with_tail("그리고도")]
+    fn an_abbreviated_word_is_replaced(#[case] text: &str) {
+        let mut state = EncoderState::new(false);
+        let tokens = [owned_word(text.to_string())];
+        assert!(!matches!(
+            WordShortcutRule.apply(&tokens, 0, &mut state).unwrap(),
+            TokenAction::Noop
+        ));
+    }
 }

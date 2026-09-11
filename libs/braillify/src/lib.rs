@@ -1,4 +1,4 @@
-use std::{borrow::Cow, cell::RefCell};
+﻿use std::{borrow::Cow, cell::RefCell};
 
 /// Small, semantic-neutral predicates shared with the NIKL analysis example.
 /// Keeping them here lets the ordinary library test target verify analyzer
@@ -3085,6 +3085,9 @@ mod print_variant_coverage {
     #[case::fahrenheit("77\u{00B0}F", "77\u{2109}")]
     #[case::ring_celsius("25\u{02DA}C", "25\u{2103}")]
     #[case::ring_fahrenheit("77\u{02DA}F", "77\u{2109}")]
+    #[case::letter_without_a_degree("25C", "25C")]
+    #[case::degree_at_the_end("25\u{00B0}", "25\u{00B0}")]
+    #[case::degree_before_another_letter("25\u{00B0}K", "25\u{00B0}K")]
     fn degree_letter_pair_folds_to_the_unit_glyph(#[case] input: &str, #[case] expected: &str) {
         assert_eq!(
             normalize_print_variants(std::borrow::Cow::Borrowed(input)).as_ref(),

@@ -1,4 +1,4 @@
-//! Math symbol encoding with Korean spacing rules.
+﻿//! Math symbol encoding with Korean spacing rules.
 //!
 //! Math symbols (＋, −, ×, ÷, etc.) need spacing around them when
 //! adjacent to Korean text, unless the Korean is a grammatical particle (josa).
@@ -542,6 +542,8 @@ mod sign_boundary_coverage {
     #[case::leading_decimal("기온 -.5 도")]
     #[case::leading_digit("기온 -5 도")]
     #[case::inside_parenthesis("값 (-5) 이다")]
+    #[case::dot_without_digits("기온 -.도")]
+    #[case::sign_then_letter("기온 -x 도")]
     fn a_signed_number_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
     }

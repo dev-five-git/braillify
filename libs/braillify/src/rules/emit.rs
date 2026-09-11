@@ -2164,6 +2164,22 @@ mod spaced_colon_coverage {
     }
 
     #[test]
+    fn a_colon_with_nothing_after_it_never_connects() {
+        assert!(!spaced_colon_connects_roman_items(&[word(":")], 0));
+    }
+
+    #[test]
+    fn spaces_and_mode_events_after_the_colon_are_skipped() {
+        let tokens = [
+            word(":"),
+            Token::Space(SpaceKind::Regular),
+            Token::Mode(ModeEvent::EnterEnglish),
+            word("Beta"),
+        ];
+        assert!(spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
     fn a_token_that_is_not_a_lone_colon_never_connects() {
         assert!(!spaced_colon_connects_roman_items(&[word("::")], 0));
         assert!(!spaced_colon_connects_roman_items(

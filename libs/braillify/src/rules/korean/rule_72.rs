@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 
 use crate::char_struct::CharType;
 use crate::rules::RuleMeta;
@@ -380,6 +380,8 @@ mod bullet_tail_coverage {
     #[case::bullet_then_punctuation("\u{25CB} 정원.")]
     #[case::bullet_alone("\u{25CB}")]
     #[case::bullet_then_bullet("\u{25CB} \u{25A1} 정원")]
+    #[case::item_runs_to_the_end("\u{25CB} 정원")]
+    #[case::item_then_comma("\u{25CB} 정원, 마당")]
     fn a_bullet_item_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
     }

@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};

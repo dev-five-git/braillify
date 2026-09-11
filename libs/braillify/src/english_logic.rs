@@ -1,4 +1,4 @@
-use crate::{symbol_shortcut, utils};
+﻿use crate::{symbol_shortcut, utils};
 
 /// 규칙 33~35에서 종료표(⠲)를 생략해야 하는 기호 모음.
 /// 기호 앞뒤에서는 로마자 종료표를 생략한다.
@@ -974,6 +974,7 @@ mod enclosure_route_coverage {
     #[case::roman_body(&['(', 'd', 'e', 'f', ')'], false)]
     #[case::nested_roman(&['(', '(', 'd', ')', 'e', ')'], false)]
     #[case::never_closes(&['(', 'd', 'e', 'f'], false)]
+    #[case::nothing_follows(&['('], false)]
     fn closed_enclosure_is_korean_unless_its_body_is_roman(
         #[case] word: &[char],
         #[case] expected: bool,

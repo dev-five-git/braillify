@@ -53,16 +53,18 @@ where
         return ONTAB;
     }
 
-    // Multi-char word: check context. 제10항 의 예는 모두 `[ㅅ떠디이]` 처럼 발음
-    // 표기 안에 자모가 **끼어** 있다. 낱말의 첫 글자로 나오는 자모는 뒤 말에 붙어
-    // 인쇄되더라도 그 말의 일부가 아니라 앞세운 글머리 자모이므로 제8항 온표를 쓴다.
-    let starts_word = char_index == 0;
+    // 국립국어원 회신(2026-09-07): 456점을 앞세우는 것은 외국어의 발음을 한글로
+    // 표기할 때(제10항)와 옛 글자의 단독 자음자(제23항)뿐이고, 그 밖의 단독 자모는
+    // 온표를 앞세운다. 제10항의 예는 모두 `[ㅅ떠디이]` 처럼 발음 표기를 대괄호로
+    // 묶으므로, 그 묶음 안에 든 자모만 456점으로 적는다.
+    let inside_pronunciation_brackets =
+        word_chars[..char_index].contains(&'[') && word_chars[char_index + 1..].contains(&']');
 
-    let prev_is_symbol_or_start = starts_word || is_symbol(word_chars[char_index - 1]);
+    let prev_is_symbol_or_start = char_index == 0 || is_symbol(word_chars[char_index - 1]);
     let next_is_symbol_or_end = char_index == word_len - 1 || is_symbol(word_chars[char_index + 1]);
     let is_bordered_by_symbols = prev_is_symbol_or_start && next_is_symbol_or_end;
 
-    if starts_word || is_bordered_by_symbols || !has_korean_char {
+    if !inside_pronunciation_brackets || is_bordered_by_symbols || !has_korean_char {
         ONTAB // 제8항: standalone context
     } else {
         WORD_ATTACHED_PREFIX // 제10항: attached to Korean word
@@ -138,7 +140,9 @@ mod tests {
     #[rstest::rstest]
     #[case::standalone_single_char(vec!['ㄱ'], 0, false, not_symbol as fn(char) -> bool, ONTAB)]
     #[case::jamo_numbering_format(vec!['ㄱ', '.'], 0, false, not_symbol, ONTAB)]
-    #[case::attached_to_korean_word(vec!['가', 'ㄱ', '나'], 1, true, not_symbol, WORD_ATTACHED_PREFIX)]
+    // 국립국어원 회신(2026-09-07): 발음 표기 밖에서 말에 붙은 자모도 온표를 쓴다.
+    #[case::attached_outside_a_pronunciation(vec!['가', 'ㄱ', '나'], 1, true, not_symbol, ONTAB)]
+    #[case::inside_a_pronunciation(vec!['[', '가', 'ㄱ', '나', ']'], 2, true, is_sym, WORD_ATTACHED_PREFIX)]
     #[case::bordered_by_symbols_uses_ontab(vec!['(', 'ㄱ', ')'], 1, true, is_sym, ONTAB)]
     #[case::first_with_ja_uses_ontab(vec!['ㄱ', '자', '도'], 0, true, not_symbol, ONTAB)]
     fn determine_prefix_paths(
@@ -214,5 +218,35 @@ mod tests {
         assert!(matches!(outcome, RuleResult::Consumed));
         assert!(!owned.result.is_empty());
         assert_eq!(owned.result[0], ONTAB);
+    }
+}
+
+#[cfg(test)]
+mod nikl_answer_coverage {
+    use super::*;
+
+    /// 국립국어원 회신(2026-09-07): 456점은 외국어 발음을 한글로 적을 때(제10항)와
+    /// 옛 글자(제23항)에만 쓰고, 그 밖의 단독 자모는 온표를 앞세운다.
+    #[rstest::rstest]
+    #[case::inside_pronunciation_brackets(&['[','ㅅ','떠','디','이',']'], 1, WORD_ATTACHED_PREFIX)]
+    #[case::pronunciation_tail(&['[','아','이','ㅅ',']'], 3, WORD_ATTACHED_PREFIX)]
+    #[case::leading_bullet_jamo(&['ㅇ','정','원','은'], 0, ONTAB)]
+    #[case::attached_without_brackets(&['정','ㅇ','원','은'], 1, ONTAB)]
+    fn the_prefix_follows_the_pronunciation_context(
+        #[case] word_chars: &[char],
+        #[case] char_index: usize,
+        #[case] expected: u8,
+    ) {
+        let has_korean_char = word_chars.iter().any(|c| crate::utils::is_korean_char(*c));
+        assert_eq!(
+            determine_prefix(
+                word_chars.len(),
+                char_index,
+                word_chars,
+                has_korean_char,
+                |c| !crate::utils::is_korean_char(c) && !('\u{3131}'..='\u{318E}').contains(&c)
+            ),
+            expected
+        );
     }
 }

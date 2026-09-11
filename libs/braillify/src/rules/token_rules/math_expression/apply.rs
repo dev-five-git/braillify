@@ -816,6 +816,72 @@ pub(super) fn is_korean_prose_acronym_parenthetical(chars: &[char]) -> bool {
     })
 }
 
+/// 수식은 괄호가 맞물린다. 한쪽만 남은 괄호는 앞뒤 어절로 이어지는 산문의 조각
+/// 이므로(`LTE),`, `S(PLAN`) 제11항의 경계를 두지 않는다.
+fn has_balanced_brackets(chars: &[char]) -> bool {
+    let mut depth = 0i32;
+    for ch in chars {
+        match ch {
+            '(' | '[' | '{' => depth += 1,
+            ')' | ']' | '}' => depth -= 1,
+            _ => {}
+        }
+        if depth < 0 {
+            return false;
+        }
+    }
+    depth == 0
+}
+
+/// 붙임표로 이은 로마자 낱말(`know-how`, `well-made`)은 제37항의 로마자이지 뺄셈이
+/// 아니다. 숫자도 관계 기호도 없이 글자와 붙임표만 있으면 수식으로 보지 않는다.
+fn is_hyphenated_roman_word(chars: &[char]) -> bool {
+    chars.contains(&'-')
+        && chars
+            .iter()
+            .all(|ch| ch.is_ascii_alphabetic() || matches!(*ch, '-' | '.' | ','))
+}
+/// 제11항의 두 칸은 그 어절이 수식임을 알린다. 숫자를 구분 기호로 이어 적은 표기
+/// (시각 `22:00`, 비율 `16:9`, 해상도 `1280×720`, 범위 `150~200`)는 제40항의 수
+/// 표기이지 수식이 아니다. 단위나 모델을 나타내는 글자가 숫자에 붙은 것(`5G`,
+/// `F1.2`, `3G/4G`)도 마찬가지이므로, 숫자에서 떨어진 글자 — 곧 변수 — 나 관계
+/// 기호가 있어야 수식으로 본다.
+fn is_prose_number_notation(chars: &[char]) -> bool {
+    if !chars.iter().any(char::is_ascii_digit) {
+        return false;
+    }
+    if chars
+        .iter()
+        .any(|c| matches!(c, '=' | '<' | '>' | '\u{2260}' | '\u{2264}' | '\u{2265}'))
+    {
+        return false;
+    }
+    // 더하기·빼기는 수식의 연산이므로(`2x+3`) 구분 기호로 보지 않는다. 여기 남긴
+    // 것은 수를 이어 적는 자리 표시뿐이다.
+    let is_separator = |c: char| {
+        c.is_ascii_digit()
+            || matches!(
+                c,
+                '.' | ',' | ':' | '\u{00D7}' | '/' | '\u{00B7}' | '~' | '\u{223C}' | '(' | ')'
+            )
+    };
+    chars.iter().enumerate().all(|(index, c)| {
+        if is_separator(*c) {
+            return true;
+        }
+        // 숫자에 잇닿은 글자는 단위·모델 표시다. 떨어져 선 글자는 변수이므로
+        // 그 어절은 수식이다.
+        c.is_ascii_alphabetic()
+            && (index
+                .checked_sub(1)
+                .is_some_and(|previous| chars[previous].is_ascii_digit())
+                || chars.get(index + 1).is_some_and(char::is_ascii_digit)
+                || index
+                    .checked_sub(1)
+                    .is_some_and(|previous| chars[previous].is_ascii_alphabetic())
+                || chars.get(index + 1).is_some_and(char::is_ascii_alphabetic))
+    })
+}
 fn has_ascii_letter_korean_math_suffix(chars: &[char]) -> bool {
     if chars.len() < 3 {
         return false;
@@ -1964,7 +2030,10 @@ pub(super) fn run<'a>(
                 && word.chars.iter().any(|c| {
                     c.is_ascii_alphanumeric() || matches!(*c, '(' | ')' | '[' | ']' | '|')
                 })
-                && !only_simple_digits;
+                && !only_simple_digits
+                && !is_prose_number_notation(&word.chars)
+                && has_balanced_brackets(&word.chars)
+                && !is_hyphenated_roman_word(&word.chars);
             let needs_korean_leading = index != 0
                 && prev_has_korean
                 && matches!(tokens.get(index - 1), Some(Token::Space(_)))
@@ -3558,6 +3627,71 @@ mod math_identifier_cue_coverage {
         #[case] input: &str,
         #[case] is_math: bool,
     ) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert_eq!(
+            encoded.contains("\u{2800}\u{2800}"),
+            is_math,
+            "unexpected Article 11 boundary in {encoded}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod article_11_boundary_coverage {
+    use super::*;
+
+    /// 제11항의 두 칸은 그 어절이 수식임을 알린다. 숫자를 구분 기호로 이어 적은
+    /// 표기와 단위·모델 글자는 제40·69항의 수 표기이지 수식이 아니다.
+    #[rstest::rstest]
+    #[case::clock("22:00", true)]
+    #[case::ratio("16:9", true)]
+    #[case::resolution("1280×720", true)]
+    #[case::range("150~200", true)]
+    #[case::model("F1.2", true)]
+    #[case::generation("5G·4G", true)]
+    #[case::unit_slash("3G/4G", true)]
+    #[case::equation("x=1", false)]
+    #[case::relation("2<3", false)]
+    #[case::variable_term("2x+3", false)]
+    #[case::no_digits("abc", false)]
+    fn a_number_notation_is_not_an_expression(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_prose_number_notation(&chars), expected);
+    }
+
+    /// 수식은 괄호가 맞물린다. 한쪽만 남은 괄호는 산문의 조각이다.
+    #[rstest::rstest]
+    #[case::balanced("f(x)", true)]
+    #[case::nested("((a))", true)]
+    #[case::none("abc", true)]
+    #[case::trailing_close("LTE)", false)]
+    #[case::leading_open("S(PLAN", false)]
+    #[case::closes_first(")a(", false)]
+    fn an_expression_keeps_its_brackets_balanced(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(has_balanced_brackets(&chars), expected);
+    }
+
+    /// 붙임표로 이은 로마자 낱말은 제37항의 로마자이지 뺄셈이 아니다.
+    #[rstest::rstest]
+    #[case::compound("know-how", true)]
+    #[case::compound_with_comma("well-made,", true)]
+    #[case::subtraction("a-1", false)]
+    #[case::no_hyphen("know", false)]
+    fn a_hyphenated_roman_word_is_not_subtraction(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_hyphenated_roman_word(&chars), expected);
+    }
+
+    /// 제34항: 괄호 안의 한글 주석까지가 익명 인물 표기다. 뒤따르는 사람 표지가
+    /// 그것을 함수 표기와 가른다.
+    #[rstest::rstest]
+    #[case::age_unit("가나 A(37세)씨는 다라", false)]
+    #[case::rank("가나 A(4급)씨가 다라", false)]
+    #[case::nationality("가나 A(27·스리랑카)씨에 다라", false)]
+    #[case::plain_age("가나 A(54)씨는 다라", false)]
+    #[case::function_notation("가나 A(14)는 다라", true)]
+    fn a_person_label_is_not_a_function(#[case] input: &str, #[case] is_math: bool) {
         let encoded = crate::encode_to_unicode(input).unwrap();
         assert_eq!(
             encoded.contains("\u{2800}\u{2800}"),

@@ -1,4 +1,4 @@
-﻿//! Math symbol encoding with Korean spacing rules.
+//! Math symbol encoding with Korean spacing rules.
 //!
 //! Math symbols (＋, −, ×, ÷, etc.) need spacing around them when
 //! adjacent to Korean text, unless the Korean is a grammatical particle (josa).
@@ -159,15 +159,24 @@ fn first_korean_run(chars: &[char]) -> Option<String> {
     Some(chars[start..end].iter().collect())
 }
 
-fn rule_46_requires_padding(ctx: &RuleContext) -> bool {
-    let left_is_korean_operand = left_operand(ctx.word_chars, ctx.index)
+/// 제46항은 기호의 앞뒤를 각각 그 피연산자가 항인지 보고 정한다. 국립국어원
+/// 회신(2026-09-11)은 "기호의 한쪽이 한글인지 아닌지보다 한글이 연산식과 상관없는
+/// 성분인지, 한글 항인지 파악해야" 한다고 밝혔다. 그래서 조사가 붙은 쪽은 항이
+/// 아니고(`반지름×3.14이다` 의 `이다`), 한글이 전혀 없는 순수 숫자는 항이다
+/// (`지역번호+120` 의 `120`).
+fn rule_46_padding(ctx: &RuleContext) -> (bool, bool) {
+    let left_is_korean_term = left_operand(ctx.word_chars, ctx.index)
         .iter()
         .any(|ch| utils::is_korean_char(*ch));
-    let right_is_non_suffix_korean_operand =
-        first_korean_run(right_operand(ctx.word_chars, ctx.index))
-            .is_some_and(|run| !NON_OPERAND_KOREAN_SUFFIXES.contains(&run.as_str()));
-
-    left_is_korean_operand && right_is_non_suffix_korean_operand
+    let right = right_operand(ctx.word_chars, ctx.index);
+    let right_korean_run = first_korean_run(right);
+    let right_is_korean_term = right_korean_run
+        .as_ref()
+        .is_some_and(|run| !NON_OPERAND_KOREAN_SUFFIXES.contains(&run.as_str()));
+    // 한글이 하나도 없는 피연산자는 조사를 달 수 없으므로 그대로 항이다.
+    let right_is_bare_operand = right_korean_run.is_none() && !right.is_empty();
+    let pad_left = left_is_korean_term && (right_is_korean_term || right_is_bare_operand);
+    (pad_left, left_is_korean_term && right_is_korean_term)
 }
 
 /// U+002D is both HYPHEN-MINUS, so its braille meaning has to be inferred from
@@ -335,16 +344,16 @@ impl BrailleRule for RuleMath {
         //     기호 양쪽을 띄어쓰지 않는다.
         //     예: `반지름×3.14이다` → `이다`는 JOSA → 띄어쓰지 않음.
         //     예: `5개−3개=2개` → `개`는 JOSA가 아님 → 띄어씀.
-        let pad_spaces = rule_46_requires_padding(ctx);
+        let (pad_before, pad_after) = rule_46_padding(ctx);
 
-        if pad_spaces {
+        if pad_before {
             ctx.emit(0);
         }
 
         let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
         ctx.emit_slice(encoded);
 
-        if pad_spaces {
+        if pad_after {
             ctx.emit(0);
         }
 
@@ -497,7 +506,7 @@ mod tests {
     ) {
         let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
         let ctx = owned.ctx_at(index);
-        assert_eq!(rule_46_requires_padding(&ctx), expected, "input={input}");
+        assert_eq!(rule_46_padding(&ctx).1, expected, "input={input}");
     }
 
     #[rstest::rstest]

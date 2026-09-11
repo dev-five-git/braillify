@@ -1051,3 +1051,43 @@ mod digital_notation_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod roman_word_enclosure_coverage {
+    use super::*;
+
+    /// 제32항의 낱글자 목록 `(a), (e)` 과 달리, 두 글자 이상의 로마자 낱말을 담은
+    /// 괄호는 그 낱말의 것이다.
+    #[rstest::rstest]
+    #[case::two_letters(&['(', 'P', 'F', ')'], true)]
+    #[case::one_letter(&['(', 'a', ')'], false)]
+    #[case::nested(&['(', '(', 'A', 'B', ')', ')'], true)]
+    #[case::never_closes(&['(', 'A', 'B'], false)]
+    #[case::digits_only(&['(', '7', '3', ')'], false)]
+    fn an_enclosure_holds_a_roman_word_only_with_two_letters(
+        #[case] word: &[char],
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            closed_parenthesis_encloses_roman_word(word, 0, &[]),
+            expected
+        );
+    }
+
+    /// 제74항: 주소 표기의 구분 기호는 주소가 이어지는 동안 구간을 닫지 않는다.
+    /// 더 이어질 글자가 없으면 일반 기호 판정으로 내려간다.
+    #[rstest::rstest]
+    #[case::address_continues(&['h','t','t','p','s',':','/','/','a','.','b'], 6, true)]
+    #[case::separator_ends_the_word(&['h','t','t','p','s',':','/','/'], 7, false)]
+    #[case::not_a_notation_symbol(&['a','b','c'], 1, false)]
+    fn a_digital_address_separator_keeps_english_mode(
+        #[case] word: &[char],
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            should_keep_english_mode_for_symbol(word[index], word, index, &[]),
+            expected
+        );
+    }
+}

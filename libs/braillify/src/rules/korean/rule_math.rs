@@ -577,3 +577,16 @@ mod roman_grade_minus_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod english_document_grade_minus_coverage {
+    /// UEB 3.17.1: 영어 위주 글에서 신용등급의 붙임표(`AA-`)는 같은 구간 안의
+    /// 뺄셈 기호로 적는다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("The credit grade AA- is stable")]
+    #[case::three_letter_grade("Moody rated it BBB- last year")]
+    #[case::grade_at_the_end("The outlook remains AA-")]
+    fn a_credit_grade_minus_in_english_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

@@ -416,3 +416,16 @@ mod repeated_marker_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod triangle_geometry_coverage {
+    /// 제72항: `△ABC` 꼴은 도형 이름이다. 같은 삼각형 기호가 다른 항목도 이끌고
+    /// 있으면 그때는 글머리 기호로 본다.
+    #[rstest::rstest]
+    #[case::two_geometry_names("\u{25B3}ABC 와 \u{25B3}DEF 는 합동이다")]
+    #[case::one_geometry_name("\u{25B3}ABC 는 정삼각형이다")]
+    #[case::filled_geometry("\u{25B2}ABC 와 \u{25B2}DEF")]
+    fn a_triangle_geometry_name_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

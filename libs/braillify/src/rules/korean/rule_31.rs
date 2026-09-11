@@ -234,3 +234,20 @@ mod greek_after_open_section_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod greek_continuation_indicator_coverage {
+    /// 제31항 + 제33항: 앞 로마자 구간이 종료표 없이 닫혔다면 그리스 문자 앞에는
+    /// 로마자표가 아니라 연속표를 적는다.
+    #[rstest::rstest]
+    #[case::after_comma("비타민A, \u{03B3}")]
+    #[case::after_comma_short("A, \u{03B3}")]
+    #[case::after_number_comma("비타민1, \u{03B3}")]
+    #[case::after_closing_paren("비타민(A), \u{03B3}")]
+    #[case::after_middle_dot("DT\u{00B7}\u{03B3}")]
+    #[case::after_hyphen("IFN-\u{03B3}")]
+    #[case::after_number("1\u{03B2} 값")]
+    fn a_greek_letter_after_an_open_section_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

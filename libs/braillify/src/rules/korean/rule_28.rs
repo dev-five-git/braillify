@@ -836,3 +836,18 @@ mod strong_wordsign_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod enclosed_wordsign_coverage {
+    /// 제37항 + §10.2: 괄호나 따옴표에 싸여 낱말 첫 글자가 아닌 자리에서도 강한
+    /// 낱말 약자는 한 칸으로 적고, 그 앞에 대문자 표시를 붙인다.
+    #[rstest::rstest]
+    #[case::all_capitals_in_parentheses("그는 (THIS) 를")]
+    #[case::all_capitals_out("그는 (OUT) 을")]
+    #[case::title_case_in_parentheses("그는 (This) 를")]
+    #[case::lowercase_in_parentheses("그는 (this) 를")]
+    #[case::all_capitals_in_quotes("그는 \u{201C}WHICH\u{201D} 를")]
+    fn an_enclosed_strong_wordsign_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

@@ -3760,3 +3760,39 @@ mod number_notation_routing_coverage {
         );
     }
 }
+
+#[cfg(test)]
+mod identifier_prev_token_coverage {
+    use super::*;
+    use crate::rules::token::{SpaceKind, WordMeta, WordToken};
+    use std::borrow::Cow;
+
+    fn word_tok(text: &str) -> Token<'_> {
+        let chars: Vec<char> = text.chars().collect();
+        let meta = WordMeta::from_chars(&chars);
+        Token::Word(WordToken {
+            text: Cow::Borrowed(text),
+            chars,
+            meta,
+        })
+    }
+
+    fn space_tok() -> Token<'static> {
+        Token::Space(SpaceKind::Regular)
+    }
+
+    /// 식별자 앞이 낱말도 빈칸도 아닌 토큰(미리 점역된 조각)이면 한글 어절이
+    /// 이끄는 자리가 아니므로 제11항의 경계를 두지 않는다.
+    #[test]
+    fn a_pre_encoded_token_before_the_identifier_blocks_the_boundary() {
+        let tokens = vec![
+            Token::PreEncoded(vec![1]),
+            word_tok("AB의"),
+            space_tok(),
+            word_tok("값을"),
+        ];
+        let mut state = EncoderState::new(false);
+        let action = run(&tokens, 1, &mut state).expect("ok");
+        assert!(matches!(action, TokenAction::Noop));
+    }
+}

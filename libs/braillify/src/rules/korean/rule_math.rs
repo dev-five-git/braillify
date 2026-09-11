@@ -564,3 +564,16 @@ mod sign_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod roman_grade_minus_coverage {
+    /// UEB 3.17.1: 신용등급의 붙임표(`AA-`)는 같은 로마자 구간 안의 뺄셈 기호
+    /// `⠐⠤` 로 적는다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("신용등급 AA-에서")]
+    #[case::three_letter_grade("신용등급 BBB-로")]
+    #[case::single_letter_grade("신용등급 A- 로")]
+    fn a_credit_grade_minus_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

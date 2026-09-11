@@ -1061,3 +1061,18 @@ mod title_subunit_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod three_capital_prefix_coverage {
+    /// §8.8.2: 대문자 셋 뒤에 소문자가 이어지고 그 마지막 대문자부터가 제 이름을
+    /// 이루면(`KBSteru` 의 `Steru`), 그 단위가 제 대문자표를 갖는다. 사전에 실린
+    /// 하위 단위(`KBStar` 의 `Star`)는 그 앞 갈래가 맡는다.
+    #[rstest::rstest]
+    #[case::subunit_not_in_the_dictionary("그는 KBSteru 를")]
+    #[case::subunit_in_the_dictionary("그는 KBStar 를")]
+    #[case::four_capital_prefix("그는 BLASTSound 를")]
+    #[case::caps_then_lowercase_tail("그는 WALKing 을")]
+    fn a_mixed_case_roman_word_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

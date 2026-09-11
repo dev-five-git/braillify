@@ -221,3 +221,16 @@ mod greek_continuation_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod greek_after_open_section_coverage {
+    /// 제31항: 이미 열린 로마자 구간 뒤의 그리스 문자는 로마자표를 다시 적지 않고,
+    /// 제33항으로 구간이 이어지는 자리에서는 연속표를 앞세운다.
+    #[rstest::rstest]
+    #[case::after_roman_hyphen("그는 IFN-\u{03B3} 를")]
+    #[case::after_comma("비타민A, \u{03B3}")]
+    #[case::after_number("\u{03B1} 1\u{03B2} 값")]
+    fn a_greek_letter_after_a_roman_item_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

@@ -482,3 +482,18 @@ mod colon_and_merge_coverage {
         ));
     }
 }
+
+#[cfg(test)]
+mod spaced_mark_merge_coverage {
+    /// 제49항 붙임표: 묵자가 앞뒤를 띄어 쓴 붙임표라도 한글 두 어절을 잇는 것이면
+    /// 한 어절로 합친다. 물결표는 뒤 항목이 있어야 합친다.
+    #[rstest::rstest]
+    #[case::korean_hyphen("정치 - 경제")]
+    #[case::hyphen_between_roman("ABC - DEF")]
+    #[case::tilde_with_tail("무게 300 ~ 350kg")]
+    #[case::tilde_without_tail("무게 300 ~")]
+    #[case::tilde_attached("무게 300~350kg")]
+    fn a_spaced_mark_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

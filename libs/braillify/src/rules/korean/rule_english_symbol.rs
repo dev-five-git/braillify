@@ -524,3 +524,17 @@ mod parenthesis_and_list_coverage {
         );
     }
 }
+
+#[cfg(test)]
+mod roman_number_chain_comma_coverage {
+    /// 제35항: 로마자+숫자 연결 뒤의 쉼표는 뒤에 로마자 항목이 이어지면 제32항의
+    /// 통일영어점자 점형을 지키고, 뒤가 순수 숫자이면 거기서 구간이 끝난다.
+    #[rstest::rstest]
+    #[case::roman_number_then_roman("그는 A100, B200 을")]
+    #[case::attached_company("그는 DA5,Inc 를")]
+    #[case::citation_pair("그는 1998a, 1998b; 를")]
+    #[case::then_plain_number("그는 Cs-134, 137 을")]
+    fn a_comma_inside_a_roman_number_chain_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

@@ -822,3 +822,17 @@ mod uppercase_indicator_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod strong_wordsign_coverage {
+    /// 제37항은 §10.1·§10.5 의 낱말 약자만 풀어 적게 한다. 로마자 항목 전체가
+    /// §10.2 의 강한 낱말 약자이면 대문자 표시만 앞세우고 한 칸으로 적는다.
+    #[rstest::rstest]
+    #[case::lowercase("그는 this 를")]
+    #[case::title_case("그는 This 를")]
+    #[case::all_capitals("그는 THIS 를")]
+    #[case::another_wordsign("그는 WHICH 를")]
+    fn a_strong_wordsign_as_the_whole_item_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

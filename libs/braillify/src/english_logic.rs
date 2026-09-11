@@ -1038,3 +1038,16 @@ mod symbol_route_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod digital_notation_coverage {
+    /// 제74항: 주소 표기는 한 로마자 구간이다. 뒤에 더 이어질 글자가 없으면 그
+    /// 구분 기호는 일반 기호 경로로 판정한다.
+    #[rstest::rstest]
+    #[case::address_continues("그는 https://a.b 를")]
+    #[case::separator_ends_the_word("그는 https:// 를")]
+    #[case::mail_address("그는 a@b.c 를")]
+    fn a_digital_address_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

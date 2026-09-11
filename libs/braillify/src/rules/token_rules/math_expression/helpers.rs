@@ -1034,3 +1034,22 @@ mod numeric_annotation_coverage {
         );
     }
 }
+
+#[cfg(test)]
+mod hyphenated_number_suffix_coverage {
+    use super::*;
+
+    /// 제55항 [다만]: 낱말에 붙은 숫자 접미(`코로나-19`)는 제49항의 붙임표이지
+    /// 제46항의 뺄셈 기호가 아니다.
+    #[rstest::rstest]
+    #[case::plain("-19", true)]
+    #[case::decimal("-1.5", true)]
+    #[case::grouped("-1,000", true)]
+    #[case::letter_after_hyphen("-a19", false)]
+    #[case::hyphen_alone("-", false)]
+    #[case::no_hyphen("19", false)]
+    fn a_hyphenated_number_suffix_is_digits_only(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_hyphenated_number_suffix(&chars), expected);
+    }
+}

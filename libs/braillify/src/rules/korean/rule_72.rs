@@ -403,3 +403,16 @@ mod bullet_item_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod repeated_marker_coverage {
+    /// 제72항: 같은 글머리 기호가 여러 항목을 이끌면 그 기호는 이름이 아니라
+    /// 글머리 기호다.
+    #[rstest::rstest]
+    #[case::two_triangles("\u{25B3} 정원 \u{25B3} 마당")]
+    #[case::one_triangle("\u{25B3} 정원")]
+    #[case::filled_triangle("\u{25B2} 정원 \u{25B2} 마당")]
+    fn a_repeated_triangle_marker_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

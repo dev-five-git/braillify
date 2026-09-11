@@ -2247,3 +2247,16 @@ mod section_boundary_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod roman_chain_resume_coverage {
+    /// 제32항: 열린 로마자 구간에 속한 통일영어점자 기호(`JTC1/SC27`, `M-SAM2`)는
+    /// 로마자표를 다시 적지 않고 구간을 이어받는다.
+    #[rstest::rstest]
+    #[case::slash_inside_identifier("그는 JTC1/SC27 을")]
+    #[case::hyphen_inside_identifier("그는 M-SAM2 를")]
+    #[case::plus_identifier("그는 A1+B2 를")]
+    fn a_symbol_inside_a_roman_number_chain_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

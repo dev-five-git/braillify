@@ -91,6 +91,24 @@ braille: ⠀⠁⠂⠃⠄⠅⠆⠇⠈⠉⠊⠋⠌⠍⠎⠏⠐⠑⠒⠓⠔⠕⠖�
 
 `test_cases/testcase-integrity.test.ts`가 모든 엔트리의 internal → expected/unicode 일치를 검증한다. 대문자(수학 변수 A, B 등)를 포함한 internal은 기본 패턴 외이므로 skip된다.
 
+### ⚠️ 랜딩 페이지 발행 규약 (NON-NEGOTIABLE)
+
+`cargo test test_by_testcase`가 랜딩 빌드의 입력을 생성한다. **모든 그룹이 예외 없이 같은 경로를 탄다. 행은 프리렌더에 절대 싣지 않는다.**
+
+| 산출물 | 내용 |
+|---|---|
+| `test_status.json` | 그룹별 **집계만** (행 배열은 항상 비어 있음, 약 35 KB) |
+| `apps/landing/public/test-status/<key>/page-N.json` | 행 250건씩. 브라우저가 필요한 쪽만 `fetch` |
+| `apps/landing/public/test-status/manifest.json` | 그룹별 `{pageSize, pageCount}`. 빌드 타임에만 읽는다 |
+
+- **행을 client 컴포넌트 prop으로 넘기지 않는다.** prop은 그 route의 RSC 페이로드에 전량 직렬화된다. 말뭉치 83,528행을 넘겼다가 `/test-case`가 108 MB HTML이 되어 CI 프리렌더가 `ERR_ENCODING_INVALID_ENCODED_DATA`로 죽었다.
+- **행을 프리렌더하지 않는다.** 프리렌더하면 행 하나가 HTML DOM·인라인 RSC·`.txt`·`__next._full.txt`·`__PAGE__.txt`로 **5벌** 복제되어 약 7.5배가 된다. 467,121행 전량 프리렌더 시 `out/`이 3.66 GB가 되어 **GitHub Pages 상한 1 GB**를 넘겼다 (실측). ajax로는 1벌만 저장되어 약 685 MB다.
+- `TestCaseResults`는 화면에 들어올 때만 `fetch`한다 (`useIntersectionObserver`). 한글 탭만 92개 그룹이라 즉시 로드하면 요청이 폭주한다.
+- `paginate_rows`는 행이 없어도 **빈 1쪽을 반드시 만든다.** 모든 그룹에 `page-1.json`이 있어야 클라이언트에 분기가 생기지 않는다.
+- `bun scripts/check-landing-size.ts`가 프리렌더 문서 하나당 6 MiB 상한을 강제한다. **상한을 올려서 통과시키지 말고** 행을 프리렌더에서 빼낸다.
+- `output: 'export'`라 `searchParams`·PPR(`cacheComponents`)은 쓸 수 없다. 쿼리스트링으로는 정적 파일이 갈리지 않고, PPR은 요청 시점 서버를 요구한다.
+- ⚠️ 전량 발행이므로 `out/` 총량이 말뭉치 크기에 비례한다 (83,528행 → 약 649 MB). **GitHub Pages 발행 사이트 상한은 1 GB**이므로, 말뭉치를 크게 늘리기 전에 총량을 먼저 확인한다.
+
 ### 테스트 케이스 작성 원칙
 
 1. **PDF가 유일한 근거** — `docs/2024 개정 한국 점자 규정.pdf`에 없는 예제를 만들지 않는다.

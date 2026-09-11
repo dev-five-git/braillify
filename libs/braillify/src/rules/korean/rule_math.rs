@@ -1,4 +1,4 @@
-//! Math symbol encoding with Korean spacing rules.
+﻿//! Math symbol encoding with Korean spacing rules.
 //!
 //! Math symbols (＋, −, ×, ÷, etc.) need spacing around them when
 //! adjacent to Korean text, unless the Korean is a grammatical particle (josa).
@@ -269,6 +269,15 @@ fn is_semantic_ascii_minus(ctx: &RuleContext) -> bool {
     prev_ends_operand && next_starts_number && has_other_math_operator
 }
 
+fn is_roman_grade_minus(ctx: &RuleContext) -> bool {
+    ctx.state.english_indicator
+        && ctx.state.is_english
+        && ctx
+            .next_char()
+            .is_none_or(|next| !next.is_ascii_alphanumeric())
+        && crate::rules::token_rules::math_expression::is_roman_minus_grade(ctx.word_chars)
+}
+
 impl BrailleRule for RuleMath {
     fn meta(&self) -> &'static RuleMeta {
         &META
@@ -280,10 +289,18 @@ impl BrailleRule for RuleMath {
 
     fn matches(&self, ctx: &RuleContext) -> bool {
         matches!(ctx.char_type, CharType::MathSymbol(_))
-            || (matches!(ctx.char_type, CharType::Symbol('-')) && is_semantic_ascii_minus(ctx))
+            || (matches!(ctx.char_type, CharType::Symbol('-'))
+                && (is_semantic_ascii_minus(ctx) || is_roman_grade_minus(ctx)))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
+        // UEB 3.17.1 minus inside a Roman grade (`AA-`): same section, `⠐⠤`.
+        if matches!(ctx.char_type, CharType::Symbol('-')) && is_roman_grade_minus(ctx) {
+            let encoded = crate::rules::english_ueb::rule_3::encode_symbol('\u{2212}')
+                .ok_or_else(|| "UEB minus sign must be defined".to_string())?;
+            ctx.emit_slice(&encoded);
+            return Ok(RuleResult::Consumed);
+        }
         let c = match ctx.char_type {
             CharType::MathSymbol(c) => *c,
             CharType::Symbol('-') if is_semantic_ascii_minus(ctx) => '\u{2212}',
@@ -466,6 +483,7 @@ mod tests {
     #[case::roman_annotation_on_left("레트로(RETRO)+뉴트로", 10, true)]
     #[case::korean_annotations_on_both_sides("AI(인공지능)+DX(디지털전환)", 8, true)]
     #[case::mixed_script_right_operand("밀레니얼+Z세대", 4, true)]
+    #[case::article_example_radius("반지름×3.14이다", 3, false)]
     #[case::signed_parenthetical("기업(+5p)의", 3, false)]
     #[case::numeric_sum("행사(1+1)이다", 4, false)]
     #[case::brand_particle("디즈니+와", 3, false)]
@@ -513,5 +531,91 @@ mod tests {
             crate::encode_to_unicode(&explicit_minus).expect("minus variant must encode"),
             "input={input}"
         );
+    }
+}
+
+#[cfg(test)]
+mod sign_boundary_coverage {
+    /// 수학 제2항: a sign opening a number may be followed by a bare decimal
+    /// point, and may itself open the expression.
+    #[rstest::rstest]
+    #[case::leading_decimal("기온 -.5 도")]
+    #[case::leading_digit("기온 -5 도")]
+    #[case::inside_parenthesis("값 (-5) 이다")]
+    #[case::dot_without_digits("기온 -.도")]
+    #[case::sign_then_letter("기온 -x 도")]
+    fn a_signed_number_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod sign_coverage {
+    /// 수학 제2항: 부호는 숫자를 열 수도, 소수점만 뒤따를 수도 있다. U+2212 는
+    /// 통일영어점자의 뺄셈 기호로 적는다.
+    #[rstest::rstest]
+    #[case::leading_decimal("기온 -.5 도")]
+    #[case::leading_digit("기온 -5 도")]
+    #[case::inside_parenthesis("값 (-5) 이다")]
+    #[case::dot_without_digits("기온 -.도")]
+    #[case::unicode_minus("값 5 \u{2212} 3 이다")]
+    #[case::unicode_minus_attached("그는 A\u{2212}B 를")]
+    fn a_signed_number_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod roman_grade_minus_coverage {
+    /// UEB 3.17.1: 신용등급의 붙임표(`AA-`)는 같은 로마자 구간 안의 뺄셈 기호
+    /// `⠐⠤` 로 적는다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("신용등급 AA-에서")]
+    #[case::three_letter_grade("신용등급 BBB-로")]
+    #[case::single_letter_grade("신용등급 A- 로")]
+    fn a_credit_grade_minus_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod english_document_grade_minus_coverage {
+    /// UEB 3.17.1: 영어 위주 글에서 신용등급의 붙임표(`AA-`)는 같은 구간 안의
+    /// 뺄셈 기호로 적는다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("The credit grade AA- is stable")]
+    #[case::three_letter_grade("Moody rated it BBB- last year")]
+    #[case::grade_at_the_end("The outlook remains AA-")]
+    fn a_credit_grade_minus_in_english_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod grade_minus_branch_coverage {
+    use super::*;
+    use crate::rules::traits::BrailleRule;
+
+    /// UEB 3.17.1: 이미 열린 로마자 구간 안의 신용등급 붙임표(`AA-`, `BBB-`)는
+    /// 뺄셈 기호 `⠐⠤` 로 적는다. 등급 꼴이 아니면 이 갈래가 아니다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("AA-", 2, true)]
+    #[case::three_letter_grade("BBB-", 3, true)]
+    #[case::one_letter_is_not_a_grade("A-", 1, false)]
+    #[case::four_letters_is_not_a_grade("AAAA-", 4, false)]
+    fn a_roman_grade_minus_is_written_as_the_ueb_minus(
+        #[case] text: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(text, true);
+        owned.state.is_english = true;
+        let mut ctx = owned.ctx_at(index);
+        assert_eq!(RuleMath.matches(&ctx), expected, "matches for {text}");
+        if expected {
+            let outcome = RuleMath.apply(&mut ctx).unwrap();
+            assert!(matches!(outcome, RuleResult::Consumed));
+            assert!(!owned.result.is_empty(), "no cells emitted for {text}");
+        }
     }
 }

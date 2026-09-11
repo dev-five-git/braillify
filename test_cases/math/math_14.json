@@ -7,7 +7,7 @@
     "expected": "52321050",
     "unicode": "⠴⠠⠊⠲",
     "world": "⠴⠠⠊⠲",
-    "jeomsarang": "⠴⠠⠊⠲"
+    "jeomsarang": "⠠⠊"
   },
   {
     "input": "$I$",
@@ -26,7 +26,7 @@
     "expected": "523232101050",
     "unicode": "⠴⠠⠠⠊⠊⠲",
     "world": "⠴⠠⠠⠊⠊⠲",
-    "jeomsarang": "⠴⠠⠠⠊⠊⠲"
+    "jeomsarang": "⠠⠠⠊⠊"
   },
   {
     "input": "$II$",
@@ -45,7 +45,7 @@
     "expected": "52323210101050",
     "unicode": "⠴⠠⠠⠊⠊⠊⠲",
     "world": "⠴⠠⠠⠊⠊⠊⠲",
-    "jeomsarang": "⠴⠠⠠⠊⠊⠊⠲"
+    "jeomsarang": "⠠⠠⠊⠊⠊"
   },
   {
     "input": "$III$",

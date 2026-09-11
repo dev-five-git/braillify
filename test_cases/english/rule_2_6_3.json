@@ -4,126 +4,144 @@
     "internal": "v1 v /2 r gd4",
     "expected": "39203901260230272550",
     "unicode": "⠧⠂⠀⠧⠀⠌⠆⠀⠗⠀⠛⠙⠲",
-    "world": "⠴⠧⠻⠽⠂ ⠧ ⠌⠆ ⠗ ⠛⠙⠲"
+    "world": "⠴⠧⠻⠽⠂ ⠧ ⠌⠆ ⠗ ⠛⠙⠲",
+    "jeomsarang": "⠧⠑⠗⠽⠂⠀⠧⠑⠗⠽⠀⠎⠞⠊⠇⠇⠆⠀⠗⠁⠞⠓⠑⠗⠀⠛⠕⠕⠙⠲"
   },
   {
     "input": "d:",
     "internal": ";d3",
     "expected": "482518",
     "unicode": "⠰⠙⠒",
-    "world": "⠴⠙⠒"
+    "world": "⠴⠙⠒",
+    "jeomsarang": "⠙⠒"
   },
   {
     "input": "this...",
     "internal": "?444",
     "expected": "57505050",
     "unicode": "⠹⠲⠲⠲",
-    "world": "⠴⠹⠲⠲⠲"
+    "world": "⠴⠹⠲⠲⠲",
+    "jeomsarang": "⠞⠓⠊⠎⠲⠲⠲"
   },
   {
     "input": "rejoice!",
     "internal": "rjc6",
     "expected": "2326922",
     "unicode": "⠗⠚⠉⠖",
-    "world": "⠴⠗⠚⠉⠖"
+    "world": "⠴⠗⠚⠉⠖",
+    "jeomsarang": "⠗⠑⠚⠕⠊⠉⠑⠖"
   },
   {
     "input": "(q, r)",
     "internal": "\"<;q1 ;r\">",
     "expected": "163548312048231628",
     "unicode": "⠐⠣⠰⠟⠂⠀⠰⠗⠐⠜",
-    "world": "⠦⠄⠴⠟⠂ ⠰⠗⠠⠴"
+    "world": "⠦⠄⠴⠟⠂ ⠰⠗⠠⠴",
+    "jeomsarang": "⠶⠟⠂⠀⠗⠶"
   },
   {
     "input": "[quite, rather]",
     "internal": ".<q1 r.>",
     "expected": "40353120234028",
     "unicode": "⠨⠣⠟⠂⠀⠗⠨⠜",
-    "world": "⠦⠆⠴⠟⠥⠊⠞⠑⠂ ⠗⠰⠴"
+    "world": "⠦⠆⠴⠟⠥⠊⠞⠑⠂ ⠗⠰⠴",
+    "jeomsarang": "⠠⠶⠟⠥⠊⠞⠑⠂⠀⠗⠁⠞⠓⠑⠗⠶⠄"
   },
   {
     "input": "{k-p}",
     "internal": "_<;k-;p_>",
     "expected": "56354853648155628",
     "unicode": "⠸⠣⠰⠅⠤⠰⠏⠸⠜",
-    "world": "⠦⠂⠴⠅⠤⠰⠏⠐⠴"
+    "world": "⠦⠂⠴⠅⠤⠰⠏⠐⠴",
+    "jeomsarang": "⠪⠅⠤⠏⠻"
   },
   {
     "input": "\"Which go-between?\"",
     "internal": "8,: g-2t80",
     "expected": "383249027366303852",
     "unicode": "⠦⠠⠱⠀⠛⠤⠆⠞⠦⠴",
-    "world": "⠦⠴⠠⠱ ⠛⠤⠆⠞⠦⠴"
+    "world": "⠦⠴⠠⠱ ⠛⠤⠆⠞⠦⠴",
+    "jeomsarang": "⠦⠠⠺⠓⠊⠉⠓⠀⠛⠕⠤⠃⠑⠞⠺⠑⠑⠝⠦⠴"
   },
   {
     "input": "children.”",
     "internal": "*n40",
     "expected": "33295052",
     "unicode": "⠡⠝⠲⠴",
-    "world": "⠴⠡⠝⠲⠦"
+    "world": "⠴⠡⠝⠲⠦",
+    "jeomsarang": "⠉⠓⠊⠇⠙⠗⠑⠝⠲⠴"
   },
   {
     "input": "t' have–",
     "internal": ";t' h,-",
     "expected": "483040193236",
     "unicode": "⠰⠞⠄⠀⠓⠠⠤",
-    "world": "⠴⠞⠄ ⠓⠤⠤"
+    "world": "⠴⠞⠄ ⠓⠤⠤",
+    "jeomsarang": "⠞⠴⠄⠀⠓⠁⠧⠑⠲⠤"
   },
   {
     "input": "friends' numbers",
     "internal": "frs' numb]s",
     "expected": "1123144029371335914",
     "unicode": "⠋⠗⠎⠄⠀⠝⠥⠍⠃⠻⠎",
-    "world": "⠴⠋⠗⠎⠄ ⠝⠥⠍⠃⠻⠎⠲"
+    "world": "⠴⠋⠗⠎⠄ ⠝⠥⠍⠃⠻⠎⠲",
+    "jeomsarang": "⠋⠗⠊⠑⠝⠙⠎⠄⠀⠝⠥⠍⠃⠑⠗⠎"
   },
   {
     "input": "ALWAYS BE YOURSELF",
     "internal": ",,,alw 2 yrf,'",
     "expected": "3232321758060612311324",
     "unicode": "⠠⠠⠠⠁⠇⠺⠀⠆⠀⠽⠗⠋⠠⠄",
-    "world": "⠴⠠⠠⠠⠁⠇⠺ ⠆ ⠽⠗⠋⠠⠄⠲"
+    "world": "⠴⠠⠠⠠⠁⠇⠺ ⠆ ⠽⠗⠋⠠⠄⠲",
+    "jeomsarang": "⠠⠠⠁⠇⠺⠁⠽⠎⠀⠠⠠⠃⠑⠀⠠⠠⠽⠕⠥⠗⠎⠑⠇⠋"
   },
   {
     "input": "The sun kept setting, setting still;\nNo hue of afternoon\nUpon the village I perceived\nFrom house to house 'twas noon",
     "internal": ",! sun kept sett+1 sett+ /2_ ,no hue ( afn_ ,^u ! village ,i p]cvd_ ,f h\\se to h\\se 'twas noon",
     "expected": "3246014372905171530014173030442014173030440126\n3229210193717055011130592921212936\n32243704603910771271703210015599392536\n321123211301951141703021019511417043058114029212129",
     "unicode": "⠠⠮⠀⠎⠥⠝⠀⠅⠑⠏⠞⠀⠎⠑⠞⠞⠬⠂⠀⠎⠑⠞⠞⠬⠀⠌⠆\n⠠⠝⠕⠀⠓⠥⠑⠀⠷⠀⠁⠋⠞⠻⠝⠕⠕⠝⠤\n⠠⠘⠥⠀⠮⠀⠧⠊⠇⠇⠁⠛⠑⠀⠠⠊⠀⠏⠻⠉⠧⠙⠤\n⠠⠋⠗⠕⠍⠀⠓⠳⠎⠑⠀⠞⠕⠀⠓⠳⠎⠑⠀⠄⠞⠺⠁⠎⠀⠝⠕⠕⠝",
-    "world": "⠴⠠⠮ ⠎⠥⠝ ⠅⠑⠏⠞ ⠎⠑⠞⠞⠬⠂ ⠎⠑⠞⠞⠬ ⠌⠆\n⠴⠠⠝⠕ ⠓⠥⠑ ⠷ ⠁⠋⠝⠲\n⠴⠠⠘⠥ ⠮ ⠧⠊⠇⠇⠁⠛⠑ ⠠⠊ ⠏⠻⠉⠧⠙⠲\n⠴⠠⠋⠗⠕⠍ ⠓⠳⠎⠑ ⠞⠕ ⠓⠳⠎⠑ ⠄⠞⠺⠁⠎ ⠝⠕⠕⠝⠲"
+    "world": "⠴⠠⠮ ⠎⠥⠝ ⠅⠑⠏⠞ ⠎⠑⠞⠞⠬⠂ ⠎⠑⠞⠞⠬ ⠌⠆\n⠴⠠⠝⠕ ⠓⠥⠑ ⠷ ⠁⠋⠝⠲\n⠴⠠⠘⠥ ⠮ ⠧⠊⠇⠇⠁⠛⠑ ⠠⠊ ⠏⠻⠉⠧⠙⠲\n⠴⠠⠋⠗⠕⠍ ⠓⠳⠎⠑ ⠞⠕ ⠓⠳⠎⠑ ⠄⠞⠺⠁⠎ ⠝⠕⠕⠝⠲",
+    "jeomsarang": "⠠⠞⠓⠑⠀⠎⠥⠝⠀⠅⠑⠏⠞⠀⠎⠑⠞⠞⠊⠝⠛⠂⠀⠎⠑⠞⠞⠊⠝⠛⠀⠎⠞⠊⠇⠇⠆\n⠠⠝⠕⠀⠓⠥⠑⠀⠕⠋⠀⠁⠋⠞⠑⠗⠝⠕⠕⠝\n⠠⠥⠏⠕⠝⠀⠞⠓⠑⠀⠧⠊⠇⠇⠁⠛⠑⠀⠠⠊⠀⠏⠑⠗⠉⠑⠊⠧⠑⠙\n⠠⠋⠗⠕⠍⠀⠓⠕⠥⠎⠑⠀⠞⠕⠀⠓⠕⠥⠎⠑⠀⠠⠦⠞⠺⠁⠎⠀⠝⠕⠕⠝"
   },
   {
     "input": "X' Y\"",
     "internal": ";,x' ;,y,7",
     "expected": "483245404832613254",
     "unicode": "⠰⠠⠭⠄⠀⠰⠠⠽⠠⠶",
-    "world": "⠴⠠⠭⠄ ⠰⠠⠽⠦"
+    "world": "⠴⠠⠭⠄ ⠰⠠⠽⠦",
+    "jeomsarang": "⠠⠭⠴⠄⠀⠠⠽⠴"
   },
   {
     "input": "t'night",
     "internal": "t'ni<t",
     "expected": "30429103530",
     "unicode": "⠞⠄⠝⠊⠣⠞",
-    "world": "⠴⠞⠄⠝⠊⠣⠞⠲"
+    "world": "⠴⠞⠄⠝⠊⠣⠞⠲",
+    "jeomsarang": "⠞⠄⠝⠊⠛⠓⠞"
   },
   {
     "input": "word(s)",
     "internal": "^w\"<s\">",
     "expected": "24581635141628",
     "unicode": "⠘⠺⠐⠣⠎⠐⠜",
-    "world": "⠴⠘⠺⠐⠣⠎⠠⠴"
+    "world": "⠴⠘⠺⠐⠣⠎⠠⠴",
+    "jeomsarang": "⠺⠕⠗⠙⠶⠎⠶"
   },
   {
     "input": "ab/cd",
     "internal": "ab_/cd",
     "expected": "135612925",
     "unicode": "⠁⠃⠸⠌⠉⠙",
-    "world": "⠴⠁⠃⠸⠌⠉⠙⠲"
+    "world": "⠴⠁⠃⠸⠌⠉⠙⠲",
+    "jeomsarang": "⠁⠃⠈⠌⠉⠙"
   },
   {
     "input": "could/should",
     "internal": "c\\ld_/%\\ld",
     "expected": "95172556124151725",
     "unicode": "⠉⠳⠇⠙⠸⠌⠩⠳⠇⠙",
-    "world": "⠴⠉⠳⠇⠙⠸⠌⠩⠳⠇⠙⠲"
+    "world": "⠴⠉⠳⠇⠙⠸⠌⠩⠳⠇⠙⠲",
+    "jeomsarang": "⠉⠕⠥⠇⠙⠈⠌⠎⠓⠕⠥⠇⠙"
   },
   {
     "input": "section B²",
@@ -131,7 +149,8 @@
     "internal": "sec;n ,b;9#b",
     "expected": "14179482903234820603",
     "unicode": "⠎⠑⠉⠰⠝⠀⠠⠃⠰⠔⠼⠃",
-    "world": "⠴⠎⠑⠉⠰⠝ ⠰⠠⠃⠘⠼⠃"
+    "world": "⠴⠎⠑⠉⠰⠝ ⠰⠠⠃⠘⠼⠃",
+    "jeomsarang": "⠎⠑⠉⠞⠊⠕⠝⠀⠠⠃⠘⠼⠃"
   },
   {
     "input": "knowledge.³",
@@ -139,70 +158,80 @@
     "internal": "\"kl$ge4;9#c",
     "expected": "1657432717504820609",
     "unicode": "⠐⠅⠇⠫⠛⠑⠲⠰⠔⠼⠉",
-    "world": "⠴⠐⠅⠇⠫⠛⠑⠲⠘⠼⠉"
+    "world": "⠴⠐⠅⠇⠫⠛⠑⠲⠘⠼⠉",
+    "jeomsarang": "⠅⠝⠕⠺⠇⠑⠙⠛⠑⠲⠘⠼⠉"
   },
   {
     "input": "this.)*",
     "internal": "?is4\">\"9",
     "expected": "5710145016281620",
     "unicode": "⠹⠊⠎⠲⠐⠜⠐⠔",
-    "world": "⠴⠹⠲⠠⠴⠐⠔"
+    "world": "⠴⠹⠲⠠⠴⠐⠔",
+    "jeomsarang": "⠞⠓⠊⠎⠲⠶⠔⠔"
   },
   {
     "input": "<J.Child@children.net>",
     "internal": "@<,j4,*ild@a*ildr54net@>",
     "expected": "835322650323310725813310725233450291730828",
     "unicode": "⠈⠣⠠⠚⠲⠠⠡⠊⠇⠙⠈⠁⠡⠊⠇⠙⠗⠢⠲⠝⠑⠞⠈⠜",
-    "world": "⠔⠔⠴⠠⠚⠲⠠⠡⠊⠇⠙⠈⠁⠡⠊⠇⠙⠗⠢⠲⠝⠑⠞⠢⠢"
+    "world": "⠔⠔⠴⠠⠚⠲⠠⠡⠊⠇⠙⠈⠁⠡⠊⠇⠙⠗⠢⠲⠝⠑⠞⠢⠢",
+    "jeomsarang": "⠣⠠⠚⠲⠠⠉⠓⠊⠇⠙⠈⠉⠓⠊⠇⠙⠗⠑⠝⠲⠝⠑⠞⠜"
   },
   {
     "input": "just_for_good.org",
     "internal": "ju/.-=.-good4org",
     "expected": "26371240366340362721212550212327",
     "unicode": "⠚⠥⠌⠨⠤⠿⠨⠤⠛⠕⠕⠙⠲⠕⠗⠛",
-    "world": "⠴⠚⠥⠌⠨⠤⠿⠨⠤⠛⠕⠕⠙⠲⠕⠗⠛⠲"
+    "world": "⠴⠚⠥⠌⠨⠤⠿⠨⠤⠛⠕⠕⠙⠲⠕⠗⠛⠲",
+    "jeomsarang": "⠚⠥⠎⠞⠈⠸⠋⠕⠗⠈⠸⠛⠕⠕⠙⠲⠕⠗⠛"
   },
   {
     "input": "l_ _f",
     "internal": "l.-.-f",
     "expected": "74036403611",
     "unicode": "⠇⠨⠤⠨⠤⠋",
-    "world": "⠴⠇⠨⠤ ⠨⠤⠋⠲"
+    "world": "⠴⠇⠨⠤ ⠨⠤⠋⠲",
+    "jeomsarang": "⠇⠈⠸⠀⠈⠸⠋"
   },
   {
     "input": "ch...f",
     "internal": "*444f",
     "expected": "3350505011",
     "unicode": "⠡⠲⠲⠲⠋",
-    "world": "⠴⠡⠲⠲⠲⠋⠲"
+    "world": "⠴⠡⠲⠲⠲⠋⠲",
+    "jeomsarang": "⠉⠓⠲⠲⠲⠋"
   },
   {
     "input": "a:b :: x:y",
     "internal": "a;3b 33 x;3y",
     "expected": "14818301818045481861",
     "unicode": "⠁⠰⠒⠃⠀⠒⠒⠀⠭⠰⠒⠽",
-    "world": "⠴⠁⠰⠒⠃ ⠒⠒ ⠭⠰⠒⠽⠲"
+    "world": "⠴⠁⠰⠒⠃ ⠒⠒ ⠭⠰⠒⠽⠲",
+    "jeomsarang": "⠁⠒⠃⠀⠒⠒⠀⠭⠒⠽"
   },
   {
     "input": "X%",
     "internal": ",x.0",
     "expected": "32454052",
     "unicode": "⠠⠭⠨⠴",
-    "world": "⠴⠠⠭⠴⠏"
+    "world": "⠴⠠⠭⠴⠏",
+    "jeomsarang": "⠠⠭⠈⠒⠏"
   },
   {
     "input": "Braillex®",
     "internal": ",braillex^r",
     "expected": "323231107717452423",
     "unicode": "⠠⠃⠗⠁⠊⠇⠇⠑⠭⠘⠗",
-    "world": "⠴⠠⠃⠗⠇⠭⠘⠗"
+    "world": "⠴⠠⠃⠗⠇⠭⠘⠗",
+    "jeomsarang": "⠠⠃⠗⠁⠊⠇⠇⠑⠭⠲⠴⠘⠗"
   },
   {
     "input": "Braille4All",
     "internal": ",braille#d,all",
     "expected": "323231107717602532177",
     "unicode": "⠠⠃⠗⠁⠊⠇⠇⠑⠼⠙⠠⠁⠇⠇",
-    "world": "⠴⠠⠃⠗⠁⠊⠇⠇⠑⠼⠙⠠⠁⠇⠇⠲"
+    "world": "⠴⠠⠃⠗⠁⠊⠇⠇⠑⠼⠙⠠⠁⠇⠇⠲",
+    "jeomsarang": "⠠⠃⠗⠁⠊⠇⠇⠑⠼⠙⠠⠁⠇⠇"
   },
   {
     "input": "X′ Y″",
@@ -210,13 +239,15 @@
     "internal": ",x7 ,y77",
     "expected": "324554032615454",
     "unicode": "⠠⠭⠶⠀⠠⠽⠶⠶",
-    "world": "⠴⠠⠭⠶ ⠰⠠⠽⠴⠤⠤"
+    "world": "⠴⠠⠭⠶ ⠰⠠⠽⠴⠤⠤",
+    "jeomsarang": "⠠⠭⠴⠤⠀⠠⠽⠲⠴⠤⠤"
   },
   {
     "input": "‘Himself or herself?―Neither!’",
     "internal": ",8,hmf or h]f8,-,nei6,0",
     "expected": "32383219131102123019591417711383236322917104623223252",
     "unicode": "⠠⠦⠠⠓⠍⠋⠀⠕⠗⠀⠓⠻⠎⠑⠇⠋⠦⠠⠤⠠⠝⠑⠊⠮⠗⠖⠠⠴",
-    "world": "⠠⠦⠴⠠⠓⠍⠋ ⠕⠗ ⠓⠻⠋⠦⠐⠠⠤⠠⠝⠑⠊⠖⠄"
+    "world": "⠠⠦⠴⠠⠓⠍⠋ ⠕⠗ ⠓⠻⠋⠦⠐⠠⠤⠠⠝⠑⠊⠖⠄",
+    "jeomsarang": "⠠⠦⠠⠓⠊⠍⠎⠑⠇⠋⠀⠕⠗⠀⠓⠑⠗⠎⠑⠇⠋⠦⠤⠤⠠⠝⠑⠊⠞⠓⠑⠗⠖⠴⠄"
   }
 ]

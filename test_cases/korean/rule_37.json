@@ -6,7 +6,7 @@
     "expected": "523373050",
     "unicode": "⠴⠃⠥⠞⠲",
     "world": "⠴⠃⠥⠞⠲",
-    "jeomsarang": "⠴⠃⠥⠞⠲"
+    "jeomsarang": "⠃⠥⠞"
   },
   {
     "input": "can",
@@ -15,7 +15,7 @@
     "expected": "52912950",
     "unicode": "⠴⠉⠁⠝⠲",
     "world": "⠴⠉⠁⠝⠲",
-    "jeomsarang": "⠴⠉⠁⠝⠲"
+    "jeomsarang": "⠉⠁⠝"
   },
   {
     "input": "do",
@@ -24,7 +24,7 @@
     "expected": "52252150",
     "unicode": "⠴⠙⠕⠲",
     "world": "⠴⠙⠕⠲",
-    "jeomsarang": "⠴⠙⠕⠲"
+    "jeomsarang": "⠙⠕"
   },
   {
     "input": "every",
@@ -33,7 +33,7 @@
     "expected": "5216176150",
     "unicode": "⠴⠐⠑⠽⠲",
     "world": "⠴⠐⠑⠽⠲",
-    "jeomsarang": "⠴⠐⠑⠽⠲"
+    "jeomsarang": "⠑⠧⠑⠗⠽"
   },
   {
     "input": "from",
@@ -42,7 +42,7 @@
     "expected": "521123211350",
     "unicode": "⠴⠋⠗⠕⠍⠲",
     "world": "⠴⠋⠗⠕⠍⠲",
-    "jeomsarang": "⠴⠋⠗⠕⠍⠲"
+    "jeomsarang": "⠋⠗⠕⠍"
   },
   {
     "input": "go",
@@ -51,7 +51,7 @@
     "expected": "52272150",
     "unicode": "⠴⠛⠕⠲",
     "world": "⠴⠛⠕⠲",
-    "jeomsarang": "⠴⠛⠕⠲"
+    "jeomsarang": "⠛⠕"
   },
   {
     "input": "have",
@@ -60,7 +60,7 @@
     "expected": "52191391750",
     "unicode": "⠴⠓⠁⠧⠑⠲",
     "world": "⠴⠓⠁⠧⠑⠲",
-    "jeomsarang": "⠴⠓⠁⠧⠑⠲"
+    "jeomsarang": "⠓⠁⠧⠑"
   },
   {
     "input": "just",
@@ -69,7 +69,7 @@
     "expected": "5226371250",
     "unicode": "⠴⠚⠥⠌⠲",
     "world": "⠴⠚⠥⠌⠲",
-    "jeomsarang": "⠴⠚⠥⠌⠲"
+    "jeomsarang": "⠚⠥⠎⠞"
   },
   {
     "input": "knowledge",
@@ -78,7 +78,7 @@
     "expected": "52165743271750",
     "unicode": "⠴⠐⠅⠇⠫⠛⠑⠲",
     "world": "⠴⠐⠅⠇⠫⠛⠑⠲",
-    "jeomsarang": "⠴⠐⠅⠇⠫⠛⠑⠲"
+    "jeomsarang": "⠅⠝⠕⠺⠇⠑⠙⠛⠑"
   },
   {
     "input": "like",
@@ -87,7 +87,7 @@
     "expected": "5271051750",
     "unicode": "⠴⠇⠊⠅⠑⠲",
     "world": "⠴⠇⠊⠅⠑⠲",
-    "jeomsarang": "⠴⠇⠊⠅⠑⠲"
+    "jeomsarang": "⠇⠊⠅⠑"
   },
   {
     "input": "more",
@@ -96,7 +96,7 @@
     "expected": "521321231750",
     "unicode": "⠴⠍⠕⠗⠑⠲",
     "world": "⠴⠍⠕⠗⠑⠲",
-    "jeomsarang": "⠴⠍⠕⠗⠑⠲"
+    "jeomsarang": "⠍⠕⠗⠑"
   },
   {
     "input": "not",
@@ -105,7 +105,7 @@
     "expected": "5229213050",
     "unicode": "⠴⠝⠕⠞⠲",
     "world": "⠴⠝⠕⠞⠲",
-    "jeomsarang": "⠴⠝⠕⠞⠲"
+    "jeomsarang": "⠝⠕⠞"
   },
   {
     "input": "people",
@@ -114,7 +114,7 @@
     "expected": "521517211571750",
     "unicode": "⠴⠏⠑⠕⠏⠇⠑⠲",
     "world": "⠴⠏⠑⠕⠏⠇⠑⠲",
-    "jeomsarang": "⠴⠏⠑⠕⠏⠇⠑⠲"
+    "jeomsarang": "⠏⠑⠕⠏⠇⠑"
   },
   {
     "input": "quite",
@@ -123,7 +123,7 @@
     "expected": "52313710301750",
     "unicode": "⠴⠟⠥⠊⠞⠑⠲",
     "world": "⠴⠟⠥⠊⠞⠑⠲",
-    "jeomsarang": "⠴⠟⠥⠊⠞⠑⠲"
+    "jeomsarang": "⠟⠥⠊⠞⠑"
   },
   {
     "input": "rather",
@@ -132,7 +132,7 @@
     "expected": "52231462350",
     "unicode": "⠴⠗⠁⠮⠗⠲",
     "world": "⠴⠗⠁⠮⠗⠲",
-    "jeomsarang": "⠴⠗⠁⠮⠗⠲"
+    "jeomsarang": "⠗⠁⠞⠓⠑⠗"
   },
   {
     "input": "so",
@@ -141,7 +141,7 @@
     "expected": "52142150",
     "unicode": "⠴⠎⠕⠲",
     "world": "⠴⠎⠕⠲",
-    "jeomsarang": "⠴⠎⠕⠲"
+    "jeomsarang": "⠎⠕"
   },
   {
     "input": "that",
@@ -150,7 +150,7 @@
     "expected": "525713050",
     "unicode": "⠴⠹⠁⠞⠲",
     "world": "⠴⠹⠁⠞⠲",
-    "jeomsarang": "⠴⠹⠁⠞⠲"
+    "jeomsarang": "⠞⠓⠁⠞"
   },
   {
     "input": "us",
@@ -159,7 +159,7 @@
     "expected": "52371450",
     "unicode": "⠴⠥⠎⠲",
     "world": "⠴⠥⠎⠲",
-    "jeomsarang": "⠴⠥⠎⠲"
+    "jeomsarang": "⠥⠎"
   },
   {
     "input": "very",
@@ -168,7 +168,7 @@
     "expected": "5239596150",
     "unicode": "⠴⠧⠻⠽⠲",
     "world": "⠴⠧⠻⠽⠲",
-    "jeomsarang": "⠴⠧⠻⠽⠲"
+    "jeomsarang": "⠧⠑⠗⠽"
   },
   {
     "input": "will",
@@ -177,7 +177,7 @@
     "expected": "5258107750",
     "unicode": "⠴⠺⠊⠇⠇⠲",
     "world": "⠴⠺⠊⠇⠇⠲",
-    "jeomsarang": "⠴⠺⠊⠇⠇⠲"
+    "jeomsarang": "⠺⠊⠇⠇"
   },
   {
     "input": "it",
@@ -186,7 +186,7 @@
     "expected": "52103050",
     "unicode": "⠴⠊⠞⠲",
     "world": "⠴⠊⠞⠲",
-    "jeomsarang": "⠴⠊⠞⠲"
+    "jeomsarang": "⠊⠞"
   },
   {
     "input": "you",
@@ -195,7 +195,7 @@
     "expected": "52615150",
     "unicode": "⠴⠽⠳⠲",
     "world": "⠴⠽⠳⠲",
-    "jeomsarang": "⠴⠽⠳⠲"
+    "jeomsarang": "⠽⠕⠥"
   },
   {
     "input": "as",
@@ -204,7 +204,7 @@
     "expected": "5211450",
     "unicode": "⠴⠁⠎⠲",
     "world": "⠴⠁⠎⠲",
-    "jeomsarang": "⠴⠁⠎⠲"
+    "jeomsarang": "⠁⠎"
   },
   {
     "input": "be",
@@ -213,7 +213,7 @@
     "expected": "5231750",
     "unicode": "⠴⠃⠑⠲",
     "world": "⠴⠃⠑⠲",
-    "jeomsarang": "⠴⠆"
+    "jeomsarang": "⠃⠑"
   },
   {
     "input": "enough",
@@ -222,7 +222,7 @@
     "expected": "5234513550",
     "unicode": "⠴⠢⠳⠣⠲",
     "world": "⠴⠢⠳⠣⠲",
-    "jeomsarang": "⠴⠢"
+    "jeomsarang": "⠑⠝⠕⠥⠛⠓"
   },
   {
     "input": "his",
@@ -231,7 +231,7 @@
     "expected": "5219101450",
     "unicode": "⠴⠓⠊⠎⠲",
     "world": "⠴⠓⠊⠎⠲",
-    "jeomsarang": "⠴⠦"
+    "jeomsarang": "⠓⠊⠎"
   },
   {
     "input": "in",
@@ -240,7 +240,7 @@
     "expected": "52102950",
     "unicode": "⠴⠊⠝⠲",
     "world": "⠴⠊⠝⠲",
-    "jeomsarang": "⠴⠔"
+    "jeomsarang": "⠊⠝"
   },
   {
     "input": "was",
@@ -249,7 +249,7 @@
     "expected": "525811450",
     "unicode": "⠴⠺⠁⠎⠲",
     "world": "⠴⠺⠁⠎⠲",
-    "jeomsarang": "⠴⠴"
+    "jeomsarang": "⠺⠁⠎"
   },
   {
     "input": "were",
@@ -258,7 +258,7 @@
     "expected": "5258591750",
     "unicode": "⠴⠺⠻⠑⠲",
     "world": "⠴⠺⠻⠑⠲",
-    "jeomsarang": "⠴⠶"
+    "jeomsarang": "⠺⠑⠗⠑"
   },
   {
     "input": "그는 Can you help me?라고 도움을 요청했다.",
@@ -266,7 +266,7 @@
     "expected": "84295305232912906101917715013173816358370103713344604448592623121050",
     "unicode": "⠈⠪⠉⠵⠀⠴⠠⠉⠁⠝⠀⠽⠀⠓⠑⠇⠏⠀⠍⠑⠦⠐⠣⠈⠥⠀⠊⠥⠍⠢⠮⠀⠬⠰⠻⠚⠗⠌⠊⠲",
     "world": "⠈⠪⠉⠵ ⠴⠠⠉⠁⠝ ⠽ ⠓⠑⠇⠏ ⠍⠑⠦⠐⠣⠈⠥ ⠊⠥⠍⠢⠮ ⠬⠰⠻⠚⠗⠌⠊⠲",
-    "jeomsarang": "⠈⠪⠉⠵⠀⠴⠠⠉⠁⠝⠀⠽⠀⠓⠑⠇⠏⠀⠍⠑⠦⠐⠣⠈⠥⠀⠊⠥⠍⠢⠮⠀⠬⠰⠻⠚⠗⠌⠊⠲"
+    "jeomsarang": "⠈⠪⠉⠵⠀⠴⠠⠉⠁⠝⠀⠽⠕⠥⠀⠓⠑⠇⠏⠀⠍⠑⠦⠐⠣⠈⠥⠀⠊⠥⠍⠢⠮⠀⠬⠰⠻⠚⠗⠌⠊⠲"
   },
   {
     "input": "be는 am, are, is의 원형 동사이다.",
@@ -274,7 +274,7 @@
     "expected": "52317509530521132028172010145058015182659010637211050",
     "unicode": "⠴⠃⠑⠲⠉⠵⠀⠴⠁⠍⠂⠀⠜⠑⠂⠀⠊⠎⠲⠺⠀⠏⠒⠚⠻⠀⠊⠿⠇⠕⠊⠲",
     "world": "⠴⠃⠑⠲⠉⠵ ⠴⠁⠍⠂ ⠜⠑⠂ ⠊⠎⠲⠺ ⠏⠒⠚⠻ ⠊⠿⠇⠕⠊⠲",
-    "jeomsarang": "⠴⠃⠑⠲⠉⠵⠀⠴⠁⠍⠂⠀⠜⠑⠂⠀⠊⠎⠲⠺⠀⠏⠒⠚⠻⠀⠊⠿⠇⠕⠊⠲"
+    "jeomsarang": "⠴⠃⠑⠲⠉⠵⠀⠴⠁⠍⠂⠀⠁⠗⠑⠂⠀⠊⠎⠲⠺⠀⠏⠒⠚⠻⠀⠊⠿⠇⠕⠊⠲"
   },
   {
     "input": "be, his, was, were의 약자를 바르게 쓰시오.",
@@ -282,6 +282,6 @@
     "expected": "5231720191014205811420585917505802814016460241642829032324232213750",
     "unicode": "⠴⠃⠑⠂⠀⠓⠊⠎⠂⠀⠺⠁⠎⠂⠀⠺⠻⠑⠲⠺⠀⠜⠁⠨⠐⠮⠀⠘⠐⠪⠈⠝⠀⠠⠠⠪⠠⠕⠥⠲",
     "world": "⠴⠃⠑⠂ ⠓⠊⠎⠂ ⠺⠁⠎⠂ ⠺⠻⠑⠲⠺ ⠜⠁⠨⠐⠮ ⠘⠐⠪⠈⠝ ⠠⠠⠪⠠⠕⠥⠲",
-    "jeomsarang": "⠴⠃⠑⠂⠀⠓⠊⠎⠂⠀⠺⠁⠎⠂⠀⠺⠻⠑⠲⠺⠀⠜⠁⠨⠐⠮⠀⠘⠐⠪⠈⠝⠀⠠⠠⠪⠠⠕⠥⠲"
+    "jeomsarang": "⠴⠃⠑⠂⠀⠓⠊⠎⠂⠀⠺⠁⠎⠂⠀⠺⠑⠗⠑⠲⠺⠀⠜⠁⠨⠐⠮⠀⠘⠐⠪⠈⠝⠀⠠⠠⠪⠠⠕⠥⠲"
   }
 ]

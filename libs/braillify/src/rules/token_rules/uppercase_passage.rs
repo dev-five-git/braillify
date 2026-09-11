@@ -1,10 +1,46 @@
+use crate::rules::context::EncoderState;
 use crate::rules::english_shortform::{
     permits_grade1_boundary_after_run, requires_grade1_indicator,
+};
+use crate::rules::english_ueb::rule_10_9::requires_grade1_before_spelled_letters;
+use crate::rules::english_ueb::rule_10_12::{
+    RomanRunPosition, is_letter_initialism_in_korean_text,
 };
 use crate::rules::token::{ModeEvent, Token, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 pub struct UppercasePassageRule;
+
+/// UEB §5.7.2 + §10.9 grade-1 decision for the capitals run
+/// `word.chars[run_start..run_end]`, matched to how rule 28 will spell it: a
+/// §10.12.1 initialism collides only through its literal letter cells.
+fn capitals_run_needs_grade1(
+    state: &EncoderState,
+    tokens: &[Token<'_>],
+    index: usize,
+    word: &WordToken<'_>,
+    run_start: usize,
+    run_end: usize,
+) -> bool {
+    if !permits_grade1_boundary_after_run(&word.chars[run_end..]) {
+        return false;
+    }
+    let uppercase_run = word.chars[run_start..run_end].iter().collect::<String>();
+    let position = RomanRunPosition {
+        word_chars: &word.chars,
+        run_start,
+        run_end,
+        prev_word: prev_word(tokens, index).map_or("", |prev| prev.text.as_ref()),
+        next_word: next_two_words(tokens, index)
+            .0
+            .map(|next| next.text.as_ref()),
+    };
+    if is_letter_initialism_in_korean_text(state, &position) {
+        requires_grade1_before_spelled_letters(&uppercase_run)
+    } else {
+        requires_grade1_indicator(&uppercase_run)
+    }
+}
 
 fn prev_word<'a>(tokens: &'a [Token<'a>], index: usize) -> Option<&'a WordToken<'a>> {
     tokens[..index].iter().rev().find_map(|t| {
@@ -77,10 +113,16 @@ fn capitalized_group(word: &WordToken<'_>) -> Option<CapitalizedGroup> {
     }
 
     let start = word.chars.iter().position(char::is_ascii_uppercase)?;
-    if !word.chars[..start]
-        .iter()
-        .copied()
-        .all(is_opening_passage_punctuation)
+    let prefix = &word.chars[..start];
+    // 제34항 `링컨(Lincoln)`: a Korean headword followed by its opening
+    // parenthesis also sits before the capitalised sequence.
+    let korean_headword_then_bracket = prefix
+        .last()
+        .is_some_and(|ch| matches!(ch, '(' | '[' | '{'))
+        && prefix[..prefix.len() - 1]
+            .iter()
+            .all(|ch| crate::utils::is_korean_char(*ch) || is_opening_passage_punctuation(*ch));
+    if !prefix.iter().copied().all(is_opening_passage_punctuation) && !korean_headword_then_bracket
     {
         return None;
     }
@@ -102,6 +144,7 @@ fn capitalized_group(word: &WordToken<'_>) -> Option<CapitalizedGroup> {
                 .any(|next| crate::utils::is_korean_char(*next));
         if crate::utils::is_korean_char(ch)
             || is_closing_passage_quote(ch)
+            || matches!(ch, ')' | ']' | '}')
             || opens_attached_korean_gloss
         {
             end = index;
@@ -215,8 +258,21 @@ impl TokenRule for UppercasePassageRule {
         let ascii_starts_at_beginning = word.meta.starts_with_ascii;
         let capitalized = capitalized_group(word);
 
+        // Korean rule 35: a preceding Roman/number item (`Top5`, `MP4`, `1`)
+        // leaves its Roman section open across the print space, so the entry
+        // indicator is not pre-emitted here; rule 28 decides at the letter.
+        let previous_keeps_section_open = prev_word(tokens, index).is_some_and(|previous| {
+            previous
+                .chars
+                .iter()
+                .rev()
+                .find(|ch| ch.is_alphanumeric())
+                .is_some_and(char::is_ascii_alphanumeric)
+                && matches!(tokens.get(index - 1), Some(Token::Space(_)))
+        });
         let needs_inline_entry = state.english_indicator
             && !state.is_english
+            && !previous_keeps_section_open
             && word.meta.has_ascii_alphabetic
             && capitalized.is_some();
 
@@ -245,8 +301,7 @@ impl TokenRule for UppercasePassageRule {
                     ModeEvent::EnterEnglish
                 };
                 replacement.push(Token::Mode(entry));
-                state.is_english = true;
-                state.needs_english_continuation = false;
+                crate::rules::roman_mode::set_section_open_keeping_number_chain(state, true);
             }
 
             // UEB §5.7.2 + §10.9: inspect the initial maximal ASCII-capital
@@ -260,12 +315,8 @@ impl TokenRule for UppercasePassageRule {
                 .take_while(|ch| ch.is_ascii_uppercase())
                 .count();
             let uppercase_run_end = group.start + uppercase_run_len;
-            let uppercase_run = word.chars[group.start..uppercase_run_end]
-                .iter()
-                .collect::<String>();
-            let needs_grade1 = permits_grade1_boundary_after_run(&word.chars[uppercase_run_end..])
-                && requires_grade1_indicator(&uppercase_run);
-            if needs_grade1 {
+            if capitals_run_needs_grade1(state, tokens, index, word, group.start, uppercase_run_end)
+            {
                 replacement.push(Token::Mode(ModeEvent::Grade1Indicator));
             }
             replacement.push(Token::Mode(ModeEvent::CapsPassageStart));
@@ -287,8 +338,7 @@ impl TokenRule for UppercasePassageRule {
                     ModeEvent::EnterEnglish
                 };
                 prefix.push(Token::Mode(entry));
-                state.is_english = true;
-                state.needs_english_continuation = false;
+                crate::rules::roman_mode::set_section_open_keeping_number_chain(state, true);
             }
 
             let uppercase_run_len = word
@@ -296,9 +346,8 @@ impl TokenRule for UppercasePassageRule {
                 .iter()
                 .take_while(|ch| ch.is_ascii_uppercase())
                 .count();
-            let uppercase_run = word.chars[..uppercase_run_len].iter().collect::<String>();
-            let needs_grade1 = permits_grade1_boundary_after_run(&word.chars[uppercase_run_len..])
-                && requires_grade1_indicator(&uppercase_run);
+            let needs_grade1 =
+                capitals_run_needs_grade1(state, tokens, index, word, 0, uppercase_run_len);
             if word_len >= 2 {
                 if needs_grade1 {
                     prefix.push(Token::Mode(ModeEvent::Grade1Indicator));
@@ -311,7 +360,32 @@ impl TokenRule for UppercasePassageRule {
         if state.triple_big_english && !next_continues_passage {
             state.triple_big_english = false;
 
-            if let Some(group) = capitalized
+            // 제33항: a comma/period after the last Roman word is Korean
+            // punctuation when no Roman item follows, so the capitals
+            // terminator closes the passage before it (UEB 8.6.1).
+            let next_starts_roman = upcoming_first.is_some_and(|next| {
+                next.chars
+                    .iter()
+                    .find(|ch| ch.is_alphanumeric())
+                    .is_some_and(char::is_ascii_alphanumeric)
+            });
+            let korean_punctuation_tail = word
+                .chars
+                .iter()
+                .rev()
+                .take_while(|ch| matches!(ch, ',' | '.' | ';' | ':'))
+                .count();
+            let group = capitalized.map(|group| {
+                if group.end == word_len && korean_punctuation_tail > 0 && !next_starts_roman {
+                    CapitalizedGroup {
+                        start: group.start,
+                        end: word_len - korean_punctuation_tail,
+                    }
+                } else {
+                    group
+                }
+            });
+            if let Some(group) = group
                 && group.start == 0
                 && group.end < word_len
             {
@@ -436,7 +510,7 @@ mod tests {
     #[case::cd_before_digit("CD47", false)]
     #[case::cd_before_slash("CD/ATM", false)]
     #[case::neither_s_before_plus("NEIS+", false)]
-    #[case::little_m_before_opening_group("LLM(SLM)", false)]
+    #[case::little_m_before_opening_group("LLM(SLM)", true)]
     fn uppercase_passage_grade1_respects_letters_sequence_boundary(
         #[case] input: &str,
         #[case] expected: bool,

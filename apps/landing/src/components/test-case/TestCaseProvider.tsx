@@ -10,7 +10,11 @@ export type TestCaseFilter =
   | 'english'
   | 'foreign-language'
   | 'ipa'
-  | 'corpus'
+  | '2021_corpus'
+  | '2022_corpus'
+  | '2023_corpus'
+  | '2024_corpus'
+  | '2025_corpus'
 
 export type TestCaseOptions = {
   filters: TestCaseFilter[]

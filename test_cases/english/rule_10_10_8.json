@@ -4,83 +4,95 @@
     "internal": "a\"pheid",
     "expected": "1161519171025",
     "unicode": "⠁⠐⠏⠓⠑⠊⠙",
-    "world": "⠴⠁⠐⠏⠓⠑⠊⠙⠲"
+    "world": "⠴⠁⠐⠏⠓⠑⠊⠙⠲",
+    "jeomsarang": "⠁⠏⠁⠗⠞⠓⠑⠊⠙"
   },
   {
     "input": "asthma",
     "internal": "as?ma",
     "expected": "11457131",
     "unicode": "⠁⠎⠹⠍⠁",
-    "world": "⠴⠁⠎⠹⠍⠁⠲"
+    "world": "⠴⠁⠎⠹⠍⠁⠲",
+    "jeomsarang": "⠁⠎⠞⠓⠍⠁"
   },
   {
     "input": "dishevelled",
     "internal": "di%evell$",
     "expected": "2510411739177743",
     "unicode": "⠙⠊⠩⠑⠧⠑⠇⠇⠫",
-    "world": "⠴⠙⠊⠩⠑⠧⠑⠇⠇⠫⠲"
+    "world": "⠴⠙⠊⠩⠑⠧⠑⠇⠇⠫⠲",
+    "jeomsarang": "⠙⠊⠎⠓⠑⠧⠑⠇⠇⠑⠙"
   },
   {
     "input": "gingham",
     "internal": "g+ham",
     "expected": "274419113",
     "unicode": "⠛⠬⠓⠁⠍",
-    "world": "⠴⠛⠬⠓⠁⠍⠲"
+    "world": "⠴⠛⠬⠓⠁⠍⠲",
+    "jeomsarang": "⠛⠊⠝⠛⠓⠁⠍"
   },
   {
     "input": "hypotheses",
     "internal": "hypo!ses",
     "expected": "1961152146141714",
     "unicode": "⠓⠽⠏⠕⠮⠎⠑⠎",
-    "world": "⠴⠓⠽⠏⠕⠮⠎⠑⠎⠲"
+    "world": "⠴⠓⠽⠏⠕⠮⠎⠑⠎⠲",
+    "jeomsarang": "⠓⠽⠏⠕⠞⠓⠑⠎⠑⠎"
   },
   {
     "input": "isthmus",
     "internal": "is?mus",
     "expected": "101457133714",
     "unicode": "⠊⠎⠹⠍⠥⠎",
-    "world": "⠴⠊⠎⠹⠍⠥⠎⠲"
+    "world": "⠴⠊⠎⠹⠍⠥⠎⠲",
+    "jeomsarang": "⠊⠎⠞⠓⠍⠥⠎"
   },
   {
     "input": "posthumous",
     "internal": "po/hum\\s",
     "expected": "1521121937135114",
     "unicode": "⠏⠕⠌⠓⠥⠍⠳⠎",
-    "world": "⠴⠏⠕⠌⠓⠥⠍⠳⠎⠲"
+    "world": "⠴⠏⠕⠌⠓⠥⠍⠳⠎⠲",
+    "jeomsarang": "⠏⠕⠎⠞⠓⠥⠍⠕⠥⠎"
   },
   {
     "input": "stronghold",
     "internal": "/r;ghold",
     "expected": "122348271921725",
     "unicode": "⠌⠗⠰⠛⠓⠕⠇⠙",
-    "world": "⠴⠌⠗⠰⠛⠓⠕⠇⠙⠲"
+    "world": "⠴⠌⠗⠰⠛⠓⠕⠇⠙⠲",
+    "jeomsarang": "⠎⠞⠗⠕⠝⠛⠓⠕⠇⠙"
   },
   {
     "input": "towhee",
     "internal": "t[hee",
     "expected": "3042191717",
     "unicode": "⠞⠪⠓⠑⠑",
-    "world": "⠴⠞⠪⠓⠑⠑⠲"
+    "world": "⠴⠞⠪⠓⠑⠑⠲",
+    "jeomsarang": "⠞⠕⠺⠓⠑⠑"
   },
   {
     "input": "where'er",
     "internal": ":]e']",
     "expected": "495917459",
     "unicode": "⠱⠻⠑⠄⠻",
-    "world": "⠴⠱⠻⠑⠄⠻⠲"
+    "world": "⠴⠱⠻⠑⠄⠻⠲",
+    "jeomsarang": "⠺⠓⠑⠗⠑⠄⠑⠗"
   },
   {
     "input": "whereas",
     "internal": "\":as",
     "expected": "1649114",
     "unicode": "⠐⠱⠁⠎",
-    "world": "⠴⠐⠱⠁⠎⠲"
+    "world": "⠴⠐⠱⠁⠎⠲",
+    "jeomsarang": "⠺⠓⠑⠗⠑⠁⠎"
   },
   {
     "input": "wherever",
     "internal": ":]\"e",
     "expected": "49591617",
     "unicode": "⠱⠻⠐⠑",
-    "world": "⠴⠱⠻⠐⠑⠲"
+    "world": "⠴⠱⠻⠐⠑⠲",
+    "jeomsarang": "⠺⠓⠑⠗⠑⠧⠑⠗"
   }
 ]

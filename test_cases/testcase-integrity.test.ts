@@ -215,6 +215,7 @@ function runShardedIntegrityTests(dir: string, label: string) {
 
 runIntegrityTests('korean', 'Korean')
 runIntegrityTests('math', 'Math')
-runShardedIntegrityTests('corpus', 'Corpus')
+runShardedIntegrityTests('2024_corpus', 'NIKL 2024 corpus')
+runShardedIntegrityTests('2025_corpus', 'NIKL 2025 corpus')
 runConversionTests('korean', 'Korean')
 runConversionTests('math', 'Math')

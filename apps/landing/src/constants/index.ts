@@ -24,8 +24,24 @@ export const TEST_CASE_FILTERS: { label: string; value: TestCaseFilter }[] = [
     value: 'ipa',
   },
   {
-    label: '말뭉치',
-    value: 'corpus',
+    label: '2021 말뭉치',
+    value: '2021_corpus',
+  },
+  {
+    label: '2022 말뭉치',
+    value: '2022_corpus',
+  },
+  {
+    label: '2023 말뭉치',
+    value: '2023_corpus',
+  },
+  {
+    label: '2024 말뭉치',
+    value: '2024_corpus',
+  },
+  {
+    label: '2025 말뭉치',
+    value: '2025_corpus',
   },
 ]
 
@@ -41,7 +57,11 @@ export const CATEGORY_PREFIX_MAP: Record<string, TestCaseFilter> = {
   'english/': 'english',
   'foreign-language/': 'foreign-language',
   'ipa/': 'ipa',
-  'corpus/': 'corpus',
+  '2021_corpus/': '2021_corpus',
+  '2022_corpus/': '2022_corpus',
+  '2023_corpus/': '2023_corpus',
+  '2024_corpus/': '2024_corpus',
+  '2025_corpus/': '2025_corpus',
 }
 
 /**
@@ -61,7 +81,11 @@ export function createFilterMap(
     english: [],
     'foreign-language': [],
     ipa: [],
-    corpus: [],
+    '2021_corpus': [],
+    '2022_corpus': [],
+    '2023_corpus': [],
+    '2024_corpus': [],
+    '2025_corpus': [],
   }
 
   for (const key of ruleMapKeys) {
@@ -90,5 +114,9 @@ export const FILTER_MAP: Record<TestCaseFilter, string[]> = {
   english: [],
   'foreign-language': [],
   ipa: [],
-  corpus: [],
+  '2021_corpus': [],
+  '2022_corpus': [],
+  '2023_corpus': [],
+  '2024_corpus': [],
+  '2025_corpus': [],
 }

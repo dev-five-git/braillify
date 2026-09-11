@@ -6,7 +6,7 @@
     "expected": "52321050",
     "unicode": "⠴⠠⠊⠲",
     "world": "⠴⠠⠊⠲",
-    "jeomsarang": "⠴⠠⠊⠲"
+    "jeomsarang": "⠠⠊"
   },
   {
     "input": "II",
@@ -15,7 +15,7 @@
     "expected": "523232101050",
     "unicode": "⠴⠠⠠⠊⠊⠲",
     "world": "⠴⠠⠠⠊⠊⠲",
-    "jeomsarang": "⠴⠠⠠⠊⠊⠲"
+    "jeomsarang": "⠠⠠⠊⠊"
   },
   {
     "input": "III",
@@ -24,7 +24,7 @@
     "expected": "52323210101050",
     "unicode": "⠴⠠⠠⠊⠊⠊⠲",
     "world": "⠴⠠⠠⠊⠊⠊⠲",
-    "jeomsarang": "⠴⠠⠠⠊⠊⠊⠲"
+    "jeomsarang": "⠠⠠⠊⠊⠊"
   },
   {
     "input": "V",
@@ -33,7 +33,7 @@
     "expected": "52323950",
     "unicode": "⠴⠠⠧⠲",
     "world": "⠴⠠⠧⠲",
-    "jeomsarang": "⠴⠰⠠⠧⠲"
+    "jeomsarang": "⠠⠧"
   },
   {
     "input": "IX",
@@ -42,7 +42,7 @@
     "expected": "523232104550",
     "unicode": "⠴⠠⠠⠊⠭⠲",
     "world": "⠴⠠⠠⠊⠭⠲",
-    "jeomsarang": "⠴⠠⠠⠊⠭⠲"
+    "jeomsarang": "⠠⠠⠊⠭"
   },
   {
     "input": "X",
@@ -51,7 +51,7 @@
     "expected": "52324550",
     "unicode": "⠴⠠⠭⠲",
     "world": "⠴⠠⠭⠲",
-    "jeomsarang": "⠴⠰⠠⠭⠲"
+    "jeomsarang": "⠠⠭"
   },
   {
     "input": "XV",
@@ -60,7 +60,7 @@
     "expected": "523232453950",
     "unicode": "⠴⠠⠠⠭⠧⠲",
     "world": "⠴⠠⠠⠭⠧⠲",
-    "jeomsarang": "⠴⠠⠠⠭⠧⠲"
+    "jeomsarang": "⠠⠠⠭⠧"
   },
   {
     "input": "XX",
@@ -69,7 +69,7 @@
     "expected": "523232454550",
     "unicode": "⠴⠠⠠⠭⠭⠲",
     "world": "⠴⠠⠠⠭⠭⠲",
-    "jeomsarang": "⠴⠠⠠⠭⠭⠲"
+    "jeomsarang": "⠠⠠⠭⠭"
   },
   {
     "input": "i",
@@ -78,7 +78,7 @@
     "expected": "521050",
     "unicode": "⠴⠊⠲",
     "world": "⠴⠊⠲",
-    "jeomsarang": "⠴⠊"
+    "jeomsarang": "⠊"
   },
   {
     "input": "ii",
@@ -87,7 +87,7 @@
     "expected": "52101050",
     "unicode": "⠴⠊⠊⠲",
     "world": "⠴⠊⠊⠲",
-    "jeomsarang": "⠴⠊⠊⠲"
+    "jeomsarang": "⠊⠊"
   },
   {
     "input": "iii",
@@ -96,7 +96,7 @@
     "expected": "5210101050",
     "unicode": "⠴⠊⠊⠊⠲",
     "world": "⠴⠊⠊⠊⠲",
-    "jeomsarang": "⠴⠊⠊⠊⠲"
+    "jeomsarang": "⠊⠊⠊"
   },
   {
     "input": "v",
@@ -105,7 +105,7 @@
     "expected": "523950",
     "unicode": "⠴⠧⠲",
     "world": "⠴⠧⠲",
-    "jeomsarang": "⠴⠧"
+    "jeomsarang": "⠧"
   },
   {
     "input": "ix",
@@ -114,7 +114,7 @@
     "expected": "52104550",
     "unicode": "⠴⠊⠭⠲",
     "world": "⠴⠊⠭⠲",
-    "jeomsarang": "⠴⠊⠭⠲"
+    "jeomsarang": "⠊⠭"
   },
   {
     "input": "x",
@@ -123,7 +123,7 @@
     "expected": "524550",
     "unicode": "⠴⠭⠲",
     "world": "⠴⠭⠲",
-    "jeomsarang": "⠴⠭"
+    "jeomsarang": "⠭"
   },
   {
     "input": "xviii",
@@ -132,7 +132,7 @@
     "expected": "52453910101050",
     "unicode": "⠴⠭⠧⠊⠊⠊⠲",
     "world": "⠴⠭⠧⠊⠊⠊⠲",
-    "jeomsarang": "⠴⠭⠧⠊⠊⠊⠲"
+    "jeomsarang": "⠭⠧⠊⠊⠊"
   },
   {
     "input": "xxx",
@@ -141,7 +141,7 @@
     "expected": "5245454550",
     "unicode": "⠴⠭⠭⠭⠲",
     "world": "⠴⠭⠭⠭⠲",
-    "jeomsarang": "⠴⠭⠭⠭⠲"
+    "jeomsarang": "⠭⠭⠭"
   },
   {
     "input": "가영이는 미적분학 II 과목을 수강하고 있다.",
@@ -157,7 +157,7 @@
     "expected": "60148350322981201023406201054322105981315803954530523227172123271704832395049121050",
     "unicode": "⠼⠁⠰⠣⠀⠠⠝⠈⠌⠀⠊⠗⠨⠾⠀⠊⠶⠠⠕⠀⠻⠈⠍⠁⠺⠀⠧⠶⠵⠀⠴⠠⠛⠑⠕⠗⠛⠑⠀⠰⠠⠧⠲⠱⠌⠊⠲",
     "world": "⠼⠁⠰⠣ ⠠⠝⠈⠌ ⠊⠗⠨⠾ ⠊⠶⠠⠕ ⠻⠈⠍⠁⠺ ⠧⠶⠵ ⠴⠠⠛⠑⠕⠗⠛⠑ ⠰⠠⠧⠲⠱⠌⠊⠲",
-    "jeomsarang": "⠼⠁⠰⠣⠀⠠⠝⠈⠌⠀⠊⠗⠨⠾⠀⠊⠶⠠⠕⠀⠻⠈⠍⠁⠺⠀⠧⠶⠵⠀⠴⠠⠛⠑⠕⠗⠛⠑⠀⠰⠠⠧⠲⠱⠌⠊⠲"
+    "jeomsarang": "⠼⠁⠰⠣⠀⠠⠝⠈⠌⠀⠊⠗⠨⠾⠀⠊⠶⠠⠕⠀⠻⠈⠍⠁⠺⠀⠧⠶⠵⠀⠴⠠⠛⠑⠕⠗⠛⠑⠀⠠⠧⠲⠱⠌⠊⠲"
   },
   {
     "input": "그 책의 v-x쪽을 읽어 보세요.",
@@ -165,6 +165,6 @@
     "expected": "8420482315805239364845503240454602121140243732294450",
     "unicode": "⠈⠪⠀⠰⠗⠁⠺⠀⠴⠧⠤⠰⠭⠲⠠⠨⠭⠮⠀⠕⠂⠁⠎⠀⠘⠥⠠⠝⠬⠲",
     "world": "⠈⠪ ⠰⠗⠁⠺ ⠴⠧⠤⠰⠭⠲⠠⠨⠭⠮ ⠕⠂⠁⠎ ⠘⠥⠠⠝⠬⠲",
-    "jeomsarang": "⠈⠪⠀⠰⠗⠁⠺⠀⠴⠧⠤⠰⠭⠲⠠⠨⠭⠮⠀⠕⠂⠁⠎⠀⠘⠥⠠⠝⠬⠲"
+    "jeomsarang": "⠈⠪⠀⠰⠗⠁⠺⠀⠴⠧⠤⠭⠲⠠⠨⠭⠮⠀⠕⠂⠁⠎⠀⠘⠥⠠⠝⠬⠲"
   }
 ]

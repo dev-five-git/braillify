@@ -175,7 +175,7 @@ async function main() {
     const dir = dirent.name
     // NIKL 병렬 말뭉치는 별도 sentence-level benchmark가 `world` 필드를
     // 직접 읽어 측정한다. 규정 fixture 리포트에 섞지 않는다.
-    if (dir === 'corpus') continue
+    if (dir.endsWith('_corpus')) continue
     const dirPath = join(TEST_CASES_DIR, dir)
     const files = await readdir(dirPath)
     const jsonFiles = files.filter((f) => f.endsWith('.json')).sort()

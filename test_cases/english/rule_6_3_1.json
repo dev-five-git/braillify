@@ -4,7 +4,8 @@
     "internal": "#g3#cj a4m4",
     "expected": "6027186092601501350",
     "unicode": "⠼⠛⠒⠼⠉⠚⠀⠁⠲⠍⠲",
-    "world": "⠼⠛⠐⠂⠼⠉⠚ ⠴⠁⠲⠍⠲"
+    "world": "⠼⠛⠐⠂⠼⠉⠚ ⠴⠁⠲⠍⠲",
+    "jeomsarang": "⠼⠛⠒⠼⠉⠚⠀⠁⠲⠍⠲"
   },
   {
     "input": "10:12:2009",
@@ -12,21 +13,24 @@
     "internal": "#aj3#ab3#bjji",
     "expected": "6012618601318603262610",
     "unicode": "⠼⠁⠚⠒⠼⠁⠃⠒⠼⠃⠚⠚⠊",
-    "world": "⠼⠁⠚⠐⠂⠼⠁⠃⠐⠂⠼⠃⠚⠚⠊"
+    "world": "⠼⠁⠚⠐⠂⠼⠁⠃⠐⠂⠼⠃⠚⠚⠊",
+    "jeomsarang": "⠼⠁⠚⠐⠂⠼⠁⠃⠐⠂⠼⠃⠚⠚⠊"
   },
   {
     "input": "9-10",
     "internal": "#i-#aj",
     "expected": "60103660126",
     "unicode": "⠼⠊⠤⠼⠁⠚",
-    "world": "⠼⠊⠤⠼⠁⠚"
+    "world": "⠼⠊⠤⠼⠁⠚",
+    "jeomsarang": "⠼⠊⠤⠼⠁⠚"
   },
   {
     "input": "1914–18",
     "internal": "#aiad,-#ah",
     "expected": "60110125323660119",
     "unicode": "⠼⠁⠊⠁⠙⠠⠤⠼⠁⠓",
-    "world": "⠼⠁⠊⠁⠙⠤⠤⠼⠁⠓"
+    "world": "⠼⠁⠊⠁⠙⠤⠤⠼⠁⠓",
+    "jeomsarang": "⠼⠁⠊⠁⠙⠤⠼⠁⠓"
   },
   {
     "input": "2.5-5",
@@ -34,21 +38,24 @@
     "internal": "#b4e-#e",
     "expected": "6035017366017",
     "unicode": "⠼⠃⠲⠑⠤⠼⠑",
-    "world": "⠼⠃⠲⠑⠤⠼⠑"
+    "world": "⠼⠃⠲⠑⠤⠼⠑",
+    "jeomsarang": "⠼⠃⠲⠑⠤⠼⠑"
   },
   {
     "input": "8-cab fleet",
     "internal": "#h-cab fleet",
     "expected": "6019369130117171730",
     "unicode": "⠼⠓⠤⠉⠁⠃⠀⠋⠇⠑⠑⠞",
-    "world": "⠼⠓⠤⠴⠉⠁⠃ ⠋⠇⠑⠑⠞⠲"
+    "world": "⠼⠓⠤⠴⠉⠁⠃ ⠋⠇⠑⠑⠞⠲",
+    "jeomsarang": "⠼⠓⠤⠰⠉⠁⠃⠀⠋⠇⠑⠑⠞"
   },
   {
     "input": "The score was 4–3",
     "internal": ",! score 0 #d,-#c",
     "expected": "32460149212317052060253236609",
     "unicode": "⠠⠮⠀⠎⠉⠕⠗⠑⠀⠴⠀⠼⠙⠠⠤⠼⠉",
-    "world": "⠴⠠⠮ ⠎⠉⠕⠗⠑ ⠺⠁⠎ ⠼⠙⠤⠤⠼⠉"
+    "world": "⠴⠠⠮ ⠎⠉⠕⠗⠑ ⠺⠁⠎ ⠼⠙⠤⠤⠼⠉",
+    "jeomsarang": "⠠⠞⠓⠑⠀⠎⠉⠕⠗⠑⠀⠺⠁⠎⠀⠼⠙⠤⠼⠉"
   },
   {
     "input": "7−5 = 2",
@@ -56,7 +63,8 @@
     "internal": "#g\"-#e \"7 #b",
     "expected": "602716366017016540603",
     "unicode": "⠼⠛⠐⠤⠼⠑⠀⠐⠶⠀⠼⠃",
-    "world": "⠼⠛⠔⠼⠑ ⠒⠒ ⠼⠃"
+    "world": "⠼⠛⠔⠼⠑ ⠒⠒ ⠼⠃",
+    "jeomsarang": "⠼⠛⠔⠼⠑⠀⠒⠒⠀⠼⠃"
   },
   {
     "input": "2-½",
@@ -64,14 +72,16 @@
     "internal": "#b-#a/b",
     "expected": "60336601123",
     "unicode": "⠼⠃⠤⠼⠁⠌⠃",
-    "world": "⠼⠃⠤"
+    "world": "⠼⠃⠤",
+    "jeomsarang": "⠼⠃⠤⠼⠃⠌⠼⠁"
   },
   {
     "input": "¼-½ tsp",
     "internal": "#a/d-#a/b tsp",
     "expected": "6011225366011230301415",
     "unicode": "⠼⠁⠌⠙⠤⠼⠁⠌⠃⠀⠞⠎⠏",
-    "world": "⠤ ⠴⠞⠎⠏⠲"
+    "world": "⠤ ⠴⠞⠎⠏⠲",
+    "jeomsarang": "⠼⠙⠌⠼⠁⠤⠼⠃⠌⠼⠁⠀⠞⠎⠏"
   },
   {
     "input": "6¼—6½",
@@ -79,28 +89,32 @@
     "internal": "#f#a/d,-#f#a/b",
     "expected": "6011601122532366011601123",
     "unicode": "⠼⠋⠼⠁⠌⠙⠠⠤⠼⠋⠼⠁⠌⠃",
-    "world": "⠼⠋⠤⠤⠋"
+    "world": "⠼⠋⠤⠤⠋",
+    "jeomsarang": "⠼⠋⠼⠙⠌⠼⠁⠤⠼⠋⠼⠃⠌⠼⠁"
   },
   {
     "input": "1/4 cup",
     "internal": "#a_/#d cup",
     "expected": "60156126025093715",
     "unicode": "⠼⠁⠸⠌⠼⠙⠀⠉⠥⠏",
-    "world": "⠼⠁⠸⠌⠼⠙⠘⠌⠴⠉⠥⠏⠲"
+    "world": "⠼⠁⠸⠌⠼⠙⠘⠌⠴⠉⠥⠏⠲",
+    "jeomsarang": "⠼⠁⠸⠌⠼⠙⠀⠉⠥⠏"
   },
   {
     "input": "model 09/52",
     "internal": "model #ji_/#eb",
     "expected": "1321251770602610561260173",
     "unicode": "⠍⠕⠙⠑⠇⠀⠼⠚⠊⠸⠌⠼⠑⠃",
-    "world": "⠴⠍⠕⠙⠑⠇ ⠼⠚⠊⠸⠌⠼⠑⠃"
+    "world": "⠴⠍⠕⠙⠑⠇ ⠼⠚⠊⠸⠌⠼⠑⠃",
+    "jeomsarang": "⠍⠕⠙⠑⠇⠀⠼⠚⠊⠸⠌⠼⠑⠃"
   },
   {
     "input": "on call 24/7",
     "internal": "on call #bd_/#g",
     "expected": "21290917706032556126027",
     "unicode": "⠕⠝⠀⠉⠁⠇⠇⠀⠼⠃⠙⠸⠌⠼⠛",
-    "world": "⠴⠕⠝ ⠉⠁⠇⠇ ⠼⠃⠙⠸⠌⠼⠛"
+    "world": "⠴⠕⠝ ⠉⠁⠇⠇ ⠼⠃⠙⠸⠌⠼⠛",
+    "jeomsarang": "⠕⠝⠀⠉⠁⠇⠇⠀⠼⠃⠙⠸⠌⠼⠛"
   },
   {
     "input": "7(2)",
@@ -108,34 +122,39 @@
     "internal": "#g\"<#b\">",
     "expected": "602716356031628",
     "unicode": "⠼⠛⠐⠣⠼⠃⠐⠜",
-    "world": "⠼⠛⠦⠄⠼⠃⠠⠴"
+    "world": "⠼⠛⠦⠄⠼⠃⠠⠴",
+    "jeomsarang": "⠼⠛⠦⠄⠼⠃⠠⠴"
   },
   {
     "input": "7(b)",
     "internal": "#g\"<b\">",
     "expected": "6027163531628",
     "unicode": "⠼⠛⠐⠣⠃⠐⠜",
-    "world": "⠼⠛⠦⠄⠴⠃⠠⠴"
+    "world": "⠼⠛⠦⠄⠴⠃⠠⠴",
+    "jeomsarang": "⠼⠛⠶⠰⠃⠶"
   },
   {
     "input": "4—7",
     "internal": "#d,-#g",
     "expected": "602532366027",
     "unicode": "⠼⠙⠠⠤⠼⠛",
-    "world": "⠼⠙⠤⠤⠼⠛"
+    "world": "⠼⠙⠤⠤⠼⠛",
+    "jeomsarang": "⠼⠙⠤⠼⠛"
   },
   {
     "input": "4..7",
     "internal": "#d44g",
     "expected": "6025505027",
     "unicode": "⠼⠙⠲⠲⠛",
-    "world": "⠼⠙⠲⠲⠛"
+    "world": "⠼⠙⠲⠲⠛",
+    "jeomsarang": "⠼⠙⠲⠲⠼⠛"
   },
   {
     "input": "45̲6̲7",
     "internal": "#d_1#ef_'#g",
     "expected": "60255626017115646027",
     "unicode": "⠼⠙⠸⠂⠼⠑⠋⠸⠄⠼⠛",
-    "world": "⠼⠙⠑⠼⠋⠼⠛"
+    "world": "⠼⠙⠑⠼⠋⠼⠛",
+    "jeomsarang": "⠼⠙⠑⠀⠼⠋⠀⠼⠛"
   }
 ]

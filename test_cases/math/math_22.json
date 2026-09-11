@@ -42,7 +42,7 @@
     "expected": "609594524609",
     "unicode": "⠼⠉⠻⠭⠘⠼⠉",
     "world": "⠘⠼⠉⠴⠭⠘⠼⠉",
-    "jeomsarang": "⠘⠼⠉⠻⠭⠰⠔⠼⠉"
+    "jeomsarang": "⠘⠼⠉⠻⠭⠘⠼⠉"
   },
   {
     "input": "$\\sqrt[3]{x^3}$",
@@ -78,7 +78,7 @@
     "expected": "135929",
     "unicode": "⠍⠻⠝",
     "world": "⠴⠝⠲",
-    "jeomsarang": "⠀⠻⠝⠲"
+    "jeomsarang": "⠀⠻⠝"
   },
   {
     "input": "$\\sqrt[m]{n}$",
@@ -96,7 +96,7 @@
     "expected": "2855456162",
     "unicode": "⠜⠷⠭⠽⠾",
     "world": "⠦⠄⠴⠭⠽⠠⠴",
-    "jeomsarang": "⠻⠐⠣⠭⠽⠐⠜⠲"
+    "jeomsarang": "⠻⠶⠭⠽⠶"
   },
   {
     "input": "$\\sqrt{xy}$",
@@ -114,7 +114,7 @@
     "expected": "551329625961",
     "unicode": "⠷⠍⠝⠾⠻⠽",
     "world": "⠘⠴⠝⠐⠩⠽⠲",
-    "jeomsarang": "⠀⠘⠝⠻⠽⠲"
+    "jeomsarang": "⠀⠘⠝⠻⠽"
   },
   {
     "input": "$\\sqrt[mn]{y}$",
@@ -132,7 +132,7 @@
     "expected": "1359552959162",
     "unicode": "⠍⠻⠷⠝⠻⠁⠾",
     "world": "⠦⠄⠘⠴⠝⠐⠩⠁⠠⠴",
-    "jeomsarang": "⠀⠻⠐⠣⠘⠝⠻⠁⠐⠜⠲"
+    "jeomsarang": "⠀⠻⠶⠘⠝⠻⠁⠶"
   },
   {
     "input": "$\\sqrt[m]{\\sqrt[n]{a}}$",

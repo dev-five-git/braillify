@@ -1,4 +1,4 @@
-//! 제28항 — 로마자는 ｢통일영어점자 규정｣에 따라 다음과 같이 적는다.
+﻿//! 제28항 — 로마자는 ｢통일영어점자 규정｣에 따라 다음과 같이 적는다.
 //!
 //! English letters are mapped to braille using the UEB (Unified English Braille) system.
 //! Uppercase indicators: single ⠠(32), word ⠠⠠(32,32), passage ⠠⠠⠠(32,32,32).
@@ -15,6 +15,10 @@ use crate::rules::english_shortform::{
     permits_grade1_boundary_after_run, requires_grade1_indicator,
 };
 use crate::rules::english_ueb::korean_context::KoreanPrefixInput;
+use crate::rules::english_ueb::rule_10_9::requires_grade1_before_spelled_letters;
+use crate::rules::english_ueb::rule_10_12::{
+    RomanRunPosition, is_letter_initialism_in_korean_text,
+};
 use crate::rules::english_ueb::span::{encode_korean_unit, encode_korean_word};
 use crate::rules::english_ueb::standing_alone::lower_wordsign_usable;
 use crate::rules::english_ueb::token::EnglishToken;
@@ -55,6 +59,19 @@ fn uppercase_indicators(
     }
 }
 
+/// Whether the emitted cells end with a capitals word/passage prefix (`⠠⠠`,
+/// `⠠⠠⠠`) that is itself preceded by the grade-1 symbol `⠰`.
+fn grade1_precedes_capitals_prefix(result: &[u8]) -> bool {
+    let capitals = result
+        .iter()
+        .rev()
+        .take_while(|cell| **cell == UPPERCASE_SINGLE)
+        .count();
+    capitals >= 2
+        && result[..result.len() - capitals].last()
+            == Some(&crate::rules::korean::rule_29::ENGLISH_CONTINUATION)
+}
+
 /// Plugin struct for the rule engine.
 ///
 /// Handles 제28항 English-in-Korean encoding: 로마자표/연속표 entry and uppercase
@@ -83,12 +100,18 @@ impl BrailleRule for Rule28 {
 
         // At index 0 the emitter may already have emitted the Roman indicator,
         // so use its pre-entry snapshot. For an ASCII run later in a mixed
-        // print word, the live mode accurately says whether this run continues
-        // an existing Roman section or starts a fresh one.
+        // print word, the live mode says whether the section is still open,
+        // but an opening bracket alone (`(Like)`) does not make this run a
+        // continuation: 제37항 still treats it as the section's first word
+        // unless Roman text already preceded it.
         let continuing_roman_section = if ctx.index == 0 {
             ctx.roman_section_continues_from_previous_word
         } else {
             ctx.state.is_english
+                && (ctx.roman_section_continues_from_previous_word
+                    || ctx.word_chars[..ctx.index]
+                        .iter()
+                        .any(|ch| ch.is_ascii_alphanumeric()))
         };
 
         // Enter English mode (로마자표 / 연속표)
@@ -158,7 +181,19 @@ impl BrailleRule for Rule28 {
                         )
                 });
             let run_is_all_uppercase = run.iter().all(|ch| ch.is_ascii_uppercase());
-            let is_standing_alone_ordinary_run = !run_is_all_uppercase
+            // UEB 10.12.1 (`rule_10_12`): an all-capitals initialism in Korean
+            // text is spelled with alphabet signs only.
+            let letter_initialism = is_letter_initialism_in_korean_text(
+                ctx.state,
+                &RomanRunPosition {
+                    word_chars: ctx.word_chars,
+                    run_start: ctx.index,
+                    run_end,
+                    prev_word: ctx.prev_word,
+                    next_word: ctx.remaining_words.first().copied(),
+                },
+            );
+            let is_standing_alone_ordinary_run = (!run_is_all_uppercase || !letter_initialism)
                 && word_initial
                 && permits_grade1_boundary_after_run(&ctx.word_chars[run_end..]);
             // Rule 37's PDF example, "그는 Can you help me?라고 도움을 요청했다.",
@@ -167,9 +202,9 @@ impl BrailleRule for Rule28 {
             // Roman words in the same section, so every complete ordinary-cased word
             // after the first Roman word has the same continuation status, including
             // the final word of a phrase. UEB capitalization does not suppress a
-            // wordsign, hence Title-case `Like`/`This` follows the same rule. All-caps
-            // runs remain excluded because Rule 10.12.1 initialisms and emphasized
-            // words have the same surface form and require pronunciation semantics.
+            // wordsign, hence Title-case `Like`/`This` follows the same rule. An
+            // all-caps run joins them once Rule 10.12.1 has read it as a word rather
+            // than as an initialism (`WE GO`, `Fix YOU`).
             // Rule 39's "What is 김치 in English?" resumes the surrounding English
             // passage after Korean, so the persistent English-dominant gate retains
             // the resumed `in` wordsign. Neither gate depends on a corpus reference.
@@ -247,35 +282,76 @@ impl BrailleRule for Rule28 {
             let single_letter_wordsign_collision = run.len() == 1
                 && requires_single_letter_continuation(run[0])
                 && ctx.index == 0
+                && ctx.state.english_indicator
                 && ctx.roman_section_continues_from_previous_word
                 && !entire_isolated_rule_28_specimen;
-            let shortform_collision = requires_grade1_indicator(&uppercase_run);
+            let shortform_collision = if letter_initialism {
+                requires_grade1_before_spelled_letters(&uppercase_run)
+            } else {
+                requires_grade1_indicator(&uppercase_run)
+            };
             let prepend_grade1_indicator = !caps_already_emitted
                 && word_initial
                 && !digit_adjacent
-                && run.iter().all(|ch| ch.is_ascii_uppercase())
                 && permits_grade1_boundary_after_run(&ctx.word_chars[run_end..])
-                && (single_letter_wordsign_collision || shortform_collision);
+                && (single_letter_wordsign_collision
+                    || (run_is_all_uppercase && shortform_collision));
             let apostrophe_joined_lexeme =
                 crate::rules::english_ueb::pronunciation::apostrophe_elided_recorded_word_at(
                     ctx.word_chars,
                     ctx.index,
                     run_end,
                 );
+            // 제37항 names only the §10.1 alphabetic and §10.5 lower wordsigns
+            // as words to spell out after the Roman indicator. A §10.2 strong
+            // wordsign (`out`, `this`, `which`, …) that is the whole Roman item
+            // therefore keeps its single cell even as the first Roman word.
+            let run_is_whole_roman_item = !ctx.word_chars[..ctx.index]
+                .iter()
+                .chain(&ctx.word_chars[run_end..])
+                .any(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '-' | '\''));
+            if !standalone_wordsign
+                && !letter_initialism
+                && run_is_whole_roman_item
+                && let Some(cell) = crate::rules::english_ueb::rule_10_2::wordsign(&lower_run)
+            {
+                if !caps_already_emitted {
+                    if run_is_all_uppercase && run.len() >= 2 {
+                        ctx.emit_slice(&[UPPERCASE_SINGLE, UPPERCASE_SINGLE]);
+                    } else if run[0].is_ascii_uppercase() {
+                        ctx.emit(UPPERCASE_SINGLE);
+                    }
+                }
+                ctx.emit(cell);
+                *ctx.skip_count = run.len().saturating_sub(1);
+                crate::rules::roman_mode::set_section_open_keeping_number_chain(ctx.state, true);
+                return Ok(RuleResult::Consumed);
+            }
+            // 제37항 names wordsigns only, so a §10.9 shortform (`Good`,
+            // `First`, `After`) stays available to the entry word whenever the
+            // run itself stands alone (§2.6).
+            let shortform_usable = is_standing_alone_ordinary_run;
             if let Some(cells) = encode_korean_word(
                 run,
                 caps_already_emitted,
                 prepend_grade1_indicator,
                 standalone_wordsign,
+                shortform_usable,
                 word_initial,
                 digit_adjacent,
                 numeric_grade1_active,
                 apostrophe_joined_lexeme,
+                letter_initialism,
             ) {
-                ctx.emit_slice(&cells);
+                // UEB 5.8.1: the token rule already placed the §10.9.7 grade-1
+                // symbol before the capitals prefix it emitted (`⠰⠠⠠⠁⠛`), so
+                // the engine's own §10.9.7 symbol for the same word is dropped.
+                let duplicate_grade1 = ctx.index == 0
+                    && grade1_precedes_capitals_prefix(ctx.result)
+                    && cells.first() == Some(&crate::rules::korean::rule_29::ENGLISH_CONTINUATION);
+                ctx.emit_slice(&cells[usize::from(duplicate_grade1)..]);
                 *ctx.skip_count = run.len().saturating_sub(1);
-                ctx.state.is_english = true;
-                ctx.state.needs_english_continuation = false;
+                crate::rules::roman_mode::set_section_open_keeping_number_chain(ctx.state, true);
                 return Ok(RuleResult::Consumed);
             }
         }
@@ -321,8 +397,7 @@ impl BrailleRule for Rule28 {
             *ctx.skip_count = unit.consumed.saturating_sub(1);
         }
 
-        ctx.state.is_english = true;
-        ctx.state.needs_english_continuation = false;
+        crate::rules::roman_mode::set_section_open_keeping_number_chain(ctx.state, true);
         Ok(RuleResult::Consumed)
     }
 }
@@ -431,7 +506,7 @@ mod tests {
     #[case::closing_group_before_korean_middle_dot("(CD)·현금", true)]
     #[case::adjacent_digit("‘CD47", false)]
     #[case::slash_continuation("‘CD/ATM", false)]
-    #[case::opening_group_after_sequence("‘LLC(회사)", false)]
+    #[case::opening_group_after_sequence("‘LLC(회사)", true)]
     fn noninitial_ascii_run_respects_grade1_boundary(#[case] input: &str, #[case] expected: bool) {
         let encoded = crate::encode(input).unwrap();
         assert_eq!(
@@ -717,5 +792,62 @@ mod tests {
         let mut ctx = owned.ctx_at(0);
         let outcome = Rule28.apply(&mut ctx).unwrap();
         assert!(matches!(outcome, RuleResult::Skip));
+    }
+}
+
+#[cfg(test)]
+mod uppercase_run_coverage {
+    /// UEB 10.12.1: an all-capitals initialism in Korean text is spelled with
+    /// alphabet signs; a mixed-case Roman run keeps its ordinary route.
+    #[rstest::rstest]
+    #[case::initialism("그는 WHO 를")]
+    #[case::hyphenated_run("그는 CV3-AD685 를")]
+    #[case::mixed_case("그는 Lincoln 을")]
+    fn a_roman_run_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod uppercase_indicator_coverage {
+    /// 제28항: 대문자 하나는 대문자표를, 둘 이상 이어지면 대문자 낱말표를 앞세운다.
+    /// UEB 10.12.1 의 두문자어는 알파벳 기호로만 적는다.
+    #[rstest::rstest]
+    #[case::single_capital("그는 Ab 를")]
+    #[case::two_capitals("그는 AB 를")]
+    #[case::initialism("그는 WHO 를")]
+    #[case::hyphenated_run("그는 CV3-AD685 를")]
+    #[case::mixed_case("그는 Lincoln 을")]
+    fn a_roman_run_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod strong_wordsign_coverage {
+    /// 제37항은 §10.1·§10.5 의 낱말 약자만 풀어 적게 한다. 로마자 항목 전체가
+    /// §10.2 의 강한 낱말 약자이면 대문자 표시만 앞세우고 한 칸으로 적는다.
+    #[rstest::rstest]
+    #[case::lowercase("그는 this 를")]
+    #[case::title_case("그는 This 를")]
+    #[case::all_capitals("그는 THIS 를")]
+    #[case::another_wordsign("그는 WHICH 를")]
+    fn a_strong_wordsign_as_the_whole_item_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod enclosed_wordsign_coverage {
+    /// 제37항 + §10.2: 괄호나 따옴표에 싸여 낱말 첫 글자가 아닌 자리에서도 강한
+    /// 낱말 약자는 한 칸으로 적고, 그 앞에 대문자 표시를 붙인다.
+    #[rstest::rstest]
+    #[case::all_capitals_in_parentheses("그는 (THIS) 를")]
+    #[case::all_capitals_out("그는 (OUT) 을")]
+    #[case::title_case_in_parentheses("그는 (This) 를")]
+    #[case::lowercase_in_parentheses("그는 (this) 를")]
+    #[case::all_capitals_in_quotes("그는 \u{201C}WHICH\u{201D} 를")]
+    fn an_enclosed_strong_wordsign_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
     }
 }

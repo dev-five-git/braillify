@@ -147,6 +147,13 @@ impl BrailleRule for Rule49 {
             return Ok(RuleResult::Consumed);
         }
 
+        // 제40항 + 제48항: a number that begins with its decimal point (`.846`)
+        // still opens with the 수표, so the point is written by rule 40 after
+        // the 수표 (⠼⠲⠓⠙⠋) and emits nothing here.
+        if super::rule_40::is_leading_decimal_point(ctx.word_chars, ctx.index) {
+            return Ok(RuleResult::Consumed);
+        }
+
         if *c == '×'
             && ctx.word_len() == 1
             && ctx.prev_word.is_empty()
@@ -337,5 +344,18 @@ mod tests {
                 decode_unicode('⠇'),
             ]
         );
+    }
+}
+
+#[cfg(test)]
+mod emphasis_mark_coverage {
+    /// 제56항 입력 표기: a print source may still carry the `"˙` opening and the
+    /// `__` closing of an emphasis span.
+    #[rstest::rstest]
+    #[case::opening("\"\u{02D9}강조")]
+    #[case::closing("강조__")]
+    #[case::plain_quote("\"강조\"")]
+    fn emphasis_input_notation_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
     }
 }

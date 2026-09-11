@@ -6,7 +6,7 @@
     "expected": "221419",
     "unicode": "⠖⠎⠓",
     "world": "⠴⠎⠔⠓⠲",
-    "jeomsarang": "⠴⠎⠔⠓⠲"
+    "jeomsarang": "⠎⠊⠝⠓"
   },
   {
     "input": "$\\sinh$",
@@ -24,7 +24,7 @@
     "expected": "22919",
     "unicode": "⠖⠉⠓",
     "world": "⠴⠉⠕⠩⠲",
-    "jeomsarang": "⠴⠉⠕⠩⠲"
+    "jeomsarang": "⠉⠕⠎⠓"
   },
   {
     "input": "$\\cosh$",
@@ -42,7 +42,7 @@
     "expected": "223019",
     "unicode": "⠖⠞⠓",
     "world": "⠴⠞⠁⠝⠓⠲",
-    "jeomsarang": "⠴⠞⠁⠝⠓⠲"
+    "jeomsarang": "⠞⠁⠝⠓"
   },
   {
     "input": "$\\tanh$",
@@ -60,7 +60,7 @@
     "expected": "22141945",
     "unicode": "⠖⠎⠓⠭",
     "world": "⠴⠎⠔⠓⠭⠲",
-    "jeomsarang": "⠴⠎⠔⠓⠭⠲"
+    "jeomsarang": "⠎⠊⠝⠓⠭"
   },
   {
     "input": "$\\sinh x$",
@@ -78,7 +78,7 @@
     "expected": "2291945",
     "unicode": "⠖⠉⠓⠭",
     "world": "⠴⠉⠕⠩⠭⠲",
-    "jeomsarang": "⠴⠉⠕⠩⠭⠲"
+    "jeomsarang": "⠉⠕⠎⠓⠭"
   },
   {
     "input": "$\\cosh x$",
@@ -96,7 +96,7 @@
     "expected": "22301945",
     "unicode": "⠖⠞⠓⠭",
     "world": "⠴⠞⠁⠝⠓⠭⠲",
-    "jeomsarang": "⠴⠞⠁⠝⠓⠭⠲"
+    "jeomsarang": "⠞⠁⠝⠓⠭"
   },
   {
     "input": "$\\tanh x$",
@@ -114,7 +114,7 @@
     "expected": "2214194518186031255172445201724204562",
     "unicode": "⠖⠎⠓⠭⠒⠒⠼⠃⠌⠷⠑⠘⠭⠔⠑⠘⠔⠭⠾",
     "world": "⠴⠈⠎⠸⠡⠴⠎⠔⠓ ⠭⠐⠶⠸⠡⠋⠗⠁⠉⠸⠣⠑⠈⠢⠭⠤⠑⠈⠢⠸⠣⠤⠰⠭⠐⠴⠐⠴⠦⠂⠼⠃⠐⠴⠈⠎",
-    "jeomsarang": ""
+    "jeomsarang": "⠈⠲⠈⠳⠎⠊⠝⠓⠀⠭⠰⠶⠈⠳⠋⠗⠁⠉⠪⠑⠈⠢⠭⠤⠑⠈⠢⠪⠤⠭⠻⠻⠪⠼⠃⠻⠈⠲"
   },
   {
     "input": "cosh²x-sinh²x=1",
@@ -123,7 +123,7 @@
     "expected": "2291924603452022141924603451818601",
     "unicode": "⠖⠉⠓⠘⠼⠃⠭⠔⠖⠎⠓⠘⠼⠃⠭⠒⠒⠼⠁",
     "world": "⠴⠉⠕⠩⠘⠼⠃⠭⠤⠎⠔⠓⠘⠼⠃⠭⠒⠒⠼⠁",
-    "jeomsarang": "⠴⠉⠕⠩⠰⠔⠼⠃⠭⠤⠎⠔⠓⠰⠔⠼⠃⠭⠐⠶⠼⠁"
+    "jeomsarang": "⠉⠕⠎⠓⠘⠼⠃⠭⠤⠎⠊⠝⠓⠘⠼⠃⠭⠐⠶⠼⠁"
   },
   {
     "input": "$\\cosh^2x-\\sinh^2x=1$",

@@ -4,27 +4,31 @@
     "internal": "deactivate",
     "expected": "25171930103913017",
     "unicode": "⠙⠑⠁⠉⠞⠊⠧⠁⠞⠑",
-    "world": "⠴⠙⠑⠁⠉⠞⠊⠧⠁⠞⠑⠲"
+    "world": "⠴⠙⠑⠁⠉⠞⠊⠧⠁⠞⠑⠲",
+    "jeomsarang": "⠙⠑⠁⠉⠞⠊⠧⠁⠞⠑"
   },
   {
     "input": "geanticline",
     "internal": "geanticl9e",
     "expected": "27171293010972017",
     "unicode": "⠛⠑⠁⠝⠞⠊⠉⠇⠔⠑",
-    "world": "⠴⠛⠑⠁⠝⠞⠊⠉⠇⠔⠑⠲"
+    "world": "⠴⠛⠑⠁⠝⠞⠊⠉⠇⠔⠑⠲",
+    "jeomsarang": "⠛⠑⠁⠝⠞⠊⠉⠇⠊⠝⠑"
   },
   {
     "input": "preamble",
     "internal": "preamble",
     "expected": "1523171133717",
     "unicode": "⠏⠗⠑⠁⠍⠃⠇⠑",
-    "world": "⠴⠏⠗⠑⠁⠍⠃⠇⠑⠲"
+    "world": "⠴⠏⠗⠑⠁⠍⠃⠇⠑⠲",
+    "jeomsarang": "⠏⠗⠑⠁⠍⠃⠇⠑"
   },
   {
     "input": "reaction",
     "internal": "reac;n",
     "expected": "2317194829",
     "unicode": "⠗⠑⠁⠉⠰⠝",
-    "world": "⠴⠗⠑⠁⠉⠰⠝⠲"
+    "world": "⠴⠗⠑⠁⠉⠰⠝⠲",
+    "jeomsarang": "⠗⠑⠁⠉⠞⠊⠕⠝"
   }
 ]

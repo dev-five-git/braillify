@@ -5,14 +5,16 @@
     "internal": ",h;5#b,o",
     "expected": "321948346033221",
     "unicode": "⠠⠓⠰⠢⠼⠃⠠⠕",
-    "world": "⠴⠠⠓⠰⠼⠃⠠⠕⠲"
+    "world": "⠴⠠⠓⠰⠼⠃⠠⠕⠲",
+    "jeomsarang": "⠠⠓⠰⠼⠃⠠⠕"
   },
   {
     "input": "O",
     "internal": ",o",
     "expected": "3221",
     "unicode": "⠠⠕",
-    "world": "⠴⠠⠕⠲"
+    "world": "⠴⠠⠕⠲",
+    "jeomsarang": "⠠⠕"
   },
   {
     "input": "H",
@@ -20,21 +22,24 @@
     "internal": ";,h",
     "expected": "483219",
     "unicode": "⠰⠠⠓",
-    "world": "⠴⠠⠓⠲"
+    "world": "⠴⠠⠓⠲",
+    "jeomsarang": "⠠⠓"
   },
   {
     "input": "OH",
     "internal": ",o,h",
     "expected": "32213219",
     "unicode": "⠠⠕⠠⠓",
-    "world": "⠴⠠⠠⠕⠓⠲"
+    "world": "⠴⠠⠠⠕⠓⠲",
+    "jeomsarang": "⠠⠠⠕⠓"
   },
   {
     "input": "KCl",
     "internal": ",k,cl",
     "expected": "3253297",
     "unicode": "⠠⠅⠠⠉⠇",
-    "world": "⠴⠠⠠⠅⠉⠠⠄⠇⠲"
+    "world": "⠴⠠⠠⠅⠉⠠⠄⠇⠲",
+    "jeomsarang": "⠠⠅⠠⠉⠇"
   },
   {
     "input": "CH₂OH",
@@ -42,13 +47,15 @@
     "internal": ",c,h;5#b,o,h",
     "expected": "3293219483460332213219",
     "unicode": "⠠⠉⠠⠓⠰⠢⠼⠃⠠⠕⠠⠓",
-    "world": "⠴⠠⠠⠡⠰⠼⠃⠠⠠⠕⠓⠲"
+    "world": "⠴⠠⠠⠡⠰⠼⠃⠠⠠⠕⠓⠲",
+    "jeomsarang": "⠠⠠⠉⠓⠰⠼⠃⠠⠠⠕⠓"
   },
   {
     "input": "HOCH₂",
     "internal": ",h,o,c,h;5#b",
     "expected": "3219322132932194834603",
     "unicode": "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃",
-    "world": "⠴⠠⠠⠓⠕⠡⠰⠼⠃"
+    "world": "⠴⠠⠠⠓⠕⠡⠰⠼⠃",
+    "jeomsarang": "⠠⠠⠓⠕⠉⠓⠲⠰⠼⠃"
   }
 ]

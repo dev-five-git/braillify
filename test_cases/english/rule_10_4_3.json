@@ -4,118 +4,135 @@
     "internal": "f+]",
     "expected": "114459",
     "unicode": "⠋⠬⠻",
-    "world": "⠴⠋⠬⠻⠲"
+    "world": "⠴⠋⠬⠻⠲",
+    "jeomsarang": "⠋⠊⠝⠛⠑⠗"
   },
   {
     "input": "ginger",
     "internal": "g+]",
     "expected": "274459",
     "unicode": "⠛⠬⠻",
-    "world": "⠴⠛⠬⠻⠲"
+    "world": "⠴⠛⠬⠻⠲",
+    "jeomsarang": "⠛⠊⠝⠛⠑⠗"
   },
   {
     "input": "singe",
     "internal": "s+e",
     "expected": "144417",
     "unicode": "⠎⠬⠑",
-    "world": "⠴⠎⠬⠑⠲"
+    "world": "⠴⠎⠬⠑⠲",
+    "jeomsarang": "⠎⠊⠝⠛⠑"
   },
   {
     "input": "singeing",
     "internal": "s+e+",
     "expected": "14441744",
     "unicode": "⠎⠬⠑⠬",
-    "world": "⠴⠎⠬⠑⠬⠲"
+    "world": "⠴⠎⠬⠑⠬⠲",
+    "jeomsarang": "⠎⠊⠝⠛⠑⠊⠝⠛"
   },
   {
     "input": "sting",
     "internal": "/+",
     "expected": "1244",
     "unicode": "⠌⠬",
-    "world": "⠴⠌⠬⠲"
+    "world": "⠴⠌⠬⠲",
+    "jeomsarang": "⠎⠞⠊⠝⠛"
   },
   {
     "input": "stinging",
     "internal": "/++",
     "expected": "124444",
     "unicode": "⠌⠬⠬",
-    "world": "⠴⠌⠬⠬⠲"
+    "world": "⠴⠌⠬⠬⠲",
+    "jeomsarang": "⠎⠞⠊⠝⠛⠊⠝⠛"
   },
   {
     "input": "brown(ing)",
     "internal": "br[n\"<+\">",
     "expected": "32342291635441628",
     "unicode": "⠃⠗⠪⠝⠐⠣⠬⠐⠜",
-    "world": "⠴⠃⠗⠪⠝⠐⠣⠬⠠⠴"
+    "world": "⠴⠃⠗⠪⠝⠐⠣⠬⠠⠴",
+    "jeomsarang": "⠃⠗⠕⠺⠝⠶⠊⠝⠛⠶"
   },
   {
     "input": "brown𝑖𝑛𝑔",
     "internal": "br[n.2+",
     "expected": "323422940644",
     "unicode": "⠃⠗⠪⠝⠨⠆⠬",
-    "world": "⠴⠃⠗⠪⠝"
+    "world": "⠴⠃⠗⠪⠝",
+    "jeomsarang": "⠃⠗⠕⠺⠝⠊⠝⠛"
   },
   {
     "input": "SmithInge",
     "internal": ",smi?,+e",
     "expected": "3214131057324417",
     "unicode": "⠠⠎⠍⠊⠹⠠⠬⠑",
-    "world": "⠴⠠⠎⠍⠊⠹⠠⠬⠑⠲"
+    "world": "⠴⠠⠎⠍⠊⠹⠠⠬⠑⠲",
+    "jeomsarang": "⠠⠎⠍⠊⠞⠓⠠⠊⠝⠛⠑"
   },
   {
     "input": "Ch'ing Dynasty",
     "internal": ",*'+ ,dyna/y",
     "expected": "323344403225612911261",
     "unicode": "⠠⠡⠄⠬⠀⠠⠙⠽⠝⠁⠌⠽",
-    "world": "⠴⠠⠡⠄⠬ ⠠⠙⠽⠝⠁⠌⠽⠲"
+    "world": "⠴⠠⠡⠄⠬ ⠠⠙⠽⠝⠁⠌⠽⠲",
+    "jeomsarang": "⠠⠉⠓⠄⠊⠝⠛⠀⠠⠙⠽⠝⠁⠎⠞⠽"
   },
   {
     "input": "ingot",
     "internal": "9got",
     "expected": "20272130",
     "unicode": "⠔⠛⠕⠞",
-    "world": "⠴⠔⠛⠕⠞⠲"
+    "world": "⠴⠔⠛⠕⠞⠲",
+    "jeomsarang": "⠊⠝⠛⠕⠞"
   },
   {
     "input": "Ingoldsby",
     "internal": ",9goldsby",
     "expected": "3220272172514361",
     "unicode": "⠠⠔⠛⠕⠇⠙⠎⠃⠽",
-    "world": "⠴⠠⠔⠛⠕⠇⠙⠎⠃⠽⠲"
+    "world": "⠴⠠⠔⠛⠕⠇⠙⠎⠃⠽⠲",
+    "jeomsarang": "⠠⠊⠝⠛⠕⠇⠙⠎⠃⠽"
   },
   {
     "input": "ingredients",
     "internal": "9gr$i5ts",
     "expected": "2027234310343014",
     "unicode": "⠔⠛⠗⠫⠊⠢⠞⠎",
-    "world": "⠴⠔⠛⠗⠫⠊⠢⠞⠎⠲"
+    "world": "⠴⠔⠛⠗⠫⠊⠢⠞⠎⠲",
+    "jeomsarang": "⠊⠝⠛⠗⠑⠙⠊⠑⠝⠞⠎"
   },
   {
     "input": "ingrown",
     "internal": "9gr[n",
     "expected": "2027234229",
     "unicode": "⠔⠛⠗⠪⠝",
-    "world": "⠴⠔⠛⠗⠪⠝⠲"
+    "world": "⠴⠔⠛⠗⠪⠝⠲",
+    "jeomsarang": "⠊⠝⠛⠗⠕⠺⠝"
   },
   {
     "input": "to-ing and fro-ing",
     "internal": "to-9g & fro-9g",
     "expected": "30213620270470112321362027",
     "unicode": "⠞⠕⠤⠔⠛⠀⠯⠀⠋⠗⠕⠤⠔⠛",
-    "world": "⠴⠞⠕⠤⠔⠛ ⠯ ⠋⠗⠕⠤⠔⠛⠲"
+    "world": "⠴⠞⠕⠤⠔⠛ ⠯ ⠋⠗⠕⠤⠔⠛⠲",
+    "jeomsarang": "⠞⠕⠤⠊⠝⠛⠀⠁⠝⠙⠀⠋⠗⠕⠤⠊⠝⠛"
   },
   {
     "input": "brown-𝑖𝑛𝑔",
     "internal": "br[n-.19g",
     "expected": "3234229364022027",
     "unicode": "⠃⠗⠪⠝⠤⠨⠂⠔⠛",
-    "world": "⠴⠃⠗⠪⠝⠲⠤"
+    "world": "⠴⠃⠗⠪⠝⠲⠤",
+    "jeomsarang": "⠃⠗⠕⠺⠝⠤⠊⠝⠛"
   },
   {
     "input": "Smith–Inge",
     "internal": ",smi?,-,9ge",
     "expected": "3214131057323632202717",
     "unicode": "⠠⠎⠍⠊⠹⠠⠤⠠⠔⠛⠑",
-    "world": "⠴⠠⠎⠍⠊⠹⠠⠤⠠⠔⠛⠑⠲"
+    "world": "⠴⠠⠎⠍⠊⠹⠠⠤⠠⠔⠛⠑⠲",
+    "jeomsarang": "⠠⠎⠍⠊⠞⠓⠤⠠⠊⠝⠛⠑"
   }
 ]

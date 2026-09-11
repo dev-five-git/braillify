@@ -5,28 +5,32 @@
     "internal": "^p#c",
     "expected": "2415609",
     "unicode": "⠘⠏⠼⠉",
-    "world": "⠘⠏⠼⠉"
+    "world": "⠘⠏⠼⠉",
+    "jeomsarang": "⠴⠘⠏⠼⠉"
   },
   {
     "input": "¶C",
     "internal": "^p,c",
     "expected": "2415329",
     "unicode": "⠘⠏⠠⠉",
-    "world": "⠘⠏⠴⠠⠉⠲"
+    "world": "⠘⠏⠴⠠⠉⠲",
+    "jeomsarang": "⠴⠘⠏⠠⠉"
   },
   {
     "input": "¶g",
     "internal": "^pg",
     "expected": "241527",
     "unicode": "⠘⠏⠛",
-    "world": "⠘⠏⠴⠛⠲"
+    "world": "⠘⠏⠴⠛⠲",
+    "jeomsarang": "⠴⠘⠏⠛"
   },
   {
     "input": "Click on the ¶ icon on the toolbar.",
     "internal": ",click on ! ^p icon on ! toolb>4",
     "expected": "32971095021290460241501092129021290460302121732850",
     "unicode": "⠠⠉⠇⠊⠉⠅⠀⠕⠝⠀⠮⠀⠘⠏⠀⠊⠉⠕⠝⠀⠕⠝⠀⠮⠀⠞⠕⠕⠇⠃⠜⠲",
-    "world": "⠴⠠⠉⠇⠊⠉⠅ ⠕⠝ ⠮ ⠘⠏ ⠊⠉⠕⠝ ⠕⠝ ⠮ ⠞⠕⠕⠇⠃⠜⠲"
+    "world": "⠴⠠⠉⠇⠊⠉⠅ ⠕⠝ ⠮ ⠘⠏ ⠊⠉⠕⠝ ⠕⠝ ⠮ ⠞⠕⠕⠇⠃⠜⠲",
+    "jeomsarang": "⠠⠉⠇⠊⠉⠅⠀⠕⠝⠀⠞⠓⠑⠀⠴⠘⠏⠀⠊⠉⠕⠝⠀⠕⠝⠀⠞⠓⠑⠀⠞⠕⠕⠇⠃⠁⠗⠲"
   },
   {
     "input": "§5",
@@ -34,21 +38,24 @@
     "internal": "^s#e",
     "expected": "24146017",
     "unicode": "⠘⠎⠼⠑",
-    "world": "⠘⠎⠼⠑"
+    "world": "⠘⠎⠼⠑",
+    "jeomsarang": "⠴⠘⠎⠼⠑"
   },
   {
     "input": "§K",
     "internal": "^s,k",
     "expected": "2414325",
     "unicode": "⠘⠎⠠⠅",
-    "world": "⠘⠎⠴⠠⠅⠲"
+    "world": "⠘⠎⠴⠠⠅⠲",
+    "jeomsarang": "⠴⠘⠎⠠⠅"
   },
   {
     "input": "§d",
     "internal": "^sd",
     "expected": "241425",
     "unicode": "⠘⠎⠙",
-    "world": "⠘⠎⠴⠙⠲"
+    "world": "⠘⠎⠴⠙⠲",
+    "jeomsarang": "⠴⠘⠎⠙"
   },
   {
     "input": "§§ 5-15",
@@ -56,6 +63,7 @@
     "internal": "^s^s #e-#ae",
     "expected": "24142414060173660117",
     "unicode": "⠘⠎⠘⠎⠀⠼⠑⠤⠼⠁⠑",
-    "world": "⠘⠎⠘⠎ ⠼⠑⠤⠼⠁⠑"
+    "world": "⠘⠎⠘⠎ ⠼⠑⠤⠼⠁⠑",
+    "jeomsarang": "⠴⠘⠎⠲⠴⠘⠎⠀⠼⠑⠤⠼⠁⠑"
   }
 ]

@@ -624,14 +624,53 @@ fn is_closed_roman_annotation_suffix(chars: &[char]) -> bool {
     let body = &chars[1..close];
     let trailing = &chars[close + 1..];
 
+    let is_section_letter =
+        |c: &char| c.is_ascii_alphabetic() || crate::rules::korean::rule_31::is_greek_letter(*c);
     !body.is_empty()
-        && body.iter().any(|c| c.is_ascii_alphabetic())
+        && body.iter().any(is_section_letter)
         && body
             .iter()
-            .all(|c| c.is_ascii_alphanumeric() || matches!(*c, '-' | '\'' | '.'))
+            .all(|c| is_section_letter(c) || c.is_ascii_digit() || matches!(*c, '-' | '\'' | '.'))
         && trailing
             .iter()
             .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+}
+
+/// 제34항 attaches a bracket to the Korean word it annotates and 제54항 keeps the
+/// bracket closed onto its contents, so `목요일(6/4)`, `일대일(1:1)` and
+/// `1500m(1)` are Korean-mode annotations written with 한글 괄호. Only a body of
+/// digits joined by ordinary marks qualifies; an operator or a letter leaves the
+/// parenthetical to the math engine (`정수(x+1)`).
+fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
+    if chars.first() != Some(&'(') {
+        return false;
+    }
+    let Some(close) = chars.iter().position(|c| *c == ')') else {
+        return false;
+    };
+    let body = &chars[1..close];
+    let trailing = &chars[close + 1..];
+    body.iter().any(char::is_ascii_digit)
+        && body
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(*c, '/' | ':' | '.' | ',' | '~' | '\u{223C}'))
+        && trailing
+            .iter()
+            .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+}
+
+/// 제49항 붙임표 `⠤` follows print spacing, and 제55항 [다만] keeps an affix
+/// hyphen with its word: `코로나-19`, `화성-12형` attach a 붙임표, not a
+/// spaced 제46항 minus sign.
+fn is_hyphenated_number_suffix(chars: &[char]) -> bool {
+    let Some(('-', digits)) = chars.split_first().map(|(head, rest)| (*head, rest)) else {
+        return false;
+    };
+    !digits.is_empty()
+        && digits.first().is_some_and(char::is_ascii_digit)
+        && digits
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(*c, '.' | ','))
 }
 
 pub(super) fn split_mixed_math_word(
@@ -684,7 +723,10 @@ pub(super) fn split_mixed_math_word(
         if !prefix_all_korean || !suffix_no_korean {
             return None;
         }
-        if is_closed_roman_annotation_suffix(suffix_chars) {
+        if is_closed_roman_annotation_suffix(suffix_chars)
+            || is_closed_numeric_annotation_suffix(suffix_chars)
+            || is_hyphenated_number_suffix(suffix_chars)
+        {
             return None;
         }
         let suffix_text: String = suffix_chars.iter().collect();
@@ -945,5 +987,69 @@ mod tests {
             meta: WordMeta::from_chars(&chars),
         };
         let _ = split_mixed_math_word(&word, 0, MathContext::default());
+    }
+}
+
+#[cfg(test)]
+mod attached_korean_name_coverage {
+    use super::*;
+
+    /// 제34항: only a Korean run of three or more syllables reads as a name
+    /// that owns the following parenthetical.
+    #[rstest::rstest]
+    #[case::two_syllables("김씨(30)이", 2, 6, false)]
+    #[case::three_syllables("홍길동(30)이", 3, 7, true)]
+    fn a_name_needs_three_korean_syllables(
+        #[case] text: &str,
+        #[case] start: usize,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            has_attached_korean_name_and_case_particle(&chars, start, end),
+            expected
+        );
+    }
+}
+
+#[cfg(test)]
+mod numeric_annotation_coverage {
+    use super::*;
+
+    /// 제34항: 한글 세 음절 이상이라야 뒤 괄호를 거느리는 이름으로 본다.
+    #[rstest::rstest]
+    #[case::two_syllables("김씨(30)이", 2, 6, false)]
+    #[case::three_syllables("홍길동(30)이", 3, 7, true)]
+    fn a_name_needs_three_korean_syllables(
+        #[case] text: &str,
+        #[case] start: usize,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            has_attached_korean_name_and_case_particle(&chars, start, end),
+            expected
+        );
+    }
+}
+
+#[cfg(test)]
+mod hyphenated_number_suffix_coverage {
+    use super::*;
+
+    /// 제55항 [다만]: 낱말에 붙은 숫자 접미(`코로나-19`)는 제49항의 붙임표이지
+    /// 제46항의 뺄셈 기호가 아니다.
+    #[rstest::rstest]
+    #[case::plain("-19", true)]
+    #[case::decimal("-1.5", true)]
+    #[case::grouped("-1,000", true)]
+    #[case::letter_after_hyphen("-a19", false)]
+    #[case::hyphen_alone("-", false)]
+    #[case::no_hyphen("19", false)]
+    fn a_hyphenated_number_suffix_is_digits_only(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_hyphenated_number_suffix(&chars), expected);
     }
 }

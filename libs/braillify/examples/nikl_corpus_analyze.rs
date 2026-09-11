@@ -266,7 +266,7 @@ impl Config {
 }
 
 fn load_cases() -> Result<Vec<LocatedCase>, String> {
-    let corpus_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../test_cases/corpus");
+    let corpus_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../test_cases/2025_corpus");
     let mut paths = fs::read_dir(&corpus_dir)
         .map_err(|error| format!("cannot read {}: {error}", corpus_dir.display()))?
         .map(|entry| entry.map(|entry| entry.path()))

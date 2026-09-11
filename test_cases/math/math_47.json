@@ -6,7 +6,7 @@
     "expected": "2214",
     "unicode": "⠖⠎",
     "world": "⠴⠎⠔⠲",
-    "jeomsarang": "⠴⠎⠔⠲"
+    "jeomsarang": "⠎⠊⠝"
   },
   {
     "input": "$\\sin$",
@@ -24,7 +24,7 @@
     "expected": "229",
     "unicode": "⠖⠉",
     "world": "⠴⠉⠕⠎⠲",
-    "jeomsarang": "⠴⠉⠕⠎⠲"
+    "jeomsarang": "⠉⠕⠎"
   },
   {
     "input": "$\\cos$",
@@ -42,7 +42,7 @@
     "expected": "2230",
     "unicode": "⠖⠞",
     "world": "⠴⠞⠁⠝⠲",
-    "jeomsarang": "⠴⠞⠁⠝⠲"
+    "jeomsarang": "⠞⠁⠝"
   },
   {
     "input": "$\\tan$",
@@ -60,7 +60,7 @@
     "expected": "2235",
     "unicode": "⠖⠣",
     "world": "⠴⠉⠎⠉⠲",
-    "jeomsarang": "⠴⠉⠎⠉⠲"
+    "jeomsarang": "⠉⠎⠉"
   },
   {
     "input": "$\\csc$",
@@ -78,7 +78,7 @@
     "expected": "2235",
     "unicode": "⠖⠣",
     "world": "⠴⠉⠕⠎⠑⠉⠲",
-    "jeomsarang": "⠴⠉⠕⠎⠑⠉⠲"
+    "jeomsarang": "⠉⠕⠎⠑⠉"
   },
   {
     "input": "sec",
@@ -87,7 +87,7 @@
     "expected": "2236",
     "unicode": "⠖⠤",
     "world": "⠴⠎⠑⠉⠲",
-    "jeomsarang": "⠴⠎⠑⠉⠲"
+    "jeomsarang": "⠎⠑⠉"
   },
   {
     "input": "$\\sec$",
@@ -105,7 +105,7 @@
     "expected": "2251",
     "unicode": "⠖⠳",
     "world": "⠴⠉⠕⠞⠲",
-    "jeomsarang": "⠴⠉⠕⠞⠲"
+    "jeomsarang": "⠉⠕⠞"
   },
   {
     "input": "$\\cot$",
@@ -123,7 +123,7 @@
     "expected": "2214556094562",
     "unicode": "⠖⠎⠷⠼⠉⠭⠾",
     "world": "⠴⠎⠔⠼⠉⠭⠲",
-    "jeomsarang": "⠴⠎⠔⠼⠉⠭⠲"
+    "jeomsarang": "⠎⠊⠝⠼⠉⠭"
   },
   {
     "input": "$\\sin 3x$",
@@ -141,7 +141,7 @@
     "expected": "221455456162",
     "unicode": "⠖⠎⠷⠭⠽⠾",
     "world": "⠴⠎⠔⠭⠽⠲",
-    "jeomsarang": "⠴⠎⠔⠭⠽⠲"
+    "jeomsarang": "⠎⠊⠝⠭⠽"
   },
   {
     "input": "$\\sin xy$",
@@ -159,7 +159,7 @@
     "expected": "2214556011124562",
     "unicode": "⠖⠎⠷⠼⠋⠌⠭⠾",
     "world": "⠴⠈⠎⠸⠡⠴⠎⠔⠸⠡⠋⠗⠁⠉⠸⠣⠭⠐⠴⠦⠂⠼⠋⠐⠴⠈⠎",
-    "jeomsarang": ""
+    "jeomsarang": "⠈⠲⠈⠳⠎⠊⠝⠈⠳⠋⠗⠁⠉⠪⠭⠻⠪⠼⠋⠻⠈⠲"
   },
   {
     "input": "2cosx",
@@ -168,7 +168,7 @@
     "expected": "60322945",
     "unicode": "⠼⠃⠖⠉⠭",
     "world": "⠼⠃⠴⠉⠕⠎⠭⠲",
-    "jeomsarang": "⠼⠃⠴⠉⠕⠎⠭⠲"
+    "jeomsarang": "⠼⠃⠰⠉⠕⠎⠭"
   },
   {
     "input": "$2\\cos x$",
@@ -186,7 +186,7 @@
     "expected": "221424603453422924603451818601",
     "unicode": "⠖⠎⠘⠼⠃⠭⠢⠖⠉⠘⠼⠃⠭⠒⠒⠼⠁",
     "world": "⠴⠎⠔⠘⠼⠃⠭⠐⠖⠉⠕⠎⠘⠼⠃⠭⠒⠒⠼⠁",
-    "jeomsarang": "⠴⠎⠔⠰⠔⠼⠃⠰⠭⠐⠖⠉⠕⠎⠰⠔⠼⠃⠭⠐⠶⠼⠁"
+    "jeomsarang": "⠎⠊⠝⠘⠼⠃⠭⠀⠰⠖⠀⠉⠕⠎⠘⠼⠃⠭⠐⠶⠼⠁"
   },
   {
     "input": "$\\sin^2x+\\cos^2x=1$",
@@ -204,7 +204,7 @@
     "expected": "22142460945",
     "unicode": "⠖⠎⠘⠼⠉⠭",
     "world": "⠴⠎⠔⠘⠼⠉⠭⠲",
-    "jeomsarang": "⠴⠎⠔⠰⠔⠼⠉⠰⠭⠲"
+    "jeomsarang": "⠎⠊⠝⠘⠼⠉⠭"
   },
   {
     "input": "$\\sin^3x$",
@@ -222,7 +222,7 @@
     "expected": "22144524609",
     "unicode": "⠖⠎⠭⠘⠼⠉",
     "world": "⠴⠎⠔⠭⠘⠼⠉",
-    "jeomsarang": "⠴⠎⠔⠭⠰⠔⠼⠉"
+    "jeomsarang": "⠎⠊⠝⠭⠘⠼⠉"
   },
   {
     "input": "$\\sin x^3$",

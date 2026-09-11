@@ -1771,8 +1771,32 @@
     "title": "16.5.1",
     "description": "Line Mode, Guide Dots - Guide dots"
   },
-  "corpus/sentence": {
-    "title": "NIKL 말뭉치",
+  "2021_corpus/sentence": {
+    "title": "NIKL 2021 말뭉치",
+    "description": "NIKL Korean-Korean Braille Parallel Corpus 2021 v1.0 (revision 최신본 기준)",
+    "benchmark": true,
+    "shards": true
+  },
+  "2022_corpus/sentence": {
+    "title": "NIKL 2022 말뭉치",
+    "description": "NIKL KB 2022 v1.0 (revision 최신본 기준)",
+    "benchmark": true,
+    "shards": true
+  },
+  "2023_corpus/sentence": {
+    "title": "NIKL 2023 말뭉치",
+    "description": "NIKL KB 2023 v1.0 (revision 최신본 기준)",
+    "benchmark": true,
+    "shards": true
+  },
+  "2024_corpus/sentence": {
+    "title": "NIKL 2024 말뭉치",
+    "description": "NIKL Korean-Korean Braille Parallel Corpus 2024 v1.0 (revision 최신본 기준)",
+    "benchmark": true,
+    "shards": true
+  },
+  "2025_corpus/sentence": {
+    "title": "NIKL 2025 말뭉치",
     "description": "NIKL Korean-Korean Braille Parallel Corpus 2025 v1.0",
     "benchmark": true,
     "shards": true

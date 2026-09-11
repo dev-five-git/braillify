@@ -1,4 +1,4 @@
-//! Body of MathExpressionTokenRule::apply (extracted from math_expression.rs).
+﻿//! Body of MathExpressionTokenRule::apply (extracted from math_expression.rs).
 
 use crate::math_symbol_shortcut;
 use crate::rules::context::EncoderState;
@@ -838,7 +838,16 @@ fn next_word_starts_with_math_value_cue(tokens: &[Token<'_>], index: usize) -> b
             Token::Space(_) => cursor += 1,
             Token::Word(word) => {
                 let text = word.text.as_ref();
-                return text.starts_with('값') || text.starts_with('곱');
+                if text.starts_with('값') || text.starts_with('곱') {
+                    return true;
+                }
+                // 식별자를 나열한 어절(`AB와 CD의 값을`)은 그 자체가 단서는 아니지만
+                // 단서를 뒤로 미룰 뿐이므로 건너뛰고 계속 찾는다. 나열이 끝나도록
+                // 단서가 없으면 그 나열은 수식이 아니다.
+                if !has_ascii_letter_korean_math_suffix(&word.chars) {
+                    return false;
+                }
+                cursor += 1;
             }
             _ => return false,
         }
@@ -1506,10 +1515,14 @@ pub(super) fn run<'a>(
             let all_lower = prefix_letters.iter().all(|c| c.is_ascii_lowercase());
             let all_upper = prefix_letters.iter().all(|c| c.is_ascii_uppercase());
 
-            let case_allowed = (all_lower
-                && (next_word_starts_with_math_value_cue(tokens, index)
-                    || prev_word_is_math_product_cue(tokens, index)))
-                || (all_upper && is_consecutive_ascii_letter_run(&prefix_letters));
+            // 알파벳이 이어진다는 것만으로는 수식이 아니다. 산문의 약어에도 그런
+            // 짝이 흔하다(`GH의`, `AB의`). 제11항의 두 칸 경계는 그 어절이 수식일
+            // 때만 쓰므로, 대문자도 소문자와 같이 문장이 주는 수학 단서(`값`, `곱`)를
+            // 요구한다. 규정 예 `행렬 A와 B에 대하여 AB의 값을` 은 그 단서를 갖췄다.
+            let has_math_cue = next_word_starts_with_math_value_cue(tokens, index)
+                || prev_word_is_math_product_cue(tokens, index);
+            let case_allowed = has_math_cue
+                && (all_lower || (all_upper && is_consecutive_ascii_letter_run(&prefix_letters)));
             if suffix_is_math_identifier_particle && case_allowed {
                 let prev_is_korean_or_first = index == 0
                     || index
@@ -2566,11 +2579,18 @@ mod tests {
     /// stay prose.
     #[test]
     fn multiletter_upper_identifier_uses_genitive_suffix() {
+        // 말뭉치 다섯 판본에서 대문자+`의` 어절에 제11항의 두 칸을 둔 참조는 없다.
+        // 수학 단서가 없으면 산문의 약어이므로 로마자 구간으로 적는다.
         let tokens = vec![word_tok("AB의")];
 
         let mut plain_state = EncoderState::new(false);
         let plain = run(&tokens, 0, &mut plain_state).expect("ok");
-        assert!(matches!(plain, TokenAction::ReplaceMany(_)));
+        assert!(matches!(plain, TokenAction::Noop));
+
+        let cued_tokens = vec![word_tok("AB의"), space_tok(), word_tok("값을")];
+        let mut cued_state = EncoderState::new(false);
+        let cued = run(&cued_tokens, 0, &mut cued_state).expect("ok");
+        assert!(matches!(cued, TokenAction::ReplaceMany(_)));
 
         let acronym_tokens = vec![word_tok("FM의")];
         let mut acronym_state = EncoderState::new(false);
@@ -2587,9 +2607,15 @@ mod tests {
     /// searching for fixture-specific prompt words later in the sentence.
     #[test]
     fn multiletter_identifier_allows_conjunctive_suffix() {
-        let tokens = vec![word_tok("AB와"), space_tok(), word_tok("CD의")];
+        let tokens = vec![
+            word_tok("AB와"),
+            space_tok(),
+            word_tok("CD의"),
+            space_tok(),
+            word_tok("값을"),
+        ];
         let mut state = EncoderState::new(false);
-        let action = run(&tokens, 0, &mut state).expect("ok");
+        let action = run(&tokens, 2, &mut state).expect("ok");
         assert!(matches!(action, TokenAction::ReplaceMany(_)));
     }
 
@@ -3149,7 +3175,12 @@ mod tests {
 
     #[test]
     fn uppercase_identifier_after_korean_word_uses_math_letter_path() {
-        let tokens = vec![word_tok("문제"), word_tok("AB의")];
+        let tokens = vec![
+            word_tok("문제"),
+            word_tok("AB의"),
+            space_tok(),
+            word_tok("값을"),
+        ];
         let mut state = EncoderState::new(false);
 
         let action = run(&tokens, 1, &mut state).expect("ok");
@@ -3507,5 +3538,31 @@ mod tests {
         let result = run(&tokens, 0, &mut state);
         // Whether Noop or Err, the Err arm at line 765 was exercised.
         let _ = result;
+    }
+}
+
+#[cfg(test)]
+mod math_identifier_cue_coverage {
+    /// 제11항의 두 칸 경계는 그 어절이 수식일 때만 쓴다. 알파벳이 이어지는 대문자
+    /// 짝은 산문의 약어에도 흔하므로(`GH의`), 문장이 주는 수학 단서가 있어야 수학
+    /// 식별자로 본다.
+    #[rstest::rstest]
+    #[case::consecutive_capitals_without_a_cue("광명 GH의 주파수", false)]
+    #[case::non_consecutive_capitals("국방 FM의 주파수", false)]
+    #[case::lowercase_without_a_cue("표의 ab의 자리", false)]
+    #[case::three_capitals_without_a_cue("가나 GHI의 다라", false)]
+    #[case::other_particle("가나 GH를 다라", false)]
+    #[case::capitals_with_a_value_cue("행렬 A와 B에 대하여 AB의 값을 구하여라.", true)]
+    #[case::lowercase_with_a_value_cue("그래프가 대칭일 때, ab의 값을 구하여라.", true)]
+    fn a_letter_run_needs_a_math_cue_to_take_the_boundary(
+        #[case] input: &str,
+        #[case] is_math: bool,
+    ) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert_eq!(
+            encoded.contains("\u{2800}\u{2800}"),
+            is_math,
+            "unexpected Article 11 boundary in {encoded}"
+        );
     }
 }

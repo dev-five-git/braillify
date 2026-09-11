@@ -850,6 +850,28 @@ fn is_prose_number_notation(chars: &[char]) -> bool {
     if !chars.iter().any(char::is_ascii_digit) {
         return false;
     }
+    // 함수 이름(`log2`, `sin3x`), 숫자끼리의 가운뎃점 곱(`6·9`), 숫자 뒤에 이어진
+    // 두 글자 이상의 변수열(`3ab`)은 수식이다.
+    let text: String = chars.iter().collect();
+    if crate::rules::math::function::starts_with_function(&text)
+        || text
+            .char_indices()
+            .any(|(at, _)| crate::rules::math::function::starts_with_function(&text[at..]))
+    {
+        return false;
+    }
+    if chars.windows(3).any(|window| {
+        window[0].is_ascii_digit() && window[1] == '\u{00B7}' && window[2].is_ascii_digit()
+    }) {
+        return false;
+    }
+    if chars.windows(3).any(|window| {
+        window[0].is_ascii_digit()
+            && window[1].is_ascii_lowercase()
+            && window[2].is_ascii_lowercase()
+    }) {
+        return false;
+    }
     if chars
         .iter()
         .any(|c| matches!(c, '=' | '<' | '>' | '\u{2260}' | '\u{2264}' | '\u{2265}'))
@@ -1967,7 +1989,10 @@ pub(super) fn run<'a>(
         return Ok(TokenAction::Noop);
     }
 
-    if !is_math_expression(&word.chars, text) {
+    // 쌍점으로 수를 이어 적은 표기(`7:30,`, `16:9`)는 제51항 [다만 2] 가 붙여 쓰는
+    // 시·분이나 비율이고, 그 수는 제40항에 따라 쌍점 뒤에도 수표를 세운다. 수식
+    // 엔진에 넘기면 그 수표가 사라지므로 한글 규칙에 맡긴다.
+    if !is_math_expression(&word.chars, text) || is_prose_number_notation(&word.chars) {
         let math_context = math_context_from_state(state);
         if let Some(bytes) = try_encode_mixed_math_slice(&word.chars, math_context) {
             return Ok(TokenAction::Replace(Token::PreEncoded(bytes)));
@@ -3697,6 +3722,41 @@ mod article_11_boundary_coverage {
             encoded.contains("\u{2800}\u{2800}"),
             is_math,
             "unexpected Article 11 boundary in {encoded}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod number_notation_routing_coverage {
+    use super::*;
+
+    /// 수를 구분 기호로 이어 적은 표기는 제40·43항이 다루므로 수식 엔진에 넘기지
+    /// 않는다. 다만 함수 이름, 숫자끼리의 가운뎃점 곱, 숫자 뒤 변수열은 수식이다.
+    #[rstest::rstest]
+    #[case::clock("7:30,", true)]
+    #[case::ratio("16:9", true)]
+    #[case::model("F1.2", true)]
+    #[case::function_name("log2", false)]
+    #[case::function_inside("2log7", false)]
+    #[case::trig("sin3x", false)]
+    #[case::digit_product("6\u{00B7}9", false)]
+    #[case::variable_product("3ab", false)]
+    fn a_number_notation_stays_off_the_math_engine(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_prose_number_notation(&chars), expected);
+    }
+
+    /// 제40항: 쌍점 뒤의 수도 제 수표를 세운다.
+    #[rstest::rstest]
+    #[case::bare("가나 7:30 다라")]
+    #[case::with_comma("가나 7:30, 다라")]
+    #[case::with_paren("가나 7:30) 다라")]
+    fn a_number_after_a_colon_keeps_its_number_sign(#[case] input: &str) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert_eq!(
+            encoded.matches('\u{283C}').count(),
+            2,
+            "expected both number signs in {encoded}"
         );
     }
 }

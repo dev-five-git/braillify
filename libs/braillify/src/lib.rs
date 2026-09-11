@@ -1758,6 +1758,56 @@ mod test {
         bool,
     );
 
+    const REPORT_PAGE_SIZE: usize = 250;
+
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct ReportPageInfo {
+        page_size: usize,
+        page_count: usize,
+    }
+
+    /// Splits a group's rows into the pages the landing app fetches on demand.
+    /// Always yields at least one page so every group has a `page-1.json`.
+    fn paginate_rows(rows: Vec<TestStatusRow>) -> Vec<Vec<TestStatusRow>> {
+        if rows.is_empty() {
+            return vec![Vec::new()];
+        }
+        rows.chunks(REPORT_PAGE_SIZE)
+            .map(<[TestStatusRow]>::to_vec)
+            .collect()
+    }
+
+    #[rstest::rstest]
+    #[case::no_rows(0, 1)]
+    #[case::partial_page(1, 1)]
+    #[case::exact_page(REPORT_PAGE_SIZE, 1)]
+    #[case::page_overflow(REPORT_PAGE_SIZE + 1, 2)]
+    #[case::many_pages(REPORT_PAGE_SIZE * 3, 3)]
+    fn paginate_rows_publishes_every_row(#[case] row_count: usize, #[case] expected_pages: usize) {
+        let rows = (0..row_count)
+            .map(|index| -> TestStatusRow {
+                (
+                    format!("가{index}"),
+                    String::new(),
+                    "⠈⠣".to_string(),
+                    "⠈⠣".to_string(),
+                    index % 2 == 0,
+                    String::new(),
+                    false,
+                    String::new(),
+                    false,
+                )
+            })
+            .collect::<Vec<TestStatusRow>>();
+
+        let pages = paginate_rows(rows.clone());
+
+        assert_eq!(pages.len(), expected_pages);
+        assert_eq!(pages.concat(), rows);
+        assert!(pages.iter().all(|page| page.len() <= REPORT_PAGE_SIZE));
+    }
+
     #[derive(Default)]
     struct NiklFailureStats {
         encoding_errors: usize,
@@ -2172,6 +2222,53 @@ mod test {
             }
             println!("총 Skip: {}건", skipped_cases.len());
         }
+
+        // Rows for every group are drained out of `file_stats` into paged JSON the
+        // landing app loads on demand, leaving `test_status.json` as pure
+        // aggregates. Inlining them instead put 467k corpus rows into one route's
+        // payload, which is what broke the export (`ERR_ENCODING_INVALID_ENCODED_DATA`)
+        // and grew the site past the GitHub Pages 1 GB ceiling.
+        let report_root = std::path::PathBuf::from(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../apps/landing/public/test-status"
+        ));
+        if report_root.exists() {
+            std::fs::remove_dir_all(&report_root).unwrap_or_else(|error| {
+                panic!(
+                    "failed to clear report directory {}: {error}",
+                    report_root.display()
+                )
+            });
+        }
+        let mut report_manifest = std::collections::BTreeMap::new();
+        for (key, stats) in &mut file_stats {
+            let pages = paginate_rows(std::mem::take(&mut stats.6));
+            let group_dir = report_root.join(key);
+            std::fs::create_dir_all(&group_dir).unwrap_or_else(|error| {
+                panic!(
+                    "failed to create report directory {}: {error}",
+                    group_dir.display()
+                )
+            });
+            for (index, page) in pages.iter().enumerate() {
+                let page_path = group_dir.join(format!("page-{}.json", index + 1));
+                serde_json::to_writer(File::create(&page_path).unwrap(), page).unwrap();
+            }
+            report_manifest.insert(
+                key.clone(),
+                ReportPageInfo {
+                    page_size: REPORT_PAGE_SIZE,
+                    page_count: pages.len(),
+                },
+            );
+        }
+        // Written last so a half-generated directory can never look complete.
+        std::fs::create_dir_all(&report_root).unwrap();
+        serde_json::to_writer_pretty(
+            File::create(report_root.join("manifest.json")).unwrap(),
+            &report_manifest,
+        )
+        .unwrap();
 
         // Write per-file stats to the workspace-root status file.
         let status_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../test_status.json");

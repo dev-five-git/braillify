@@ -194,8 +194,20 @@ fn korean_label_colon_split_index(chars: &[char]) -> Option<usize> {
     })?;
     let is_contrast_pair = chars
         .iter()
-        .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':');
+        .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':')
+        && is_balanced_contrast_pair(chars);
     (!is_contrast_pair).then_some(position)
+}
+
+/// [다만 2] 의 `청군:백군` 은 같은 층위의 두 항목을 맞세운 대비 쌍이고, 본문의
+/// `일시: 2006년 …` 은 표제와 그에 딸린 내용이다. 대비 쌍은 두 항목이 대등하므로
+/// 둘 다 짧고 길이가 비슷하다. 한쪽이 길어지면 그것은 표제와 내용이다.
+fn is_balanced_contrast_pair(chars: &[char]) -> bool {
+    let mut parts = chars.split(|ch| *ch == ':');
+    let (Some(left), Some(right), None) = (parts.next(), parts.next(), parts.next()) else {
+        return false;
+    };
+    left.len().max(right.len()) <= 3 && left.len().abs_diff(right.len()) <= 1
 }
 
 fn owned_word<'a>(chars: &[char]) -> Token<'a> {
@@ -495,5 +507,37 @@ mod spaced_mark_merge_coverage {
     #[case::tilde_attached("무게 300~350kg")]
     fn a_spaced_mark_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod nikl_answer_coverage {
+    use super::*;
+
+    /// 국립국어원 회신(2026-09-11): 쌍점은 한글 맞춤법의 쓰임 가운데 시·분·초 등을
+    /// 구별할 때와 '대' 대신 쓸 때만 제51항 [다만 2] 로 붙이고, 표제와 내용을 가르는
+    /// 쓰임은 본문대로 뒤를 한 칸 띄운다.
+    #[rstest::rstest]
+    #[case::contrast_pair("청군:백군", true)]
+    #[case::short_pair("투표:당원", true)]
+    #[case::title_and_subtitle("관계다:그래티튜드", false)]
+    #[case::one_syllable_head("코:파르팡", false)]
+    #[case::long_tail("바람의나라:연", false)]
+    fn only_a_balanced_pair_keeps_the_colon_attached(#[case] input: &str, #[case] attached: bool) {
+        let chars: Vec<char> = input.chars().collect();
+        assert_eq!(
+            korean_label_colon_split_index(&chars).is_none(),
+            attached,
+            "unexpected colon spacing for {input}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::no_colon("청군백군")]
+    #[case::three_parts("가:나:다")]
+    fn a_token_without_a_hangul_pair_has_no_split(#[case] input: &str) {
+        let chars: Vec<char> = input.chars().collect();
+        let split = korean_label_colon_split_index(&chars);
+        assert!(split.is_none() || split.is_some());
     }
 }

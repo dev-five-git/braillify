@@ -1,4 +1,4 @@
-//! English-context symbol handling.
+﻿//! English-context symbol handling.
 //!
 //! Handles symbol behavior that depends on English mode state:
 //! - English symbol rendering for (, ), , when context requires
@@ -112,29 +112,14 @@ impl BrailleRule for RuleEnglishSymbol {
         if *sym == '('
             && !ctx.state.is_english
             && !english_logic::closed_parenthesis_continues_into_roman(ctx.word_chars, ctx.index)
+            && korean_prose_owns_opening_parenthesis(
+                ctx.word_chars,
+                ctx.index,
+                ctx.remaining_words,
+                ctx.prev_word,
+            )
         {
-            let prefix = &ctx.word_chars[..ctx.index];
-            let prefix_contains_korean = prefix.iter().any(|ch| utils::is_korean_char(*ch));
-            let numeric_prefix = !prefix.is_empty()
-                && prefix.iter().any(char::is_ascii_digit)
-                && prefix.iter().all(|ch| {
-                    ch.is_ascii_digit()
-                        || matches!(*ch, '.' | ',' | '\'' | '’' | '"' | '”' | '‘' | '“')
-                });
-            let spaced_roman_word_enclosure = prefix
-                .iter()
-                .all(|ch| matches!(*ch, '\'' | '’' | '"' | '”' | '‘' | '“'))
-                && english_logic::closed_parenthesis_encloses_roman_word(
-                    ctx.word_chars,
-                    ctx.index,
-                    ctx.remaining_words,
-                );
-            let previous_word_is_korean = ctx.prev_word.chars().any(utils::is_korean_char);
-            if prefix_contains_korean
-                || ((numeric_prefix || spaced_roman_word_enclosure) && previous_word_is_korean)
-            {
-                use_english_symbol = false;
-            }
+            use_english_symbol = false;
         }
 
         // 제33항은 점형이 다른 문장 부호를 "로마자와 한글 사이"에서만 한글 점자로
@@ -233,6 +218,56 @@ impl BrailleRule for RuleEnglishSymbol {
 
         Ok(RuleResult::Continue)
     }
+}
+
+/// 제34항의 `링컨(Lincoln)은` 은 한글 어절이 로마자 풀이를 이끌 때 한글 여는 괄호를
+/// 로마자표보다 앞에 둔다. 묵자가 괄호를 붙여 썼는지 띄어 썼는지는 기준이 아니다.
+fn korean_prose_owns_opening_parenthesis(
+    word_chars: &[char],
+    index: usize,
+    remaining_words: &[&str],
+    prev_word: &str,
+) -> bool {
+    let prefix = &word_chars[..index];
+    if prefix.iter().any(|ch| utils::is_korean_char(*ch)) {
+        return true;
+    }
+    if !prev_word.chars().any(utils::is_korean_char) {
+        return false;
+    }
+    numeric_parenthesis_prefix(prefix)
+        || quote_only_prefix_encloses_roman_word(prefix, word_chars, index, remaining_words)
+}
+
+/// 제54항: 한글 어절에 붙은 아라비아 숫자(`3.5(`, `1,000(`)도 그 어절의 일부다.
+fn numeric_parenthesis_prefix(prefix: &[char]) -> bool {
+    !prefix.is_empty()
+        && prefix.iter().any(char::is_ascii_digit)
+        && prefix
+            .iter()
+            .all(|ch| ch.is_ascii_digit() || is_number_adjacent_punctuation(*ch))
+}
+
+/// 앞이 따옴표뿐이면 괄호는 앞 한글 어절에 딸린 것이다.
+fn quote_only_prefix_encloses_roman_word(
+    prefix: &[char],
+    word_chars: &[char],
+    index: usize,
+    remaining_words: &[&str],
+) -> bool {
+    prefix.iter().all(|ch| is_quote_punctuation(*ch))
+        && english_logic::closed_parenthesis_encloses_roman_word(word_chars, index, remaining_words)
+}
+
+fn is_quote_punctuation(ch: char) -> bool {
+    matches!(
+        ch,
+        '\'' | '\u{2019}' | '"' | '\u{201D}' | '\u{2018}' | '\u{201C}'
+    )
+}
+
+fn is_number_adjacent_punctuation(ch: char) -> bool {
+    ch == '.' || ch == ',' || is_quote_punctuation(ch)
 }
 
 #[cfg(test)]

@@ -505,25 +505,28 @@ fn square_unit_presentation(letters: &[char], exponent: char) -> Option<char> {
         .find(|candidate| std::iter::once(*candidate).nfkc().eq(spelled.chars()))
 }
 
+/// 제69항 [붙임 2] 의 `℃`/`℉` 는 도 기호와 글자를 이어 쓴 `°C`/`°F` 로도 입력된다.
+/// U+02DA RING ABOVE 는 도 기호의 활자체 표기다.
+fn degree_unit_glyph(ch: char, next: Option<char>) -> Option<char> {
+    if !matches!(ch, '\u{00B0}' | '\u{02DA}') {
+        return None;
+    }
+    match next {
+        Some('C') => Some('\u{2103}'),
+        Some('F') => Some('\u{2109}'),
+        _ => None,
+    }
+}
 fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
     let chars = text.chars().collect::<Vec<_>>();
     let mut out = String::with_capacity(text.len());
     let mut index = 0usize;
     while index < chars.len() {
         let ch = chars[index];
-        let degree = matches!(ch, '\u{00B0}' | '\u{02DA}');
-        match chars.get(index + 1) {
-            Some('C') if degree => {
-                out.push('\u{2103}');
-                index += 2;
-                continue;
-            }
-            Some('F') if degree => {
-                out.push('\u{2109}');
-                index += 2;
-                continue;
-            }
-            _ => {}
+        if let Some(glyph) = degree_unit_glyph(ch, chars.get(index + 1).copied()) {
+            out.push(glyph);
+            index += 2;
+            continue;
         }
         let starts_letter_run = ch.is_ascii_alphabetic()
             && index

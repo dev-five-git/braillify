@@ -590,3 +590,32 @@ mod english_document_grade_minus_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod grade_minus_branch_coverage {
+    use super::*;
+    use crate::rules::traits::BrailleRule;
+
+    /// UEB 3.17.1: 이미 열린 로마자 구간 안의 신용등급 붙임표(`AA-`, `BBB-`)는
+    /// 뺄셈 기호 `⠐⠤` 로 적는다. 등급 꼴이 아니면 이 갈래가 아니다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("AA-", 2, true)]
+    #[case::three_letter_grade("BBB-", 3, true)]
+    #[case::one_letter_is_not_a_grade("A-", 1, false)]
+    #[case::four_letters_is_not_a_grade("AAAA-", 4, false)]
+    fn a_roman_grade_minus_is_written_as_the_ueb_minus(
+        #[case] text: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(text, true);
+        owned.state.is_english = true;
+        let mut ctx = owned.ctx_at(index);
+        assert_eq!(RuleMath.matches(&ctx), expected, "matches for {text}");
+        if expected {
+            let outcome = RuleMath.apply(&mut ctx).unwrap();
+            assert!(matches!(outcome, RuleResult::Consumed));
+            assert!(!owned.result.is_empty(), "no cells emitted for {text}");
+        }
+    }
+}

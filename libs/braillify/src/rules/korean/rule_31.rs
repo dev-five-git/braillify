@@ -251,3 +251,31 @@ mod greek_continuation_indicator_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod continuation_indicator_branch_coverage {
+    use super::*;
+    use crate::rules::traits::BrailleRule;
+
+    /// 제31항 + 제29항: 앞 로마자 구간이 종료표 없이 닫혀 연속표가 예약돼 있으면
+    /// 그리스 문자 앞에는 로마자표가 아니라 연속표를 적는다.
+    #[rstest::rstest]
+    #[case::continuation_pending(true, crate::rules::korean::rule_29::ENGLISH_CONTINUATION)]
+    #[case::fresh_section(false, crate::rules::korean::rule_29::ROMAN_INDICATOR)]
+    fn a_greek_run_opens_with_the_reserved_marker(
+        #[case] continuation_pending: bool,
+        #[case] expected_first_cell: u8,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("\u{03B1}", false);
+        owned.state.needs_english_continuation = continuation_pending;
+        owned.prev_word = "한글".to_string();
+        let mut ctx = owned.ctx_at(0);
+        let outcome = Rule31.apply(&mut ctx).unwrap();
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(
+            owned.result.first().copied(),
+            Some(expected_first_cell),
+            "unexpected opening marker"
+        );
+    }
+}

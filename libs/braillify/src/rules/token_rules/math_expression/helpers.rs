@@ -403,16 +403,15 @@ fn anonymized_person_label_end(chars: &[char], start: usize) -> Option<usize> {
         return None;
     }
 
-    match chars.get(cursor) {
-        Some('대') => cursor += 1,
-        Some('·' | 'ㆍ')
-            if chars
-                .get(cursor + 1)
-                .is_some_and(|ch| matches!(*ch, '여' | '남')) =>
-        {
-            cursor += 2;
-        }
-        _ => {}
+    // 제34항: 괄호 안의 나머지는 그 사람을 가리키는 한글 주석이다. 나이의 단위
+    // (`37세`, `50대`), 국적이나 신분(`27·스리랑카`, `42·구속`), 자리를 나눈 수
+    // (`18,000원`)가 모두 여기 온다. 닫는 괄호까지 한글과 자리 구분 기호만 오는
+    // 동안 이어 읽고, 그것이 사람 표지인지는 호출부가 뒤따르는 `씨`·`군` 으로
+    // 가린다. 그래서 함수 표기 `A(14)는` 은 여기에 걸리지 않는다.
+    while chars.get(cursor).is_some_and(|ch| {
+        is_korean_char(*ch) || ch.is_ascii_digit() || matches!(*ch, '·' | 'ㆍ' | ',' | '.' | ' ')
+    }) {
+        cursor += 1;
     }
 
     (chars.get(cursor) == Some(&')')).then_some(cursor + 1)
@@ -726,6 +725,15 @@ pub(super) fn split_mixed_math_word(
         if is_closed_roman_annotation_suffix(suffix_chars)
             || is_closed_numeric_annotation_suffix(suffix_chars)
             || is_hyphenated_number_suffix(suffix_chars)
+        {
+            return None;
+        }
+        // 한글 뒤에 부호와 숫자만 이어지는 것(`아세안+3`, `리오+20`)은 제46항의
+        // 연산 기호가 한글과 숫자 사이에 온 자리이지 제11항이 두 칸으로 감싸는
+        // 수식이 아니다. 그 띄어쓰기는 제46항이 한 칸으로 정한다.
+        if suffix_chars
+            .iter()
+            .all(|ch| ch.is_ascii_digit() || matches!(*ch, '+' | '-' | '\u{2212}' | '.' | ','))
         {
             return None;
         }
@@ -1051,5 +1059,25 @@ mod hyphenated_number_suffix_coverage {
     fn a_hyphenated_number_suffix_is_digits_only(#[case] text: &str, #[case] expected: bool) {
         let chars: Vec<char> = text.chars().collect();
         assert_eq!(is_hyphenated_number_suffix(&chars), expected);
+    }
+}
+
+#[cfg(test)]
+mod korean_prefix_sign_coverage {
+    /// 제46항: 한글 뒤에 부호와 숫자만 이어지면 그것은 한글과 숫자 사이의 연산
+    /// 기호이므로 한 칸을 둔다. 제11항이 두 칸으로 감싸는 수식은 그 너머에 있다.
+    #[rstest::rstest]
+    #[case::name_with_plus("가나 아세안+3 다라", false)]
+    #[case::name_with_number("가나 리오+20, 다라", false)]
+    #[case::trailing_plus("가나 스포츠+ 다라", false)]
+    #[case::equation("값은 x=1 이다", true)]
+    #[case::because_sign("정수\u{2235}y=n+2", true)]
+    fn a_sign_and_digits_tail_is_not_an_expression(#[case] input: &str, #[case] is_math: bool) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert_eq!(
+            encoded.contains("\u{2800}\u{2800}"),
+            is_math,
+            "unexpected Article 11 boundary in {encoded}"
+        );
     }
 }

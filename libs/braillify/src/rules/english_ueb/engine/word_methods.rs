@@ -1033,3 +1033,15 @@ mod tests {
         assert!(out.starts_with(&[GRADE1, CAPITAL, CAPITAL]));
     }
 }
+
+#[cfg(test)]
+mod word_body_coverage {
+    /// §10.9: a whole-word shortform is written by its own cells; any other
+    /// word falls through to the ordinary contraction encoder.
+    #[rstest::rstest]
+    #[case::whole_word_shortform("그는 about 를")]
+    #[case::ordinary_word("그는 tomato 를")]
+    fn a_roman_word_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

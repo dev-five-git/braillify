@@ -413,3 +413,26 @@ mod tests {
         ));
     }
 }
+
+#[cfg(test)]
+mod label_colon_coverage {
+    /// 제51항 본문은 표제와 내용을 가르는 쌍점 뒤를 띄우고, [다만 2] 의 대비 쌍은
+    /// 붙인다. 어절에 괄호·따옴표가 섞이면 표제 꼴로 본다.
+    #[rstest::rstest]
+    #[case::contrast_pair("청군:백군")]
+    #[case::three_syllable_pair("재판장:신교식")]
+    fn an_all_hangul_pair_stays_attached(#[case] input: &str) {
+        let spaced = input.replace(':', ": ");
+        assert_ne!(crate::encode(input), crate::encode(&spaced));
+    }
+
+    #[rstest::rstest]
+    #[case::quoted("‘제목:내용’")]
+    #[case::double_quoted("“제목:내용”")]
+    fn an_enclosure_makes_the_colon_a_label_boundary(#[case] input: &str) {
+        assert_eq!(
+            crate::encode(input),
+            crate::encode(&input.replace(':', ": "))
+        );
+    }
+}

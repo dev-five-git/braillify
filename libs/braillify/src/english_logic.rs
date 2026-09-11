@@ -961,3 +961,35 @@ mod tests {
         let _ = super::should_keep_english_mode_for_symbol('@', &chars, 4, &[]);
     }
 }
+
+#[cfg(test)]
+mod enclosure_route_coverage {
+    use super::*;
+
+    /// 제46항 `BMI(체질량 지수)`: a closed enclosure is Korean punctuation
+    /// unless its body is Roman letters (제32항 `ABC(def)`).
+    #[rstest::rstest]
+    #[case::korean_body(&['(', '체', '질', '량', ')'], true)]
+    #[case::digits_only(&['(', '7', '3', ')'], true)]
+    #[case::roman_body(&['(', 'd', 'e', 'f', ')'], false)]
+    #[case::nested_roman(&['(', '(', 'd', ')', 'e', ')'], false)]
+    #[case::never_closes(&['(', 'd', 'e', 'f'], false)]
+    fn closed_enclosure_is_korean_unless_its_body_is_roman(
+        #[case] word: &[char],
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            closed_parenthesis_is_korean_punctuation(word, 0, &[]),
+            expected
+        );
+    }
+
+    #[test]
+    fn an_enclosure_closing_in_a_later_word_is_still_scanned() {
+        assert!(closed_parenthesis_is_korean_punctuation(
+            &['(', 'A'],
+            0,
+            &["체질량)"]
+        ));
+    }
+}

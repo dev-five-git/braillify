@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
@@ -70,4 +70,30 @@ fn owned_word(text: String) -> Token<'static> {
         meta: WordMeta::from_chars(&chars),
         chars,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::rules::context::EncoderState;
+
+    fn noop_for(tokens: &[Token<'_>]) -> bool {
+        let mut state = EncoderState::new(false);
+        matches!(
+            WordShortcutRule.apply(tokens, 0, &mut state).unwrap(),
+            TokenAction::Noop
+        )
+    }
+
+    /// 제18항: a word carrying no abbreviation, and a token that is not a word
+    /// at all, both leave the stream untouched.
+    #[test]
+    fn a_word_without_an_abbreviation_is_left_alone() {
+        assert!(noop_for(&[owned_word("사과".to_string())]));
+    }
+
+    #[test]
+    fn a_token_that_is_not_a_word_is_left_alone() {
+        assert!(noop_for(&[Token::PreEncoded(vec![1])]));
+    }
 }

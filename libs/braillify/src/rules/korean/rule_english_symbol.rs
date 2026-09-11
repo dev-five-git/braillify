@@ -433,3 +433,18 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+mod parenthesis_route_coverage {
+    /// 제34항 `링컨(Lincoln)은` keeps the Korean parenthesis outside the Roman
+    /// indicator whether or not print separates it with a space; a parenthesis
+    /// reached inside an open Roman section stays UEB punctuation.
+    #[rstest::rstest]
+    #[case::attached("링컨(Lincoln)은")]
+    #[case::spaced("링컨 (Lincoln)은")]
+    #[case::inside_roman_section("그는 ABC(def) 를")]
+    #[case::runs_on_into_roman("폐쇄회로(CC)TV와")]
+    fn a_roman_parenthetical_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

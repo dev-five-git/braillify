@@ -3075,3 +3075,51 @@ mod debug_reader {
         }
     }
 }
+
+#[cfg(test)]
+mod print_variant_coverage {
+    use super::*;
+
+    #[rstest::rstest]
+    #[case::celsius("25\u{00B0}C", "25\u{2103}")]
+    #[case::fahrenheit("77\u{00B0}F", "77\u{2109}")]
+    #[case::ring_celsius("25\u{02DA}C", "25\u{2103}")]
+    #[case::ring_fahrenheit("77\u{02DA}F", "77\u{2109}")]
+    fn degree_letter_pair_folds_to_the_unit_glyph(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            normalize_print_variants(std::borrow::Cow::Borrowed(input)).as_ref(),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::fullwidth_percent('\u{FF05}', true)]
+    #[case::fullwidth_letter('\u{FF4D}', true)]
+    #[case::fullwidth_hash_is_the_math_cardinal('\u{FF03}', false)]
+    #[case::fullwidth_colon_is_the_old_hangul_mark('\u{FF1A}', false)]
+    #[case::ascii_is_not_a_variant('m', false)]
+    fn fullwidth_folding_excludes_the_two_reserved_glyphs(
+        #[case] input: char,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(is_foldable_fullwidth(input), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::before_slash("\u{338F}/h")]
+    #[case::after_slash("h/\u{338F}")]
+    fn a_square_unit_joined_through_a_slash_decomposes(#[case] input: &str) {
+        let folded = normalize_pure_roman_compatibility_units(std::borrow::Cow::Borrowed(input));
+        assert!(
+            folded.contains("kg"),
+            "expected the unit to spell out, got {folded:?}"
+        );
+    }
+
+    #[test]
+    fn a_detached_square_unit_keeps_its_glyph() {
+        let folded =
+            normalize_pure_roman_compatibility_units(std::borrow::Cow::Borrowed("\u{338F}"));
+        assert_eq!(folded.as_ref(), "\u{338F}");
+    }
+}

@@ -649,3 +649,20 @@ mod tests {
         assert!(!contains_contiguous(&[], &[]));
     }
 }
+
+#[cfg(test)]
+mod ever_shape_coverage {
+    /// §10.7: with no dictionary entry the `ever` sign is decided by shape —
+    /// word-final, or with a single inflectional `s` left.
+    #[rstest::rstest]
+    #[case::word_final("그는 cantilever 를", "⠐⠑")]
+    #[case::inflected_s("그는 Clevers 를", "⠐⠑")]
+    #[case::longer_tail("그는 Cleverse 를", "⠑⠧⠻")]
+    fn dictionaryless_ever_follows_the_word_edge(#[case] input: &str, #[case] expected: &str) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            encoded.contains(expected),
+            "expected {expected} in {encoded}"
+        );
+    }
+}

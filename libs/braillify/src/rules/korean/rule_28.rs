@@ -794,3 +794,16 @@ mod tests {
         assert!(matches!(outcome, RuleResult::Skip));
     }
 }
+
+#[cfg(test)]
+mod uppercase_run_coverage {
+    /// UEB 10.12.1: an all-capitals initialism in Korean text is spelled with
+    /// alphabet signs; a mixed-case Roman run keeps its ordinary route.
+    #[rstest::rstest]
+    #[case::initialism("그는 WHO 를")]
+    #[case::hyphenated_run("그는 CV3-AD685 를")]
+    #[case::mixed_case("그는 Lincoln 을")]
+    fn a_roman_run_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

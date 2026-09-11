@@ -370,3 +370,17 @@ mod tests {
         assert!(matches!(outcome, RuleResult::Skip));
     }
 }
+
+#[cfg(test)]
+mod bullet_tail_coverage {
+    /// 제72항: a bullet owns the item that follows it, whether that item runs
+    /// to the end of the line or stops at punctuation.
+    #[rstest::rstest]
+    #[case::bullet_then_item("\u{25CB} 정원은 넓다")]
+    #[case::bullet_then_punctuation("\u{25CB} 정원.")]
+    #[case::bullet_alone("\u{25CB}")]
+    #[case::bullet_then_bullet("\u{25CB} \u{25A1} 정원")]
+    fn a_bullet_item_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

@@ -1,4 +1,4 @@
-use crate::char_struct::{CharType, KoreanChar};
+﻿use crate::char_struct::{CharType, KoreanChar};
 use crate::english_logic;
 use crate::fraction;
 use crate::rules::context::{EncoderState, RuleContext};
@@ -2126,5 +2126,49 @@ mod tests {
             vec![32, 4],
             "expected safety-net close bytes, got {result:?}"
         );
+    }
+}
+
+#[cfg(test)]
+mod spaced_colon_coverage {
+    use super::*;
+    use crate::rules::token::{SpaceKind, WordMeta};
+
+    fn word(text: &str) -> Token<'static> {
+        let chars: Vec<char> = text.chars().collect();
+        Token::Word(WordToken {
+            text: std::borrow::Cow::Owned(text.to_string()),
+            meta: WordMeta::from_chars(&chars),
+            chars,
+        })
+    }
+
+    /// 제29항·제32항·제35항: a standalone colon joins two Roman items only when
+    /// the item after it is proved Roman.
+    #[test]
+    fn a_roman_item_after_the_colon_connects_the_section() {
+        let tokens = [word(":"), Token::Space(SpaceKind::Regular), word("Beta")];
+        assert!(spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
+    fn a_korean_item_after_the_colon_breaks_the_section() {
+        let tokens = [word(":"), Token::Space(SpaceKind::Regular), word("베타")];
+        assert!(!spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
+    fn a_pre_encoded_item_after_the_colon_breaks_the_section() {
+        let tokens = [word(":"), Token::PreEncoded(vec![1])];
+        assert!(!spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
+    fn a_token_that_is_not_a_lone_colon_never_connects() {
+        assert!(!spaced_colon_connects_roman_items(&[word("::")], 0));
+        assert!(!spaced_colon_connects_roman_items(
+            &[Token::PreEncoded(vec![1])],
+            0
+        ));
     }
 }

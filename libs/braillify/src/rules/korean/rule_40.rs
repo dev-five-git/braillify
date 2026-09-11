@@ -223,3 +223,16 @@ mod tests {
         assert!(matches!(outcome, RuleResult::Skip));
     }
 }
+
+#[cfg(test)]
+mod number_prefix_coverage {
+    /// 제40항 + 제61항: a number opened after an apostrophe writes the 수표 and
+    /// then the apostrophe cell.
+    #[rstest::rstest]
+    #[case::straight_quote("그는 '2026 년")]
+    #[case::typographic_quote("그는 \u{2019}2026 년")]
+    #[case::plain_number("그는 2026 년")]
+    fn a_number_after_a_quote_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

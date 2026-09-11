@@ -989,3 +989,26 @@ mod tests {
         let _ = split_mixed_math_word(&word, 0, MathContext::default());
     }
 }
+
+#[cfg(test)]
+mod attached_korean_name_coverage {
+    use super::*;
+
+    /// 제34항: only a Korean run of three or more syllables reads as a name
+    /// that owns the following parenthetical.
+    #[rstest::rstest]
+    #[case::two_syllables("김씨(30)이", 2, 6, false)]
+    #[case::three_syllables("홍길동(30)이", 3, 7, true)]
+    fn a_name_needs_three_korean_syllables(
+        #[case] text: &str,
+        #[case] start: usize,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            has_attached_korean_name_and_case_particle(&chars, start, end),
+            expected
+        );
+    }
+}

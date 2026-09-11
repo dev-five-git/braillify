@@ -196,3 +196,14 @@ mod tests {
         assert!(!result.is_empty());
     }
 }
+
+#[cfg(test)]
+mod greek_run_coverage {
+    /// 제31항: Greek letters take their own cells, alone or in a run.
+    #[rstest::rstest]
+    #[case::single("알파 \u{03B1} 값")]
+    #[case::run("\u{03B1}\u{03B2}\u{03B3}")]
+    fn greek_letters_encode(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

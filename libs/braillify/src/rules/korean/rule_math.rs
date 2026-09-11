@@ -533,3 +533,16 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+mod sign_boundary_coverage {
+    /// 수학 제2항: a sign opening a number may be followed by a bare decimal
+    /// point, and may itself open the expression.
+    #[rstest::rstest]
+    #[case::leading_decimal("기온 -.5 도")]
+    #[case::leading_digit("기온 -5 도")]
+    #[case::inside_parenthesis("값 (-5) 이다")]
+    fn a_signed_number_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

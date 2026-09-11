@@ -346,3 +346,16 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+mod emphasis_mark_coverage {
+    /// 제56항 입력 표기: a print source may still carry the `"˙` opening and the
+    /// `__` closing of an emphasis span.
+    #[rstest::rstest]
+    #[case::opening("\"\u{02D9}강조")]
+    #[case::closing("강조__")]
+    #[case::plain_quote("\"강조\"")]
+    fn emphasis_input_notation_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

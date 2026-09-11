@@ -1,4 +1,4 @@
-﻿use std::borrow::Cow;
+use std::borrow::Cow;
 
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
@@ -434,5 +434,51 @@ mod label_colon_coverage {
             crate::encode(input),
             crate::encode(&input.replace(':', ": "))
         );
+    }
+}
+
+#[cfg(test)]
+mod colon_and_merge_coverage {
+    use super::*;
+    use crate::rules::token_rule::{TokenAction, TokenRule};
+
+    /// 제51항 [다만 2] 의 대비 쌍은 붙이고, 괄호·따옴표가 섞여 표제를 가르면 본문에
+    /// 따라 쌍점 뒤를 띄운다.
+    #[rstest::rstest]
+    #[case::contrast_pair("청군:백군")]
+    #[case::three_syllable_pair("재판장:신교식")]
+    fn an_all_hangul_pair_stays_attached(#[case] input: &str) {
+        assert_ne!(
+            crate::encode(input),
+            crate::encode(&input.replace(':', ": "))
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::quoted("\u{2018}제목:내용\u{2019}")]
+    #[case::double_quoted("\u{201C}제목:내용\u{201D}")]
+    fn an_enclosure_makes_the_colon_a_label_boundary(#[case] input: &str) {
+        assert_eq!(
+            crate::encode(input),
+            crate::encode(&input.replace(':', ": "))
+        );
+    }
+
+    /// 제49항: 묵자가 물결표 앞뒤를 띄어 써도 점자에서는 한 어절로 합친다.
+    #[rstest::rstest]
+    #[case::tilde_both_sides("무게 300 ~ 350kg")]
+    #[case::middle_dot_both_sides("정치 · 경제")]
+    fn a_spaced_mark_merges_its_neighbours(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    #[test]
+    fn a_token_that_is_not_a_word_is_left_alone() {
+        let mut state = crate::rules::context::EncoderState::new(false);
+        let tokens = [crate::rules::token::Token::PreEncoded(vec![1])];
+        assert!(matches!(
+            MiddleDotSpacingRule.apply(&tokens, 0, &mut state).unwrap(),
+            TokenAction::Noop
+        ));
     }
 }

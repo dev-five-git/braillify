@@ -1012,3 +1012,25 @@ mod attached_korean_name_coverage {
         );
     }
 }
+
+#[cfg(test)]
+mod numeric_annotation_coverage {
+    use super::*;
+
+    /// 제34항: 한글 세 음절 이상이라야 뒤 괄호를 거느리는 이름으로 본다.
+    #[rstest::rstest]
+    #[case::two_syllables("김씨(30)이", 2, 6, false)]
+    #[case::three_syllables("홍길동(30)이", 3, 7, true)]
+    fn a_name_needs_three_korean_syllables(
+        #[case] text: &str,
+        #[case] start: usize,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            has_attached_korean_name_and_case_particle(&chars, start, end),
+            expected
+        );
+    }
+}

@@ -994,3 +994,47 @@ mod enclosure_route_coverage {
         ));
     }
 }
+
+#[cfg(test)]
+mod symbol_route_coverage {
+    use super::*;
+
+    /// 제46항 `BMI(체질량 지수)`: 닫힌 괄호는 그 안이 로마자 낱말일 때만 제32항의
+    /// 통일영어점자 괄호로 남는다.
+    #[rstest::rstest]
+    #[case::korean_body(&['(', '체', '질', '량', ')'], true)]
+    #[case::digits_only(&['(', '7', '3', ')'], true)]
+    #[case::roman_body(&['(', 'd', 'e', 'f', ')'], false)]
+    #[case::nested_roman(&['(', '(', 'd', ')', 'e', ')'], false)]
+    #[case::never_closes(&['(', 'd', 'e', 'f'], false)]
+    #[case::nothing_follows(&['('], false)]
+    fn a_closed_enclosure_is_korean_unless_its_body_is_roman(
+        #[case] word: &[char],
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            closed_parenthesis_is_korean_punctuation(word, 0, &[]),
+            expected
+        );
+    }
+
+    #[test]
+    fn an_enclosure_closing_in_a_later_word_is_still_scanned() {
+        assert!(closed_parenthesis_is_korean_punctuation(
+            &['(', 'A'],
+            0,
+            &["체질량)"]
+        ));
+    }
+
+    /// 제71항 [다만]: `®`/`™` 는 로마자 낱말에 붙으면 제29항으로 열린 구간 안에
+    /// 남고, 한글에 닿으면 따로 싼다.
+    #[rstest::rstest]
+    #[case::after_roman_letter("그는 Jeep\u{00AE} 를")]
+    #[case::after_roman_letter_tm("그는 Line\u{2122} 을")]
+    #[case::after_korean("그는 지프\u{00AE} 를")]
+    #[case::standalone("그는 \u{00AE} 를")]
+    fn a_trademark_sign_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

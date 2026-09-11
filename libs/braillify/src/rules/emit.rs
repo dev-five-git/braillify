@@ -2188,3 +2188,62 @@ mod spaced_colon_coverage {
         ));
     }
 }
+
+#[cfg(test)]
+mod section_boundary_coverage {
+    use super::*;
+    use crate::rules::token::{SpaceKind, WordMeta};
+
+    fn word(text: &str) -> Token<'static> {
+        let chars: Vec<char> = text.chars().collect();
+        Token::Word(WordToken {
+            text: std::borrow::Cow::Owned(text.to_string()),
+            meta: WordMeta::from_chars(&chars),
+            chars,
+        })
+    }
+
+    /// 제29항·제32항·제35항: 홀로 선 쌍점은 뒤 항목이 로마자로 증명될 때만 구간을
+    /// 잇는다.
+    #[test]
+    fn a_roman_item_after_the_colon_connects_the_section() {
+        let tokens = [word(":"), Token::Space(SpaceKind::Regular), word("Beta")];
+        assert!(spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
+    fn a_korean_item_after_the_colon_breaks_the_section() {
+        let tokens = [word(":"), Token::Space(SpaceKind::Regular), word("베타")];
+        assert!(!spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
+    fn a_pre_encoded_item_after_the_colon_breaks_the_section() {
+        let tokens = [word(":"), Token::PreEncoded(vec![1])];
+        assert!(!spaced_colon_connects_roman_items(&tokens, 0));
+    }
+
+    #[test]
+    fn a_colon_with_nothing_after_it_never_connects() {
+        assert!(!spaced_colon_connects_roman_items(&[word(":")], 0));
+    }
+
+    #[test]
+    fn a_token_that_is_not_a_lone_colon_never_connects() {
+        assert!(!spaced_colon_connects_roman_items(&[word("::")], 0));
+        assert!(!spaced_colon_connects_roman_items(
+            &[Token::PreEncoded(vec![1])],
+            0
+        ));
+    }
+
+    /// 제28항 [붙임] 의 대문자 구절과 제35항의 로마자+숫자 연결.
+    #[rstest::rstest]
+    #[case::caps_passage("그는 THE WORLD OF TIM BURTON 을")]
+    #[case::caps_passage_then_korean("THE WORLD OF TIM BURTON 전시")]
+    #[case::roman_number_chain("그는 CV3-AD685 를")]
+    #[case::roman_then_number_then_roman("그는 A100 B200 을")]
+    fn a_caps_passage_or_number_chain_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

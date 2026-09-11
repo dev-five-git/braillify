@@ -1,4 +1,4 @@
-use crate::char_struct::CharType;
+﻿use crate::char_struct::CharType;
 use crate::rules::RuleMeta;
 use crate::rules::context::RuleContext;
 use crate::rules::traits::{BrailleRule, Phase, RuleResult};
@@ -204,6 +204,20 @@ mod greek_run_coverage {
     #[case::single("알파 \u{03B1} 값")]
     #[case::run("\u{03B1}\u{03B2}\u{03B3}")]
     fn greek_letters_encode(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod greek_continuation_coverage {
+    /// 제31항 + 제29항: 그리스 문자는 홀로도 잇달아도 제 점형을 쓰고, 뒤에 로마자가
+    /// 이어지면 연속표를 앞세운다.
+    #[rstest::rstest]
+    #[case::single("알파 \u{03B1} 값")]
+    #[case::run("\u{03B1}\u{03B2}\u{03B3}")]
+    #[case::greek_then_roman("\u{03B1}x 값")]
+    #[case::greek_run_then_roman("\u{03B1}\u{03B2}t 값")]
+    fn a_greek_run_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }

@@ -483,3 +483,44 @@ mod parenthesis_route_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod parenthesis_and_list_coverage {
+    use super::*;
+
+    /// 제34항 `링컨(Lincoln)은` 은 괄호를 붙여 썼든 띄어 썼든 한글 괄호를 앞에 둔다.
+    #[rstest::rstest]
+    #[case::attached("링컨(Lincoln)은")]
+    #[case::spaced("링컨 (Lincoln)은")]
+    #[case::inside_roman_section("그는 ABC(def) 를")]
+    #[case::runs_on_into_roman("폐쇄회로(CC)TV와")]
+    fn a_roman_parenthetical_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    /// 제35항: 로마자+숫자 연결 뒤의 쉼표는 뒤에 로마자 항목이 이어지면 제32항의
+    /// 통일영어점자 점형을 지킨다.
+    #[rstest::rstest]
+    #[case::roman_number_then_roman("그는 DA5,Inc 를")]
+    #[case::roman_number_then_number("그는 Cs-134, 137 을")]
+    fn a_comma_inside_a_roman_number_chain_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    #[rstest::rstest]
+    #[case::korean_prefix(&['한','글','('], 2, "", true)]
+    #[case::numeric_prefix_after_korean(&['3','.','5','('], 3, "한글", true)]
+    #[case::numeric_prefix_after_roman(&['3','.','5','('], 3, "ABC", false)]
+    #[case::no_prefix(&['('], 0, "", false)]
+    fn korean_prose_ownership_follows_the_prefix(
+        #[case] word_chars: &[char],
+        #[case] index: usize,
+        #[case] prev_word: &str,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            korean_prose_owns_opening_parenthesis(word_chars, index, &[], prev_word),
+            expected
+        );
+    }
+}

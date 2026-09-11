@@ -548,3 +548,19 @@ mod sign_boundary_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod sign_coverage {
+    /// 수학 제2항: 부호는 숫자를 열 수도, 소수점만 뒤따를 수도 있다. U+2212 는
+    /// 통일영어점자의 뺄셈 기호로 적는다.
+    #[rstest::rstest]
+    #[case::leading_decimal("기온 -.5 도")]
+    #[case::leading_digit("기온 -5 도")]
+    #[case::inside_parenthesis("값 (-5) 이다")]
+    #[case::dot_without_digits("기온 -.도")]
+    #[case::unicode_minus("값 5 \u{2212} 3 이다")]
+    #[case::unicode_minus_attached("그는 A\u{2212}B 를")]
+    fn a_signed_number_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

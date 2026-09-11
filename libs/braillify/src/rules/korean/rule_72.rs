@@ -386,3 +386,20 @@ mod bullet_tail_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod bullet_item_coverage {
+    /// 제72항: 글머리 기호는 뒤 항목을 거느린다. 항목이 줄 끝까지 가든 문장 부호에서
+    /// 끊기든 마찬가지다.
+    #[rstest::rstest]
+    #[case::bullet_then_item("\u{25CB} 정원은 넓다")]
+    #[case::bullet_then_punctuation("\u{25CB} 정원.")]
+    #[case::bullet_alone("\u{25CB}")]
+    #[case::bullet_then_bullet("\u{25CB} \u{25A1} 정원")]
+    #[case::item_runs_to_the_end("\u{25CB} 정원")]
+    #[case::item_then_comma("\u{25CB} 정원, 마당")]
+    #[case::triangle_bullet("\u{25B3} 정원")]
+    fn a_bullet_item_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}

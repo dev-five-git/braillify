@@ -1,4 +1,4 @@
-﻿use std::{borrow::Cow, cell::RefCell};
+use std::{borrow::Cow, cell::RefCell};
 
 /// Small, semantic-neutral predicates shared with the NIKL analysis example.
 /// Keeping them here lets the ordinary library test target verify analyzer
@@ -3127,5 +3127,83 @@ mod print_variant_coverage {
         let folded =
             normalize_pure_roman_compatibility_units(std::borrow::Cow::Borrowed("\u{338F}"));
         assert_eq!(folded.as_ref(), "\u{338F}");
+    }
+}
+
+#[cfg(test)]
+mod print_variant_fold_coverage {
+    use super::*;
+    use std::borrow::Cow;
+
+    /// 제49·50·61·69항 + 수학 제65항: 규정이 이미 점형을 정한 문자의 활자체·호환
+    /// 표기는 그 문자로 접어 적고, 보이지 않는 문자는 버린다.
+    #[rstest::rstest]
+    #[case::ring_above_alone("\u{02DA}", "\u{00B0}")]
+    #[case::unicode_hyphen("\u{2010}", "-")]
+    #[case::non_breaking_hyphen("\u{2011}", "-")]
+    #[case::katakana_middle_dot("\u{30FB}", "\u{00B7}")]
+    #[case::halfwidth_middle_dot("\u{FF65}", "\u{00B7}")]
+    #[case::hyphenation_point("\u{2027}", "\u{00B7}")]
+    #[case::one_dot_leader("\u{2024}", "\u{00B7}")]
+    #[case::vector_cross("\u{2A2F}", "\u{00D7}")]
+    #[case::parenthesised_five("\u{2478}", "(5)")]
+    #[case::parenthesised_twenty("\u{2487}", "(20)")]
+    #[case::wave_dash("\u{301C}", "~")]
+    #[case::acute_accent("\u{00B4}", "'")]
+    #[case::soft_hyphen("\u{00AD}", "")]
+    #[case::zero_width_space("\u{200B}", "")]
+    #[case::zero_width_joiner("\u{200D}", "")]
+    #[case::byte_order_mark("\u{FEFF}", "")]
+    #[case::fullwidth_percent("\u{FF05}", "%")]
+    #[case::fullwidth_letter("\u{FF4D}", "m")]
+    #[case::plain_char_is_kept("m", "m")]
+    fn a_print_variant_folds_to_the_character_the_standard_defines(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(
+            normalize_print_variants(Cow::Borrowed(input)).as_ref(),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::celsius("25\u{00B0}C", "25\u{2103}")]
+    #[case::fahrenheit("77\u{00B0}F", "77\u{2109}")]
+    #[case::letter_without_a_degree("25C", "25C")]
+    #[case::degree_at_the_end("25\u{00B0}", "25\u{00B0}")]
+    fn a_degree_letter_pair_folds_to_the_unit_glyph(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            normalize_print_variants(Cow::Borrowed(input)).as_ref(),
+            expected
+        );
+    }
+
+    /// 전화 기호는 묵자의 뜻대로 `Tel` 로 적는다.
+    #[rstest::rstest]
+    #[case::black_telephone("\u{260E}051", "Tel051")]
+    #[case::white_telephone("\u{260F}051", "Tel051")]
+    #[case::other_char_is_kept("051", "051")]
+    fn a_telephone_sign_expands_to_its_printed_meaning(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(expand_pictographs(Cow::Borrowed(input)).as_ref(), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::before_slash("\u{338F}/h")]
+    #[case::after_slash("h/\u{338F}")]
+    fn a_square_unit_joined_through_a_slash_decomposes(#[case] input: &str) {
+        let folded = normalize_pure_roman_compatibility_units(Cow::Borrowed(input));
+        assert!(folded.contains("kg"), "expected kg in {folded:?}");
+    }
+
+    #[test]
+    fn a_detached_square_unit_keeps_its_glyph() {
+        assert_eq!(
+            normalize_pure_roman_compatibility_units(Cow::Borrowed("\u{338F}")).as_ref(),
+            "\u{338F}"
+        );
     }
 }

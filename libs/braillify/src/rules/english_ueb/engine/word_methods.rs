@@ -1,4 +1,4 @@
-use super::*;
+﻿use super::*;
 
 impl EnglishUebEngine {
     pub(super) fn encode_word(
@@ -1041,6 +1041,22 @@ mod word_body_coverage {
     #[rstest::rstest]
     #[case::whole_word_shortform("그는 about 를")]
     #[case::ordinary_word("그는 tomato 를")]
+    fn a_roman_word_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod title_subunit_coverage {
+    /// §8.8.2 `TVOntario`: 앞의 대문자 무리와 뒤의 소문자가 자연스러운 하위 단위를
+    /// 이루면 그 단위가 제 대문자표를 갖는다. §10.9 의 낱말 약자는 제 점형으로 적고,
+    /// 그 밖의 낱말은 일반 약자 경로로 내려간다.
+    #[rstest::rstest]
+    #[case::three_capital_prefix("그는 KBStar 를")]
+    #[case::four_capital_prefix("그는 BLASTSound 를")]
+    #[case::whole_word_shortform("그는 about 를")]
+    #[case::ordinary_word("그는 tomato 를")]
+    #[case::caps_then_lowercase_tail("그는 WALKing 을")]
     fn a_roman_word_in_korean_text_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
     }

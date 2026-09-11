@@ -1,4 +1,4 @@
-//! 제28항 — 로마자는 ｢통일영어점자 규정｣에 따라 다음과 같이 적는다.
+﻿//! 제28항 — 로마자는 ｢통일영어점자 규정｣에 따라 다음과 같이 적는다.
 //!
 //! English letters are mapped to braille using the UEB (Unified English Braille) system.
 //! Uppercase indicators: single ⠠(32), word ⠠⠠(32,32), passage ⠠⠠⠠(32,32,32).
@@ -800,6 +800,21 @@ mod uppercase_run_coverage {
     /// UEB 10.12.1: an all-capitals initialism in Korean text is spelled with
     /// alphabet signs; a mixed-case Roman run keeps its ordinary route.
     #[rstest::rstest]
+    #[case::initialism("그는 WHO 를")]
+    #[case::hyphenated_run("그는 CV3-AD685 를")]
+    #[case::mixed_case("그는 Lincoln 을")]
+    fn a_roman_run_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod uppercase_indicator_coverage {
+    /// 제28항: 대문자 하나는 대문자표를, 둘 이상 이어지면 대문자 낱말표를 앞세운다.
+    /// UEB 10.12.1 의 두문자어는 알파벳 기호로만 적는다.
+    #[rstest::rstest]
+    #[case::single_capital("그는 Ab 를")]
+    #[case::two_capitals("그는 AB 를")]
     #[case::initialism("그는 WHO 를")]
     #[case::hyphenated_run("그는 CV3-AD685 를")]
     #[case::mixed_case("그는 Lincoln 을")]

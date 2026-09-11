@@ -17,7 +17,7 @@
     "preinstall": "uv sync && (cargo install wasm-pack || node -e \"process.exit(0)\") && (pip install maturin || \"process.exit(0)\")",
     "build": "cargo build --release -p braillify && cargo build --release -p braillify-c && bun -F braillify build && cd packages/python && maturin build --release --out dist",
     "build:jvm": "cd packages/jvm && ./gradlew assembleJvmJar",
-    "build:landing": "bun run build && (cargo test test_by_testcase || node -e \"process.exit(0)\") && bun -F landing build",
+    "build:landing": "bun run build && (cargo test test_by_testcase || node -e \"process.exit(0)\") && bun -F landing build && bun scripts/check-landing-size.ts",
     "changepacks": "bunx @changepacks/cli",
     "dev": "bun -F landing dev"
   },

@@ -1,4 +1,7 @@
-import type { TestCaseFilter } from '@/components/test-case/TestCaseProvider'
+import type {
+  FilterTotalMap,
+  TestCaseFilter,
+} from '@/components/test-case/TestCaseProvider'
 
 export const TEST_CASE_FILTERS: { label: string; value: TestCaseFilter }[] = [
   { label: '한글', value: 'korean' },
@@ -105,18 +108,24 @@ export function createFilterMap(
   return map
 }
 
-// Default FILTER_MAP for backward compatibility (legacy migration support)
-export const FILTER_MAP: Record<TestCaseFilter, string[]> = {
-  korean: [],
-  math: [],
-  science: [],
-  music: [],
-  english: [],
-  'foreign-language': [],
-  ipa: [],
-  '2021_corpus': [],
-  '2022_corpus': [],
-  '2023_corpus': [],
-  '2024_corpus': [],
-  '2025_corpus': [],
+export function createFilterTotalMap(): FilterTotalMap {
+  return Object.fromEntries(
+    TEST_CASE_FILTERS.map(({ value }) => [
+      value,
+      {
+        braillify: { total: 0, fail: 0 },
+        world: { total: 0, fail: 0 },
+        jeomsarang: { total: 0, fail: 0 },
+      },
+    ]),
+  ) as FilterTotalMap
+}
+
+/**
+ * URL of a generated result page. Mirrors the directory layout written by
+ * `cargo test test_by_testcase` into `apps/landing/public/test-status`.
+ */
+export function testStatusPageUrl(statusKey: string, page: number): string {
+  const path = statusKey.split('/').map(encodeURIComponent).join('/')
+  return `/test-status/${path}/page-${page}.json`
 }

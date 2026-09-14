@@ -126,17 +126,20 @@ impl InitialContractionPronunciationRule {
         if key != "ever" {
             return false;
         }
-        if pos > 0 && matches!(word[pos - 1], 'a' | 'e' | 'i' | 'o' | 'u') {
+        // 국립국어원 회신(2026-09-12): §10.7.4 는 `ever` 의 첫 `e` 에 강세가 오고
+        // 그 앞에 `e` 나 `i` 가 오지 않을 때 어두 약자를 쓰도록 한다. 앞의 `ie`/`ee`
+        // 가 이 자리에서 걸러진다(`belie·ver`, `thie·very`, `McKe·ever`).
+        if pos > 0 && matches!(word[pos - 1], 'e' | 'i') {
             return false;
         }
         let er_e_idx = pos + 2; // the `e` of the trailing `er` in `e·v·e·r`
         let prons = self.provider.pronunciations(full);
         if prons.is_empty() {
-            // 사전에 없는 합성어·고유명사(`cantilever`, `Clevers`)는 철자로 판정한다.
-            // `ever`가 낱말 끝이거나 굴절 어미 `s` 하나만 남기고 끝나며 앞이 자음이면
-            // 그 `er`는 강세를 받을 수 없는 어미이므로 §10.7 의 `ever` 꼴이다. 뒤에
-            // 다른 글자가 더 붙으면 그 `ver`가 강세를 받을 수 있어(`e·ver·sion`,
-            // `re·ver·ify`, `Guine·vere`, `Monte·ver·di`) 약자를 쓰지 않는다.
+            // 사전에 없어 강세를 확인할 수 없는 낱말은 `ever` 가 낱말 끝이거나 굴절
+            // 어미 `s` 하나만 남기고 끝날 때에만 그 `er` 가 강세 없는 어미가 되어
+            // §10.7 의 꼴을 이룬다(`cantilever`, `Clevers`). 뒤에 다른 글자가 더
+            // 붙으면 그 `ver` 가 강세를 받을 수 있어(`e·ver·sion`, `re·ver·ify`)
+            // 약자를 쓰지 않는다.
             return match word.len() - (pos + 4) {
                 0 => true,
                 1 => word[pos + 4] == 's',
@@ -438,6 +441,8 @@ mod tests {
     #[case::asseverate("asseverate", 3, Some((vec![decode_unicode('⠐'), decode_unicode('⠑')], 4)))]
     #[case::eversion("eversion", 0, None)] // e·VER stressed → use `er`
     #[case::severity("severity", 1, None)] // se·VER·ity — e is a full vowel
+    #[case::believer("believer", 4, None)] // §10.7.4 — preceding `i`
+    #[case::mckeever("mckeever", 4, None)] // §10.7.4 — preceding `e`
     fn applies_ever_when_unstressed(
         #[case] word: &str,
         #[case] pos: usize,

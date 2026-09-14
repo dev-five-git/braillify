@@ -549,6 +549,16 @@ pub(crate) fn should_render_symbol_as_english(
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
             let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words);
 
+            // 제33항 [다만] — 앞에 로마자가 없이 숫자만 온 빗금은 단위를 가르는
+            // 기호이지 제74항 디지털 표기의 일부가 아니다(`17.1/km`). 구간을 열지
+            // 않으므로 로마자표가 붙지 않고, 뒤의 로마자가 제 구간을 연다.
+            if symbol == '/'
+                && !is_english
+                && !word_chars[..index].iter().any(char::is_ascii_alphabetic)
+            {
+                return false;
+            }
+
             (prev_ascii && next_ascii)
                 // Korean rules 29/32/35: `Alpha : Beta` is one Roman
                 // section. The print tokenizer makes the colon a standalone
@@ -1062,6 +1072,25 @@ mod symbol_route_coverage {
 
 #[cfg(test)]
 mod digital_notation_coverage {
+    /// 제33항 [다만] — 앞에 로마자가 없이 숫자만 온 빗금은 로마자 구간을 열지 않는다.
+    /// 뒤의 로마자가 제 구간을 열고, 빗금 자체는 제33항의 점형으로 적는다. 왼쪽에
+    /// 로마자가 있으면(`www.a.kr`, `A/B`) 종전대로 한 구간 안에 남는다.
+    #[rstest::rstest]
+    #[case::digits_then_unit("가나 17.1/km, 다라", "⠼⠁⠛⠲⠁⠸⠌⠴⠅⠍⠐")]
+    #[case::digit_groups("가나 16/32/64GB 다라", "⠼⠁⠋⠸⠌⠼⠉⠃⠸⠌⠼⠋⠙⠴⠠⠠⠛⠃⠲")]
+    #[case::roman_on_the_left("가나 A/B 다라", "⠴⠠⠁⠸⠌⠠⠃⠲")]
+    #[case::web_address("가나 www.a.kr 다라", "⠴⠺⠺⠺⠲⠁⠲⠅⠗⠲")]
+    fn a_slash_after_digits_opens_no_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing slash run {expected_segment:?} in {actual:?}"
+        );
+    }
+
     /// 제74항: 주소 표기는 한 로마자 구간이다. 뒤에 더 이어질 글자가 없으면 그
     /// 구분 기호는 일반 기호 경로로 판정한다.
     #[rstest::rstest]

@@ -63,7 +63,7 @@ fn should_wrap_information_symbol(ctx: &RuleContext) -> bool {
 /// to a Roman word (`Jeep®`) sits inside the open 제29항 section, where UEB
 /// 3.1 reads its own cells and no re-entry indicator is needed.
 fn follows_roman_word_in_open_section(ctx: &RuleContext) -> bool {
-    matches!(ctx.current_char(), '®' | '™')
+    matches!(ctx.current_char(), '®' | '™' | '&')
         && ctx.state.is_english
         && ctx.prev_char().is_some_and(|ch| ch.is_ascii_alphanumeric())
 }
@@ -235,6 +235,24 @@ mod tests {
 
         assert!(matches!(outcome, RuleResult::Consumed));
         assert_eq!(ctx.result.as_slice(), encode_unicode_cells("⠈⠯"));
+    }
+
+    /// 제29항 — 로마자에 붙은 `&` 는 뒤에 한글이 이어져도 구간 안에 남는다. 구간은
+    /// 그 한글에서 닫히므로 `&` 앞에 종료표가 서지 않는다. 공식 예 `AT&T` 와 한글에
+    /// 닿지 않는 `A&B` 는 그대로다.
+    #[rstest::rstest]
+    #[case::korean_follows("가나 쏠로몬tv&이지사커 다라", "⠴⠞⠧⠈⠯⠲⠕")]
+    #[case::official_at_and_t("가나 AT&T 다라", "⠴⠠⠠⠁⠞⠈⠯⠠⠞⠲")]
+    #[case::roman_both_sides("가나 A&B 다라", "⠴⠠⠁⠈⠯⠠⠃⠲")]
+    fn attached_ampersand_keeps_the_open_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing ampersand run {expected_segment:?} in {actual:?}"
+        );
     }
 
     /// UEB 3.1.1's official `&c` surface exercises the Korean Rule-71 wrapper

@@ -444,7 +444,17 @@ pub(crate) fn should_render_symbol_as_english(
         // grade-1 mode in attached Roman forms such as AT&T and B&B. Use
         // a complete ASCII-letter run so spaced prose, Hangul, and outer
         // alphanumeric continuations keep their existing routes.
-        '&' => is_attached_ascii_roman_ampersand(word_chars, index),
+        // 로마자에 붙은 `&` 는 제29항 구간 안에 남는다. 뒤에 한글이 이어지더라도
+        // (`tv&이지사커`) 구간은 그 한글에서 닫히므로, `&` 앞에서 종료표를 적고
+        // 다시 여는 일이 없다.
+        '&' => {
+            is_attached_ascii_roman_ampersand(word_chars, index)
+                || (is_english
+                    && prev_char.is_some_and(|ch| ch.is_ascii_alphabetic())
+                    && word_chars
+                        .get(index + 1)
+                        .is_some_and(|ch| utils::is_korean_char(*ch)))
+        }
         // UEB 3.3.1 explicitly keeps the general-purpose asterisk inside the
         // attached Roman example `M*A*S*H`. Preserve that one Roman section;
         // Korean Rule 60 continues to own standalone and non-Roman asterisks.
@@ -856,7 +866,9 @@ mod tests {
     #[case::official_b_and_b("B&B", true, true)]
     #[case::spaced("A & B", true, false)]
     #[case::hangul_left("가&B", true, false)]
-    #[case::hangul_right("A&나", true, false)]
+    // 제29항 — 로마자 뒤의 `&` 는 한글이 이어져도 구간 안에 남고, 구간은 그 한글에서
+    // 닫힌다. 한글이 앞서면(`가&B`) 구간이 열려 있지 않으므로 그대로 거짓이다.
+    #[case::hangul_right("A&나", true, true)]
     #[case::digit_neighbor("3&B", true, false)]
     #[case::digit_outer_left("3A&B", true, false)]
     #[case::rule35_digit_suffix("A&B3", true, true)]

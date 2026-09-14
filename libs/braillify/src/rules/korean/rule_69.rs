@@ -642,10 +642,9 @@ fn omit_roman_terminator_before_boundary(
         && word
             .get(boundary_index + 1)
             .is_some_and(|next| is_roman_unit_component(*next));
-    let continues_into_number = word
-        .get(boundary_index)
-        .is_some_and(|next| next.is_ascii_digit());
-    if (skips_for_punctuation || continues_through_slash || continues_into_number)
+    if (skips_for_punctuation
+        || continues_through_slash
+        || unit_continues_into_number(word, boundary_index))
         && encoded.last() == Some(&crate::unicode::decode_unicode('⠲'))
     {
         encoded.pop();
@@ -694,6 +693,18 @@ fn roman_unit_continues_into_next_word(ctx: &RuleContext, boundary_index: usize)
             .is_some_and(|ch| ch.is_ascii_alphanumeric())
 }
 
+/// 제35항 `D-100` 은 붙임표로 이어지는 숫자를 같은 로마자 구간에 둔다. 단위 뒤도
+/// 같은 자리여서(`799cc-7`, `25kg-3`) 구간이 닫히지 않는다.
+fn unit_continues_into_number(word: &[char], boundary_index: usize) -> bool {
+    word.get(boundary_index).is_some_and(|next| {
+        next.is_ascii_digit()
+            || (*next == '-'
+                && word
+                    .get(boundary_index + 1)
+                    .is_some_and(char::is_ascii_digit))
+    })
+}
+
 fn omit_trailing_roman_terminator(encoded: &mut Vec<u8>) {
     if encoded.last() == Some(&crate::unicode::decode_unicode('⠲')) {
         encoded.pop();
@@ -725,7 +736,9 @@ pub(crate) fn adjust_roman_unit_boundary(
     if separated_continues {
         omit_trailing_roman_terminator(encoded);
     }
-    comma_continues || separated_continues
+    comma_continues
+        || separated_continues
+        || unit_continues_into_number(ctx.word_chars, boundary_index)
 }
 
 fn should_insert_separator_after_symbol(symbol: char, next: Option<char>) -> bool {
@@ -1463,6 +1476,23 @@ mod tests {
         assert!(
             actual.contains(expected_segment),
             "missing ordinary rule-69 unit boundary {expected_segment:?} in {actual:?}"
+        );
+    }
+
+    /// 제35항 — 단위 뒤에서 붙임표로 이어지는 숫자는 종료표도 로마자표도 없이 같은
+    /// 구간에 남는다. 붙임표 뒤가 숫자가 아니면 평소대로 구간을 닫는다.
+    #[rstest::rstest]
+    #[case::volume_unit("가나 799cc-7 다라", "⠴⠉⠉⠤⠼⠛")]
+    #[case::mass_unit("가나 25kg-3 다라", "⠴⠅⠛⠤⠼⠉")]
+    #[case::hyphen_before_letter("가나 25kg-a 다라", "⠴⠅⠛⠲")]
+    fn unit_hyphen_number_stays_in_one_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing rule-35 hyphen chain {expected_segment:?} in {actual:?}"
         );
     }
 

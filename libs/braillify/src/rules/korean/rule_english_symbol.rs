@@ -164,6 +164,14 @@ impl BrailleRule for RuleEnglishSymbol {
         }
 
         if *sym == '(' {
+            // 닫는 따옴표 뒤의 한국어 괄호는 앞 구간을 완전히 닫는다. 예약된 연속표
+            // ⠰ 를 지워 괄호 안 로마자가 제29항의 로마자표 ⠴ 로 새로 열리게 한다.
+            if !use_english_symbol
+                && ctx.index > 0
+                && matches!(ctx.word_chars[ctx.index - 1], '\u{2019}' | '\u{201d}')
+            {
+                crate::rules::roman_mode::clear_pending_continuation(ctx.state);
+            }
             ctx.state.parenthesis_stack.push(use_english_symbol);
         } else if *sym == ')' {
             use_english_symbol = ctx
@@ -370,6 +378,23 @@ mod tests {
         let _ = RuleEnglishSymbol.apply(&mut ctx);
 
         assert!(!ctx.state.parenthesis_stack.is_empty());
+    }
+
+    /// 닫는 따옴표 뒤의 괄호는 제56항의 한국어 괄호 ⠦⠄ 이고, 그 안의 로마자는
+    /// 예약된 연속표 ⠰ 가 아니라 제29항의 로마자표 ⠴ 로 새로 열린다. 한글에 바로
+    /// 붙은 괄호(`모터보트(`)와 같은 자리다.
+    #[rstest::rstest]
+    #[case::after_closing_quote("가나 ‘MDPS’(Motor 다라", "⠴⠄⠦⠄⠴⠠⠍⠕⠞⠕⠗")]
+    #[case::attached_to_korean("가나 모터보트(Motor 다라", "⠦⠄⠴⠠⠍⠕⠞⠕⠗")]
+    fn closing_quote_opens_a_fresh_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing Korean parenthesis run {expected_segment:?} in {actual:?}"
+        );
     }
 
     #[test]

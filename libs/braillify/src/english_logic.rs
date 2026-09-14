@@ -427,9 +427,15 @@ pub(crate) fn should_render_symbol_as_english(
 
     match symbol {
         '(' => {
+            // 닫는 따옴표는 로마자 구간을 닫으므로 그 뒤의 여는 괄호는 한글에 바로
+            // 붙은 괄호(`모터보트(`, `씨넷(`)와 같은 자리다. 제39항 영어 주도
+            // 문서에서는 따옴표가 영어 구문 안에 있으므로 이 판정을 적용하지 않는다.
+            let after_closing_quote = !is_english_majority
+                && prev_char.is_some_and(|ch| matches!(ch, '\u{2019}' | '\u{201d}'));
             (is_english_majority
                 || !closed_parenthesis_is_korean_punctuation(word_chars, index, remaining_words))
                 && is_ascii_letter_or_digit(next_char)
+                && !after_closing_quote
                 && (!prev_char.is_some_and(utils::is_korean_char)
                     || closed_parenthesis_continues_into_roman(word_chars, index))
         }
@@ -687,6 +693,9 @@ mod tests {
         false
     )]
     #[case::rule_39_english_majority("(Korean:", 0, &["반찬)"], true, true, true, true)]
+    // 닫는 따옴표 뒤는 제56항의 한국어 괄호, 제39항 문서에서만 UEB 괄호.
+    #[case::after_closing_quote("’(Motor", 1, &[], true, true, false, false)]
+    #[case::after_closing_quote_english_majority("’(Motor", 1, &[], true, true, true, true)]
     fn should_render_symbol_as_english_for_opening_parenthesis(
         #[case] input: &str,
         #[case] index: usize,

@@ -310,6 +310,14 @@ jobs:
       - jvm-test
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # changepacks 는 base branch 와 견주어 바뀐 manifest 를 찾으므로 전체
+          # 이력이 필요하다. 기본 shallow checkout 이면 그 비교가 실패한다.
+          fetch-depth: 0
+          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
+          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
+          allow-unsafe-pr-checkout: true
       - uses: changepacks/action@main
         id: changepacks
         with:

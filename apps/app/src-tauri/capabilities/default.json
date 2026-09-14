@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/mobile-schema.json",
+  "identifier": "default",
+  "description": "Braillify 메인 창에 필요한 최소 권한",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "clipboard-manager:allow-write-text"
+  ]
+}

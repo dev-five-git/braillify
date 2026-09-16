@@ -223,9 +223,24 @@ impl BrailleRule for Rule28 {
                 lower_run.as_str(),
                 "be" | "enough" | "his" | "in" | "was" | "were"
             );
+            // 국립국어원 회신(2026-09-15): 붙임표 뒤에 이어진 낱말은 독립적이므로
+            // 약자를 쓸 수 있고, 제37항 붙임의 여섯 낱말 중에서는 `in` 만
+            // 해당한다 — ⠔ 가 낱말표이면서 UEB §10.6 묶음약자이기 때문이다.
+            let follows_hyphen = ctx
+                .index
+                .checked_sub(1)
+                .and_then(|index| ctx.word_chars.get(index))
+                .is_some_and(|previous| {
+                    matches!(
+                        previous,
+                        '-' | '\u{2010}' | '\u{2011}' | '\u{2012}' | '\u{2013}' | '\u{2014}'
+                    )
+                });
+            let hyphen_joined_in = lower_run == "in" && follows_hyphen;
             let rule_37_korean_context_exception = !ctx.state.english_dominant_wrap_active
                 && !ctx.state.roman_section_is_english_context
-                && is_lower_wordsign;
+                && is_lower_wordsign
+                && !hyphen_joined_in;
             // UEB 10.5 gives lower wordsigns a stricter boundary than ordinary
             // standing-alone wordsigns. In particular, a hyphen, dash, quote,
             // or lower punctuation cell touching either side forces spelling.
@@ -243,6 +258,7 @@ impl BrailleRule for Rule28 {
                 .copied()
                 .map(EnglishToken::Symbol);
             let lower_wordsign_boundary_permits = !is_lower_wordsign
+                || hyphen_joined_in
                 || lower_wordsign_usable(previous_boundary.as_ref(), next_boundary.as_ref());
             let standalone_wordsign = is_standing_alone_ordinary_run
                 && (wrap_wordsign || continuing_roman_section)
@@ -705,8 +721,8 @@ mod tests {
         );
     }
 
-    /// UEB 10.5: a lower wordsign touching a hyphen is not usable even when the
-    /// surrounding Roman section is clearly an English title.
+    /// UEB 10.5: a lower wordsign followed by a hyphen is not usable even when
+    /// the surrounding Roman section is clearly an English title.
     #[test]
     fn english_phrase_spells_lower_wordsign_touching_hyphen() {
         let actual = encode_to_unicode("제목(Alpha In-house Teams)이다.")
@@ -719,6 +735,42 @@ mod tests {
         assert!(
             !actual.contains("⠀⠠⠔⠤"),
             "hyphen-adjacent `In` must not use its lower wordsign: {actual}"
+        );
+    }
+
+    /// 국립국어원 회신(2026-09-15): 붙임표 뒤에 이어진 `in` 은 독립적이라 약자를
+    /// 쓴다. 제37항 붙임의 나머지 다섯 낱말은 해당하지 않는다.
+    #[rstest::rstest]
+    #[case::between_hyphens("클라우드(Cloud-in-a-Box)라는", "⠤⠔⠤")]
+    #[case::before_closing_paren("록인(lock-in)을", "⠤⠔⠠⠴")]
+    #[case::before_opening_paren("‘built-in(빌트인)’", "⠤⠔⠦⠄")]
+    #[case::capitalized("팬인(Fan-In)", "⠤⠠⠔⠠⠴")]
+    fn hyphen_joined_in_keeps_its_contraction(#[case] input: &str, #[case] expected: &str) {
+        let actual = encode_to_unicode(input).expect("hyphenated `in` must encode");
+
+        assert!(
+            actual.contains(expected),
+            "`in` after a hyphen must contract to ⠔: {actual}"
+        );
+    }
+
+    /// 제37항 붙임 과 UEB 10.5 는 그대로다 — 붙임표가 앞에 없는 나머지 다섯
+    /// 낱말은 여전히 철자로 적는다.
+    #[rstest::rstest]
+    #[case::whole_roman_item("가나 in 다라", "⠴⠊⠝⠲")]
+    #[case::hyphen_only_follows("내부(in-house)에서", "⠴⠊⠝⠤")]
+    #[case::hyphen_joined_was("클라우드(Cloud-was-a-Box)라는", "⠤⠺⠁⠎⠤")]
+    #[case::hyphen_joined_his("클라우드(Cloud-his-a-Box)라는", "⠤⠓⠊⠎⠤")]
+    #[case::hyphen_joined_be("클라우드(Cloud-be-a-Box)라는", "⠤⠃⠑⠤")]
+    fn hyphen_rule_leaves_the_other_lower_wordsigns_spelled(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let actual = encode_to_unicode(input).expect("lower wordsign context must encode");
+
+        assert!(
+            actual.contains(expected),
+            "lower wordsign must stay spelled: {actual}"
         );
     }
 

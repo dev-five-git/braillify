@@ -427,9 +427,15 @@ pub(crate) fn should_render_symbol_as_english(
 
     match symbol {
         '(' => {
+            // 닫는 따옴표는 로마자 구간을 닫으므로 그 뒤의 여는 괄호는 한글에 바로
+            // 붙은 괄호(`모터보트(`, `씨넷(`)와 같은 자리다. 제39항 영어 주도
+            // 문서에서는 따옴표가 영어 구문 안에 있으므로 이 판정을 적용하지 않는다.
+            let after_closing_quote = !is_english_majority
+                && prev_char.is_some_and(|ch| matches!(ch, '\u{2019}' | '\u{201d}'));
             (is_english_majority
                 || !closed_parenthesis_is_korean_punctuation(word_chars, index, remaining_words))
                 && is_ascii_letter_or_digit(next_char)
+                && !after_closing_quote
                 && (!prev_char.is_some_and(utils::is_korean_char)
                     || closed_parenthesis_continues_into_roman(word_chars, index))
         }
@@ -438,7 +444,17 @@ pub(crate) fn should_render_symbol_as_english(
         // grade-1 mode in attached Roman forms such as AT&T and B&B. Use
         // a complete ASCII-letter run so spaced prose, Hangul, and outer
         // alphanumeric continuations keep their existing routes.
-        '&' => is_attached_ascii_roman_ampersand(word_chars, index),
+        // 로마자에 붙은 `&` 는 제29항 구간 안에 남는다. 뒤에 한글이 이어지더라도
+        // (`tv&이지사커`) 구간은 그 한글에서 닫히므로, `&` 앞에서 종료표를 적고
+        // 다시 여는 일이 없다.
+        '&' => {
+            is_attached_ascii_roman_ampersand(word_chars, index)
+                || (is_english
+                    && prev_char.is_some_and(|ch| ch.is_ascii_alphabetic())
+                    && word_chars
+                        .get(index + 1)
+                        .is_some_and(|ch| utils::is_korean_char(*ch)))
+        }
         // UEB 3.3.1 explicitly keeps the general-purpose asterisk inside the
         // attached Roman example `M*A*S*H`. Preserve that one Roman section;
         // Korean Rule 60 continues to own standalone and non-Roman asterisks.
@@ -532,6 +548,16 @@ pub(crate) fn should_render_symbol_as_english(
         '/' | '@' | '#' | '.' | '_' | ':' => {
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
             let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words);
+
+            // 제33항 [다만] — 앞에 로마자가 없이 숫자만 온 빗금은 단위를 가르는
+            // 기호이지 제74항 디지털 표기의 일부가 아니다(`17.1/km`). 구간을 열지
+            // 않으므로 로마자표가 붙지 않고, 뒤의 로마자가 제 구간을 연다.
+            if symbol == '/'
+                && !is_english
+                && !word_chars[..index].iter().any(char::is_ascii_alphabetic)
+            {
+                return false;
+            }
 
             (prev_ascii && next_ascii)
                 // Korean rules 29/32/35: `Alpha : Beta` is one Roman
@@ -687,6 +713,9 @@ mod tests {
         false
     )]
     #[case::rule_39_english_majority("(Korean:", 0, &["반찬)"], true, true, true, true)]
+    // 닫는 따옴표 뒤는 제56항의 한국어 괄호, 제39항 문서에서만 UEB 괄호.
+    #[case::after_closing_quote("’(Motor", 1, &[], true, true, false, false)]
+    #[case::after_closing_quote_english_majority("’(Motor", 1, &[], true, true, true, true)]
     fn should_render_symbol_as_english_for_opening_parenthesis(
         #[case] input: &str,
         #[case] index: usize,
@@ -847,7 +876,9 @@ mod tests {
     #[case::official_b_and_b("B&B", true, true)]
     #[case::spaced("A & B", true, false)]
     #[case::hangul_left("가&B", true, false)]
-    #[case::hangul_right("A&나", true, false)]
+    // 제29항 — 로마자 뒤의 `&` 는 한글이 이어져도 구간 안에 남고, 구간은 그 한글에서
+    // 닫힌다. 한글이 앞서면(`가&B`) 구간이 열려 있지 않으므로 그대로 거짓이다.
+    #[case::hangul_right("A&나", true, true)]
     #[case::digit_neighbor("3&B", true, false)]
     #[case::digit_outer_left("3A&B", true, false)]
     #[case::rule35_digit_suffix("A&B3", true, true)]
@@ -1041,6 +1072,25 @@ mod symbol_route_coverage {
 
 #[cfg(test)]
 mod digital_notation_coverage {
+    /// 제33항 [다만] — 앞에 로마자가 없이 숫자만 온 빗금은 로마자 구간을 열지 않는다.
+    /// 뒤의 로마자가 제 구간을 열고, 빗금 자체는 제33항의 점형으로 적는다. 왼쪽에
+    /// 로마자가 있으면(`www.a.kr`, `A/B`) 종전대로 한 구간 안에 남는다.
+    #[rstest::rstest]
+    #[case::digits_then_unit("가나 17.1/km, 다라", "⠼⠁⠛⠲⠁⠸⠌⠴⠅⠍⠐")]
+    #[case::digit_groups("가나 16/32/64GB 다라", "⠼⠁⠋⠸⠌⠼⠉⠃⠸⠌⠼⠋⠙⠴⠠⠠⠛⠃⠲")]
+    #[case::roman_on_the_left("가나 A/B 다라", "⠴⠠⠁⠸⠌⠠⠃⠲")]
+    #[case::web_address("가나 www.a.kr 다라", "⠴⠺⠺⠺⠲⠁⠲⠅⠗⠲")]
+    fn a_slash_after_digits_opens_no_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing slash run {expected_segment:?} in {actual:?}"
+        );
+    }
+
     /// 제74항: 주소 표기는 한 로마자 구간이다. 뒤에 더 이어질 글자가 없으면 그
     /// 구분 기호는 일반 기호 경로로 판정한다.
     #[rstest::rstest]

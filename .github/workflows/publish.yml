@@ -1074,7 +1074,7 @@ jobs:
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
-          - runner: macos-13
+          - runner: macos-15-intel
             target: x86_64-apple-darwin
             platform: darwin-amd64
     steps:
@@ -1138,7 +1138,7 @@ jobs:
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
-          - runner: macos-13
+          - runner: macos-15-intel
             target: x86_64-apple-darwin
             platform: darwin-amd64
     steps:

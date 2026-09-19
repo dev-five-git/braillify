@@ -1,6 +1,6 @@
 [package]
 name = "braillify"
-version = "2.1.2"
+version = "2.2.0"
 edition.workspace = true
 rust-version.workspace = true
 authors = ["JeongMin Oh <owjs39@gmail.com>"]

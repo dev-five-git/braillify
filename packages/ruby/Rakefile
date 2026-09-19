@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+require "rake/testtask"
+require "rb_sys/extensiontask"
+
+GEMSPEC = Gem::Specification.load("braillify.gemspec")
+
+RbSys::ExtensionTask.new("braillify_rb", GEMSPEC) do |ext|
+  # 크레이트(Cargo.toml)가 표준 ext/<name>/이 아닌 패키지 루트에 있다
+  # (루트 Cargo 워크스페이스의 members = ["packages/*"] 글롭 요구사항).
+  ext.ext_dir = "."
+  ext.lib_dir = "lib/braillify"
+  ext.cross_compile = true
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test" << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+task test: :compile
+task default: :test

@@ -3,90 +3,120 @@
     "input": "daytime",
     "internal": "\"d\"t",
     "expected": "16251630",
-    "unicode": "⠐⠙⠐⠞"
+    "unicode": "⠐⠙⠐⠞",
+    "world": "⠴⠐⠙⠐⠞⠲",
+    "jeomsarang": "⠙⠁⠽⠞⠊⠍⠑"
   },
   {
     "input": "maritime",
     "internal": "m>i\"t",
     "expected": "1328101630",
-    "unicode": "⠍⠜⠊⠐⠞"
+    "unicode": "⠍⠜⠊⠐⠞",
+    "world": "⠴⠍⠜⠊⠐⠞⠲",
+    "jeomsarang": "⠍⠁⠗⠊⠞⠊⠍⠑"
   },
   {
     "input": "mistimed",
     "internal": "mis\"td",
     "expected": "131014163025",
-    "unicode": "⠍⠊⠎⠐⠞⠙"
+    "unicode": "⠍⠊⠎⠐⠞⠙",
+    "world": "⠴⠍⠊⠎⠐⠞⠙⠲",
+    "jeomsarang": "⠍⠊⠎⠞⠊⠍⠑⠙"
   },
   {
     "input": "pastime",
     "internal": "pas\"t",
     "expected": "151141630",
-    "unicode": "⠏⠁⠎⠐⠞"
+    "unicode": "⠏⠁⠎⠐⠞",
+    "world": "⠴⠏⠁⠎⠐⠞⠲",
+    "jeomsarang": "⠏⠁⠎⠞⠊⠍⠑"
   },
   {
     "input": "sometimes",
     "internal": "\"s\"ts",
     "expected": "1614163014",
-    "unicode": "⠐⠎⠐⠞⠎"
+    "unicode": "⠐⠎⠐⠞⠎",
+    "world": "⠴⠐⠎⠐⠞⠎⠲",
+    "jeomsarang": "⠎⠕⠍⠑⠞⠊⠍⠑⠎"
   },
   {
     "input": "springtime",
     "internal": "spr+\"t",
     "expected": "141523441630",
-    "unicode": "⠎⠏⠗⠬⠐⠞"
+    "unicode": "⠎⠏⠗⠬⠐⠞",
+    "world": "⠴⠎⠏⠗⠬⠐⠞⠲",
+    "jeomsarang": "⠎⠏⠗⠊⠝⠛⠞⠊⠍⠑"
   },
   {
     "input": "timeously",
     "internal": "\"t\\sly",
     "expected": "16305114761",
-    "unicode": "⠐⠞⠳⠎⠇⠽"
+    "unicode": "⠐⠞⠳⠎⠇⠽",
+    "world": "⠴⠐⠞⠳⠎⠇⠽⠲",
+    "jeomsarang": "⠞⠊⠍⠑⠕⠥⠎⠇⠽"
   },
   {
     "input": "Timex",
     "internal": ",\"tx",
     "expected": "32163045",
-    "unicode": "⠠⠐⠞⠭"
+    "unicode": "⠠⠐⠞⠭",
+    "world": "⠴⠠⠐⠞⠭⠲",
+    "jeomsarang": "⠠⠞⠊⠍⠑⠭"
   },
   {
     "input": "untimely",
     "internal": "un\"tly",
     "expected": "37291630761",
-    "unicode": "⠥⠝⠐⠞⠇⠽"
+    "unicode": "⠥⠝⠐⠞⠇⠽",
+    "world": "⠴⠥⠝⠐⠞⠇⠽⠲",
+    "jeomsarang": "⠥⠝⠞⠊⠍⠑⠇⠽"
   },
   {
     "input": "altimeter",
     "internal": "altimet]",
     "expected": "17301013173059",
-    "unicode": "⠁⠇⠞⠊⠍⠑⠞⠻"
+    "unicode": "⠁⠇⠞⠊⠍⠑⠞⠻",
+    "world": "⠴⠁⠇⠞⠊⠍⠑⠞⠻⠲",
+    "jeomsarang": "⠁⠇⠞⠊⠍⠑⠞⠑⠗"
   },
   {
     "input": "centime",
     "internal": "c5time",
     "expected": "93430101317",
-    "unicode": "⠉⠢⠞⠊⠍⠑"
+    "unicode": "⠉⠢⠞⠊⠍⠑",
+    "world": "⠴⠉⠢⠞⠊⠍⠑⠲",
+    "jeomsarang": "⠉⠑⠝⠞⠊⠍⠑"
   },
   {
     "input": "centimeter",
     "internal": "c5timet]",
     "expected": "934301013173059",
-    "unicode": "⠉⠢⠞⠊⠍⠑⠞⠻"
+    "unicode": "⠉⠢⠞⠊⠍⠑⠞⠻",
+    "world": "⠴⠉⠢⠞⠊⠍⠑⠞⠻⠲",
+    "jeomsarang": "⠉⠑⠝⠞⠊⠍⠑⠞⠑⠗"
   },
   {
     "input": "Mortimer",
     "internal": ",mortim]",
     "expected": "3213212330101359",
-    "unicode": "⠠⠍⠕⠗⠞⠊⠍⠻"
+    "unicode": "⠠⠍⠕⠗⠞⠊⠍⠻",
+    "world": "⠴⠠⠍⠕⠗⠞⠊⠍⠻⠲",
+    "jeomsarang": "⠠⠍⠕⠗⠞⠊⠍⠑⠗"
   },
   {
     "input": "multimedia",
     "internal": "multim$ia",
     "expected": "1337730101343101",
-    "unicode": "⠍⠥⠇⠞⠊⠍⠫⠊⠁"
+    "unicode": "⠍⠥⠇⠞⠊⠍⠫⠊⠁",
+    "world": "⠴⠍⠥⠇⠞⠊⠍⠫⠊⠁⠲",
+    "jeomsarang": "⠍⠥⠇⠞⠊⠍⠑⠙⠊⠁"
   },
   {
     "input": "sentiment",
     "internal": "s5ti;t",
     "expected": "143430104830",
-    "unicode": "⠎⠢⠞⠊⠰⠞"
+    "unicode": "⠎⠢⠞⠊⠰⠞",
+    "world": "⠴⠎⠢⠞⠊⠰⠞⠲",
+    "jeomsarang": "⠎⠑⠝⠞⠊⠍⠑⠝⠞"
   }
 ]

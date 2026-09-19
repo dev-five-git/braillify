@@ -76,20 +76,6 @@ impl MathTokenRule for MathSymbolRule {
         let _ = rule_26::is_reserved_rule_26();
         let _ = rule_22::NTH_ROOT_INDEX_MARKER;
 
-        let prev_is_variable_or_upper = matches!(
-            rule_12::prev_non_space(tokens, index),
-            Some(MathToken::Variable(_) | MathToken::UpperVariable(_))
-        );
-        let next_is_upper = matches!(
-            Self::next_non_space(tokens, index + 1),
-            Some(MathToken::UpperVariable(_))
-        );
-        if *c == '\u{00AC}' && index > 0 && prev_is_variable_or_upper && next_is_upper {
-            result.push(40);
-            state.prev_was_number = false;
-            return Ok(MathTokenResult::Consumed(1));
-        }
-
         if *c == '\u{FF03}'
             && matches!(
                 Self::next_non_space(tokens, index + 1),
@@ -482,25 +468,31 @@ mod tests {
 
     // ---------------- Specialised prefix arms ----------------
 
-    /// `A¬B` — ¬ (U+00AC) sandwiched between two UpperVariables hits the
-    /// negation prefix arm at lines 59-73. Encoded byte 40 is pushed.
+    /// Math rule 61: a negation sign keeps its complete two-cell mapping
+    /// between uppercase variables.
     #[test]
     fn negation_between_upper_variables() {
         let result = enc("A\u{00AC}B");
-        assert!(!result.is_empty(), "A¬B must encode");
-        // Compare against pattern WITHOUT the matching neighbours to ensure
-        // a different code path was taken.
-        let other = enc("\u{00AC}B");
-        assert_ne!(result, other, "A¬B (sandwiched) must differ from ¬B");
+        let negation = crate::math_symbol_shortcut::encode_char_math_symbol_shortcut('\u{00AC}')
+            .expect("rule-61 negation must be mapped");
+        assert!(
+            result
+                .windows(negation.len())
+                .any(|cells| cells == negation)
+        );
     }
 
-    /// `A¬ B` with a leading lower variable instead of upper still triggers
-    /// the prev=Variable arm of the match (line 63).
+    /// The same rule applies between a lowercase and uppercase variable.
     #[test]
     fn negation_between_lower_and_upper_variable() {
-        // `a¬B` — prev is Variable('a'), next is UpperVariable('B').
         let result = enc("a\u{00AC}B");
-        assert!(!result.is_empty(), "a¬B must encode");
+        let negation = crate::math_symbol_shortcut::encode_char_math_symbol_shortcut('\u{00AC}')
+            .expect("rule-61 negation must be mapped");
+        assert!(
+            result
+                .windows(negation.len())
+                .any(|cells| cells == negation)
+        );
     }
 
     /// `＃B` — FF03 fullwidth hash + UpperVariable hits lines 75-96.

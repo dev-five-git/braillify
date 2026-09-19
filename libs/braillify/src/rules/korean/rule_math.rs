@@ -18,10 +18,274 @@ pub static META: RuleMeta = RuleMeta {
     description: "Math symbols with Korean spacing rules",
 };
 
-/// Korean particles (josa) that should NOT have spacing before them.
-const JOSA: &[&str] = &["과", "와", "이다", "하고", "이랑", "와", "랑", "아니다"];
+/// Korean particles or copulas that do not form the right-hand operand of an
+/// Article 46 expression by themselves.
+const NON_OPERAND_KOREAN_SUFFIXES: &[&str] =
+    &["과", "와", "의", "이다", "하고", "이랑", "랑", "아니다"];
 
 pub struct RuleMath;
+
+fn matching_opening_delimiter(ch: char) -> Option<char> {
+    match ch {
+        ')' => Some('('),
+        ']' => Some('['),
+        '}' => Some('{'),
+        '〉' => Some('〈'),
+        '》' => Some('《'),
+        '」' => Some('「'),
+        '』' => Some('『'),
+        '】' => Some('【'),
+        '〕' => Some('〔'),
+        '〗' => Some('〖'),
+        '〙' => Some('〘'),
+        '〛' => Some('〚'),
+        _ => None,
+    }
+}
+
+fn matching_closing_delimiter(ch: char) -> Option<char> {
+    match ch {
+        '(' => Some(')'),
+        '[' => Some(']'),
+        '{' => Some('}'),
+        '〈' => Some('〉'),
+        '《' => Some('》'),
+        '「' => Some('」'),
+        '『' => Some('』'),
+        '【' => Some('】'),
+        '〔' => Some('〕'),
+        '〖' => Some('〗'),
+        '〘' => Some('〙'),
+        '〚' => Some('〛'),
+        _ => None,
+    }
+}
+
+fn is_operand_separator(ch: char) -> bool {
+    matches!(
+        ch,
+        '+' | '-'
+            | '−'
+            | '×'
+            | '÷'
+            | '='
+            | '<'
+            | '>'
+            | '≤'
+            | '≥'
+            | '≠'
+            | ','
+            | ';'
+            | ':'
+            | '!'
+            | '?'
+            | '…'
+            | '\''
+            | '"'
+            | '‘'
+            | '’'
+            | '“'
+            | '”'
+    )
+}
+
+/// Finds the syntactic operand immediately to the left of an Article 46 sign.
+/// A balanced annotation remains part of its operand (`레트로(RETRO)`), while
+/// an unmatched opening delimiter is a hard boundary (`기업(+5p)`).
+fn left_operand(chars: &[char], operator_index: usize) -> &[char] {
+    let mut start = operator_index;
+    let mut openings = Vec::new();
+
+    for index in (0..operator_index).rev() {
+        let ch = chars[index];
+        if let Some(opening) = matching_opening_delimiter(ch) {
+            openings.push(opening);
+            start = index;
+            continue;
+        }
+        if matching_closing_delimiter(ch).is_some() {
+            if openings.last() == Some(&ch) {
+                openings.pop();
+                start = index;
+                continue;
+            }
+            break;
+        }
+        if openings.is_empty() && is_operand_separator(ch) {
+            break;
+        }
+        start = index;
+    }
+
+    &chars[start..operator_index]
+}
+
+/// Finds the syntactic operand immediately to the right of an Article 46 sign.
+/// Balanced annotations and numeric unit notation stay inside the operand, but
+/// the next top-level sign or unmatched closing delimiter ends it.
+fn right_operand(chars: &[char], operator_index: usize) -> &[char] {
+    let mut end = operator_index + 1;
+    let mut closings = Vec::new();
+
+    for (index, ch) in chars.iter().copied().enumerate().skip(operator_index + 1) {
+        if let Some(closing) = matching_closing_delimiter(ch) {
+            closings.push(closing);
+            end = index + 1;
+            continue;
+        }
+        if matching_opening_delimiter(ch).is_some() {
+            if closings.last() == Some(&ch) {
+                closings.pop();
+                end = index + 1;
+                continue;
+            }
+            break;
+        }
+        if closings.is_empty() && is_operand_separator(ch) {
+            break;
+        }
+        end = index + 1;
+    }
+
+    &chars[operator_index + 1..end]
+}
+
+fn first_korean_run(chars: &[char]) -> Option<String> {
+    let start = chars.iter().position(|ch| utils::is_korean_char(*ch))?;
+    let end = chars[start..]
+        .iter()
+        .position(|ch| !utils::is_korean_char(*ch))
+        .map_or(chars.len(), |offset| start + offset);
+    Some(chars[start..end].iter().collect())
+}
+
+/// 제46항은 기호의 앞뒤를 각각 그 피연산자가 항인지 보고 정한다. 국립국어원
+/// 회신(2026-09-11)은 "기호의 한쪽이 한글인지 아닌지보다 한글이 연산식과 상관없는
+/// 성분인지, 한글 항인지 파악해야" 한다고 밝혔다. 그래서 조사가 붙은 쪽은 항이
+/// 아니고(`반지름×3.14이다` 의 `이다`), 한글이 전혀 없는 순수 숫자는 항이다
+/// (`지역번호+120` 의 `120`).
+fn rule_46_padding(ctx: &RuleContext) -> (bool, bool) {
+    let left_is_korean_term = left_operand(ctx.word_chars, ctx.index)
+        .iter()
+        .any(|ch| utils::is_korean_char(*ch));
+    let right = right_operand(ctx.word_chars, ctx.index);
+    let right_korean_run = first_korean_run(right);
+    let right_is_korean_term = right_korean_run
+        .as_ref()
+        .is_some_and(|run| !NON_OPERAND_KOREAN_SUFFIXES.contains(&run.as_str()));
+    // 한글이 하나도 없는 피연산자는 조사를 달 수 없으므로 그대로 항이다.
+    let right_is_bare_operand = right_korean_run.is_none() && !right.is_empty();
+    let pad_left = left_is_korean_term && (right_is_korean_term || right_is_bare_operand);
+    (pad_left, left_is_korean_term && right_is_korean_term)
+}
+
+/// U+002D is both HYPHEN-MINUS, so its braille meaning has to be inferred from
+/// syntax.  Treat it as the Article 45 subtraction/minus sign only when the
+/// surrounding token makes that role explicit.  In particular, a leading
+/// signed number is a minus, while phone numbers, dates, ranges and identifiers
+/// such as `02-799-1000` and `A-3` remain hyphenated.
+fn is_semantic_ascii_minus(ctx: &RuleContext) -> bool {
+    if ctx.current_char() != '-' {
+        return false;
+    }
+
+    let next_starts_number = ctx.next_char().is_some_and(|next| {
+        next.is_ascii_digit()
+            || (next == '.'
+                && ctx
+                    .word_chars
+                    .get(ctx.index + 2)
+                    .is_some_and(char::is_ascii_digit))
+    });
+    let unary_boundary = ctx.prev_char().is_none_or(|prev| {
+        matches!(
+            prev,
+            '(' | '['
+                | '{'
+                | '〈'
+                | '《'
+                | '「'
+                | '『'
+                | '【'
+                | '〔'
+                | '〖'
+                | '〘'
+                | '〚'
+                | '‘'
+                | '“'
+                | '\''
+                | '"'
+                | ','
+                | ':'
+                | ';'
+                | '='
+                | '+'
+                | '×'
+                | '÷'
+                | '<'
+                | '>'
+                | '≤'
+                | '≥'
+                | '≠'
+        )
+    });
+    if next_starts_number && unary_boundary {
+        return true;
+    }
+
+    // A sign cited by itself inside a matched delimiter is an operator, as in
+    // the common polarity notation `양(+)극·음(-)극`. A hyphen joining text has
+    // operands on the same side and therefore cannot have this shape.
+    let isolated_operator = matches!(
+        (ctx.prev_char(), ctx.next_char()),
+        (Some('('), Some(')'))
+            | (Some('['), Some(']'))
+            | (Some('{'), Some('}'))
+            | (Some('〈'), Some('〉'))
+            | (Some('《'), Some('》'))
+            | (Some('「'), Some('」'))
+            | (Some('『'), Some('』'))
+            | (Some('【'), Some('】'))
+            | (Some('〔'), Some('〕'))
+            | (Some('〖'), Some('〗'))
+            | (Some('〘'), Some('〙'))
+            | (Some('〚'), Some('〛'))
+            | (Some('‘'), Some('’'))
+            | (Some('“'), Some('”'))
+            | (Some('\''), Some('\''))
+            | (Some('"'), Some('"'))
+    );
+    if isolated_operator {
+        return true;
+    }
+
+    // Article 46's printed example `5개-3개=2개` contains Hangul, so the
+    // token-level mathematics parser deliberately leaves it to Korean rules.
+    // A second explicit operator disambiguates the inner U+002D from a range.
+    let has_other_math_operator = ctx.word_chars.iter().enumerate().any(|(index, ch)| {
+        index != ctx.index
+            && matches!(
+                ch,
+                '+' | '=' | '×' | '÷' | '<' | '>' | '≤' | '≥' | '≠' | '−'
+            )
+    });
+    let prev_ends_operand = ctx.prev_char().is_some_and(|prev| {
+        prev.is_alphanumeric()
+            || utils::is_korean_char(prev)
+            || matches!(prev, ')' | ']' | '}' | '〉' | '》' | '」' | '』' | '】')
+    });
+
+    prev_ends_operand && next_starts_number && has_other_math_operator
+}
+
+fn is_roman_grade_minus(ctx: &RuleContext) -> bool {
+    ctx.state.english_indicator
+        && ctx.state.is_english
+        && ctx
+            .next_char()
+            .is_none_or(|next| !next.is_ascii_alphanumeric())
+        && crate::rules::token_rules::math_expression::is_roman_minus_grade(ctx.word_chars)
+}
 
 impl BrailleRule for RuleMath {
     fn meta(&self) -> &'static RuleMeta {
@@ -34,55 +298,62 @@ impl BrailleRule for RuleMath {
 
     fn matches(&self, ctx: &RuleContext) -> bool {
         matches!(ctx.char_type, CharType::MathSymbol(_))
+            || (matches!(ctx.char_type, CharType::Symbol('-'))
+                && (is_semantic_ascii_minus(ctx) || is_roman_grade_minus(ctx)))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
-        let CharType::MathSymbol(c) = ctx.char_type else {
-            return Ok(RuleResult::Skip);
+        // UEB 3.17.1 minus inside a Roman grade (`AA-`): same section, `⠐⠤`.
+        if matches!(ctx.char_type, CharType::Symbol('-')) && is_roman_grade_minus(ctx) {
+            let encoded = crate::rules::english_ueb::rule_3::encode_symbol('\u{2212}')
+                .ok_or_else(|| "UEB minus sign must be defined".to_string())?;
+            ctx.emit_slice(&encoded);
+            return Ok(RuleResult::Consumed);
+        }
+        let c = match ctx.char_type {
+            CharType::MathSymbol(c) => *c,
+            CharType::Symbol('-') if is_semantic_ascii_minus(ctx) => '\u{2212}',
+            _ => return Ok(RuleResult::Skip),
         };
 
-        // PDF 제46항 — 사칙연산 기호(+, −, ×, ÷, =) 띄어쓰기 규칙.
-        // 좌·우가 모두 "한글이 포함된 식"일 때에만 기호 앞뒤를 한 칸씩 띄어 쓴다.
+        // UEB §3.17 + Korean rules 29/35: a plus that belongs to a Roman
+        // product/grade identifier stays inside that Roman section and uses
+        // the UEB general-symbol cells ⠐⠖.  The token-level grammar has already
+        // rejected completed sums and the ambiguous one-letter `A+` shape.
+        if c == '+'
+            && ctx.state.english_indicator
+            && ctx.state.is_english
+            && crate::rules::token_rules::math_expression::is_roman_plus_identifier(ctx.word_chars)
+        {
+            let encoded = crate::rules::english_ueb::rule_3::encode_symbol(c)
+                .ok_or_else(|| "UEB plus sign must be defined".to_string())?;
+            ctx.emit_slice(&encoded);
+            return Ok(RuleResult::Consumed);
+        }
+
+        // PDF 제46항 — 사칙연산 기호(+, −, ×, ÷, =)가 한글 사이에
+        // 나올 때에만 기호 앞뒤를 한 칸씩 띄어 쓴다.
         //
         // 판정:
-        //   - 좌측 segment: 단어 시작부터 현재 기호 직전까지의 chars. 한글 포함 여부.
-        //   - 우측 segment: 현재 기호 직후부터 단어 끝까지의 chars 중 **선행 비한글을 건너뛴
-        //     첫 한글 묶음**. (예: `3.14이다` → `이다`; `3개=2개` → `개`)
-        //   - 우측 묶음이 비어 있거나 JOSA(조사: 과/와/이다/하고/이랑/랑/아니다 등)이면
+        //   - 바로 인접한 피연산자 범위 안에 한글이 각각 있어야 한다.
+        //   - 괄호 속 로마자·한글 주석은 그 피연산자에 포함한다.
+        //     예: `레트로(RETRO)+뉴트로(NEWTRO)`.
+        //   - 괄호 경계나 다른 연산 기호를 넘어 문법적으로 무관한 한글은
+        //     찾지 않는다. 예: `기업(+5p)의`, `행사(1+1)이다`.
+        //   - 우측 한글 묶음이 비어 있거나 조사·서술격 표현(과/와/의/이다 등)이면
         //     기호 양쪽을 띄어쓰지 않는다.
         //     예: `반지름×3.14이다` → `이다`는 JOSA → 띄어쓰지 않음.
         //     예: `5개−3개=2개` → `개`는 JOSA가 아님 → 띄어씀.
-        let prev_has_korean = ctx.word_chars[..ctx.index]
-            .iter()
-            .any(|c| utils::is_korean_char(*c));
+        let (pad_before, pad_after) = rule_46_padding(ctx);
 
-        let next_korean_is_non_josa = {
-            let mut korean = Vec::new();
-            for wc in &ctx.word_chars[ctx.index + 1..] {
-                if utils::is_korean_char(*wc) {
-                    korean.push(*wc);
-                } else if !korean.is_empty() {
-                    break;
-                }
-            }
-            if korean.is_empty() {
-                false
-            } else {
-                let s: String = korean.into_iter().collect();
-                !JOSA.contains(&s.as_str())
-            }
-        };
-
-        let pad_spaces = prev_has_korean && next_korean_is_non_josa;
-
-        if pad_spaces {
+        if pad_before {
             ctx.emit(0);
         }
 
-        let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(*c)?;
+        let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
         ctx.emit_slice(encoded);
 
-        if pad_spaces {
+        if pad_after {
             ctx.emit(0);
         }
 
@@ -93,6 +364,24 @@ impl BrailleRule for RuleMath {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[rstest::rstest]
+    #[case::parenthesis('(', ')')]
+    #[case::square_bracket('[', ']')]
+    #[case::curly_brace('{', '}')]
+    #[case::single_angle('〈', '〉')]
+    #[case::double_angle('《', '》')]
+    #[case::corner_bracket('「', '」')]
+    #[case::white_corner_bracket('『', '』')]
+    #[case::lenticular_bracket('【', '】')]
+    #[case::tortoise_shell_bracket('〔', '〕')]
+    #[case::white_lenticular_bracket('〖', '〗')]
+    #[case::white_tortoise_shell_bracket('〘', '〙')]
+    #[case::white_square_bracket('〚', '〛')]
+    fn delimiter_pairs_are_bidirectional(#[case] opening: char, #[case] closing: char) {
+        assert_eq!(matching_opening_delimiter(closing), Some(opening));
+        assert_eq!(matching_closing_delimiter(opening), Some(closing));
+    }
 
     #[test]
     fn apply_exercise() {
@@ -119,5 +408,223 @@ mod tests {
         assert!(matches!(outcome, RuleResult::Consumed));
         assert!(owned.result.starts_with(&[0]));
         assert!(owned.result.ends_with(&[0]));
+    }
+
+    #[rstest::rstest]
+    #[case::plus('+')]
+    #[case::times('×')]
+    #[case::division('÷')]
+    #[case::equals('=')]
+    fn parenthesized_math_symbol_does_not_gain_inner_spaces(#[case] operator: char) {
+        let input = format!("가({operator})나");
+        let mut owned = crate::test_helpers::CtxOwned::for_text(&input, false);
+        let mut ctx = owned.ctx_at(2);
+
+        let outcome = RuleMath.apply(&mut ctx).expect("math rule should apply");
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert!(!owned.result.is_empty());
+        assert_ne!(owned.result.first(), Some(&0));
+        assert_ne!(owned.result.last(), Some(&0));
+    }
+
+    #[rstest::rstest]
+    #[case::service("TV+")]
+    #[case::alphanumeric_product("HDR10+")]
+    #[case::mixed_case_service("U+tv")]
+    fn roman_terminal_plus_uses_ueb_general_symbol(#[case] identifier: &str) {
+        let output = crate::encode(&format!("가 {identifier} 나"))
+            .expect("Roman product identifier must encode");
+        let ueb_plus = crate::rules::english_ueb::rule_3::encode_symbol('+')
+            .expect("UEB plus must be defined");
+
+        assert!(
+            output
+                .windows(ueb_plus.len())
+                .any(|cells| cells == ueb_plus),
+            "identifier={identifier}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::plus_math_symbol("양", "+", "극")]
+    #[case::ascii_hyphen_minus_symbol("음", "-", "극")]
+    fn full_encoder_preserves_tight_parenthesized_operator(
+        #[case] left: &str,
+        #[case] operator: &str,
+        #[case] right: &str,
+    ) {
+        let input = format!("{left}({operator}){right}");
+        let expected = [left, &format!("({operator})"), right]
+            .into_iter()
+            .map(|part| crate::encode_to_unicode(part).expect("component must encode"))
+            .collect::<Vec<_>>()
+            .concat();
+
+        assert_eq!(
+            crate::encode_to_unicode(&input).expect("full input must encode"),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::signed_integer("-3", 0, true)]
+    #[case::parenthesized_signed_decimal("(-3.5)", 1, true)]
+    #[case::quoted_negative_quantity("‘-2배’", 1, true)]
+    #[case::pdf_phone_number("02-799-1000", 2, false)]
+    #[case::identifier_suffix("A-3", 1, false)]
+    #[case::calendar_date("2024-09-03", 4, false)]
+    #[case::non_hyphen_character("A", 0, false)]
+    fn ascii_hyphen_minus_is_disambiguated_by_syntax(
+        #[case] input: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(index);
+        assert_eq!(is_semantic_ascii_minus(&ctx), expected, "input={input}");
+    }
+
+    #[rstest::rstest]
+    #[case::korean_words("나루+배", 2, true)]
+    #[case::korean_numeric_units("5개-3개", 2, true)]
+    #[case::percentage_noun_operand("팬=51%지분", 1, true)]
+    #[case::roman_annotation_on_left("레트로(RETRO)+뉴트로", 10, true)]
+    #[case::korean_annotations_on_both_sides("AI(인공지능)+DX(디지털전환)", 8, true)]
+    #[case::mixed_script_right_operand("밀레니얼+Z세대", 4, true)]
+    #[case::article_example_radius("반지름×3.14이다", 3, false)]
+    #[case::signed_parenthetical("기업(+5p)의", 3, false)]
+    #[case::numeric_sum("행사(1+1)이다", 4, false)]
+    #[case::brand_particle("디즈니+와", 3, false)]
+    #[case::roman_variable_left("T+3일", 1, false)]
+    #[case::particle_after_annotated_roman("OPEC(석유수출국기구)+의", 13, false)]
+    #[case::quoted_suffix("저소음+’", 3, false)]
+    fn rule_46_padding_depends_on_actual_operands(
+        #[case] input: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ctx = owned.ctx_at(index);
+        assert_eq!(rule_46_padding(&ctx).1, expected, "input={input}");
+    }
+
+    #[rstest::rstest]
+    #[case::negative_percentage("-2.73%를", "−2.73%를")]
+    #[case::negative_unit("체급(-67kg)은", "체급(−67kg)은")]
+    #[case::parenthesized_polarity("음(-)극", "음(−)극")]
+    #[case::article_46_equation("5개-3개=2개", "5개−3개=2개")]
+    fn semantic_ascii_minus_matches_explicit_unicode_minus(
+        #[case] ascii: &str,
+        #[case] explicit: &str,
+    ) {
+        assert!(matches!(
+            crate::char_struct::CharType::new('-').expect("hyphen-minus must classify"),
+            crate::char_struct::CharType::Symbol('-')
+        ));
+        assert_eq!(
+            crate::encode_to_unicode(ascii).expect("ASCII expression must encode"),
+            crate::encode_to_unicode(explicit).expect("Unicode expression must encode"),
+            "input={ascii}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::pdf_phone_number("02-799-1000")]
+    #[case::identifier_suffix("A-3")]
+    #[case::calendar_date("2024-09-03")]
+    fn non_operator_hyphens_do_not_become_minus(#[case] input: &str) {
+        let explicit_minus = input.replacen('-', "−", 1);
+        assert_ne!(
+            crate::encode_to_unicode(input).expect("hyphenated input must encode"),
+            crate::encode_to_unicode(&explicit_minus).expect("minus variant must encode"),
+            "input={input}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod sign_boundary_coverage {
+    /// 수학 제2항: a sign opening a number may be followed by a bare decimal
+    /// point, and may itself open the expression.
+    #[rstest::rstest]
+    #[case::leading_decimal("기온 -.5 도")]
+    #[case::leading_digit("기온 -5 도")]
+    #[case::inside_parenthesis("값 (-5) 이다")]
+    #[case::dot_without_digits("기온 -.도")]
+    #[case::sign_then_letter("기온 -x 도")]
+    fn a_signed_number_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod sign_coverage {
+    /// 수학 제2항: 부호는 숫자를 열 수도, 소수점만 뒤따를 수도 있다. U+2212 는
+    /// 통일영어점자의 뺄셈 기호로 적는다.
+    #[rstest::rstest]
+    #[case::leading_decimal("기온 -.5 도")]
+    #[case::leading_digit("기온 -5 도")]
+    #[case::inside_parenthesis("값 (-5) 이다")]
+    #[case::dot_without_digits("기온 -.도")]
+    #[case::unicode_minus("값 5 \u{2212} 3 이다")]
+    #[case::unicode_minus_attached("그는 A\u{2212}B 를")]
+    fn a_signed_number_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod roman_grade_minus_coverage {
+    /// UEB 3.17.1: 신용등급의 붙임표(`AA-`)는 같은 로마자 구간 안의 뺄셈 기호
+    /// `⠐⠤` 로 적는다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("신용등급 AA-에서")]
+    #[case::three_letter_grade("신용등급 BBB-로")]
+    #[case::single_letter_grade("신용등급 A- 로")]
+    fn a_credit_grade_minus_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod english_document_grade_minus_coverage {
+    /// UEB 3.17.1: 영어 위주 글에서 신용등급의 붙임표(`AA-`)는 같은 구간 안의
+    /// 뺄셈 기호로 적는다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("The credit grade AA- is stable")]
+    #[case::three_letter_grade("Moody rated it BBB- last year")]
+    #[case::grade_at_the_end("The outlook remains AA-")]
+    fn a_credit_grade_minus_in_english_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod grade_minus_branch_coverage {
+    use super::*;
+    use crate::rules::traits::BrailleRule;
+
+    /// UEB 3.17.1: 이미 열린 로마자 구간 안의 신용등급 붙임표(`AA-`, `BBB-`)는
+    /// 뺄셈 기호 `⠐⠤` 로 적는다. 등급 꼴이 아니면 이 갈래가 아니다.
+    #[rstest::rstest]
+    #[case::two_letter_grade("AA-", 2, true)]
+    #[case::three_letter_grade("BBB-", 3, true)]
+    #[case::one_letter_is_not_a_grade("A-", 1, false)]
+    #[case::four_letters_is_not_a_grade("AAAA-", 4, false)]
+    fn a_roman_grade_minus_is_written_as_the_ueb_minus(
+        #[case] text: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(text, true);
+        owned.state.is_english = true;
+        let mut ctx = owned.ctx_at(index);
+        assert_eq!(RuleMath.matches(&ctx), expected, "matches for {text}");
+        if expected {
+            let outcome = RuleMath.apply(&mut ctx).unwrap();
+            assert!(matches!(outcome, RuleResult::Consumed));
+            assert!(!owned.result.is_empty(), "no cells emitted for {text}");
+        }
     }
 }

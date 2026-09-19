@@ -1,5 +1,54 @@
 use std::{borrow::Cow, cell::RefCell};
 
+/// Small, semantic-neutral predicates shared with the NIKL analysis example.
+/// Keeping them here lets the ordinary library test target verify analyzer
+/// input boundaries without making the whole example a coverage target.
+#[doc(hidden)]
+pub mod corpus_analysis {
+    /// Whether a corpus filename belongs to the deterministic sentence shards.
+    pub fn is_sentence_corpus_shard_name(name: &str) -> bool {
+        name.starts_with("sentence_") && name.ends_with(".json")
+    }
+
+    /// Whether the Unicode scalar immediately before `byte_index` is an ASCII
+    /// letter or digit. Callers provide a boundary from `str::char_indices`.
+    pub fn has_ascii_alphanumeric_before(input: &str, byte_index: usize) -> bool {
+        input
+            .get(..byte_index)
+            .unwrap_or_default()
+            .chars()
+            .next_back()
+            .is_some_and(|previous| previous.is_ascii_alphanumeric())
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[rstest::rstest]
+        #[case::sentence_json("sentence_000.json", true)]
+        #[case::wrong_prefix("document_000.json", false)]
+        #[case::wrong_extension("sentence_000.txt", false)]
+        fn classifies_sentence_corpus_shard_names(#[case] name: &str, #[case] expected: bool) {
+            assert_eq!(is_sentence_corpus_shard_name(name), expected);
+        }
+
+        #[rstest::rstest]
+        #[case::start_of_input("A(14)", 0, false)]
+        #[case::ascii_letter("BA(14)", 1, true)]
+        #[case::ascii_digit("1A(14)", 1, true)]
+        #[case::korean_scalar("가A(14)", 3, false)]
+        #[case::non_scalar_boundary("가A(14)", 1, false)]
+        fn detects_ascii_alphanumeric_immediately_before_boundary(
+            #[case] input: &str,
+            #[case] byte_index: usize,
+            #[case] expected: bool,
+        ) {
+            assert_eq!(has_ascii_alphanumeric_before(input, byte_index), expected);
+        }
+    }
+}
+
 mod char_shortcut;
 pub(crate) mod char_struct;
 #[cfg(feature = "cli")]
@@ -8,6 +57,7 @@ mod encoder;
 pub(crate) mod english;
 pub(crate) mod english_logic;
 pub(crate) mod fraction;
+mod hanja;
 mod ipa;
 mod jauem;
 mod korean_char;
@@ -47,6 +97,7 @@ mod test_helpers {
         pub result: Vec<u8>,
         pub prev_word: String,
         pub remaining_words: Vec<String>,
+        pub roman_section_continues_from_previous_word: bool,
     }
 
     impl CtxOwned {
@@ -67,12 +118,20 @@ mod test_helpers {
                 result: Vec::new(),
                 prev_word: String::new(),
                 remaining_words: Vec::new(),
+                roman_section_continues_from_previous_word: false,
             }
         }
 
         /// Builder: set the `prev_word` field that the borrowed `RuleContext` exposes.
         pub(crate) fn with_prev_word(mut self, prev_word: impl Into<String>) -> Self {
             self.prev_word = prev_word.into();
+            self
+        }
+
+        /// Mark this print word as a continuation of an already active Roman
+        /// section.
+        pub(crate) fn with_roman_section_continuation(mut self) -> Self {
+            self.roman_section_continues_from_previous_word = true;
             self
         }
 
@@ -112,6 +171,8 @@ mod test_helpers {
                 }),
                 is_all_uppercase: false,
                 ascii_starts_at_beginning: false,
+                roman_section_continues_from_previous_word: self
+                    .roman_section_continues_from_previous_word,
                 skip_count: &mut self.skip_count,
                 state: &mut self.state,
                 result: &mut self.result,
@@ -256,6 +317,322 @@ fn normalize_math_alphanumeric_string(text: &str) -> Cow<'_, str> {
     Cow::Owned(text.chars().map(normalize_math_alphanumeric_char).collect())
 }
 
+fn may_normalize_roman_numeral_presentation(c: char) -> bool {
+    (0x2160..=0x217f).contains(&(c as u32))
+}
+
+fn may_normalize_parenthesized_hangul_presentation(c: char) -> bool {
+    (0x3200..=0x321e).contains(&(c as u32))
+}
+
+fn may_normalize_word_separator_middle_dot(c: char) -> bool {
+    c == '\u{2e31}'
+}
+
+fn pure_roman_compatibility_unit_decomposition(c: char) -> Option<Vec<char>> {
+    use unicode_normalization::UnicodeNormalization;
+
+    let parts =
+        crate::rules::korean::rule_69::compatibility_unit_decomposition(c).or_else(|| {
+            crate::rules::korean::rule_68::is_rule_68_symbol(c)
+                .then(|| std::iter::once(c).nfkc().collect())
+        })?;
+    parts.iter().all(char::is_ascii_alphabetic).then_some(parts)
+}
+
+/// Korean Braille rule 36 transcribes a Roman numeral with its corresponding
+/// Roman letters. Unicode U+2160–U+217F are presentation forms whose NFKC
+/// decomposition is exactly that Roman-letter spelling (`Ⅱ` → `II`). Normalize
+/// only this block; the existing rule-36 token logic remains responsible for
+/// numeral validity, case indicators, context, and Roman termination.
+fn normalize_roman_numeral_presentation<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    use unicode_normalization::UnicodeNormalization;
+
+    let mut out = String::with_capacity(text.len());
+    for ch in text.chars() {
+        if may_normalize_roman_numeral_presentation(ch) {
+            out.extend(std::iter::once(ch).nfkc());
+        } else {
+            out.push(ch);
+        }
+    }
+    Cow::Owned(out)
+}
+
+/// Unicode U+3200-U+321E are compatibility presentation forms whose visible
+/// content is ordinary Hangul enclosed by literal parentheses (`㈜` -> `(주)`,
+/// `㈔` -> `(사)`). The Korean braille standard already defines both the
+/// enclosed Hangul and the parentheses; expanding the presentation form lets
+/// those existing rules own the transcription without assigning a new braille
+/// symbol to each Unicode glyph.
+fn normalize_parenthesized_hangul_presentation<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    use unicode_normalization::UnicodeNormalization;
+
+    let mut out = String::with_capacity(text.len());
+    for ch in text.chars() {
+        if may_normalize_parenthesized_hangul_presentation(ch) {
+            out.extend(std::iter::once(ch).nfkc());
+        } else {
+            out.push(ch);
+        }
+    }
+    Cow::Owned(out)
+}
+
+/// U+2E31 WORD SEPARATOR MIDDLE DOT is a visible presentation of a word
+/// boundary, not U+00B7 MIDDLE DOT punctuation. Preserve that semantic
+/// distinction by expanding it to one ordinary print space before tokenization;
+/// the existing Korean spacing rules then emit one blank braille cell.
+fn normalize_word_separator_middle_dot<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let mut out = String::with_capacity(text.len());
+    for ch in text.chars() {
+        if may_normalize_word_separator_middle_dot(ch) {
+            out.push(' ');
+        } else {
+            out.push(ch);
+        }
+    }
+    Cow::Owned(out)
+}
+
+/// Korean Braille rule 69 assigns Unicode compatibility unit glyphs the
+/// transcription of their semantic Roman spelling.  When such a glyph is
+/// immediately combined with ordinary Roman letters (`㎾h` -> `kWh`) or with
+/// another unit component (`W/㎏` -> `W/kg`), encoding it as a self-contained
+/// symbol would incorrectly close and reopen the Roman section at the Unicode
+/// code-point boundary.
+///
+/// Expand only unit glyphs whose complete NFKC decomposition consists of Roman
+/// letters *and* which are joined to another Roman unit component. Standalone
+/// compatibility units retain their dedicated rule-68/69 encoding.
+/// Compatibility forms containing a slash or an exponent (`㎧`, `㎥`) and
+/// non-unit compatibility characters remain untouched.
+fn normalize_pure_roman_compatibility_units<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let chars = text.chars().collect::<Vec<_>>();
+    let mut out = String::with_capacity(text.len());
+    for (index, ch) in chars.iter().copied().enumerate() {
+        let is_roman_unit_component = |candidate: char| {
+            candidate.is_ascii_alphabetic()
+                || candidate == 'μ'
+                || pure_roman_compatibility_unit_decomposition(candidate).is_some()
+        };
+        let directly_joined = index
+            .checked_sub(1)
+            .and_then(|previous| chars.get(previous))
+            .is_some_and(|previous| is_roman_unit_component(*previous))
+            || chars
+                .get(index + 1)
+                .is_some_and(|next| is_roman_unit_component(*next));
+        let joined_through_slash = (index >= 2
+            && matches!(chars[index - 1], '/' | '\u{2044}' | '\u{2215}')
+            && is_roman_unit_component(chars[index - 2]))
+            || (index + 2 < chars.len()
+                && matches!(chars[index + 1], '/' | '\u{2044}' | '\u{2215}')
+                && is_roman_unit_component(chars[index + 2]));
+
+        if (directly_joined || joined_through_slash)
+            && let Some(parts) = pure_roman_compatibility_unit_decomposition(ch)
+        {
+            out.extend(parts);
+        } else {
+            out.push(ch);
+        }
+    }
+    Cow::Owned(out)
+}
+
+/// Print variants of characters the standard already defines. U+02DA RING ABOVE
+/// is typed for the degree sign (제69항 [붙임 2] `°`); U+2010/U+2011/U+2043 are
+/// Unicode hyphen forms of the 붙임표 `-` (제72항 lists the same cell for the
+/// hyphen bullet); `°C`/`°F` are the decomposed spellings of the unit glyphs
+/// `℃`/`℉` (제69항 [붙임 2]). U+00AD SOFT HYPHEN is an invisible line-break
+/// hint and carries no print, so it is dropped.
+///
+/// The same holds for the compatibility spellings of characters the standard
+/// already defines: U+FF01–U+FF5E are the fullwidth forms of ASCII `!`–`~`
+/// (`％`, `ｍ`, `＆`), U+30FB/U+FF65/U+2027 are CJK spellings of the 가운뎃점 `·`
+/// (제50항), U+301C is the wave-dash form of the 물결표 `~` (제49항), and U+00B4
+/// is a typed acute accent standing for the 아포스트로피 `'` (제61항). The
+/// zero-width marks U+200B–U+200D and U+FEFF carry no print at all, so they are
+/// dropped like the soft hyphen.
+///
+/// U+FF1A `：` and U+FF03 `＃` are excluded: the standard gives those fullwidth
+/// glyphs their own meanings — the 옛한글 장음 표시 of 제27항 and the 기수 기호 of
+/// 수학 제65항 — so they are not print variants of ASCII `:` and `#`.
+fn is_foldable_fullwidth(c: char) -> bool {
+    matches!(c, '\u{FF01}'..='\u{FF5E}') && !matches!(c, '\u{FF03}' | '\u{FF1A}')
+}
+
+/// U+2474–U+2487 은 괄호 안에 숫자를 넣은 표기(`⑸`)의 한 글자 표기이므로 제34항의
+/// 괄호와 제40항의 수표로 풀어 적는다. 제64항의 동그라미 숫자(`①`)는 규정이 따로
+/// 점형을 정하므로 여기서 건드리지 않는다.
+fn parenthesized_number_expansion(c: char) -> Option<String> {
+    let value = (c as u32).checked_sub(0x2473)?;
+    (1..=20).contains(&value).then(|| format!("({value})"))
+}
+
+fn may_normalize_print_variant(c: char) -> bool {
+    matches!(
+        c,
+        '\u{02DA}' | '\u{2010}' | '\u{2011}' | '\u{2043}' | '\u{00AD}' | '\u{00B0}' | '²' | '³'
+    ) || is_foldable_fullwidth(c)
+        || parenthesized_number_expansion(c).is_some()
+        || matches!(
+            c,
+            '\u{30FB}'
+                | '\u{FF65}'
+                | '\u{2027}'
+                | '\u{2024}'
+                | '\u{2A2F}'
+                | '\u{301C}'
+                | '\u{00B4}'
+                | '\u{200B}'
+                | '\u{200C}'
+                | '\u{200D}'
+                | '\u{FEFF}'
+        )
+}
+
+/// The CJK compatibility square unit whose NFKC decomposition is exactly
+/// `letters` + `exponent` (`km` + `2` → `㎢`), so a printed `km²` takes the
+/// 제68항/제69항 transcription of that unit glyph.
+fn square_unit_presentation(letters: &[char], exponent: char) -> Option<char> {
+    use unicode_normalization::UnicodeNormalization;
+
+    let spelled: String = letters.iter().chain(std::iter::once(&exponent)).collect();
+    (0x3371..=0x33DF)
+        .filter_map(char::from_u32)
+        .find(|candidate| std::iter::once(*candidate).nfkc().eq(spelled.chars()))
+}
+
+/// 제69항 [붙임 2] 의 `℃`/`℉` 는 도 기호와 글자를 이어 쓴 `°C`/`°F` 로도 입력된다.
+/// U+02DA RING ABOVE 는 도 기호의 활자체 표기다.
+fn degree_unit_glyph(ch: char, next: Option<char>) -> Option<char> {
+    if !matches!(ch, '\u{00B0}' | '\u{02DA}') {
+        return None;
+    }
+    match next {
+        Some('C') => Some('\u{2103}'),
+        Some('F') => Some('\u{2109}'),
+        _ => None,
+    }
+}
+fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let chars = text.chars().collect::<Vec<_>>();
+    let mut out = String::with_capacity(text.len());
+    let mut index = 0usize;
+    while index < chars.len() {
+        let ch = chars[index];
+        if let Some(glyph) = degree_unit_glyph(ch, chars.get(index + 1).copied()) {
+            out.push(glyph);
+            index += 2;
+            continue;
+        }
+        let starts_letter_run = ch.is_ascii_alphabetic()
+            && index
+                .checked_sub(1)
+                .is_none_or(|previous| !chars[previous].is_ascii_alphabetic());
+        if starts_letter_run {
+            let run_end = index
+                + chars[index..]
+                    .iter()
+                    .take_while(|c| c.is_ascii_alphabetic())
+                    .count();
+            let exponent = match chars.get(run_end) {
+                Some('²') => Some('2'),
+                Some('³') => Some('3'),
+                _ => None,
+            };
+            if let Some(exponent) = exponent
+                && let Some(unit) = square_unit_presentation(&chars[index..run_end], exponent)
+            {
+                out.push(unit);
+                index = run_end + 1;
+                continue;
+            }
+        }
+        match ch {
+            '\u{02DA}' => out.push('\u{00B0}'),
+            '\u{2010}' | '\u{2011}' | '\u{2043}' => out.push('-'),
+            '\u{30FB}' | '\u{FF65}' | '\u{2027}' | '\u{2024}' => {
+                out.push('\u{00B7}');
+            }
+            '\u{2A2F}' => out.push('\u{00D7}'),
+            _ if parenthesized_number_expansion(ch).is_some() => {
+                out.push_str(&parenthesized_number_expansion(ch).unwrap_or_default());
+            }
+            '\u{301C}' => out.push('~'),
+            '\u{00B4}' => out.push('\''),
+            '\u{00AD}' | '\u{200B}' | '\u{200C}' | '\u{200D}' | '\u{FEFF}' => {}
+            _ if is_foldable_fullwidth(ch) => {
+                out.push(char::from_u32(ch as u32 - 0xFEE0).unwrap_or(ch));
+            }
+            _ => out.push(ch),
+        }
+        index += 1;
+    }
+    Cow::Owned(out)
+}
+
+/// 국어 문장 안의 한자는 그 한자의 한국어 독음으로 적으므로(`支線` → 지선), 점역
+/// 전에 독음으로 바꾼다. 표에 없는 한자는 그대로 두어 뒤 단계가 오류를 보고한다.
+///
+/// 제19~27항의 옛한글은 한자를 독음으로 바꾸지 않고 옛한글 점형으로 적으므로
+/// (`轉輪륜王` → `⠊⠸⠩⠱⠒…`) 그 문맥은 건너뛴다. 옛한글임을 알리는 표시는 홀로 쓴
+/// 자모(`洪ㄱ字`), 방점(`·갈`, `中國·귁`), 한자 뒤에 곧바로 붙인 독음(`君군`,
+/// `轉輪륜王`의 `輪륜`), 그리고 한글이 하나도 없는 한자만의 표기(`榮養`)다.
+fn is_middle_korean_hanja_context(chars: &[char]) -> bool {
+    let has_old_jamo = chars.iter().any(|c| {
+        matches!(*c, '\u{3131}'..='\u{318E}' | '\u{1100}'..='\u{11FF}' | '\u{E000}'..='\u{F8FF}')
+    });
+    let has_tone_mark = chars.iter().any(|c| matches!(*c, '\u{00B7}' | '\u{FF1A}'));
+    let has_modern_hangul = chars.iter().any(|c| matches!(*c, '\u{AC00}'..='\u{D7A3}'));
+    let has_gloss = chars.iter().enumerate().any(|(index, c)| {
+        hanja::reading(*c).is_some_and(|reading| {
+            chars[index + 1..]
+                .iter()
+                .take(reading.chars().count())
+                .copied()
+                .eq(reading.chars())
+        })
+    });
+    has_old_jamo || has_tone_mark || has_gloss || !has_modern_hangul
+}
+
+fn expand_hanja_readings<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let chars: Vec<char> = text.chars().collect();
+    if is_middle_korean_hanja_context(&chars) {
+        return text;
+    }
+    let mut out = String::with_capacity(text.len());
+    for ch in chars {
+        match hanja::reading(ch) {
+            Some(reading) => out.push_str(reading),
+            None => out.push(ch),
+        }
+    }
+    Cow::Owned(out)
+}
+
+/// Pictographs that the NIKL reference corpus transcribes by their printed
+/// meaning rather than by a symbol cell: the telephone sign is written as the
+/// Roman word `Tel` before the number (`☏051-514-9901` → `⠴⠠⠞⠑⠇⠼⠚⠑⠁…`).
+fn may_expand_pictograph(c: char) -> bool {
+    matches!(c, '\u{260E}' | '\u{260F}')
+}
+
+fn expand_pictographs<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
+    let mut out = String::with_capacity(text.len());
+    for ch in text.chars() {
+        if may_expand_pictograph(ch) {
+            out.push_str("Tel");
+        } else {
+            out.push(ch);
+        }
+    }
+    Cow::Owned(out)
+}
+
 /// Default-route whole expressions that contain math-only relational/grouping
 /// glyphs which cannot be encoded correctly one space-separated token at a time.
 ///
@@ -276,7 +653,12 @@ fn default_math_expression_needs_whole_route(text: &str) -> bool {
     let has_operand = chars.iter().any(|c| c.is_ascii_alphanumeric());
     has_operand
         && chars.iter().enumerate().any(|(i, c)| match *c {
-            '→' | '←' | '↗' | '↘' | '↑' | '↓' | '△' | '□' => true,
+            // 수학 제32·33항의 합동/기하 연산 기호도 양쪽 변수를 포함한
+            // 하나의 수식이다. 공백 단위 token 경로로 나누면 뒤쪽 대문자
+            // 변수가 국어 제29항의 로마자 연속으로 오인될 수 있다.
+            '→' | '←' | '↗' | '↘' | '↑' | '↓' | '△' | '□' | '≅' | '▷' | '◁' => {
+                true
+            }
             // 수학 제34/37항 hat/bar 결합부호는 단일 문자 operand에 붙는다
             // (`x̂`, `x̄`, `p̂`, `2̄.3010`). NFD 분해된 악센트 단어(`maître` →
             // `mai`+◌̂+`tre`)처럼 결합부호가 3글자 이상 단어 내부에 있으면
@@ -318,6 +700,13 @@ fn combining_mark_on_single_letter(chars: &[char], i: usize) -> bool {
 #[derive(Clone, Copy, Default)]
 struct NormalizationTriggers {
     has_math_alphanumeric: bool,
+    has_roman_numeral_presentation: bool,
+    has_parenthesized_hangul_presentation: bool,
+    has_word_separator_middle_dot: bool,
+    has_pure_roman_compatibility_unit: bool,
+    has_print_variant: bool,
+    has_hanja: bool,
+    has_pictograph: bool,
     has_decomposable_latin: bool,
     has_negation_combiner: bool,
     has_vector_mark: bool,
@@ -331,6 +720,15 @@ impl NormalizationTriggers {
         let mut triggers = Self::default();
         for c in text.chars() {
             triggers.has_math_alphanumeric |= may_normalize_math_alphanumeric(c);
+            triggers.has_roman_numeral_presentation |= may_normalize_roman_numeral_presentation(c);
+            triggers.has_parenthesized_hangul_presentation |=
+                may_normalize_parenthesized_hangul_presentation(c);
+            triggers.has_word_separator_middle_dot |= may_normalize_word_separator_middle_dot(c);
+            triggers.has_pure_roman_compatibility_unit |=
+                pure_roman_compatibility_unit_decomposition(c).is_some();
+            triggers.has_print_variant |= may_normalize_print_variant(c);
+            triggers.has_hanja |= hanja::is_hanja(c);
+            triggers.has_pictograph |= may_expand_pictograph(c);
             triggers.has_decomposable_latin |= may_decompose_accented_latin(c);
             triggers.has_negation_combiner |= c == '\u{0338}';
             triggers.has_vector_mark |= is_vector_mark(c);
@@ -722,6 +1120,41 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     } else {
         Cow::Borrowed(text)
     };
+    let normalized_text = if normalization_triggers.has_roman_numeral_presentation {
+        normalize_roman_numeral_presentation(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_parenthesized_hangul_presentation {
+        normalize_parenthesized_hangul_presentation(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_word_separator_middle_dot {
+        normalize_word_separator_middle_dot(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_pure_roman_compatibility_unit {
+        normalize_pure_roman_compatibility_units(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_print_variant {
+        normalize_print_variants(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_hanja {
+        expand_hanja_readings(normalized_text)
+    } else {
+        normalized_text
+    };
+    let normalized_text = if normalization_triggers.has_pictograph {
+        expand_pictographs(normalized_text)
+    } else {
+        normalized_text
+    };
     let normalized_text = if normalization_triggers.has_decomposable_latin {
         decompose_accented_latin(normalized_text)
     } else {
@@ -829,6 +1262,25 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
         && default_math_expression_needs_whole_route(text)
         && !text.chars().any(crate::utils::is_korean_char);
     if matches!(options.default_mode, Some(EncodingMode::Math)) || default_math_owned {
+        // Explicit math mode still accepts the public testcase/API LaTeX form
+        // `$...$`.  The whole-expression fast path below consumes already
+        // normalized math text, so sending the dollar delimiters and LaTeX
+        // commands to it directly makes otherwise valid expressions fall back
+        // to the raw symbol encoder.  Reuse the same LaTeX normalization and
+        // math encoder as the token pipeline for one complete math block.
+        if math_mode
+            && text.len() >= 3
+            && text.starts_with('$')
+            && text.ends_with('$')
+            && text.matches('$').count() == 2
+        {
+            let inner = &text[1..text.len() - 1];
+            return crate::rules::token_rules::latex_math::encode_latex_math_bytes_with_context(
+                inner,
+                math_context,
+            );
+        }
+
         let chars: Vec<char> = text.chars().collect();
 
         // PDF 수학 제12항: 단일 ASCII lowercase = 영자표시 ⠴(52) + 알파벳 점자.
@@ -1104,9 +1556,60 @@ mod test {
         assert!(err.is_err());
     }
 
-    /// Recursively scan test_cases/ subdirectories, returning (path, key) pairs.
-    /// Key format: "subdir/file_stem" (e.g., "korean/rule_1", "math/math_1").
-    fn collect_test_files() -> Vec<(std::path::PathBuf, String)> {
+    #[derive(serde::Deserialize, Default)]
+    #[serde(rename_all = "camelCase")]
+    struct TestCaseRuleConfig {
+        #[serde(default)]
+        benchmark: bool,
+        #[serde(default)]
+        shards: bool,
+    }
+
+    type TestCaseRuleMap = HashMap<String, TestCaseRuleConfig>;
+
+    fn load_test_case_rule_map() -> TestCaseRuleMap {
+        serde_json::from_str(
+            &std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../rule_map.json"))
+                .unwrap(),
+        )
+        .unwrap()
+    }
+
+    /// Resolves a physical JSON file to its logical `rule_map.json` key.
+    ///
+    /// Most fixtures map one-to-one (`korean/rule_1.json` -> `korean/rule_1`).
+    /// A rule-map entry with `shards: true` may instead own numbered files such
+    /// as `2025_corpus/sentence_01.json` and `2025_corpus/sentence_02.json`. Unknown files
+    /// keep their physical key so the rule-map integrity check reports them.
+    fn logical_test_case_key(physical_key: &str, rule_map: &TestCaseRuleMap) -> String {
+        if rule_map.contains_key(physical_key) {
+            return physical_key.to_string();
+        }
+
+        let mut matches = rule_map
+            .iter()
+            .filter(|(_, config)| config.shards)
+            .filter_map(|(key, _)| {
+                physical_key
+                    .strip_prefix(key)
+                    .and_then(|suffix| suffix.strip_prefix('_'))
+                    .filter(|suffix| {
+                        !suffix.is_empty() && suffix.bytes().all(|byte| byte.is_ascii_digit())
+                    })
+                    .map(|_| key.clone())
+            })
+            .collect::<Vec<_>>();
+        matches.sort();
+        assert!(
+            matches.len() <= 1,
+            "fixture {physical_key:?} matches multiple sharded rule-map entries: {matches:?}"
+        );
+        matches.pop().unwrap_or_else(|| physical_key.to_string())
+    }
+
+    /// Recursively scans `test_cases/`, returning physical paths paired with
+    /// logical rule-map keys. Multiple shard paths may therefore share one key.
+    fn collect_test_files(rule_map: &TestCaseRuleMap) -> Vec<(std::path::PathBuf, String)> {
         let test_cases_dir =
             std::path::Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/../../test_cases"));
         let mut files = Vec::new();
@@ -1120,14 +1623,37 @@ mod test {
                     let sub_path = sub_entry.path();
                     if sub_path.extension().unwrap_or_default() == "json" {
                         let stem = sub_path.file_stem().unwrap().to_string_lossy().to_string();
-                        let key = format!("{}/{}", subdir, stem);
+                        let physical_key = format!("{}/{}", subdir, stem);
+                        let key = logical_test_case_key(&physical_key, rule_map);
                         files.push((sub_path, key));
                     }
                 }
             }
         }
-        files.sort_by(|a, b| a.1.cmp(&b.1));
+        files.sort_by(|a, b| a.1.cmp(&b.1).then_with(|| a.0.cmp(&b.0)));
         files
+    }
+
+    #[rstest::rstest]
+    #[case::exact_rule("korean/rule_1", "korean/rule_1")]
+    #[case::numbered_shard("2025_corpus/sentence_04", "2025_corpus/sentence")]
+    #[case::unregistered_file("2025_corpus/other_01", "2025_corpus/other_01")]
+    fn resolves_physical_fixture_to_logical_rule_key(
+        #[case] physical_key: &str,
+        #[case] expected: &str,
+    ) {
+        let rule_map = HashMap::from([
+            ("korean/rule_1".to_string(), TestCaseRuleConfig::default()),
+            (
+                "2025_corpus/sentence".to_string(),
+                TestCaseRuleConfig {
+                    shards: true,
+                    ..TestCaseRuleConfig::default()
+                },
+            ),
+        ]);
+
+        assert_eq!(logical_test_case_key(physical_key, &rule_map), expected);
     }
 
     fn testcase_answer_forms(
@@ -1191,22 +1717,208 @@ mod test {
         )]
     }
 
+    #[derive(serde::Deserialize)]
+    struct NiklCorpusCase {
+        input: String,
+        unicode: String,
+    }
+
+    fn load_test_case_group<T: serde::de::DeserializeOwned>(key: &str) -> Vec<T> {
+        let rule_map = load_test_case_rule_map();
+        assert!(rule_map.contains_key(key), "unknown test-case group: {key}");
+        let paths = collect_test_files(&rule_map)
+            .into_iter()
+            .filter_map(|(path, logical_key)| (logical_key == key).then_some(path))
+            .collect::<Vec<_>>();
+        assert!(!paths.is_empty(), "test-case group {key} has no JSON files");
+        let mut cases = Vec::new();
+        for path in paths {
+            let mut shard: Vec<T> = serde_json::from_reader(
+                File::open(&path).expect("test-case JSON must be readable"),
+            )
+            .unwrap_or_else(|error| panic!("{} must be valid JSON: {error}", path.display()));
+            cases.append(&mut shard);
+        }
+        cases
+    }
+
+    fn load_nikl_2025_corpus_cases() -> Vec<NiklCorpusCase> {
+        load_test_case_group("2025_corpus/sentence")
+    }
+
+    type TestStatusRow = (
+        String,
+        String,
+        String,
+        String,
+        bool,
+        String,
+        bool,
+        String,
+        bool,
+    );
+
+    const REPORT_PAGE_SIZE: usize = 250;
+
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct ReportPageInfo {
+        page_size: usize,
+        page_count: usize,
+    }
+
+    /// Splits a group's rows into the pages the landing app fetches on demand.
+    /// Always yields at least one page so every group has a `page-1.json`.
+    fn paginate_rows(rows: Vec<TestStatusRow>) -> Vec<Vec<TestStatusRow>> {
+        if rows.is_empty() {
+            return vec![Vec::new()];
+        }
+        rows.chunks(REPORT_PAGE_SIZE)
+            .map(<[TestStatusRow]>::to_vec)
+            .collect()
+    }
+
+    #[rstest::rstest]
+    #[case::no_rows(0, 1)]
+    #[case::partial_page(1, 1)]
+    #[case::exact_page(REPORT_PAGE_SIZE, 1)]
+    #[case::page_overflow(REPORT_PAGE_SIZE + 1, 2)]
+    #[case::many_pages(REPORT_PAGE_SIZE * 3, 3)]
+    fn paginate_rows_publishes_every_row(#[case] row_count: usize, #[case] expected_pages: usize) {
+        let rows = (0..row_count)
+            .map(|index| -> TestStatusRow {
+                (
+                    format!("가{index}"),
+                    String::new(),
+                    "⠈⠣".to_string(),
+                    "⠈⠣".to_string(),
+                    index % 2 == 0,
+                    String::new(),
+                    false,
+                    String::new(),
+                    false,
+                )
+            })
+            .collect::<Vec<TestStatusRow>>();
+
+        let pages = paginate_rows(rows.clone());
+
+        assert_eq!(pages.len(), expected_pages);
+        assert_eq!(pages.concat(), rows);
+        assert!(pages.iter().all(|page| page.len() <= REPORT_PAGE_SIZE));
+    }
+
+    #[derive(Default)]
+    struct NiklFailureStats {
+        encoding_errors: usize,
+        contains_latin: usize,
+        contains_digits: usize,
+        contains_delimiters: usize,
+        korean_text_only: usize,
+    }
+
+    fn classify_nikl_failure(input: &str, is_encoding_error: bool, stats: &mut NiklFailureStats) {
+        if is_encoding_error {
+            stats.encoding_errors += 1;
+        }
+
+        let contains_latin = input.chars().any(|ch| ch.is_ascii_alphabetic());
+        let contains_digits = input.chars().any(|ch| ch.is_ascii_digit());
+        let contains_delimiters = input.chars().any(|ch| {
+            matches!(
+                ch,
+                '(' | ')' | '[' | ']' | '{' | '}' | '“' | '”' | '‘' | '’' | '"' | '\''
+            )
+        });
+
+        stats.contains_latin += usize::from(contains_latin);
+        stats.contains_digits += usize::from(contains_digits);
+        stats.contains_delimiters += usize::from(contains_delimiters);
+        stats.korean_text_only +=
+            usize::from(!contains_latin && !contains_digits && !contains_delimiters);
+    }
+
+    /// NIKL Korean–Korean Braille Parallel Corpus (2025 v1.0) regression suite.
+    ///
+    /// The fixture uses the shared logical-group loader and the project's standard
+    /// `input`/`internal`/`expected`/`unicode` shape. This dedicated assertion keeps
+    /// the full benchmark available as an opt-in regression gate while
+    /// `test_by_testcase` records its current accuracy for the landing page.
+    #[test]
+    #[ignore = "NIKL 2025 corpus support is tracked as a benchmark until it reaches 100%"]
+    fn test_nikl_2025_parallel_corpus() {
+        let cases = load_nikl_2025_corpus_cases();
+        assert!(
+            !cases.is_empty(),
+            "NIKL 2025 corpus fixture must not be empty"
+        );
+
+        let mut failures = Vec::new();
+        let mut failure_stats = NiklFailureStats::default();
+        for case in &cases {
+            match encode_to_unicode(&case.input) {
+                Ok(actual) if actual == case.unicode => {}
+                Ok(actual) => {
+                    classify_nikl_failure(&case.input, false, &mut failure_stats);
+                    failures.push((
+                        case.input.as_str(),
+                        case.input.as_str(),
+                        case.unicode.as_str(),
+                        "mismatch",
+                        actual,
+                    ));
+                }
+                Err(error) => {
+                    classify_nikl_failure(&case.input, true, &mut failure_stats);
+                    failures.push((
+                        case.input.as_str(),
+                        case.input.as_str(),
+                        case.unicode.as_str(),
+                        "encoding error",
+                        error,
+                    ));
+                }
+            }
+        }
+
+        if !failures.is_empty() {
+            let preview = failures
+                .iter()
+                .take(20)
+                .map(|(id, input, expected, kind, actual)| {
+                    format!(
+                        "{id} ({kind})\n  input: {input}\n  expected: {expected}\n  actual: {actual}"
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+            panic!(
+                "NIKL 2025 corpus: {}/{} cases differ from the reference.\n\
+                 Failure traits (overlapping): encoding errors={}, Latin={}, digits={}, delimiters={}, Korean-text-only={}.\n\
+                 First {}:\n{}",
+                failures.len(),
+                cases.len(),
+                failure_stats.encoding_errors,
+                failure_stats.contains_latin,
+                failure_stats.contains_digits,
+                failure_stats.contains_delimiters,
+                failure_stats.korean_text_only,
+                failures.len().min(20),
+                preview
+            );
+        }
+    }
+
     #[test]
     pub fn test_by_testcase() {
-        let files = collect_test_files();
+        let rule_map = load_test_case_rule_map();
+        let files = collect_test_files(&rule_map);
         let mut total = 0;
         let mut failed = 0;
         let mut failed_cases = Vec::new();
         // (filename, line_num, input, reason) — limitation 필드로 skip된 케이스.
         let mut skipped_cases: Vec<(String, usize, String, String)> = Vec::new();
         let mut file_stats = std::collections::BTreeMap::new();
-
-        // read rule_map.json
-        let rule_map: HashMap<String, HashMap<String, String>> = serde_json::from_str(
-            &std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../rule_map.json"))
-                .unwrap(),
-        )
-        .unwrap();
 
         let rule_map_keys: std::collections::HashSet<String> = rule_map.keys().cloned().collect();
         let file_keys: std::collections::HashSet<_> =
@@ -1221,6 +1933,9 @@ mod test {
         }
 
         for (path, file_stem) in &files {
+            let config = rule_map
+                .get(file_stem)
+                .unwrap_or_else(|| panic!("missing rule-map config for {file_stem}"));
             let content = std::fs::read_to_string(path).unwrap();
             let filename = path.file_name().unwrap().to_string_lossy();
             let records: Vec<serde_json::Value> = serde_json::from_str(&content)
@@ -1232,18 +1947,6 @@ mod test {
             let mut file_world_failed = 0;
             let mut file_jeomsarang_total = 0;
             let mut file_jeomsarang_failed = 0;
-            // (input, note, expected, actual, is_success, world, world_is_success, jeomsarang, jeomsarang_is_success)
-            type TestStatusRow = (
-                String,
-                String,
-                String,
-                String,
-                bool,
-                String,
-                bool,
-                String,
-                bool,
-            );
             let mut test_status: Vec<TestStatusRow> = Vec::new();
 
             for (line_num, record) in records.iter().enumerate() {
@@ -1277,7 +1980,9 @@ mod test {
                     ));
                     continue;
                 }
-                total += 1;
+                if !config.benchmark {
+                    total += 1;
+                }
                 file_total += 1;
                 let input = record["input"].as_str().unwrap_or_else(|| {
                     panic!(
@@ -1287,10 +1992,21 @@ mod test {
                 });
                 let context = record["context"].as_str().unwrap_or("");
                 let note = record["note"].as_str().unwrap_or("").to_string();
-                let world = record["world"].as_str().unwrap_or("").to_string();
-                file_world_total += 1;
-                let jeomsarang = record["jeomsarang"].as_str().unwrap_or("").to_string();
-                file_jeomsarang_total += 1;
+                // Benchmark fixtures are evaluated only against their own Unicode
+                // reference. Competitor fields remain untouched in the source JSON
+                // and are intentionally excluded from pass/fail metrics.
+                let (world, jeomsarang) = if config.benchmark {
+                    (String::new(), String::new())
+                } else {
+                    (
+                        record["world"].as_str().unwrap_or("").to_string(),
+                        record["jeomsarang"].as_str().unwrap_or("").to_string(),
+                    )
+                };
+                if !config.benchmark {
+                    file_world_total += 1;
+                    file_jeomsarang_total += 1;
+                }
                 // 테스트 케이스 파일의 숫자 코드에서 앞뒤 공백 제거 후 비교
                 let answer_forms = testcase_answer_forms(record, &filename, line_num);
                 let expected_forms = answer_forms
@@ -1351,25 +2067,27 @@ mod test {
                         let case_matches = expected_forms.contains(&actual_str);
 
                         if !case_matches {
-                            failed += 1;
                             file_failed += 1;
-                            failed_cases.push((
-                                filename.to_string(),
-                                line_num + 1,
-                                input.to_string(),
-                                expected_display.clone(),
-                                actual_str.clone(),
-                                braille_expected.clone(),
-                                unicode_display.clone(),
-                            ));
+                            if !config.benchmark {
+                                failed += 1;
+                                failed_cases.push((
+                                    filename.to_string(),
+                                    line_num + 1,
+                                    input.to_string(),
+                                    expected_display.clone(),
+                                    actual_str.clone(),
+                                    braille_expected.clone(),
+                                    unicode_display.clone(),
+                                ));
+                            }
                         }
                         let world_is_success = !world.is_empty() && unicode_forms.contains(&world);
-                        if !world_is_success {
+                        if !config.benchmark && !world_is_success {
                             file_world_failed += 1;
                         }
                         let jeomsarang_is_success =
                             !jeomsarang.is_empty() && unicode_forms.contains(&jeomsarang);
-                        if !jeomsarang_is_success {
+                        if !config.benchmark && !jeomsarang_is_success {
                             file_jeomsarang_failed += 1;
                         }
 
@@ -1386,26 +2104,30 @@ mod test {
                         ));
                     }
                     Err(e) => {
-                        println!("Error: {}", e);
-                        failed += 1;
+                        if !config.benchmark {
+                            println!("Error: {}", e);
+                        }
                         file_failed += 1;
-                        failed_cases.push((
-                            filename.to_string(),
-                            line_num + 1,
-                            input.to_string(),
-                            expected_display.clone(),
-                            "".to_string(),
-                            e.to_string(),
-                            unicode_display.clone(),
-                        ));
+                        if !config.benchmark {
+                            failed += 1;
+                            failed_cases.push((
+                                filename.to_string(),
+                                line_num + 1,
+                                input.to_string(),
+                                expected_display.clone(),
+                                "".to_string(),
+                                e.to_string(),
+                                unicode_display.clone(),
+                            ));
+                        }
 
                         let world_is_success = !world.is_empty() && unicode_forms.contains(&world);
-                        if !world_is_success {
+                        if !config.benchmark && !world_is_success {
                             file_world_failed += 1;
                         }
                         let jeomsarang_is_success =
                             !jeomsarang.is_empty() && unicode_forms.contains(&jeomsarang);
-                        if !jeomsarang_is_success {
+                        if !config.benchmark && !jeomsarang_is_success {
                             file_jeomsarang_failed += 1;
                         }
 
@@ -1423,18 +2145,16 @@ mod test {
                     }
                 }
             }
-            file_stats.insert(
-                file_stem.clone(),
-                (
-                    file_total,
-                    file_failed,
-                    file_world_total,
-                    file_world_failed,
-                    file_jeomsarang_total,
-                    file_jeomsarang_failed,
-                    test_status,
-                ),
-            );
+            let stats = file_stats
+                .entry(file_stem.clone())
+                .or_insert_with(|| (0, 0, 0, 0, 0, 0, Vec::<TestStatusRow>::new()));
+            stats.0 += file_total;
+            stats.1 += file_failed;
+            stats.2 += file_world_total;
+            stats.3 += file_world_failed;
+            stats.4 += file_jeomsarang_total;
+            stats.5 += file_jeomsarang_failed;
+            stats.6.append(&mut test_status);
         }
 
         if !failed_cases.is_empty() {
@@ -1502,6 +2222,53 @@ mod test {
             }
             println!("총 Skip: {}건", skipped_cases.len());
         }
+
+        // Rows for every group are drained out of `file_stats` into paged JSON the
+        // landing app loads on demand, leaving `test_status.json` as pure
+        // aggregates. Inlining them instead put 467k corpus rows into one route's
+        // payload, which is what broke the export (`ERR_ENCODING_INVALID_ENCODED_DATA`)
+        // and grew the site past the GitHub Pages 1 GB ceiling.
+        let report_root = std::path::PathBuf::from(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../apps/landing/public/test-status"
+        ));
+        if report_root.exists() {
+            std::fs::remove_dir_all(&report_root).unwrap_or_else(|error| {
+                panic!(
+                    "failed to clear report directory {}: {error}",
+                    report_root.display()
+                )
+            });
+        }
+        let mut report_manifest = std::collections::BTreeMap::new();
+        for (key, stats) in &mut file_stats {
+            let pages = paginate_rows(std::mem::take(&mut stats.6));
+            let group_dir = report_root.join(key);
+            std::fs::create_dir_all(&group_dir).unwrap_or_else(|error| {
+                panic!(
+                    "failed to create report directory {}: {error}",
+                    group_dir.display()
+                )
+            });
+            for (index, page) in pages.iter().enumerate() {
+                let page_path = group_dir.join(format!("page-{}.json", index + 1));
+                serde_json::to_writer(File::create(&page_path).unwrap(), page).unwrap();
+            }
+            report_manifest.insert(
+                key.clone(),
+                ReportPageInfo {
+                    page_size: REPORT_PAGE_SIZE,
+                    page_count: pages.len(),
+                },
+            );
+        }
+        // Written last so a half-generated directory can never look complete.
+        std::fs::create_dir_all(&report_root).unwrap();
+        serde_json::to_writer_pretty(
+            File::create(report_root.join("manifest.json")).unwrap(),
+            &report_manifest,
+        )
+        .unwrap();
 
         // Write per-file stats to the workspace-root status file.
         let status_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../test_status.json");
@@ -1601,7 +2368,11 @@ mod test {
     /// Non-panicking accuracy report — run with `cargo test test_accuracy_report -- --nocapture`
     #[test]
     fn test_accuracy_report() {
-        let files = collect_test_files();
+        let rule_map = load_test_case_rule_map();
+        let files = collect_test_files(&rule_map)
+            .into_iter()
+            .filter(|(_, key)| !rule_map[key].benchmark)
+            .collect::<Vec<_>>();
 
         let mut total = 0usize;
         let mut passed = 0usize;
@@ -1726,6 +2497,134 @@ mod coverage_targeted_tests {
     #[case::passthrough_ascii('Z', 'Z')]
     fn normalize_math_alphanumeric_block_mapping(#[case] input: char, #[case] expected: char) {
         assert_eq!(normalize_math_alphanumeric_char(input), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::upper_one("Ⅰ", "I")]
+    #[case::upper_two("Ⅱ", "II")]
+    #[case::upper_seven("Ⅶ", "VII")]
+    #[case::lower_four("ⅳ", "iv")]
+    #[case::embedded("제Ⅲ장", "제III장")]
+    fn normalizes_roman_numeral_presentation(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            normalize_roman_numeral_presentation(Cow::Borrowed(input)),
+            expected
+        );
+    }
+
+    /// Rule 36 spells Roman numerals with Roman letters. Presentation forms must
+    /// therefore enter the same existing encoder path in spaced, attached,
+    /// particle-adjacent, and lower-case contexts.
+    #[rstest::rstest]
+    #[case::pdf_sentence(
+        "가영이는 미적분학 Ⅱ 과목을 수강하고 있다.",
+        "가영이는 미적분학 II 과목을 수강하고 있다."
+    )]
+    #[case::attached_chapter("제Ⅲ장", "제III장")]
+    #[case::adjacent_particle("Ⅶ을", "VII을")]
+    #[case::lowercase_indicator("ⅳ를", "iv를")]
+    fn unicode_roman_numeral_matches_ascii_rule_36_path(
+        #[case] presentation: &str,
+        #[case] ascii: &str,
+    ) {
+        assert_eq!(encode_to_unicode(presentation), encode_to_unicode(ascii));
+    }
+
+    #[test]
+    fn roman_numeral_normalization_leaves_other_nfkc_characters_unchanged() {
+        let input = "ↀ㈜";
+        assert_eq!(
+            normalize_roman_numeral_presentation(Cow::Borrowed(input)),
+            input
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::parenthesized_jamo("㈀", "(ᄀ)")]
+    #[case::parenthesized_syllable("㈎", "(가)")]
+    #[case::incorporated_association("㈔", "(사)")]
+    #[case::incorporated_company("㈜", "(주)")]
+    #[case::afternoon("㈞", "(오후)")]
+    fn normalizes_parenthesized_hangul_presentation(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            normalize_parenthesized_hangul_presentation(Cow::Borrowed(input)),
+            expected
+        );
+    }
+
+    /// The compatibility glyph carries no independent braille semantics: its
+    /// expanded print-equivalent must follow the ordinary Korean parenthesis
+    /// and Hangul rules in every surrounding position.
+    #[rstest::rstest]
+    #[case::association_prefix("㈔한국", "(사)한국")]
+    #[case::company_prefix("㈜한빛", "(주)한빛")]
+    #[case::attached_company_suffix("한빛㈜", "한빛(주)")]
+    fn parenthesized_hangul_presentation_matches_expanded_print(
+        #[case] presentation: &str,
+        #[case] expanded: &str,
+    ) {
+        assert_eq!(encode_to_unicode(presentation), encode_to_unicode(expanded));
+    }
+
+    #[test]
+    fn normalizes_word_separator_middle_dot_to_print_space() {
+        assert_eq!(
+            normalize_word_separator_middle_dot(Cow::Borrowed("인증⸱실천⸱교육")),
+            "인증 실천 교육"
+        );
+    }
+
+    #[test]
+    fn word_separator_middle_dot_matches_visible_word_spacing() {
+        assert_eq!(
+            encode_to_unicode("인증⸱실천⸱교육"),
+            encode_to_unicode("인증 실천 교육")
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::kilowatt_hour("㎾h", "kWh")]
+    #[case::milli_sievert("m㏜", "mSv")]
+    #[case::watt_per_kilogram("W/㎏", "W/kg")]
+    #[case::kilogram_carbon_equivalent("㎏CO2eq", "kgCO2eq")]
+    #[case::milligram_per_gram("㎎/g", "mg/g")]
+    fn normalizes_pure_roman_compatibility_unit_components(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(
+            normalize_pure_roman_compatibility_units(Cow::Borrowed(input)),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::superscript("㎥")]
+    #[case::quotient("㎧")]
+    #[case::standalone_hectare("㏊")]
+    #[case::non_unit_compatibility_abbreviation("㏚")]
+    fn pure_roman_unit_normalization_preserves_other_compatibility_forms(#[case] input: &str) {
+        assert_eq!(
+            normalize_pure_roman_compatibility_units(Cow::Borrowed(input)),
+            input
+        );
+    }
+
+    /// Rule 69: a compatibility unit presentation and its semantic Roman
+    /// spelling are one unit section even when joined to another component.
+    #[rstest::rstest]
+    #[case::kilowatt_hour("용량은 1㎾h이다", "용량은 1kWh이다")]
+    #[case::milli_sievert("선량은 1m㏜보다 낮다", "선량은 1mSv보다 낮다")]
+    #[case::watt_per_kilogram("기준은 4.0W/㎏이다", "기준은 4.0W/kg이다")]
+    fn compound_compatibility_units_match_semantic_roman_spelling(
+        #[case] presentation: &str,
+        #[case] expanded: &str,
+    ) {
+        assert_eq!(
+            encode_to_unicode(presentation),
+            encode_to_unicode(expanded),
+            "presentation={presentation:?}"
+        );
     }
 
     #[test]
@@ -1894,6 +2793,19 @@ mod coverage_targeted_tests {
         // '+' is in math_symbol_shortcut SHORTCUT_MAP
         let result = encode_with_options("+", &opts);
         assert!(result.is_ok());
+    }
+
+    /// 수학 제32·33항: 수학 전용 관계 기호 양쪽의 대문자는 하나의 수식
+    /// 안의 변수다. 뒤쪽 변수를 국어 로마자 연속 항목으로 보아 ⠰를 붙이지 않는다.
+    #[rstest::rstest]
+    #[case::congruence("A ≅ B", "⠠⠁⠀⠈⠔⠒⠒⠀⠠⠃")]
+    #[case::right_geometric_operation("G ▷ N", "⠠⠛⠀⠸⠜⠀⠠⠝")]
+    #[case::left_geometric_operation("N ◁ G", "⠠⠝⠀⠸⠣⠀⠠⠛")]
+    fn default_route_keeps_math_relation_operands_in_one_expression(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(encode_to_unicode(input).as_deref(), Ok(expected));
     }
 
     /// Math mode — multi-char expression with spaces around operators.
@@ -2261,5 +3173,134 @@ mod debug_reader {
                 eprintln!("[{}] returned None", input);
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod print_variant_coverage {
+    use super::*;
+
+    #[rstest::rstest]
+    #[case::celsius("25\u{00B0}C", "25\u{2103}")]
+    #[case::fahrenheit("77\u{00B0}F", "77\u{2109}")]
+    #[case::ring_celsius("25\u{02DA}C", "25\u{2103}")]
+    #[case::ring_fahrenheit("77\u{02DA}F", "77\u{2109}")]
+    #[case::letter_without_a_degree("25C", "25C")]
+    #[case::degree_at_the_end("25\u{00B0}", "25\u{00B0}")]
+    #[case::degree_before_another_letter("25\u{00B0}K", "25\u{00B0}K")]
+    fn degree_letter_pair_folds_to_the_unit_glyph(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            normalize_print_variants(std::borrow::Cow::Borrowed(input)).as_ref(),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::fullwidth_percent('\u{FF05}', true)]
+    #[case::fullwidth_letter('\u{FF4D}', true)]
+    #[case::fullwidth_hash_is_the_math_cardinal('\u{FF03}', false)]
+    #[case::fullwidth_colon_is_the_old_hangul_mark('\u{FF1A}', false)]
+    #[case::ascii_is_not_a_variant('m', false)]
+    fn fullwidth_folding_excludes_the_two_reserved_glyphs(
+        #[case] input: char,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(is_foldable_fullwidth(input), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::before_slash("\u{338F}/h")]
+    #[case::after_slash("h/\u{338F}")]
+    fn a_square_unit_joined_through_a_slash_decomposes(#[case] input: &str) {
+        let folded = normalize_pure_roman_compatibility_units(std::borrow::Cow::Borrowed(input));
+        assert!(
+            folded.contains("kg"),
+            "expected the unit to spell out, got {folded:?}"
+        );
+    }
+
+    #[test]
+    fn a_detached_square_unit_keeps_its_glyph() {
+        let folded =
+            normalize_pure_roman_compatibility_units(std::borrow::Cow::Borrowed("\u{338F}"));
+        assert_eq!(folded.as_ref(), "\u{338F}");
+    }
+}
+
+#[cfg(test)]
+mod print_variant_fold_coverage {
+    use super::*;
+    use std::borrow::Cow;
+
+    /// 제49·50·61·69항 + 수학 제65항: 규정이 이미 점형을 정한 문자의 활자체·호환
+    /// 표기는 그 문자로 접어 적고, 보이지 않는 문자는 버린다.
+    #[rstest::rstest]
+    #[case::ring_above_alone("\u{02DA}", "\u{00B0}")]
+    #[case::unicode_hyphen("\u{2010}", "-")]
+    #[case::non_breaking_hyphen("\u{2011}", "-")]
+    #[case::katakana_middle_dot("\u{30FB}", "\u{00B7}")]
+    #[case::halfwidth_middle_dot("\u{FF65}", "\u{00B7}")]
+    #[case::hyphenation_point("\u{2027}", "\u{00B7}")]
+    #[case::one_dot_leader("\u{2024}", "\u{00B7}")]
+    #[case::vector_cross("\u{2A2F}", "\u{00D7}")]
+    #[case::parenthesised_five("\u{2478}", "(5)")]
+    #[case::parenthesised_twenty("\u{2487}", "(20)")]
+    #[case::wave_dash("\u{301C}", "~")]
+    #[case::acute_accent("\u{00B4}", "'")]
+    #[case::soft_hyphen("\u{00AD}", "")]
+    #[case::zero_width_space("\u{200B}", "")]
+    #[case::zero_width_joiner("\u{200D}", "")]
+    #[case::byte_order_mark("\u{FEFF}", "")]
+    #[case::fullwidth_percent("\u{FF05}", "%")]
+    #[case::fullwidth_letter("\u{FF4D}", "m")]
+    #[case::plain_char_is_kept("m", "m")]
+    fn a_print_variant_folds_to_the_character_the_standard_defines(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(
+            normalize_print_variants(Cow::Borrowed(input)).as_ref(),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::celsius("25\u{00B0}C", "25\u{2103}")]
+    #[case::fahrenheit("77\u{00B0}F", "77\u{2109}")]
+    #[case::letter_without_a_degree("25C", "25C")]
+    #[case::degree_at_the_end("25\u{00B0}", "25\u{00B0}")]
+    fn a_degree_letter_pair_folds_to_the_unit_glyph(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            normalize_print_variants(Cow::Borrowed(input)).as_ref(),
+            expected
+        );
+    }
+
+    /// 전화 기호는 묵자의 뜻대로 `Tel` 로 적는다.
+    #[rstest::rstest]
+    #[case::black_telephone("\u{260E}051", "Tel051")]
+    #[case::white_telephone("\u{260F}051", "Tel051")]
+    #[case::other_char_is_kept("051", "051")]
+    fn a_telephone_sign_expands_to_its_printed_meaning(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(expand_pictographs(Cow::Borrowed(input)).as_ref(), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::before_slash("\u{338F}/h")]
+    #[case::after_slash("h/\u{338F}")]
+    fn a_square_unit_joined_through_a_slash_decomposes(#[case] input: &str) {
+        let folded = normalize_pure_roman_compatibility_units(Cow::Borrowed(input));
+        assert!(folded.contains("kg"), "expected kg in {folded:?}");
+    }
+
+    #[test]
+    fn a_detached_square_unit_keeps_its_glyph() {
+        assert_eq!(
+            normalize_pure_roman_compatibility_units(Cow::Borrowed("\u{338F}")).as_ref(),
+            "\u{338F}"
+        );
     }
 }

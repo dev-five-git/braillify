@@ -4,7 +4,7 @@ import { Button } from '@devup-ui/react'
 import { ComponentProps } from 'react'
 
 export function ScrollTopButton(
-  props: ComponentProps<typeof Button<'button'>>,
+  props: Omit<ComponentProps<typeof Button<'button'>>, 'as'>,
 ) {
   const handleClick = () => {
     document.body.scrollBy({

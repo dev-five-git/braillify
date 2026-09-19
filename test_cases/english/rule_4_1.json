@@ -3,312 +3,416 @@
     "input": "a",
     "internal": "a",
     "expected": "1",
-    "unicode": "⠁"
+    "unicode": "⠁",
+    "world": "⠴⠁⠲",
+    "jeomsarang": "⠁"
   },
   {
     "input": "b",
     "internal": "b",
     "expected": "3",
-    "unicode": "⠃"
+    "unicode": "⠃",
+    "world": "⠴⠃⠲",
+    "jeomsarang": "⠃"
   },
   {
     "input": "c",
     "internal": "c",
     "expected": "9",
-    "unicode": "⠉"
+    "unicode": "⠉",
+    "world": "⠴⠉⠲",
+    "jeomsarang": "⠉"
   },
   {
     "input": "d",
     "internal": "d",
     "expected": "25",
-    "unicode": "⠙"
+    "unicode": "⠙",
+    "world": "⠴⠙⠲",
+    "jeomsarang": "⠙"
   },
   {
     "input": "e",
     "internal": "e",
     "expected": "17",
-    "unicode": "⠑"
+    "unicode": "⠑",
+    "world": "⠴⠑⠲",
+    "jeomsarang": "⠑"
   },
   {
     "input": "f",
     "internal": "f",
     "expected": "11",
-    "unicode": "⠋"
+    "unicode": "⠋",
+    "world": "⠴⠋⠲",
+    "jeomsarang": "⠋"
   },
   {
     "input": "g",
     "internal": "g",
     "expected": "27",
-    "unicode": "⠛"
+    "unicode": "⠛",
+    "world": "⠴⠛⠲",
+    "jeomsarang": "⠛"
   },
   {
     "input": "h",
     "internal": "h",
     "expected": "19",
-    "unicode": "⠓"
+    "unicode": "⠓",
+    "world": "⠴⠓⠲",
+    "jeomsarang": "⠓"
   },
   {
     "input": "i",
     "internal": "i",
     "expected": "10",
-    "unicode": "⠊"
+    "unicode": "⠊",
+    "world": "⠴⠊⠲",
+    "jeomsarang": "⠊"
   },
   {
     "input": "j",
     "internal": "j",
     "expected": "26",
-    "unicode": "⠚"
+    "unicode": "⠚",
+    "world": "⠴⠚⠲",
+    "jeomsarang": "⠚"
   },
   {
     "input": "k",
     "internal": "k",
     "expected": "5",
-    "unicode": "⠅"
+    "unicode": "⠅",
+    "world": "⠴⠅⠲",
+    "jeomsarang": "⠅"
   },
   {
     "input": "l",
     "internal": "l",
     "expected": "7",
-    "unicode": "⠇"
+    "unicode": "⠇",
+    "world": "⠴⠇⠲",
+    "jeomsarang": "⠇"
   },
   {
     "input": "m",
     "internal": "m",
     "expected": "13",
-    "unicode": "⠍"
+    "unicode": "⠍",
+    "world": "⠴⠍⠲",
+    "jeomsarang": "⠍"
   },
   {
     "input": "n",
     "internal": "n",
     "expected": "29",
-    "unicode": "⠝"
+    "unicode": "⠝",
+    "world": "⠴⠝⠲",
+    "jeomsarang": "⠝"
   },
   {
     "input": "o",
     "internal": "o",
     "expected": "21",
-    "unicode": "⠕"
+    "unicode": "⠕",
+    "world": "⠴⠕⠲",
+    "jeomsarang": "⠕"
   },
   {
     "input": "p",
     "internal": "p",
     "expected": "15",
-    "unicode": "⠏"
+    "unicode": "⠏",
+    "world": "⠴⠏⠲",
+    "jeomsarang": "⠏"
   },
   {
     "input": "q",
     "internal": "q",
     "expected": "31",
-    "unicode": "⠟"
+    "unicode": "⠟",
+    "world": "⠴⠟⠲",
+    "jeomsarang": "⠟"
   },
   {
     "input": "r",
     "internal": "r",
     "expected": "23",
-    "unicode": "⠗"
+    "unicode": "⠗",
+    "world": "⠴⠗⠲",
+    "jeomsarang": "⠗"
   },
   {
     "input": "s",
     "internal": "s",
     "expected": "14",
-    "unicode": "⠎"
+    "unicode": "⠎",
+    "world": "⠴⠎⠲",
+    "jeomsarang": "⠎"
   },
   {
     "input": "t",
     "internal": "t",
     "expected": "30",
-    "unicode": "⠞"
+    "unicode": "⠞",
+    "world": "⠴⠞⠲",
+    "jeomsarang": "⠞"
   },
   {
     "input": "u",
     "internal": "u",
     "expected": "37",
-    "unicode": "⠥"
+    "unicode": "⠥",
+    "world": "⠴⠥⠲",
+    "jeomsarang": "⠥"
   },
   {
     "input": "v",
     "internal": "v",
     "expected": "39",
-    "unicode": "⠧"
+    "unicode": "⠧",
+    "world": "⠴⠧⠲",
+    "jeomsarang": "⠧"
   },
   {
     "input": "w",
     "internal": "w",
     "expected": "58",
-    "unicode": "⠺"
+    "unicode": "⠺",
+    "world": "⠴⠺⠲",
+    "jeomsarang": "⠺"
   },
   {
     "input": "x",
     "internal": "x",
     "expected": "45",
-    "unicode": "⠭"
+    "unicode": "⠭",
+    "world": "⠴⠭⠲",
+    "jeomsarang": "⠭"
   },
   {
     "input": "y",
     "internal": "y",
     "expected": "61",
-    "unicode": "⠽"
+    "unicode": "⠽",
+    "world": "⠴⠽⠲",
+    "jeomsarang": "⠽"
   },
   {
     "input": "z",
     "internal": "z",
     "expected": "53",
-    "unicode": "⠵"
+    "unicode": "⠵",
+    "world": "⠴⠵⠲",
+    "jeomsarang": "⠵"
   },
   {
     "input": "A",
     "internal": ",a",
     "expected": "321",
-    "unicode": "⠠⠁"
+    "unicode": "⠠⠁",
+    "world": "⠴⠠⠁⠲",
+    "jeomsarang": "⠠⠁"
   },
   {
     "input": "B",
     "internal": ",b",
     "expected": "323",
-    "unicode": "⠠⠃"
+    "unicode": "⠠⠃",
+    "world": "⠴⠠⠃⠲",
+    "jeomsarang": "⠠⠃"
   },
   {
     "input": "C",
     "internal": ",c",
     "expected": "329",
-    "unicode": "⠠⠉"
+    "unicode": "⠠⠉",
+    "world": "⠴⠠⠉⠲",
+    "jeomsarang": "⠠⠉"
   },
   {
     "input": "D",
     "internal": ",d",
     "expected": "3225",
-    "unicode": "⠠⠙"
+    "unicode": "⠠⠙",
+    "world": "⠴⠠⠙⠲",
+    "jeomsarang": "⠠⠙"
   },
   {
     "input": "E",
     "internal": ",e",
     "expected": "3217",
-    "unicode": "⠠⠑"
+    "unicode": "⠠⠑",
+    "world": "⠴⠠⠑⠲",
+    "jeomsarang": "⠠⠑"
   },
   {
     "input": "F",
     "internal": ",f",
     "expected": "3211",
-    "unicode": "⠠⠋"
+    "unicode": "⠠⠋",
+    "world": "⠴⠠⠋⠲",
+    "jeomsarang": "⠠⠋"
   },
   {
     "input": "G",
     "internal": ",g",
     "expected": "3227",
-    "unicode": "⠠⠛"
+    "unicode": "⠠⠛",
+    "world": "⠴⠠⠛⠲",
+    "jeomsarang": "⠠⠛"
   },
   {
     "input": "H",
     "internal": ",h",
     "expected": "3219",
-    "unicode": "⠠⠓"
+    "unicode": "⠠⠓",
+    "world": "⠴⠠⠓⠲",
+    "jeomsarang": "⠠⠓"
   },
   {
     "input": "I",
     "internal": ",i",
     "expected": "3210",
-    "unicode": "⠠⠊"
+    "unicode": "⠠⠊",
+    "world": "⠴⠠⠊⠲",
+    "jeomsarang": "⠠⠊"
   },
   {
     "input": "J",
     "internal": ",j",
     "expected": "3226",
-    "unicode": "⠠⠚"
+    "unicode": "⠠⠚",
+    "world": "⠴⠠⠚⠲",
+    "jeomsarang": "⠠⠚"
   },
   {
     "input": "K",
     "internal": ",k",
     "expected": "325",
-    "unicode": "⠠⠅"
+    "unicode": "⠠⠅",
+    "world": "⠴⠠⠅⠲",
+    "jeomsarang": "⠠⠅"
   },
   {
     "input": "L",
     "internal": ",l",
     "expected": "327",
-    "unicode": "⠠⠇"
+    "unicode": "⠠⠇",
+    "world": "⠴⠠⠇⠲",
+    "jeomsarang": "⠠⠇"
   },
   {
     "input": "M",
     "internal": ",m",
     "expected": "3213",
-    "unicode": "⠠⠍"
+    "unicode": "⠠⠍",
+    "world": "⠴⠠⠍⠲",
+    "jeomsarang": "⠠⠍"
   },
   {
     "input": "N",
     "internal": ",n",
     "expected": "3229",
-    "unicode": "⠠⠝"
+    "unicode": "⠠⠝",
+    "world": "⠴⠠⠝⠲",
+    "jeomsarang": "⠠⠝"
   },
   {
     "input": "O",
     "internal": ",o",
     "expected": "3221",
-    "unicode": "⠠⠕"
+    "unicode": "⠠⠕",
+    "world": "⠴⠠⠕⠲",
+    "jeomsarang": "⠠⠕"
   },
   {
     "input": "P",
     "internal": ",p",
     "expected": "3215",
-    "unicode": "⠠⠏"
+    "unicode": "⠠⠏",
+    "world": "⠴⠠⠏⠲",
+    "jeomsarang": "⠠⠏"
   },
   {
     "input": "Q",
     "internal": ",q",
     "expected": "3231",
-    "unicode": "⠠⠟"
+    "unicode": "⠠⠟",
+    "world": "⠴⠠⠟⠲",
+    "jeomsarang": "⠠⠟"
   },
   {
     "input": "R",
     "internal": ",r",
     "expected": "3223",
-    "unicode": "⠠⠗"
+    "unicode": "⠠⠗",
+    "world": "⠴⠠⠗⠲",
+    "jeomsarang": "⠠⠗"
   },
   {
     "input": "S",
     "internal": ",s",
     "expected": "3214",
-    "unicode": "⠠⠎"
+    "unicode": "⠠⠎",
+    "world": "⠴⠠⠎⠲",
+    "jeomsarang": "⠠⠎"
   },
   {
     "input": "T",
     "internal": ",t",
     "expected": "3230",
-    "unicode": "⠠⠞"
+    "unicode": "⠠⠞",
+    "world": "⠴⠠⠞⠲",
+    "jeomsarang": "⠠⠞"
   },
   {
     "input": "U",
     "internal": ",u",
     "expected": "3237",
-    "unicode": "⠠⠥"
+    "unicode": "⠠⠥",
+    "world": "⠴⠠⠥⠲",
+    "jeomsarang": "⠠⠥"
   },
   {
     "input": "V",
     "internal": ",v",
     "expected": "3239",
-    "unicode": "⠠⠧"
+    "unicode": "⠠⠧",
+    "world": "⠴⠠⠧⠲",
+    "jeomsarang": "⠠⠧"
   },
   {
     "input": "W",
     "internal": ",w",
     "expected": "3258",
-    "unicode": "⠠⠺"
+    "unicode": "⠠⠺",
+    "world": "⠴⠠⠺⠲",
+    "jeomsarang": "⠠⠺"
   },
   {
     "input": "X",
     "internal": ",x",
     "expected": "3245",
-    "unicode": "⠠⠭"
+    "unicode": "⠠⠭",
+    "world": "⠴⠠⠭⠲",
+    "jeomsarang": "⠠⠭"
   },
   {
     "input": "Y",
     "internal": ",y",
     "expected": "3261",
-    "unicode": "⠠⠽"
+    "unicode": "⠠⠽",
+    "world": "⠴⠠⠽⠲",
+    "jeomsarang": "⠠⠽"
   },
   {
     "input": "Z",
     "internal": ",z",
     "expected": "3253",
-    "unicode": "⠠⠵"
+    "unicode": "⠠⠵",
+    "world": "⠴⠠⠵⠲",
+    "jeomsarang": "⠠⠵"
   }
 ]

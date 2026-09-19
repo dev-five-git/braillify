@@ -37,11 +37,24 @@ impl WordMeta {
             .iter()
             .any(|ch| (0xAC00..=0xD7A3).contains(&(*ch as u32)));
         let ascii_letter_count = chars.iter().filter(|ch| ch.is_ascii_alphabetic()).count();
-        let uppercase_count = chars.iter().filter(|ch| ch.is_ascii_uppercase()).count();
         let has_ascii_alphabetic = ascii_letter_count > 0;
 
         let starts_with_ascii = chars.first().is_some_and(char::is_ascii_alphabetic);
-        let is_all_uppercase = ascii_letter_count >= 2 && ascii_letter_count == uppercase_count;
+        // UEB 8.4.1-8.4.2 applies the capitals-word indicator to the initial
+        // uppercase letters-sequence and terminates it at the first nonletter.
+        // Korean rule 35's `MP3` therefore still pre-emits capitals-word mode
+        // for `MP`, while UEB's `B&B` does not do so for its one-letter prefix.
+        // Mixed-case forms stay on the span path, which can emit the required
+        // capitals terminator before a lowercase continuation (`TVOntario`).
+        let initial_uppercase_count = chars
+            .iter()
+            .take_while(|ch| ch.is_ascii_uppercase())
+            .count();
+        let all_ascii_letters_uppercase = chars
+            .iter()
+            .filter(|ch| ch.is_ascii_alphabetic())
+            .all(|ch| ch.is_ascii_uppercase());
+        let is_all_uppercase = initial_uppercase_count >= 2 && all_ascii_letters_uppercase;
 
         WordMeta {
             has_korean,
@@ -264,6 +277,22 @@ mod tests {
         assert!(meta.has_ascii_alphabetic);
         assert!(meta.starts_with_ascii);
         assert!(meta.is_all_uppercase);
+    }
+
+    /// UEB 8.4.2 terminates capitals word mode at a nonalphabetic symbol.
+    /// The official UEB 3.1.1/8.4 and Korean rule-35 examples distinguish a
+    /// multi-letter initial sequence from a one-letter initial sequence.
+    #[rstest::rstest]
+    #[case::official_at_and_t("AT&T", true)]
+    #[case::official_b_and_b("B&B", false)]
+    #[case::official_mixed_case("TVOntario", false)]
+    #[case::rule35_mp3("MP3", true)]
+    fn word_meta_scopes_capitals_word_to_initial_letters_sequence(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        assert_eq!(WordMeta::from_chars(&chars).is_all_uppercase, expected);
     }
 
     #[test]

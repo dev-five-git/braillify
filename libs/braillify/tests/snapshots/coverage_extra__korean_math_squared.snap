@@ -3,5 +3,5 @@ source: libs/braillify/tests/coverage_extra.rs
 expression: rendered
 ---
 input  = "변수 a^2 와 b^2"
-unicode = ok: "⠘⠡⠠⠍⠀⠴⠁⠲⠈⠢⠼⠃⠀⠸⠷⠧⠸⠾⠀⠃⠲⠈⠢⠼⠃"
-bytes   = ok: [24, 33, 32, 13, 0, 52, 1, 50, 8, 34, 60, 3, 0, 56, 55, 39, 56, 62, 0, 3, 50, 8, 34, 60, 3]
+unicode = ok: "⠘⠡⠠⠍⠀⠴⠁⠲⠈⠢⠼⠃⠀⠧⠀⠴⠃⠲⠈⠢⠼⠃"
+bytes   = ok: [24, 33, 32, 13, 0, 52, 1, 50, 8, 34, 60, 3, 0, 39, 0, 52, 3, 50, 8, 34, 60, 3]

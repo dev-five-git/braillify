@@ -32,10 +32,6 @@ export function MathTransPanel() {
       flexDirection={[null, null, null, 'row']}
       gap={['12px', null, null, '30px']}
       h={['auto', null, null, '500px']}
-      // 좌우 박스가 폭을 반씩 나누도록 호출부에서 분배한다. 화살표(가운데)는 제외.
-      selectors={{
-        '&>*:first-child, &>*:last-child': { flex: 1, minWidth: 0 },
-      }}
     >
       <MathTransInput
         latex={latex}

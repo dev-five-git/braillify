@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+﻿use std::borrow::Cow;
 
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
@@ -25,22 +25,95 @@ impl TokenRule for WordShortcutRule {
             return Ok(TokenAction::Noop);
         };
 
-        let Some((_, code, rest)) = word_shortcut::split_word_shortcut(word.text.as_ref()) else {
+        // 제18항 [다만] withholds the abbreviation only when another *letter*
+        // precedes it (오그리고); an opening quote or bracket is punctuation,
+        // so `“그러나` still abbreviates.
+        let text = word.text.as_ref();
+        let prefix_len = text
+            .chars()
+            .take_while(|ch| is_opening_punctuation(*ch))
+            .map(char::len_utf8)
+            .sum::<usize>();
+        let (prefix, body) = text.split_at(prefix_len);
+
+        let Some((_, code, rest)) = word_shortcut::split_word_shortcut(body) else {
             return Ok(TokenAction::Noop);
         };
 
-        if rest.is_empty() {
+        if prefix.is_empty() && rest.is_empty() {
             return Ok(TokenAction::Replace(Token::PreEncoded(code.to_vec())));
         }
 
-        let rest_chars: Vec<char> = rest.chars().collect();
-        Ok(TokenAction::ReplaceMany(vec![
-            Token::PreEncoded(code.to_vec()),
-            Token::Word(WordToken {
-                text: Cow::Owned(rest),
-                chars: rest_chars.clone(),
-                meta: WordMeta::from_chars(&rest_chars),
-            }),
-        ]))
+        let mut replacement = Vec::with_capacity(3);
+        if !prefix.is_empty() {
+            replacement.push(owned_word(prefix.to_string()));
+        }
+        replacement.push(Token::PreEncoded(code.to_vec()));
+        if !rest.is_empty() {
+            replacement.push(owned_word(rest));
+        }
+        Ok(TokenAction::ReplaceMany(replacement))
+    }
+}
+
+fn is_opening_punctuation(ch: char) -> bool {
+    matches!(
+        ch,
+        '“' | '‘' | '"' | '\'' | '(' | '[' | '{' | '「' | '『' | '〈' | '《' | '〔'
+    )
+}
+
+fn owned_word(text: String) -> Token<'static> {
+    let chars: Vec<char> = text.chars().collect();
+    Token::Word(WordToken {
+        text: Cow::Owned(text),
+        meta: WordMeta::from_chars(&chars),
+        chars,
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::rules::context::EncoderState;
+
+    fn noop_for(tokens: &[Token<'_>]) -> bool {
+        let mut state = EncoderState::new(false);
+        matches!(
+            WordShortcutRule.apply(tokens, 0, &mut state).unwrap(),
+            TokenAction::Noop
+        )
+    }
+
+    /// 제18항: a word carrying no abbreviation, and a token that is not a word
+    /// at all, both leave the stream untouched.
+    #[test]
+    fn a_word_without_an_abbreviation_is_left_alone() {
+        assert!(noop_for(&[owned_word("사과".to_string())]));
+    }
+
+    #[test]
+    fn a_token_that_is_not_a_word_is_left_alone() {
+        assert!(noop_for(&[Token::PreEncoded(vec![1])]));
+    }
+
+    #[test]
+    fn an_index_past_the_end_is_left_alone() {
+        assert!(noop_for(&[]));
+    }
+
+    /// 제18항: the abbreviation is written, and an opening quote before it or a
+    /// particle after it is kept as its own token.
+    #[rstest::rstest]
+    #[case::bare("그리고")]
+    #[case::quoted("\u{201C}그리고")]
+    #[case::with_tail("그리고도")]
+    fn an_abbreviated_word_is_replaced(#[case] text: &str) {
+        let mut state = EncoderState::new(false);
+        let tokens = [owned_word(text.to_string())];
+        assert!(!matches!(
+            WordShortcutRule.apply(&tokens, 0, &mut state).unwrap(),
+            TokenAction::Noop
+        ));
     }
 }

@@ -4,6 +4,10 @@ target/
 node_modules
 .df
 test_status.json
+
+# Paged test results emitted by `cargo test test_by_testcase` and served to the
+# landing page. Generated artifact, never committed.
+apps/landing/public/test-status/
 .venv
 __pycache__
 .pytest_cache
@@ -59,3 +63,9 @@ docs/superpowers/
 
 # superpowers 로컬 작업 디렉터리.
 .superpowers/
+
+# NIKL 말뭉치 원본 배포 아카이브. test_cases/<연도>_corpus/ 의 shard 만 커밋한다.
+NIKL_*.zip
+
+# 점사랑 점역 라이브러리 배포 아카이브. scripts/fetch-jeomsarang-lib.ts 가 푼다.
+BrailleTransLibrary-*.zip

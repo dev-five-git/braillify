@@ -45,6 +45,102 @@ pub fn is_recorded_word(word: &str) -> bool {
     INDEX.contains_key(word)
 }
 
+/// Whether CMUdict records `lower` (a lowercase letter sequence) with at least
+/// one pronunciation that is *not* the concatenated letter names — i.e. the
+/// dictionary knows it as a word (`gist`, `zero`), not merely as an initialism
+/// (`cc`). A variant longer than two phonemes per letter is an expansion
+/// (`tv` → *television*), not a reading of the letters, and does not count.
+/// Used by §10.12.1 to accept a short all-capitals token as a word-read acronym.
+pub fn has_word_pronunciation(lower: &[char]) -> bool {
+    if lower.is_empty() || !lower.iter().all(|ch| ch.is_ascii_lowercase()) {
+        return false;
+    }
+    let expected: Vec<&str> = lower
+        .iter()
+        .flat_map(|letter| LETTER_PHONES[*letter as usize - 'a' as usize])
+        .copied()
+        .collect();
+    let key: String = lower.iter().collect();
+    INDEX.get(key.as_str()).is_some_and(|variants| {
+        variants.iter().any(|variant| {
+            let phones: Vec<&str> = variant
+                .split_whitespace()
+                .map(|phone| phone.trim_end_matches(['0', '1', '2']))
+                .collect();
+            phones.len() <= lower.len() * 2 && phones != expected
+        })
+    })
+}
+
+/// ARPABET names of the letters `A`–`Z`, indexed by letter offset.
+const LETTER_PHONES: &[&[&str]; 26] = &[
+    &["EY"],
+    &["B", "IY"],
+    &["S", "IY"],
+    &["D", "IY"],
+    &["IY"],
+    &["EH", "F"],
+    &["JH", "IY"],
+    &["EY", "CH"],
+    &["AY"],
+    &["JH", "EY"],
+    &["K", "EY"],
+    &["EH", "L"],
+    &["EH", "M"],
+    &["EH", "N"],
+    &["OW"],
+    &["P", "IY"],
+    &["K", "Y", "UW"],
+    &["AA", "R"],
+    &["EH", "S"],
+    &["T", "IY"],
+    &["Y", "UW"],
+    &["V", "IY"],
+    &["D", "AH", "B", "AH", "L", "Y", "UW"],
+    &["EH", "K", "S"],
+    &["W", "AY"],
+    &["Z", "IY"],
+];
+
+/// Whether CMUdict supplies sufficiently specific evidence that an uppercase
+/// abbreviation is pronounced as letter names.
+///
+/// UEB §10.12.1 suppresses contractions when an abbreviation is pronounced as
+/// letters.  Case-folded dictionary headwords alone cannot establish that
+/// (`LED` otherwise collides with lexical *led*), so compare a pronunciation
+/// variant against the concatenated ARPABET names of the printed capitals. An
+/// For three or more letters, every recorded pronunciation must be the exact
+/// letter-name sequence; this keeps word-pronounced acronyms such as `ASEAN`
+/// on UEB's contract-when-uncertain fallback when the dictionary records both
+/// readings.  For a two-capital abbreviation, an exact two-letter reading is
+/// already specific evidence for the printed abbreviation even when the same
+/// case-folded headword also has a one-word homograph (`AI` versus *ai*).
+/// Unknown abbreviations and longer mixed-pronunciation entries return false.
+pub fn has_unambiguous_letter_name_pronunciation(chars: &[char]) -> bool {
+    if chars.len() < 2 || !chars.iter().all(|ch| ch.is_ascii_uppercase()) {
+        return false;
+    }
+
+    let expected: Vec<&str> = chars
+        .iter()
+        // The guard above proves every character is in `A..=Z`.
+        .flat_map(|letter| LETTER_PHONES[*letter as usize - 'A' as usize])
+        .copied()
+        .collect();
+    let key: String = chars.iter().map(|ch| ch.to_ascii_lowercase()).collect();
+    INDEX.get(key.as_str()).is_some_and(|variants| {
+        let is_letter_name_variant = |variant: &&str| {
+            variant
+                .split_whitespace()
+                .map(|phone| phone.trim_end_matches(['0', '1', '2']))
+                .eq(expected.iter().copied())
+        };
+        !variants.is_empty()
+            && (variants.iter().all(is_letter_name_variant)
+                || (chars.len() == 2 && variants.iter().any(is_letter_name_variant)))
+    })
+}
+
 /// Looks up ARPABET pronunciations from the embedded CMUdict.
 pub struct CmuDictProvider;
 
@@ -135,5 +231,30 @@ mod tests {
         assert_eq!(parse_cmudict_line("# comment only"), None);
         // A head with no phones → None.
         assert_eq!(parse_cmudict_line("word "), None);
+    }
+
+    #[rstest::rstest]
+    #[case::ged_is_ambiguous("GED", false)]
+    #[case::ai_two_letter_abbreviation("AI", true)]
+    #[case::cc_two_letter_abbreviation("CC", true)]
+    #[case::asean_mixed_pronunciation("ASEAN", false)]
+    #[case::ofc_initialism("OFC", true)]
+    #[case::lexical_led_only("LED", false)]
+    #[case::unknown_mou("MOU", false)]
+    #[case::lowercase_is_not_capitals("ged", false)]
+    fn detects_unambiguous_letter_name_pronunciations(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(has_unambiguous_letter_name_pronunciation(&chars), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::dictionary_word("gist", true)]
+    #[case::letter_names_only("cc", false)]
+    #[case::expansion_variant_tv("tv", false)]
+    #[case::unknown("mou", false)]
+    #[case::uppercase_is_not_a_key("GIST", false)]
+    fn detects_word_pronunciations(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(has_word_pronunciation(&chars), expected);
     }
 }

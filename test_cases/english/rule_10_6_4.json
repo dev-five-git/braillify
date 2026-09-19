@@ -3,54 +3,72 @@
     "input": "Conn.",
     "internal": ",3n4",
     "expected": "32182950",
-    "unicode": "⠠⠒⠝⠲"
+    "unicode": "⠠⠒⠝⠲",
+    "world": "⠴⠠⠒⠝⠲",
+    "jeomsarang": "⠠⠉⠕⠝⠝⠲"
   },
   {
     "input": "cont",
     "internal": "3t",
     "expected": "1830",
-    "unicode": "⠒⠞"
+    "unicode": "⠒⠞",
+    "world": "⠴⠒⠞⠲",
+    "jeomsarang": "⠉⠕⠝⠞"
   },
   {
     "input": "dist.",
     "internal": "4t4",
     "expected": "503050",
-    "unicode": "⠲⠞⠲"
+    "unicode": "⠲⠞⠲",
+    "world": "⠴⠲⠞⠲",
+    "jeomsarang": "⠙⠊⠎⠞⠲"
   },
   {
     "input": "mod cons",
     "internal": "mod 3s",
     "expected": "13212501814",
-    "unicode": "⠍⠕⠙⠀⠒⠎"
+    "unicode": "⠍⠕⠙⠀⠒⠎",
+    "world": "⠴⠍⠕⠙ ⠉⠕⠝⠎⠲",
+    "jeomsarang": "⠍⠕⠙⠀⠉⠕⠝⠎"
   },
   {
     "input": "BEd",
     "internal": ",b,$",
     "expected": "3233243",
-    "unicode": "⠠⠃⠠⠫"
+    "unicode": "⠠⠃⠠⠫",
+    "world": "⠴⠠⠠⠃⠑⠠⠄⠙⠲",
+    "jeomsarang": "⠠⠃⠠⠑⠙"
   },
   {
     "input": "Belg",
     "internal": ",belg",
     "expected": "32317727",
-    "unicode": "⠠⠃⠑⠇⠛"
+    "unicode": "⠠⠃⠑⠇⠛",
+    "world": "⠴⠠⠃⠑⠇⠛⠲",
+    "jeomsarang": "⠠⠃⠑⠇⠛"
   },
   {
     "input": "bet",
     "internal": "bet",
     "expected": "31730",
-    "unicode": "⠃⠑⠞"
+    "unicode": "⠃⠑⠞",
+    "world": "⠴⠃⠑⠞⠲",
+    "jeomsarang": "⠃⠑⠞"
   },
   {
     "input": "Bev",
     "internal": ",bev",
     "expected": "3231739",
-    "unicode": "⠠⠃⠑⠧"
+    "unicode": "⠠⠃⠑⠧",
+    "world": "⠴⠠⠃⠑⠧⠲",
+    "jeomsarang": "⠠⠃⠑⠧"
   },
   {
     "input": "Con.",
     "internal": ",con4",
     "expected": "329212950",
-    "unicode": "⠠⠉⠕⠝⠲"
+    "unicode": "⠠⠉⠕⠝⠲",
+    "world": "⠴⠠⠉⠕⠝⠲",
+    "jeomsarang": "⠠⠉⠕⠝⠲"
   }
 ]

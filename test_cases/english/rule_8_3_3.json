@@ -3,12 +3,16 @@
     "input": "Étude",
     "internal": ",^/etude",
     "expected": "3224121730372517",
-    "unicode": "⠠⠘⠌⠑⠞⠥⠙⠑"
+    "unicode": "⠠⠘⠌⠑⠞⠥⠙⠑",
+    "world": "⠴⠞⠥⠙⠑⠲",
+    "jeomsarang": "⠞⠥⠙⠑"
   },
   {
     "input": "Voyage À Nice",
     "internal": ",voyage ,^*a ,nice",
     "expected": "3239216112717032243310322910917",
-    "unicode": "⠠⠧⠕⠽⠁⠛⠑⠀⠠⠘⠡⠁⠀⠠⠝⠊⠉⠑"
+    "unicode": "⠠⠧⠕⠽⠁⠛⠑⠀⠠⠘⠡⠁⠀⠠⠝⠊⠉⠑",
+    "world": "⠴⠠⠧⠕⠽⠁⠛⠑ ⠘⠡⠠⠁ ⠠⠝⠊⠉⠑⠲",
+    "jeomsarang": "⠠⠧⠕⠽⠁⠛⠑⠀⠀⠠⠝⠊⠉⠑"
   }
 ]

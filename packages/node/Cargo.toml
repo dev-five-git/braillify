@@ -12,7 +12,7 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2.126"
+wasm-bindgen = "0.2.127"
 # UEB Grade-2 English (CMUdict + hyphenation) is a base dependency of braillify,
 # so it ships even with default-features disabled — the ~3.5 MB table is an
 # accepted trade-off for correct English in the wasm bundle.
@@ -27,7 +27,7 @@ braillify = { path = "../../libs/braillify", default-features = false, features 
 console_error_panic_hook = { version = "0.1.7", optional = true }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.76"
+wasm-bindgen-test = "0.3.77"
 
 # Disable wasm-pack's bundled (legacy) wasm-opt; the bundled version does not
 # support bulk-memory ops emitted by modern rustc. The `build` script in

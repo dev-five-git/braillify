@@ -43,7 +43,9 @@ export function SideBarTrigger({
   asChild,
   children,
   ...props
-}: ComponentProps<typeof Button<'button'>> & { asChild?: boolean }) {
+}: Omit<ComponentProps<typeof Button<'button'>>, 'as'> & {
+  asChild?: boolean
+}) {
   const { setIsOpen } = useSideBar()
 
   if (asChild) {
@@ -115,7 +117,7 @@ export function SideBarContainer({
   position = 'right',
   className,
   ...props
-}: ComponentProps<typeof Box<'div'>> & {
+}: Omit<ComponentProps<typeof Box<'div'>>, 'as'> & {
   position?: 'left' | 'right' | 'top' | 'bottom'
 }) {
   const ref = useRef<HTMLDivElement>(null)

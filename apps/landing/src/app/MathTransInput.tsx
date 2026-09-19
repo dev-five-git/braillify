@@ -59,10 +59,11 @@ export function MathTransInput({
   }, [ready])
 
   return (
-    // 폭 분배(flex)는 호출부가 맡는다. 바깥 Flex 에 padding 을 두지 않는 이유는
-    // flex-basis:0 이라도 flex 아이템의 border-box 크기가 padding 합보다 작아질 수
-    // 없어서, padding 이 있으면 그만큼 출력측 TransInput 보다 넓어지기 때문이다.
-    <Flex>
+    // 출력측 TransInput 과 마찬가지로 자기 폭은 자기가 잡는다. 바깥 Flex 에
+    // padding 을 두지 않는 이유는 flex-basis:0 이라도 flex 아이템의 border-box
+    // 크기가 padding 합보다 작아질 수 없어서, padding 이 있으면 그만큼 출력측
+    // TransInput 보다 넓어지기 때문이다.
+    <Flex flex="1" minW="0">
       <VStack
         bg="$containerBackground"
         borderRadius={['16px', null, null, '30px']}
@@ -110,9 +111,9 @@ export function MathTransInput({
         </VStack>
         <Text
           color="$text"
-          fontFamily="monospace"
           minH="1.5em"
           opacity={0.7}
+          typography="body"
           wordBreak="break-all"
         >
           {latex ? `LaTeX: $${latex}$` : 'LaTeX가 자동으로 생성됩니다'}

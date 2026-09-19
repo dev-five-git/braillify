@@ -17,6 +17,8 @@ import { spawnSync } from "node:child_process";
 // deterministic — that fails CI fast on an actual coverage regression. Windows
 // and macOS still run tarpaulin and upload (feeding the merge) but must not fail
 // CI on the recorder's flicker, so they run without the threshold.
+// The JNI bridge is excluded from tarpaulin because it requires a live JVM; the
+// separate `jvm-test` job exercises that native path instead.
 const enforceThreshold = process.platform === "linux";
 
 const cargoArgs = [

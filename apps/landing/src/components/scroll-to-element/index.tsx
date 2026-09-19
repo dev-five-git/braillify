@@ -7,7 +7,7 @@ export function ScrollToElement({
   elementId,
   onClick,
   ...props
-}: ComponentProps<typeof Button<'button'>> & {
+}: Omit<ComponentProps<typeof Button<'button'>>, 'as'> & {
   elementId: string
 }) {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {

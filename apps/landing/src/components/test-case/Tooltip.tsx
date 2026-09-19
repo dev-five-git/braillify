@@ -17,7 +17,7 @@ export default function Tooltip({
   translateX = '0px',
   translateY = '10px',
   ...props
-}: ComponentProps<typeof VStack<'div'>> & {
+}: Omit<ComponentProps<typeof VStack<'div'>>, 'as'> & {
   translateX?: string
   translateY?: string
 }) {

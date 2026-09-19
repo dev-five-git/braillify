@@ -1,10 +1,23 @@
-use super::*;
+﻿use super::*;
 
 impl EnglishUebEngine {
     pub(super) fn encode_word(
         &self,
         chars: &[char],
         ctx: WordContext,
+        out: &mut Vec<u8>,
+    ) -> Option<()> {
+        self.encode_word_with_apostrophe_lexeme(chars, ctx, false, out)
+    }
+
+    /// Encode a word with evidence that an adjacent apostrophe-separated run
+    /// reconstructs one lexical word.  Only the mixed-case capitals prefix uses
+    /// this evidence; ordinary words follow [`Self::encode_word`] unchanged.
+    pub(super) fn encode_word_with_apostrophe_lexeme(
+        &self,
+        chars: &[char],
+        ctx: WordContext,
+        apostrophe_joined_lexeme: bool,
         out: &mut Vec<u8>,
     ) -> Option<()> {
         let WordContext {
@@ -63,7 +76,12 @@ impl EnglishUebEngine {
             return Some(());
         }
         if !suppress_caps && classify_caps(chars).is_none() {
-            return self.encode_mixed_case(chars, allow_longer_shortforms, out);
+            return self.encode_mixed_case(
+                chars,
+                allow_longer_shortforms,
+                apostrophe_joined_lexeme,
+                out,
+            );
         }
         if shortform_usable && super::super::rule_10_9::is_pure_shortform_abbreviation(&word) {
             out.push(GRADE1);
@@ -109,11 +127,14 @@ impl EnglishUebEngine {
         // is structurally indistinguishable from a short §8 all-caps emphasis word
         // that DOES contract (`THE`/`SHE`) — a heuristic that suppresses contractions
         // there was measured to regress 9 passing cases for 11, so it is left out.)
+        // §10.12.2: a whole word written with one contraction (`DAY6`,
+        // `1FOR1`) is read as that word, not as letter names.
         let acronym_as_letters = matches!(classify_caps(chars), Some(Caps::Word))
             && !matches!(
                 lower.as_slice(),
                 ['s', 't'] | ['n', 'd'] | ['r', 'd'] | ['t', 'h']
             )
+            && !super::super::rule_10_12::is_whole_word_contraction(&word)
             && digit_adjacent;
         // §8.5 caps passage / §10.1 wordsign preference: inside a §8 caps context
         // an all-caps pronoun (`IT`, `US`) that stands alone with a wordsign
@@ -153,12 +174,10 @@ impl EnglishUebEngine {
                 out.push(cell);
                 return Some(());
             }
-            if shortform_usable
-                && let Some(cells) = super::super::rule_10_9::whole_word_cells(&word)
-            {
-                out.extend(cells);
-                return Some(());
-            }
+        }
+        if shortform_usable && let Some(cells) = super::super::rule_10_9::whole_word_cells(&word) {
+            out.extend(cells);
+            return Some(());
         }
         out.extend(
             super::super::rule_10_9::encode_with_optional_longer_shortforms(
@@ -186,6 +205,7 @@ impl EnglishUebEngine {
         &self,
         chars: &[char],
         allow_longer_shortforms: bool,
+        apostrophe_joined_lexeme: bool,
         out: &mut Vec<u8>,
     ) -> Option<()> {
         if allow_longer_shortforms && let Some(boundary) = initial_caps_shortform_boundary(chars) {
@@ -194,7 +214,12 @@ impl EnglishUebEngine {
             out.extend([CAPITAL, CAPITAL]);
             out.extend(cells);
             out.extend([CAPITAL, decode_unicode('⠄')]);
-            self.encode_mixed_case(&chars[boundary..], allow_longer_shortforms, out)?;
+            self.encode_mixed_case(
+                &chars[boundary..],
+                allow_longer_shortforms,
+                apostrophe_joined_lexeme,
+                out,
+            )?;
             return Some(());
         }
         let camel_subunit_start = camel_title_subunit_after_caps_prefix(chars);
@@ -214,10 +239,54 @@ impl EnglishUebEngine {
                     allow_longer_shortforms,
                 )?,
             );
-            self.encode_mixed_case(&chars[subunit_start..], allow_longer_shortforms, out)?;
+            self.encode_mixed_case(
+                &chars[subunit_start..],
+                allow_longer_shortforms,
+                apostrophe_joined_lexeme,
+                out,
+            )?;
             return Some(());
         }
         let initial_caps = chars.iter().take_while(|c| c.is_uppercase()).count();
+        // §8.8.2 `TVOntario`: when the last capital and the lowercase tail form
+        // a dictionary word (`SEIBro`, `PPCBank`), that natural subunit takes
+        // its own capital instead of a caps-word terminator inside it.
+        if initial_caps >= 3
+            && chars[initial_caps..].len() >= 2
+            && chars[initial_caps..].iter().all(|c| c.is_ascii_lowercase())
+            && !chars[..initial_caps]
+                .iter()
+                .all(|c| matches!(c, 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M'))
+            && !is_grammatical_suffix(
+                &chars[initial_caps..]
+                    .iter()
+                    .flat_map(|c| c.to_lowercase())
+                    .collect::<String>(),
+            )
+        {
+            let subunit_start = initial_caps - 1;
+            let subunit: Vec<char> = chars[subunit_start..]
+                .iter()
+                .map(|c| c.to_ascii_lowercase())
+                .collect();
+            let whole_lower: Vec<char> = chars.iter().map(|c| c.to_ascii_lowercase()).collect();
+            // §8.6.3 `PRESent`: an ordinary word with partial capitals keeps
+            // the caps-word terminator instead of a subunit split.
+            if super::super::pronunciation::cmudict::has_word_pronunciation(&subunit)
+                && !super::super::pronunciation::cmudict::has_word_pronunciation(&whole_lower)
+            {
+                out.extend([CAPITAL, CAPITAL]);
+                for c in &chars[..subunit_start] {
+                    out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+                }
+                out.extend(encode_title_subunit(
+                    &chars[subunit_start..],
+                    &self.contractions,
+                    allow_longer_shortforms,
+                )?);
+                return Some(());
+            }
+        }
         if initial_caps == 3
             && chars.get(initial_caps).is_some_and(|c| c.is_lowercase())
             && !chars[..initial_caps]
@@ -328,13 +397,16 @@ impl EnglishUebEngine {
             let initials_are_roman = chars[..initial_caps]
                 .iter()
                 .all(|c| matches!(c, 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M'));
-            // §8.8.2 vs §8.6.3: chemical/abbreviation subunits (`KBr`, `BSc`,
-            // `MHz`, `KCl`) split into per-letter capitals so the natural
+            // §8.8.2 vs §8.6.3: two-letter chemical/abbreviation subunits (`KBr`,
+            // `BSc`, `MHz`, `KCl`) split into per-letter capitals so the natural
             // subunit (`Br`, `Sc`, `Hz`, `Cl`) needs no internal indicators.
+            // Every §8.8 example of that choice has two capitals; a longer run
+            // keeps the §8.4 default capitals-word mode (`GEOfood`, `WALKing`).
             // A grammatical suffix (`ABCs`, `WALKing`, `XXIInd`) keeps the
             // caps-word + terminator + suffix pattern, as does a Roman numeral
             // + trailing chord letter (`VIIb`).
-            if !caps_prefix_keeps_word_indicator(&chars[..initial_caps])
+            if initial_caps == 2
+                && !caps_prefix_keeps_word_indicator(&chars[..initial_caps])
                 && !is_grammatical_suffix(&lower_suffix)
                 && !initials_are_roman
             {
@@ -355,8 +427,28 @@ impl EnglishUebEngine {
                 return Some(());
             }
             out.extend([CAPITAL, CAPITAL]);
-            for c in &chars[..initial_caps] {
-                out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+            if apostrophe_joined_lexeme {
+                // §10.6.8: `en`/`in` and the other permitted groupsigns remain
+                // available inside capital mode when the letters belong to an
+                // ordinarily pronounced word.  §10.12.1 initialisms retain the
+                // literal path because they have no lexical-word evidence.
+                let lower_prefix: Vec<char> = chars[..initial_caps]
+                    .iter()
+                    .map(|c| c.to_ascii_lowercase())
+                    .collect();
+                out.extend(
+                    super::super::rule_10_9::encode_with_optional_longer_shortforms(
+                        &lower_prefix,
+                        &self.contractions,
+                        false,
+                        false,
+                        false,
+                    )?,
+                );
+            } else {
+                for c in &chars[..initial_caps] {
+                    out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+                }
             }
             out.extend([CAPITAL, decode_unicode('⠄')]);
             let lower: Vec<char> = suffix.iter().flat_map(|c| c.to_lowercase()).collect();
@@ -443,15 +535,19 @@ impl EnglishUebEngine {
                     &seg_lower,
                     &self.contractions,
                     false,
-                    w[0] == 0 && w[1] == chars.len(),
+                    w[0] == 0,
                     false,
                 )?
             } else {
+                // §10.6.2: the first part of a CamelCase word is still the
+                // beginning of the word (`ConsumerInsight`); only §10.6.3's
+                // capitals indicator directly after the prefix (`conCUR`)
+                // spells it, which the 3-letter literal branch above handles.
                 super::super::rule_10_9::encode_with_optional_longer_shortforms(
                     &seg_lower,
                     &self.contractions,
                     false,
-                    w[0] == 0 && w[1] == chars.len(),
+                    w[0] == 0,
                     allow_longer_shortforms,
                 )?
             };
@@ -513,6 +609,10 @@ mod tests {
     #[case::bachelor_science("BSc", "⠠⠃⠠⠎⠉")]
     #[case::megahertz("MHz", "⠠⠍⠠⠓⠵")]
     #[case::potassium_chloride("KCl", "⠠⠅⠠⠉⠇")]
+    // §10.6.8/§10.12.1: the apostrophe-elided spelling is the recorded word
+    // `opening`, so `PEN` is a capitalised word segment, not initials, and keeps
+    // the `en` groupsign inside capitals-word mode.
+    #[case::apostrophe_joined_lexeme("O'PENing", "⠠⠕⠄⠠⠠⠏⠢⠠⠄⠬")]
     #[case::chemical_subscript("HOCH₂", "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃")]
     fn encodes_mixed_case_words_8_2(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(enc(text), Some(cells(expected)));
@@ -800,6 +900,7 @@ mod tests {
             .encode_mixed_case(
                 &['f', 'o', 'u', 'n', 'D', 'A', 't', 'i', 'o', 'n'],
                 true,
+                false,
                 &mut out,
             )
             .unwrap();
@@ -814,6 +915,7 @@ mod tests {
             .encode_mixed_case(
                 &['f', 'o', 'u', 'n', 'D', 'A', 't', 'i', 'o', 'n'],
                 true,
+                false,
                 &mut out,
             )
             .unwrap();
@@ -905,5 +1007,72 @@ mod tests {
                 .is_some()
         );
         assert!(!out.is_empty());
+    }
+
+    #[test]
+    fn standing_all_caps_longer_shortform_collision_gets_grade1() {
+        // UEB 5.7.2/10.9.8: LLC begins with the `little` shortform cells but is
+        // not itself a complete pure-letter shortform abbreviation.
+        let ctx = WordContext {
+            standing_alone: true,
+            upper_usable: true,
+            shortform_usable: true,
+            allow_longer_shortforms: true,
+            lower_usable: true,
+            suppress_caps: false,
+            word_initial: true,
+            restricted_prefix_boundary: true,
+            digit_adjacent: false,
+        };
+        let mut out = Vec::new();
+
+        EnglishUebEngine::new()
+            .encode_word(&['L', 'L', 'C'], ctx, &mut out)
+            .expect("ASCII acronym must encode");
+
+        assert!(out.starts_with(&[GRADE1, CAPITAL, CAPITAL]));
+    }
+}
+
+#[cfg(test)]
+mod word_body_coverage {
+    /// §10.9: a whole-word shortform is written by its own cells; any other
+    /// word falls through to the ordinary contraction encoder.
+    #[rstest::rstest]
+    #[case::whole_word_shortform("그는 about 를")]
+    #[case::ordinary_word("그는 tomato 를")]
+    fn a_roman_word_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod title_subunit_coverage {
+    /// §8.8.2 `TVOntario`: 앞의 대문자 무리와 뒤의 소문자가 자연스러운 하위 단위를
+    /// 이루면 그 단위가 제 대문자표를 갖는다. §10.9 의 낱말 약자는 제 점형으로 적고,
+    /// 그 밖의 낱말은 일반 약자 경로로 내려간다.
+    #[rstest::rstest]
+    #[case::three_capital_prefix("그는 KBStar 를")]
+    #[case::four_capital_prefix("그는 BLASTSound 를")]
+    #[case::whole_word_shortform("그는 about 를")]
+    #[case::ordinary_word("그는 tomato 를")]
+    #[case::caps_then_lowercase_tail("그는 WALKing 을")]
+    fn a_roman_word_in_korean_text_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod three_capital_prefix_coverage {
+    /// §8.8.2: 대문자 셋 뒤에 소문자가 이어지고 그 마지막 대문자부터가 제 이름을
+    /// 이루면(`KBSteru` 의 `Steru`), 그 단위가 제 대문자표를 갖는다. 사전에 실린
+    /// 하위 단위(`KBStar` 의 `Star`)는 그 앞 갈래가 맡는다.
+    #[rstest::rstest]
+    #[case::subunit_not_in_the_dictionary("그는 KBSteru 를")]
+    #[case::subunit_in_the_dictionary("그는 KBStar 를")]
+    #[case::four_capital_prefix("그는 BLASTSound 를")]
+    #[case::caps_then_lowercase_tail("그는 WALKing 을")]
+    fn a_mixed_case_roman_word_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
     }
 }

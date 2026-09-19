@@ -2,8 +2,6 @@
 
 import { createContext, useContext, useState } from 'react'
 
-import type { TestStatusMap } from '@/types'
-
 export type TestCaseFilter =
   | 'korean'
   | 'math'
@@ -12,7 +10,11 @@ export type TestCaseFilter =
   | 'english'
   | 'foreign-language'
   | 'ipa'
-  | 'corpus'
+  | '2021_corpus'
+  | '2022_corpus'
+  | '2023_corpus'
+  | '2024_corpus'
+  | '2025_corpus'
 
 export type TestCaseOptions = {
   filters: TestCaseFilter[]
@@ -32,7 +34,6 @@ export type FilterTotalMap = Record<
 >
 
 const TestCaseContext = createContext<{
-  testStatusMap: TestStatusMap
   filterMap: FilterMap
   filterTotalMap: FilterTotalMap
   options: TestCaseOptions
@@ -48,12 +49,10 @@ export function useTestCase() {
 }
 
 export function TestCaseProvider({
-  testStatusMap,
   filterMap,
   filterTotalMap,
   children,
 }: {
-  testStatusMap: TestStatusMap
   filterMap: FilterMap
   filterTotalMap: FilterTotalMap
   children: React.ReactNode
@@ -74,7 +73,6 @@ export function TestCaseProvider({
         filterTotalMap,
         onChangeOptions: handleChangeOptions,
         options,
-        testStatusMap,
       }}
     >
       {children}

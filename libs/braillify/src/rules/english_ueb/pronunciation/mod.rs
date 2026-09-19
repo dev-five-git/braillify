@@ -15,6 +15,65 @@ pub mod aligner;
 pub mod classifier;
 pub mod cmudict;
 
+/// Decide whether an apostrophe-separated print sequence is one recorded
+/// lexical word when the apostrophe is elided.
+///
+/// UEB §10.12.1 suppresses contractions when capitals are letters pronounced
+/// separately, while §10.6.8 retains `en`/`in` inside an ordinarily pronounced
+/// word.  A stylised spelling such as `O'PENing` is split into two parser runs,
+/// so the case pattern of `PENing` alone cannot distinguish those situations.
+/// Requiring the complete adjacent sequence (`opening`) to be in CMUdict gives
+/// pronunciation evidence without recognising any particular corpus phrase.
+/// The caller supplies the current ASCII run so unrelated quote punctuation is
+/// never absorbed into the lookup.
+pub(crate) fn apostrophe_elided_recorded_word_at(
+    chars: &[char],
+    run_start: usize,
+    run_end: usize,
+) -> bool {
+    if run_start >= run_end
+        || run_end > chars.len()
+        || !chars[run_start..run_end]
+            .iter()
+            .all(|ch| ch.is_ascii_alphabetic())
+    {
+        return false;
+    }
+
+    let is_apostrophe = |ch: char| matches!(ch, '\'' | '\u{2019}');
+    let is_member = |ch: char| ch.is_ascii_alphabetic() || is_apostrophe(ch);
+
+    let mut start = run_start;
+    while start > 0 && is_member(chars[start - 1]) {
+        start -= 1;
+    }
+    let mut end = run_end;
+    while end < chars.len() && is_member(chars[end]) {
+        end += 1;
+    }
+
+    let segment = &chars[start..end];
+    if !segment.iter().any(|ch| is_apostrophe(*ch)) {
+        return false;
+    }
+    if segment.iter().enumerate().any(|(index, ch)| {
+        is_apostrophe(*ch)
+            && (index == 0
+                || index + 1 == segment.len()
+                || !segment[index - 1].is_ascii_alphabetic()
+                || !segment[index + 1].is_ascii_alphabetic())
+    }) {
+        return false;
+    }
+
+    let normalized: String = segment
+        .iter()
+        .filter(|ch| ch.is_ascii_alphabetic())
+        .map(|ch| ch.to_ascii_lowercase())
+        .collect();
+    cmudict::is_recorded_word(&normalized)
+}
+
 /// One ARPABET phoneme: its base symbol (e.g. `B`, `AH`, `N`) and, for vowels,
 /// the lexical stress (0 = unstressed, 1 = primary, 2 = secondary). In CMUdict
 /// only vowels carry a stress digit, so `stress.is_some()` identifies a vowel.
@@ -101,5 +160,26 @@ mod tests {
         assert_eq!(ph.base, "NG");
         assert_eq!(ph.stress, None);
         assert!(!ph.is_vowel());
+    }
+
+    #[rstest::rstest]
+    #[case::straight_apostrophe("O'PENing", 2, 8, true)]
+    #[case::curly_apostrophe("O\u{2019}PENing", 2, 8, true)]
+    #[case::no_join("PENing", 0, 6, false)]
+    #[case::unknown_elision("rock'n", 5, 6, false)]
+    #[case::empty_requested_run("abc", 1, 1, false)]
+    #[case::run_end_out_of_bounds("abc", 0, 4, false)]
+    #[case::requested_run_contains_nonletter("a1c", 0, 3, false)]
+    fn classifies_apostrophe_elided_lexical_words(
+        #[case] text: &str,
+        #[case] run_start: usize,
+        #[case] run_end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            apostrophe_elided_recorded_word_at(&chars, run_start, run_end),
+            expected
+        );
     }
 }

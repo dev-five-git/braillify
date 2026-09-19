@@ -1,0 +1,22 @@
+[package]
+name = "braillify-jvm"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+description = "JNI bindings for braillify"
+license = "Apache-2.0"
+repository = "https://github.com/dev-five-git/braillify"
+
+[lib]
+name = "braillify_jvm"
+crate-type = ["cdylib", "rlib"]
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(tarpaulin_include)"] }
+
+[dependencies]
+braillify = { path = "../../libs/braillify", default-features = false }
+jni = "=0.22.4"
+
+[dev-dependencies]
+rstest = "0.26"

@@ -30,7 +30,15 @@ impl BrailleRule for Rule73 {
     }
 
     fn matches(&self, ctx: &RuleContext) -> bool {
-        matches!(ctx.char_type, CharType::Symbol('_' | '□'))
+        if !matches!(ctx.char_type, CharType::Symbol('_' | '□')) {
+            return false;
+        }
+        // 제73항의 밑줄은 채워 넣을 빈칸이다. 로마자 글자 사이에 낀 밑줄(`VR_S`)은
+        // 빈칸이 아니라 제32항의 로마자 이름 안에 있는 밑줄이므로 넘긴다. 뒤가
+        // 숫자이면 수학 제19항의 아래첨자(`\int_0`)일 수 있어 건드리지 않는다.
+        !(ctx.current_char() == '_'
+            && ctx.prev_char().is_some_and(|c| c.is_ascii_alphabetic())
+            && ctx.next_char().is_some_and(|c| c.is_ascii_alphabetic()))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {

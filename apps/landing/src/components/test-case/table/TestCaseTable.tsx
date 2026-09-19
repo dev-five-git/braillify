@@ -27,7 +27,13 @@ function CompetitorCell({
   )
 }
 
-export function TestCaseTable({ results }: { results: TestStatus[6] }) {
+export function TestCaseTable({
+  results,
+  startIndex = 0,
+}: {
+  results: TestStatus[6]
+  startIndex?: number
+}) {
   return (
     <Table>
       <Thead
@@ -83,7 +89,7 @@ export function TestCaseTable({ results }: { results: TestStatus[6] }) {
                   })}
                   data-responsive="desktop"
                 >
-                  <Td>{index + 1}</Td>
+                  <Td>{startIndex + index + 1}</Td>
                   <Td>
                     <LatexText>{text}</LatexText>
                     {note ? ` (${note})` : null}
@@ -137,7 +143,7 @@ export function TestCaseTable({ results }: { results: TestStatus[6] }) {
                         justifyContent="space-between"
                         px="10px"
                       >
-                        <Text>{index + 1}</Text>
+                        <Text>{startIndex + index + 1}</Text>
                         <Image
                           alt={isSuccess ? 'success' : 'error'}
                           boxSize="24px"

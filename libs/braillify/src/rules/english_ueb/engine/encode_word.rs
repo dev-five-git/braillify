@@ -651,7 +651,7 @@ macro_rules! encode_word_arm {
                     {
                         lower_usable = true;
                     }
-		                    $engine.encode_word(
+		                    $engine.encode_word_with_apostrophe_lexeme(
 		                        $chars,
 		                        WordContext {
 	                            standing_alone,
@@ -675,6 +675,7 @@ macro_rules! encode_word_arm {
                             digit_adjacent: matches!(prev, Some(EnglishToken::Number(_)))
                                 || matches!(next, Some(EnglishToken::Number(_))),
                         },
+                        apostrophe_joined_recorded_token_word($tokens, $i),
                         &mut $out,
                     )?;
                     $prev_was_number = false;

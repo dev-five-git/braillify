@@ -11,7 +11,7 @@ export function TestCaseRuleContainer({
   ...props
 }: {
   exception: boolean
-} & ComponentProps<typeof VStack<'div'>>) {
+} & Omit<ComponentProps<typeof VStack<'div'>>, 'as'>) {
   const { options } = useTestCase()
   const isList = options.type === 'list'
   return (

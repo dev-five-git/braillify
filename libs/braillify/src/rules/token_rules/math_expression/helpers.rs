@@ -62,12 +62,45 @@ pub(super) fn is_middle_dot_numeric_word(chars: &[char]) -> bool {
         .iter()
         .filter(|c| matches!(**c, '\u{00B7}' | '\u{22C5}'))
         .count();
-    if middle_dot_count != 1 {
+    if middle_dot_count == 0 {
         return false;
     }
-    chars
+    chars.iter().all(|c| {
+        c.is_ascii_digit()
+            || matches!(
+                *c,
+                '\u{00B7}' | '\u{22C5}' | '\u{2212}' | '-' | ',' | ';' | ':'
+            )
+    })
+}
+
+/// Numeric notation which is written as ordinary Korean prose rather than as
+/// a standalone mathematical expression.
+///
+/// Korean Braille Rules 43, 47 [appendix], 48, and 50 keep the print order of
+/// numeric slashes, decimal points, ranges, and middle-dot lists.  Routing
+/// these tokens through the math-expression layer only adds mathematical
+/// delimiters; the character rules already emit the required repeated number
+/// signs after `/`, `~`, and `·`.
+pub(super) fn is_korean_prose_numeric_notation(chars: &[char]) -> bool {
+    let has_digit = chars.iter().any(|c| c.is_ascii_digit());
+    let has_prose_separator = chars
         .iter()
-        .all(|c| c.is_ascii_digit() || matches!(*c, '\u{00B7}' | '\u{22C5}' | '\u{2212}' | '-'))
+        .any(|c| matches!(*c, '.' | '/' | '~' | '\u{00B7}' | '\u{22C5}'));
+    let starts_with_signed_minus = chars
+        .first()
+        .is_some_and(|c| matches!(*c, '-' | '\u{2212}'));
+
+    has_digit
+        && has_prose_separator
+        && !starts_with_signed_minus
+        && chars.iter().all(|c| {
+            c.is_ascii_digit()
+                || matches!(
+                    *c,
+                    '.' | ',' | '-' | '\u{2212}' | '~' | '/' | '\u{00B7}' | '\u{22C5}' | ';' | ':'
+                )
+        })
 }
 
 pub(super) fn adjacent_korean_word_flags(tokens: &[Token<'_>], index: usize) -> (bool, bool) {
@@ -345,6 +378,300 @@ fn build_korean_prefix_math_suffix(prefix: String, bytes: Vec<u8>) -> Vec<Token<
     vec![head, sep, math]
 }
 
+/// Locate an anonymized-person label used in Korean prose, such as
+/// `A(54)씨`, `B(17)군`, or `C(16)양`.
+///
+/// The leading surface also looks like mathematical function notation, but
+/// the Korean honorific immediately after the numeric parenthesis resolves the
+/// ambiguity. Hangeul rules 29 and 35 therefore own the Roman letter and age,
+/// while ordinary Korean punctuation rules own the parentheses. A real
+/// function followed by another Korean particle (`A(14)는`) deliberately does
+/// not match this predicate and remains on the math path. The returned range
+/// contains the Roman letter and age parenthetical, but not the honorific.
+fn anonymized_person_label_end(chars: &[char], start: usize) -> Option<usize> {
+    if !chars.get(start).is_some_and(char::is_ascii_uppercase) || chars.get(start + 1) != Some(&'(')
+    {
+        return None;
+    }
+
+    let mut cursor = start + 2;
+    let digit_start = cursor;
+    while chars.get(cursor).is_some_and(char::is_ascii_digit) {
+        cursor += 1;
+    }
+    if cursor == digit_start {
+        return None;
+    }
+
+    // 제34항: 괄호 안의 나머지는 그 사람을 가리키는 한글 주석이다. 나이의 단위
+    // (`37세`, `50대`), 국적이나 신분(`27·스리랑카`, `42·구속`), 자리를 나눈 수
+    // (`18,000원`)가 모두 여기 온다. 닫는 괄호까지 한글과 자리 구분 기호만 오는
+    // 동안 이어 읽고, 그것이 사람 표지인지는 호출부가 뒤따르는 `씨`·`군` 으로
+    // 가린다. 그래서 함수 표기 `A(14)는` 은 여기에 걸리지 않는다.
+    while chars.get(cursor).is_some_and(|ch| {
+        is_korean_char(*ch) || ch.is_ascii_digit() || matches!(*ch, '·' | 'ㆍ' | ',' | '.' | ' ')
+    }) {
+        cursor += 1;
+    }
+
+    (chars.get(cursor) == Some(&')')).then_some(cursor + 1)
+}
+
+fn starts_anonymized_person_marker(chars: &[char], index: usize) -> bool {
+    chars
+        .get(index)
+        .is_some_and(|marker| matches!(*marker, '씨' | '군' | '양'))
+}
+
+/// Whether the label is immediately followed by a Korean human-role noun.
+///
+/// The role stem is separated from an attached case particle and classified
+/// by its productive title/rank ending (`-사`, `-병`, `-감`, `-관`, `-장`,
+/// `-원`).  This covers ranks and occupations without enumerating corpus
+/// phrases.  Mathematical nouns such as `함수`, `변수`, and `값` do not have
+/// one of these endings, so `A(14)함수는` remains on the math path.
+fn starts_attached_korean_person_role(chars: &[char], index: usize) -> bool {
+    let suffix = chars[index..]
+        .iter()
+        .take_while(|ch| is_korean_char(**ch))
+        .collect::<String>();
+    if suffix.is_empty() {
+        return false;
+    }
+
+    const PARTICLES: &[&str] = &[
+        "에게서",
+        "으로",
+        "에게",
+        "께서",
+        "에서",
+        "까지",
+        "부터",
+        "처럼",
+        "보다",
+        "라고",
+        "이라",
+        "이랑",
+        "하고",
+        "께",
+        "의",
+        "이",
+        "가",
+        "은",
+        "는",
+        "을",
+        "를",
+        "와",
+        "과",
+        "에",
+        "도",
+        "로",
+    ];
+    let stem = PARTICLES
+        .iter()
+        .find_map(|particle| suffix.strip_suffix(particle))
+        .unwrap_or(&suffix);
+
+    stem.chars().count() >= 2
+        && stem
+            .chars()
+            .last()
+            .is_some_and(|ending| matches!(ending, '사' | '병' | '감' | '관' | '장' | '원'))
+}
+
+fn attached_korean_suffix_text(chars: &[char], index: usize) -> String {
+    chars[index..]
+        .iter()
+        .take_while(|ch| is_korean_char(**ch))
+        .collect()
+}
+
+fn starts_animate_dative_particle(chars: &[char], index: usize) -> bool {
+    attached_korean_suffix_text(chars, index).starts_with("에게")
+}
+
+/// A Korean personal name can be printed directly before an anonymizing Roman
+/// label, for example `조너선M(41)이`.  In that structure a following case
+/// particle resolves the `M(41)` function-notation ambiguity.  Require a
+/// three-syllable-or-longer attached Korean prefix; ordinary mathematical
+/// heads such as `함수A(14)는` therefore remain math-owned.
+fn has_attached_korean_name_and_case_particle(chars: &[char], start: usize, end: usize) -> bool {
+    let korean_prefix_len = chars[..start]
+        .iter()
+        .rev()
+        .take_while(|ch| is_korean_char(**ch))
+        .count();
+    if korean_prefix_len < 3 {
+        return false;
+    }
+
+    matches!(
+        attached_korean_suffix_text(chars, end).as_str(),
+        "이" | "가" | "은" | "는" | "을" | "를" | "와" | "과" | "의" | "에"
+    )
+}
+
+/// A list can defer its person marker to the final member, as in
+/// `B(60)·C(41)씨`.  Every preceding age label is still Roman prose.  Only a
+/// middle-dot chain whose eventual member has an explicit person marker is
+/// accepted, so an algebraic `A(1)·B(2)` remains mathematical.
+fn anonymized_person_chain_has_marker(chars: &[char], mut cursor: usize) -> bool {
+    while chars.get(cursor) == Some(&'·') {
+        let next_start = cursor + 1;
+        let Some(next_end) = anonymized_person_label_end(chars, next_start) else {
+            return false;
+        };
+        if starts_anonymized_person_marker(chars, next_end) {
+            return true;
+        }
+        cursor = next_end;
+    }
+    false
+}
+
+fn anonymized_person_label_span(chars: &[char]) -> Option<(usize, usize)> {
+    let mut index = 0usize;
+    while index < chars.len() {
+        if !chars[index].is_ascii_uppercase()
+            || index
+                .checked_sub(1)
+                .and_then(|previous| chars.get(previous))
+                .is_some_and(|previous| previous.is_ascii_alphanumeric())
+            || chars.get(index + 1) != Some(&'(')
+        {
+            index += 1;
+            continue;
+        }
+
+        if let Some(end) = anonymized_person_label_end(chars, index)
+            && (starts_anonymized_person_marker(chars, end)
+                || starts_attached_korean_person_role(chars, end)
+                || starts_animate_dative_particle(chars, end)
+                || has_attached_korean_name_and_case_particle(chars, index, end)
+                || anonymized_person_chain_has_marker(chars, end))
+        {
+            return Some((index, end));
+        }
+        index += 1;
+    }
+    None
+}
+
+pub(super) fn encode_anonymized_person_label(chars: &[char]) -> Option<Vec<u8>> {
+    let (&letter, _) = chars.split_first()?;
+    if anonymized_person_label_end(chars, 0) != Some(chars.len()) {
+        return None;
+    }
+
+    let mut encoded = vec![
+        crate::rules::korean::rule_29::ROMAN_INDICATOR,
+        crate::rules::korean::rule_28::UPPERCASE_SINGLE,
+        crate::english::encode_english(letter).ok()?,
+    ];
+    let parenthetical = chars[1..].iter().collect::<String>();
+    encoded.extend(crate::encode(&parenthetical).ok()?);
+    Some(encoded)
+}
+
+pub(super) fn split_anonymized_person_label(chars: &[char]) -> Option<Vec<Token<'static>>> {
+    let mut replacement = Vec::new();
+    let mut cursor = 0usize;
+    let mut found = false;
+
+    while cursor < chars.len() {
+        let Some((relative_start, relative_end)) = anonymized_person_label_span(&chars[cursor..])
+        else {
+            break;
+        };
+        let start = cursor + relative_start;
+        let end = cursor + relative_end;
+        let encoded = encode_anonymized_person_label(&chars[start..end])?;
+        if start > cursor {
+            replacement.push(build_word_token(chars[cursor..start].iter().collect()));
+        }
+        replacement.push(Token::PreEncoded(encoded));
+        cursor = end;
+        found = true;
+    }
+
+    if !found {
+        return None;
+    }
+    if cursor < chars.len() {
+        replacement.push(build_word_token(chars[cursor..].iter().collect()));
+    }
+    Some(replacement)
+}
+
+/// Recognize only the suffix shape used after an already-confirmed Korean
+/// prefix.  Korean rule 34's PDF example is `링컨(Lincoln)은`: Roman text may
+/// be enclosed in a bracket without a Roman terminator.  Rule 54 requires the
+/// bracket to attach to its contents, so a comma or period after the closing
+/// bracket does not turn that Roman annotation into mathematics.
+///
+/// This predicate is intentionally not part of the global math detector, whose
+/// existing results for standalone `(x)`, `(A)`, and `(abc)` stay unchanged.
+/// The caller below must first prove that all preceding characters are Korean.
+fn is_closed_roman_annotation_suffix(chars: &[char]) -> bool {
+    if chars.first() != Some(&'(') {
+        return false;
+    }
+
+    let Some(close) = chars.iter().position(|c| *c == ')') else {
+        return false;
+    };
+    let body = &chars[1..close];
+    let trailing = &chars[close + 1..];
+
+    let is_section_letter =
+        |c: &char| c.is_ascii_alphabetic() || crate::rules::korean::rule_31::is_greek_letter(*c);
+    !body.is_empty()
+        && body.iter().any(is_section_letter)
+        && body
+            .iter()
+            .all(|c| is_section_letter(c) || c.is_ascii_digit() || matches!(*c, '-' | '\'' | '.'))
+        && trailing
+            .iter()
+            .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+}
+
+/// 제34항 attaches a bracket to the Korean word it annotates and 제54항 keeps the
+/// bracket closed onto its contents, so `목요일(6/4)`, `일대일(1:1)` and
+/// `1500m(1)` are Korean-mode annotations written with 한글 괄호. Only a body of
+/// digits joined by ordinary marks qualifies; an operator or a letter leaves the
+/// parenthetical to the math engine (`정수(x+1)`).
+fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
+    if chars.first() != Some(&'(') {
+        return false;
+    }
+    let Some(close) = chars.iter().position(|c| *c == ')') else {
+        return false;
+    };
+    let body = &chars[1..close];
+    let trailing = &chars[close + 1..];
+    body.iter().any(char::is_ascii_digit)
+        && body
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(*c, '/' | ':' | '.' | ',' | '~' | '\u{223C}'))
+        && trailing
+            .iter()
+            .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+}
+
+/// 제49항 붙임표 `⠤` follows print spacing, and 제55항 [다만] keeps an affix
+/// hyphen with its word: `코로나-19`, `화성-12형` attach a 붙임표, not a
+/// spaced 제46항 minus sign.
+fn is_hyphenated_number_suffix(chars: &[char]) -> bool {
+    let Some(('-', digits)) = chars.split_first().map(|(head, rest)| (*head, rest)) else {
+        return false;
+    };
+    !digits.is_empty()
+        && digits.first().is_some_and(char::is_ascii_digit)
+        && digits
+            .iter()
+            .all(|c| c.is_ascii_digit() || matches!(*c, '.' | ','))
+}
+
 pub(super) fn split_mixed_math_word(
     word: &crate::rules::token::WordToken<'_>,
     leading_delimiter_len: usize,
@@ -352,6 +679,10 @@ pub(super) fn split_mixed_math_word(
 ) -> Option<Vec<Token<'static>>> {
     if !word.meta.has_korean || word.chars.iter().all(|c| is_korean_char(*c)) {
         return None;
+    }
+
+    if let Some(replacement) = split_anonymized_person_label(&word.chars) {
+        return Some(replacement);
     }
 
     let chars = &word.chars;
@@ -391,6 +722,21 @@ pub(super) fn split_mixed_math_word(
         if !prefix_all_korean || !suffix_no_korean {
             return None;
         }
+        if is_closed_roman_annotation_suffix(suffix_chars)
+            || is_closed_numeric_annotation_suffix(suffix_chars)
+            || is_hyphenated_number_suffix(suffix_chars)
+        {
+            return None;
+        }
+        // 한글 뒤에 부호와 숫자만 이어지는 것(`아세안+3`, `리오+20`)은 제46항의
+        // 연산 기호가 한글과 숫자 사이에 온 자리이지 제11항이 두 칸으로 감싸는
+        // 수식이 아니다. 그 띄어쓰기는 제46항이 한 칸으로 정한다.
+        if suffix_chars
+            .iter()
+            .all(|ch| ch.is_ascii_digit() || matches!(*ch, '+' | '-' | '\u{2212}' | '.' | ','))
+        {
+            return None;
+        }
         let suffix_text: String = suffix_chars.iter().collect();
         let suffix_is_math = is_mixed_math_expression(suffix_chars, &suffix_text)
             || is_math_expression(suffix_chars, &suffix_text);
@@ -409,8 +755,95 @@ pub(super) fn split_mixed_math_word(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[rstest::rstest]
+    #[case::official_rule_34_annotation("(Lincoln)", true)]
+    #[case::missing_opening("Lincoln)", false)]
+    #[case::missing_closing("(Lincoln", false)]
+    #[case::empty_body("()", false)]
+    fn recognizes_only_closed_roman_annotation_suffixes(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            is_closed_roman_annotation_suffix(&input.chars().collect::<Vec<_>>()),
+            expected
+        );
+    }
     use crate::rules::math::math_token_rule::MathContext;
     use crate::rules::token::SpaceKind;
+
+    #[rstest::rstest]
+    #[case::adult("A(54)씨는", true)]
+    #[case::minor_male("B(17)군에게", true)]
+    #[case::minor_female("C(16)양은", true)]
+    #[case::gender_annotation("A(41·여)씨는", true)]
+    #[case::age_decade("B(30대)씨는", true)]
+    #[case::korean_name_prefix("김모A(41)씨", true)]
+    #[case::military_rank("A(21)상병을", true)]
+    #[case::police_rank("B(42)경사가", true)]
+    #[case::occupation("C(47)원사에게", true)]
+    #[case::animate_dative("A(30)에게", true)]
+    #[case::attached_korean_name("조너선M(41)이", true)]
+    #[case::math_function_particle("A(14)는", false)]
+    #[case::attached_math_function("함수A(14)는", false)]
+    #[case::math_function_noun("A(14)함수는", false)]
+    #[case::non_honorific_syllable("A(14)시는", false)]
+    #[case::missing_digits("A()씨", false)]
+    fn recognizes_only_anonymized_person_labels(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            anonymized_person_label_span(&input.chars().collect::<Vec<_>>()).is_some(),
+            expected
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::adult("A(54)씨는")]
+    #[case::minor_male("B(17)군에게")]
+    #[case::minor_female("C(16)양은")]
+    #[case::gender_annotation("A(41·여)씨는")]
+    #[case::age_decade("B(30대)씨는")]
+    fn anonymized_person_labels_use_korean_prose_cells(#[case] input: &str) {
+        let chars = input.chars().collect::<Vec<_>>();
+        let word = WordToken {
+            text: Cow::Borrowed(input),
+            chars: chars.clone(),
+            meta: WordMeta::from_chars(&chars),
+        };
+
+        let replacement = split_mixed_math_word(&word, 0, MathContext::default())
+            .expect("honorific resolves the function/prose ambiguity");
+        assert!(matches!(
+            replacement.as_slice(),
+            [Token::PreEncoded(_), Token::Word(_)]
+        ));
+        let Token::PreEncoded(label) = &replacement[0] else {
+            unreachable!();
+        };
+        let (start, end) = anonymized_person_label_span(&chars).expect("label span");
+        let expected = encode_anonymized_person_label(&chars[start..end]).expect("label cells");
+        assert_eq!(label, &expected);
+    }
+
+    #[rstest::rstest]
+    #[case::deferred_marker("B(60)·C(41)씨", 2)]
+    #[case::child_markers("B(6)군·C(3)양이", 2)]
+    #[case::three_people("A(41)씨·B(28)씨와C(27)씨가", 3)]
+    fn splits_every_anonymized_person_label_in_one_token(
+        #[case] input: &str,
+        #[case] expected_labels: usize,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        let replacement = split_anonymized_person_label(&chars).expect("person-label list");
+
+        assert_eq!(
+            replacement
+                .iter()
+                .filter(|token| matches!(token, Token::PreEncoded(_)))
+                .count(),
+            expected_labels
+        );
+    }
 
     /// helpers:235 — `try_encode_math_slice` fallback to `crate::encode` when
     /// math encoder fails. Use `f(~)`: passes `has_function_call` candidacy
@@ -429,6 +862,33 @@ mod tests {
     fn try_encode_mixed_math_slice_empty_returns_none() {
         let result = try_encode_mixed_math_slice(&[], MathContext::default());
         assert!(result.is_none());
+    }
+
+    /// The PDF's `√분산` form is a mixed expression because the radical is
+    /// directly attached to Korean text; it must produce a concrete cell sequence.
+    #[test]
+    fn try_encode_mixed_math_slice_encodes_valid_expression() {
+        let chars = std::hint::black_box("√분산").chars().collect::<Vec<_>>();
+        let result = try_encode_mixed_math_slice(&chars, MathContext::default());
+
+        assert!(result.is_some());
+    }
+
+    #[test]
+    fn mixed_fraction_detects_korean_inside_the_parenthesized_operand() {
+        let text = "2/(삼+오)";
+        let chars = text.chars().collect::<Vec<_>>();
+
+        assert!(is_mixed_math_expression(&chars, text));
+    }
+
+    #[test]
+    fn anonymized_person_chain_rejects_invalid_or_unmarked_following_labels() {
+        let invalid = "A(1)·not".chars().collect::<Vec<_>>();
+        assert!(!anonymized_person_chain_has_marker(&invalid, 4));
+
+        let unmarked = "A(1)·B(2)·C(3)".chars().collect::<Vec<_>>();
+        assert!(!anonymized_person_chain_has_marker(&unmarked, 4));
     }
 
     #[test]
@@ -535,5 +995,89 @@ mod tests {
             meta: WordMeta::from_chars(&chars),
         };
         let _ = split_mixed_math_word(&word, 0, MathContext::default());
+    }
+}
+
+#[cfg(test)]
+mod attached_korean_name_coverage {
+    use super::*;
+
+    /// 제34항: only a Korean run of three or more syllables reads as a name
+    /// that owns the following parenthetical.
+    #[rstest::rstest]
+    #[case::two_syllables("김씨(30)이", 2, 6, false)]
+    #[case::three_syllables("홍길동(30)이", 3, 7, true)]
+    fn a_name_needs_three_korean_syllables(
+        #[case] text: &str,
+        #[case] start: usize,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            has_attached_korean_name_and_case_particle(&chars, start, end),
+            expected
+        );
+    }
+}
+
+#[cfg(test)]
+mod numeric_annotation_coverage {
+    use super::*;
+
+    /// 제34항: 한글 세 음절 이상이라야 뒤 괄호를 거느리는 이름으로 본다.
+    #[rstest::rstest]
+    #[case::two_syllables("김씨(30)이", 2, 6, false)]
+    #[case::three_syllables("홍길동(30)이", 3, 7, true)]
+    fn a_name_needs_three_korean_syllables(
+        #[case] text: &str,
+        #[case] start: usize,
+        #[case] end: usize,
+        #[case] expected: bool,
+    ) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(
+            has_attached_korean_name_and_case_particle(&chars, start, end),
+            expected
+        );
+    }
+}
+
+#[cfg(test)]
+mod hyphenated_number_suffix_coverage {
+    use super::*;
+
+    /// 제55항 [다만]: 낱말에 붙은 숫자 접미(`코로나-19`)는 제49항의 붙임표이지
+    /// 제46항의 뺄셈 기호가 아니다.
+    #[rstest::rstest]
+    #[case::plain("-19", true)]
+    #[case::decimal("-1.5", true)]
+    #[case::grouped("-1,000", true)]
+    #[case::letter_after_hyphen("-a19", false)]
+    #[case::hyphen_alone("-", false)]
+    #[case::no_hyphen("19", false)]
+    fn a_hyphenated_number_suffix_is_digits_only(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_hyphenated_number_suffix(&chars), expected);
+    }
+}
+
+#[cfg(test)]
+mod korean_prefix_sign_coverage {
+    /// 제46항: 한글 뒤에 부호와 숫자만 이어지면 그것은 한글과 숫자 사이의 연산
+    /// 기호이므로 한 칸을 둔다. 제11항이 두 칸으로 감싸는 수식은 그 너머에 있다.
+    #[rstest::rstest]
+    #[case::name_with_plus("가나 아세안+3 다라", false)]
+    #[case::name_with_number("가나 리오+20, 다라", false)]
+    #[case::trailing_plus("가나 스포츠+ 다라", false)]
+    #[case::equation("값은 x=1 이다", true)]
+    #[case::because_sign("정수\u{2235}y=n+2", true)]
+    fn a_sign_and_digits_tail_is_not_an_expression(#[case] input: &str, #[case] is_math: bool) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert_eq!(
+            encoded.contains("\u{2800}\u{2800}"),
+            is_math,
+            "unexpected Article 11 boundary in {encoded}"
+        );
     }
 }

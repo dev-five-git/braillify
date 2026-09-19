@@ -87,6 +87,11 @@ pub struct EncoderState {
     pub needs_english_continuation: bool,
     /// Rule 35 chain: English followed by digits may resume English without indicators
     pub roman_number_chain: bool,
+    /// The active Roman section is an English phrase rather than metalinguistic
+    /// Roman material in a Korean sentence. Korean rule 37 keeps its six lower
+    /// wordsigns expanded in Korean context, while UEB 10.5 applies in an
+    /// independently recognizable English phrase.
+    pub roman_section_is_english_context: bool,
     /// Stack tracking whether parentheses were opened in English context
     pub parenthesis_stack: Vec<bool>,
     /// Currently in a number sequence (수표 already emitted)
@@ -122,6 +127,7 @@ impl EncoderState {
             has_processed_word: false,
             needs_english_continuation: false,
             roman_number_chain: false,
+            roman_section_is_english_context: false,
             parenthesis_stack: Vec::new(),
             is_number: false,
             is_big_english: false,
@@ -178,6 +184,13 @@ pub struct RuleContext<'a> {
     pub is_all_uppercase: bool,
     /// Whether ASCII letters start at index 0
     pub ascii_starts_at_beginning: bool,
+    /// Whether a Roman section was already active before the current print word.
+    ///
+    /// Korean rule 37 suppresses whole-word contractions only for the first
+    /// Roman word after the Roman indicator. The emitter may enter Roman mode
+    /// before character rules run, so `state.is_english` alone cannot distinguish
+    /// that first word from a later word in the same section.
+    pub roman_section_continues_from_previous_word: bool,
     /// Skip count — rules can set this to skip subsequent characters
     pub skip_count: &'a mut usize,
     /// Shared mutable encoder state

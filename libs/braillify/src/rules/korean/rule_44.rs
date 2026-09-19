@@ -22,6 +22,14 @@ pub static META: RuleMeta = RuleMeta {
 /// Choseong characters that could be confused with digit braille patterns.
 const CONFUSABLE_CHOSEONG: [char; 7] = ['ㄴ', 'ㄷ', 'ㅁ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
 
+pub(crate) fn is_number_confusable_korean_char(ch: char) -> bool {
+    matches!(
+        CharType::new(ch),
+        Ok(CharType::Korean(korean))
+            if CONFUSABLE_CHOSEONG.contains(&korean.cho) || ch == '운'
+    )
+}
+
 /// Plugin struct for the rule engine.
 ///
 /// Inserts a space (code 0) before Korean syllables with confusable choseong
@@ -46,10 +54,10 @@ impl BrailleRule for Rule44 {
         if !ctx.state.is_number {
             return false;
         }
-        let CharType::Korean(korean) = ctx.char_type else {
+        let CharType::Korean(_) = ctx.char_type else {
             return false;
         };
-        CONFUSABLE_CHOSEONG.contains(&korean.cho) || ctx.current_char() == '운'
+        is_number_confusable_korean_char(ctx.current_char())
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
@@ -83,6 +91,24 @@ mod tests {
         }
     }
 
+    #[rstest::rstest]
+    #[case::nieun("는", true)]
+    #[case::digeut("당", true)]
+    #[case::mieum("명", true)]
+    #[case::kieuk("칸", true)]
+    #[case::tieut("톤", true)]
+    #[case::pieup("평", true)]
+    #[case::hieuh("항", true)]
+    #[case::un_abbreviation("운", true)]
+    #[case::vowel_initial("이다", false)]
+    #[case::non_korean("A", false)]
+    fn detects_number_confusable_following_korean(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            is_number_confusable_korean_char(input.chars().next().unwrap()),
+            expected
+        );
+    }
+
     #[test]
     fn meta_is_correct() {
         assert_eq!(META.section, "44");
@@ -109,6 +135,7 @@ mod tests {
             has_korean_char: true,
             is_all_uppercase: false,
             ascii_starts_at_beginning: false,
+            roman_section_continues_from_previous_word: false,
             skip_count: &mut skip,
             state: &mut state,
             result: &mut out,

@@ -3,66 +3,88 @@
     "input": "blunder",
     "internal": "bl\"u",
     "expected": "371637",
-    "unicode": "⠃⠇⠐⠥"
+    "unicode": "⠃⠇⠐⠥",
+    "world": "⠴⠃⠇⠐⠥⠲",
+    "jeomsarang": "⠃⠇⠥⠝⠙⠑⠗"
   },
   {
     "input": "misunderstand",
     "internal": "mis\"u/&",
     "expected": "13101416371247",
-    "unicode": "⠍⠊⠎⠐⠥⠌⠯"
+    "unicode": "⠍⠊⠎⠐⠥⠌⠯",
+    "world": "⠴⠍⠊⠎⠐⠥⠌⠯⠲",
+    "jeomsarang": "⠍⠊⠎⠥⠝⠙⠑⠗⠎⠞⠁⠝⠙"
   },
   {
     "input": "thundered",
     "internal": "?\"u$",
     "expected": "57163743",
-    "unicode": "⠹⠐⠥⠫"
+    "unicode": "⠹⠐⠥⠫",
+    "world": "⠴⠹⠐⠥⠫⠲",
+    "jeomsarang": "⠞⠓⠥⠝⠙⠑⠗⠑⠙"
   },
   {
     "input": "undergo",
     "internal": "\"ugo",
     "expected": "16372721",
-    "unicode": "⠐⠥⠛⠕"
+    "unicode": "⠐⠥⠛⠕",
+    "world": "⠴⠐⠥⠛⠕⠲",
+    "jeomsarang": "⠥⠝⠙⠑⠗⠛⠕"
   },
   {
     "input": "underpaid",
     "internal": "\"upd",
     "expected": "16371525",
-    "unicode": "⠐⠥⠏⠙"
+    "unicode": "⠐⠥⠏⠙",
+    "world": "⠴⠐⠥⠏⠙⠲",
+    "jeomsarang": "⠥⠝⠙⠑⠗⠏⠁⠊⠙"
   },
   {
     "input": "Wunderhorn",
     "internal": ",w\"uhorn",
     "expected": "3258163719212329",
-    "unicode": "⠠⠺⠐⠥⠓⠕⠗⠝"
+    "unicode": "⠠⠺⠐⠥⠓⠕⠗⠝",
+    "world": "⠴⠠⠺⠐⠥⠓⠕⠗⠝⠲",
+    "jeomsarang": "⠠⠺⠥⠝⠙⠑⠗⠓⠕⠗⠝"
   },
   {
     "input": "flounder",
     "internal": "fl.d]",
     "expected": "117402559",
-    "unicode": "⠋⠇⠨⠙⠻"
+    "unicode": "⠋⠇⠨⠙⠻",
+    "world": "⠴⠋⠇⠨⠙⠻⠲",
+    "jeomsarang": "⠋⠇⠕⠥⠝⠙⠑⠗"
   },
   {
     "input": "laundering",
     "internal": "laund]+",
     "expected": "713729255944",
-    "unicode": "⠇⠁⠥⠝⠙⠻⠬"
+    "unicode": "⠇⠁⠥⠝⠙⠻⠬",
+    "world": "⠴⠇⠁⠥⠝⠙⠻⠬⠲",
+    "jeomsarang": "⠇⠁⠥⠝⠙⠑⠗⠊⠝⠛"
   },
   {
     "input": "Saunders",
     "internal": ",saund]s",
     "expected": "321413729255914",
-    "unicode": "⠠⠎⠁⠥⠝⠙⠻⠎"
+    "unicode": "⠠⠎⠁⠥⠝⠙⠻⠎",
+    "world": "⠴⠠⠎⠁⠥⠝⠙⠻⠎⠲",
+    "jeomsarang": "⠠⠎⠁⠥⠝⠙⠑⠗⠎"
   },
   {
     "input": "underived",
     "internal": "und]iv$",
     "expected": "37292559103943",
-    "unicode": "⠥⠝⠙⠻⠊⠧⠫"
+    "unicode": "⠥⠝⠙⠻⠊⠧⠫",
+    "world": "⠴⠥⠝⠙⠻⠊⠧⠫⠲",
+    "jeomsarang": "⠥⠝⠙⠑⠗⠊⠧⠑⠙"
   },
   {
     "input": "underogatory",
     "internal": "und]ogatory",
     "expected": "372925592127130212361",
-    "unicode": "⠥⠝⠙⠻⠕⠛⠁⠞⠕⠗⠽"
+    "unicode": "⠥⠝⠙⠻⠕⠛⠁⠞⠕⠗⠽",
+    "world": "⠴⠥⠝⠙⠻⠕⠛⠁⠞⠕⠗⠽⠲",
+    "jeomsarang": "⠥⠝⠙⠑⠗⠕⠛⠁⠞⠕⠗⠽"
   }
 ]

@@ -3,7 +3,7 @@ import { ComponentProps } from 'react'
 
 import { MIDDLE_KOREAN_FONT_FAMILY } from '@/constants/font'
 
-export function Table(props: ComponentProps<typeof Box<'table'>>) {
+export function Table(props: Omit<ComponentProps<typeof Box<'table'>>, 'as'>) {
   return (
     <Box
       as="table"
@@ -17,7 +17,7 @@ export function Table(props: ComponentProps<typeof Box<'table'>>) {
   )
 }
 
-export function Thead(props: ComponentProps<typeof Box<'thead'>>) {
+export function Thead(props: Omit<ComponentProps<typeof Box<'thead'>>, 'as'>) {
   return (
     <Box
       as="thead"
@@ -32,15 +32,15 @@ export function Thead(props: ComponentProps<typeof Box<'thead'>>) {
   )
 }
 
-export function Tbody(props: ComponentProps<typeof Box<'tbody'>>) {
+export function Tbody(props: Omit<ComponentProps<typeof Box<'tbody'>>, 'as'>) {
   return <Box as="tbody" {...props} />
 }
 
-export function Tr(props: ComponentProps<typeof Box<'tr'>>) {
+export function Tr(props: Omit<ComponentProps<typeof Box<'tr'>>, 'as'>) {
   return <Box as="tr" {...props} />
 }
 
-export function Th(props: ComponentProps<typeof Box<'th'>>) {
+export function Th(props: Omit<ComponentProps<typeof Box<'th'>>, 'as'>) {
   return (
     <Box
       as="th"
@@ -71,7 +71,7 @@ export function Th(props: ComponentProps<typeof Box<'th'>>) {
 export function Td({
   typography = 'body',
   ...props
-}: ComponentProps<typeof Box<'td'>>) {
+}: Omit<ComponentProps<typeof Box<'td'>>, 'as'>) {
   return (
     <Box
       as="td"

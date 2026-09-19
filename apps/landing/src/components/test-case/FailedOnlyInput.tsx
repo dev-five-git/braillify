@@ -8,7 +8,7 @@ import { useTestCase } from './TestCaseProvider'
 export function FailedOnlyInput(
   props: Omit<
     ComponentProps<typeof Input<'input'>>,
-    'checked' | 'onChange' | 'defaultChecked'
+    'as' | 'checked' | 'onChange' | 'defaultChecked'
   >,
 ) {
   const { options, onChangeOptions } = useTestCase()

@@ -3,5 +3,5 @@ source: libs/braillify/tests/coverage_extra.rs
 expression: rendered
 ---
 input  = "p¬Q"
-unicode = ok: "⠏⠨⠟"
-bytes   = ok: [15, 40, 31]
+unicode = ok: "⠏⠈⠔⠟"
+bytes   = ok: [15, 8, 20, 31]

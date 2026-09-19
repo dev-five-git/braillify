@@ -16,6 +16,7 @@ const MAPPINGS: &[(char, &str)] = &[
     ('^', "⠈⠢"),
     ('#', "⠸⠹"),
     ('|', "⠸⠳"),
+    ('│', "⠸⠳"),
     ('\\', "⠸⠡"),
     ('&', "⠈⠯"),
     ('§', "⠘⠎"),
@@ -37,14 +38,48 @@ fn should_wrap_information_symbol(ctx: &RuleContext) -> bool {
         return true;
     }
 
-    let prev_has_korean =
-        !ctx.prev_word.is_empty() && ctx.prev_word.chars().any(crate::utils::is_korean_char);
-    let next_has_korean = ctx
+    // 제71항 [다만]: the standalone sign is wrapped when it touches Korean
+    // text.  Only the letter adjacent to the sign decides (`Mining &
+    // Development)가` bridges two Roman words, so the open Roman section
+    // already covers the ampersand).
+    let is_letter_like =
+        |ch: &char| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(*ch);
+    let prev_ends_korean = ctx
+        .prev_word
+        .chars()
+        .rev()
+        .find(is_letter_like)
+        .is_some_and(crate::utils::is_korean_char);
+    let next_starts_korean = ctx
         .remaining_words
         .first()
-        .is_some_and(|word| !word.is_empty() && word.chars().any(crate::utils::is_korean_char));
+        .and_then(|word| word.chars().find(is_letter_like))
+        .is_some_and(crate::utils::is_korean_char);
 
-    prev_has_korean || next_has_korean
+    prev_ends_korean || next_starts_korean
+}
+
+/// 제71항 [다만] wraps a sign that "한글과 혼동되는" position; `®`/`™` attached
+/// to a Roman word (`Jeep®`) sits inside the open 제29항 section, where UEB
+/// 3.1 reads its own cells and no re-entry indicator is needed.
+fn follows_roman_word_in_open_section(ctx: &RuleContext) -> bool {
+    matches!(ctx.current_char(), '®' | '™' | '&')
+        && ctx.state.is_english
+        && ctx.prev_char().is_some_and(|ch| ch.is_ascii_alphanumeric())
+}
+
+/// UEB 3.1.1 writes `&` directly between attached ASCII-letter segments
+/// (for example, AT&T and B&B). The surrounding Roman section already owns
+/// the mode indicators, so Rule 71 must emit only the ampersand cells there.
+fn is_attached_roman_ampersand(ctx: &RuleContext) -> bool {
+    crate::english_logic::is_attached_ascii_roman_ampersand(ctx.word_chars, ctx.index)
+}
+
+fn begins_attached_roman_segment(ctx: &RuleContext) -> bool {
+    crate::english_logic::is_ampersand_before_attached_ascii_roman_segment(
+        ctx.word_chars,
+        ctx.index,
+    )
 }
 
 pub fn is_rule_71_symbol(c: char) -> bool {
@@ -102,15 +137,49 @@ impl BrailleRule for Rule71 {
 
         let mut encoded = Vec::new();
         if should_wrap_information_symbol(ctx)
+            && ctx.current_char() == '&'
+            && begins_attached_roman_segment(ctx)
+        {
+            // Korean rules 29/32/71 and UEB 3.1.1 `&c`: the ambiguous
+            // ampersand opens the Roman section, but the attached ASCII-letter
+            // segment owns its eventual terminator. Do not close and re-enter
+            // between the two printed-adjacent items.
+            if !ctx.state.is_english {
+                if ctx.state.english_dominant_no_indicator {
+                    crate::rules::roman_mode::mark_section_open(ctx.state);
+                } else {
+                    crate::rules::roman_mode::enter_english(ctx.state, ctx.result);
+                }
+            }
+            encoded = encode_unicode_cells(unicode);
+        } else if should_wrap_information_symbol(ctx)
             && matches!(ctx.current_char(), '&' | '¶' | '©' | '®' | '™')
+            && !is_attached_roman_ampersand(ctx)
+            && !follows_roman_word_in_open_section(ctx)
         {
             encoded.push(crate::unicode::decode_unicode('⠴'));
             encoded.extend(encode_unicode_cells(unicode));
-            encoded.push(crate::unicode::decode_unicode('⠲'));
+            // 제35항 (규정 예 `헌법§1①`): a digit directly after the wrapped
+            // sign continues the section, so the terminator is omitted.
+            if !ctx.next_char().is_some_and(|ch| ch.is_ascii_digit()) {
+                encoded.push(crate::unicode::decode_unicode('⠲'));
+            }
         } else {
             encoded = encode_unicode_cells(unicode);
         }
+
+        // U+2502 is the Unicode box-drawing presentation of a vertical line
+        // segment. Korean Rule 71 assigns the same cells as `|`, while UEB
+        // 16.4.3 requires a vertical line segment to be surrounded by spaces.
+        // Insert only missing intra-token boundaries; ordinary Token::Space
+        // already owns whitespace printed around a standalone line.
+        if ctx.current_char() == '│' && ctx.prev_char().is_some() {
+            ctx.emit(0);
+        }
         ctx.emit_slice(&encoded);
+        if ctx.current_char() == '│' && ctx.next_char().is_some() {
+            ctx.emit(0);
+        }
         Ok(RuleResult::Consumed)
     }
 }
@@ -134,40 +203,145 @@ mod tests {
         let _ = Rule71.matches(&ctx);
     }
 
-    /// 제71항 — § 정보 기호가 직후 숫자를 만나면 종료표(⠲) 생략 (line 84-86).
-    #[test]
-    fn rule71_section_sign_before_digit_omits_terminator() {
-        let word: Vec<char> = "§1".chars().collect();
-        let ct = CharType::Symbol('§');
-        let mut skip = 0usize;
-        let mut state = crate::rules::context::EncoderState::new(false);
-        let mut out = Vec::new();
-        let mut ctx = RuleContext {
-            word_chars: &word,
-            index: 0,
-            char_type: &ct,
-            prev_word: "",
-            remaining_words: &[],
-            has_korean_char: false,
-            is_all_uppercase: false,
-            ascii_starts_at_beginning: false,
-            skip_count: &mut skip,
-            state: &mut state,
-            result: &mut out,
-        };
+    /// 제71항 붙임 `헌법§1①` covers the digit continuation that omits ⠲;
+    /// the end/non-digit controls cover the ordinary wrapped terminator branch.
+    #[rstest::rstest]
+    #[case::official_digit_continuation("헌법§1①", "⠴⠘⠎")]
+    #[case::word_end("헌법§", "⠴⠘⠎⠲")]
+    #[case::non_digit_continuation("헌법§A", "⠴⠘⠎⠲")]
+    fn section_sign_wrapper_terminator_boundary(#[case] input: &str, #[case] expected: &str) {
+        let section_index = input.chars().position(|ch| ch == '§').unwrap();
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let mut ctx = owned.ctx_at(section_index);
+
         let outcome = Rule71.apply(&mut ctx).unwrap();
+
         assert!(matches!(outcome, RuleResult::Consumed));
-        // No ⠲ terminator because next char is a digit
-        assert!(!out.contains(&crate::unicode::decode_unicode('⠲')));
+        assert_eq!(ctx.result.as_slice(), encode_unicode_cells(expected));
     }
 
-    /// rule_71:85 — § followed by NON-digit (or end of input) appends ⠲ terminator.
+    /// The Korean Rule 71 encoder owns the ampersand cells even while the
+    /// surrounding Roman section remains open. These are the official UEB
+    /// 3.1.1 surface forms, not corpus-derived examples.
+    #[rstest::rstest]
+    #[case::official_at_and_t("AT&T")]
+    #[case::official_b_and_b("B&B")]
+    fn attached_roman_ampersand_emits_bare_rule_71_cells(#[case] input: &str) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
+        let ampersand_index = input.chars().position(|ch| ch == '&').unwrap();
+        let mut ctx = owned.ctx_at(ampersand_index);
+
+        let outcome = Rule71.apply(&mut ctx).unwrap();
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(ctx.result.as_slice(), encode_unicode_cells("⠈⠯"));
+    }
+
+    /// 제29항 — 로마자에 붙은 `&` 는 뒤에 한글이 이어져도 구간 안에 남는다. 구간은
+    /// 그 한글에서 닫히므로 `&` 앞에 종료표가 서지 않는다. 공식 예 `AT&T` 와 한글에
+    /// 닿지 않는 `A&B` 는 그대로다.
+    #[rstest::rstest]
+    #[case::korean_follows("가나 쏠로몬tv&이지사커 다라", "⠴⠞⠧⠈⠯⠲⠕")]
+    #[case::official_at_and_t("가나 AT&T 다라", "⠴⠠⠠⠁⠞⠈⠯⠠⠞⠲")]
+    #[case::roman_both_sides("가나 A&B 다라", "⠴⠠⠁⠈⠯⠠⠃⠲")]
+    fn attached_ampersand_keeps_the_open_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing ampersand run {expected_segment:?} in {actual:?}"
+        );
+    }
+
+    /// UEB 3.1.1's official `&c` surface exercises the Korean Rule-71 wrapper
+    /// state directly: the Roman indicator precedes `&`, and the section stays
+    /// open for the attached `c` rather than emitting a terminator/re-entry.
     #[test]
-    fn rule71_section_symbol_followed_by_non_digit_appends_terminator() {
-        // Encode "§A" — next char is letter, not digit → ⠲ appended at line 85.
-        let result = crate::encode("§A");
-        assert!(result.is_ok());
-        // Also: § alone (no next char) → no digit → ⠲ appended.
-        let _ = crate::encode("§");
+    fn one_sided_official_ampersand_opens_and_keeps_roman_section() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("&c", true);
+        let mut ctx = owned.ctx_at(0);
+
+        let outcome = Rule71.apply(&mut ctx).unwrap();
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(ctx.result.as_slice(), encode_unicode_cells("⠴⠈⠯"));
+        assert!(ctx.state.is_english);
+    }
+
+    #[test]
+    fn attached_ampersand_resumes_indicator_free_english_dominant_context() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("&c", true);
+        owned.state.english_dominant_no_indicator = true;
+        let mut ctx = owned.ctx_at(0);
+
+        let outcome = Rule71.apply(&mut ctx).unwrap();
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(ctx.result.as_slice(), encode_unicode_cells("⠈⠯"));
+        assert!(ctx.state.is_english);
+        assert!(!ctx.state.needs_english_continuation);
+        assert!(!ctx.state.roman_number_chain);
+    }
+
+    /// Full-encoder controls reproduce the two UEB 3.1.1 examples exactly.
+    #[rstest::rstest]
+    #[case::official_at_and_t("AT&T", "⠠⠠⠁⠞⠈⠯⠠⠞")]
+    #[case::official_b_and_b("B&B", "⠠⠃⠈⠯⠠⠃")]
+    fn full_encoder_preserves_official_ueb_ampersand_examples(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
+    }
+
+    /// UEB 3.1.1 keeps `AT&T` in one Roman section and Korean rule 35 keeps
+    /// the directly following digit in that same section. The two rules must
+    /// compose without a terminator/re-entry around the ampersand or digit.
+    #[test]
+    fn full_encoder_keeps_ampersand_roman_number_chain() {
+        assert_eq!(
+            crate::encode_to_unicode("가 AT&T3 나").unwrap(),
+            "⠫⠀⠴⠠⠠⠁⠞⠈⠯⠠⠞⠼⠉⠀⠉"
+        );
+    }
+
+    /// UEB 8.4.2 ends capitals word mode at the nonalphabetic ampersand.
+    /// Wrapping the official UEB 3.1.1 examples in neutral Korean text proves
+    /// that the mixed-document rule-28/29 path restarts capitalization for the
+    /// next ASCII-letter segment while keeping one Roman section.
+    #[rstest::rstest]
+    #[case::official_at_and_t("가 AT&T 나", "⠫⠀⠴⠠⠠⠁⠞⠈⠯⠠⠞⠲⠀⠉")]
+    #[case::official_b_and_b("가 B&B 나", "⠫⠀⠴⠠⠃⠈⠯⠠⠃⠲⠀⠉")]
+    fn korean_wrapper_preserves_ampersand_capitalization_extent(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(crate::encode_to_unicode(input).as_deref(), Ok(expected));
+    }
+
+    #[rstest::rstest]
+    #[case::standalone("│", "|")]
+    #[case::spaced("저자 │ 홍길동", "저자 | 홍길동")]
+    #[case::attached("제작│감독", "제작 | 감독")]
+    fn box_drawing_vertical_line_matches_rule_71_print_form(
+        #[case] presentation: &str,
+        #[case] standard_print: &str,
+    ) {
+        assert_eq!(
+            crate::encode_to_unicode(presentation),
+            crate::encode_to_unicode(standard_print)
+        );
+    }
+
+    /// Korean Rule 71's spaced Hangul example remains an independently
+    /// delimited information symbol after the attached-Roman exception.
+    #[test]
+    fn full_encoder_preserves_official_korean_spaced_ampersand_example() {
+        assert_eq!(
+            crate::encode_to_unicode("종이접기 & 클레이아트").unwrap(),
+            "⠨⠿⠕⠨⠎⠃⠈⠕⠀⠴⠈⠯⠲⠀⠋⠮⠐⠝⠕⠣⠓⠪",
+        );
     }
 }

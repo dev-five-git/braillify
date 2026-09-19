@@ -3,24 +3,32 @@
     "input": "BeLinda",
     "internal": ",be,l9da",
     "expected": "3231732720251",
-    "unicode": "⠠⠃⠑⠠⠇⠔⠙⠁"
+    "unicode": "⠠⠃⠑⠠⠇⠔⠙⠁",
+    "world": "⠴⠠⠃⠑⠠⠇⠔⠙⠁⠲",
+    "jeomsarang": "⠠⠃⠑⠠⠇⠊⠝⠙⠁"
   },
   {
     "input": "conCUR",
     "internal": "con,,cur",
     "expected": "92129323293723",
-    "unicode": "⠉⠕⠝⠠⠠⠉⠥⠗"
+    "unicode": "⠉⠕⠝⠠⠠⠉⠥⠗",
+    "world": "⠴⠉⠕⠝⠠⠠⠉⠥⠗⠲",
+    "jeomsarang": "⠉⠕⠝⠠⠠⠉⠥⠗"
   },
   {
     "input": "DisCORD",
     "internal": ",dis,,cord",
     "expected": "3225101432329212325",
-    "unicode": "⠠⠙⠊⠎⠠⠠⠉⠕⠗⠙"
+    "unicode": "⠠⠙⠊⠎⠠⠠⠉⠕⠗⠙",
+    "world": "⠴⠠⠙⠊⠎⠠⠠⠉⠕⠗⠙⠲",
+    "jeomsarang": "⠠⠙⠊⠎⠠⠠⠉⠕⠗⠙"
   },
   {
     "input": "DISlike",
     "internal": ",,dis,'like",
     "expected": "3232251014324710517",
-    "unicode": "⠠⠠⠙⠊⠎⠠⠄⠇⠊⠅⠑"
+    "unicode": "⠠⠠⠙⠊⠎⠠⠄⠇⠊⠅⠑",
+    "world": "⠴⠠⠠⠙⠊⠎⠠⠄⠇⠊⠅⠑⠲",
+    "jeomsarang": "⠠⠙⠠⠊⠠⠎⠇⠊⠅⠑"
   }
 ]

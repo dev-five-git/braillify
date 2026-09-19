@@ -26,8 +26,16 @@ fn is_historical_context_word(word: &str) -> bool {
         let code = c as u32;
         (0xE000..=0xF8FF).contains(&code)
             || (0x4E00..=0x9FFF).contains(&code)
-            || matches!(c, '：' | '〔' | '〕')
+            || matches!(c, '：' | '〮' | '〯' | '〔' | '〕')
     })
+}
+
+fn is_geoseong(c: char) -> bool {
+    matches!(c, '·' | '〮')
+}
+
+fn is_sangseong(c: char) -> bool {
+    matches!(c, '：' | '〯')
 }
 
 fn has_historical_context(ctx: &RuleContext) -> bool {
@@ -44,8 +52,17 @@ fn has_historical_context(ctx: &RuleContext) -> bool {
 }
 
 fn is_middle_korean_geoseong(ctx: &RuleContext) -> bool {
-    if !matches!(ctx.char_type, CharType::Symbol('·')) {
+    let CharType::Symbol(c) = ctx.char_type else {
         return false;
+    };
+    if !is_geoseong(*c) {
+        return false;
+    }
+
+    // U+302E HANGUL SINGLE DOT TONE MARK is semantically unambiguous. Unlike
+    // U+00B7, it can never be the modern middle-dot punctuation of Rule 49.
+    if *c == '〮' {
+        return true;
     }
 
     // 단독 입력 `·`은 한국어 점자에서 두 가지 의미를 가진다:
@@ -67,7 +84,7 @@ fn is_middle_korean_geoseong(ctx: &RuleContext) -> bool {
 }
 
 fn is_middle_korean_particle_geoseong(ctx: &RuleContext) -> bool {
-    matches!(ctx.char_type, CharType::Symbol('·'))
+    matches!(ctx.char_type, CharType::Symbol(c) if is_geoseong(*c))
         && ctx.state.current_mode() == EncodingMode::MiddleKorean
         && ctx.next_char() == Some('에')
 }
@@ -80,7 +97,7 @@ fn is_inline_gloss_separator(ctx: &RuleContext) -> bool {
 }
 
 fn is_middle_korean_sangseong(ctx: &RuleContext) -> bool {
-    matches!(ctx.char_type, CharType::Symbol('：'))
+    matches!(ctx.char_type, CharType::Symbol(c) if is_sangseong(*c))
 }
 
 pub struct Rule27;
@@ -99,7 +116,8 @@ impl BrailleRule for Rule27 {
     }
 
     fn matches(&self, ctx: &RuleContext) -> bool {
-        let is_potential_tone_mark = matches!(ctx.char_type, CharType::Symbol('·' | '：'));
+        let is_potential_tone_mark =
+            matches!(ctx.char_type, CharType::Symbol(c) if is_geoseong(*c) || is_sangseong(*c));
         if !is_potential_tone_mark {
             return false;
         }
@@ -118,15 +136,15 @@ impl BrailleRule for Rule27 {
 
         match c {
             '·' if is_inline_gloss_separator(ctx) => {}
-            '·' if is_middle_korean_particle_geoseong(ctx) => {
+            c if is_geoseong(*c) && is_middle_korean_particle_geoseong(ctx) => {
                 ctx.emit(0);
                 ctx.emit_slice(&GEOSEONG);
             }
-            '·' if ctx.state.current_mode() == EncodingMode::MiddleKorean => {
+            c if is_geoseong(*c) && ctx.state.current_mode() == EncodingMode::MiddleKorean => {
                 ctx.emit_slice(&GEOSEONG);
             }
-            '·' if is_middle_korean_geoseong(ctx) => ctx.emit_slice(&GEOSEONG),
-            '：' => ctx.emit_slice(&SANGSEONG),
+            c if is_geoseong(*c) && is_middle_korean_geoseong(ctx) => ctx.emit_slice(&GEOSEONG),
+            c if is_sangseong(*c) => ctx.emit_slice(&SANGSEONG),
             _ => return Ok(RuleResult::Skip),
         }
 
@@ -151,6 +169,14 @@ mod tests {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let ctx = owned.ctx_at(0);
         let _ = Rule27.matches(&ctx);
+    }
+
+    #[test]
+    fn geoseong_predicate_rejects_non_symbol_context() {
+        let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
+        let ctx = owned.ctx_at(0);
+
+        assert!(!is_middle_korean_geoseong(&ctx));
     }
 
     /// 제27항 — `has_historical_context` returns true when current word contains
@@ -211,6 +237,19 @@ mod tests {
         let outcome = Rule27.apply(&mut ctx).unwrap();
         assert!(matches!(outcome, RuleResult::Consumed));
         assert_eq!(owned.result, GEOSEONG.to_vec());
+    }
+
+    #[rstest::rstest]
+    #[case::single_dot('〮', GEOSEONG.to_vec())]
+    #[case::double_dot('〯', SANGSEONG.to_vec())]
+    fn unicode_hangul_tone_marks_use_rule_27_cells(#[case] input: char, #[case] expected: Vec<u8>) {
+        let mut owned = crate::test_helpers::CtxOwned::for_text(&input.to_string(), false);
+        let mut ctx = owned.ctx_at(0);
+
+        let outcome = Rule27.apply(&mut ctx).unwrap();
+
+        assert!(matches!(outcome, RuleResult::Consumed));
+        assert_eq!(owned.result, expected);
     }
 
     /// rule_27 line 106 — `_ => return Ok(Skip)` fallback for non-· non-: symbol char.

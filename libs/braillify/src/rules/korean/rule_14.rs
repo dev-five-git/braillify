@@ -119,8 +119,12 @@ impl BrailleRule for Rule14 {
         if !is_no_abbrev_target(ctx.current_char()) {
             return false;
         }
-        // Check if next character starts with ㅇ (vowel-initial)
-        ctx.index < ctx.word_chars.len() - 1 && has_choseong_o(ctx.word_chars[ctx.index + 1])
+        // Check if next character starts with ㅇ (vowel-initial). A following
+        // '예' is governed by 제11항 instead: its 구분표 ⠤ already keeps the
+        // 약자 from being misread, so the 약자 stays (자예 → ⠨⠤⠌).
+        ctx.index < ctx.word_chars.len() - 1
+            && has_choseong_o(ctx.word_chars[ctx.index + 1])
+            && ctx.word_chars[ctx.index + 1] != '예'
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
@@ -201,6 +205,7 @@ mod tests {
     #[case("다어", true)]
     #[case("자아", true)]
     #[case("하이", true)]
+    #[case("자예", false)] // 제11항 구분표가 약자를 보호 → 약자 유지
     #[case("가나", false)] // 가 not in NO_ABBREV
     #[case("나람", false)] // 람 doesn't start with ㅇ
     #[case("A", false)] // not Korean
@@ -208,6 +213,18 @@ mod tests {
         let mut owned = crate::test_helpers::CtxOwned::for_text(input, false);
         let ctx = owned.ctx_at(0);
         assert_eq!(Rule14.matches(&ctx), expected, "input={input}");
+    }
+
+    /// 제11항 + 제13항: 약자 음절 뒤의 '예'는 약자를 유지하고 구분표만 넣는다.
+    #[rstest]
+    #[case::ja_ye("자예", "⠨⠤⠌")]
+    #[case::na_ye("나예", "⠉⠤⠌")]
+    #[case::ja_a_stays_expanded("자아", "⠨⠣⠣")]
+    fn abbreviated_syllable_before_ye_keeps_abbreviation(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        assert_eq!(crate::encode_to_unicode(input).as_deref(), Ok(expected));
     }
 
     #[test]

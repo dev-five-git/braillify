@@ -14,16 +14,14 @@ import {
 } from '@/components/side-bar'
 import { FailedOnlyInput } from '@/components/test-case/FailedOnlyInput'
 import { TestCaseFilter } from '@/components/test-case/filter/TestCaseFilter'
-import { TestCaseList } from '@/components/test-case/list/TestCaseList'
-import { TestCaseTable } from '@/components/test-case/table/TestCaseTable'
 import { TestCaseDisplayBoundary } from '@/components/test-case/TestCaseDisplayBoundary'
 import { TestCaseFilterContainer } from '@/components/test-case/TestCaseFilterContainer'
 import { TestCaseFilterValue } from '@/components/test-case/TestCaseFilterValue'
 import {
-  type FilterTotalMap,
   type TestCaseFilter as TestCaseFilterType,
   TestCaseProvider,
 } from '@/components/test-case/TestCaseProvider'
+import { TestCaseResults } from '@/components/test-case/TestCaseResults'
 import { TestCaseRuleContainer } from '@/components/test-case/TestCaseRuleContainer'
 import { TestCaseStat } from '@/components/test-case/TestCaseStat'
 import { TestCaseStatFiltered } from '@/components/test-case/TestCaseStatFiltered'
@@ -32,9 +30,11 @@ import { TestCaseTypeToggle } from '@/components/test-case/TestCaseTypeToggle'
 import {
   CATEGORY_PREFIX_MAP,
   createFilterMap,
+  createFilterTotalMap,
   TEST_CASE_FILTERS,
   TEST_CASE_FILTERS_MAP,
 } from '@/constants'
+import { readReportManifest } from '@/server/testStatus'
 import type { TestStatusMap } from '@/types'
 
 export const metadata: Metadata = {
@@ -84,29 +84,20 @@ export const metadata: Metadata = {
 }
 
 export default async function TestCasePage() {
-  const [testStatus, ruleMap] = await Promise.all([
+  const [testStatus, ruleMap, reportManifest] = await Promise.all([
     readFile('../../test_status.json', 'utf-8').then((data) =>
       JSON.parse(data),
     ) as Promise<TestStatusMap>,
     readFile('../../rule_map.json', 'utf-8').then((data) =>
       JSON.parse(data),
     ) as Promise<Record<string, { title: string; description: string }>>,
+    readReportManifest(),
   ])
 
   // Dynamically create filter map based on rule_map keys
   const filterMap = createFilterMap(Object.keys(ruleMap))
 
-  const filterTotalMap = Object.fromEntries(
-    Object.entries(filterMap).map(([key]) => [
-      key,
-      {
-        braillify: { total: 0, fail: 0 },
-        world: { total: 0, fail: 0 },
-        jeomsarang: { total: 0, fail: 0 },
-      },
-    ]),
-  ) as FilterTotalMap
-
+  const filterTotalMap = createFilterTotalMap()
   let totalTest = 0
   let totalFail = 0
   let totalWorldTest = 0
@@ -173,12 +164,11 @@ export default async function TestCasePage() {
                 {value.description}
               </Text>
             </VStack>
-            <TestCaseDisplayBoundary option="type" value="table">
-              <TestCaseTable results={testStatus[key][6]} />
-            </TestCaseDisplayBoundary>
-            <TestCaseDisplayBoundary option="type" value="list">
-              <TestCaseList results={testStatus[key][6]} />
-            </TestCaseDisplayBoundary>
+            <TestCaseResults
+              pageInfo={reportManifest[key]}
+              statusKey={key}
+              total={testStatus[key][0]}
+            />
           </TestCaseRuleContainer>
           {currentClause !== nextClause && (
             <Box bg="$text" h="1px" mx={['16px', null, null, '60px']} />
@@ -189,11 +179,7 @@ export default async function TestCasePage() {
   })
 
   return (
-    <TestCaseProvider
-      filterMap={filterMap}
-      filterTotalMap={filterTotalMap}
-      testStatusMap={testStatus}
-    >
+    <TestCaseProvider filterMap={filterMap} filterTotalMap={filterTotalMap}>
       <SideBarProvider>
         <Box maxW="1520px" mx="auto" pb="40px" w="100%">
           <VStack

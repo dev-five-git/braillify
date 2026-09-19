@@ -3,450 +3,600 @@
     "input": "amount",
     "internal": "am.t",
     "expected": "1134030",
-    "unicode": "⠁⠍⠨⠞"
+    "unicode": "⠁⠍⠨⠞",
+    "world": "⠴⠁⠍⠨⠞⠲",
+    "jeomsarang": "⠁⠍⠕⠥⠝⠞"
   },
   {
     "input": "baroness",
     "internal": "b>o;s",
     "expected": "328214814",
-    "unicode": "⠃⠜⠕⠰⠎"
+    "unicode": "⠃⠜⠕⠰⠎",
+    "world": "⠴⠃⠜⠕⠰⠎⠲",
+    "jeomsarang": "⠃⠁⠗⠕⠝⠑⠎⠎"
   },
   {
     "input": "bastion",
     "internal": "bas;n",
     "expected": "31144829",
-    "unicode": "⠃⠁⠎⠰⠝"
+    "unicode": "⠃⠁⠎⠰⠝",
+    "world": "⠴⠃⠁⠎⠰⠝⠲",
+    "jeomsarang": "⠃⠁⠎⠞⠊⠕⠝"
   },
   {
     "input": "blessing",
     "internal": "b.s+",
     "expected": "3401444",
-    "unicode": "⠃⠨⠎⠬"
+    "unicode": "⠃⠨⠎⠬",
+    "world": "⠴⠃⠨⠎⠬⠲",
+    "jeomsarang": "⠃⠇⠑⠎⠎⠊⠝⠛"
   },
   {
     "input": "business",
     "internal": "busi;s",
     "expected": "33714104814",
-    "unicode": "⠃⠥⠎⠊⠰⠎"
+    "unicode": "⠃⠥⠎⠊⠰⠎",
+    "world": "⠴⠃⠥⠎⠊⠰⠎⠲",
+    "jeomsarang": "⠃⠥⠎⠊⠝⠑⠎⠎"
   },
   {
     "input": "cancel",
     "internal": "c.el",
     "expected": "940177",
-    "unicode": "⠉⠨⠑⠇"
+    "unicode": "⠉⠨⠑⠇",
+    "world": "⠴⠉⠨⠑⠇⠲",
+    "jeomsarang": "⠉⠁⠝⠉⠑⠇"
   },
   {
     "input": "carefully",
     "internal": "c>e;lly",
     "expected": "92817487761",
-    "unicode": "⠉⠜⠑⠰⠇⠇⠽"
+    "unicode": "⠉⠜⠑⠰⠇⠇⠽",
+    "world": "⠴⠉⠜⠑⠰⠇⠇⠽⠲",
+    "jeomsarang": "⠉⠁⠗⠑⠋⠥⠇⠇⠽"
   },
   {
     "input": "cement",
     "internal": "ce;t",
     "expected": "9174830",
-    "unicode": "⠉⠑⠰⠞"
+    "unicode": "⠉⠑⠰⠞",
+    "world": "⠴⠉⠑⠰⠞⠲",
+    "jeomsarang": "⠉⠑⠍⠑⠝⠞"
   },
   {
     "input": "cheerful",
     "internal": "*e];l",
     "expected": "331759487",
-    "unicode": "⠡⠑⠻⠰⠇"
+    "unicode": "⠡⠑⠻⠰⠇",
+    "world": "⠴⠡⠑⠻⠰⠇⠲",
+    "jeomsarang": "⠉⠓⠑⠑⠗⠋⠥⠇"
   },
   {
     "input": "chockfull",
     "internal": "*ock;ll",
     "expected": "3321954877",
-    "unicode": "⠡⠕⠉⠅⠰⠇⠇"
+    "unicode": "⠡⠕⠉⠅⠰⠇⠇",
+    "world": "⠴⠡⠕⠉⠅⠰⠇⠇⠲",
+    "jeomsarang": "⠉⠓⠕⠉⠅⠋⠥⠇⠇"
   },
   {
     "input": "circuity",
     "internal": "circu;y",
     "expected": "910239374861",
-    "unicode": "⠉⠊⠗⠉⠥⠰⠽"
+    "unicode": "⠉⠊⠗⠉⠥⠰⠽",
+    "world": "⠴⠉⠊⠗⠉⠥⠰⠽⠲",
+    "jeomsarang": "⠉⠊⠗⠉⠥⠊⠞⠽"
   },
   {
     "input": "commencement",
     "internal": "comm;e;t",
     "expected": "921131348174830",
-    "unicode": "⠉⠕⠍⠍⠰⠑⠰⠞"
+    "unicode": "⠉⠕⠍⠍⠰⠑⠰⠞",
+    "world": "⠴⠉⠕⠍⠍⠰⠑⠰⠞⠲",
+    "jeomsarang": "⠉⠕⠍⠍⠑⠝⠉⠑⠍⠑⠝⠞"
   },
   {
     "input": "comment",
     "internal": "com;t",
     "expected": "921134830",
-    "unicode": "⠉⠕⠍⠰⠞"
+    "unicode": "⠉⠕⠍⠰⠞",
+    "world": "⠴⠉⠕⠍⠰⠞⠲",
+    "jeomsarang": "⠉⠕⠍⠍⠑⠝⠞"
   },
   {
     "input": "confusion",
     "internal": "3fu.n",
     "expected": "1811374029",
-    "unicode": "⠒⠋⠥⠨⠝"
+    "unicode": "⠒⠋⠥⠨⠝",
+    "world": "⠴⠒⠋⠥⠨⠝⠲",
+    "jeomsarang": "⠉⠕⠝⠋⠥⠎⠊⠕⠝"
   },
   {
     "input": "country",
     "internal": "c.try",
     "expected": "940302361",
-    "unicode": "⠉⠨⠞⠗⠽"
+    "unicode": "⠉⠨⠞⠗⠽",
+    "world": "⠴⠉⠨⠞⠗⠽⠲",
+    "jeomsarang": "⠉⠕⠥⠝⠞⠗⠽"
   },
   {
     "input": "county",
     "internal": "c.ty",
     "expected": "9403061",
-    "unicode": "⠉⠨⠞⠽"
+    "unicode": "⠉⠨⠞⠽",
+    "world": "⠴⠉⠨⠞⠽⠲",
+    "jeomsarang": "⠉⠕⠥⠝⠞⠽"
   },
   {
     "input": "creation",
     "internal": "cr1;n",
     "expected": "92324829",
-    "unicode": "⠉⠗⠂⠰⠝"
+    "unicode": "⠉⠗⠂⠰⠝",
+    "world": "⠴⠉⠗⠂⠰⠝⠲",
+    "jeomsarang": "⠉⠗⠑⠁⠞⠊⠕⠝"
   },
   {
     "input": "dancer",
     "internal": "d.er",
     "expected": "25401723",
-    "unicode": "⠙⠨⠑⠗"
+    "unicode": "⠙⠨⠑⠗",
+    "world": "⠴⠙⠨⠑⠗⠲",
+    "jeomsarang": "⠙⠁⠝⠉⠑⠗"
   },
   {
     "input": "deity",
     "internal": "de;y",
     "expected": "25174861",
-    "unicode": "⠙⠑⠰⠽"
+    "unicode": "⠙⠑⠰⠽",
+    "world": "⠴⠙⠑⠰⠽⠲",
+    "jeomsarang": "⠙⠑⠊⠞⠽"
   },
   {
     "input": "Du Plessis",
     "internal": ",du ,p.sis",
     "expected": "3225370321540141014",
-    "unicode": "⠠⠙⠥⠀⠠⠏⠨⠎⠊⠎"
+    "unicode": "⠠⠙⠥⠀⠠⠏⠨⠎⠊⠎",
+    "world": "⠴⠠⠙⠥ ⠠⠏⠨⠎⠊⠎⠲",
+    "jeomsarang": "⠠⠙⠥⠀⠠⠏⠇⠑⠎⠎⠊⠎"
   },
   {
     "input": "experienced",
     "internal": "exp]i;ed",
     "expected": "1745155910481725",
-    "unicode": "⠑⠭⠏⠻⠊⠰⠑⠙"
+    "unicode": "⠑⠭⠏⠻⠊⠰⠑⠙",
+    "world": "⠴⠑⠭⠏⠻⠊⠰⠑⠙⠲",
+    "jeomsarang": "⠑⠭⠏⠑⠗⠊⠑⠝⠉⠑⠙"
   },
   {
     "input": "expressionless",
     "internal": "expres.n.s",
     "expected": "17451523171440294014",
-    "unicode": "⠑⠭⠏⠗⠑⠎⠨⠝⠨⠎"
+    "unicode": "⠑⠭⠏⠗⠑⠎⠨⠝⠨⠎",
+    "world": "⠴⠑⠭⠏⠗⠑⠎⠨⠝⠨⠎⠲",
+    "jeomsarang": "⠑⠭⠏⠗⠑⠎⠎⠊⠕⠝⠇⠑⠎⠎"
   },
   {
     "input": "extramental",
     "internal": "extra;tal",
     "expected": "174530231483017",
-    "unicode": "⠑⠭⠞⠗⠁⠰⠞⠁⠇"
+    "unicode": "⠑⠭⠞⠗⠁⠰⠞⠁⠇",
+    "world": "⠴⠑⠭⠞⠗⠁⠰⠞⠁⠇⠲",
+    "jeomsarang": "⠑⠭⠞⠗⠁⠍⠑⠝⠞⠁⠇"
   },
   {
     "input": "fences",
     "internal": "f;es",
     "expected": "11481714",
-    "unicode": "⠋⠰⠑⠎"
+    "unicode": "⠋⠰⠑⠎",
+    "world": "⠴⠋⠰⠑⠎⠲",
+    "jeomsarang": "⠋⠑⠝⠉⠑⠎"
   },
   {
     "input": "finesse",
     "internal": "fi;se",
     "expected": "1110481417",
-    "unicode": "⠋⠊⠰⠎⠑"
+    "unicode": "⠋⠊⠰⠎⠑",
+    "world": "⠴⠋⠊⠰⠎⠑⠲",
+    "jeomsarang": "⠋⠊⠝⠑⠎⠎⠑"
   },
   {
     "input": "found",
     "internal": "f.d",
     "expected": "114025",
-    "unicode": "⠋⠨⠙"
+    "unicode": "⠋⠨⠙",
+    "world": "⠴⠋⠨⠙⠲",
+    "jeomsarang": "⠋⠕⠥⠝⠙"
   },
   {
     "input": "fractional",
     "internal": "frac;nal",
     "expected": "112319482917",
-    "unicode": "⠋⠗⠁⠉⠰⠝⠁⠇"
+    "unicode": "⠋⠗⠁⠉⠰⠝⠁⠇",
+    "world": "⠴⠋⠗⠁⠉⠰⠝⠁⠇⠲",
+    "jeomsarang": "⠋⠗⠁⠉⠞⠊⠕⠝⠁⠇"
   },
   {
     "input": "Frances",
     "internal": ",fr.es",
     "expected": "321123401714",
-    "unicode": "⠠⠋⠗⠨⠑⠎"
+    "unicode": "⠠⠋⠗⠨⠑⠎",
+    "world": "⠴⠠⠋⠗⠨⠑⠎⠲",
+    "jeomsarang": "⠠⠋⠗⠁⠝⠉⠑⠎"
   },
   {
     "input": "governess",
     "internal": "gov];s",
     "expected": "272139594814",
-    "unicode": "⠛⠕⠧⠻⠰⠎"
+    "unicode": "⠛⠕⠧⠻⠰⠎",
+    "world": "⠴⠛⠕⠧⠻⠰⠎⠲",
+    "jeomsarang": "⠛⠕⠧⠑⠗⠝⠑⠎⠎"
   },
   {
     "input": "Guinness",
     "internal": ",gu9;s",
     "expected": "322737204814",
-    "unicode": "⠠⠛⠥⠔⠰⠎"
+    "unicode": "⠠⠛⠥⠔⠰⠎",
+    "world": "⠴⠠⠛⠥⠔⠰⠎⠲",
+    "jeomsarang": "⠠⠛⠥⠊⠝⠝⠑⠎⠎"
   },
   {
     "input": "incongruous",
     "internal": "9c;gru\\s",
     "expected": "209482723375114",
-    "unicode": "⠔⠉⠰⠛⠗⠥⠳⠎"
+    "unicode": "⠔⠉⠰⠛⠗⠥⠳⠎",
+    "world": "⠴⠔⠉⠰⠛⠗⠥⠳⠎⠲",
+    "jeomsarang": "⠊⠝⠉⠕⠝⠛⠗⠥⠕⠥⠎"
   },
   {
     "input": "influenceable",
     "internal": "9flu;eable",
     "expected": "2011737481713717",
-    "unicode": "⠔⠋⠇⠥⠰⠑⠁⠃⠇⠑"
+    "unicode": "⠔⠋⠇⠥⠰⠑⠁⠃⠇⠑",
+    "world": "⠴⠔⠋⠇⠥⠰⠑⠁⠃⠇⠑⠲",
+    "jeomsarang": "⠊⠝⠋⠇⠥⠑⠝⠉⠑⠁⠃⠇⠑"
   },
   {
     "input": "lioness",
     "internal": "lio;s",
     "expected": "710214814",
-    "unicode": "⠇⠊⠕⠰⠎"
+    "unicode": "⠇⠊⠕⠰⠎",
+    "world": "⠴⠇⠊⠕⠰⠎⠲",
+    "jeomsarang": "⠇⠊⠕⠝⠑⠎⠎"
   },
   {
     "input": "longevity",
     "internal": "l;gev;y",
     "expected": "7482717394861",
-    "unicode": "⠇⠰⠛⠑⠧⠰⠽"
+    "unicode": "⠇⠰⠛⠑⠧⠰⠽",
+    "world": "⠴⠇⠰⠛⠑⠧⠰⠽⠲",
+    "jeomsarang": "⠇⠕⠝⠛⠑⠧⠊⠞⠽"
   },
   {
     "input": "memento",
     "internal": "me;to",
     "expected": "1317483021",
-    "unicode": "⠍⠑⠰⠞⠕"
+    "unicode": "⠍⠑⠰⠞⠕",
+    "world": "⠴⠍⠑⠰⠞⠕⠲",
+    "jeomsarang": "⠍⠑⠍⠑⠝⠞⠕"
   },
   {
     "input": "mongoose",
     "internal": "m;goose",
     "expected": "13482721211417",
-    "unicode": "⠍⠰⠛⠕⠕⠎⠑"
+    "unicode": "⠍⠰⠛⠕⠕⠎⠑",
+    "world": "⠴⠍⠰⠛⠕⠕⠎⠑⠲",
+    "jeomsarang": "⠍⠕⠝⠛⠕⠕⠎⠑"
   },
   {
     "input": "mountain",
     "internal": "m.ta9",
     "expected": "134030120",
-    "unicode": "⠍⠨⠞⠁⠔"
+    "unicode": "⠍⠨⠞⠁⠔",
+    "world": "⠴⠍⠨⠞⠁⠔⠲",
+    "jeomsarang": "⠍⠕⠥⠝⠞⠁⠊⠝"
   },
   {
     "input": "noblesse",
     "internal": "nob.se",
     "expected": "29213401417",
-    "unicode": "⠝⠕⠃⠨⠎⠑"
+    "unicode": "⠝⠕⠃⠨⠎⠑",
+    "world": "⠴⠝⠕⠃⠨⠎⠑⠲",
+    "jeomsarang": "⠝⠕⠃⠇⠑⠎⠎⠑"
   },
   {
     "input": "persuasion",
     "internal": "p]sua.n",
     "expected": "1559143714029",
-    "unicode": "⠏⠻⠎⠥⠁⠨⠝"
+    "unicode": "⠏⠻⠎⠥⠁⠨⠝",
+    "world": "⠴⠏⠻⠎⠥⠁⠨⠝⠲",
+    "jeomsarang": "⠏⠑⠗⠎⠥⠁⠎⠊⠕⠝"
   },
   {
     "input": "pity",
     "internal": "p;y",
     "expected": "154861",
-    "unicode": "⠏⠰⠽"
+    "unicode": "⠏⠰⠽",
+    "world": "⠴⠏⠰⠽⠲",
+    "jeomsarang": "⠏⠊⠞⠽"
   },
   {
     "input": "pongee",
     "internal": "p;gee",
     "expected": "1548271717",
-    "unicode": "⠏⠰⠛⠑⠑"
+    "unicode": "⠏⠰⠛⠑⠑",
+    "world": "⠴⠏⠰⠛⠑⠑⠲",
+    "jeomsarang": "⠏⠕⠝⠛⠑⠑"
   },
   {
     "input": "prong",
     "internal": "pr;g",
     "expected": "15234827",
-    "unicode": "⠏⠗⠰⠛"
+    "unicode": "⠏⠗⠰⠛",
+    "world": "⠴⠏⠗⠰⠛⠲",
+    "jeomsarang": "⠏⠗⠕⠝⠛"
   },
   {
     "input": "rationally",
     "internal": "ra;nally",
     "expected": "231482917761",
-    "unicode": "⠗⠁⠰⠝⠁⠇⠇⠽"
+    "unicode": "⠗⠁⠰⠝⠁⠇⠇⠽",
+    "world": "⠴⠗⠁⠰⠝⠁⠇⠇⠽⠲",
+    "jeomsarang": "⠗⠁⠞⠊⠕⠝⠁⠇⠇⠽"
   },
   {
     "input": "rotation",
     "internal": "rota;n",
     "expected": "23213014829",
-    "unicode": "⠗⠕⠞⠁⠰⠝"
+    "unicode": "⠗⠕⠞⠁⠰⠝",
+    "world": "⠴⠗⠕⠞⠁⠰⠝⠲",
+    "jeomsarang": "⠗⠕⠞⠁⠞⠊⠕⠝"
   },
   {
     "input": "Rountree",
     "internal": ",r.tree",
     "expected": "32234030231717",
-    "unicode": "⠠⠗⠨⠞⠗⠑⠑"
+    "unicode": "⠠⠗⠨⠞⠗⠑⠑",
+    "world": "⠴⠠⠗⠨⠞⠗⠑⠑⠲",
+    "jeomsarang": "⠠⠗⠕⠥⠝⠞⠗⠑⠑"
   },
   {
     "input": "séance",
     "internal": "s^/e.e",
     "expected": "142412174017",
-    "unicode": "⠎⠘⠌⠑⠨⠑"
+    "unicode": "⠎⠘⠌⠑⠨⠑",
+    "world": "⠴⠎⠘⠌⠑⠨⠑⠲",
+    "jeomsarang": "⠎⠁⠝⠉⠑"
   },
   {
     "input": "silenced",
     "internal": "sil;ed",
     "expected": "14107481725",
-    "unicode": "⠎⠊⠇⠰⠑⠙"
+    "unicode": "⠎⠊⠇⠰⠑⠙",
+    "world": "⠴⠎⠊⠇⠰⠑⠙⠲",
+    "jeomsarang": "⠎⠊⠇⠑⠝⠉⠑⠙"
   },
   {
     "input": "sinfulness",
     "internal": "s9;l;s",
     "expected": "14204874814",
-    "unicode": "⠎⠔⠰⠇⠰⠎"
+    "unicode": "⠎⠔⠰⠇⠰⠎",
+    "world": "⠴⠎⠔⠰⠇⠰⠎⠲",
+    "jeomsarang": "⠎⠊⠝⠋⠥⠇⠝⠑⠎⠎"
   },
   {
     "input": "Spencer",
     "internal": ",sp;er",
     "expected": "321415481723",
-    "unicode": "⠠⠎⠏⠰⠑⠗"
+    "unicode": "⠠⠎⠏⠰⠑⠗",
+    "world": "⠴⠠⠎⠏⠰⠑⠗⠲",
+    "jeomsarang": "⠠⠎⠏⠑⠝⠉⠑⠗"
   },
   {
     "input": "sponge",
     "internal": "sp;ge",
     "expected": "1415482717",
-    "unicode": "⠎⠏⠰⠛⠑"
+    "unicode": "⠎⠏⠰⠛⠑",
+    "world": "⠴⠎⠏⠰⠛⠑⠲",
+    "jeomsarang": "⠎⠏⠕⠝⠛⠑"
   },
   {
     "input": "sound",
     "internal": "s.d",
     "expected": "144025",
-    "unicode": "⠎⠨⠙"
+    "unicode": "⠎⠨⠙",
+    "world": "⠴⠎⠨⠙⠲",
+    "jeomsarang": "⠎⠕⠥⠝⠙"
   },
   {
     "input": "sublessee",
     "internal": "sub.see",
     "expected": "1437340141717",
-    "unicode": "⠎⠥⠃⠨⠎⠑⠑"
+    "unicode": "⠎⠥⠃⠨⠎⠑⠑",
+    "world": "⠴⠎⠥⠃⠨⠎⠑⠑⠲",
+    "jeomsarang": "⠎⠥⠃⠇⠑⠎⠎⠑⠑"
   },
   {
     "input": "Tennessee",
     "internal": ",t5;see",
     "expected": "32303448141717",
-    "unicode": "⠠⠞⠢⠰⠎⠑⠑"
+    "unicode": "⠠⠞⠢⠰⠎⠑⠑",
+    "world": "⠴⠠⠞⠢⠰⠎⠑⠑⠲",
+    "jeomsarang": "⠠⠞⠑⠝⠝⠑⠎⠎⠑⠑"
   },
   {
     "input": "thence",
     "internal": "?;e",
     "expected": "574817",
-    "unicode": "⠹⠰⠑"
+    "unicode": "⠹⠰⠑",
+    "world": "⠴⠹⠰⠑⠲",
+    "jeomsarang": "⠞⠓⠑⠝⠉⠑"
   },
   {
     "input": "tongue",
     "internal": "t;gue",
     "expected": "3048273717",
-    "unicode": "⠞⠰⠛⠥⠑"
+    "unicode": "⠞⠰⠛⠥⠑",
+    "world": "⠴⠞⠰⠛⠥⠑⠲",
+    "jeomsarang": "⠞⠕⠝⠛⠥⠑"
   },
   {
     "input": "unfulfilled",
     "internal": "un;lfill$",
     "expected": "372948711107743",
-    "unicode": "⠥⠝⠰⠇⠋⠊⠇⠇⠫"
+    "unicode": "⠥⠝⠰⠇⠋⠊⠇⠇⠫",
+    "world": "⠴⠥⠝⠰⠇⠋⠊⠇⠇⠫⠲",
+    "jeomsarang": "⠥⠝⠋⠥⠇⠋⠊⠇⠇⠑⠙"
   },
   {
     "input": "unless",
     "internal": "un.s",
     "expected": "37294014",
-    "unicode": "⠥⠝⠨⠎"
+    "unicode": "⠥⠝⠨⠎",
+    "world": "⠴⠥⠝⠨⠎⠲",
+    "jeomsarang": "⠥⠝⠇⠑⠎⠎"
   },
   {
     "input": "unlessoned",
     "internal": "un.son$",
     "expected": "37294014212943",
-    "unicode": "⠥⠝⠨⠎⠕⠝⠫"
+    "unicode": "⠥⠝⠨⠎⠕⠝⠫",
+    "world": "⠴⠥⠝⠨⠎⠕⠝⠫⠲",
+    "jeomsarang": "⠥⠝⠇⠑⠎⠎⠕⠝⠑⠙"
   },
   {
     "input": "Wenceslaus",
     "internal": ",w;eslaus",
     "expected": "3258481714713714",
-    "unicode": "⠠⠺⠰⠑⠎⠇⠁⠥⠎"
+    "unicode": "⠠⠺⠰⠑⠎⠇⠁⠥⠎",
+    "world": "⠴⠠⠺⠰⠑⠎⠇⠁⠥⠎⠲",
+    "jeomsarang": "⠠⠺⠑⠝⠉⠑⠎⠇⠁⠥⠎"
   },
   {
     "input": "wounded",
     "internal": "w.d$",
     "expected": "58402543",
-    "unicode": "⠺⠨⠙⠫"
+    "unicode": "⠺⠨⠙⠫",
+    "world": "⠴⠺⠨⠙⠫⠲",
+    "jeomsarang": "⠺⠕⠥⠝⠙⠑⠙"
   },
   {
     "input": "\"alone\"ness",
     "internal": "8al\"o0ness",
     "expected": "381716215229171414",
-    "unicode": "⠦⠁⠇⠐⠕⠴⠝⠑⠎⠎"
+    "unicode": "⠦⠁⠇⠐⠕⠴⠝⠑⠎⠎",
+    "world": "⠦⠴⠁⠇⠐⠕⠠⠶⠝⠑⠎⠎⠲",
+    "jeomsarang": "⠦⠁⠇⠕⠝⠑⠴⠝⠑⠎⠎"
   },
   {
     "input": "ancestor",
     "internal": "ance/or",
     "expected": "129917122123",
-    "unicode": "⠁⠝⠉⠑⠌⠕⠗"
+    "unicode": "⠁⠝⠉⠑⠌⠕⠗",
+    "world": "⠴⠁⠝⠉⠑⠌⠕⠗⠲",
+    "jeomsarang": "⠁⠝⠉⠑⠎⠞⠕⠗"
   },
   {
     "input": "channel-less",
     "internal": "*annel-less",
     "expected": "3312929177367171414",
-    "unicode": "⠡⠁⠝⠝⠑⠇⠤⠇⠑⠎⠎"
+    "unicode": "⠡⠁⠝⠝⠑⠇⠤⠇⠑⠎⠎",
+    "world": "⠴⠡⠁⠝⠝⠑⠇⠤⠇⠑⠎⠎⠲",
+    "jeomsarang": "⠉⠓⠁⠝⠝⠑⠇⠤⠇⠑⠎⠎"
   },
   {
     "input": "congruous",
     "internal": "3gru\\s",
     "expected": "182723375114",
-    "unicode": "⠒⠛⠗⠥⠳⠎"
+    "unicode": "⠒⠛⠗⠥⠳⠎",
+    "world": "⠴⠒⠛⠗⠥⠳⠎⠲",
+    "jeomsarang": "⠉⠕⠝⠛⠗⠥⠕⠥⠎"
   },
   {
     "input": "electroencephalogram",
     "internal": "electro5cephalogram",
     "expected": "17717930232134917151917212723113",
-    "unicode": "⠑⠇⠑⠉⠞⠗⠕⠢⠉⠑⠏⠓⠁⠇⠕⠛⠗⠁⠍"
+    "unicode": "⠑⠇⠑⠉⠞⠗⠕⠢⠉⠑⠏⠓⠁⠇⠕⠛⠗⠁⠍",
+    "world": "⠴⠑⠇⠑⠉⠞⠗⠕⠢⠉⠑⠏⠓⠁⠇⠕⠛⠗⠁⠍⠲",
+    "jeomsarang": "⠑⠇⠑⠉⠞⠗⠕⠑⠝⠉⠑⠏⠓⠁⠇⠕⠛⠗⠁⠍"
   },
   {
     "input": "encephalitis",
     "internal": "5cephalitis",
     "expected": "3491715191710301014",
-    "unicode": "⠢⠉⠑⠏⠓⠁⠇⠊⠞⠊⠎"
+    "unicode": "⠢⠉⠑⠏⠓⠁⠇⠊⠞⠊⠎",
+    "world": "⠴⠢⠉⠑⠏⠓⠁⠇⠊⠞⠊⠎⠲",
+    "jeomsarang": "⠑⠝⠉⠑⠏⠓⠁⠇⠊⠞⠊⠎"
   },
   {
     "input": "fiancé",
     "internal": "fianc^/e",
     "expected": "11101299241217",
-    "unicode": "⠋⠊⠁⠝⠉⠘⠌⠑"
+    "unicode": "⠋⠊⠁⠝⠉⠘⠌⠑",
+    "world": "⠴⠋⠊⠁⠝⠉",
+    "jeomsarang": "⠋⠊⠁⠝⠉"
   },
   {
     "input": "inessential",
     "internal": "9ess5tial",
     "expected": "2017141434301017",
-    "unicode": "⠔⠑⠎⠎⠢⠞⠊⠁⠇"
+    "unicode": "⠔⠑⠎⠎⠢⠞⠊⠁⠇",
+    "world": "⠴⠔⠑⠎⠎⠢⠞⠊⠁⠇⠲",
+    "jeomsarang": "⠊⠝⠑⠎⠎⠑⠝⠞⠊⠁⠇"
   },
   {
     "input": "lessee",
     "internal": "lessee",
     "expected": "71714141717",
-    "unicode": "⠇⠑⠎⠎⠑⠑"
+    "unicode": "⠇⠑⠎⠎⠑⠑",
+    "world": "⠴⠇⠑⠎⠎⠑⠑⠲",
+    "jeomsarang": "⠇⠑⠎⠎⠑⠑"
   },
   {
     "input": "moongod",
     "internal": "moongod",
     "expected": "13212129272125",
-    "unicode": "⠍⠕⠕⠝⠛⠕⠙"
+    "unicode": "⠍⠕⠕⠝⠛⠕⠙",
+    "world": "⠴⠍⠕⠕⠝⠛⠕⠙⠲",
+    "jeomsarang": "⠍⠕⠕⠝⠛⠕⠙"
   },
   {
     "input": "nongaseous",
     "internal": "nongase\\s",
     "expected": "29212927114175114",
-    "unicode": "⠝⠕⠝⠛⠁⠎⠑⠳⠎"
+    "unicode": "⠝⠕⠝⠛⠁⠎⠑⠳⠎",
+    "world": "⠴⠝⠕⠝⠛⠁⠎⠑⠳⠎⠲",
+    "jeomsarang": "⠝⠕⠝⠛⠁⠎⠑⠕⠥⠎"
   },
   {
     "input": "one-ness",
     "internal": "\"o-ness",
     "expected": "16213629171414",
-    "unicode": "⠐⠕⠤⠝⠑⠎⠎"
+    "unicode": "⠐⠕⠤⠝⠑⠎⠎",
+    "world": "⠴⠐⠕⠤⠝⠑⠎⠎⠲",
+    "jeomsarang": "⠕⠝⠑⠤⠝⠑⠎⠎"
   },
   {
     "input": "'ound",
     "internal": "'\\nd",
     "expected": "4512925",
-    "unicode": "⠄⠳⠝⠙"
+    "unicode": "⠄⠳⠝⠙",
+    "world": "⠄⠴⠳⠝⠙⠲",
+    "jeomsarang": "⠠⠦⠕⠥⠝⠙"
   },
   {
     "input": "pityard",
     "internal": "pity>d",
     "expected": "151030612825",
-    "unicode": "⠏⠊⠞⠽⠜⠙"
+    "unicode": "⠏⠊⠞⠽⠜⠙",
+    "world": "⠴⠏⠊⠞⠽⠜⠙⠲",
+    "jeomsarang": "⠏⠊⠞⠽⠁⠗⠙"
   },
   {
     "input": "reg̲a̲r̲d̲less",
     "internal": "re_1g>d_'less",
     "expected": "23175622728255647171414",
-    "unicode": "⠗⠑⠸⠂⠛⠜⠙⠸⠄⠇⠑⠎⠎"
+    "unicode": "⠗⠑⠸⠂⠛⠜⠙⠸⠄⠇⠑⠎⠎",
+    "world": "⠴⠗⠑⠛⠄⠳⠭⠴⠒⠒⠆⠄⠁⠄⠳⠭⠴⠒⠒⠆⠄⠰⠗⠄⠳⠭⠴⠒⠒⠆⠄⠙⠄⠳⠭⠴⠒⠒⠆⠄⠇⠑⠎⠎⠲",
+    "jeomsarang": "⠗⠑⠛⠀⠁⠀⠗⠀⠙⠀⠇⠑⠎⠎"
   }
 ]

@@ -3,5 +3,5 @@ source: libs/braillify/tests/coverage_extra2.rs
 expression: rendered
 ---
 input  = "x¬B"
-unicode = ok: "⠭⠨⠃"
-bytes   = ok: [45, 40, 3]
+unicode = ok: "⠭⠈⠔⠃"
+bytes   = ok: [45, 8, 20, 3]

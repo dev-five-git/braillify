@@ -120,6 +120,26 @@ mod tests {
         assert!(result.contains('\u{00B2}'));
     }
 
+    /// 수학 제6항의 원 둘레 공식: Korean grouped operands and repeated
+    /// `\\times` commands must survive LaTeX normalization as one expression.
+    #[test]
+    fn korean_grouped_operands_with_repeated_latex_times_encode() {
+        let inner = "(원의 둘레)=(반지름)\\times 2\\times 3.14";
+        assert_eq!(strip_latex_to_math(inner), "(원의 둘레)=(반지름)×2×3.14");
+
+        assert!(encode_latex_math_bytes_with_context(inner, MathContext::default()).is_ok());
+        assert!(crate::encode(&format!("${inner}$")).is_ok());
+        assert!(
+            crate::encode_with_options(
+                &format!("${inner}$"),
+                &crate::EncodeOptions {
+                    default_mode: Some(crate::rules::context::EncodingMode::Math),
+                },
+            )
+            .is_ok()
+        );
+    }
+
     #[test]
     fn test_strip_subscript() {
         let result = strip_latex_to_math("x_{2}");

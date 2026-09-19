@@ -25,7 +25,7 @@
     "expected": "4536",
     "unicode": "⠭⠤",
     "world": "⠴⠭⠴⠤",
-    "jeomsarang": "⠴⠊⠞⠲⠶"
+    "jeomsarang": "⠭⠲⠴⠤"
   },
   {
     "input": "$x'$",
@@ -43,7 +43,7 @@
     "expected": "6136",
     "unicode": "⠽⠤",
     "world": "⠴⠽⠴⠤",
-    "jeomsarang": "⠴⠽⠳⠲⠶"
+    "jeomsarang": "⠽⠲⠴⠤"
   },
   {
     "input": "$y'$",
@@ -61,7 +61,7 @@
     "expected": "1363",
     "unicode": "⠁⠤⠃",
     "world": "⠴⠁⠶⠃⠲",
-    "jeomsarang": "⠴⠁⠶⠃⠲"
+    "jeomsarang": "⠁⠴⠤⠃"
   },
   {
     "input": "$a'b$",

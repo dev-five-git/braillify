@@ -12,7 +12,9 @@
         "expected": "32359171",
         "unicode": "⠠⠃⠻⠑⠁"
       }
-    ]
+    ],
+    "world": "⠴⠠⠆⠗⠑⠁⠲",
+    "jeomsarang": "⠠⠃⠑⠗⠑⠁"
   },
   {
     "input": "Ione",
@@ -27,7 +29,9 @@
         "expected": "32101621",
         "unicode": "⠠⠊⠐⠕"
       }
-    ]
+    ],
+    "world": "⠴⠠⠊⠐⠕⠲",
+    "jeomsarang": "⠠⠊⠕⠝⠑"
   },
   {
     "input": "Simone",
@@ -42,7 +46,9 @@
         "expected": "321410131621",
         "unicode": "⠠⠎⠊⠍⠐⠕"
       }
-    ]
+    ],
+    "world": "⠴⠠⠎⠊⠍⠐⠕⠲",
+    "jeomsarang": "⠠⠎⠊⠍⠕⠝⠑"
   },
   {
     "input": "Townshend",
@@ -57,7 +63,9 @@
         "expected": "32304229413425",
         "unicode": "⠠⠞⠪⠝⠩⠢⠙"
       }
-    ]
+    ],
+    "world": "⠴⠠⠞⠪⠝⠎⠓⠢⠙⠲",
+    "jeomsarang": "⠠⠞⠕⠺⠝⠎⠓⠑⠝⠙"
   },
   {
     "input": "Twillingate",
@@ -72,6 +80,8 @@
         "expected": "32305810774413017",
         "unicode": "⠠⠞⠺⠊⠇⠇⠬⠁⠞⠑"
       }
-    ]
+    ],
+    "world": "⠴⠠⠞⠺⠊⠇⠇⠬⠁⠞⠑⠲",
+    "jeomsarang": "⠠⠞⠺⠊⠇⠇⠊⠝⠛⠁⠞⠑"
   }
 ]

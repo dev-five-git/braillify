@@ -49,8 +49,10 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     let has_strong_math_symbol = chars.iter().any(|c| {
         math_symbol_shortcut::is_math_symbol_char(*c)
             // `·`, `⋅`, `/`, `_`는 한국어 산문에서도 흔히 쓰이는 일반 부호이므로
-            // 수학 expression 강제 트리거에서 제외한다.
+            // 수학 expression 강제 트리거에서 제외한다. 그리스 문자는 제31항의
+            // 로마자 구간 글자이지 연산 기호가 아니다(`TNF-α`, `알파(α)`).
             && !matches!(*c, '\u{00B7}' | '\u{22C5}' | '/' | '_')
+            && !crate::rules::korean::rule_31::is_greek_letter(*c)
     });
     let has_superscript = chars.iter().any(|c| is_superscript(*c));
     let has_subscript = chars.iter().any(|c| is_subscript(*c));

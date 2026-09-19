@@ -24,7 +24,7 @@
     "expected": "321082018180323",
     "unicode": "⠠⠁⠀⠈⠔⠒⠒⠀⠠⠃",
     "world": "⠴⠠⠁ ⠐⠸⠔ ⠰⠠⠃⠲",
-    "jeomsarang": "⠴⠠⠁⠀⠐⠤⠒⠒⠀⠰⠠⠃⠲"
+    "jeomsarang": "⠠⠁⠀⠐⠤⠒⠒⠀⠠⠃"
   },
   {
     "input": "$A \\cong B$",

@@ -1,4 +1,4 @@
-//! English-context symbol handling.
+﻿//! English-context symbol handling.
 //!
 //! Handles symbol behavior that depends on English mode state:
 //! - English symbol rendering for (, ), , when context requires
@@ -103,21 +103,50 @@ impl BrailleRule for RuleEnglishSymbol {
         // Korean rules 34 and 54: when a Korean prose item (optionally ending
         // in an attached Arabic number) introduces a Roman explanation, the
         // Korean opening parenthesis is written before the Roman indicator.
+        // Rule 34's `링컨(Lincoln)은` order does not depend on whether print
+        // attaches the parenthesis or separates it by a space (`링컨 (Lincoln)`).
         // A parenthesis reached while a Roman section is already active stays
-        // UEB punctuation (`ABC(def)`), as does ordinary function notation.
-        if *sym == '(' && !ctx.state.is_english {
-            let prefix = &ctx.word_chars[..ctx.index];
-            let prefix_contains_korean = prefix.iter().any(|ch| utils::is_korean_char(*ch));
-            let numeric_prefix = !prefix.is_empty()
-                && prefix.iter().any(char::is_ascii_digit)
-                && prefix.iter().all(|ch| {
-                    ch.is_ascii_digit()
-                        || matches!(*ch, '.' | ',' | '\'' | '’' | '"' | '”' | '‘' | '“')
-                });
-            let previous_word_is_korean = ctx.prev_word.chars().any(utils::is_korean_char);
-            if prefix_contains_korean || (numeric_prefix && previous_word_is_korean) {
-                use_english_symbol = false;
-            }
+        // UEB punctuation (`ABC(def)`), as does ordinary function notation,
+        // and so does an enclosure that runs straight on into Roman letters
+        // (`폐쇄회로(CC)TV`): rule 32 keeps that whole sequence in one section.
+        if *sym == '('
+            && !ctx.state.is_english
+            && !english_logic::closed_parenthesis_continues_into_roman(ctx.word_chars, ctx.index)
+            && korean_prose_owns_opening_parenthesis(
+                ctx.word_chars,
+                ctx.index,
+                ctx.remaining_words,
+                ctx.prev_word,
+            )
+        {
+            use_english_symbol = false;
+        }
+
+        // 제33항은 점형이 다른 문장 부호를 "로마자와 한글 사이"에서만 한글 점자로
+        // 적게 한다. 제35항의 로마자+숫자 연결(`A100,` `DA5,Inc`)은 종료표 없이
+        // 로마자 구간 안에 남아 있으므로, 뒤에 로마자 항목이 이어지면 제32항에
+        // 따라 UEB 점형을 유지한다 — 규정 예 `1998a, 1998b;`와 같은 자리다.
+        // 뒤가 순수 숫자(`Cs-134, 137`)이면 그 숫자는 한글 수표 항목이므로
+        // 여기서 로마자 구간이 끝난다.
+        let next_item_continues_roman = if let Some(next) = ctx.next_char() {
+            next.is_ascii_alphanumeric()
+                && !english_logic::begins_korean_mode_number(
+                    ctx.word_chars[ctx.index + 1..].iter().copied(),
+                )
+        } else {
+            ctx.remaining_words.first().is_some_and(|w| {
+                w.chars()
+                    .next()
+                    .is_some_and(|ch| ch.is_ascii_alphanumeric())
+                    && !english_logic::begins_korean_mode_number(w.chars())
+            })
+        };
+        if !use_english_symbol
+            && matches!(*sym, ',' | ':' | ';')
+            && ctx.state.roman_number_chain
+            && next_item_continues_roman
+        {
+            use_english_symbol = true;
         }
 
         // 제39항 영-한 wrap context: 단어 끝의 영어 모드 유지 가능 기호(. , : ;)
@@ -135,6 +164,14 @@ impl BrailleRule for RuleEnglishSymbol {
         }
 
         if *sym == '(' {
+            // 닫는 따옴표 뒤의 한국어 괄호는 앞 구간을 완전히 닫는다. 예약된 연속표
+            // ⠰ 를 지워 괄호 안 로마자가 제29항의 로마자표 ⠴ 로 새로 열리게 한다.
+            if !use_english_symbol
+                && ctx.index > 0
+                && matches!(ctx.word_chars[ctx.index - 1], '\u{2019}' | '\u{201d}')
+            {
+                crate::rules::roman_mode::clear_pending_continuation(ctx.state);
+            }
             ctx.state.parenthesis_stack.push(use_english_symbol);
         } else if *sym == ')' {
             use_english_symbol = ctx
@@ -153,15 +190,15 @@ impl BrailleRule for RuleEnglishSymbol {
                 && !ctx.state.roman_number_chain
             {
                 ctx.emit(52);
-                ctx.state.is_english = true;
-                ctx.state.needs_english_continuation = false;
+                crate::rules::roman_mode::set_section_open_keeping_number_chain(ctx.state, true);
             }
-            let encoded = if *sym == '\'' {
-                // `use_english_symbol` is true here only for an ASCII apostrophe
-                // immediately between ASCII letters. Keep that narrow UEB 8.4.2
-                // role local instead of making detached straight quotes globally
-                // eligible for the UEB apostrophe cell.
-                crate::rules::english_ueb::rule_7::encode_punctuation(*sym)
+            let encoded = if matches!(*sym, '\'' | '\u{2019}') {
+                // `use_english_symbol` is true here only for an apostrophe
+                // immediately between ASCII letters — the straight form or its
+                // typographic U+2019 spelling. Keep that narrow UEB 8.4.2 role
+                // local instead of making detached quotes globally eligible for
+                // the UEB apostrophe cell.
+                crate::rules::english_ueb::rule_7::encode_punctuation('\'')
             } else {
                 symbol_shortcut::encode_english_char_symbol_shortcut(*sym)
             };
@@ -189,6 +226,56 @@ impl BrailleRule for RuleEnglishSymbol {
 
         Ok(RuleResult::Continue)
     }
+}
+
+/// 제34항의 `링컨(Lincoln)은` 은 한글 어절이 로마자 풀이를 이끌 때 한글 여는 괄호를
+/// 로마자표보다 앞에 둔다. 묵자가 괄호를 붙여 썼는지 띄어 썼는지는 기준이 아니다.
+fn korean_prose_owns_opening_parenthesis(
+    word_chars: &[char],
+    index: usize,
+    remaining_words: &[&str],
+    prev_word: &str,
+) -> bool {
+    let prefix = &word_chars[..index];
+    if prefix.iter().any(|ch| utils::is_korean_char(*ch)) {
+        return true;
+    }
+    if !prev_word.chars().any(utils::is_korean_char) {
+        return false;
+    }
+    numeric_parenthesis_prefix(prefix)
+        || quote_only_prefix_encloses_roman_word(prefix, word_chars, index, remaining_words)
+}
+
+/// 제54항: 한글 어절에 붙은 아라비아 숫자(`3.5(`, `1,000(`)도 그 어절의 일부다.
+fn numeric_parenthesis_prefix(prefix: &[char]) -> bool {
+    !prefix.is_empty()
+        && prefix.iter().any(char::is_ascii_digit)
+        && prefix
+            .iter()
+            .all(|ch| ch.is_ascii_digit() || is_number_adjacent_punctuation(*ch))
+}
+
+/// 앞이 따옴표뿐이면 괄호는 앞 한글 어절에 딸린 것이다.
+fn quote_only_prefix_encloses_roman_word(
+    prefix: &[char],
+    word_chars: &[char],
+    index: usize,
+    remaining_words: &[&str],
+) -> bool {
+    prefix.iter().all(|ch| is_quote_punctuation(*ch))
+        && english_logic::closed_parenthesis_encloses_roman_word(word_chars, index, remaining_words)
+}
+
+fn is_quote_punctuation(ch: char) -> bool {
+    matches!(
+        ch,
+        '\'' | '\u{2019}' | '"' | '\u{201D}' | '\u{2018}' | '\u{201C}'
+    )
+}
+
+fn is_number_adjacent_punctuation(ch: char) -> bool {
+    ch == '.' || ch == ',' || is_quote_punctuation(ch)
 }
 
 #[cfg(test)]
@@ -293,6 +380,23 @@ mod tests {
         assert!(!ctx.state.parenthesis_stack.is_empty());
     }
 
+    /// 닫는 따옴표 뒤의 괄호는 제56항의 한국어 괄호 ⠦⠄ 이고, 그 안의 로마자는
+    /// 예약된 연속표 ⠰ 가 아니라 제29항의 로마자표 ⠴ 로 새로 열린다. 한글에 바로
+    /// 붙은 괄호(`모터보트(`)와 같은 자리다.
+    #[rstest::rstest]
+    #[case::after_closing_quote("가나 ‘MDPS’(Motor 다라", "⠴⠄⠦⠄⠴⠠⠍⠕⠞⠕⠗")]
+    #[case::attached_to_korean("가나 모터보트(Motor 다라", "⠦⠄⠴⠠⠍⠕⠞⠕⠗")]
+    fn closing_quote_opens_a_fresh_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing Korean parenthesis run {expected_segment:?} in {actual:?}"
+        );
+    }
+
     #[test]
     fn closing_parenthesis_reuses_opening_parenthesis_symbol_mode() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("()", true);
@@ -387,5 +491,75 @@ mod tests {
             crate::encode_to_unicode("문구(I AM…)이다"),
             crate::encode_to_unicode("문구(I AM...)이다")
         );
+    }
+}
+
+#[cfg(test)]
+mod parenthesis_route_coverage {
+    /// 제34항 `링컨(Lincoln)은` keeps the Korean parenthesis outside the Roman
+    /// indicator whether or not print separates it with a space; a parenthesis
+    /// reached inside an open Roman section stays UEB punctuation.
+    #[rstest::rstest]
+    #[case::attached("링컨(Lincoln)은")]
+    #[case::spaced("링컨 (Lincoln)은")]
+    #[case::inside_roman_section("그는 ABC(def) 를")]
+    #[case::runs_on_into_roman("폐쇄회로(CC)TV와")]
+    fn a_roman_parenthetical_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod parenthesis_and_list_coverage {
+    use super::*;
+
+    /// 제34항 `링컨(Lincoln)은` 은 괄호를 붙여 썼든 띄어 썼든 한글 괄호를 앞에 둔다.
+    #[rstest::rstest]
+    #[case::attached("링컨(Lincoln)은")]
+    #[case::spaced("링컨 (Lincoln)은")]
+    #[case::inside_roman_section("그는 ABC(def) 를")]
+    #[case::runs_on_into_roman("폐쇄회로(CC)TV와")]
+    fn a_roman_parenthetical_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    /// 제35항: 로마자+숫자 연결 뒤의 쉼표는 뒤에 로마자 항목이 이어지면 제32항의
+    /// 통일영어점자 점형을 지킨다.
+    #[rstest::rstest]
+    #[case::roman_number_then_roman("그는 DA5,Inc 를")]
+    #[case::roman_number_then_number("그는 Cs-134, 137 을")]
+    fn a_comma_inside_a_roman_number_chain_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    #[rstest::rstest]
+    #[case::korean_prefix(&['한','글','('], 2, "", true)]
+    #[case::numeric_prefix_after_korean(&['3','.','5','('], 3, "한글", true)]
+    #[case::numeric_prefix_after_roman(&['3','.','5','('], 3, "ABC", false)]
+    #[case::no_prefix(&['('], 0, "", false)]
+    fn korean_prose_ownership_follows_the_prefix(
+        #[case] word_chars: &[char],
+        #[case] index: usize,
+        #[case] prev_word: &str,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(
+            korean_prose_owns_opening_parenthesis(word_chars, index, &[], prev_word),
+            expected
+        );
+    }
+}
+
+#[cfg(test)]
+mod roman_number_chain_comma_coverage {
+    /// 제35항: 로마자+숫자 연결 뒤의 쉼표는 뒤에 로마자 항목이 이어지면 제32항의
+    /// 통일영어점자 점형을 지키고, 뒤가 순수 숫자이면 거기서 구간이 끝난다.
+    #[rstest::rstest]
+    #[case::roman_number_then_roman("그는 A100, B200 을")]
+    #[case::attached_company("그는 DA5,Inc 를")]
+    #[case::citation_pair("그는 1998a, 1998b; 를")]
+    #[case::then_plain_number("그는 Cs-134, 137 을")]
+    fn a_comma_inside_a_roman_number_chain_encodes(#[case] input: &str) {
+        assert!(crate::encode_to_unicode(input).is_ok());
     }
 }

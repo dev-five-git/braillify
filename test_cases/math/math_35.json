@@ -24,7 +24,7 @@
     "expected": "89323213",
     "unicode": "⠈⠉⠠⠠⠁⠃",
     "world": "⠴⠰⠠⠠⠁⠃⠲",
-    "jeomsarang": "⠀⠠⠠⠁⠃⠲"
+    "jeomsarang": "⠀⠠⠠⠁⠃"
   },
   {
     "input": "$\\overline{AB}$",
@@ -33,7 +33,7 @@
     "expected": "89323213",
     "unicode": "⠈⠉⠠⠠⠁⠃",
     "world": "⠴⠈⠎⠸⠡⠴⠕⠧⠻⠇⠔⠑⠸⠣⠠⠠⠁⠃⠐⠴⠈⠎",
-    "jeomsarang": ""
+    "jeomsarang": "⠈⠲⠈⠳⠕⠧⠑⠗⠇⠊⠝⠑⠪⠠⠠⠁⠃⠻⠈⠲"
   },
   {
     "input": "‾A′B′",
@@ -42,7 +42,7 @@
     "expected": "893232136336",
     "unicode": "⠈⠉⠠⠠⠁⠤⠃⠤",
     "world": "⠴⠠⠁⠶⠠⠃⠴⠤",
-    "jeomsarang": "⠀⠠⠁⠶⠠⠃⠲⠶"
+    "jeomsarang": "⠀⠠⠁⠴⠤⠠⠃⠲⠴⠤"
   },
   {
     "input": "$\\overline{A'B'}$",
@@ -51,6 +51,6 @@
     "expected": "893232136336",
     "unicode": "⠈⠉⠠⠠⠁⠤⠃⠤",
     "world": "⠴⠈⠎⠸⠡⠴⠕⠧⠻⠇⠔⠑⠸⠣⠠⠁⠄⠠⠃⠄⠐⠴⠈⠎",
-    "jeomsarang": ""
+    "jeomsarang": "⠈⠲⠈⠳⠕⠧⠑⠗⠇⠊⠝⠑⠪⠠⠠⠁⠄⠠⠃⠴⠄⠻⠈⠲"
   }
 ]

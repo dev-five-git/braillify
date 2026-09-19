@@ -5,7 +5,7 @@
     "expected": "1",
     "unicode": "⠁",
     "world": "⠴⠁⠲",
-    "jeomsarang": "⠴⠁"
+    "jeomsarang": "⠁"
   },
   {
     "input": "A",
@@ -13,7 +13,7 @@
     "expected": "321",
     "unicode": "⠠⠁",
     "world": "⠴⠠⠁⠲",
-    "jeomsarang": "⠴⠠⠁⠲"
+    "jeomsarang": "⠠⠁"
   },
   {
     "input": "b",
@@ -21,7 +21,7 @@
     "expected": "3",
     "unicode": "⠃",
     "world": "⠴⠃⠲",
-    "jeomsarang": "⠴⠃"
+    "jeomsarang": "⠃"
   },
   {
     "input": "B",
@@ -29,7 +29,7 @@
     "expected": "323",
     "unicode": "⠠⠃",
     "world": "⠴⠠⠃⠲",
-    "jeomsarang": "⠴⠰⠠⠃⠲"
+    "jeomsarang": "⠠⠃"
   },
   {
     "input": "c",
@@ -37,7 +37,7 @@
     "expected": "9",
     "unicode": "⠉",
     "world": "⠴⠉⠲",
-    "jeomsarang": "⠴⠉"
+    "jeomsarang": "⠉"
   },
   {
     "input": "C",
@@ -45,7 +45,7 @@
     "expected": "329",
     "unicode": "⠠⠉",
     "world": "⠴⠠⠉⠲",
-    "jeomsarang": "⠴⠰⠠⠉⠲"
+    "jeomsarang": "⠠⠉"
   },
   {
     "input": "d",
@@ -53,7 +53,7 @@
     "expected": "25",
     "unicode": "⠙",
     "world": "⠴⠙⠲",
-    "jeomsarang": "⠴⠙"
+    "jeomsarang": "⠙"
   },
   {
     "input": "D",
@@ -61,7 +61,7 @@
     "expected": "3225",
     "unicode": "⠠⠙",
     "world": "⠴⠠⠙⠲",
-    "jeomsarang": "⠴⠰⠠⠙⠲"
+    "jeomsarang": "⠠⠙"
   },
   {
     "input": "e",
@@ -69,7 +69,7 @@
     "expected": "17",
     "unicode": "⠑",
     "world": "⠴⠑⠲",
-    "jeomsarang": "⠴⠑"
+    "jeomsarang": "⠑"
   },
   {
     "input": "E",
@@ -77,7 +77,7 @@
     "expected": "3217",
     "unicode": "⠠⠑",
     "world": "⠴⠠⠑⠲",
-    "jeomsarang": "⠴⠰⠠⠑⠲"
+    "jeomsarang": "⠠⠑"
   },
   {
     "input": "f",
@@ -85,7 +85,7 @@
     "expected": "11",
     "unicode": "⠋",
     "world": "⠴⠋⠲",
-    "jeomsarang": "⠴⠋"
+    "jeomsarang": "⠋"
   },
   {
     "input": "F",
@@ -93,7 +93,7 @@
     "expected": "3211",
     "unicode": "⠠⠋",
     "world": "⠴⠠⠋⠲",
-    "jeomsarang": "⠴⠰⠠⠋⠲"
+    "jeomsarang": "⠠⠋"
   },
   {
     "input": "g",
@@ -101,7 +101,7 @@
     "expected": "27",
     "unicode": "⠛",
     "world": "⠴⠛⠲",
-    "jeomsarang": "⠴⠛"
+    "jeomsarang": "⠛"
   },
   {
     "input": "G",
@@ -109,7 +109,7 @@
     "expected": "3227",
     "unicode": "⠠⠛",
     "world": "⠴⠠⠛⠲",
-    "jeomsarang": "⠴⠰⠠⠛⠲"
+    "jeomsarang": "⠠⠛"
   },
   {
     "input": "h",
@@ -117,7 +117,7 @@
     "expected": "19",
     "unicode": "⠓",
     "world": "⠴⠓⠲",
-    "jeomsarang": "⠴⠓"
+    "jeomsarang": "⠓"
   },
   {
     "input": "H",
@@ -125,7 +125,7 @@
     "expected": "3219",
     "unicode": "⠠⠓",
     "world": "⠴⠠⠓⠲",
-    "jeomsarang": "⠴⠰⠠⠓⠲"
+    "jeomsarang": "⠠⠓"
   },
   {
     "input": "i",
@@ -133,7 +133,7 @@
     "expected": "10",
     "unicode": "⠊",
     "world": "⠴⠊⠲",
-    "jeomsarang": "⠴⠊"
+    "jeomsarang": "⠊"
   },
   {
     "input": "I",
@@ -141,7 +141,7 @@
     "expected": "3210",
     "unicode": "⠠⠊",
     "world": "⠴⠠⠊⠲",
-    "jeomsarang": "⠴⠠⠊⠲"
+    "jeomsarang": "⠠⠊"
   },
   {
     "input": "j",
@@ -149,7 +149,7 @@
     "expected": "26",
     "unicode": "⠚",
     "world": "⠴⠚⠲",
-    "jeomsarang": "⠴⠚"
+    "jeomsarang": "⠚"
   },
   {
     "input": "J",
@@ -157,7 +157,7 @@
     "expected": "3226",
     "unicode": "⠠⠚",
     "world": "⠴⠠⠚⠲",
-    "jeomsarang": "⠴⠰⠠⠚⠲"
+    "jeomsarang": "⠠⠚"
   },
   {
     "input": "k",
@@ -165,7 +165,7 @@
     "expected": "5",
     "unicode": "⠅",
     "world": "⠴⠅⠲",
-    "jeomsarang": "⠴⠅"
+    "jeomsarang": "⠅"
   },
   {
     "input": "K",
@@ -173,7 +173,7 @@
     "expected": "325",
     "unicode": "⠠⠅",
     "world": "⠴⠠⠅⠲",
-    "jeomsarang": "⠴⠰⠠⠅⠲"
+    "jeomsarang": "⠠⠅"
   },
   {
     "input": "l",
@@ -181,7 +181,7 @@
     "expected": "7",
     "unicode": "⠇",
     "world": "⠴⠇⠲",
-    "jeomsarang": "⠴⠇"
+    "jeomsarang": "⠇"
   },
   {
     "input": "L",
@@ -189,7 +189,7 @@
     "expected": "327",
     "unicode": "⠠⠇",
     "world": "⠴⠠⠇⠲",
-    "jeomsarang": "⠴⠰⠠⠇⠲"
+    "jeomsarang": "⠠⠇"
   },
   {
     "input": "m",
@@ -197,7 +197,7 @@
     "expected": "13",
     "unicode": "⠍",
     "world": "⠴⠍⠲",
-    "jeomsarang": "⠴⠍"
+    "jeomsarang": "⠍"
   },
   {
     "input": "M",
@@ -205,7 +205,7 @@
     "expected": "3213",
     "unicode": "⠠⠍",
     "world": "⠴⠠⠍⠲",
-    "jeomsarang": "⠴⠰⠠⠍⠲"
+    "jeomsarang": "⠠⠍"
   },
   {
     "input": "n",
@@ -213,7 +213,7 @@
     "expected": "29",
     "unicode": "⠝",
     "world": "⠴⠝⠲",
-    "jeomsarang": "⠴⠝"
+    "jeomsarang": "⠝"
   },
   {
     "input": "N",
@@ -221,7 +221,7 @@
     "expected": "3229",
     "unicode": "⠠⠝",
     "world": "⠴⠠⠝⠲",
-    "jeomsarang": "⠴⠰⠠⠝⠲"
+    "jeomsarang": "⠠⠝"
   },
   {
     "input": "o",
@@ -229,7 +229,7 @@
     "expected": "21",
     "unicode": "⠕",
     "world": "⠴⠕⠲",
-    "jeomsarang": "⠴⠕"
+    "jeomsarang": "⠕"
   },
   {
     "input": "O",
@@ -237,7 +237,7 @@
     "expected": "3221",
     "unicode": "⠠⠕",
     "world": "⠴⠠⠕⠲",
-    "jeomsarang": "⠴⠠⠕⠲"
+    "jeomsarang": "⠠⠕"
   },
   {
     "input": "p",
@@ -245,7 +245,7 @@
     "expected": "15",
     "unicode": "⠏",
     "world": "⠴⠏⠲",
-    "jeomsarang": "⠴⠏"
+    "jeomsarang": "⠏"
   },
   {
     "input": "P",
@@ -253,7 +253,7 @@
     "expected": "3215",
     "unicode": "⠠⠏",
     "world": "⠴⠠⠏⠲",
-    "jeomsarang": "⠴⠰⠠⠏⠲"
+    "jeomsarang": "⠠⠏"
   },
   {
     "input": "q",
@@ -261,7 +261,7 @@
     "expected": "31",
     "unicode": "⠟",
     "world": "⠴⠟⠲",
-    "jeomsarang": "⠴⠟"
+    "jeomsarang": "⠟"
   },
   {
     "input": "Q",
@@ -269,7 +269,7 @@
     "expected": "3231",
     "unicode": "⠠⠟",
     "world": "⠴⠠⠟⠲",
-    "jeomsarang": "⠴⠰⠠⠟⠲"
+    "jeomsarang": "⠠⠟"
   },
   {
     "input": "r",
@@ -277,7 +277,7 @@
     "expected": "23",
     "unicode": "⠗",
     "world": "⠴⠗⠲",
-    "jeomsarang": "⠴⠗"
+    "jeomsarang": "⠗"
   },
   {
     "input": "R",
@@ -285,7 +285,7 @@
     "expected": "3223",
     "unicode": "⠠⠗",
     "world": "⠴⠠⠗⠲",
-    "jeomsarang": "⠴⠰⠠⠗⠲"
+    "jeomsarang": "⠠⠗"
   },
   {
     "input": "s",
@@ -293,7 +293,7 @@
     "expected": "14",
     "unicode": "⠎",
     "world": "⠴⠎⠲",
-    "jeomsarang": "⠴⠎"
+    "jeomsarang": "⠎"
   },
   {
     "input": "S",
@@ -301,7 +301,7 @@
     "expected": "3214",
     "unicode": "⠠⠎",
     "world": "⠴⠠⠎⠲",
-    "jeomsarang": "⠴⠰⠠⠎⠲"
+    "jeomsarang": "⠠⠎"
   },
   {
     "input": "t",
@@ -309,7 +309,7 @@
     "expected": "30",
     "unicode": "⠞",
     "world": "⠴⠞⠲",
-    "jeomsarang": "⠴⠞"
+    "jeomsarang": "⠞"
   },
   {
     "input": "T",
@@ -317,7 +317,7 @@
     "expected": "3230",
     "unicode": "⠠⠞",
     "world": "⠴⠠⠞⠲",
-    "jeomsarang": "⠴⠰⠠⠞⠲"
+    "jeomsarang": "⠠⠞"
   },
   {
     "input": "u",
@@ -325,7 +325,7 @@
     "expected": "37",
     "unicode": "⠥",
     "world": "⠴⠥⠲",
-    "jeomsarang": "⠴⠥"
+    "jeomsarang": "⠥"
   },
   {
     "input": "U",
@@ -333,7 +333,7 @@
     "expected": "3237",
     "unicode": "⠠⠥",
     "world": "⠴⠠⠥⠲",
-    "jeomsarang": "⠴⠰⠠⠥⠲"
+    "jeomsarang": "⠠⠥"
   },
   {
     "input": "v",
@@ -341,7 +341,7 @@
     "expected": "39",
     "unicode": "⠧",
     "world": "⠴⠧⠲",
-    "jeomsarang": "⠴⠧"
+    "jeomsarang": "⠧"
   },
   {
     "input": "V",
@@ -349,7 +349,7 @@
     "expected": "3239",
     "unicode": "⠠⠧",
     "world": "⠴⠠⠧⠲",
-    "jeomsarang": "⠴⠰⠠⠧⠲"
+    "jeomsarang": "⠠⠧"
   },
   {
     "input": "w",
@@ -357,7 +357,7 @@
     "expected": "58",
     "unicode": "⠺",
     "world": "⠴⠺⠲",
-    "jeomsarang": "⠴⠺"
+    "jeomsarang": "⠺"
   },
   {
     "input": "W",
@@ -365,7 +365,7 @@
     "expected": "3258",
     "unicode": "⠠⠺",
     "world": "⠴⠠⠺⠲",
-    "jeomsarang": "⠴⠰⠠⠺⠲"
+    "jeomsarang": "⠠⠺"
   },
   {
     "input": "x",
@@ -373,7 +373,7 @@
     "expected": "45",
     "unicode": "⠭",
     "world": "⠴⠭⠲",
-    "jeomsarang": "⠴⠭"
+    "jeomsarang": "⠭"
   },
   {
     "input": "X",
@@ -381,7 +381,7 @@
     "expected": "3245",
     "unicode": "⠠⠭",
     "world": "⠴⠠⠭⠲",
-    "jeomsarang": "⠴⠰⠠⠭⠲"
+    "jeomsarang": "⠠⠭"
   },
   {
     "input": "y",
@@ -389,7 +389,7 @@
     "expected": "61",
     "unicode": "⠽",
     "world": "⠴⠽⠲",
-    "jeomsarang": "⠴⠽"
+    "jeomsarang": "⠽"
   },
   {
     "input": "Y",
@@ -397,7 +397,7 @@
     "expected": "3261",
     "unicode": "⠠⠽",
     "world": "⠴⠠⠽⠲",
-    "jeomsarang": "⠴⠰⠠⠽⠲"
+    "jeomsarang": "⠠⠽"
   },
   {
     "input": "z",
@@ -405,7 +405,7 @@
     "expected": "53",
     "unicode": "⠵",
     "world": "⠴⠵⠲",
-    "jeomsarang": "⠴⠵"
+    "jeomsarang": "⠵"
   },
   {
     "input": "Z",
@@ -413,7 +413,7 @@
     "expected": "3253",
     "unicode": "⠠⠵",
     "world": "⠴⠠⠵⠲",
-    "jeomsarang": "⠴⠰⠠⠵⠲"
+    "jeomsarang": "⠠⠵"
   },
   {
     "input": "book",
@@ -421,7 +421,7 @@
     "expected": "321215",
     "unicode": "⠃⠕⠕⠅",
     "world": "⠴⠃⠕⠕⠅⠲",
-    "jeomsarang": "⠴⠃⠕⠕⠅⠲"
+    "jeomsarang": "⠃⠕⠕⠅"
   },
   {
     "input": "happy",
@@ -429,7 +429,7 @@
     "expected": "191151561",
     "unicode": "⠓⠁⠏⠏⠽",
     "world": "⠴⠓⠁⠏⠏⠽⠲",
-    "jeomsarang": "⠴⠓⠁⠏⠏⠽⠲"
+    "jeomsarang": "⠓⠁⠏⠏⠽"
   },
   {
     "input": "moon",
@@ -437,7 +437,7 @@
     "expected": "13212129",
     "unicode": "⠍⠕⠕⠝",
     "world": "⠴⠍⠕⠕⠝⠲",
-    "jeomsarang": "⠴⠍⠕⠕⠝⠲"
+    "jeomsarang": "⠍⠕⠕⠝"
   },
   {
     "input": "purple",
@@ -445,7 +445,7 @@
     "expected": "15372315717",
     "unicode": "⠏⠥⠗⠏⠇⠑",
     "world": "⠴⠏⠥⠗⠏⠇⠑⠲",
-    "jeomsarang": "⠴⠏⠥⠗⠏⠇⠑⠲"
+    "jeomsarang": "⠏⠥⠗⠏⠇⠑"
   },
   {
     "input": "tea",
@@ -453,7 +453,7 @@
     "expected": "30171",
     "unicode": "⠞⠑⠁",
     "world": "⠴⠞⠑⠁⠲",
-    "jeomsarang": "⠴⠞⠑⠁⠲"
+    "jeomsarang": "⠞⠑⠁"
   },
   {
     "input": "welcome",
@@ -461,7 +461,7 @@
     "expected": "581779211317",
     "unicode": "⠺⠑⠇⠉⠕⠍⠑",
     "world": "⠴⠺⠑⠇⠉⠕⠍⠑⠲",
-    "jeomsarang": "⠴⠺⠑⠇⠉⠕⠍⠑⠲"
+    "jeomsarang": "⠺⠑⠇⠉⠕⠍⠑"
   },
   {
     "input": "New York",
@@ -469,7 +469,7 @@
     "expected": "322917580326121235",
     "unicode": "⠠⠝⠑⠺⠀⠠⠽⠕⠗⠅",
     "world": "⠴⠠⠝⠑⠺ ⠠⠽⠕⠗⠅⠲",
-    "jeomsarang": "⠴⠠⠝⠑⠺⠀⠠⠽⠕⠗⠅⠲"
+    "jeomsarang": "⠠⠝⠑⠺⠀⠠⠽⠕⠗⠅"
   },
   {
     "input": "NEW YORK",
@@ -477,7 +477,7 @@
     "expected": "3232291758032326121235",
     "unicode": "⠠⠠⠝⠑⠺⠀⠠⠠⠽⠕⠗⠅",
     "world": "⠴⠠⠠⠝⠑⠺ ⠠⠠⠽⠕⠗⠅⠲",
-    "jeomsarang": "⠴⠠⠠⠝⠑⠺⠀⠠⠠⠽⠕⠗⠅⠲"
+    "jeomsarang": "⠠⠠⠝⠑⠺⠀⠠⠠⠽⠕⠗⠅"
   },
   {
     "input": "McDonald",
@@ -485,7 +485,7 @@
     "expected": "32139322521291725",
     "unicode": "⠠⠍⠉⠠⠙⠕⠝⠁⠇⠙",
     "world": "⠴⠠⠍⠉⠠⠙⠕⠝⠁⠇⠙⠲",
-    "jeomsarang": "⠴⠠⠍⠉⠠⠙⠕⠝⠁⠇⠙⠲"
+    "jeomsarang": "⠠⠍⠉⠠⠙⠕⠝⠁⠇⠙"
   },
   {
     "input": "IoT",
@@ -493,7 +493,7 @@
     "expected": "3210213230",
     "unicode": "⠠⠊⠕⠠⠞",
     "world": "⠴⠠⠊⠕⠠⠞⠲",
-    "jeomsarang": "⠴⠠⠊⠕⠠⠞⠲"
+    "jeomsarang": "⠠⠊⠕⠠⠞"
   },
   {
     "input": "iOS",
@@ -501,7 +501,7 @@
     "expected": "1032322114",
     "unicode": "⠊⠠⠠⠕⠎",
     "world": "⠴⠊⠠⠠⠕⠎⠲",
-    "jeomsarang": "⠴⠊⠠⠠⠕⠎⠲"
+    "jeomsarang": "⠊⠠⠠⠕⠎"
   },
   {
     "input": "WELCOME TO KOREA",
@@ -509,6 +509,6 @@
     "expected": "32323258177921131703021052123171324",
     "unicode": "⠠⠠⠠⠺⠑⠇⠉⠕⠍⠑⠀⠞⠕⠀⠅⠕⠗⠑⠁⠠⠄",
     "world": "⠴⠠⠠⠠⠺⠑⠇⠉⠕⠍⠑ ⠞⠕ ⠅⠕⠗⠑⠁⠠⠄⠲",
-    "jeomsarang": "⠴⠠⠠⠠⠺⠑⠇⠉⠕⠍⠑⠀⠞⠕⠀⠅⠕⠗⠑⠁⠠⠄⠲"
+    "jeomsarang": "⠠⠠⠺⠑⠇⠉⠕⠍⠑⠀⠠⠠⠞⠕⠀⠠⠠⠅⠕⠗⠑⠁"
   }
 ]

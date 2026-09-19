@@ -24,7 +24,7 @@
     "expected": "32321352432322517",
     "unicode": "⠠⠠⠁⠃⠴⠄⠠⠠⠙⠑",
     "world": "⠴⠠⠠⠁⠃⠼⠤⠠⠠⠙⠑⠲",
-    "jeomsarang": "⠴⠠⠠⠁⠃⠴⠄⠠⠠⠙⠑⠲"
+    "jeomsarang": "⠠⠠⠁⠃⠴⠄⠠⠠⠙⠑"
   },
   {
     "input": "$AB \\perp DE$",

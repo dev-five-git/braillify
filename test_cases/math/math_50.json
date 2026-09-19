@@ -24,7 +24,7 @@
     "expected": "2901821063",
     "unicode": "⠝⠀⠒⠕⠀⠿",
     "world": "⠴⠝ ⠳⠕",
-    "jeomsarang": "⠴⠝⠀⠰⠳⠕⠀⠿"
+    "jeomsarang": "⠝⠀⠒⠕⠀⠿"
   },
   {
     "input": "$n \\to \\infty$",
@@ -60,7 +60,7 @@
     "expected": "22306010265225181863",
     "unicode": "⠖⠞⠼⠊⠚⠴⠙⠒⠒⠿",
     "world": "⠴⠞⠁⠝⠼⠊⠚⠴⠙ ⠒⠒",
-    "jeomsarang": "⠴⠞⠁⠝⠼⠊⠚⠘⠚⠀⠐⠶⠀⠿",
+    "jeomsarang": "⠞⠁⠝⠼⠊⠚⠴⠙⠀⠰⠶⠀⠿",
     "context": "math"
   },
   {

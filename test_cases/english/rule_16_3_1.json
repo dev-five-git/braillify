@@ -5,7 +5,8 @@
     "internal": "<\n <\n  <\n   <",
     "expected": "35\n035\n0035\n00035",
     "unicode": "⠣\n⠀⠣\n⠀⠀⠣\n⠀⠀⠀⠣",
-    "world": ""
+    "world": "",
+    "jeomsarang": "⠀"
   },
   {
     "input": "┊",
@@ -13,13 +14,15 @@
     "internal": "^\n^\n^\n^",
     "expected": "24\n24\n24\n24",
     "unicode": "⠘\n⠘\n⠘\n⠘",
-    "world": ""
+    "world": "",
+    "jeomsarang": "⠀"
   },
   {
     "input": "╲╱╱",
     "internal": "<        ,>\n  <    ,>\n    <,>",
     "expected": "35000000003228\n003500003228\n0000353228",
     "unicode": "⠣⠀⠀⠀⠀⠀⠀⠀⠀⠠⠜\n⠀⠀⠣⠀⠀⠀⠀⠠⠜\n⠀⠀⠀⠀⠣⠠⠜",
-    "world": ""
+    "world": "",
+    "jeomsarang": "⠀⠀⠀"
   }
 ]

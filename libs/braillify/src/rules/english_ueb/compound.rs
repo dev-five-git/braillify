@@ -147,10 +147,17 @@ fn parse_compound_line(line: &'static str) -> Option<(&'static str, Vec<usize>)>
 /// table (CompoundPiece + [`SUPPLEMENTAL`]) is authoritative; only when a word is
 /// absent there do we fall back to the productive [`combining_form_seam`] rule.
 pub fn compound_seams(word: &str) -> Vec<usize> {
-    if let Some(seams) = SEAMS.get(word) {
-        return seams.clone();
-    }
-    combining_form_seam(word).into_iter().collect()
+    let raw = if let Some(seams) = SEAMS.get(word) {
+        seams.clone()
+    } else {
+        combining_form_seam(word).into_iter().collect()
+    };
+    // 합성어의 구성요소는 한 글자일 수 없다. 첫 글자 뒤나 끝 글자 앞의 이음매는
+    // 실제 경계가 아니라 표의 잡음이므로 버린다(`w|hole`).
+    let len = word.chars().count();
+    raw.into_iter()
+        .filter(|seam| *seam >= 2 && *seam + 2 <= len)
+        .collect()
 }
 
 #[cfg(test)]
@@ -174,6 +181,20 @@ mod tests {
     #[test]
     fn compound_seams_clones_static_table_entry() {
         assert_eq!(compound_seams(std::hint::black_box("anthill")), vec![3]);
+    }
+
+    /// 한 글자짜리 구성요소는 없으므로 첫 글자 뒤나 끝 글자 앞의 이음매는 버린다.
+    /// 그 잡음이 남아 있으면 §10.11.1 이 `wh` 를 경계를 넘는 것으로 보아 없앤다.
+    #[rstest::rstest]
+    #[case::whole("whole")]
+    #[case::wholesale("wholesale")]
+    #[case::wholegrain("wholegrain")]
+    fn no_seam_after_the_first_letter(#[case] word: &str) {
+        assert!(
+            !compound_seams(word).contains(&1),
+            "{word} must not expose a one-letter component, got {:?}",
+            compound_seams(word)
+        );
     }
 
     /// Coincidental letter splits that are NOT compounds — and CompoundPiece's bogus

@@ -4,55 +4,63 @@
     "internal": ">1way",
     "expected": "28258161",
     "unicode": "⠜⠂⠺⠁⠽",
-    "world": "⠴⠜⠂⠺⠁⠽⠲"
+    "world": "⠴⠜⠂⠺⠁⠽⠲",
+    "jeomsarang": "⠁⠗⠑⠁⠺⠁⠽"
   },
   {
     "input": "ebbing",
     "internal": "e2+",
     "expected": "17644",
     "unicode": "⠑⠆⠬",
-    "world": "⠴⠑⠆⠬⠲"
+    "world": "⠴⠑⠆⠬⠲",
+    "jeomsarang": "⠑⠃⠃⠊⠝⠛"
   },
   {
     "input": "eggplant",
     "internal": "e7plant",
     "expected": "175415712930",
     "unicode": "⠑⠶⠏⠇⠁⠝⠞",
-    "world": "⠴⠑⠶⠏⠇⠁⠝⠞⠲"
+    "world": "⠴⠑⠶⠏⠇⠁⠝⠞⠲",
+    "jeomsarang": "⠑⠛⠛⠏⠇⠁⠝⠞"
   },
   {
     "input": "ideas",
     "internal": "id1s",
     "expected": "1025214",
     "unicode": "⠊⠙⠂⠎",
-    "world": "⠴⠊⠙⠂⠎⠲"
+    "world": "⠴⠊⠙⠂⠎⠲",
+    "jeomsarang": "⠊⠙⠑⠁⠎"
   },
   {
     "input": "seaman",
     "internal": "s1man",
     "expected": "14213129",
     "unicode": "⠎⠂⠍⠁⠝",
-    "world": "⠴⠎⠂⠍⠁⠝⠲"
+    "world": "⠴⠎⠂⠍⠁⠝⠲",
+    "jeomsarang": "⠎⠑⠁⠍⠁⠝"
   },
   {
     "input": "seashore",
     "internal": "s1%ore",
     "expected": "14241212317",
     "unicode": "⠎⠂⠩⠕⠗⠑",
-    "world": "⠴⠎⠂⠩⠕⠗⠑⠲"
+    "world": "⠴⠎⠂⠩⠕⠗⠑⠲",
+    "jeomsarang": "⠎⠑⠁⠎⠓⠕⠗⠑"
   },
   {
     "input": "stiffly",
     "internal": "/i6ly",
     "expected": "121022761",
     "unicode": "⠌⠊⠖⠇⠽",
-    "world": "⠴⠌⠊⠖⠇⠽⠲"
+    "world": "⠴⠌⠊⠖⠇⠽⠲",
+    "jeomsarang": "⠎⠞⠊⠋⠋⠇⠽"
   },
   {
     "input": "teatime",
     "internal": "t1\"t",
     "expected": "3021630",
     "unicode": "⠞⠂⠐⠞",
-    "world": "⠴⠞⠂⠐⠞⠲"
+    "world": "⠴⠞⠂⠐⠞⠲",
+    "jeomsarang": "⠞⠑⠁⠞⠊⠍⠑"
   }
 ]

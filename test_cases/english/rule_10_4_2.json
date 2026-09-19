@@ -4,62 +4,71 @@
     "internal": ",sh6",
     "expected": "32141922",
     "unicode": "⠠⠎⠓⠖",
-    "world": "⠴⠠⠎⠓⠖"
+    "world": "⠴⠠⠎⠓⠖",
+    "jeomsarang": "⠠⠎⠓⠖"
   },
   {
     "input": "th'",
     "internal": "th'",
     "expected": "30194",
     "unicode": "⠞⠓⠄",
-    "world": "⠴⠞⠓⠄"
+    "world": "⠴⠞⠓⠄",
+    "jeomsarang": "⠞⠓⠴⠄"
   },
   {
     "input": "St.",
     "internal": ",st4",
     "expected": "32143050",
     "unicode": "⠠⠎⠞⠲",
-    "world": "⠴⠠⠎⠞⠲"
+    "world": "⠴⠠⠎⠞⠲",
+    "jeomsarang": "⠠⠎⠞⠲"
   },
   {
     "input": "Wh–?",
     "internal": ",wh,-;8",
     "expected": "32581932364838",
     "unicode": "⠠⠺⠓⠠⠤⠰⠦",
-    "world": "⠴⠠⠺⠓⠤⠤⠦"
+    "world": "⠴⠠⠺⠓⠤⠤⠦",
+    "jeomsarang": "⠠⠺⠓⠲⠠⠤⠦"
   },
   {
     "input": "St Stephen",
     "internal": ",st ,/eph5",
     "expected": "3214300321217151934",
     "unicode": "⠠⠎⠞⠀⠠⠌⠑⠏⠓⠢",
-    "world": "⠴⠠⠎⠞ ⠠⠌⠑⠏⠓⠢⠲"
+    "world": "⠴⠠⠎⠞ ⠠⠌⠑⠏⠓⠢⠲",
+    "jeomsarang": "⠠⠎⠞⠀⠠⠎⠞⠑⠏⠓⠑⠝"
   },
   {
     "input": "ch-ch-chilly",
     "internal": "ch-ch-*illy",
     "expected": "919369193633107761",
     "unicode": "⠉⠓⠤⠉⠓⠤⠡⠊⠇⠇⠽",
-    "world": "⠴⠉⠓⠤⠉⠓⠤⠡⠊⠇⠇⠽⠲"
+    "world": "⠴⠉⠓⠤⠉⠓⠤⠡⠊⠇⠇⠽⠲",
+    "jeomsarang": "⠉⠓⠤⠉⠓⠤⠉⠓⠊⠇⠇⠽"
   },
   {
     "input": "Shhh!",
     "internal": ",%hh6",
     "expected": "3241191922",
     "unicode": "⠠⠩⠓⠓⠖",
-    "world": "⠴⠠⠩⠓⠓⠖"
+    "world": "⠴⠠⠩⠓⠓⠖",
+    "jeomsarang": "⠠⠎⠓⠓⠓⠖"
   },
   {
     "input": "th'n",
     "internal": "?'n",
     "expected": "57429",
     "unicode": "⠹⠄⠝",
-    "world": "⠴⠹⠄⠝⠲"
+    "world": "⠴⠹⠄⠝⠲",
+    "jeomsarang": "⠞⠓⠄⠝"
   },
   {
     "input": "Ste Anne",
     "internal": ",/e ,anne",
     "expected": "3212170321292917",
     "unicode": "⠠⠌⠑⠀⠠⠁⠝⠝⠑",
-    "world": "⠴⠠⠌⠑ ⠠⠁⠝⠝⠑⠲"
+    "world": "⠴⠠⠌⠑ ⠠⠁⠝⠝⠑⠲",
+    "jeomsarang": "⠠⠎⠞⠑⠀⠠⠁⠝⠝⠑"
   }
 ]

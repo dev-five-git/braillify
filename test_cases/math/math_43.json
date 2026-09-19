@@ -24,7 +24,7 @@
     "expected": "56443232139545456443232251711",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉⠶⠶⠸⠬⠠⠠⠙⠑⠋",
     "world": "⠸⠬⠴⠠⠠⠁⠃⠉⠸⠿⠫⠼⠉⠠⠠⠙⠑⠋⠲",
-    "jeomsarang": "⠸⠬⠠⠠⠁⠃⠉⠶⠶⠸⠬⠇⠠⠠⠙⠑⠋⠲"
+    "jeomsarang": "⠸⠬⠠⠠⠁⠃⠉⠶⠶⠸⠬⠇⠠⠠⠙⠑⠋"
   },
   {
     "input": "$\\triangle ABC \\equiv \\triangle DEF$",

@@ -1,0 +1,11 @@
+[package]
+name = "braillify-go"
+version = "2.0.0"
+edition = "2024"
+
+[lib]
+name = "braillify_go"
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+braillify = { path = "../../libs/braillify", default-features = false }

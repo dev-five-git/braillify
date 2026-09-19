@@ -13,7 +13,7 @@
     "expected": "614018186026",
     "unicode": "⠽⠨⠒⠒⠼⠚",
     "world": "⠴⠽⠒⠒⠼⠚",
-    "jeomsarang": "⠴⠽⠳⠲⠨⠒⠒⠼⠚"
+    "jeomsarang": "⠽⠲⠨⠒⠒⠼⠚"
   },
   {
     "input": "$y \\neq 0$",
@@ -38,7 +38,7 @@
     "expected": "134343",
     "unicode": "⠁⠢⠢⠃",
     "world": "⠴⠁⠈⠜⠃⠲",
-    "jeomsarang": "⠴⠁⠈⠜⠃⠲"
+    "jeomsarang": "⠁⠜⠃"
   },
   {
     "input": "$a > b$",
@@ -63,7 +63,7 @@
     "expected": "454034346026",
     "unicode": "⠭⠨⠢⠢⠼⠚",
     "world": "⠴⠭⠢⠢⠼⠚",
-    "jeomsarang": "⠴⠭⠨⠢⠢⠼⠚"
+    "jeomsarang": "⠭⠨⠢⠢⠼⠚"
   },
   {
     "input": "$x≯0$",
@@ -72,7 +72,7 @@
     "expected": "454034346026",
     "unicode": "⠭⠨⠢⠢⠼⠚",
     "world": "⠴⠈⠎⠴⠭⠢⠢⠼⠚⠈⠎",
-    "jeomsarang": "⠈⠎⠭⠨⠢⠢⠼⠚⠈⠎"
+    "jeomsarang": "⠈⠲⠭⠨⠢⠢⠼⠚⠈⠲"
   },
   {
     "input": "<",
@@ -88,7 +88,7 @@
     "expected": "4520206026",
     "unicode": "⠭⠔⠔⠼⠚",
     "world": "⠴⠭⠔⠔⠼⠚",
-    "jeomsarang": "⠴⠰⠭⠈⠣⠼⠚"
+    "jeomsarang": "⠭⠣⠼⠚"
   },
   {
     "input": "$x < 0$",
@@ -105,7 +105,7 @@
     "expected": "206012020452020609",
     "unicode": "⠔⠼⠁⠔⠔⠭⠔⠔⠼⠉",
     "world": "⠤⠼⠁⠔⠔⠴⠭⠔⠔⠼⠉",
-    "jeomsarang": "⠤⠼⠁⠈⠣⠭⠈⠣⠼⠉"
+    "jeomsarang": "⠤⠼⠁⠣⠭⠣⠼⠉"
   },
   {
     "input": "$-1 < x < 3$",
@@ -122,7 +122,7 @@
     "expected": "2060172020452020603",
     "unicode": "⠔⠼⠑⠔⠔⠭⠔⠔⠼⠃",
     "world": "⠤⠼⠑⠔⠔⠴⠭⠔⠔⠤⠼⠃",
-    "jeomsarang": "⠤⠼⠑⠈⠣⠭⠈⠣⠤⠼⠃"
+    "jeomsarang": "⠤⠼⠑⠣⠭⠣⠤⠼⠃"
   },
   {
     "input": "$-5 < x < -2$",
@@ -147,7 +147,7 @@
     "expected": "4540202061",
     "unicode": "⠭⠨⠔⠔⠽",
     "world": "⠴⠭⠈⠣⠄⠳⠭⠴⠒⠒⠦⠄⠰⠽⠲",
-    "jeomsarang": "⠴⠭⠨⠔⠔⠰⠽⠲"
+    "jeomsarang": "⠭⠨⠔⠔⠽"
   },
   {
     "input": "$x≮y$",
@@ -156,7 +156,7 @@
     "expected": "4540202061",
     "unicode": "⠭⠨⠔⠔⠽",
     "world": "⠴⠈⠎⠴⠭⠈⠣⠄⠳⠭⠴⠒⠒⠦⠄⠰⠽⠈⠎",
-    "jeomsarang": "⠈⠎⠭⠨⠔⠔⠽⠈⠎"
+    "jeomsarang": "⠈⠲⠭⠨⠔⠔⠽⠈⠲"
   },
   {
     "input": "≧",
@@ -180,7 +180,7 @@
     "expected": "4550506017",
     "unicode": "⠭⠲⠲⠼⠑",
     "world": "⠴⠭⠲⠲⠼⠑",
-    "jeomsarang": "⠴⠊⠞⠲⠲⠲⠼⠑"
+    "jeomsarang": "⠭⠲⠲⠲⠼⠑"
   },
   {
     "input": "$x \\geq 5$",
@@ -205,7 +205,7 @@
     "expected": "4540505061",
     "unicode": "⠭⠨⠲⠲⠽",
     "world": "⠴⠭⠸⠈⠜⠄⠳⠭⠴⠒⠒⠦⠄⠰⠽⠲",
-    "jeomsarang": "⠴⠭⠨⠲⠲⠰⠽⠲"
+    "jeomsarang": "⠭⠨⠲⠲⠽"
   },
   {
     "input": "$x≱y$",
@@ -214,7 +214,7 @@
     "expected": "4540505061",
     "unicode": "⠭⠨⠲⠲⠽",
     "world": "⠴⠈⠎⠴⠭⠸⠈⠜⠄⠳⠭⠴⠒⠒⠦⠄⠰⠽⠈⠎",
-    "jeomsarang": "⠈⠎⠭⠨⠲⠲⠽⠈⠎"
+    "jeomsarang": "⠈⠲⠭⠨⠲⠲⠽⠈⠲"
   },
   {
     "input": "≦",
@@ -238,7 +238,7 @@
     "expected": "4522226026",
     "unicode": "⠭⠖⠖⠼⠚",
     "world": "⠴⠭⠖⠖⠼⠚",
-    "jeomsarang": "⠴⠊⠞⠲⠖⠖⠼⠚"
+    "jeomsarang": "⠭⠲⠖⠖⠼⠚"
   },
   {
     "input": "$x \\leq 0$",
@@ -255,7 +255,7 @@
     "expected": "2060122222214452222601",
     "unicode": "⠔⠼⠁⠖⠖⠖⠎⠭⠖⠖⠼⠁",
     "world": "⠤⠼⠁⠖⠖⠴⠎⠔⠭⠖⠖⠼⠁",
-    "jeomsarang": "⠤⠼⠁⠖⠖⠎⠔⠭⠲⠖⠖⠼⠁"
+    "jeomsarang": "⠤⠼⠁⠖⠖⠎⠊⠝⠭⠲⠖⠖⠼⠁"
   },
   {
     "input": "$-1 \\leq \\sin x \\leq 1$",
@@ -280,7 +280,7 @@
     "expected": "4540222261",
     "unicode": "⠭⠨⠖⠖⠽",
     "world": "⠴⠭⠸⠈⠣⠄⠳⠭⠴⠒⠒⠦⠄⠰⠽⠲",
-    "jeomsarang": "⠴⠭⠨⠖⠖⠰⠽⠲"
+    "jeomsarang": "⠭⠨⠖⠖⠽"
   },
   {
     "input": "$x≰y$",
@@ -289,6 +289,6 @@
     "expected": "4540222261",
     "unicode": "⠭⠨⠖⠖⠽",
     "world": "⠴⠈⠎⠴⠭⠸⠈⠣⠄⠳⠭⠴⠒⠒⠦⠄⠰⠽⠈⠎",
-    "jeomsarang": "⠈⠎⠭⠨⠖⠖⠽⠈⠎"
+    "jeomsarang": "⠈⠲⠭⠨⠖⠖⠽⠈⠲"
   }
 ]

@@ -1,0 +1,40 @@
+braillify
+Copyright the braillify contributors.
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It bundles the following third-party data files.
+
+--------------------------------------------------------------------------------
+libs/braillify/resources/hanja-readings.txt
+--------------------------------------------------------------------------------
+
+Derived from the Unicode® Unihan Database (the `kHangul` property of
+Unihan_Readings.txt), which maps a Han ideograph to its Korean reading.
+
+Copyright © 1991-2026 Unicode, Inc.
+
+Distributed under the Unicode License v3:
+https://www.unicode.org/license.txt
+
+Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the
+United States and other countries. This project is not endorsed by Unicode, Inc.
+
+--------------------------------------------------------------------------------
+libs/braillify/resources/cmudict.dict
+--------------------------------------------------------------------------------
+
+The CMU Pronouncing Dictionary.
+
+Copyright © 1993-2014 Carnegie Mellon University.
+
+Distributed under the 2-clause BSD license; see the header of the file itself
+for the full text.
+
+--------------------------------------------------------------------------------
+test_cases/<year>_corpus/
+--------------------------------------------------------------------------------
+
+Transcriptions imported from the 국립국어원 한국어-한국점자 병렬 말뭉치
+(NIKL Korean-Korean Braille Parallel Corpus), used as benchmark reference data.
+The original distribution archives are not redistributed here.

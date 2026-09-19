@@ -46,6 +46,45 @@ static INITIAL_CONTRACTIONS: phf::Map<&'static str, [u8; 2]> = phf_map! {
     "many"      => [decode_unicode('⠸'), decode_unicode('⠍')],
 };
 
+/// Whether `word` (lowercase) is one of the §10.7 initial-letter contraction
+/// words — the complete RUEB list, independent of which module applies it.
+pub fn is_initial_letter_contraction_word(word: &str) -> bool {
+    matches!(
+        word,
+        "day"
+            | "ever"
+            | "father"
+            | "here"
+            | "know"
+            | "lord"
+            | "mother"
+            | "name"
+            | "one"
+            | "part"
+            | "question"
+            | "right"
+            | "some"
+            | "time"
+            | "under"
+            | "young"
+            | "there"
+            | "character"
+            | "through"
+            | "where"
+            | "ought"
+            | "cannot"
+            | "had"
+            | "many"
+            | "spirit"
+            | "world"
+            | "these"
+            | "those"
+            | "whose"
+            | "upon"
+            | "word"
+    )
+}
+
 /// §10.7 initial-letter contraction rule.
 pub struct InitialContractionRule;
 

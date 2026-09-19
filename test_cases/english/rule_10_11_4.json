@@ -4,27 +4,31 @@
     "internal": "preamplifi]",
     "expected": "15231711315710111059",
     "unicode": "⠏⠗⠑⠁⠍⠏⠇⠊⠋⠊⠻",
-    "world": "⠴⠏⠗⠑⠁⠍⠏⠇⠊⠋⠊⠻⠲"
+    "world": "⠴⠏⠗⠑⠁⠍⠏⠇⠊⠋⠊⠻⠲",
+    "jeomsarang": "⠏⠗⠑⠁⠍⠏⠇⠊⠋⠊⠑⠗"
   },
   {
     "input": "readjust",
     "internal": "readju/",
     "expected": "2317125263712",
     "unicode": "⠗⠑⠁⠙⠚⠥⠌",
-    "world": "⠴⠗⠑⠁⠙⠚⠥⠌⠲"
+    "world": "⠴⠗⠑⠁⠙⠚⠥⠌⠲",
+    "jeomsarang": "⠗⠑⠁⠙⠚⠥⠎⠞"
   },
   {
     "input": "reappoint",
     "internal": "reappo9t",
     "expected": "231711515212030",
     "unicode": "⠗⠑⠁⠏⠏⠕⠔⠞",
-    "world": "⠴⠗⠑⠁⠏⠏⠕⠔⠞⠲"
+    "world": "⠴⠗⠑⠁⠏⠏⠕⠔⠞⠲",
+    "jeomsarang": "⠗⠑⠁⠏⠏⠕⠊⠝⠞"
   },
   {
     "input": "reassure",
     "internal": "reassure",
     "expected": "231711414372317",
     "unicode": "⠗⠑⠁⠎⠎⠥⠗⠑",
-    "world": "⠴⠗⠑⠁⠎⠎⠥⠗⠑⠲"
+    "world": "⠴⠗⠑⠁⠎⠎⠥⠗⠑⠲",
+    "jeomsarang": "⠗⠑⠁⠎⠎⠥⠗⠑"
   }
 ]

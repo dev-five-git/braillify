@@ -157,7 +157,21 @@ fn classify_con(word: &[char], provider: &dyn PronunciationProvider) -> Decision
     if matches!(word.get(3), Some('t' | 'g')) {
         return Decision::Use;
     }
-    decide_all(&provider.pronunciations(&word_string(word)), con_pron_uses)
+    let decision = decide_all(&provider.pronunciations(&word_string(word)), con_pron_uses);
+    if decision != Decision::Unknown {
+        return decision;
+    }
+    // 사전에 없는 외래 고유명사(`Consulta`, `Condotti`)는 위 `t`/`g` 판정과 같은
+    // 철자 기준으로 정한다: `con` 뒤에 자음이 오면 첫 음절이 닫히고, 그 뒤에 모음이
+    // 있어 둘째 음절이 이어지면 `con`이 첫 음절이다. 뒤에 모음이 없으면 단음절
+    // (`conch`, `conk`)이라 §10.6.2의 첫 음절 조건을 만족하지 못한다.
+    let consonant_closes_prefix = word.get(3).is_some_and(|ch| !is_vowel_char(*ch));
+    let second_syllable_follows = word.iter().skip(4).any(|ch| is_vowel_char(*ch));
+    if consonant_closes_prefix && second_syllable_follows {
+        Decision::Use
+    } else {
+        Decision::Unknown
+    }
 }
 
 fn con_pron_uses(p: &[Phoneme]) -> bool {
@@ -198,6 +212,19 @@ fn classify_dis(word: &[char], provider: &dyn PronunciationProvider) -> Decision
     // stress cannot: `distinct`/`disturbed` are pretonic (`D IH0 S T…`) just like
     // `dispirited`, yet take `dis`. No `dis…t` word in the corpus spells out.
     if word.get(3) == Some(&'t') {
+        return Decision::Use;
+    }
+    // §10.6.1 `disco`, `self-discipline` and §10.13.9 `disgusting`: UEB reads
+    // `dis` as the closed first syllable before `c`/`g`, and a consonant that
+    // never forms an `s`-onset cluster (`sb sd sf sj sr sv sz`) leaves the `s`
+    // as the coda of `dis` just the same. Only `sp` (`di·spirited`) and the
+    // `sh` digraph (`dishevel`) are left to the pronunciation test.
+    if word.len() > 4
+        && matches!(
+            word.get(3),
+            Some('c' | 'b' | 'd' | 'f' | 'g' | 'j' | 'r' | 'v' | 'z')
+        )
+    {
         return Decision::Use;
     }
     decide_all(&provider.pronunciations(&word_string(word)), dis_pron_uses)

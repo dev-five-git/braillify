@@ -24,7 +24,7 @@
     "expected": "56443232139",
     "unicode": "⠸⠬⠠⠠⠁⠃⠉",
     "world": "⠸⠬⠴⠠⠠⠁⠃⠉⠲",
-    "jeomsarang": "⠸⠬⠠⠠⠁⠃⠉⠲"
+    "jeomsarang": "⠸⠬⠠⠠⠁⠃⠉"
   },
   {
     "input": "$\\triangle ABC$",
@@ -60,7 +60,7 @@
     "expected": "5654323213925",
     "unicode": "⠸⠶⠠⠠⠁⠃⠉⠙",
     "world": "⠸⠶⠴⠠⠠⠁⠃⠉⠙⠲",
-    "jeomsarang": "⠸⠶⠠⠠⠁⠃⠉⠙⠲"
+    "jeomsarang": "⠸⠶⠠⠠⠁⠃⠉⠙"
   },
   {
     "input": "$\\square ABCD$",

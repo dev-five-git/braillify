@@ -39,6 +39,7 @@ const ASCII_UNIT_MAPPINGS: &[(&str, &str)] = &[
     ("GB", "⠴⠠⠠⠛⠃⠲"),
     ("m", "⠴⠍⠲"),
     ("h", "⠴⠓⠲"),
+    ("s", "⠴⠎⠲"),
 ];
 
 /// Roman unit symbols printed in the Rule 69 / science-braille unit tables
@@ -56,7 +57,10 @@ const SI_PREFIXES: &[&str] = &[
     "E", "Z", "Y", "R", "Q",
 ];
 
-const PERCENT_ABBREVIATION_MAPPINGS: &[(&str, &str)] = &[("%ile", "⠴⠏⠞"), ("%p", "⠴⠏⠏")];
+// 제69항 [붙임 2] `%p` = `⠴⠏⠏`; a printed capital `P` keeps the same unit
+// form with UEB 8.3's capital indicator before that letter.
+const PERCENT_ABBREVIATION_MAPPINGS: &[(&str, &str)] =
+    &[("%ile", "⠴⠏⠞"), ("%p", "⠴⠏⠏"), ("%P", "⠴⠏⠠⠏")];
 
 const SEPARATED_SYMBOLS: &[char] = &['%', '‰', '°', '℃', '℉'];
 
@@ -116,7 +120,9 @@ pub(crate) fn is_compatibility_unit_presentation(c: char) -> bool {
 /// and a lower groupsign cannot consume the whole entry run (`in` is spelled
 /// `i`-`n`, while the same `in` may contract inside `min`).
 fn encode_rule_69_unit_letters(letters: &[char]) -> Result<Vec<u8>, String> {
-    match encode_korean_word(letters, false, false, false, true, false, false, false) {
+    match encode_korean_word(
+        letters, false, false, false, false, true, false, false, false, false,
+    ) {
         Some(encoded) => Ok(encoded),
         None => Err(format!(
             "cannot encode rule 69 Roman unit letters: {}",
@@ -215,11 +221,17 @@ fn is_numeric_or_unit_context(ctx: &RuleContext) -> bool {
     {
         numeric_start -= 1;
     }
+    // 제35항 `D-100`: a Roman-led identifier keeps its hyphenated number in
+    // the Roman chain, so letters after that number (`FA-50PL`) are not a unit.
+    let mut identifier_head = numeric_start;
+    if identifier_head > 0 && ctx.word_chars[identifier_head - 1] == '-' {
+        identifier_head -= 1;
+    }
     let compact_numeric_prefix = numeric_start < ctx.index
         && ctx.word_chars[numeric_start..ctx.index]
             .iter()
             .any(char::is_ascii_digit)
-        && numeric_start
+        && identifier_head
             .checked_sub(1)
             .and_then(|index| ctx.word_chars.get(index))
             .is_none_or(|previous| !previous.is_ascii_alphabetic());
@@ -492,7 +504,7 @@ fn encode_percent_abbreviation(word: &[char], index: usize) -> Option<(Vec<u8>, 
         if !chars_start_with_ascii(tail, abbr) {
             continue;
         }
-        if *abbr == "%p"
+        if matches!(*abbr, "%p" | "%P")
             && tail
                 .get(abbr.len())
                 .is_some_and(|ch| ch.is_ascii_alphabetic())
@@ -557,6 +569,19 @@ pub(crate) fn parse_numeric_ascii_unit_expression(word: &[char]) -> Option<usize
             cursor += unit_len;
             saw_unit = true;
             component_has_unit = true;
+        } else if word
+            .get(cursor)
+            .is_some_and(|symbol| SINGLE_MAPPINGS.iter().any(|(unit, _)| unit == symbol))
+        {
+            cursor += 1;
+            // 제69항 [붙임 2] unit symbol followed by a Roman qualifier
+            // (`38°N`, `15°Bx`) is still one measurement, not a formula.
+            cursor += word[cursor..]
+                .iter()
+                .take_while(|ch| ch.is_ascii_alphabetic())
+                .count();
+            saw_unit = true;
+            component_has_unit = true;
         }
 
         while component_has_unit && word.get(cursor) == Some(&'/') {
@@ -617,10 +642,9 @@ fn omit_roman_terminator_before_boundary(
         && word
             .get(boundary_index + 1)
             .is_some_and(|next| is_roman_unit_component(*next));
-    let continues_into_number = word
-        .get(boundary_index)
-        .is_some_and(|next| next.is_ascii_digit());
-    if (skips_for_punctuation || continues_through_slash || continues_into_number)
+    if (skips_for_punctuation
+        || continues_through_slash
+        || unit_continues_into_number(word, boundary_index))
         && encoded.last() == Some(&crate::unicode::decode_unicode('⠲'))
     {
         encoded.pop();
@@ -669,6 +693,18 @@ fn roman_unit_continues_into_next_word(ctx: &RuleContext, boundary_index: usize)
             .is_some_and(|ch| ch.is_ascii_alphanumeric())
 }
 
+/// 제35항 `D-100` 은 붙임표로 이어지는 숫자를 같은 로마자 구간에 둔다. 단위 뒤도
+/// 같은 자리여서(`799cc-7`, `25kg-3`) 구간이 닫히지 않는다.
+fn unit_continues_into_number(word: &[char], boundary_index: usize) -> bool {
+    word.get(boundary_index).is_some_and(|next| {
+        next.is_ascii_digit()
+            || (*next == '-'
+                && word
+                    .get(boundary_index + 1)
+                    .is_some_and(char::is_ascii_digit))
+    })
+}
+
 fn omit_trailing_roman_terminator(encoded: &mut Vec<u8>) {
     if encoded.last() == Some(&crate::unicode::decode_unicode('⠲')) {
         encoded.pop();
@@ -700,7 +736,9 @@ pub(crate) fn adjust_roman_unit_boundary(
     if separated_continues {
         omit_trailing_roman_terminator(encoded);
     }
-    comma_continues || separated_continues
+    comma_continues
+        || separated_continues
+        || unit_continues_into_number(ctx.word_chars, boundary_index)
 }
 
 fn should_insert_separator_after_symbol(symbol: char, next: Option<char>) -> bool {
@@ -742,11 +780,7 @@ impl BrailleRule for Rule69 {
             let mut encoded = crate::encode(&numeric)?;
             encoded.extend(unit);
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            if continues {
-                ctx.state.roman_number_chain = false;
-            }
+            crate::rules::roman_mode::resolve_section_after_unit(ctx.state, continues);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -763,11 +797,7 @@ impl BrailleRule for Rule69 {
             }
             trim_recent_english_indicator(ctx.result);
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            if continues {
-                ctx.state.roman_number_chain = false;
-            }
+            crate::rules::roman_mode::resolve_section_after_unit(ctx.state, continues);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -812,8 +842,7 @@ impl BrailleRule for Rule69 {
             );
 
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = false;
-            ctx.state.needs_english_continuation = false;
+            crate::rules::roman_mode::close_section_keeping_number_chain(ctx.state);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -839,9 +868,7 @@ impl BrailleRule for Rule69 {
             // component and must retain their existing closed state. Only a
             // continuation across a print space needs to survive into the next
             // Word token.
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            ctx.state.roman_number_chain = false;
+            crate::rules::roman_mode::set_section_open(ctx.state, continues);
             return Ok(RuleResult::Consumed);
         }
 
@@ -1449,6 +1476,23 @@ mod tests {
         assert!(
             actual.contains(expected_segment),
             "missing ordinary rule-69 unit boundary {expected_segment:?} in {actual:?}"
+        );
+    }
+
+    /// 제35항 — 단위 뒤에서 붙임표로 이어지는 숫자는 종료표도 로마자표도 없이 같은
+    /// 구간에 남는다. 붙임표 뒤가 숫자가 아니면 평소대로 구간을 닫는다.
+    #[rstest::rstest]
+    #[case::volume_unit("가나 799cc-7 다라", "⠴⠉⠉⠤⠼⠛")]
+    #[case::mass_unit("가나 25kg-3 다라", "⠴⠅⠛⠤⠼⠉")]
+    #[case::hyphen_before_letter("가나 25kg-a 다라", "⠴⠅⠛⠲")]
+    fn unit_hyphen_number_stays_in_one_roman_section(
+        #[case] input: &str,
+        #[case] expected_segment: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            actual.contains(expected_segment),
+            "missing rule-35 hyphen chain {expected_segment:?} in {actual:?}"
         );
     }
 

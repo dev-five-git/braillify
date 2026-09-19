@@ -53,6 +53,14 @@ jobs:
         with:
           components: clippy, rustfmt
       - uses: actions-rust-lang/setup-rust-toolchain@v1
+      # packages/ruby(rb-sys) 컴파일에 libruby가 필요하다.
+      # Windows는 pyo3/maturin(MSVC Python)과 ABI를 맞추기 위해 MSVC 빌드(mswin) Ruby를 쓴다.
+      # (ucrt Ruby는 GNU 툴체인을 요구해 한 번의 workspace-wide cargo 호출에서 pyo3와 공존 불가)
+      # mswin은 ruby master dev 빌드만 제공된다 — 실배포 플랫폼(ucrt) 검증은 ruby-test 잡이 담당.
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
+        with:
+          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
+          cargo-cache: true
       - name: Cargo tarpaulin and fmt
         run: |
           cargo install cargo-tarpaulin
@@ -1056,7 +1064,9 @@ jobs:
             target: x86_64-unknown-linux-gnu
             platform: linux-amd64
           # Linux ARM64
-          - runner: ubuntu-latest
+          # go test 는 네이티브로 돌기 때문에 러너 아키텍처가 target 과 같아야 한다.
+          # amd64 러너에서 크로스 빌드하면 cgo 가 libs/linux-amd64 를 찾다가 링크에 실패한다.
+          - runner: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
             platform: linux-arm64
           # macOS ARM64
@@ -1072,6 +1082,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          allow-unsafe-pr-checkout: true
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -1079,20 +1090,12 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
 
-      - name: Install cross-compilation tools (Linux ARM64)
-        if: matrix.platform == 'linux-arm64'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
-
       - uses: actions/setup-go@v5
         with:
           go-version: stable
 
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
-        env:
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Copy native library
         run: |

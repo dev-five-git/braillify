@@ -1,6 +1,6 @@
 # 점자세상 (braillekorea.org) 정답률 벤치마크
 
-- 측정일: 2026-08-31
+- 측정일: 2026-09-07
 - 비교 기준: PDF 규정 (2024 개정 한국 점자 규정)
   - PDF 정답 = test_cases JSON 의 `unicode` 필드
   - 점자세상 결과 = test_cases JSON 의 `world` 필드 (fetch-world.ts 가 braillekorea.org API 에서 수집)

@@ -4,13 +4,15 @@
     "internal": "aegis",
     "expected": "117271014",
     "unicode": "⠁⠑⠛⠊⠎",
-    "world": "⠴⠁⠑⠛⠊⠎⠲"
+    "world": "⠴⠁⠑⠛⠊⠎⠲",
+    "jeomsarang": "⠁⠑⠛⠊⠎"
   },
   {
     "input": "amoeba",
     "internal": "amoeba",
     "expected": "113211731",
     "unicode": "⠁⠍⠕⠑⠃⠁",
-    "world": "⠴⠁⠍⠕⠑⠃⠁⠲"
+    "world": "⠴⠁⠍⠕⠑⠃⠁⠲",
+    "jeomsarang": "⠁⠍⠕⠑⠃⠁"
   }
 ]

@@ -27,9 +27,17 @@ pub fn requires_grade1_indicator(uppercase_word: &str) -> bool {
 /// longer alphabetic word (10.9.8).  Callers use this after an all-capitals ASCII
 /// run, so any nonletter suffix must satisfy the standing-alone boundary.  A
 /// Korean syllable starts the next code span and is likewise a hard boundary for
-/// the embedded Roman sequence.  Digits, slash, plus, and an opening grouping
-/// sign are deliberately excluded (`CD47`, `CD/ATM`, `NEIS+`, `LLM(SLM)`).
+/// the embedded Roman sequence.  Digits, slash and plus are deliberately
+/// excluded (`CD47`, `CD/ATM`, `NEIS+`).
+///
+/// An opening bracket is admitted on 10.9.8 grounds rather than 2.6.3: that rule
+/// asks only that the colliding sequence sit at the *beginning of a word*, which
+/// `LLM(...)` satisfies, and its official example `LLC ⠰⠠⠠⠇⠇⠉` is exactly this
+/// shape.
 pub fn permits_grade1_boundary_after_run(suffix: &[char]) -> bool {
+    if matches!(suffix.first(), Some('(' | '[' | '{')) {
+        return true;
+    }
     for &ch in suffix {
         // UEB 2.6.1 makes a hyphen or dash a boundary in its own right.  Do
         // not scan through it into the next segment: the official `CD-ROM`
@@ -78,7 +86,7 @@ mod tests {
     #[case::adjacent_digit("47", false)]
     #[case::slash_continuation("/ATM", false)]
     #[case::plus_continuation("+", false)]
-    #[case::opening_group("(SLM)", false)]
+    #[case::opening_group("(SLM)", true)]
     #[case::comma_before_attached_letters(",ABC", false)]
     fn grade1_boundary_follows_ueb_standing_alone_rules(
         #[case] suffix: &str,
@@ -117,5 +125,20 @@ mod tests {
         let word = std::hint::black_box("cd");
 
         assert!(requires_grade1_indicator(word));
+    }
+
+    /// A spelled-out initialism collides only through its literal letter cells.
+    #[rstest::rstest]
+    #[case::complete_cd("CD", true)]
+    #[case::official_llc_prefix("LLC", true)]
+    #[case::groupsign_reading_mst("MST", false)]
+    #[case::groupsign_reading_fst("FST", false)]
+    #[case::tomorrow_plus_s("TMS", true)]
+    #[case::plain_initialism("KBS", false)]
+    fn spelled_letters_collide_only_literally(#[case] input: &str, #[case] expected: bool) {
+        assert_eq!(
+            super::super::english_ueb::rule_10_9::requires_grade1_before_spelled_letters(input),
+            expected
+        );
     }
 }

@@ -4,27 +4,31 @@
     "internal": "_?#d",
     "expected": "56576025",
     "unicode": "⠸⠹⠼⠙",
-    "world": "⠸⠹⠼⠙"
+    "world": "⠸⠹⠼⠙",
+    "jeomsarang": "⠼⠼⠙"
   },
   {
     "input": "Apt. #D",
     "internal": ",apt4 _?,d",
     "expected": "321153050056573225",
     "unicode": "⠠⠁⠏⠞⠲⠀⠸⠹⠠⠙",
-    "world": "⠴⠠⠁⠏⠞⠲ ⠸⠹⠠⠙⠲"
+    "world": "⠴⠠⠁⠏⠞⠲ ⠸⠹⠠⠙⠲",
+    "jeomsarang": "⠠⠁⠏⠞⠲⠀⠈⠼⠠⠙"
   },
   {
     "input": "20# bag of flour",
     "internal": "#bj_? bag ( fl\\r",
     "expected": "6032656570312705501175123",
     "unicode": "⠼⠃⠚⠸⠹⠀⠃⠁⠛⠀⠷⠀⠋⠇⠳⠗",
-    "world": "⠼⠃⠚⠸⠹ ⠴⠃⠁⠛ ⠷ ⠋⠇⠳⠗⠲"
+    "world": "⠼⠃⠚⠸⠹ ⠴⠃⠁⠛ ⠷ ⠋⠇⠳⠗⠲",
+    "jeomsarang": "⠼⠃⠚⠈⠼⠀⠃⠁⠛⠀⠕⠋⠀⠋⠇⠕⠥⠗"
   },
   {
     "input": "Press the # key on the telephone.",
     "internal": ",press ! _? key on ! teleph\"o4",
     "expected": "3215231714140460565705176102129046030177171519162150",
     "unicode": "⠠⠏⠗⠑⠎⠎⠀⠮⠀⠸⠹⠀⠅⠑⠽⠀⠕⠝⠀⠮⠀⠞⠑⠇⠑⠏⠓⠐⠕⠲",
-    "world": "⠴⠠⠏⠗⠑⠎⠎ ⠮ ⠸⠹ ⠅⠑⠽ ⠕⠝ ⠮ ⠞⠑⠇⠑⠏⠓⠐⠕⠲"
+    "world": "⠴⠠⠏⠗⠑⠎⠎ ⠮ ⠸⠹ ⠅⠑⠽ ⠕⠝ ⠮ ⠞⠑⠇⠑⠏⠓⠐⠕⠲",
+    "jeomsarang": "⠠⠏⠗⠑⠎⠎⠀⠞⠓⠑⠀⠈⠼⠀⠅⠑⠽⠀⠕⠝⠀⠞⠓⠑⠀⠞⠑⠇⠑⠏⠓⠕⠝⠑⠲"
   }
 ]

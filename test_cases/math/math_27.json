@@ -43,7 +43,7 @@
     "expected": "2060175129",
     "unicode": "⠔⠼⠑⠳⠝",
     "world": "⠤⠼⠑⠸⠳⠴⠝⠲",
-    "jeomsarang": "⠤⠼⠑⠈⠳⠝⠲"
+    "jeomsarang": "⠤⠼⠑⠈⠳⠝"
   },
   {
     "input": "$-5 \\mid n$",
@@ -97,7 +97,7 @@
     "expected": "15405129",
     "unicode": "⠏⠨⠳⠝",
     "world": "⠴⠏⠸⠳⠄⠳⠭⠴⠒⠒⠦⠄⠰⠝⠲",
-    "jeomsarang": "⠴⠏⠨⠳⠝⠲"
+    "jeomsarang": "⠏⠨⠳⠝"
   },
   {
     "input": "$p \\nmid n$",

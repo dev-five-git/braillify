@@ -41,6 +41,10 @@ pub(crate) fn is_roman_plus_identifier(chars: &[char]) -> bool {
         || apply::has_korean_prefix_terminal_roman_plus_identifier(chars)
 }
 
+pub(crate) fn is_roman_minus_grade(chars: &[char]) -> bool {
+    apply::is_korean_prose_roman_minus_grade(chars)
+}
+
 #[cfg(test)]
 mod tests {
     use super::apply::{
@@ -179,8 +183,9 @@ mod tests {
     #[case::relapsed_refractory_cancer("폐암(R/R ES-SCLC)에서", true)]
     #[case::lowercase_math_description("F/N ratio", false)]
     #[case::explicit_equation("X≈F/N Result", false)]
-    #[case::isolated_fraction("F/N", false)]
-    fn single_letter_slash_phrase_requires_a_capital_led_roman_continuation(
+    #[case::isolated_contrast_pair("F/N", true)]
+    #[case::korean_continuation("A/S 센터", true)]
+    fn single_letter_slash_phrase_is_a_contrast_pair_unless_math_follows(
         #[case] input: &str,
         #[case] expected: bool,
     ) {
@@ -224,7 +229,9 @@ mod tests {
     #[case::contextual_single_letter_grade("A+(우수)", true)]
     #[case::ascii_single_letter_expression("A+(B)", false)]
     #[case::one_letter_terminal_identifier("A+", true)]
-    #[case::completed_sum("AB+C", false)]
+    #[case::capital_pair_identifier("AB+C", true)]
+    #[case::lowercase_algebra("x+y", false)]
+    #[case::digit_led_sum("7+UP", false)]
     #[case::chemical_expression("SmBa0.5-xCo2O5+d", false)]
     #[case::lexical_compound("Dog+Yoga", true)]
     #[case::lowercase_math_functions("sin+cos", false)]
@@ -243,7 +250,7 @@ mod tests {
     #[case::attached_particle("워케이션(Work+Vacation)은", true)]
     #[case::single_letter_terminal_label("등급(A+)은", true)]
     #[case::middle_dot_chained_identifier("상품(Service+)·후속(Next+)는", true)]
-    #[case::math_body("공식(A+B)은", false)]
+    #[case::capital_letter_pair_body("공식(A+B)은", true)]
     #[case::unclosed("도가(Dog+Yoga", false)]
     fn korean_prefix_plus_annotation_grammar(#[case] input: &str, #[case] expected: bool) {
         assert_eq!(
@@ -255,8 +262,8 @@ mod tests {
     #[rstest::rstest]
     #[case::roman_suffix("한글TV+는", true)]
     #[case::numeric_roman_suffix("한글7GB+는", true)]
-    #[case::completed_sum("한글A+B는", false)]
-    #[case::all_capital_internal_ambiguity("한글X+U는", false)]
+    #[case::capital_letter_pair("한글A+B는", true)]
+    #[case::all_capital_pair("한글X+U는", true)]
     fn korean_prefix_terminal_plus_suffix_grammar(#[case] input: &str, #[case] expected: bool) {
         assert_eq!(
             has_korean_prefix_terminal_roman_plus_identifier(&input.chars().collect::<Vec<_>>()),

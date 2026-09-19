@@ -67,6 +67,22 @@ pub fn is_pure_shortform_abbreviation(word: &str) -> bool {
 /// longer-word grammar decides whether that shortform reading is actually
 /// permitted; this is why the official `LLC` is guarded but `LLAMA` is not.
 pub fn requires_grade1_at_word_start(letters: &str) -> bool {
+    requires_grade1_before_cells(letters, korean_letter_sequence_cells)
+}
+
+/// The same §10.9.7-10.9.8 collision test for a §10.12.1 initialism that is
+/// spelled letter by letter: only its literal alphabet cells can be misread
+/// (`CD` → *could*), never a groupsign reading (`MST` is `⠍⠎⠞`, not *must*).
+pub fn requires_grade1_before_spelled_letters(letters: &str) -> bool {
+    requires_grade1_before_cells(letters, |chars| {
+        chars
+            .iter()
+            .map(|ch| crate::english::encode_english(*ch).expect("ASCII letter"))
+            .collect()
+    })
+}
+
+fn requires_grade1_before_cells(letters: &str, cells_for: impl Fn(&[char]) -> Vec<u8>) -> bool {
     let lower = letters.to_ascii_lowercase();
     let chars = lower.chars().collect::<Vec<_>>();
     if chars.len() < 2 || !letters.chars().all(|ch| ch.is_ascii_alphabetic()) {
@@ -74,7 +90,7 @@ pub fn requires_grade1_at_word_start(letters: &str) -> bool {
     }
 
     for end in 2..=chars.len() {
-        let prefix_cells = korean_letter_sequence_cells(&chars[..end]);
+        let prefix_cells = cells_for(&chars[..end]);
         for (shortform, notation) in SHORTFORMS.entries() {
             if notation_cells(notation).as_deref() != Some(prefix_cells.as_slice()) {
                 continue;
@@ -112,10 +128,12 @@ fn korean_letter_sequence_cells(letters: &[char]) -> Vec<u8> {
         letters, true,  // capitalization indicators are compared separately
         false, // do not recursively prepend grade 1
         false, // rule 37 suppresses whole-word signs on Roman entry
+        false, // compare against groupsign cells, never a shortform
         true,  // the sequence begins at a Roman word boundary
         false, // no adjacent digit in a pure letters-sequence
         false, // no numeric grade-1 mode in a pure letters-sequence
         false, // not split by an apostrophe
+        false, // lowercase, so never a §10.12.1 initialism
     )
     .expect("a lowercase ASCII letters-sequence must be encodable")
 }

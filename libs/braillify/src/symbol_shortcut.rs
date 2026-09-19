@@ -78,6 +78,10 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '〃' => &[decode_unicode('⠴'), decode_unicode('⠴')],
     // PDF 제60항 [붙임 1] — 참조 기호 ※ (U+203B).
     '※' => &[decode_unicode('⠸'), decode_unicode('⠔')],
+    // Decorative heart pictographs have no cell in the standard; the NIKL
+    // reference corpus keeps their print position as one blank cell.
+    '♥' => &[decode_unicode('⠀')],
+    '♡' => &[decode_unicode('⠀')],
 };
 
 /// Symbols that take UEB English (로마자) point shapes inside a Korean Roman

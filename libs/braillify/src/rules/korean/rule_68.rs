@@ -189,8 +189,7 @@ impl BrailleRule for Rule68 {
             )?
         {
             ctx.emit_slice(&encoded);
-            ctx.state.is_english = false;
-            ctx.state.needs_english_continuation = false;
+            crate::rules::roman_mode::close_section_keeping_number_chain(ctx.state);
             *ctx.skip_count = consumed.saturating_sub(1);
             return Ok(RuleResult::Consumed);
         }
@@ -238,9 +237,7 @@ impl BrailleRule for Rule68 {
             ctx.emit(0);
         }
         if is_roman_unit {
-            ctx.state.is_english = continues;
-            ctx.state.needs_english_continuation = false;
-            ctx.state.roman_number_chain = false;
+            crate::rules::roman_mode::set_section_open(ctx.state, continues);
         }
         Ok(RuleResult::Consumed)
     }

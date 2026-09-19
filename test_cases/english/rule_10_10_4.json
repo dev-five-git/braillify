@@ -4,132 +4,151 @@
     "internal": "2atitude",
     "expected": "61301030372517",
     "unicode": "⠆⠁⠞⠊⠞⠥⠙⠑",
-    "world": "⠴⠆⠁⠞⠊⠞⠥⠙⠑⠲"
+    "world": "⠴⠆⠁⠞⠊⠞⠥⠙⠑⠲",
+    "jeomsarang": "⠃⠑⠁⠞⠊⠞⠥⠙⠑"
   },
   {
     "input": "Beatrix",
     "internal": ",2atrix",
     "expected": "326130231045",
     "unicode": "⠠⠆⠁⠞⠗⠊⠭",
-    "world": "⠴⠠⠆⠁⠞⠗⠊⠭⠲"
+    "world": "⠴⠠⠆⠁⠞⠗⠊⠭⠲",
+    "jeomsarang": "⠠⠃⠑⠁⠞⠗⠊⠭"
   },
   {
     "input": "bedraggled",
     "internal": "2dra7l$",
     "expected": "62523154743",
     "unicode": "⠆⠙⠗⠁⠶⠇⠫",
-    "world": "⠴⠆⠙⠗⠁⠶⠇⠫⠲"
+    "world": "⠴⠆⠙⠗⠁⠶⠇⠫⠲",
+    "jeomsarang": "⠃⠑⠙⠗⠁⠛⠛⠇⠑⠙"
   },
   {
     "input": "benevolence",
     "internal": "2nevol;e",
     "expected": "62917392174817",
     "unicode": "⠆⠝⠑⠧⠕⠇⠰⠑",
-    "world": "⠴⠆⠝⠑⠧⠕⠇⠰⠑⠲"
+    "world": "⠴⠆⠝⠑⠧⠕⠇⠰⠑⠲",
+    "jeomsarang": "⠃⠑⠝⠑⠧⠕⠇⠑⠝⠉⠑"
   },
   {
     "input": "benighted",
     "internal": "2ni<t$",
     "expected": "62910353043",
     "unicode": "⠆⠝⠊⠣⠞⠫",
-    "world": "⠴⠆⠝⠊⠣⠞⠫⠲"
+    "world": "⠴⠆⠝⠊⠣⠞⠫⠲",
+    "jeomsarang": "⠃⠑⠝⠊⠛⠓⠞⠑⠙"
   },
   {
     "input": "benign",
     "internal": "2nign",
     "expected": "629102729",
     "unicode": "⠆⠝⠊⠛⠝",
-    "world": "⠴⠆⠝⠊⠛⠝⠲"
+    "world": "⠴⠆⠝⠊⠛⠝⠲",
+    "jeomsarang": "⠃⠑⠝⠊⠛⠝"
   },
   {
     "input": "berated",
     "internal": "2rat$",
     "expected": "62313043",
     "unicode": "⠆⠗⠁⠞⠫",
-    "world": "⠴⠆⠗⠁⠞⠫⠲"
+    "world": "⠴⠆⠗⠁⠞⠫⠲",
+    "jeomsarang": "⠃⠑⠗⠁⠞⠑⠙"
   },
   {
     "input": "congee",
     "internal": "3gee",
     "expected": "18271717",
     "unicode": "⠒⠛⠑⠑",
-    "world": "⠴⠒⠛⠑⠑⠲"
+    "world": "⠴⠒⠛⠑⠑⠲",
+    "jeomsarang": "⠉⠕⠝⠛⠑⠑"
   },
   {
     "input": "congenial",
     "internal": "3g5ial",
     "expected": "1827341017",
     "unicode": "⠒⠛⠢⠊⠁⠇",
-    "world": "⠴⠒⠛⠢⠊⠁⠇⠲"
+    "world": "⠴⠒⠛⠢⠊⠁⠇⠲",
+    "jeomsarang": "⠉⠕⠝⠛⠑⠝⠊⠁⠇"
   },
   {
     "input": "dishonesty",
     "internal": "4h\"o/y",
     "expected": "501916211261",
     "unicode": "⠲⠓⠐⠕⠌⠽",
-    "world": "⠴⠲⠓⠐⠕⠌⠽⠲"
+    "world": "⠴⠲⠓⠐⠕⠌⠽⠲",
+    "jeomsarang": "⠙⠊⠎⠓⠕⠝⠑⠎⠞⠽"
   },
   {
     "input": "distance",
     "internal": "4t.e",
     "expected": "50304017",
     "unicode": "⠲⠞⠨⠑",
-    "world": "⠴⠲⠞⠨⠑⠲"
+    "world": "⠴⠲⠞⠨⠑⠲",
+    "jeomsarang": "⠙⠊⠎⠞⠁⠝⠉⠑"
   },
   {
     "input": "beach",
     "internal": "b1*",
     "expected": "3233",
     "unicode": "⠃⠂⠡",
-    "world": "⠴⠃⠂⠡⠲"
+    "world": "⠴⠃⠂⠡⠲",
+    "jeomsarang": "⠃⠑⠁⠉⠓"
   },
   {
     "input": "beautiful",
     "internal": "b1uti;l",
     "expected": "32373010487",
     "unicode": "⠃⠂⠥⠞⠊⠰⠇",
-    "world": "⠴⠃⠂⠥⠞⠊⠰⠇⠲"
+    "world": "⠴⠃⠂⠥⠞⠊⠰⠇⠲",
+    "jeomsarang": "⠃⠑⠁⠥⠞⠊⠋⠥⠇"
   },
   {
     "input": "bed",
     "internal": "b$",
     "expected": "343",
     "unicode": "⠃⠫",
-    "world": "⠴⠃⠫⠲"
+    "world": "⠴⠃⠫⠲",
+    "jeomsarang": "⠃⠑⠙"
   },
   {
     "input": "benefit",
     "internal": "b5efit",
     "expected": "33417111030",
     "unicode": "⠃⠢⠑⠋⠊⠞",
-    "world": "⠴⠃⠢⠑⠋⠊⠞⠲"
+    "world": "⠴⠃⠢⠑⠋⠊⠞⠲",
+    "jeomsarang": "⠃⠑⠝⠑⠋⠊⠞"
   },
   {
     "input": "benzene",
     "internal": "b5z5e",
     "expected": "334533417",
     "unicode": "⠃⠢⠵⠢⠑",
-    "world": "⠴⠃⠢⠵⠢⠑⠲"
+    "world": "⠴⠃⠢⠵⠢⠑⠲",
+    "jeomsarang": "⠃⠑⠝⠵⠑⠝⠑"
   },
   {
     "input": "berth",
     "internal": "b]?",
     "expected": "35957",
     "unicode": "⠃⠻⠹",
-    "world": "⠴⠃⠻⠹⠲"
+    "world": "⠴⠃⠻⠹⠲",
+    "jeomsarang": "⠃⠑⠗⠞⠓"
   },
   {
     "input": "dish",
     "internal": "di%",
     "expected": "251041",
     "unicode": "⠙⠊⠩",
-    "world": "⠴⠙⠊⠩⠲"
+    "world": "⠴⠙⠊⠩⠲",
+    "jeomsarang": "⠙⠊⠎⠓"
   },
   {
     "input": "dishevelled",
     "internal": "di%evell$",
     "expected": "2510411739177743",
     "unicode": "⠙⠊⠩⠑⠧⠑⠇⠇⠫",
-    "world": "⠴⠙⠊⠩⠑⠧⠑⠇⠇⠫⠲"
+    "world": "⠴⠙⠊⠩⠑⠧⠑⠇⠇⠫⠲",
+    "jeomsarang": "⠙⠊⠎⠓⠑⠧⠑⠇⠇⠑⠙"
   }
 ]

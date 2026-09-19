@@ -126,11 +126,26 @@ impl InitialContractionPronunciationRule {
         if key != "ever" {
             return false;
         }
-        if pos > 0 && matches!(word[pos - 1], 'a' | 'e' | 'i' | 'o' | 'u') {
+        // 국립국어원 회신(2026-09-12): §10.7.4 는 `ever` 의 첫 `e` 에 강세가 오고
+        // 그 앞에 `e` 나 `i` 가 오지 않을 때 어두 약자를 쓰도록 한다. 앞의 `ie`/`ee`
+        // 가 이 자리에서 걸러진다(`belie·ver`, `thie·very`, `McKe·ever`).
+        if pos > 0 && matches!(word[pos - 1], 'e' | 'i') {
             return false;
         }
         let er_e_idx = pos + 2; // the `e` of the trailing `er` in `e·v·e·r`
         let prons = self.provider.pronunciations(full);
+        if prons.is_empty() {
+            // 사전에 없어 강세를 확인할 수 없는 낱말은 `ever` 가 낱말 끝이거나 굴절
+            // 어미 `s` 하나만 남기고 끝날 때에만 그 `er` 가 강세 없는 어미가 되어
+            // §10.7 의 꼴을 이룬다(`cantilever`, `Clevers`). 뒤에 다른 글자가 더
+            // 붙으면 그 `ver` 가 강세를 받을 수 있어(`e·ver·sion`, `re·ver·ify`)
+            // 약자를 쓰지 않는다.
+            return match word.len() - (pos + 4) {
+                0 => true,
+                1 => word[pos + 4] == 's',
+                _ => false,
+            };
+        }
         super::pronunciation::aligner::trailing_er_is_unstressed(word, er_e_idx, &prons)
     }
 
@@ -211,17 +226,27 @@ impl InitialContractionPronunciationRule {
             || is_safe_suffix(&after.iter().collect::<String>());
         if key == "one" {
             // §10.7.6: use `one` in compounds/derivatives (`stonework`,
-            // `demonetise`, `lonesomest`) when not preceded by `o`; require a real
-            // following component/suffix so monomorphemes like `anemone` still spell.
-            pos > 0 && word[pos - 1] != 'o' && !after.is_empty() && after_ok
+            // `demonetise`, `lonesomest`) when not preceded by `o`; a following
+            // component must be a real word/suffix (`after_ok`). Word-final `one`
+            // in an unknown word (`ZEROBASEONE`, `homezone`) is read as the /oʊn/
+            // unit under §10.12.7, except after `i`, whose `io` diphthong voices
+            // the `e` (`pensione`, cf. §10.7.6 `Hermione`, `pioneer`); known
+            // `-one` words such as `anemone` never reach this recovery.
+            (pos == 0 || !matches!(word[pos - 1], 'o' | 'i'))
+                && !(pos == 0 && after.is_empty())
+                && after_ok
         } else if pos == 0 {
             // Word-initial unit: `some`·such, `time`·ously, `name`·able, `where`·of.
             // A bare key alone is a known word (handled by phonology), so a valid
             // non-empty remainder is required.
             !after.is_empty() && after_ok
         } else if after.is_empty() {
-            // Word-final unit: `blithe`·some, `tea`·time, `your`·name.
-            self.is_word(&word[..pos])
+            // Word-final unit: `blithe`·some, `tea`·time, `your`·name. A base that
+            // is not itself a word still exposes the morpheme when it ends in the
+            // combining-form linking vowel `o` (`exo`·some, `azoto`·some,
+            // `lipo`·some) — the `o` closes the preceding element, so the final
+            // four letters cannot be a chance spill from it.
+            self.is_word(&word[..pos]) || (key == "some" && pos > 1 && word[pos - 1] == 'o')
         } else if matches!(key, "some" | "time")
             && is_safe_suffix(&after.iter().collect::<String>())
         {
@@ -272,7 +297,9 @@ impl ContractionRule for InitialContractionPronunciationRule {
             if *key == "ever" && pos > 0 && word[pos - 1] == 'i' {
                 continue;
             }
-            if *key == "one" && pos > 0 && matches!(word[pos - 1], 'a' | 'e' | 'i' | 'o' | 'u') {
+            // §10.7.6 excludes only a preceding `o` (`Boone`, `Rooney`); after
+            // another vowel the pronunciation gates decide (`someone`, `anyone`).
+            if *key == "one" && pos > 0 && word[pos - 1] == 'o' {
                 continue;
             }
             if *key == "one" && word.get(end..) == Some(&['s', 's']) {
@@ -414,6 +441,8 @@ mod tests {
     #[case::asseverate("asseverate", 3, Some((vec![decode_unicode('⠐'), decode_unicode('⠑')], 4)))]
     #[case::eversion("eversion", 0, None)] // e·VER stressed → use `er`
     #[case::severity("severity", 1, None)] // se·VER·ity — e is a full vowel
+    #[case::believer("believer", 4, None)] // §10.7.4 — preceding `i`
+    #[case::mckeever("mckeever", 4, None)] // §10.7.4 — preceding `e`
     fn applies_ever_when_unstressed(
         #[case] word: &str,
         #[case] pos: usize,
@@ -623,5 +652,22 @@ mod tests {
         // An empty needle — like any needle longer than the haystack — is not
         // contained.
         assert!(!contains_contiguous(&[], &[]));
+    }
+}
+
+#[cfg(test)]
+mod ever_shape_coverage {
+    /// §10.7: with no dictionary entry the `ever` sign is decided by shape —
+    /// word-final, or with a single inflectional `s` left.
+    #[rstest::rstest]
+    #[case::word_final("그는 cantilever 를", "⠐⠑")]
+    #[case::inflected_s("그는 Clevers 를", "⠐⠑")]
+    #[case::longer_tail("그는 Cleverse 를", "⠑⠧⠻")]
+    fn dictionaryless_ever_follows_the_word_edge(#[case] input: &str, #[case] expected: &str) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert!(
+            encoded.contains(expected),
+            "expected {expected} in {encoded}"
+        );
     }
 }

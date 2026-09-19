@@ -45,6 +45,63 @@ pub fn is_recorded_word(word: &str) -> bool {
     INDEX.contains_key(word)
 }
 
+/// Whether CMUdict records `lower` (a lowercase letter sequence) with at least
+/// one pronunciation that is *not* the concatenated letter names — i.e. the
+/// dictionary knows it as a word (`gist`, `zero`), not merely as an initialism
+/// (`cc`). A variant longer than two phonemes per letter is an expansion
+/// (`tv` → *television*), not a reading of the letters, and does not count.
+/// Used by §10.12.1 to accept a short all-capitals token as a word-read acronym.
+pub fn has_word_pronunciation(lower: &[char]) -> bool {
+    if lower.is_empty() || !lower.iter().all(|ch| ch.is_ascii_lowercase()) {
+        return false;
+    }
+    let expected: Vec<&str> = lower
+        .iter()
+        .flat_map(|letter| LETTER_PHONES[*letter as usize - 'a' as usize])
+        .copied()
+        .collect();
+    let key: String = lower.iter().collect();
+    INDEX.get(key.as_str()).is_some_and(|variants| {
+        variants.iter().any(|variant| {
+            let phones: Vec<&str> = variant
+                .split_whitespace()
+                .map(|phone| phone.trim_end_matches(['0', '1', '2']))
+                .collect();
+            phones.len() <= lower.len() * 2 && phones != expected
+        })
+    })
+}
+
+/// ARPABET names of the letters `A`–`Z`, indexed by letter offset.
+const LETTER_PHONES: &[&[&str]; 26] = &[
+    &["EY"],
+    &["B", "IY"],
+    &["S", "IY"],
+    &["D", "IY"],
+    &["IY"],
+    &["EH", "F"],
+    &["JH", "IY"],
+    &["EY", "CH"],
+    &["AY"],
+    &["JH", "EY"],
+    &["K", "EY"],
+    &["EH", "L"],
+    &["EH", "M"],
+    &["EH", "N"],
+    &["OW"],
+    &["P", "IY"],
+    &["K", "Y", "UW"],
+    &["AA", "R"],
+    &["EH", "S"],
+    &["T", "IY"],
+    &["Y", "UW"],
+    &["V", "IY"],
+    &["D", "AH", "B", "AH", "L", "Y", "UW"],
+    &["EH", "K", "S"],
+    &["W", "AY"],
+    &["Z", "IY"],
+];
+
 /// Whether CMUdict supplies sufficiently specific evidence that an uppercase
 /// abbreviation is pronounced as letter names.
 ///
@@ -63,35 +120,6 @@ pub fn has_unambiguous_letter_name_pronunciation(chars: &[char]) -> bool {
     if chars.len() < 2 || !chars.iter().all(|ch| ch.is_ascii_uppercase()) {
         return false;
     }
-
-    const LETTER_PHONES: &[&[&str]; 26] = &[
-        &["EY"],
-        &["B", "IY"],
-        &["S", "IY"],
-        &["D", "IY"],
-        &["IY"],
-        &["EH", "F"],
-        &["JH", "IY"],
-        &["EY", "CH"],
-        &["AY"],
-        &["JH", "EY"],
-        &["K", "EY"],
-        &["EH", "L"],
-        &["EH", "M"],
-        &["EH", "N"],
-        &["OW"],
-        &["P", "IY"],
-        &["K", "Y", "UW"],
-        &["AA", "R"],
-        &["EH", "S"],
-        &["T", "IY"],
-        &["Y", "UW"],
-        &["V", "IY"],
-        &["D", "AH", "B", "AH", "L", "Y", "UW"],
-        &["EH", "K", "S"],
-        &["W", "AY"],
-        &["Z", "IY"],
-    ];
 
     let expected: Vec<&str> = chars
         .iter()
@@ -217,5 +245,16 @@ mod tests {
     fn detects_unambiguous_letter_name_pronunciations(#[case] text: &str, #[case] expected: bool) {
         let chars: Vec<char> = text.chars().collect();
         assert_eq!(has_unambiguous_letter_name_pronunciation(&chars), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::dictionary_word("gist", true)]
+    #[case::letter_names_only("cc", false)]
+    #[case::expansion_variant_tv("tv", false)]
+    #[case::unknown("mou", false)]
+    #[case::uppercase_is_not_a_key("GIST", false)]
+    fn detects_word_pronunciations(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(has_word_pronunciation(&chars), expected);
     }
 }

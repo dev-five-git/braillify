@@ -149,6 +149,15 @@ impl Encoder {
             rules::token_rules::middle_dot_spacing::MiddleDotSpacingRule,
         ));
         token_engine.register(Box::new(
+            rules::token_rules::middle_dot_spacing::KoreanSemicolonTrailingSpaceRule,
+        ));
+        token_engine.register(Box::new(
+            rules::token_rules::middle_dot_spacing::TildeSpacingRule,
+        ));
+        token_engine.register(Box::new(
+            rules::token_rules::middle_dot_spacing::KoreanHyphenSpacingRule,
+        ));
+        token_engine.register(Box::new(
             rules::token_rules::quote_attachment::QuoteAttachmentRule,
         ));
         token_engine.register(Box::new(rules::token_rules::spacing::AsteriskSpacingRule));

@@ -24,7 +24,7 @@
     "expected": "421821323213",
     "unicode": "⠪⠒⠕⠠⠠⠁⠃",
     "world": "⠴⠠⠁⠄⠳⠭⠆⠴⠑⠂⠄⠰⠠⠃",
-    "jeomsarang": "⠴⠠⠁⠲⠀⠠⠃⠲⠀"
+    "jeomsarang": "⠠⠁⠲⠀⠠⠃⠲⠀"
   },
   {
     "input": "$\\overleftrightarrow{AB}$",

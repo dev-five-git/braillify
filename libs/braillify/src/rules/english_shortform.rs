@@ -105,7 +105,11 @@ mod tests {
     #[case::groupsign_shd("SHD", true)]
     #[case::official_llc_prefix("LLC", true)]
     #[case::good_prefix("GDP", true)]
-    #[case::added_s("SDS", true)]
+    #[case::official_great_prefix("GRTSAMADA", true)]
+    // 국립국어원 회신(2026-09-17): §10.9.3 의 열 축어에 `said`/`according` 이 없어
+    // `saids`/`accordings` 를 만들 수 없으므로 1급 점자를 전치하지 않는다.
+    #[case::said_outside_the_ten("SDS", false)]
+    #[case::according_outside_the_ten("ACS", false)]
     #[case::because_needs_be("BC", false)]
     #[case::about_unlisted_suffix("ABBA", false)]
     #[case::little_before_vowel("LLAMA", false)]
@@ -133,7 +137,8 @@ mod tests {
     #[case::official_llc_prefix("LLC", true)]
     #[case::groupsign_reading_mst("MST", false)]
     #[case::groupsign_reading_fst("FST", false)]
-    #[case::tomorrow_plus_s("TMS", true)]
+    // 국립국어원 회신(2026-09-17): `tomorrow` 는 §10.9.3 의 열 축어 밖이다.
+    #[case::tomorrow_outside_the_ten("TMS", false)]
     #[case::plain_initialism("KBS", false)]
     fn spelled_letters_collide_only_literally(#[case] input: &str, #[case] expected: bool) {
         assert_eq!(

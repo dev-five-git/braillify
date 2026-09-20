@@ -145,7 +145,30 @@ impl EnglishUebEngine {
             && !(suppress_caps
                 && standing_alone
                 && super::super::rule_10_1::wordsign(&word).is_some());
-        if acronym_as_letters || letter_initialism {
+        // §10.12.1: an all-capitals run that is EXACTLY a groupsign is read as
+        // letters — `⠠⠠⠌` would be the capitalised wordsign "still" and `⠠⠠⠜` a
+        // bare groupsign. This is narrower than the rejected short-acronym
+        // heuristic above: a word that merely CONTAINS one (`THE`, `SHE`, `OUT`)
+        // is a real word and keeps its contraction. Ordinals (`1ST`, `4TH`) are
+        // digit-adjacent and stay with `acronym_as_letters`.
+        let all_capitals_groupsign_word = matches!(classify_caps(chars), Some(Caps::Word))
+            && !digit_adjacent
+            && matches!(
+                lower.as_slice(),
+                ['a', 'r']
+                    | ['e', 'd']
+                    | ['e', 'n']
+                    | ['e', 'r']
+                    | ['g', 'h']
+                    | ['o', 'w']
+                    | ['c', 'h']
+                    | ['s', 'h']
+                    | ['t', 'h']
+                    | ['w', 'h']
+                    | ['o', 'u']
+                    | ['s', 't']
+            );
+        if acronym_as_letters || letter_initialism || all_capitals_groupsign_word {
             for &c in &lower {
                 match super::super::rule_4::accent_cells(c) {
                     Some(cells) => out.extend(cells),

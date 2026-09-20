@@ -802,6 +802,11 @@ mod tests {
     #[case::caps_be("가나 BE 다라", "⠠⠠⠃⠑")]
     #[case::lower_er_keeps_groupsign("가나 er 다라", "⠻")]
     #[case::lower_be_keeps_wordsign("제목(Alpha be Omega)이다", "⠆")]
+    // 규정 예 `DAR` ⠠⠠⠙⠁⠗ · `EST` ⠠⠠⠑⠎⠞ 와 같은 자리다. 한글이 없는
+    // 입력도 같은 §10.12.1 을 따른다.
+    #[case::english_context_ar("AR.", "⠠⠠⠁⠗")]
+    #[case::english_context_st("ST.", "⠠⠠⠎⠞")]
+    #[case::english_context_en("EN.", "⠠⠠⠑⠝")]
     fn all_caps_whole_run_is_spelled(#[case] input: &str, #[case] expected: &str) {
         let actual = encode_to_unicode(input).expect("initialism must encode");
 

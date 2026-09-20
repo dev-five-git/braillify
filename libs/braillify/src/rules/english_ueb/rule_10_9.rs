@@ -98,7 +98,15 @@ fn requires_grade1_before_cells(letters: &str, cells_for: impl Fn(&[char]) -> Ve
             if end == chars.len() {
                 return true;
             }
-            if rule_10_9_3_reading_exists(shortform, &chars[end..]) {
+            let suffix = &chars[end..];
+            // §10.9.5 adds `s` to every shortform on the list, not only to the
+            // ten of §10.9.3, so `saids` and `accordings` both compete with the
+            // spelled letters (국립국어원 회신 2026-09-20). `abouts`, `almosts`
+            // and `hims` are the rule's own exceptions.
+            if suffix == ['s'] && !matches!(*shortform, "about" | "almost" | "him") {
+                return true;
+            }
+            if rule_10_9_3_reading_exists(shortform, suffix) {
                 return true;
             }
         }

@@ -238,7 +238,7 @@ bun test test_cases/                 # JSON integrity checks (packages/node/pkg 
 한국어-한국점자 병렬 말뭉치 46만 7121문장이 들어 있다. 말뭉치는 `rule_map.json` 에서
 `benchmark: true` 로 표시되어 **pass/fail 에 들어가지 않고 정확도만 보고**한다.
 
-**Current status: 규정 fixture 5141/5141 (100%), 말뭉치 455,671/467,121 (97.55%).**
+**Current status: 규정 fixture 5141/5141 (100%), 말뭉치 455,597/467,121 (97.53%).**
 
 `KNOWN_FAILURES` 상수는 더 이상 존재하지 않는다. raw `encode()` 가 모든 testcase 에서
 PDF 정답과 byte-동일 결과를 낸다. 새로 추가되는 testcase 도 같은 기준을 만족해야 한다.
@@ -252,9 +252,12 @@ PDF 정답과 byte-동일 결과를 낸다. 새로 추가되는 testcase 도 같
 - **제37항은 로마자표 바로 뒤의 단어에만** 적용된다. `Yes, I can.` 에서 로마자표는
   `Y` 앞에 오므로 `can` 은 약자를 쓴다. 제37항 표는 §10.1 알파벳 단어 약자와
   §10.5 하위 단어 약자 6개뿐이고 축어(§10.9)는 들어 있지 않다.
-- 1급 점자는 **§10.9.3 의 열 축어**(braille, great, children, blind, first, friend,
-  good, letter, little, quick)로만 판정한다. `GDP` 는 전치하고 `ACS`·`NEIS`·`ALS` 는
-  전치하지 않는다.
+- 1급 점자는 두 갈래로만 판정한다. 글자열 전체가 축어와 같거나(`CD`=could),
+  **§10.9.5 로 s 가 붙거나**(`SDS`=said+s, `ACS`=according+s — 축어 목록 전체에
+  적용된다), **§10.9.3 의 열 축어**(braille, great, children, blind, first, friend,
+  good, letter, little, quick)로 시작하고 뒤가 모음·y 가 아닐 때(`GDP`=good+p)다.
+  그 밖에는 전치하지 않는다. 말뭉치는 이 자리에서 583번 ⠰ 를 빠뜨렸으므로
+  정확도가 떨어지는 쪽이 규정에 맞는 쪽이다.
 
 ### 개선 후보를 고르는 법 (두 번 틀린 뒤 적어 둠)
 

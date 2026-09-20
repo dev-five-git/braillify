@@ -792,6 +792,25 @@ mod tests {
         );
     }
 
+    /// UEB 10.12.1: an all-capitals letters-run standing as the whole Roman item
+    /// in Korean text is an initialism, spelled letter by letter, so a groupsign
+    /// must not swallow it. Lower-case runs keep their groupsign.
+    #[rstest::rstest]
+    #[case::caps_ar("VR(가상현실)과 AR(증강현실), AI(인공지능) 기술", "⠠⠠⠁⠗")]
+    #[case::caps_gh("LH와 GH(경기주택도시공사), HUIC(하남도시공사) 등이다.", "⠠⠠⠛⠓")]
+    #[case::caps_en("첫 공연은 ‘EN. VOICE(이엔 보이스)’를 초청해", "⠠⠠⠑⠝")]
+    #[case::caps_be("가나 BE 다라", "⠠⠠⠃⠑")]
+    #[case::lower_er_keeps_groupsign("가나 er 다라", "⠻")]
+    #[case::lower_be_keeps_wordsign("제목(Alpha be Omega)이다", "⠆")]
+    fn all_caps_whole_run_is_spelled(#[case] input: &str, #[case] expected: &str) {
+        let actual = encode_to_unicode(input).expect("initialism must encode");
+
+        assert!(
+            actual.contains(expected),
+            "all-caps whole run must be spelled: {actual}"
+        );
+    }
+
     #[test]
     fn apply_skips_non_korean() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);

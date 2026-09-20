@@ -241,7 +241,27 @@ impl EnglishUebEngine {
             lower.as_slice(),
             ['c', 'h'] | ['s', 'h'] | ['t', 'h'] | ['w', 'h'] | ['o', 'u'] | ['s', 't']
         );
-        if numeric_grade1_active || complete_strong_sequence_would_be_word || letter_initialism {
+        // UEB 10.12.1: an all-capitals letters-sequence in Korean text is read as
+        // letters, so a groupsign must not swallow the whole run (`AR` is ⠠⠠⠁⠗,
+        // never ⠠⠠⠜). `in` is excluded — ⠔ is also its §10.5 wordsign, which
+        // 제37항 붙임 governs (국립국어원 회신 2026-09-15).
+        let all_capitals_groupsign_run = chars.iter().all(char::is_ascii_uppercase)
+            && matches!(
+                lower.as_slice(),
+                ['a', 'r']
+                    | ['e', 'd']
+                    | ['e', 'n']
+                    | ['e', 'r']
+                    | ['g', 'h']
+                    | ['o', 'w']
+                    | ['b', 'e']
+                    | ['i', 'n', 'g']
+            );
+        if numeric_grade1_active
+            || complete_strong_sequence_would_be_word
+            || all_capitals_groupsign_run
+            || letter_initialism
+        {
             match classify_caps(chars) {
                 _ if suppress_caps => {}
                 Some(Caps::None) => {}

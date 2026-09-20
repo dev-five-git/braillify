@@ -1,6 +1,16 @@
 [workspace]
 members = ["libs/*", "packages/*"]
+# braillify_rb 는 libruby 를 링크하므로 Ruby ABI 에 맞는 Rust 타겟을 요구한다.
+# Windows 의 실배포 Ruby(ucrt)는 GNU 타겟이라, MSVC 를 요구하는 pyo3 와 같은 cargo
+# 호출에 함께 들어갈 수 없다. 기본 대상에서 빼고 ruby-test 잡이 ucrt Ruby 로 따로 빌드한다.
+# 새 바인딩을 추가하면 이 목록에도 넣어야 기본 빌드/테스트에 포함된다.
+default-members = ["libs/*", "packages/c", "packages/dotnet", "packages/go", "packages/jvm", "packages/node", "packages/python"]
 resolver = "3"
+
+# packages/ruby는 소스 gem 배포를 위해 braillify를 crates.io 버전으로 의존한다.
+# 저장소 내 빌드(개발/CI/프리컴파일 gem)는 이 patch로 로컬 코어를 사용한다.
+[patch.crates-io]
+braillify = { path = "libs/braillify" }
 
 [workspace.package]
 version = "0.1.0"

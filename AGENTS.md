@@ -7,6 +7,7 @@
 - `libs/braillify/` — Rust 핵심 변환 엔진
 - `packages/node/` — Node.js WASM 바인딩
 - `packages/python/` — Python 바인딩 (maturin)
+- `packages/ruby/` — Ruby 바인딩 (magnus + rb-sys, 워크스페이스 cargo 명령에 Ruby 3.x 필요)
 - `apps/landing/` — Next.js 랜딩 페이지
 - `test_cases/` — 점자 변환 테스트 케이스 (JSON)
   - `korean/`, `math/`, `english/` — 규정 fixture. 100% 통과가 기준

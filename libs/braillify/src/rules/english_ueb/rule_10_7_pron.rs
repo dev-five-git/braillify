@@ -135,6 +135,13 @@ impl InitialContractionPronunciationRule {
         let er_e_idx = pos + 2; // the `e` of the trailing `er` in `e·v·e·r`
         let prons = self.provider.pronunciations(full);
         if prons.is_empty() {
+            // 국립국어원 회신(2026-09-17): 사전에 없는 낱말은 어원을 보아 쪼갠 뒤
+            // 강세를 정한다. `ever` 로 시작하고 남은 글자가 그대로 한 낱말이면
+            // 합성어의 앞 요소여서 첫 `e` 가 강세를 받는다(`EVERGLOW` = ever+glow).
+            // `eversion` 은 `sion` 이 낱말이 아니므로 여기에 들지 않는다.
+            if pos == 0 && self.is_word(&word[pos + 4..]) {
+                return true;
+            }
             // 사전에 없어 강세를 확인할 수 없는 낱말은 `ever` 가 낱말 끝이거나 굴절
             // 어미 `s` 하나만 남기고 끝날 때에만 그 `er` 가 강세 없는 어미가 되어
             // §10.7 의 꼴을 이룬다(`cantilever`, `Clevers`). 뒤에 다른 글자가 더
@@ -658,11 +665,14 @@ mod tests {
 #[cfg(test)]
 mod ever_shape_coverage {
     /// §10.7: with no dictionary entry the `ever` sign is decided by shape —
-    /// word-final, or with a single inflectional `s` left.
+    /// word-final, a single inflectional `s` left, or a compound whose second
+    /// component is itself a word (국립국어원 회신 2026-09-17).
     #[rstest::rstest]
     #[case::word_final("그는 cantilever 를", "⠐⠑")]
     #[case::inflected_s("그는 Clevers 를", "⠐⠑")]
     #[case::longer_tail("그는 Cleverse 를", "⠑⠧⠻")]
+    #[case::compound_head("그는 EVERGLOW 를", "⠐⠑")]
+    #[case::unsplittable_tail("그는 eversion 를", "⠑⠧⠻")]
     fn dictionaryless_ever_follows_the_word_edge(#[case] input: &str, #[case] expected: &str) {
         let encoded = crate::encode_to_unicode(input).unwrap();
         assert!(

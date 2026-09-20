@@ -158,6 +158,9 @@ impl Encoder {
             rules::token_rules::middle_dot_spacing::KoreanHyphenSpacingRule,
         ));
         token_engine.register(Box::new(
+            rules::token_rules::middle_dot_spacing::LeadingDashSpacingRule,
+        ));
+        token_engine.register(Box::new(
             rules::token_rules::quote_attachment::QuoteAttachmentRule,
         ));
         token_engine.register(Box::new(rules::token_rules::spacing::AsteriskSpacingRule));

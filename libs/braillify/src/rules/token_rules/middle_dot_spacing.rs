@@ -311,6 +311,50 @@ impl TokenRule for KoreanHyphenSpacingRule {
     }
 }
 
+/// 제49항이 붙여 쓰게 하는 붙임표는 낱말과 낱말 사이의 것이다. 글 첫머리에
+/// 홀로 서서 한글을 끌고 오는 붙임표는 그 항목을 여는 표지이므로 뒤를 띄운다
+/// (`-플랫폼이` → `⠤ ⠙⠮…`). 글머리가 아닌 자리는 [`KoreanHyphenSpacingRule`]
+/// 대로 붙인다.
+pub struct LeadingDashSpacingRule;
+
+impl TokenRule for LeadingDashSpacingRule {
+    fn phase(&self) -> TokenPhase {
+        TokenPhase::PostWord
+    }
+
+    fn priority(&self) -> u16 {
+        129
+    }
+
+    fn apply<'a>(
+        &self,
+        tokens: &[Token<'a>],
+        index: usize,
+        _state: &mut crate::rules::context::EncoderState,
+    ) -> Result<TokenAction<'a>, String> {
+        if index != 0 {
+            return Ok(TokenAction::Noop);
+        }
+        let Some(Token::Word(word)) = tokens.first() else {
+            return Ok(TokenAction::Noop);
+        };
+        let ['-', rest @ ..] = word.chars.as_slice() else {
+            return Ok(TokenAction::Noop);
+        };
+        if !rest
+            .first()
+            .is_some_and(|ch| crate::utils::is_korean_char(*ch))
+        {
+            return Ok(TokenAction::Noop);
+        }
+        Ok(TokenAction::ReplaceMany(vec![
+            owned_word(&['-']),
+            Token::Space(crate::rules::token::SpaceKind::Regular),
+            owned_word(rest),
+        ]))
+    }
+}
+
 pub struct TildeSpacingRule;
 
 impl TokenRule for TildeSpacingRule {
@@ -539,5 +583,30 @@ mod nikl_answer_coverage {
         let chars: Vec<char> = input.chars().collect();
         let split = korean_label_colon_split_index(&chars);
         assert!(split.is_none() || split.is_some());
+    }
+}
+
+#[cfg(test)]
+mod leading_dash_spacing {
+    /// 제49항이 붙여 쓰게 하는 붙임표는 낱말 사이의 것이다. 글머리에 홀로 선
+    /// 붙임표는 그 항목을 여는 표지이므로 뒤를 띄운다.
+    #[rstest::rstest]
+    #[case::sentence_initial("-플랫폼이 바닥이라면", "⠤⠀⠙⠮")]
+    #[case::sentence_initial_with_bracket("-심층그룹인터뷰(FGI)했는데", "⠤⠀⠠⠕⠢")]
+    fn a_dash_opening_the_text_is_followed_by_a_space(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("leading dash must encode");
+        assert!(
+            actual.contains(expected),
+            "expected a space after ⠤: {actual}"
+        );
+    }
+
+    /// 글머리가 아닌 붙임표는 그대로 붙인다 — 어절 안이든 어절 첫머리든.
+    #[rstest::rstest]
+    #[case::inside_a_word("가나-다라", "⠫⠉⠤⠊")]
+    #[case::word_initial_mid_text("앞말 -플랫폼이", "⠀⠤⠙⠮")]
+    fn a_dash_elsewhere_stays_attached(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
+        assert!(actual.contains(expected), "⠤ must stay attached: {actual}");
     }
 }

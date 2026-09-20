@@ -774,6 +774,24 @@ mod tests {
         );
     }
 
+    /// UEB 10.4.2: a complete `ch`/`sh`/`th`/`wh`/`ou`/`st` sequence that is the
+    /// whole Roman run is spelled — its one-cell groupsign reads as a wordsign
+    /// (⠌ = still, ⠩ = shall, ⠹ = this, ⠱ = which, ⠳ = out, ⠡ = child).
+    #[rstest::rstest]
+    #[case::st_after_opening_bracket("에스티유니타스(ST", "⠠⠠⠎⠞")]
+    #[case::sh_whole_enclosure("서울주택도시공사(SH)는", "⠠⠠⠎⠓")]
+    #[case::wh_after_digit("80Wh(와트시)", "⠠⠺⠓")]
+    #[case::th_before_digit("Th17이", "⠠⠞⠓")]
+    #[case::ch_before_period("Ch.1(류현진", "⠠⠉⠓")]
+    fn complete_strong_sequence_is_spelled(#[case] input: &str, #[case] expected: &str) {
+        let actual = encode_to_unicode(input).expect("strong sequence must encode");
+
+        assert!(
+            actual.contains(expected),
+            "a whole-run strong sequence must be spelled: {actual}"
+        );
+    }
+
     #[test]
     fn apply_skips_non_korean() {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);

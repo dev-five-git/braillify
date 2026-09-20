@@ -232,17 +232,15 @@ impl EnglishUebEngine {
         // UEB 5.6.1-5.6.2 and 6.5.3: a numeric indicator establishes grade-1
         // mode through a resumed Roman letters-sequence, so no contraction may
         // follow an internal number (`Kep1er`). A number-first Korean token
-        // instead inserts rule 29's Roman indicator before its letters. In that
-        // latter shape, UEB 10.4.2 still spells a complete `ch/sh/th/wh/ou/st`
-        // sequence because its one-cell groupsign would be read as a word.
-        // UEB 10.12.1 (`letter_initialism`, decided by the Korean caller) spells
-        // an abbreviation pronounced as letters the same way.
-        let complete_strong_sequence_would_be_word = digit_adjacent
-            && !word_initial
-            && matches!(
-                lower.as_slice(),
-                ['c', 'h'] | ['s', 'h'] | ['t', 'h'] | ['w', 'h'] | ['o', 'u'] | ['s', 't']
-            );
+        // instead inserts rule 29's Roman indicator before its letters.
+        // UEB 10.4.2: a complete `ch/sh/th/wh/ou/st` run is always spelled,
+        // wherever it sits, because its one-cell groupsign reads as the wordsign
+        // (⠌ = still, ⠩ = shall). UEB 10.12.1 (`letter_initialism`, decided by
+        // the Korean caller) spells an abbreviation pronounced as letters too.
+        let complete_strong_sequence_would_be_word = matches!(
+            lower.as_slice(),
+            ['c', 'h'] | ['s', 'h'] | ['t', 'h'] | ['w', 'h'] | ['o', 'u'] | ['s', 't']
+        );
         if numeric_grade1_active || complete_strong_sequence_would_be_word || letter_initialism {
             match classify_caps(chars) {
                 _ if suppress_caps => {}

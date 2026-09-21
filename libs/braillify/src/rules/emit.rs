@@ -477,9 +477,14 @@ pub fn emit(
                 if !is_math_operator_space_suppression(&ir.tokens, idx) {
                     let start = result.len();
                     result.push(0);
-                    record_token_span(&mut trace, origins, idx, &result, start, || {
-                        RuleId::emitter(EmitterRule::WordSpace)
-                    });
+                    record_token_span(
+                        &mut trace,
+                        origins,
+                        idx,
+                        &result,
+                        start,
+                        RuleId::emitter(EmitterRule::WordSpace),
+                    );
                 }
             }
             Token::Mode(event) => {
@@ -511,9 +516,14 @@ pub fn emit(
                 let start = result.len();
                 enter_roman_before_ueb_prefix(&ir.tokens, idx, event, &mut ir.state, &mut result);
                 emit_mode_event(event, &mut ir.state, &mut result);
-                record_token_span(&mut trace, origins, idx, &result, start, || {
-                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput)
-                });
+                record_token_span(
+                    &mut trace,
+                    origins,
+                    idx,
+                    &result,
+                    start,
+                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput),
+                );
             }
             Token::Fraction(frac) => {
                 let start = result.len();
@@ -530,9 +540,14 @@ pub fn emit(
                     )?);
                 }
                 ir.state.is_number = true;
-                record_token_span(&mut trace, origins, idx, &result, start, || {
-                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput)
-                });
+                record_token_span(
+                    &mut trace,
+                    origins,
+                    idx,
+                    &result,
+                    start,
+                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput),
+                );
             }
             Token::PreEncoded(bytes) => {
                 // 제39항 한글 wrap 점형은 영어 모드를 자동으로 휴면(⠸⠷)·재개(⠸⠾)시킨다.
@@ -545,9 +560,14 @@ pub fn emit(
                 }
                 let start = result.len();
                 result.extend(bytes);
-                record_token_span(&mut trace, origins, idx, &result, start, || {
-                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput)
-                });
+                record_token_span(
+                    &mut trace,
+                    origins,
+                    idx,
+                    &result,
+                    start,
+                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput),
+                );
             }
         }
     }
@@ -599,7 +619,7 @@ fn record_token_span(
     idx: usize,
     result: &[u8],
     start: usize,
-    fallback: impl FnOnce() -> RuleId,
+    fallback: RuleId,
 ) {
     let Some(sink) = trace.as_mut() else {
         return;
@@ -615,7 +635,7 @@ fn record_token_span(
         }
         return;
     }
-    let rule = origins.and_then(|o| o.get(idx)).unwrap_or_else(fallback);
+    let rule = origins.and_then(|o| o.get(idx)).unwrap_or(fallback);
     sink.record_span(rule, idx, start..end);
 }
 

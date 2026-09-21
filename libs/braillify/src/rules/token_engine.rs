@@ -131,11 +131,8 @@ impl TokenRuleEngine {
                             continue;
                         }
                     }
-                    debug_assert_eq!(
-                        origins.as_deref().map_or(tokens.len(), TokenOrigins::len),
-                        tokens.len(),
-                        "origin tracking must stay in lockstep with the token stream"
-                    );
+                    let tracked = origins.as_deref().map_or(tokens.len(), TokenOrigins::len);
+                    debug_assert_eq!(tracked, tokens.len(), "origin table lost lockstep");
                     break;
                 }
                 i += 1;
@@ -463,6 +460,76 @@ mod tests {
         engine.apply_all(&mut tokens, &mut state).unwrap();
 
         assert!(matches!(&tokens[0], Token::Word(w) if w.text == "a"));
+    }
+
+    #[derive(Clone, Copy, Debug)]
+    enum Rewrite {
+        InsertBefore,
+        ReplaceMany,
+        ReplaceRange,
+        Remove,
+    }
+
+    struct RewriteB(Rewrite);
+    impl TokenRule for RewriteB {
+        fn phase(&self) -> TokenPhase {
+            TokenPhase::WordShortcut
+        }
+        fn apply<'a>(
+            &self,
+            tokens: &[Token<'a>],
+            index: usize,
+            _state: &mut EncoderState,
+        ) -> Result<TokenAction<'a>, String> {
+            let Some(Token::Word(word)) = tokens.get(index) else {
+                return Ok(TokenAction::Noop);
+            };
+            if word.text != "b" {
+                return Ok(TokenAction::Noop);
+            }
+            Ok(match self.0 {
+                Rewrite::InsertBefore => {
+                    TokenAction::InsertBefore(vec![Token::PreEncoded(vec![1])])
+                }
+                Rewrite::ReplaceMany => TokenAction::ReplaceMany(vec![
+                    Token::PreEncoded(vec![1]),
+                    Token::PreEncoded(vec![2]),
+                ]),
+                Rewrite::ReplaceRange => {
+                    TokenAction::ReplaceRange(1, vec![Token::PreEncoded(vec![3])])
+                }
+                Rewrite::Remove => TokenAction::Remove,
+            })
+        }
+    }
+
+    /// The emitter names a token's producer by looking its position up in the
+    /// origin table, so every rewrite shape must leave that table the same
+    /// length as the stream and must claim exactly the slots it created. A
+    /// shape that resized one but not the other would silently shift every
+    /// later token's attribution onto the wrong rule.
+    #[rstest::rstest]
+    #[case::insert_before(Rewrite::InsertBefore)]
+    #[case::replace_many(Rewrite::ReplaceMany)]
+    #[case::replace_range(Rewrite::ReplaceRange)]
+    #[case::remove(Rewrite::Remove)]
+    fn origin_tracking_stays_in_lockstep_with_every_rewrite_shape(#[case] rewrite: Rewrite) {
+        let mut engine = TokenRuleEngine::new();
+        engine.register(Box::new(RewriteB(rewrite)));
+
+        let mut tokens = vec![word_token("a"), word_token("b"), word_token("c")];
+        let mut state = EncoderState::new(false);
+        let mut origins = TokenOrigins::seeded(tokens.len());
+
+        engine
+            .apply_all_tracked(&mut tokens, &mut state, Some(&mut origins))
+            .expect("the rewrite rule never fails");
+
+        assert_eq!(origins.len(), tokens.len(), "{rewrite:?} resized one side");
+        for (index, token) in tokens.iter().enumerate() {
+            let expected = matches!(token, Token::PreEncoded(_)).then(|| RuleId::token(0));
+            assert_eq!(origins.get(index), expected, "{rewrite:?} slot {index}");
+        }
     }
 
     /// token_engine.rs lines 95-96 - `impl Default::default()` body.

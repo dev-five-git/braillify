@@ -1837,6 +1837,92 @@ mod trace_tests {
         );
     }
 
+    /// 수학 제32·33항's 합동/기하 glyphs (`△`, `→`, `□`, `≅`) pull the whole string
+    /// onto the math route, which encodes *before* the token pipeline and so
+    /// carries its own sink instead of the emitter's origin table. Without that
+    /// sink the expression would encode with nothing recorded at all.
+    #[rstest::rstest]
+    #[case::congruence_triangle("△ABC")]
+    #[case::implication("p → q")]
+    #[case::relation("A≅B")]
+    fn a_whole_route_math_expression_names_its_math_rules(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(encode(input).expect("input must encode"), cells);
+        assert_eq!(trace.path(), TracePath::MathExpression);
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        assert!(
+            trace
+                .events()
+                .iter()
+                .any(|event| event.rule.kind() == Some(RuleKind::Math)),
+            "the math engine must name itself: {:?}",
+            trace.events()
+        );
+    }
+
+    /// The whole-route math encoder runs speculatively: it emits cells for the
+    /// tokens it consumed and only then discovers a token it cannot encode, at
+    /// which point the Korean pipeline re-encodes the whole input. The discarded
+    /// cells never ship, so crediting their rules would name rules that did not
+    /// produce the output — and would leave two rules claiming the same cell.
+    #[rstest::rstest]
+    #[case::trailing_at_sign("△AB@")]
+    #[case::percent_between_operands("△A%B")]
+    #[case::bare_at_sign("A□@B")]
+    fn a_failed_math_route_credits_no_rule_for_the_cells_it_threw_away(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_ne!(
+            trace.path(),
+            TracePath::MathExpression,
+            "the math route must have failed for this case to mean anything"
+        );
+        assert!(
+            trace
+                .events()
+                .iter()
+                .all(|event| event.rule.kind() != Some(RuleKind::Math)),
+            "rolled-back math rules must not survive: {:?}",
+            trace.events()
+        );
+
+        let mut claims = vec![0u32; cells.len()];
+        for event in trace.events() {
+            for cell in event.output.clone() {
+                claims[cell as usize] += 1;
+            }
+        }
+        assert!(
+            claims.iter().all(|count| *count == 1),
+            "cells claimed {claims:?} times in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// `EncodingMode::English` forces the UEB engine even where content routing
+    /// would not pick it — a letterless `4:30` reads as a Korean-context number
+    /// otherwise. The forced entry point has to collect the same spans as the
+    /// content-routed one, or a declared-English testcase would trace as though
+    /// no rule had run.
+    #[rstest::rstest]
+    #[case::letterless_time("4:30")]
+    #[case::prose("the child")]
+    fn forced_english_mode_still_names_its_ueb_rules(#[case] input: &str) {
+        let options = EncodeOptions {
+            default_mode: Some(EncodingMode::English),
+        };
+        let (cells, trace) =
+            encode_with_options_and_trace(input, &options).expect("input must encode");
+
+        assert_eq!(
+            encode_with_options(input, &options).expect("input must encode"),
+            cells
+        );
+        assert_eq!(trace.path(), TracePath::EnglishUeb);
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+    }
+
     #[test]
     fn contributing_rules_lists_each_rule_once() {
         let (_, trace) = encode_with_trace("가나다 라마").expect("input must encode");

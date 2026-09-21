@@ -292,9 +292,7 @@ impl Encoder {
 
         // `transform` injects formatting tokens without origin tracking, so the
         // side table no longer lines up with the stream and must be dropped.
-        if origins.as_ref().is_some_and(|o| o.len() != ir.tokens.len()) {
-            origins = None;
-        }
+        let origins = origins.filter(|o| o.len() == ir.tokens.len());
 
         let output = rules::emit::emit(&mut ir, &mut self.rule_engine, trace, origins.as_ref());
         rules::math::end_collection();

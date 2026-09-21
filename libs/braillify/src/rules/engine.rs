@@ -520,6 +520,115 @@ mod tests {
         assert_eq!(outcome, RuleResult::Skip);
     }
 
+    /// `TraceSpan::close` records by what a rule PRODUCED, not by what it
+    /// returned. A few rules write a mode indicator and still return `Skip` so
+    /// the next rule encodes the character — 제29항 로마자표 is the usual one —
+    /// and those cells are in the output, so something has to account for them.
+    /// A rule that returned `Skip` without writing anything explains nothing
+    /// and must stay out of the trace.
+    #[test]
+    fn a_skipping_rule_is_recorded_only_when_it_wrote_cells() {
+        use crate::char_struct::CharType;
+        use crate::rules::trace::{Trace, TraceSink};
+
+        static META_INDICATOR: RuleMeta = RuleMeta {
+            section: "indicator-skip",
+            subsection: None,
+            name: "indicator_then_skip",
+            standard_ref: "",
+            description: "writes a mode indicator, then defers to the next rule",
+        };
+        static META_SILENT: RuleMeta = RuleMeta {
+            section: "silent-skip",
+            subsection: None,
+            name: "silent_skip",
+            standard_ref: "",
+            description: "matches but declines without writing anything",
+        };
+
+        struct IndicatorThenSkip;
+        impl BrailleRule for IndicatorThenSkip {
+            fn meta(&self) -> &'static RuleMeta {
+                &META_INDICATOR
+            }
+            fn phase(&self) -> Phase {
+                Phase::CoreEncoding
+            }
+            fn matches(&self, _: &RuleContext) -> bool {
+                true
+            }
+            fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
+                ctx.emit(48);
+                Ok(RuleResult::Skip)
+            }
+        }
+
+        struct SilentSkip;
+        impl BrailleRule for SilentSkip {
+            fn meta(&self) -> &'static RuleMeta {
+                &META_SILENT
+            }
+            fn phase(&self) -> Phase {
+                Phase::CoreEncoding
+            }
+            fn matches(&self, _: &RuleContext) -> bool {
+                true
+            }
+            fn apply(&self, _: &mut RuleContext) -> Result<RuleResult, String> {
+                Ok(RuleResult::Skip)
+            }
+        }
+
+        let mut engine = RuleEngine::new();
+        engine.register(Box::new(IndicatorThenSkip));
+        engine.register(Box::new(SilentSkip));
+
+        let word_chars = vec!['x'];
+        let char_type = CharType::English('x');
+        let empty: [&str; 0] = [];
+        let mut skip = 0usize;
+        let mut state = EncoderState::new(false);
+        let mut result = Vec::new();
+        let mut trace = Trace::default();
+        {
+            let mut ctx = RuleContext {
+                word_chars: &word_chars,
+                index: 0,
+                char_type: &char_type,
+                prev_word: "",
+                remaining_words: &empty,
+                has_korean_char: false,
+                is_all_uppercase: false,
+                ascii_starts_at_beginning: false,
+                roman_section_continues_from_previous_word: false,
+                skip_count: &mut skip,
+                state: &mut state,
+                result: &mut result,
+            };
+
+            let outcome = engine
+                .apply_phase(
+                    Phase::CoreEncoding,
+                    &mut ctx,
+                    Some(TraceSink::new(&mut trace)),
+                )
+                .expect("neither rule fails");
+
+            assert_eq!(outcome, RuleResult::Skip);
+        }
+
+        assert_eq!(result, vec![48]);
+        assert_eq!(
+            trace.events().len(),
+            1,
+            "only the rule that wrote a cell is recorded: {:?}",
+            trace.events()
+        );
+        assert_eq!(trace.events()[0].rule, RuleId::korean(0));
+        assert_eq!(trace.events()[0].outcome, RuleOutcome::Continued);
+        assert_eq!(trace.events()[0].output, 0..1);
+    }
+
     /// engine.rs line 124 - `apply_phase` skip arm for disabled rules.
     #[test]
     fn engine_apply_phase_skips_disabled_rules() {

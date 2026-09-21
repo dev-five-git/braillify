@@ -256,6 +256,20 @@ mod tests {
         assert_eq!(cells, vec![decode_unicode('⠃')]);
     }
 
+    /// §10.4 strong groupsigns and §10.6 lower groupsigns are matched through
+    /// the §10.11 bridge rule and the §10.6.4/§10.6.8 gated rules rather than
+    /// registered on their own, so neither has had its section checked against
+    /// the standard. Reporting the undeclared placeholder keeps their cells out
+    /// of a section nobody verified instead of crediting a plausible-looking
+    /// one, which a trace consumer would have no way to distrust.
+    #[rstest::rstest]
+    #[case::strong_groupsign(&crate::rules::english_ueb::rule_10_4::StrongGroupsignRule)]
+    #[case::lower_groupsign(&crate::rules::english_ueb::rule_10_6::LowerGroupsignRule)]
+    fn an_undeclared_rule_reports_the_placeholder_section(#[case] rule: &dyn ContractionRule) {
+        assert_eq!(rule.meta().name, "undeclared_ueb_rule");
+        assert_eq!(rule.meta().section, "?");
+    }
+
     #[test]
     fn match_longest_accepts_runtime_word_slice() {
         static MAP: phf::Map<&'static str, u8> = phf::phf_map! {

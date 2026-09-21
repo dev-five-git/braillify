@@ -738,6 +738,55 @@ mod tests {
         assert_eq!(trace.events()[0].rule, RuleId(1));
     }
 
+    /// A sink is rebound to each token as the emitter walks the stream, so an
+    /// event names the token it came from. The math engine reads that index
+    /// back out to place its own spans, which is why the binding is readable
+    /// rather than write-only.
+    #[test]
+    fn a_sink_reports_the_token_it_is_bound_to() {
+        let mut trace = Trace::default();
+        let mut sink = TraceSink::new(&mut trace);
+        assert_eq!(sink.token_index(), 0);
+
+        let mut at_third = sink.at_token(3);
+
+        assert_eq!(at_third.token_index(), 3);
+        assert_eq!(at_third.reborrow().token_index(), 3);
+    }
+
+    /// `output_len` is the denominator [`Trace::attributed_cells`] is read
+    /// against, so it counts the cells the encode produced rather than the
+    /// cells the events happen to cover.
+    #[test]
+    fn output_len_counts_the_encoded_cells_not_the_recorded_ones() {
+        let mut trace = Trace::default();
+        assert_eq!(trace.output_len(), 0);
+
+        trace.set_output_len(5);
+        trace.push(event(1, 0..2));
+
+        assert_eq!(trace.output_len(), 5);
+        assert_eq!(trace.attributed_cells(), 2);
+        assert_eq!(trace.unattributed_cells(), 3);
+    }
+
+    /// A token rule may delete a token outright. Dropping the matching origin
+    /// slot is what keeps the side table indexable by token position; an index
+    /// past the end has no slot to drop.
+    #[test]
+    fn removing_a_token_drops_exactly_its_origin_slot() {
+        let mut origins = TokenOrigins::seeded(3);
+        origins.set(0, RuleId::token(1));
+        origins.set(2, RuleId::token(2));
+
+        origins.remove(1);
+        origins.remove(9);
+
+        assert_eq!(origins.len(), 2);
+        assert_eq!(origins.get(0), Some(RuleId::token(1)));
+        assert_eq!(origins.get(1), Some(RuleId::token(2)));
+    }
+
     #[test]
     fn token_origins_survive_a_splice_that_changes_length() {
         let mut origins = TokenOrigins::seeded(3);

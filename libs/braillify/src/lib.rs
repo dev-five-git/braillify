@@ -1722,6 +1722,7 @@ mod trace_tests {
     #[case::english("the child was here")]
     #[case::math("3+4=7")]
     #[case::chemical("C_{2}H_{4}(g) + H_{2}O(g) -> C_{2}H_{5}OH(g)")]
+    #[case::inline_chemical("$C_{2}H_{4}$(g)＋$H_{2}O$(g)→$C_{2}H_{5}OH$(g)")]
     fn no_cell_is_claimed_twice(#[case] input: &str) {
         let (cells, trace) = encode_with_trace(input).expect("input must encode");
 

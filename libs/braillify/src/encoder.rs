@@ -333,13 +333,28 @@ impl Encoder {
             // contains `-`, `(`, `,`, `.` is NOT blocked (that over-broad reading
             // of the math detector would swallow `child-ish-ly`, `with(er)`, …).
             && !crate::rules::english_ueb::is_math_owned(text)
-            && let Some(bytes) = crate::rules::english_ueb::try_encode(text)
         {
-            result.extend(bytes);
-            if let Some(sink) = trace.as_mut() {
-                sink.trace.set_path(TracePath::EnglishUeb);
+            let encoded = if trace.is_some() {
+                crate::rules::english_ueb::try_encode_traced(text)
+            } else {
+                crate::rules::english_ueb::try_encode(text).map(|cells| (cells, Vec::new()))
+            };
+            if let Some((bytes, spans)) = encoded {
+                let output_base = result.len();
+                result.extend(bytes);
+                if let Some(sink) = trace.as_mut() {
+                    let token_index = sink.token_index() as usize;
+                    for (rule, output) in spans {
+                        sink.record_span(
+                            rule,
+                            token_index,
+                            output_base + output.start as usize..output_base + output.end as usize,
+                        );
+                    }
+                    sink.trace.set_path(TracePath::EnglishUeb);
+                }
+                return Ok(());
             }
-            return Ok(());
         }
         self.encode_via_ir(text, result, trace)
     }

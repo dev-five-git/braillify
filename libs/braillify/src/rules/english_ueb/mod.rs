@@ -66,7 +66,8 @@ thread_local! {
 
 enum AttributionRecord {
     Word(WordAttempt),
-    Indicator(IndicatorAttempt),
+    Indicator(NonWordAttempt),
+    Direct(NonWordAttempt),
 }
 
 /// The cells one attempt produced, plus where each rule's cells sat inside them.
@@ -75,7 +76,7 @@ struct WordAttempt {
     moves: Vec<(crate::rules::trace::RuleId, u32, u32)>,
 }
 
-struct IndicatorAttempt {
+struct NonWordAttempt {
     cells: Vec<u8>,
     rule: crate::rules::trace::RuleId,
 }
@@ -161,6 +162,18 @@ fn collect_selected(
     encoded.map(|cells| (cells, records))
 }
 
+fn attribution_checkpoint() -> usize {
+    ATTRIBUTIONS.with(|slot| slot.borrow().as_ref().map_or(0, Vec::len))
+}
+
+fn rollback_attributions(checkpoint: usize) {
+    ATTRIBUTIONS.with(|slot| {
+        if let Some(records) = slot.borrow_mut().as_mut() {
+            records.truncate(checkpoint);
+        }
+    });
+}
+
 /// Place each attempt's moves in the finished output, skipping attempts the
 /// engine discarded.
 ///
@@ -168,43 +181,62 @@ fn collect_selected(
 /// already placed. A discarded attempt is recognised by its cells not appearing
 /// there — the engine never emitted them.
 fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
+    let mut direct_spans = Vec::new();
+    let mut direct_cursor = 0usize;
+    for record in records {
+        if let AttributionRecord::Direct(direct) = record
+            && let Some(base) = find_from(cells, &direct.cells, direct_cursor)
+        {
+            let end = base + direct.cells.len();
+            direct_spans.push((direct.rule, base as u32..end as u32));
+            direct_cursor = end;
+        }
+    }
+
     let mut indicator_spans = Vec::new();
     let mut indicator_cursor = 0usize;
     for record in records {
         match record {
-            AttributionRecord::Word(_) => {}
+            AttributionRecord::Word(_) | AttributionRecord::Direct(_) => {}
             AttributionRecord::Indicator(indicator) => {
-                if let Some(base) = find_from(cells, &indicator.cells, indicator_cursor) {
+                if let Some(base) =
+                    find_from_outside(cells, &indicator.cells, indicator_cursor, &direct_spans)
+                {
                     let end = base + indicator.cells.len();
-                    indicator_spans.push((indicator.rule, base as u32..end as u32));
+                    push_without_indicators(
+                        &mut indicator_spans,
+                        (indicator.rule, base as u32..end as u32),
+                        &direct_spans,
+                    );
                     indicator_cursor = end;
                 }
             }
         }
     }
 
+    let mut fixed_spans = direct_spans.clone();
+    fixed_spans.extend(indicator_spans.iter().cloned());
+    fixed_spans.sort_by_key(|(_, range)| range.start);
+
     let mut spans = Vec::new();
     let mut cursor = 0usize;
     for record in records {
         let attempt = match record {
             AttributionRecord::Word(attempt) => attempt,
-            AttributionRecord::Indicator(_) => continue,
+            AttributionRecord::Indicator(_) | AttributionRecord::Direct(_) => continue,
         };
-        let Some(base) = find_from(cells, &attempt.cells, cursor) else {
+        let Some(base) = find_from_outside(cells, &attempt.cells, cursor, &direct_spans) else {
             continue;
         };
         for (rule, offset, len) in &attempt.moves {
             let start = base + *offset as usize;
             let end = start + *len as usize;
-            push_without_indicators(
-                &mut spans,
-                (*rule, start as u32..end as u32),
-                &indicator_spans,
-            );
+            push_without_indicators(&mut spans, (*rule, start as u32..end as u32), &fixed_spans);
         }
         cursor = base + attempt.cells.len();
     }
     spans.extend(indicator_spans);
+    spans.extend(direct_spans);
     // An empty cell between words is the inter-word blank, the same structural
     // output the Korean emitter accounts for. It carries no dots, so there is no
     // other thing it could be.
@@ -247,6 +279,26 @@ fn find_from(haystack: &[u8], needle: &[u8], from: usize) -> Option<usize> {
         .map(|offset| offset + from)
 }
 
+fn find_from_outside(
+    haystack: &[u8],
+    needle: &[u8],
+    from: usize,
+    excluded: &[UebSpan],
+) -> Option<usize> {
+    let mut cursor = from;
+    loop {
+        let base = find_from(haystack, needle, cursor)?;
+        let end = base + needle.len();
+        let overlap = excluded
+            .iter()
+            .find(|(_, range)| range.start < end as u32 && (base as u32) < range.end);
+        let Some((_, range)) = overlap else {
+            return Some(base);
+        };
+        cursor = range.end as usize;
+    }
+}
+
 /// Sources of a selected contraction move that are not [`ContractionRule`]
 /// objects. They occupy the first slots of the UEB id space so a contraction
 /// rule's id stays a fixed offset from its registration index.
@@ -265,10 +317,11 @@ pub(crate) enum UebMoveSource {
     Grade1Indicator = 8,
     CapitalLetterIndicator = 9,
     CapitalisedWordIndicator = 10,
+    InlineNemethCode = 11,
 }
 
 /// Number of non-rule slots reserved before the contraction rules.
-pub(crate) const UEB_RESERVED_SLOTS: usize = 11;
+pub(crate) const UEB_RESERVED_SLOTS: usize = 12;
 
 /// Record a whole word that a lookup table resolved in one step, bypassing the
 /// contraction search. Without this a wordsign or shortform would leave its
@@ -305,6 +358,14 @@ pub(super) fn settle_word_attribution(pending: Option<PendingWord>, out: &[u8]) 
     }
 }
 
+pub(super) fn settle_symbol_attribution(start: Option<usize>, out: &[u8]) {
+    if let Some(start) = start
+        && out.len() > start
+    {
+        record_whole_word(UebMoveSource::Symbol, &out[start..]);
+    }
+}
+
 pub(super) fn record_whole_word(source: UebMoveSource, cells: &[u8]) {
     let mut attempt = AttemptRecorder::new();
     attempt.push(
@@ -321,7 +382,25 @@ pub(super) fn push_indicator(out: &mut Vec<u8>, source: UebMoveSource, cells: &[
         if let Ok(mut slot) = slot.try_borrow_mut()
             && let Some(records) = slot.as_mut()
         {
-            records.push(AttributionRecord::Indicator(IndicatorAttempt {
+            records.push(AttributionRecord::Indicator(NonWordAttempt {
+                cells: cells.to_vec(),
+                rule: crate::rules::trace::RuleId::ueb(source as usize),
+            }));
+        }
+    });
+}
+
+pub(super) fn push_direct(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    out.extend_from_slice(cells);
+    record_direct(source, cells);
+}
+
+pub(super) fn record_direct(source: UebMoveSource, cells: &[u8]) {
+    ATTRIBUTIONS.with(|slot| {
+        if let Ok(mut slot) = slot.try_borrow_mut()
+            && let Some(records) = slot.as_mut()
+        {
+            records.push(AttributionRecord::Direct(NonWordAttempt {
                 cells: cells.to_vec(),
                 rule: crate::rules::trace::RuleId::ueb(source as usize),
             }));
@@ -407,6 +486,13 @@ static UEB_NON_RULE_METAS: [crate::rules::RuleMeta; UEB_RESERVED_SLOTS] = [
         standard_ref: "RUEB 2024 §8.4",
         description: "Capital indicators applying to the following word",
     },
+    crate::rules::RuleMeta {
+        section: "14.6.2",
+        subsection: None,
+        name: "ueb_inline_nemeth_code",
+        standard_ref: "RUEB 2024 §14.6.2",
+        description: "Nemeth Code within UEB text",
+    },
 ];
 
 /// Metadata of every UEB move source, in [`crate::rules::trace::RuleId`] order:
@@ -468,6 +554,7 @@ fn encode_english(text: &str, explicit_english: bool) -> Option<Vec<u8>> {
     // §14.3.1/14.3.2: non-UEB (Arabic/Greek/IPA/music) runs inside English prose
     // take the non-UEB word/passage indicators, with the surrounding English
     // encoded by the closure. Returns None when no code-switch span is present.
+    let attribution_checkpoint = attribution_checkpoint();
     if let Some(cells) = rule_14::encode_with_code_switches(&composed, |segment| {
         let tokens = parser::parse_english(segment);
         if tokens.is_empty() {
@@ -478,6 +565,7 @@ fn encode_english(text: &str, explicit_english: bool) -> Option<Vec<u8>> {
     }) {
         return Some(cells);
     }
+    rollback_attributions(attribution_checkpoint);
     let tokens = parser::parse_english(&composed);
     if tokens.is_empty() {
         return None;
@@ -1092,6 +1180,52 @@ mod is_ueb_eligible_tests {
 #[cfg(test)]
 mod encode_pipeline_tests {
     use super::encode_forced;
+
+    #[rstest::rstest]
+    #[case::two_assignments("$P_{D}$＝1,000kN, $P_{L}$＝600kN", 12)]
+    #[case::preceded_by_prose("abc $P_{D}$", 6)]
+    #[case::followed_by_prose("$I_{7}H^{T}$(mod 2)", 12)]
+    #[case::ethylene_equation("$C_{2}H_{4}$(g)＋$H_{2}O$(g)→$C_{2}H_{5}OH$(g)", 36)]
+    #[case::carbon_monoxide_equation("$CO$(g)＋$H_{2}O$(g)→$CO_{2}$(g)＋$H_{2}$(g)", 27)]
+    #[case::capitalised_spelled_word_after_span("abc $P_{D}$ Cat", 6)]
+    fn inline_technical_cells_are_claimed_by_14_6_2(
+        #[case] input: &str,
+        #[case] expected_technical_cells: usize,
+    ) {
+        let (cells, trace) =
+            crate::encode_with_trace(input).expect("inline technical input must encode");
+        let untraced = crate::encode(input).expect("inline technical input must encode untraced");
+        let technical_cells: usize = trace
+            .events()
+            .iter()
+            .filter(|event| {
+                event
+                    .rule
+                    .meta()
+                    .is_some_and(|meta| meta.section == "14.6.2")
+            })
+            .map(|event| event.output.len())
+            .sum();
+        let mut claims = vec![0u8; cells.len()];
+        for event in trace.events() {
+            for index in event.output.clone() {
+                claims[index as usize] += 1;
+            }
+        }
+
+        assert_eq!(cells, untraced, "trace collection must not change output");
+        assert!(
+            claims.iter().all(|count| *count == 1),
+            "claims={claims:?}, events={:?}",
+            trace.events()
+        );
+        assert_eq!(
+            technical_cells,
+            expected_technical_cells,
+            "events={:?}",
+            trace.events()
+        );
+    }
 
     /// An input that parses to zero tokens — the empty string, reached through
     /// the eligibility-free `encode_forced` entry — yields None rather than an

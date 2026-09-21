@@ -1,0 +1,220 @@
+name: java-build
+
+on:
+  #태그를 트리거로 사용하시려면 주석을 제거하시고 사용하시면 됩니다#
+  #push:
+  #  tags:
+  #    - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version to release (e.g., 1.0.11)'
+        required: true
+        default: '1.0.11'
+
+jobs:
+  build-native-libs:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            rust_target: x86_64-pc-windows-msvc
+            lib_name: braillify_java.dll
+            artifact_name: braillify-dll
+            native_path: windows-x86_64
+            java_version: '8'
+
+          - os: ubuntu-latest
+            rust_target: x86_64-unknown-linux-gnu
+            lib_name: libbraillify_java.so
+            artifact_name: braillify-so
+            native_path: linux-x86_64
+            java_version: '8'
+
+          - os: macos-15-intel
+            rust_target: x86_64-apple-darwin
+            lib_name: libbraillify_java.dylib
+            artifact_name: braillify-dylib-x86
+            native_path: darwin-x86_64
+            java_version: '8'
+
+          - os: macos-15
+            rust_target: aarch64-apple-darwin
+            lib_name: libbraillify_java.dylib
+            artifact_name: braillify-dylib-aarch64
+            native_path: darwin-aarch64
+            java_version: '11'
+
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        working-directory: packages/java
+
+    steps:
+      - name: Checkout required subtree only
+        uses: actions/checkout@v4
+
+      - name: Set version
+        id: set_version
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update Cargo.toml version + braillify dependency version
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          version = "${{ steps.set_version.outputs.version }}"
+          path = Path("Cargo.toml")
+
+          if not path.exists():
+              raise SystemExit(f"Cargo.toml not found at: {path.resolve()}")
+
+          s = path.read_text(encoding="utf-8")
+          s2, n_ver = re.subn(r'(?m)^(version\s*=\s*)".*"$', rf'\1"{version}"', s)
+          s3, n_dep = re.subn(r'(?m)^(braillify\s*=\s*)".*"$', rf'\1"{version}"', s2)
+
+          if n_ver == 0:
+              raise SystemExit("Failed to update Cargo.toml: no 'version = \"...\"' line found.")
+          if n_dep == 0:
+              raise SystemExit("Failed to update Cargo.toml: no 'braillify = \"...\"' line found.")
+
+          path.write_text(s3, encoding="utf-8")
+          print(f"Updated Cargo.toml: package version -> {version}, braillify dependency -> {version}")
+          PY
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: 'temurin'
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_target }}
+
+      - name: Grant execute permission for gradlew
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
+      - name: Build native library (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: gradlew.bat cargoBuild --no-daemon
+
+      - name: Build native library (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: ./gradlew cargoBuild --no-daemon
+        
+
+      - name: Upload native library artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ github.workspace }}/packages/java/build/cargo-target/${{ matrix.rust_target }}/release/${{ matrix.lib_name }}
+          if-no-files-found: error
+
+  assemble-jar:
+    runs-on: ubuntu-latest
+    needs: build-native-libs
+
+    defaults:
+      run:
+        working-directory: packages/java
+
+    steps:
+      - name: Checkout required subtree only
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            packages/java
+            packages/java/jar
+          sparse-checkout-cone-mode: true
+
+      - name: Set version
+        id: set_version
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+
+      - name: Download native library artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: native-libs
+
+      - name: downloaded artifacts
+        shell: bash
+        run: ls -R "$GITHUB_WORKSPACE/native-libs"
+
+      - name: Move native libraries
+        shell: bash
+        run: |
+          mkdir -p src/main/resources/natives/windows-x86_64
+          mv "$GITHUB_WORKSPACE/native-libs/braillify-dll/braillify_java.dll" src/main/resources/natives/windows-x86_64/
+
+          mkdir -p src/main/resources/natives/linux-x86_64
+          mv "$GITHUB_WORKSPACE/native-libs/braillify-so/libbraillify_java.so" src/main/resources/natives/linux-x86_64/
+
+          mkdir -p src/main/resources/natives/macos-x86_64
+          mv "$GITHUB_WORKSPACE/native-libs/braillify-dylib-x86/libbraillify_java.dylib"  src/main/resources/natives/macos-x86_64/
+
+          mkdir -p src/main/resources/natives/macos-aarch64
+          mv "$GITHUB_WORKSPACE/native-libs/braillify-dylib-aarch64/libbraillify_java.dylib" src/main/resources/natives/macos-aarch64/
+
+      - name: Grant execute permission for gradlew
+        if: runner.os != 'Windows'
+        run: chmod +x gradlew
+
+      - name: Assemble Universal JAR
+        run: ${{ github.workspace }}/packages/java/gradlew deployJar -PreleaseVersion=${{ steps.set_version.outputs.version }} --no-daemon
+
+      - name: Copy jar into repo jar/ folder
+        shell: bash
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/packages/java/jar"
+          cp "$GITHUB_WORKSPACE/packages/java/build/libs/braillify-java-${{ steps.set_version.outputs.version }}.jar" "$GITHUB_WORKSPACE/packages/java/jar/"
+
+          echo "== jar folder =="
+          ls -al "$GITHUB_WORKSPACE/packages/java/jar"
+
+      - name: Commit & push jar to repository
+        shell: bash
+        run: |
+          cd "$GITHUB_WORKSPACE"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add packages/java/jar
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore(release): add universal jar ${{ steps.set_version.outputs.version }}"
+          git push

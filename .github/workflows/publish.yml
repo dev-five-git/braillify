@@ -53,14 +53,6 @@ jobs:
         with:
           components: clippy, rustfmt
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      # packages/ruby(rb-sys) 컴파일에 libruby가 필요하다.
-      # Windows는 pyo3/maturin(MSVC Python)과 ABI를 맞추기 위해 MSVC 빌드(mswin) Ruby를 쓴다.
-      # (ucrt Ruby는 GNU 툴체인을 요구해 한 번의 workspace-wide cargo 호출에서 pyo3와 공존 불가)
-      # mswin은 ruby master dev 빌드만 제공된다 — 실배포 플랫폼(ucrt) 검증은 ruby-test 잡이 담당.
-      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
-        with:
-          ruby-version: ${{ matrix.platform == 'windows-latest' && 'mswin' || '3.4' }}
-          cargo-cache: true
       - name: Cargo tarpaulin and fmt
         run: |
           cargo install cargo-tarpaulin
@@ -216,6 +208,48 @@ jobs:
         run: dotnet test --no-build -c Release --verbosity normal --framework net9.0 Braillify.Tests/Braillify.Tests.csproj
         working-directory: packages/dotnet
 
+  ruby-test:
+    name: Ruby Test - ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
+          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
+          # 지우면 CI 가 다시 깨진다. https://gh.io/securely-using-pull_request_target
+          allow-unsafe-pr-checkout: true
+
+      # Ruby 플랫폼(Windows ucrt 등)에 맞는 Rust 타겟/bindgen 환경까지 구성하는
+      # rb-sys 공식 셋업 액션.
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+          cargo-cache: true
+          working-directory: packages/ruby
+
+      # 실배포 gem 플랫폼(stable Ruby, Windows는 ucrt+GNU)에서의 lint.
+      # 루트 워크스페이스에서 실행해 [patch.crates-io]로 로컬 libs/braillify를 사용한다.
+      - name: Lint
+        run: cargo clippy -p braillify_rb --all-targets -- -D warnings
+
+      - name: Compile
+        run: bundle exec rake compile
+        working-directory: packages/ruby
+
+      - name: Test
+        run: bundle exec rake test
+        working-directory: packages/ruby
+
   jvm-test:
     name: JVM Test - ${{ matrix.native-target }}
     runs-on: ${{ matrix.runner }}
@@ -268,6 +302,7 @@ jobs:
       - test
       - dotnet-test
       - jvm-test
+      - ruby-test
     steps:
       - uses: actions/checkout@v7
       - uses: oven-sh/setup-bun@v2
@@ -317,6 +352,7 @@ jobs:
       - dotnet-test
       - go-test
       - jvm-test
+      - ruby-test
     steps:
       - uses: actions/checkout@v7
         with:
@@ -327,6 +363,12 @@ jobs:
           # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
           # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
           allow-unsafe-pr-checkout: true
+      # changepacks 는 base branch 를 refs/heads/<name> 에서 찾는데, checkout 은 SHA 를
+      # 주면 detached HEAD 로 두고 refs/remotes/origin/* 만 만든다. 그 로컬 ref 를 세운다.
+      - name: Materialize the base branch as a local ref
+        env:
+          BASE: ${{ github.event.pull_request.base.ref || github.ref_name }}
+        run: git branch --force "$BASE" "refs/remotes/origin/$BASE"
       - uses: changepacks/action@main
         id: changepacks
         with:
@@ -943,6 +985,7 @@ jobs:
             target: x86_64-pc-windows-msvc
             rid: windows-x64
             archive: braillify-c-windows-x64.tar.gz
+
     steps:
       - uses: actions/checkout@v7
 
@@ -1047,6 +1090,104 @@ jobs:
         with:
           upload_url: ${{ fromJson(needs.changepacks.outputs.release_assets_urls)['packages/c/Cargo.toml'] }}
           asset_path: "c-artifacts/*.tar.gz"
+
+  # ruby
+  ruby-build:
+    name: Ruby Build - ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/ruby/Cargo.toml') }}
+    needs:
+      - test
+      - dotnet-test
+      - ruby-test
+      - changepacks
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - x86_64-linux
+          - aarch64-linux
+          - x86_64-darwin
+          - arm64-darwin
+          - x64-mingw-ucrt
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+          working-directory: packages/ruby
+
+      - uses: oxidize-rb/actions/cross-gem@v1
+        id: cross-gem
+        with:
+          platform: ${{ matrix.platform }}
+          ruby-versions: "3.1,3.2,3.3,3.4"
+          working-directory: packages/ruby
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ruby-gem-${{ matrix.platform }}
+          path: ${{ steps.cross-gem.outputs.gem-path }}
+          if-no-files-found: error
+
+  ruby-publish:
+    name: Ruby Publish
+    runs-on: ubuntu-latest
+    if: ${{ contains(needs.changepacks.outputs.changepacks, 'packages/ruby/Cargo.toml') }}
+    needs:
+      - changepacks
+      - ruby-build
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+
+      - name: Download platform gems
+        uses: actions/download-artifact@v8
+        with:
+          pattern: ruby-gem-*
+          path: gems
+
+      - name: Build source gem
+        run: |
+          gem build braillify.gemspec
+          mkdir -p ../../gems/source
+          mv braillify-*.gem ../../gems/source/
+        working-directory: packages/ruby
+
+      - name: Publish
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+        run: |
+          VERSION=$(ruby -e 'print File.read("packages/ruby/Cargo.toml")[/^version = "([^"]+)"/, 1]')
+
+          EXISTING=$(curl -fsSL "https://rubygems.org/api/v1/versions/braillify.json" || echo "[]")
+
+          for GEM in $(find gems -name '*.gem' -type f); do
+            BASE=$(basename "$GEM" .gem)
+            PLATFORM=${BASE#braillify-$VERSION}
+            PLATFORM=${PLATFORM#-}
+            PLATFORM=${PLATFORM:-ruby}
+
+            if echo "$EXISTING" | jq -e --arg v "$VERSION" --arg p "$PLATFORM" \
+              'any(.[]; .number == $v and .platform == $p)' > /dev/null; then
+              echo "::notice::braillify-$VERSION ($PLATFORM) is already on rubygems.org. Skipping."
+              continue
+            fi
+
+            gem push "$GEM"
+          done
+
   # go
   go-test:
     name: Go Test - ${{ matrix.platform }}
@@ -1074,7 +1215,7 @@ jobs:
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
-          - runner: macos-13
+          - runner: macos-15-intel
             target: x86_64-apple-darwin
             platform: darwin-amd64
     steps:
@@ -1138,7 +1279,7 @@ jobs:
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
-          - runner: macos-13
+          - runner: macos-15-intel
             target: x86_64-apple-darwin
             platform: darwin-amd64
     steps:

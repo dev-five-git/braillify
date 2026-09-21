@@ -5,8 +5,8 @@
   "description": "Braillify is a library for converting text to braille.",
   "type": "module",
   "scripts": {
-    "lint": "oxlint . && cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings",
-    "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --workspace --all-targets --fix --allow-dirty --allow-staged -- -D warnings && cargo clippy --workspace --all-targets -- -D warnings",
+    "lint": "oxlint . && cargo fmt --all -- --check && cargo clippy --all-targets -- -D warnings",
+    "lint:fix": "oxlint . --fix && cargo fmt --all && cargo clippy --all-targets --fix --allow-dirty --allow-staged -- -D warnings && cargo clippy --all-targets -- -D warnings",
     "test": "bun run test:rust && bun run test:c && bun run test:node && bun run test:python && bun run test:jvm",
     "test:rust": "bun scripts/test-rust.ts",
     "test:node": "bun test",

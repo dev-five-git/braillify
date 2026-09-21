@@ -56,19 +56,7 @@ pub fn translate_to_unicode_with_trace(text: &str) -> Result<TraceResult, String
     let rules = trace
         .events()
         .iter()
-        .filter_map(|event| {
-            let meta = event.rule.meta()?;
-            let range = event.output.start as usize..event.output.end as usize;
-            Some(RuleSpan {
-                section: meta.section.to_string(),
-                name: meta.name.to_string(),
-                description: meta.description.to_string(),
-                kind: kind_label(event.rule.kind()?).to_string(),
-                start: event.output.start,
-                end: event.output.end,
-                braille: to_braille(cells.get(range).unwrap_or_default()),
-            })
-        })
+        .filter_map(|event| rule_span(event.rule, event.output.clone(), &cells))
         .collect();
 
     Ok(TraceResult {
@@ -76,13 +64,36 @@ pub fn translate_to_unicode_with_trace(text: &str) -> Result<TraceResult, String
         rules,
         attributed: trace.attributed_cells(),
         total: trace.output_len(),
-        path: match trace.path() {
-            braillify::TracePath::KoreanRules => "korean",
-            braillify::TracePath::EnglishUeb => "english-ueb",
-            braillify::TracePath::MathExpression => "math",
-        }
-        .to_string(),
+        path: path_label(trace.path()).to_string(),
     })
+}
+
+/// One event as a span, or `None` for an id the registry does not resolve.
+fn rule_span(
+    rule: braillify::RuleId,
+    output: core::ops::Range<u32>,
+    cells: &[u8],
+) -> Option<RuleSpan> {
+    let meta = rule.meta()?;
+    let kind = rule.kind()?;
+    let range = output.start as usize..output.end as usize;
+    Some(RuleSpan {
+        section: meta.section.to_string(),
+        name: meta.name.to_string(),
+        description: meta.description.to_string(),
+        kind: kind_label(kind).to_string(),
+        start: output.start,
+        end: output.end,
+        braille: to_braille(cells.get(range).unwrap_or_default()),
+    })
+}
+
+fn path_label(path: braillify::TracePath) -> &'static str {
+    match path {
+        braillify::TracePath::KoreanRules => "korean",
+        braillify::TracePath::EnglishUeb => "english-ueb",
+        braillify::TracePath::MathExpression => "math",
+    }
 }
 
 fn kind_label(kind: braillify::RuleKind) -> &'static str {
@@ -151,5 +162,59 @@ mod tests {
     fn set_panic_hook_is_callable() {
         // Exercises the no-op path on default (no `console_error_panic_hook` feature).
         utils::set_panic_hook();
+    }
+
+    #[test]
+    fn trace_reports_the_rules_behind_the_braille() {
+        let result = translate_to_unicode_with_trace("안녕").expect("must succeed");
+
+        assert_eq!(result.path, "korean");
+        assert_eq!(result.attributed, result.total);
+        assert!(!result.rules.is_empty());
+        for span in &result.rules {
+            assert!(span.end > span.start, "a span must cover a cell");
+            assert_eq!(span.braille.chars().count() as u32, span.end - span.start);
+        }
+    }
+
+    #[test]
+    fn trace_propagates_error() {
+        assert!(translate_to_unicode_with_trace("😀").is_err());
+    }
+
+    /// An id outside the registry names no rule, so it yields no span.
+    #[test]
+    fn an_unresolvable_id_yields_no_span() {
+        assert!(rule_span(braillify::RuleId::UNATTRIBUTED, 0..1, &[0]).is_none());
+    }
+
+    /// A span reaching past the output keeps its cells empty rather than
+    /// panicking, so a stale range can never take the binding down.
+    #[test]
+    fn a_span_past_the_output_carries_no_cells() {
+        let (_, trace) = braillify::encode_with_trace("안녕").expect("must encode");
+        let rule = trace.events().first().expect("안녕 records events").rule;
+        let span = rule_span(rule, 0..99, &[0]).expect("the emitter id resolves");
+
+        assert!(span.braille.is_empty());
+    }
+
+    #[rstest::rstest]
+    #[case::korean(braillify::RuleKind::Korean, "korean")]
+    #[case::token(braillify::RuleKind::Token, "token")]
+    #[case::math(braillify::RuleKind::Math, "math")]
+    #[case::jamo(braillify::RuleKind::Jamo, "jamo")]
+    #[case::english_ueb(braillify::RuleKind::EnglishUeb, "english-ueb")]
+    #[case::emitter(braillify::RuleKind::Emitter, "emitter")]
+    fn every_engine_has_a_label(#[case] kind: braillify::RuleKind, #[case] expected: &str) {
+        assert_eq!(kind_label(kind), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::korean(braillify::TracePath::KoreanRules, "korean")]
+    #[case::english_ueb(braillify::TracePath::EnglishUeb, "english-ueb")]
+    #[case::math(braillify::TracePath::MathExpression, "math")]
+    fn every_path_has_a_label(#[case] path: braillify::TracePath, #[case] expected: &str) {
+        assert_eq!(path_label(path), expected);
     }
 }

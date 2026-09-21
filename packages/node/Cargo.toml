@@ -28,6 +28,7 @@ console_error_panic_hook = { version = "0.1.7", optional = true }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.77"
+rstest = "0.26.1"
 
 # Disable wasm-pack's bundled (legacy) wasm-opt; the bundled version does not
 # support bulk-memory ops emitted by modern rustc. The `build` script in

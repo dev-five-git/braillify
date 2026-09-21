@@ -660,10 +660,57 @@ mod tests {
     #[rstest::rstest]
     #[case::word_space(EmitterRule::WordSpace, "word_space")]
     #[case::undeclared(EmitterRule::UndeclaredTokenOutput, "undeclared_token_output")]
+    #[case::roman_section(EmitterRule::RomanSectionMarker, "roman_section_marker")]
     fn emitter_slots_resolve_to_their_metadata(#[case] slot: EmitterRule, #[case] name: &str) {
         let id = RuleId::emitter(slot);
         assert_eq!(id.kind(), Some(RuleKind::Emitter));
         assert_eq!(id.meta().map(|m| m.name), Some(name));
+    }
+
+    /// The jamo articles are listed like any other engine's rules, while the
+    /// emitter's structural cells are reachable by id but are not rules anyone
+    /// can enumerate as candidates.
+    #[test]
+    fn the_remaining_engines_report_their_own_rule_lists() {
+        assert_eq!(registered_rules(RuleKind::Jamo).len(), JamoRule::ALL.len());
+        assert_eq!(
+            registered_rules(RuleKind::Jamo)[0].section,
+            JamoRule::Choseong.meta().section
+        );
+        assert!(!registered_rules(RuleKind::EnglishUeb).is_empty());
+        assert!(registered_rules(RuleKind::Emitter).is_empty());
+    }
+
+    /// An index past its engine's partition would collide with the next engine,
+    /// so it resolves to nothing instead.
+    #[rstest::rstest]
+    #[case::korean(RuleId::korean(RuleId::TOKEN_BASE as usize))]
+    #[case::token(RuleId::token(RuleId::MATH_BASE as usize))]
+    #[case::math(RuleId::math(RuleId::JAMO_BASE as usize))]
+    #[case::ueb(RuleId::ueb(RuleId::EMITTER_BASE as usize))]
+    fn an_index_past_its_partition_resolves_to_nothing(#[case] id: RuleId) {
+        assert_eq!(id, RuleId::UNATTRIBUTED);
+    }
+
+    /// The emitter borrows a character rule's id by name so both report the
+    /// same article; a name the engine never registered borrows nothing.
+    #[test]
+    fn borrowing_a_rule_id_by_name_needs_a_registered_name() {
+        let registered = registered_rules(RuleKind::Korean)[0].name;
+
+        assert_eq!(korean_rule_id(registered), RuleId::korean(0));
+        assert_eq!(korean_rule_id("no_such_rule"), RuleId::UNATTRIBUTED);
+    }
+
+    /// 제6항 lists the ten basic vowels; every other vowel is 제7항.
+    #[rstest::rstest]
+    #[case::basic('ㅏ', JamoRule::Jungseong)]
+    #[case::extended('ㅘ', JamoRule::JungseongExtended)]
+    fn a_vowel_belongs_to_the_article_that_lists_it(
+        #[case] vowel: char,
+        #[case] expected: JamoRule,
+    ) {
+        assert_eq!(JamoRule::for_vowel(vowel), expected);
     }
 
     #[test]

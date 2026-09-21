@@ -49,7 +49,7 @@ math_meta! {
     (META_31, "31", "math_asymptotic_equality", "Asymptotic equality"),
     (META_32, "32", "math_congruence_symbol", "Congruence symbols"),
     (META_33, "33", "math_geometric_operator", "Geometric operators"),
-    (META_34, "34", "math_negation_combiner", "Negation combining mark"),
+    (META_34, "34", "math_relation_symbol", "Relation symbols and their negations"),
     (META_36, "36", "math_segment_symbol", "Segment and arc symbols"),
     (META_37, "37", "math_line_symbol", "Bidirectional line symbols"),
     (META_38, "38", "math_ray_symbol", "Right-arrow ray symbols"),
@@ -307,16 +307,22 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '\u{208A}' => &[decode_unicode('⠰'), decode_unicode('⠢')],
     },
     &UNDECLARED_MATH_RULE => {
-        '\u{2044}' => &[decode_unicode('⠌')],
         '\u{2E29}' => &[decode_unicode('⠄')],
-        '\u{2241}' => &[decode_unicode('⠨'), decode_unicode('⠈'), decode_unicode('⠔')],
-        '\u{21CF}' => &[decode_unicode('⠨'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')],
-        '\u{1D9C}' => &[decode_unicode('⠘'), decode_unicode('⠉')],
-        '\u{211B}' => &[decode_unicode('⠠'), decode_unicode('⠗')],
         '\u{220F}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠏')],
     },
     &META_34 => {
         '\u{0338}' => &[decode_unicode('⠨')],
+        '\u{211B}' => &[decode_unicode('⠠'), decode_unicode('⠗')],
+        '\u{2241}' => &[decode_unicode('⠨'), decode_unicode('⠈'), decode_unicode('⠔')],
+    },
+    &META_60 => {
+        '\u{1D9C}' => &[decode_unicode('⠘'), decode_unicode('⠉')],
+    },
+    &META_61 => {
+        '\u{21CF}' => &[decode_unicode('⠨'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')],
+    },
+    &META_7 => {
+        '\u{2044}' => &[decode_unicode('⠌')],
     },
     &META_23 => {
         '_' => &[decode_unicode('⠠'), decode_unicode('⠤')],
@@ -539,21 +545,30 @@ mod test {
         );
     }
 
+    /// `∏` is written with the cells of Greek capital pi but the standard never
+    /// names it, and `⸩` stands in for LaTeX's `\right.` null delimiter, which
+    /// has no printed counterpart for an article to govern. Both keep the
+    /// placeholder rather than borrowing an article by resemblance.
     #[rstest::rstest]
     #[case::product('∏')]
-    #[case::not_implies('⇏')]
-    #[case::not_similar('≁')]
-    #[case::superscript_c('ᶜ')]
-    #[case::script_r('ℛ')]
-    #[case::fraction_slash('⁄')]
     #[case::open_ended_delimiter('⸩')]
     fn unresolved_shortcuts_keep_the_honest_placeholder(#[case] symbol: char) {
         assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, "?");
     }
 
-    #[test]
-    fn negation_overlay_uses_article_34() {
-        assert_eq!(SHORTCUT_MAP[&'\u{0338}'].fallback_meta.section, "34");
+    /// Each of these was identified by matching its cells against the notation
+    /// printed in the standard, not by searching for the character itself:
+    /// `⠌` is the 분수표 of 제7항 1, `⠠⠗`/`⠨⠈⠔` are 관계가있다/관계가없다 of
+    /// 제34항, `⠘⠉` is 여집합 of 제60항 5, `⠨⠒⠒⠕` is 항진명제의 부정 of 제61항 4.
+    #[rstest::rstest]
+    #[case::fraction_slash('⁄', "7")]
+    #[case::script_r('ℛ', "34")]
+    #[case::not_similar('≁', "34")]
+    #[case::negation_overlay('\u{0338}', "34")]
+    #[case::superscript_c('ᶜ', "60")]
+    #[case::not_implies('⇏', "61")]
+    fn cell_matched_shortcuts_name_their_article(#[case] symbol: char, #[case] section: &str) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
     }
 
     /// `is_math_symbol_char` true 케이스 — 연산자/그리스/집합/미적분 기호 전체.

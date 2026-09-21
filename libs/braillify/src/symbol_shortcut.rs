@@ -47,6 +47,8 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '：' => &[decode_unicode('⠐'), decode_unicode('⠂')],
     '「' => &[decode_unicode('⠐'), decode_unicode('⠦')],
     '」' => &[decode_unicode('⠴'), decode_unicode('⠂')],
+    '｢' => &[decode_unicode('⠐'), decode_unicode('⠦')],
+    '｣' => &[decode_unicode('⠴'), decode_unicode('⠂')],
     '『' => &[decode_unicode('⠰'), decode_unicode('⠦')],
     '』' => &[decode_unicode('⠴'), decode_unicode('⠆')],
     '/' => &[decode_unicode('⠸'), decode_unicode('⠌')],
@@ -205,6 +207,22 @@ mod test {
         assert_eq!(
             encode_char_symbol_shortcut(ch).unwrap(),
             expected.as_slice()
+        );
+    }
+
+    /// 제49항 defines one 홑낫표. Unicode spells it twice, full width and half
+    /// width, and the standard's own text uses the half-width form, so the pair
+    /// must transcribe alike or a quoted statute stops transcribing at all.
+    #[rstest::rstest]
+    #[case::opening('｢', '「')]
+    #[case::closing('｣', '」')]
+    fn a_halfwidth_corner_bracket_reads_as_its_fullwidth_twin(
+        #[case] halfwidth: char,
+        #[case] fullwidth: char,
+    ) {
+        assert_eq!(
+            encode_char_symbol_shortcut(halfwidth).unwrap(),
+            encode_char_symbol_shortcut(fullwidth).unwrap()
         );
     }
 

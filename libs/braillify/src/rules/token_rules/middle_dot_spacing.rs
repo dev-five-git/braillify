@@ -257,8 +257,8 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
 /// therefore joined the same way as the middle dot above.
 /// 제49항이 따르는 한글 맞춤법은 붙임표의 앞뒤를 붙여 쓴다. 묵자가 편집상
 /// `준우승 - 홍길동`처럼 띄워 놓아도 점자 띄어쓰기는 규정을 따르므로 한 어절로
-/// 잇는다. 양쪽이 한글일 때만 적용해 제46항의 뺄셈표(`a - b`)와 가르는데, 뺄셈은
-/// 로마자·숫자 사이에서 쓰이기 때문이다.
+/// 잇는다. 가르는 기준은 제46항의 뺄셈표(`a - b`)뿐이며, 그 피연산자는
+/// 로마자·숫자이므로 양쪽이 모두 로마자·숫자인 자리만 띄운 채로 둔다.
 pub struct KoreanHyphenSpacingRule;
 
 impl TokenRule for KoreanHyphenSpacingRule {
@@ -292,16 +292,14 @@ impl TokenRule for KoreanHyphenSpacingRule {
         else {
             return Ok(TokenAction::Noop);
         };
-        if hyphen.chars.as_slice() != ['-']
-            || !left
-                .chars
-                .last()
-                .is_some_and(|ch| crate::utils::is_korean_char(*ch))
-            || !right
-                .chars
-                .first()
-                .is_some_and(|ch| crate::utils::is_korean_char(*ch))
-        {
+        let (Some(before), Some(after)) = (left.chars.last(), right.chars.first()) else {
+            return Ok(TokenAction::Noop);
+        };
+        // 가르는 기준은 양쪽이 한글인지가 아니라 제46항의 뺄셈인지다. 뺄셈의
+        // 피연산자는 로마자·숫자이므로 그 자리만 띄운 채로 두고, 나머지는
+        // 제49항이 따르는 한글 맞춤법대로 붙인다.
+        let subtraction_operands = before.is_ascii_alphanumeric() && after.is_ascii_alphanumeric();
+        if hyphen.chars.as_slice() != ['-'] || subtraction_operands {
             return Ok(TokenAction::Noop);
         }
         let mut chars = left.chars.clone();
@@ -583,6 +581,33 @@ mod nikl_answer_coverage {
         let chars: Vec<char> = input.chars().collect();
         let split = korean_label_colon_split_index(&chars);
         assert!(split.is_none() || split.is_some());
+    }
+}
+
+#[cfg(test)]
+mod spaced_hyphen_joining {
+    /// 제49항이 따르는 한글 맞춤법은 붙임표의 앞뒤를 붙여 쓴다. 가르는 기준은
+    /// 양쪽이 한글인지가 아니라 제46항의 뺄셈인지다 — 뺄셈은 로마자·숫자
+    /// 사이에서만 쓰이므로 그 자리만 띄운 채로 둔다.
+    #[rstest::rstest]
+    #[case::closing_bracket_then_korean("확인(9일) - 논란 일자", "⠠⠴⠤⠉⠷")]
+    #[case::korean_then_digit("등장 - 2차원 표면", "⠨⠶⠤⠼⠃")]
+    #[case::korean_then_korean("가나 - 다라 마바", "⠫⠉⠤⠊⠐⠣")]
+    fn a_spaced_hyphen_joins_what_it_stands_between(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
+        assert!(actual.contains(expected), "hyphen must join: {actual}");
+    }
+
+    /// 제46항 뺄셈표는 그대로 띄운다.
+    #[rstest::rstest]
+    #[case::digits("12 - 3 을", "⠀⠤⠀")]
+    #[case::letters("a - b 를", "⠀⠤⠀")]
+    fn a_subtraction_sign_keeps_its_spaces(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("subtraction must encode");
+        assert!(
+            actual.contains(expected),
+            "subtraction must stay spaced: {actual}"
+        );
     }
 }
 

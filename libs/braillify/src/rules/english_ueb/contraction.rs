@@ -26,8 +26,26 @@ pub struct ContractionMatch {
     pub protect_span: bool,
 }
 
+/// Placeholder for a contraction rule that has not declared its UEB section yet.
+/// Rules keeping this default are reported as unattributed rather than being
+/// credited to a section nobody checked against the standard.
+pub static UNDECLARED_UEB_RULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_ueb_rule",
+    standard_ref: "",
+    description: "",
+};
+
 /// One UEB contraction rule (§10.x). `word` is the lowercased letter slice.
 pub trait ContractionRule: Send + Sync {
+    /// The UEB section this rule implements. Defaults to
+    /// [`UNDECLARED_UEB_RULE`] until someone checks the section against the
+    /// standard.
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &UNDECLARED_UEB_RULE
+    }
+
     /// Offer a match starting at `pos`, or `None`.
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch>;
 }
@@ -81,6 +99,22 @@ impl ContractionEngine {
             .iter()
             .filter_map(|rule| rule.try_match(word, pos))
             .collect()
+    }
+
+    /// [`Self::matches_at`] with each match paired to its rule's registration
+    /// index. This is the only place that index is known, and the DP needs it to
+    /// name the rule behind a match it eventually selects.
+    pub fn matches_at_indexed(&self, word: &[char], pos: usize) -> Vec<(usize, ContractionMatch)> {
+        self.rules
+            .iter()
+            .enumerate()
+            .filter_map(|(index, rule)| rule.try_match(word, pos).map(|m| (index, m)))
+            .collect()
+    }
+
+    /// Metadata of every registered rule, in registration index order.
+    pub fn registry(&self) -> Vec<&'static crate::rules::RuleMeta> {
+        self.rules.iter().map(|rule| rule.meta()).collect()
     }
 
     /// Encode a lowercased letter slice to braille cells.

@@ -9,7 +9,19 @@ use super::math_context_from_state;
 
 pub struct LatexMergeRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_latex_merge",
+    standard_ref: "",
+    description: "공백으로 끊긴 $...$ 수식 구간을 하나로 합침",
+};
+
 impl TokenRule for LatexMergeRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

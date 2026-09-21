@@ -19,7 +19,19 @@ static DIGITAL_INITIAL_PRON_RULE: LazyLock<InitialContractionPronunciationRule> 
 
 pub struct DigitalNotationRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_digital_notation",
+    standard_ref: "",
+    description: "숫자·기호가 섞인 디지털 표기 처리",
+};
+
 impl TokenRule for DigitalNotationRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::ModeEntry
     }

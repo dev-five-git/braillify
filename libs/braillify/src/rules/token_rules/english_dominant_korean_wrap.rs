@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::context::DocumentSummary;
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
@@ -27,6 +28,14 @@ const HANGUL_WRAP_START: [u8; 2] = [56, 55]; // ⠸⠷ — 한글표 (제39항)
 const HANGUL_WRAP_END: [u8; 2] = [56, 62]; // ⠸⠾ — 한글 종료표 (제39항)
 
 pub struct EnglishDominantKoreanWrapRule;
+
+static META: RuleMeta = RuleMeta {
+    section: "39",
+    subsection: None,
+    name: "english_dominant_korean_wrap",
+    standard_ref: "2024 Korean Braille Standard, 제39항",
+    description: "Wrap Korean segments embedded between English words",
+};
 
 fn build_word_token<'a>(text: &str) -> Token<'a> {
     let chars: Vec<char> = text.chars().collect();
@@ -431,6 +440,10 @@ fn build_wrapped_replacement<'a>(
 }
 
 impl TokenRule for EnglishDominantKoreanWrapRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         // PostWord 단계는 fall-through(Noop이면 다음 룰 시도) 지원이라
         // 다른 PostWord 룰들과 협력 가능하며, 다른 ModeEntry 변환(digital_notation

@@ -1,6 +1,8 @@
+use super::RuleMeta;
 use super::context::EncoderState;
 use super::token::Token;
 use super::token_rule::{TokenAction, TokenPhase, TokenRule};
+use super::trace::{RuleId, TokenOrigins};
 
 pub struct TokenRuleEngine {
     rules: Vec<Box<dyn TokenRule>>,
@@ -27,11 +29,28 @@ impl TokenRuleEngine {
         }
     }
 
+    /// Metadata of every registered token rule, in [`RuleId`] order.
+    pub(crate) fn registry(&mut self) -> Vec<&'static RuleMeta> {
+        self.ensure_sorted();
+        self.rules.iter().map(|rule| rule.meta()).collect()
+    }
+
     /// Apply all rules in phase order. Handle token insertions/removals correctly.
+    #[cfg(test)]
     pub fn apply_all<'a>(
         &mut self,
         tokens: &mut Vec<Token<'a>>,
         state: &mut EncoderState,
+    ) -> Result<(), String> {
+        self.apply_all_tracked(tokens, state, None)
+    }
+
+    /// [`Self::apply_all`], recording which rule produced each resulting token.
+    pub fn apply_all_tracked<'a>(
+        &mut self,
+        tokens: &mut Vec<Token<'a>>,
+        state: &mut EncoderState,
+        mut origins: Option<&mut TokenOrigins>,
     ) -> Result<(), String> {
         self.ensure_sorted();
 
@@ -46,7 +65,7 @@ impl TokenRuleEngine {
             let mut i = 0usize;
 
             'outer: while i < tokens.len() {
-                for rule in &self.rules {
+                for (rule_index, rule) in self.rules.iter().enumerate() {
                     if rule.phase() != phase {
                         continue;
                     }
@@ -57,19 +76,29 @@ impl TokenRuleEngine {
                     if is_noop_fallthrough {
                         continue;
                     }
+                    let id = RuleId::token(rule_index);
                     match action {
                         TokenAction::Noop => {}
                         TokenAction::Replace(t) => {
                             tokens[i] = t;
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.set(i, id);
+                            }
                         }
                         #[cfg(test)]
                         TokenAction::InsertBefore(ts) => {
                             let count = ts.len();
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.splice(i..i, id, count);
+                            }
                             tokens.splice(i..i, ts);
                             i += count;
                         }
                         TokenAction::ReplaceMany(ts) => {
                             let count = ts.len();
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.splice(i..i + 1, id, count);
+                            }
                             tokens.splice(i..=i, ts);
                             if count == 0 {
                                 // Array shrank by 1: the next original token now sits at `i`.
@@ -84,6 +113,9 @@ impl TokenRuleEngine {
                             // 현재 위치 i부터 consume_count개의 토큰을 통째로 ts로 교체한다.
                             let end = (i + consume_count).min(tokens.len());
                             let new_count = ts.len();
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.splice(i..end, id, new_count);
+                            }
                             tokens.splice(i..end, ts);
                             if new_count == 0 {
                                 continue 'outer;
@@ -93,9 +125,17 @@ impl TokenRuleEngine {
                         #[cfg(test)]
                         TokenAction::Remove => {
                             tokens.remove(i);
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.remove(i);
+                            }
                             continue;
                         }
                     }
+                    debug_assert_eq!(
+                        origins.as_deref().map_or(tokens.len(), TokenOrigins::len),
+                        tokens.len(),
+                        "origin tracking must stay in lockstep with the token stream"
+                    );
                     break;
                 }
                 i += 1;

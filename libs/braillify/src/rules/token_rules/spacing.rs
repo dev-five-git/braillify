@@ -1,3 +1,4 @@
+use crate::rules::RuleMeta;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
@@ -11,7 +12,19 @@ pub struct AsteriskSpacingRule;
 /// rule deliberately performs no transformation.
 pub struct KoreanAuxiliaryVerbSpacingRule;
 
+static META_AUXILIARY_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "korean_auxiliary_verb_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Preserve Korean print spacing for auxiliary verbs",
+};
+
 impl TokenRule for KoreanAuxiliaryVerbSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_AUXILIARY_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }
@@ -37,7 +50,19 @@ fn is_last_word_index(tokens: &[Token], index: usize) -> bool {
         .any(|t| matches!(t, Token::Word(_)))
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_asterisk_spacing",
+    standard_ref: "",
+    description: "별표 앞뒤 띄어쓰기 조정",
+};
+
 impl TokenRule for AsteriskSpacingRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }

@@ -7,9 +7,11 @@
 
 use phf::phf_map;
 
+use super::UebMoveSource;
 use super::contraction::{ContractionEngine, ContractionMatch};
 use super::rule_10_13::WordDivision;
 use crate::english::encode_english;
+use crate::rules::trace::RuleId;
 use crate::unicode::decode_unicode;
 
 static SHORTFORMS: phf::Map<&'static str, &'static str> = phf_map! {
@@ -355,12 +357,12 @@ fn encode_with_constraints(
     // lower-preference groupsign that overlaps its start here (`en`, 70):
     // `re·name·d`, not `r·en·amed`; `mis·time·d`, not `mis·st·imed`.
     let mut path_priority = vec![u16::MAX; n + 1];
-    let mut back: Vec<Option<(Vec<u8>, usize)>> = vec![None; n + 1];
+    let mut back: Vec<Option<(Vec<u8>, usize, RuleId)>> = vec![None; n + 1];
     cost[n] = 0;
     for pos in (0..n).rev() {
-        // Best candidate so far: (total cells, path priority, consumed, cells).
-        let mut best: Option<(usize, u16, usize, Vec<u8>)> = None;
-        for (cells, consumed, priority) in candidate_moves(
+        // Best candidate so far: (total cells, path priority, consumed, cells, source).
+        let mut best: Option<(usize, u16, usize, Vec<u8>, RuleId)> = None;
+        for (cells, consumed, priority, source) in candidate_moves(
             word,
             pos,
             contractions,
@@ -379,31 +381,36 @@ fn encode_with_constraints(
             // The preference of the whole remaining path: the best contraction in
             // this move or anything the tail already chose.
             let this_priority = priority.min(path_priority[next]);
-            let better = best.as_ref().is_none_or(|(bt, bp, bc, _)| {
+            let better = best.as_ref().is_none_or(|(bt, bp, bc, _, _)| {
                 total < *bt
                     || (total == *bt && this_priority < *bp)
                     || (total == *bt && this_priority == *bp && consumed > *bc)
             });
             if better {
-                best = Some((total, this_priority, consumed, cells));
+                best = Some((total, this_priority, consumed, cells, source));
             }
         }
-        let (total, pp, consumed, cells) = best?;
+        let (total, pp, consumed, cells, source) = best?;
         cost[pos] = total;
         path_priority[pos] = pp;
-        back[pos] = Some((cells, consumed));
+        back[pos] = Some((cells, consumed, source));
     }
-    // Reconstruct the chosen sequence from the start.
+    // Reconstruct the chosen sequence from the start. Only the moves on this
+    // path produced output; the candidates the DP rejected did not, so this walk
+    // is the only place a contraction may be credited for a cell.
     let mut out = Vec::with_capacity(cost[0]);
+    let mut attempt = super::AttemptRecorder::new();
     let mut pos = 0;
     while pos < n {
-        let (cells, consumed) = back[pos].as_ref()?;
+        let (cells, consumed, source) = back[pos].as_ref()?;
+        attempt.push(*source, out.len(), cells.len());
         out.extend(cells.iter().copied());
         pos += consumed;
         if division.is_some_and(|d| pos == d.index) {
             super::rule_10_13::append_break(&mut out, true);
         }
     }
+    attempt.finish(&out);
     Some(out)
 }
 
@@ -428,7 +435,7 @@ fn candidate_moves(
     allow_longer_shortforms: bool,
     relax_shortforms: bool,
     suppress_whole_word_wordsign: bool,
-) -> Vec<(Vec<u8>, usize, u16)> {
+) -> Vec<(Vec<u8>, usize, u16, RuleId)> {
     let mut moves = Vec::new();
     // §10.9 longer-word shortform placement (preferred on a cost tie → priority 0).
     if allow_longer_shortforms {
@@ -442,14 +449,14 @@ fn candidate_moves(
         if let Some((len, cells)) = longer
             && division.is_none_or(|d| !d.blocks_span(pos, len))
         {
-            moves.push((cells, len, 0));
+            moves.push((cells, len, 0, source_id(UebMoveSource::Shortform)));
         }
     }
     if relax_shortforms && let Some((cells, len)) = anglicised_initial_contraction(word, pos) {
-        moves.push((cells, len, 55));
+        moves.push((cells, len, 55, source_id(UebMoveSource::Anglicised)));
     }
     let protected_here = inside_protected[pos];
-    for m in contractions.matches_at(word, pos) {
+    for (rule_index, m) in contractions.matches_at_indexed(word, pos) {
         // Korean rule 37: immediately after the Roman indicator, a lower
         // wordsign is written with alphabet/multi-letter groupsigns instead.
         // Reject only a contraction consuming the complete wordsign; inner
@@ -565,17 +572,25 @@ fn candidate_moves(
         }) {
             continue;
         }
-        moves.push((m.cells, m.consumed, m.priority));
+        moves.push((m.cells, m.consumed, m.priority, rule_id(rule_index)));
     }
     // §4.2 accent / §4.1 single letter — always available so the DP never stalls.
     if let Some(cells) = super::rule_12::early_letter(word[pos]) {
-        moves.push((cells, 1, u16::MAX));
+        moves.push((cells, 1, u16::MAX, source_id(UebMoveSource::Letter)));
     } else if let Some(cells) = super::rule_4::accent_cells(word[pos]) {
-        moves.push((cells, 1, u16::MAX));
+        moves.push((cells, 1, u16::MAX, source_id(UebMoveSource::Letter)));
     } else if let Ok(cell) = encode_english(word[pos]) {
-        moves.push((vec![cell], 1, u16::MAX));
+        moves.push((vec![cell], 1, u16::MAX, source_id(UebMoveSource::Letter)));
     }
     moves
+}
+
+fn source_id(source: super::UebMoveSource) -> RuleId {
+    RuleId::ueb(source as usize)
+}
+
+fn rule_id(rule_index: usize) -> RuleId {
+    RuleId::ueb(super::UEB_RESERVED_SLOTS + rule_index)
 }
 
 /// §13.2.3 anglicised words may use ordinary UEB contractions even when CMUdict
@@ -1001,7 +1016,7 @@ mod tests {
             false,
             false,
         );
-        assert!(moves.iter().all(|(cells, consumed, _)| {
+        assert!(moves.iter().all(|(cells, consumed, _, _)| {
             *consumed != pattern.len() || cells != &vec![decode_unicode('⠆')]
         }));
     }
@@ -1131,7 +1146,7 @@ mod tests {
             false,
         );
 
-        assert!(moves.iter().any(|(cells, consumed, priority)| {
+        assert!(moves.iter().any(|(cells, consumed, priority, _)| {
             *cells == vec![decode_unicode('⠵')] && *consumed == 1 && *priority == u16::MAX
         }));
     }
@@ -1324,7 +1339,7 @@ mod tests {
             false,
             false,
         );
-        assert!(moves.iter().any(|(cells_, consumed, priority)| {
+        assert!(moves.iter().any(|(cells_, consumed, priority, _)| {
             *cells_ == cells("⠼⠮") && *consumed == 1 && *priority == u16::MAX
         }));
     }

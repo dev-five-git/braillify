@@ -193,6 +193,11 @@ impl EnglishUebEngine {
         Self { contractions }
     }
 
+    /// Metadata of every contraction rule, in registration index order.
+    pub(super) fn contraction_rule_metas(&self) -> Vec<&'static crate::rules::RuleMeta> {
+        self.contractions.registry()
+    }
+
     /// Encode one Roman word embedded in Korean text according to Korean rule 37.
     ///
     /// At a rule-37 Roman entry, the listed whole-word signs are suppressed
@@ -544,7 +549,13 @@ impl EnglishUebEngine {
                 255,
             ]);
         }
+        // Most word branches leave the match with `continue`, so a word cannot be
+        // checked right after its arm. Carrying the mark to the next iteration
+        // (and past the loop) reaches every branch without touching any of them.
+        let mut pending_word: Option<(usize, usize)> = None;
+
         for i in 0..tokens.len() {
+            super::settle_word_attribution(pending_word.take(), &out);
             if let Some((end, form)) = nested_inner_passage
                 && i >= end
             {
@@ -629,6 +640,7 @@ impl EnglishUebEngine {
                 EnglishToken::Number(digits) => {
                     skip_flattened_line_indent = false;
                     line_mode_active = false;
+                    let number_start = out.len();
                     if numeric_mode {
                         // §6.3: already in numeric mode (digit-separator `,`/`.`
                         // bridged us here) — emit digits only, no second `⠼`.
@@ -639,6 +651,7 @@ impl EnglishUebEngine {
                         out.extend(super::rule_6::encode_number(digits)?);
                         numeric_separator_count = 0;
                     }
+                    super::record_whole_word(super::UebMoveSource::Numeric, &out[number_start..]);
                     prev_was_number = true;
                     numeric_mode = true;
                 }
@@ -649,6 +662,7 @@ impl EnglishUebEngine {
                     numeric_mode = false;
                 }
                 EnglishToken::Word(chars) => {
+                    pending_word = Some((out.len(), super::attempt_count()));
                     encode_word_arm!(self, tokens, explicit_english, out, prev_was_number, numeric_mode, skip_to, line_mode_active, grade1_passage, cap_start_grade1, in_passage, escaped_code, regex_listing, spanish_foreign, foreign_passage, scansion_stress_context, early_english, spatial_grade1_passage, skip_flattened_line_indent, i, chars)
                 }
                 EnglishToken::WordDivision { chars, break_at } if poem_linear_context => {
@@ -886,7 +900,9 @@ impl EnglishUebEngine {
                     numeric_mode = true;
                 }
                 EnglishToken::Symbol(c) => {
-                    encode_symbol_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, passage, cap_term, in_passage, url_listing, regex_listing, foreign_code, spanish_foreign, foreign_passage, early_english, preserve_spatial_newlines, skip_flattened_line_indent, numeric_separator_count, i, c)
+                    let symbol_start = out.len();
+                    encode_symbol_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, passage, cap_term, in_passage, url_listing, regex_listing, foreign_code, spanish_foreign, foreign_passage, early_english, preserve_spatial_newlines, skip_flattened_line_indent, numeric_separator_count, i, c);
+                    super::record_whole_word(super::UebMoveSource::Symbol, &out[symbol_start..]);
                 }
                 EnglishToken::Styled(_, form) => {
                     encode_styled_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, passage, in_passage, foreign_code, spanish_foreign, foreign_passage, drop_styled_typeform_for_code_switch, skip_flattened_line_indent, nested_inner_passage, i, form)
@@ -897,6 +913,7 @@ impl EnglishUebEngine {
                 out.extend([CAPITAL, decode_unicode('⠄')]);
             }
         }
+        super::settle_word_attribution(pending_word.take(), &out);
         if let Some(span) = grade1_passage
             && span.needs_terminator
         {

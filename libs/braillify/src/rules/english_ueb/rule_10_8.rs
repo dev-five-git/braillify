@@ -53,7 +53,19 @@ fn ness_exception(word: &[char]) -> bool {
 /// §10.8 final-letter groupsign rule.
 pub struct FinalGroupsignRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.8",
+    subsection: None,
+    name: "ueb_final_groupsign",
+    standard_ref: "UEB 2024 §10.8",
+    description: "Final-letter groupsigns for word-final letter clusters",
+};
+
 impl ContractionRule for FinalGroupsignRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         // §10.8: never used at the start of a word.
         if pos == 0 {

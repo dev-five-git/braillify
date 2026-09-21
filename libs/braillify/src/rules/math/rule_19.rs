@@ -270,7 +270,19 @@ fn needs_quantifier_trailing_space(tokens: &[MathToken], idx: usize) -> bool {
 
 pub struct SubscriptRule;
 
+static META_SUBSCRIPTRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "19",
+    subsection: None,
+    name: "math_subscript",
+    standard_ref: "2024 Korean Braille Standard, 수학 제19항",
+    description: "아래첨자",
+};
+
 impl MathTokenRule for SubscriptRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_SUBSCRIPTRULE
+    }
+
     fn name(&self) -> &'static str {
         "SubscriptRule"
     }

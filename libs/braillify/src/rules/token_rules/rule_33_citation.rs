@@ -7,12 +7,21 @@
 
 use crate::english::encode_english;
 use crate::number::encode_number;
+use crate::rules::RuleMeta;
 use crate::rules::context::EncoderState;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::unicode::decode_unicode;
 
 pub struct Rule33CitationYearSuffixRule;
+
+static META: RuleMeta = RuleMeta {
+    section: "33",
+    subsection: None,
+    name: "rule_33_citation_year_suffix",
+    standard_ref: "2024 Korean Braille Standard, 제33항",
+    description: "Encode academic citation year suffixes as an English-mode token",
+};
 
 /// Rule33가 emit한 PreEncoded인지 구조적으로 확인한다.
 /// Pattern: `⠼(60)` + 4 digit bytes + (`⠴`(52) | `⠰`(48)) + letter byte + suffix.
@@ -67,6 +76,10 @@ fn match_year_suffix(text: &str) -> Option<(&str, char, char)> {
 }
 
 impl TokenRule for Rule33CitationYearSuffixRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         // Normalization 단계 — 다른 토큰 변환 전에 처리. 토큰 엔진은 Normalization
         // phase에서 Noop 시에도 다음 rule을 시도하므로 안전하다.

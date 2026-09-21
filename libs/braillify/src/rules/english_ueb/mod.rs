@@ -55,6 +55,269 @@ pub mod token;
 
 use engine::EnglishUebEngine;
 
+thread_local! {
+    /// One entry per completed word-encoding attempt, in the order the engine
+    /// made them. The engine encodes a word under several constraint
+    /// combinations and keeps one, so most entries describe output that was
+    /// thrown away; [`align_selected`] separates the kept attempt from the rest.
+    static ATTEMPTS: std::cell::RefCell<Option<Vec<WordAttempt>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// The cells one attempt produced, plus where each rule's cells sat inside them.
+struct WordAttempt {
+    cells: Vec<u8>,
+    moves: Vec<(crate::rules::trace::RuleId, u32, u32)>,
+}
+
+/// Accumulates the moves of one word-encoding attempt.
+///
+/// Offsets are taken against the attempt's own output as it is built, because
+/// the encoder can insert cells between moves (a §10.13 line break), so a move's
+/// position is not the running sum of the moves before it.
+pub(super) struct AttemptRecorder {
+    /// `None` when no trace is being collected, so an untraced encode allocates
+    /// nothing per word. The check costs one thread-local read per attempt
+    /// rather than one per move.
+    moves: Option<Vec<(crate::rules::trace::RuleId, u32, u32)>>,
+}
+
+impl AttemptRecorder {
+    pub(super) fn new() -> Self {
+        let collecting = ATTEMPTS.with(|slot| slot.borrow().is_some());
+        Self {
+            moves: collecting.then(Vec::new),
+        }
+    }
+
+    pub(super) fn push(&mut self, rule: crate::rules::trace::RuleId, offset: usize, len: usize) {
+        if let Some(moves) = self.moves.as_mut() {
+            moves.push((rule, offset as u32, len as u32));
+        }
+    }
+
+    pub(super) fn finish(self, cells: &[u8]) {
+        let Some(moves) = self.moves else {
+            return;
+        };
+        ATTEMPTS.with(|slot| {
+            if let Ok(mut slot) = slot.try_borrow_mut()
+                && let Some(attempts) = slot.as_mut()
+            {
+                attempts.push(WordAttempt {
+                    cells: cells.to_vec(),
+                    moves,
+                });
+            }
+        });
+    }
+}
+
+/// [`try_encode`] plus the rule behind each stretch of the output.
+///
+/// A word encoder does not know where its cells land in the finished document,
+/// so each attempt's ranges are recovered by locating that attempt's cells in
+/// the output. Attempts whose cells are absent were discarded by the engine and
+/// contribute nothing. A reported range therefore always points at cells its
+/// rule actually produced.
+pub(crate) fn try_encode_traced(text: &str) -> Option<(Vec<u8>, Vec<UebSpan>)> {
+    let encoded = collect_selected(|| try_encode(text));
+    encoded.map(|(cells, moves)| {
+        let spans = align_selected(&cells, &moves);
+        (cells, spans)
+    })
+}
+
+/// [`encode_forced`] plus the rule behind each stretch of the output.
+pub(crate) fn encode_forced_traced(text: &str) -> Option<(Vec<u8>, Vec<UebSpan>)> {
+    let encoded = collect_selected(|| encode_forced(text));
+    encoded.map(|(cells, moves)| {
+        let spans = align_selected(&cells, &moves);
+        (cells, spans)
+    })
+}
+
+/// One stretch of output and the UEB rule that produced it.
+pub(crate) type UebSpan = (crate::rules::trace::RuleId, core::ops::Range<u32>);
+
+fn collect_selected(
+    encode: impl FnOnce() -> Option<Vec<u8>>,
+) -> Option<(Vec<u8>, Vec<WordAttempt>)> {
+    ATTEMPTS.with(|slot| *slot.borrow_mut() = Some(Vec::new()));
+    let encoded = encode();
+    let attempts = ATTEMPTS
+        .with(|slot| slot.borrow_mut().take())
+        .unwrap_or_default();
+    encoded.map(|cells| (cells, attempts))
+}
+
+/// Place each attempt's moves in the finished output, skipping attempts the
+/// engine discarded.
+///
+/// The scan only moves forward, so an attempt is matched at or after everything
+/// already placed. A discarded attempt is recognised by its cells not appearing
+/// there — the engine never emitted them.
+fn align_selected(cells: &[u8], attempts: &[WordAttempt]) -> Vec<UebSpan> {
+    let mut spans = Vec::new();
+    let mut cursor = 0usize;
+    for attempt in attempts {
+        let Some(base) = find_from(cells, &attempt.cells, cursor) else {
+            continue;
+        };
+        for (rule, offset, len) in &attempt.moves {
+            let start = base + *offset as usize;
+            let end = start + *len as usize;
+            spans.push((*rule, start as u32..end as u32));
+        }
+        cursor = base + attempt.cells.len();
+    }
+    // An empty cell between words is the inter-word blank, the same structural
+    // output the Korean emitter accounts for. It carries no dots, so there is no
+    // other thing it could be.
+    let blank = crate::rules::trace::RuleId::emitter(crate::rules::trace::EmitterRule::WordSpace);
+    for (index, cell) in cells.iter().enumerate() {
+        if *cell == 0 {
+            spans.push((blank, index as u32..index as u32 + 1));
+        }
+    }
+    spans
+}
+
+fn find_from(haystack: &[u8], needle: &[u8], from: usize) -> Option<usize> {
+    if needle.is_empty() || from + needle.len() > haystack.len() {
+        return None;
+    }
+    haystack[from..]
+        .windows(needle.len())
+        .position(|window| window == needle)
+        .map(|offset| offset + from)
+}
+
+/// Sources of a selected contraction move that are not [`ContractionRule`]
+/// objects. They occupy the first slots of the UEB id space so a contraction
+/// rule's id stays a fixed offset from its registration index.
+///
+/// [`ContractionRule`]: contraction::ContractionRule
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum UebMoveSource {
+    Shortform = 0,
+    Anglicised = 1,
+    Letter = 2,
+    AlphabeticWordsign = 3,
+    StrongWordsign = 4,
+    LowerWordsign = 5,
+    Numeric = 6,
+    Symbol = 7,
+}
+
+/// Number of non-rule slots reserved before the contraction rules.
+pub(crate) const UEB_RESERVED_SLOTS: usize = 8;
+
+/// Record a whole word that a lookup table resolved in one step, bypassing the
+/// contraction search. Without this a wordsign or shortform would leave its
+/// cells unexplained even though its section is known exactly.
+/// How many attempts have been recorded so far, so a caller can tell whether the
+/// encoder it just ran attributed its own output.
+pub(super) fn attempt_count() -> usize {
+    ATTEMPTS.with(|slot| slot.borrow().as_ref().map_or(0, Vec::len))
+}
+
+/// A word whose attribution has not been settled yet: where its cells start in
+/// the output, and how many attempts existed before it ran.
+pub(super) type PendingWord = (usize, usize);
+
+/// Attribute a finished word that nothing else claimed.
+///
+/// A word normally names itself through the contraction search or a wordsign
+/// lookup. The branches that simply spell it out — letters after a digit, an
+/// acronym abutting one — reach neither, and this leaves their cells explained
+/// as §4.1 letters without double-counting the words that did claim themselves.
+pub(super) fn settle_word_attribution(pending: Option<PendingWord>, out: &[u8]) {
+    let Some((start, attempts_before)) = pending else {
+        return;
+    };
+    if attempt_count() == attempts_before && out.len() > start {
+        record_whole_word(UebMoveSource::Letter, &out[start..]);
+    }
+}
+
+pub(super) fn record_whole_word(source: UebMoveSource, cells: &[u8]) {
+    let mut attempt = AttemptRecorder::new();
+    attempt.push(
+        crate::rules::trace::RuleId::ueb(source as usize),
+        0,
+        cells.len(),
+    );
+    attempt.finish(cells);
+}
+
+static UEB_NON_RULE_METAS: [crate::rules::RuleMeta; UEB_RESERVED_SLOTS] = [
+    crate::rules::RuleMeta {
+        section: "10.9",
+        subsection: None,
+        name: "ueb_shortform",
+        standard_ref: "UEB 2024 §10.9",
+        description: "Shortform standing for a longer word",
+    },
+    crate::rules::RuleMeta {
+        section: "13.2",
+        subsection: Some("3"),
+        name: "ueb_anglicised_contraction",
+        standard_ref: "UEB 2024 §13.2.3",
+        description: "Contraction in an anglicised or borrowed word",
+    },
+    crate::rules::RuleMeta {
+        section: "4.1",
+        subsection: None,
+        name: "ueb_letter",
+        standard_ref: "UEB 2024 §4.1 / §4.2",
+        description: "Uncontracted letter, with an accent indicator where needed",
+    },
+    crate::rules::RuleMeta {
+        section: "10.1",
+        subsection: None,
+        name: "ueb_alphabetic_wordsign",
+        standard_ref: "UEB 2024 §10.1",
+        description: "Single letter standing for a whole word",
+    },
+    crate::rules::RuleMeta {
+        section: "10.2",
+        subsection: None,
+        name: "ueb_strong_wordsign",
+        standard_ref: "UEB 2024 §10.2",
+        description: "Strong groupsign cell standing for a whole word",
+    },
+    crate::rules::RuleMeta {
+        section: "10.5",
+        subsection: None,
+        name: "ueb_lower_wordsign",
+        standard_ref: "UEB 2024 §10.5",
+        description: "Lower-cell sign standing for a whole word",
+    },
+    crate::rules::RuleMeta {
+        section: "6",
+        subsection: None,
+        name: "ueb_numeric",
+        standard_ref: "UEB 2024 §6",
+        description: "Numeric indicator and the digits that follow it",
+    },
+    crate::rules::RuleMeta {
+        section: "3",
+        subsection: None,
+        name: "ueb_symbol",
+        standard_ref: "UEB 2024 §3",
+        description: "General symbol such as percent, ampersand or asterisk",
+    },
+];
+
+/// Metadata of every UEB move source, in [`crate::rules::trace::RuleId`] order:
+/// the reserved non-rule slots first, then the contraction rules.
+pub(crate) fn ueb_rule_registry() -> Vec<&'static crate::rules::RuleMeta> {
+    let mut metas: Vec<&'static crate::rules::RuleMeta> = UEB_NON_RULE_METAS.iter().collect();
+    metas.extend(EnglishUebEngine::new().contraction_rule_metas());
+    metas
+}
+
 /// Attempt to encode `text` as standalone UEB Grade-2. Returns `None` if the
 /// input is empty or contains a construct the engine does not yet support, so
 /// the caller can fall back to the legacy encoding path.

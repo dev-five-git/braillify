@@ -361,6 +361,13 @@ static MATRIX_MATH_MODE_ENGINE: LazyLock<MathTokenEngine> = LazyLock::new(|| {
     })
 });
 
+/// Metadata of every math rule, in [`crate::rules::trace::RuleId`] order. All
+/// four context engines register the same rules in the same order, so one
+/// engine's ordering describes them all.
+pub(crate) fn math_rule_registry() -> Vec<&'static crate::rules::RuleMeta> {
+    DEFAULT_MATH_ENGINE.registry()
+}
+
 pub(super) fn math_engine_for_context(context: MathContext) -> &'static MathTokenEngine {
     match (context.matrix_context_active, context.math_mode_active) {
         (false, false) => &DEFAULT_MATH_ENGINE,
@@ -407,12 +414,29 @@ fn build_math_engine(context: MathContext) -> MathTokenEngine {
 
 /// Encode a full math expression string into braille bytes.
 pub fn encode_math_expression(input: &str) -> Result<Vec<u8>, String> {
+    encode_math_expression_traced(input, MathContext::default(), None)
+}
+
+pub(crate) fn encode_math_expression_traced(
+    input: &str,
+    context: MathContext,
+    trace: Option<&mut crate::rules::trace::TraceSink<'_>>,
+) -> Result<Vec<u8>, String> {
     if rule_14::is_roman_numeral_expression(input) {
         return rule_14::encode_roman_numeral_expression(input);
     }
 
-    let tokens = super::parser::parse_math_expression(input)?;
-    encode_math_tokens_with_context(&tokens, MathContext::default())
+    // A non-default context parses with the math-mode parser; the two parsers
+    // disagree on tokenisation, so this branch decides the output.
+    let tokens = if context == MathContext::default() {
+        super::parser::parse_math_expression(input)?
+    } else {
+        super::parser::parse_math_expression_with_math_mode(input, context.math_mode_active)?
+    };
+    let engine = math_engine_for_context(context);
+    let mut result = Vec::new();
+    engine.encode_tokens_traced(&tokens, &mut result, trace)?;
+    Ok(result)
 }
 
 /// Encode a full math expression string with encoder-scoped context flags.
@@ -423,24 +447,7 @@ pub fn encode_math_expression_with_context(
     if context == MathContext::default() {
         return encode_math_expression(input);
     }
-
-    if rule_14::is_roman_numeral_expression(input) {
-        return rule_14::encode_roman_numeral_expression(input);
-    }
-
-    let tokens =
-        super::parser::parse_math_expression_with_math_mode(input, context.math_mode_active)?;
-    encode_math_tokens_with_context(&tokens, context)
-}
-
-fn encode_math_tokens_with_context(
-    tokens: &[MathToken],
-    context: MathContext,
-) -> Result<Vec<u8>, String> {
-    let engine = math_engine_for_context(context);
-    let mut result = Vec::new();
-    engine.encode_tokens(tokens, &mut result)?;
-    Ok(result)
+    encode_math_expression_traced(input, context, None)
 }
 
 #[cfg(test)]

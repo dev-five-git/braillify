@@ -231,7 +231,19 @@ fn is_korean_math_letter_list_start(
         && second_has_attached_korean
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_uppercase_passage",
+    standard_ref: "",
+    description: "연속 대문자 구간을 하나의 구절로 묶음",
+};
+
 impl TokenRule for UppercasePassageRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::UppercasePassage
     }

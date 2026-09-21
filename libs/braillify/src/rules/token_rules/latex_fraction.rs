@@ -4,7 +4,19 @@ use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 pub struct LatexFractionRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_latex_fraction",
+    standard_ref: "",
+    description: "LaTeX \\frac{}{} 표기를 분수 토큰으로 변환",
+};
+
 impl TokenRule for LatexFractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::FractionDetection
     }

@@ -55,7 +55,19 @@ fn quote_balance_before<'a>(tokens: &[Token<'a>], index: usize) -> i32 {
     balance
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_quote_attachment",
+    standard_ref: "",
+    description: "따옴표를 앞뒤 어절에 붙여 한 토큰으로 묶음",
+};
+
 impl TokenRule for QuoteAttachmentRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

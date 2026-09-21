@@ -72,7 +72,19 @@ fn nearest_next_word<'a>(tokens: &'a [Token<'a>], index: usize) -> Option<&'a [c
     None
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_middle_korean_detector",
+    standard_ref: "",
+    description: "중세국어 문맥 감지 후 인코딩 모드 전환",
+};
+
 impl TokenRule for MiddleKoreanDetectorRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

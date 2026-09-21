@@ -115,6 +115,14 @@ pub struct EncoderState {
     /// 0보다 크면 현재 위치는 paired closing 위치이므로 `’`를 `⠴⠄`로 emit.
     /// 0이면 standalone apostrophe로 `⠄` 한 셀만 emit. (PDF 제61항)
     pub unmatched_open_single_quotes: i32,
+    /// Per-article spans the last Korean syllable produced, handed from
+    /// `RuleKorean` to the trace recorder in [`super::engine`].
+    ///
+    /// `None` whenever no trace is being collected, which is both the signal to
+    /// rules that this work is unwanted and the reason the untraced encoder pays
+    /// only one pointer for the feature — this struct is carried by `&mut`
+    /// through the per-character loop, so its size is on the hot path.
+    pub jamo_spans: Option<Box<crate::korean_char::JamoSpans>>,
 }
 
 impl EncoderState {
@@ -137,6 +145,7 @@ impl EncoderState {
             matrix_context_active: false,
             math_mode_active: false,
             unmatched_open_single_quotes: 0,
+            jamo_spans: None,
         }
     }
 

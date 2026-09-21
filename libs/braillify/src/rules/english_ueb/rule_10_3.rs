@@ -25,7 +25,19 @@ pub fn is_strong_contraction_word(word: &str) -> bool {
 /// §10.3 strong contraction rule.
 pub struct StrongContractionRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.3",
+    subsection: None,
+    name: "ueb_strong_contraction",
+    standard_ref: "UEB 2024 §10.3",
+    description: "Strong contractions: and, for, of, the, with",
+};
+
 impl ContractionRule for StrongContractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         match_longest(word, pos, &STRONG, 50)
     }

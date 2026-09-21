@@ -43,7 +43,19 @@ fn is_slash_operator(tok: Option<&MathToken>) -> bool {
 
 pub struct PartialDerivativeFractionRule;
 
+static META_PARTIALDERIVATIVEFRACTIONRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "54",
+    subsection: None,
+    name: "math_partial_derivative",
+    standard_ref: "2024 Korean Braille Standard, 수학 제54항",
+    description: "편미분 분수",
+};
+
 impl MathTokenRule for PartialDerivativeFractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_PARTIALDERIVATIVEFRACTIONRULE
+    }
+
     fn name(&self) -> &'static str {
         "PartialDerivativeFractionRule"
     }

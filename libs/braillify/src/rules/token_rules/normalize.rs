@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
@@ -13,6 +14,14 @@ use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 /// span print spaces, so the decision has to be document-wide rather than
 /// character-local.
 pub struct NormalizeAsciiAngleBrackets;
+
+static META_ASCII_ANGLE_BRACKETS: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "normalize_ascii_angle_brackets",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Normalize balanced ASCII angle brackets used as Korean enclosures",
+};
 
 #[derive(Clone, Copy)]
 struct FlatChar {
@@ -112,6 +121,10 @@ fn ascii_angle_replacements(tokens: &[Token<'_>]) -> Vec<(usize, usize, char)> {
 }
 
 impl TokenRule for NormalizeAsciiAngleBrackets {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_ASCII_ANGLE_BRACKETS
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }
@@ -160,7 +173,19 @@ impl TokenRule for NormalizeAsciiAngleBrackets {
 
 pub struct NormalizeEllipsis;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_ellipsis_normalization",
+    standard_ref: "",
+    description: "말줄임표 문자를 표준 형태로 정규화",
+};
+
 impl TokenRule for NormalizeEllipsis {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

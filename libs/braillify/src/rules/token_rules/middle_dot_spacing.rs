@@ -1,9 +1,18 @@
 use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 pub struct MiddleDotSpacingRule;
+
+static META_MIDDLE_DOT: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "middle_dot_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Join Korean words around a middle dot according to print spacing",
+};
 
 fn previous_word<'a, 'b>(tokens: &'b [Token<'a>], index: usize) -> Option<&'b WordToken<'a>> {
     tokens[..index]
@@ -68,6 +77,10 @@ fn space_precedes_korean_colon_or_semicolon(
 }
 
 impl TokenRule for MiddleDotSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_MIDDLE_DOT
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -219,6 +232,10 @@ fn owned_word<'a>(chars: &[char]) -> Token<'a> {
 }
 
 impl TokenRule for KoreanSemicolonTrailingSpaceRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_SEMICOLON_SPACE
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -261,7 +278,27 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
 /// 로마자·숫자이므로 양쪽이 모두 로마자·숫자인 자리만 띄운 채로 둔다.
 pub struct KoreanHyphenSpacingRule;
 
+static META_SEMICOLON_SPACE: RuleMeta = RuleMeta {
+    section: "59",
+    subsection: None,
+    name: "korean_semicolon_trailing_space",
+    standard_ref: "2024 Korean Braille Standard, 제59항",
+    description: "Add the standard trailing blank after a Korean semicolon",
+};
+
+static META_HYPHEN_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "korean_hyphen_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Join Korean words around an editorial hyphen",
+};
+
 impl TokenRule for KoreanHyphenSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_HYPHEN_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -415,7 +452,19 @@ impl TokenRule for HuggingPunctuationSpacingRule {
 
 pub struct TildeSpacingRule;
 
+static META_TILDE_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "korean_tilde_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Join Korean words around a tilde according to print spacing",
+};
+
 impl TokenRule for TildeSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_TILDE_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }

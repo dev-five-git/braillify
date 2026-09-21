@@ -29,6 +29,7 @@ pub mod token;
 pub mod token_engine;
 pub mod token_rule;
 pub mod token_rules;
+pub mod trace;
 pub mod traits;
 
 // ── Rule domains ────────────────────────────────────────

@@ -267,7 +267,19 @@ pub fn encode_superscript(
 
 pub struct SuperscriptRule;
 
+static META_SUPERSCRIPTRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "18",
+    subsection: None,
+    name: "math_superscript",
+    standard_ref: "2024 Korean Braille Standard, 수학 제18항",
+    description: "위첨자",
+};
+
 impl MathTokenRule for SuperscriptRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_SUPERSCRIPTRULE
+    }
+
     fn name(&self) -> &'static str {
         "SuperscriptRule"
     }

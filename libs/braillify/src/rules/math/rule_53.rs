@@ -11,7 +11,19 @@ pub fn encode_prime(result: &mut Vec<u8>) {
 
 pub struct PrimeRule;
 
+static META_PRIMERULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "53",
+    subsection: None,
+    name: "math_prime",
+    standard_ref: "2024 Korean Braille Standard, 수학 제53항",
+    description: "프라임 기호",
+};
+
 impl MathTokenRule for PrimeRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_PRIMERULE
+    }
+
     fn name(&self) -> &'static str {
         "PrimeRule"
     }

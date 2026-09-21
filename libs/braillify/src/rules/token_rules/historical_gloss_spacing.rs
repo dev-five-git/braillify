@@ -3,7 +3,19 @@ use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 pub struct HistoricalGlossSpacingRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_historical_gloss_spacing",
+    standard_ref: "",
+    description: "한자 음독 주석 주변 띄어쓰기 조정",
+};
+
 impl TokenRule for HistoricalGlossSpacingRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

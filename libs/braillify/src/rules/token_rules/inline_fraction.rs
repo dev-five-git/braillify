@@ -10,7 +10,19 @@ static FRACTION_REGEX: Lazy<Regex> =
 
 pub struct InlineFractionRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_inline_fraction",
+    standard_ref: "",
+    description: "본문 속 N/N 표기를 분수 토큰으로 변환",
+};
+
 impl TokenRule for InlineFractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::FractionDetection
     }

@@ -1,12 +1,25 @@
 ﻿use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::word_shortcut;
 
 pub struct WordShortcutRule;
 
+static META: RuleMeta = RuleMeta {
+    section: "18",
+    subsection: None,
+    name: "token_word_shortcut",
+    standard_ref: "2024 Korean Braille Standard, 제18항",
+    description: "Apply Korean word abbreviations while preserving punctuation context",
+};
+
 impl TokenRule for WordShortcutRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::WordShortcut
     }

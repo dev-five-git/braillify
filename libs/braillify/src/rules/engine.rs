@@ -5,7 +5,9 @@
 
 use std::collections::HashSet;
 
+use super::RuleMeta;
 use super::context::RuleContext;
+use super::trace::{RuleId, RuleOutcome, TraceEvent, TraceSink};
 use super::traits::{BrailleRule, Phase, RuleResult};
 
 /// The rule engine — holds all registered rules and applies them.
@@ -45,6 +47,12 @@ impl RuleEngine {
         self.sorted = false;
     }
 
+    /// Metadata of every registered rule, in [`RuleId`] order.
+    pub(crate) fn registry(&mut self) -> Vec<&'static RuleMeta> {
+        self.ensure_sorted();
+        self.rules.iter().map(|rule| rule.meta()).collect()
+    }
+
     /// Disable a rule by its section ID (e.g., "11" to disable 제11항).
     #[cfg(test)]
     pub fn disable(&mut self, section: &str) {
@@ -79,7 +87,7 @@ impl RuleEngine {
 
     /// List all registered rule metadata (for introspection/debugging).
     #[cfg(test)]
-    pub fn list_rules(&self) -> Vec<&super::RuleMeta> {
+    pub fn list_rules(&self) -> Vec<&'static RuleMeta> {
         self.rules.iter().map(|r| r.meta()).collect()
     }
 
@@ -123,10 +131,16 @@ impl RuleEngine {
         &mut self,
         phase: Phase,
         ctx: &mut RuleContext,
+        mut trace: Option<TraceSink<'_>>,
     ) -> Result<RuleResult, String> {
         self.ensure_sorted();
 
-        for rule in &self.rules {
+        // `rule.apply` is an opaque dyn call that mutates `ctx`, so the reads
+        // `TraceSpan::open` performs cannot be sunk past it. Gating them on a
+        // loop-invariant flag keeps the untraced path free of that work.
+        let tracing = trace.is_some();
+
+        for (index, rule) in self.rules.iter().enumerate() {
             if rule.phase() != phase {
                 continue;
             }
@@ -135,7 +149,12 @@ impl RuleEngine {
                 if !rule.matches(ctx) {
                     continue;
                 }
-                match rule.apply(ctx)? {
+                let span = tracing.then(|| TraceSpan::open(ctx));
+                let outcome = rule.apply(ctx)?;
+                if let (Some(span), Some(sink)) = (span, trace.as_mut()) {
+                    span.close(RuleId::korean(index), outcome, ctx, sink);
+                }
+                match outcome {
                     RuleResult::Consumed => return Ok(RuleResult::Consumed),
                     RuleResult::Continue => {}
                     RuleResult::Skip => {}
@@ -143,6 +162,74 @@ impl RuleEngine {
             }
         }
         Ok(RuleResult::Skip)
+    }
+}
+
+struct TraceSpan {
+    output_start: u32,
+    char_start: u32,
+    skip_before: u32,
+}
+
+impl TraceSpan {
+    fn open(ctx: &RuleContext) -> Self {
+        Self {
+            output_start: ctx.result.len() as u32,
+            char_start: ctx.index as u32,
+            skip_before: *ctx.skip_count as u32,
+        }
+    }
+
+    /// Records by what a rule PRODUCED, not by what it returned.
+    ///
+    /// `Skip` normally means the rule declined and explains nothing, so it is
+    /// dropped — but a few rules emit a mode indicator and still return `Skip`
+    /// to let the next rule encode the character. Those cells are in the output
+    /// and something has to account for them.
+    ///
+    /// A rule that reported per-article spans (syllable composition) is recorded
+    /// as those articles instead of as itself, so a syllable names 제3항 for its
+    /// 받침 rather than one composite entry for the whole character.
+    fn close(
+        self,
+        rule: RuleId,
+        result: RuleResult,
+        ctx: &mut RuleContext,
+        sink: &mut TraceSink<'_>,
+    ) {
+        let produced_cells = ctx.result.len() as u32 > self.output_start;
+        let outcome = match result {
+            RuleResult::Consumed => RuleOutcome::Consumed,
+            RuleResult::Continue => RuleOutcome::Continued,
+            RuleResult::Skip if produced_cells => RuleOutcome::Continued,
+            RuleResult::Skip => return,
+        };
+        let consumed_extra = (*ctx.skip_count as u32).saturating_sub(self.skip_before);
+        let word_chars = self.char_start..self.char_start + 1 + consumed_extra;
+        let end = ctx.result.len() as u32;
+
+        let mut recorded_any = false;
+        if let Some(spans) = ctx.state.jamo_spans.as_deref_mut() {
+            for (jamo, span) in spans.drain() {
+                recorded_any = true;
+                sink.trace.push(TraceEvent {
+                    rule: RuleId::jamo(jamo),
+                    outcome,
+                    token_index: sink.token_index,
+                    word_chars: word_chars.clone(),
+                    output: self.output_start + span.start..self.output_start + span.end,
+                });
+            }
+        }
+        if !recorded_any {
+            sink.trace.push(TraceEvent {
+                rule,
+                outcome,
+                token_index: sink.token_index,
+                word_chars,
+                output: self.output_start..end,
+            });
+        }
     }
 }
 
@@ -464,7 +551,9 @@ mod tests {
         };
         // TestRule.phase() = CoreEncoding; with disabled section "test", apply_phase
         // hits the `if !self.is_enabled(meta.section) { continue; }` arm.
-        let outcome = engine.apply_phase(Phase::CoreEncoding, &mut ctx).unwrap();
+        let outcome = engine
+            .apply_phase(Phase::CoreEncoding, &mut ctx, None)
+            .unwrap();
         assert_eq!(outcome, RuleResult::Skip);
     }
 }

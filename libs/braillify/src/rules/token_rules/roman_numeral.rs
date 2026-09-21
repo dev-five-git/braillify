@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
@@ -10,6 +11,14 @@ const ROMAN_TERMINATOR: u8 = 50; // ⠲
 const HYPHEN: u8 = crate::unicode::decode_unicode('⠤');
 
 pub struct RomanNumeralRule;
+
+static META: RuleMeta = RuleMeta {
+    section: "36",
+    subsection: None,
+    name: "roman_numeral_token",
+    standard_ref: "2024 Korean Braille Standard, 제36항",
+    description: "Encode Roman numerals from I through XXXIX as Roman sections",
+};
 
 fn is_upper_roman_char(c: char) -> bool {
     matches!(c, 'I' | 'V' | 'X')
@@ -127,6 +136,10 @@ fn encode_roman_segment(text: &str, entry: u8, with_terminator: bool) -> Result<
 }
 
 impl TokenRule for RomanNumeralRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::ModeEntry
     }

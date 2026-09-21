@@ -182,6 +182,11 @@ mod test_helpers {
 }
 
 pub use encoder::Encoder;
+use rules::trace::TraceSink;
+pub use rules::trace::{
+    EmitterRule, RuleId, RuleKind, RuleOutcome, Trace, TraceEvent, TracePath, registered_rules,
+    rule_meta,
+};
 
 thread_local! {
     static ENCODER_CACHE: RefCell<Option<Encoder>> = const { RefCell::new(None) };
@@ -1079,6 +1084,33 @@ fn is_isolated_roman_section(text: &str) -> bool {
 
 /// Encode text to braille with explicit options.
 pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8>, String> {
+    encode_with_options_traced(text, options, None)
+}
+
+/// Encode `text` and report which rules produced which output cells.
+///
+/// Read [`Trace::path`] before drawing conclusions from partial attribution:
+/// each engine reports only the rule families it instruments.
+pub fn encode_with_trace(text: &str) -> Result<(Vec<u8>, Trace), String> {
+    encode_with_options_and_trace(text, &EncodeOptions::default())
+}
+
+/// [`encode_with_trace`] with an explicit encoding mode.
+pub fn encode_with_options_and_trace(
+    text: &str,
+    options: &EncodeOptions,
+) -> Result<(Vec<u8>, Trace), String> {
+    let mut trace = Trace::default();
+    let cells = encode_with_options_traced(text, options, Some(&mut trace))?;
+    trace.set_output_len(cells.len() as u32);
+    Ok((cells, trace))
+}
+
+fn encode_with_options_traced(
+    text: &str,
+    options: &EncodeOptions,
+    mut trace: Option<&mut Trace>,
+) -> Result<Vec<u8>, String> {
     use crate::rules::context::EncodingMode;
 
     // PDF 수학 — Mathematical Alphanumeric 변형(italic/bold/script 등)을 ASCII로
@@ -1102,8 +1134,14 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
         && !text.chars().any(crate::utils::is_korean_char)
         && crate::rules::english_ueb::is_ueb_eligible(text)
         && !crate::rules::english_ueb::is_math_owned(text)
-        && let Some(bytes) = crate::rules::english_ueb::try_encode(text)
+        && let Some(bytes) = encode_ueb(
+            text,
+            &mut trace,
+            crate::rules::english_ueb::try_encode,
+            crate::rules::english_ueb::try_encode_traced,
+        )
     {
+        mark_trace_path(&mut trace, TracePath::EnglishUeb);
         return Ok(bytes);
     }
     // `EncodingMode::English` forces the UEB engine even for a letterless numeric or
@@ -1111,8 +1149,14 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     // treat it as a Korean-context number (colon `⠐⠂`). A bare `N:M`/`N(x)` is
     // ambiguous from input alone, so the testcase declares its language via `context`.
     if matches!(options.default_mode, Some(EncodingMode::English))
-        && let Some(bytes) = crate::rules::english_ueb::encode_forced(text)
+        && let Some(bytes) = encode_ueb(
+            text,
+            &mut trace,
+            crate::rules::english_ueb::encode_forced,
+            crate::rules::english_ueb::encode_forced_traced,
+        )
     {
+        mark_trace_path(&mut trace, TracePath::EnglishUeb);
         return Ok(bytes);
     }
     let normalized_text = if normalization_triggers.has_math_alphanumeric {
@@ -1344,10 +1388,25 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
             }
             s
         };
-        if let Ok(bytes) =
-            rules::math::encoder::encode_math_expression_with_context(&cleaned, math_context)
-        {
-            return Ok(bytes);
+        let mark = trace.as_deref().map(Trace::mark);
+        let attempt = {
+            let mut sink = trace.as_deref_mut().map(TraceSink::new);
+            rules::math::encoder::encode_math_expression_traced(
+                &cleaned,
+                math_context,
+                sink.as_mut(),
+            )
+        };
+        match attempt {
+            Ok(bytes) => {
+                mark_trace_path(&mut trace, TracePath::MathExpression);
+                return Ok(bytes);
+            }
+            Err(_) => {
+                if let (Some(sink), Some(mark)) = (trace.as_deref_mut(), mark) {
+                    sink.rollback_to(mark);
+                }
+            }
         }
     }
 
@@ -1365,7 +1424,7 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
         }
 
         let mut result = Vec::new();
-        encoder.encode(text, &mut result)?;
+        encoder.encode_traced(text, &mut result, trace.as_deref_mut().map(TraceSink::new))?;
         // 제37항 — 국어 점자 문맥(context:korean) 안의 "고립된 로마자 구간"(공백 제외
         // 전부 ASCII 알파벳)은 로마자표 ⠴(52) … 종료표 ⠲(50)로 감싼다. 단독
         // `EncodingMode::English` 입력도 동일한 로마자 구간이므로 같은 처리를 받는다.
@@ -1376,9 +1435,45 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
         if wrap_roman_section && !result.is_empty() {
             result.insert(0, 52);
             result.push(50);
+            if let Some(sink) = trace {
+                sink.shift_output(1);
+            }
         }
         Ok(result)
     })
+}
+
+/// Run a UEB entry point, recording its rule spans when a trace is collected.
+///
+/// Both closures must invoke the SAME entry point: `traced` differs only by
+/// collecting spans around it. Crossing them would make a traced encode take a
+/// different route than an untraced one and silently change output.
+fn encode_ueb(
+    text: &str,
+    trace: &mut Option<&mut Trace>,
+    untraced: impl FnOnce(&str) -> Option<Vec<u8>>,
+    traced: impl FnOnce(&str) -> Option<(Vec<u8>, Vec<crate::rules::english_ueb::UebSpan>)>,
+) -> Option<Vec<u8>> {
+    let Some(sink) = trace.as_deref_mut() else {
+        return untraced(text);
+    };
+    let (bytes, spans) = traced(text)?;
+    for (rule, output) in spans {
+        sink.push(TraceEvent {
+            rule,
+            outcome: RuleOutcome::Consumed,
+            token_index: 0,
+            word_chars: 0..0,
+            output,
+        });
+    }
+    Some(bytes)
+}
+
+fn mark_trace_path(trace: &mut Option<&mut Trace>, path: TracePath) {
+    if let Some(sink) = trace.as_deref_mut() {
+        sink.set_path(path);
+    }
 }
 
 /// Encode text with explicit formatting spans.
@@ -1425,6 +1520,334 @@ pub fn encode_to_braille_font(text: &str) -> Result<String, String> {
         .iter()
         .map(|c| unicode::encode_unicode(*c))
         .collect::<String>())
+}
+
+#[cfg(test)]
+mod trace_tests {
+    use super::*;
+    use crate::rules::context::EncodingMode;
+
+    fn korean_mode() -> EncodeOptions {
+        EncodeOptions {
+            default_mode: Some(EncodingMode::Korean),
+        }
+    }
+
+    #[rstest::rstest]
+    #[case::korean_syllables("안녕")]
+    #[case::korean_abbreviation("그래서")]
+    #[case::english_prose("hello")]
+    #[case::latex_fraction("$\\frac{3}{4}$")]
+    #[case::mixed_sentence("가나다 라마")]
+    #[case::roman_inside_korean("가 ABC")]
+    #[case::digits("2024년")]
+    fn tracing_leaves_the_encoded_cells_unchanged(#[case] input: &str) {
+        let plain = encode(input).expect("input must encode");
+        let (traced, _) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(plain, traced);
+    }
+
+    #[rstest::rstest]
+    #[case::korean("안녕", TracePath::KoreanRules)]
+    #[case::mixed("가나다 라마", TracePath::KoreanRules)]
+    #[case::english("hello", TracePath::EnglishUeb)]
+    fn path_names_the_engine_that_ran(#[case] input: &str, #[case] expected: TracePath) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.path(), expected);
+    }
+
+    #[test]
+    fn korean_syllables_attribute_every_cell_to_a_registered_rule() {
+        let (cells, trace) = encode_with_trace("안녕").expect("input must encode");
+
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        assert_eq!(trace.unattributed_cells(), 0);
+        assert!(
+            trace.events().iter().all(|e| e.rule.meta().is_some()),
+            "every recorded id resolves against the registry"
+        );
+    }
+
+    /// 약자 abbreviation is a token-level rewrite whose cells never reach the
+    /// character engine, so it is attributed through the token-origin side table
+    /// rather than by the character rule loop.
+    #[test]
+    fn token_rule_output_is_attributed_to_the_token_engine() {
+        let (cells, trace) = encode_with_trace("그래서").expect("input must encode");
+
+        assert!(!cells.is_empty(), "the abbreviation still encodes");
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        assert!(
+            trace
+                .events()
+                .iter()
+                .all(|e| e.rule.kind() == Some(RuleKind::Token)),
+            "abbreviation cells come from a token rule: {:?}",
+            trace.events()
+        );
+    }
+
+    /// UEB picks contractions by a cell-minimising search, so only the winning
+    /// path may be credited. Every recorded range must therefore land inside the
+    /// output and name a UEB rule.
+    #[rstest::rstest]
+    #[case::uncontracted("hello")]
+    #[case::sentence("the child was here")]
+    #[case::accented("naive")]
+    fn english_attributes_only_the_selected_contraction_path(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.path(), TracePath::EnglishUeb);
+        assert!(trace.attributed_cells() > 0, "UEB now names its rules");
+        assert!(
+            trace.events().iter().all(|event| {
+                // Inter-word blanks belong to the emitter, not to a UEB rule.
+                matches!(
+                    event.rule.kind(),
+                    Some(RuleKind::EnglishUeb | RuleKind::Emitter)
+                ) && event.output.start < event.output.end
+                    && event.output.end as usize <= cells.len()
+            }),
+            "{:?}",
+            trace.events()
+        );
+    }
+
+    /// A whole-word sign is a table lookup rather than a contraction search, so
+    /// it is recorded where the table is consulted. Its section is known exactly,
+    /// so the cells are named rather than left unexplained.
+    #[rstest::rstest]
+    #[case::alphabetic_wordsign("knowledge", "10.1")]
+    #[case::shortform("about", "10.9")]
+    #[case::lower_wordsign("enough", "10.5")]
+    fn english_wordsigns_name_their_section(#[case] input: &str, #[case] section: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        let sections: Vec<&str> = trace
+            .events()
+            .iter()
+            .filter_map(|event| event.rule.meta().map(|meta| meta.section))
+            .collect();
+        assert!(
+            sections.contains(&section),
+            "expected §{section} among {sections:?}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::korean("가나다 라마")]
+    #[case::korean_prose("나는 학교에 간다")]
+    #[case::english("the child was here")]
+    #[case::mixed_numbers("2024년 제12항")]
+    #[case::math_plain("3+4=7")]
+    #[case::math_variables("$x^2+y^2=z^2$")]
+    #[case::math_function("$\\sin x$")]
+    #[case::latex_fraction("$\\frac{3}{4}$")]
+    // 제35항 numeric bridge resuming into a lowercase a-j letter: UEB 6.5.2 makes
+    // the emitter write a continuation cell there, and it must name itself.
+    #[case::roman_number_bridge_into_low_letter("가나 (1c) 다라")]
+    fn every_output_cell_is_accounted_for(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(
+            trace.attributed_cells(),
+            cells.len() as u32,
+            "unattributed cells in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// The two paths that still leave cells unexplained, pinned to their exact
+    /// numbers so the gap cannot widen unnoticed and any narrowing is visible.
+    ///
+    /// Both are mode indicators rather than content: the Roman indicator the
+    /// emitter writes ahead of a Roman run, and the numeric/symbol cells the UEB
+    /// engine writes outside its contraction search.
+    #[rstest::rstest]
+    #[case::roman_in_korean("가영이는 Los Angeles에 산다")]
+    #[case::numbers_and_symbols("50% & 3 items")]
+    #[case::measurement("3kg 5%")]
+    #[case::acronym_with_digit("MP3 player")]
+    fn indicator_and_numeric_cells_are_accounted_for(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(
+            trace.attributed_cells(),
+            cells.len() as u32,
+            "unattributed cells in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// The capitals and grade-1 indicators are written straight into the output
+    /// by the word encoder, while UEB attribution places whole *attempts* of the
+    /// contraction search — so an indicator belongs to no attempt and stays
+    /// unexplained. A Korean document never reaches this: the whole 467k-sentence
+    /// corpus leaves no cell unexplained, and only one sentence in it takes the
+    /// UEB path at all. Pinned to the exact counts so the gap cannot widen while
+    /// unnoticed, and so closing it shows up here as a failure to update.
+    #[rstest::rstest]
+    #[case::capital_then_digits("A1", 1)]
+    #[case::capital_digits_and_decimal("Q50 2.2d", 3)]
+    fn the_ueb_only_path_still_leaves_its_indicators_unexplained(
+        #[case] input: &str,
+        #[case] expected: u32,
+    ) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.path(), TracePath::EnglishUeb);
+        assert_eq!(trace.unattributed_cells(), expected);
+    }
+
+    /// Every rule must name a cell range that is really its own, so a cell may
+    /// never be claimed by two rules at once.
+    #[rstest::rstest]
+    #[case::korean("안녕하세요")]
+    #[case::mixed("가영이는 Los Angeles에 산다")]
+    #[case::measurement("3kg 5%")]
+    #[case::english("the child was here")]
+    #[case::math("3+4=7")]
+    fn no_cell_is_claimed_twice(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        let mut claims = vec![0u32; cells.len()];
+        for event in trace.events() {
+            for cell in event.output.clone() {
+                claims[cell as usize] += 1;
+            }
+        }
+
+        assert!(
+            claims.iter().all(|count| *count == 1),
+            "cells claimed {claims:?} times in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// A math expression reaches the emitter as one pre-encoded run, so without
+    /// the math engine's own spans it would report only the token rule that
+    /// detected it.
+    #[rstest::rstest]
+    #[case::sum("3+4=7", "1")]
+    #[case::superscript("$x^2$", "18")]
+    #[case::function("$\\sin x$", "47")]
+    fn math_expressions_name_their_math_article(#[case] input: &str, #[case] section: &str) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        let sections: Vec<&str> = trace
+            .events()
+            .iter()
+            .filter(|event| event.rule.kind() == Some(RuleKind::Math))
+            .filter_map(|event| event.rule.meta().map(|meta| meta.section))
+            .collect();
+
+        assert!(
+            sections.contains(&section),
+            "expected 수학 제{section}항 among {sections:?}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::korean("안녕하세요")]
+    #[case::mixed("가나다 라마 ABC")]
+    #[case::numbers("제12항 3개")]
+    fn every_recorded_range_lies_inside_the_output(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        for event in trace.events() {
+            assert!(
+                event.output.end as usize <= cells.len(),
+                "{event:?} runs past {} cells",
+                cells.len()
+            );
+            assert!(event.output.start <= event.output.end);
+        }
+    }
+
+    /// 제37항 inserts the Roman indicator at cell 0 *after* encoding, so every
+    /// range recorded before that insertion points one cell short unless shifted.
+    #[test]
+    fn roman_wrap_shifts_recorded_ranges_onto_the_right_cells() {
+        let (cells, trace) =
+            encode_with_options_and_trace("ABC", &korean_mode()).expect("input must encode");
+
+        assert_eq!(cells.first(), Some(&52), "제37항 로마자표");
+        let spans: Vec<&[u8]> = trace
+            .events()
+            .iter()
+            .map(|event| &cells[event.output.start as usize..event.output.end as usize])
+            .collect();
+        assert!(
+            spans.contains(&&[1u8, 3, 9][..]),
+            "one span must render A, B, C; got {spans:?}"
+        );
+    }
+
+    /// The encoder is cached per thread, so a leaked sink would make the second
+    /// trace of the same input differ from the first.
+    #[test]
+    fn trace_does_not_bleed_across_calls_on_the_cached_encoder() {
+        let (_, before) = encode_with_trace("안녕").expect("input must encode");
+        let _ = encode_with_trace("hello").expect("input must encode");
+        let (_, after) = encode_with_trace("안녕").expect("input must encode");
+
+        assert_eq!(before, after);
+    }
+
+    /// 안 = ㅇ + ㅏ + ㄴ, so its two cells are the 제6항 vowel and the 제3항 받침
+    /// rather than one composite entry for the syllable.
+    #[test]
+    fn syllable_cells_name_their_own_article() {
+        let (cells, trace) = encode_with_trace("안녕").expect("input must encode");
+
+        let article_at = |cell: u32| {
+            trace
+                .rules_at_cell(cell)
+                .first()
+                .and_then(|rule| rule.meta())
+                .map(|meta| (meta.section, meta.name))
+        };
+
+        assert_eq!(article_at(0), Some(("6", "syllable_jungseong")));
+        assert_eq!(article_at(1), Some(("3", "syllable_jongseong")));
+        assert!(trace.rules_at_cell(cells.len() as u32).is_empty());
+    }
+
+    #[rstest::rstest]
+    #[case::vowel("안녕", "6")]
+    #[case::final_consonant("안녕", "3")]
+    #[case::double_initial("깎다", "2")]
+    #[case::initial_consonant("라", "1")]
+    fn syllable_composition_cites_jamo_articles(#[case] input: &str, #[case] section: &str) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        let sections: Vec<&str> = trace
+            .events()
+            .iter()
+            .filter(|event| event.rule.kind() == Some(RuleKind::Jamo))
+            .filter_map(|event| event.rule.meta().map(|meta| meta.section))
+            .collect();
+
+        assert!(
+            sections.contains(&section),
+            "expected 제{section}항 among {sections:?}"
+        );
+    }
+
+    #[test]
+    fn contributing_rules_lists_each_rule_once() {
+        let (_, trace) = encode_with_trace("가나다 라마").expect("input must encode");
+        let contributing = trace.contributing_rules();
+        let mut unique = contributing.clone();
+        unique.sort_unstable();
+        unique.dedup();
+
+        assert!(!contributing.is_empty());
+        assert_eq!(contributing.len(), unique.len());
+    }
 }
 
 #[cfg(test)]

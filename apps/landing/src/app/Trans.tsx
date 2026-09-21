@@ -1,28 +1,41 @@
 'use client'
 import { VStack } from '@devup-ui/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { DemoArrow } from './DemoArrow'
 import { DemoHeading } from './DemoHeading'
+import {
+  FAILED_TRACE,
+  IDLE_TRACE,
+  readTrace,
+  RuleTrace,
+  type TraceSnapshot,
+} from './RuleTrace'
 import { TransInput } from './TransInput'
+
+type Translate = (input: string) => TraceSnapshot
+
+const idleTranslate: Translate = () => IDLE_TRACE
 
 export function Trans() {
   const [input, setInput] = useState('')
-  const [translateToUnicode, setTranslateToUnicode] = useState<
-    (input: string) => string
-  >(() => () => '')
+  const [translate, setTranslate] = useState<Translate>(() => idleTranslate)
   useEffect(() => {
     import('braillify').then((mod) => {
-      setTranslateToUnicode(() => (input: string) => {
+      setTranslate(() => (text: string) => {
+        if (text.length === 0) return IDLE_TRACE
         try {
-          return mod.translateToUnicode(input)
+          return readTrace(mod.translateToUnicodeWithTrace(text))
         } catch (e) {
           console.error(e)
-          return '점역할 수 없는 문자가 있습니다.'
+          return FAILED_TRACE
         }
       })
     })
-  }, [input])
+  }, [])
+
+  // 한 번의 점역으로 점자 출력과 규칙 목록을 모두 얻는다.
+  const trace = useMemo(() => translate(input), [translate, input])
 
   const [inputFocused, setInputFocused] = useState(false)
   const [translationFocused, setTranslationFocused] = useState(false)
@@ -60,9 +73,10 @@ export function Trans() {
           focusPlaceholder="⠕⠈⠥⠄⠝⠀⠨⠎⠢⠱⠁⠚⠂⠀⠉⠗⠬⠶⠮⠀⠕⠃⠐⠱⠁⠚⠗⠨⠍⠠⠝⠬⠖"
           isFocused={translationFocused}
           readOnly
-          value={translateToUnicode(input)}
+          value={trace.braille}
         />
       </VStack>
+      <RuleTrace trace={trace} />
     </VStack>
   )
 }

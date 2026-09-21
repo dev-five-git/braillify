@@ -362,7 +362,19 @@ pub fn encode_upper_variable(
 
 pub struct CombinatoricsRule;
 
+static META_COMBINATORICSRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "12",
+    subsection: None,
+    name: "math_combinatorics",
+    standard_ref: "2024 Korean Braille Standard, 수학 제12항",
+    description: "순열·조합",
+};
+
 impl MathTokenRule for CombinatoricsRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_COMBINATORICSRULE
+    }
+
     fn name(&self) -> &'static str {
         "CombinatoricsRule"
     }
@@ -415,7 +427,19 @@ impl MathTokenRule for CombinatoricsRule {
 
 pub struct VariableRule;
 
+static META_VARIABLERULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "12",
+    subsection: None,
+    name: "math_variable",
+    standard_ref: "2024 Korean Braille Standard, 수학 제12항",
+    description: "소문자 변수",
+};
+
 impl MathTokenRule for VariableRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_VARIABLERULE
+    }
+
     fn name(&self) -> &'static str {
         "VariableRule"
     }
@@ -457,7 +481,19 @@ impl MathTokenRule for VariableRule {
 
 pub struct UpperVariableRule;
 
+static META_UPPERVARIABLERULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "12",
+    subsection: None,
+    name: "math_upper_variable",
+    standard_ref: "2024 Korean Braille Standard, 수학 제12항",
+    description: "대문자 변수",
+};
+
 impl MathTokenRule for UpperVariableRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_UPPERVARIABLERULE
+    }
+
     fn name(&self) -> &'static str {
         "UpperVariableRule"
     }

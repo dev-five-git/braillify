@@ -116,6 +116,10 @@ fn owned_word(text: String) -> Token<'static> {
 pub struct Rule72AttachedMarkerTokenRule;
 
 impl TokenRule for Rule72AttachedMarkerTokenRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

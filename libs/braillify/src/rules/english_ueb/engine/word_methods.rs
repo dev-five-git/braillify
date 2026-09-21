@@ -1,4 +1,4 @@
-﻿use super::*;
+use super::*;
 
 impl EnglishUebEngine {
     pub(super) fn encode_word(
@@ -185,20 +185,29 @@ impl EnglishUebEngine {
             let cell = upper_usable
                 .then(|| {
                     super::super::rule_10_1::wordsign(&word)
-                        .or_else(|| super::super::rule_10_2::wordsign(&word))
+                        .map(|c| (c, super::super::UebMoveSource::AlphabeticWordsign))
+                        .or_else(|| {
+                            super::super::rule_10_2::wordsign(&word)
+                                .map(|c| (c, super::super::UebMoveSource::StrongWordsign))
+                        })
                 })
                 .flatten()
                 .or_else(|| {
                     lower_usable
-                        .then(|| super::super::rule_10_5::wordsign(&word))
+                        .then(|| {
+                            super::super::rule_10_5::wordsign(&word)
+                                .map(|c| (c, super::super::UebMoveSource::LowerWordsign))
+                        })
                         .flatten()
                 });
-            if let Some(cell) = cell {
+            if let Some((cell, source)) = cell {
+                super::super::record_whole_word(source, &[cell]);
                 out.push(cell);
                 return Some(());
             }
         }
         if shortform_usable && let Some(cells) = super::super::rule_10_9::whole_word_cells(&word) {
+            super::super::record_whole_word(super::super::UebMoveSource::Shortform, &cells);
             out.extend(cells);
             return Some(());
         }

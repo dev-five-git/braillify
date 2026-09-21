@@ -39,10 +39,29 @@ pub enum MathTokenResult {
     Skip,
 }
 
+use crate::rules::trace::{RuleId, TraceSink};
+
+/// Placeholder for a math rule that has not declared its source article yet.
+/// Rules keeping this default are reported as unattributed rather than being
+/// credited to an article nobody checked against the standard.
+pub static UNDECLARED_MATH_RULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "?",
+    subsection: None,
+    name: "undeclared_math_rule",
+    standard_ref: "",
+    description: "",
+};
+
 /// Plugin interface for math token encoding rules.
 pub trait MathTokenRule: Send + Sync {
     /// Rule name for debugging.
     fn name(&self) -> &'static str;
+
+    /// The standard article this rule implements. Defaults to
+    /// [`UNDECLARED_MATH_RULE`] until someone checks the article against the PDF.
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &UNDECLARED_MATH_RULE
+    }
 
     /// Priority (lower runs first). Default: 100.
     fn priority(&self) -> u16 {
@@ -86,20 +105,51 @@ impl MathTokenEngine {
         self.rules.sort_by_key(|r| r.priority());
     }
 
+    /// Metadata of every registered math rule, in [`RuleId`] order.
+    pub(crate) fn registry(&self) -> Vec<&'static crate::rules::RuleMeta> {
+        self.rules.iter().map(|rule| rule.meta()).collect()
+    }
+
     /// Encode a sequence of math tokens into braille bytes.
     pub fn encode_tokens(&self, tokens: &[MathToken], result: &mut Vec<u8>) -> Result<(), String> {
+        self.encode_tokens_traced(tokens, result, None)
+    }
+
+    /// [`Self::encode_tokens`], recording which rule produced each stretch.
+    ///
+    /// The spans go to a collector rather than to a sink parameter because a math
+    /// expression usually reaches here from a token rule, which emits the cells
+    /// much later without knowing where they land. [`crate::rules::emit`] pairs
+    /// the collected spans back to those cells.
+    pub(crate) fn encode_tokens_traced(
+        &self,
+        tokens: &[MathToken],
+        result: &mut Vec<u8>,
+        mut trace: Option<&mut TraceSink<'_>>,
+    ) -> Result<(), String> {
+        let mut attempt = super::MathAttempt::new();
+        let attempt_base = result.len();
         let logic_context = Self::has_logic_symbol(tokens);
         let mut state = MathEncodeState::with_context(logic_context, self.context);
         let mut i = 0usize;
 
         while i < tokens.len() {
             let mut handled = false;
-            for rule in &self.rules {
+            for (rule_index, rule) in self.rules.iter().enumerate() {
                 let _ = rule.name();
-                if rule.matches(tokens, i, &state)
-                    && let MathTokenResult::Consumed(n) =
+                if rule.matches(tokens, i, &state) {
+                    let start = result.len();
+                    let MathTokenResult::Consumed(n) =
                         rule.apply(tokens, i, result, &mut state, self)?
-                {
+                    else {
+                        continue;
+                    };
+                    let rule_id = RuleId::math(rule_index);
+                    attempt.push(rule_id, start - attempt_base, result.len() - start);
+                    if let Some(sink) = trace.as_deref_mut() {
+                        let token_index = sink.token_index() as usize;
+                        sink.record_span(rule_id, token_index, start..result.len());
+                    }
                     i += n;
                     handled = true;
                     break;
@@ -112,6 +162,7 @@ impl MathTokenEngine {
                 ));
             }
         }
+        attempt.finish(&result[attempt_base..]);
         Ok(())
     }
 

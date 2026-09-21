@@ -291,7 +291,19 @@ fn bridges_compound_seam(word: &[char], pos: usize, consumed: usize) -> bool {
         .any(|&seam| pos < seam && seam < pos + consumed)
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.6",
+    subsection: Some("5"),
+    name: "ueb_middle_lower_groupsign",
+    standard_ref: "UEB 2024 §10.6.5",
+    description: "Middle lower groupsigns ea bb cc ff gg, morpheme-gated",
+};
+
 impl ContractionRule for MiddleLowerGroupsignRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let m = middle_lower_groupsign(word, pos)?;
         // `middle_lower_groupsign` only matches `ea` or a doubled letter

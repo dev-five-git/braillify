@@ -1,8 +1,10 @@
 use std::borrow::Cow;
 
+use crate::korean_char::JamoSpans;
 use crate::rules;
 use crate::rules::context::EncodingMode;
 use crate::rules::token::{Token, WordMeta, WordToken};
+use crate::rules::trace::{TokenOrigins, TracePath, TraceSink};
 
 pub struct Encoder {
     pub(crate) is_english: bool,
@@ -219,14 +221,28 @@ impl Encoder {
         self.math_mode_active = active;
     }
 
-    fn encode_via_ir(&mut self, text: &str, result: &mut Vec<u8>) -> Result<(), String> {
-        self.encode_via_ir_with_transform(text, result, |_, _| Ok(()))
+    pub(crate) fn char_rule_registry(&mut self) -> Vec<&'static rules::RuleMeta> {
+        self.rule_engine.registry()
+    }
+
+    pub(crate) fn token_rule_registry(&mut self) -> Vec<&'static rules::RuleMeta> {
+        self.token_engine.registry()
+    }
+
+    fn encode_via_ir(
+        &mut self,
+        text: &str,
+        result: &mut Vec<u8>,
+        trace: Option<TraceSink<'_>>,
+    ) -> Result<(), String> {
+        self.encode_via_ir_with_transform(text, result, trace, |_, _| Ok(()))
     }
 
     fn encode_via_ir_with_transform<F>(
         &mut self,
         text: &str,
         result: &mut Vec<u8>,
+        trace: Option<TraceSink<'_>>,
         transform: F,
     ) -> Result<(), String>
     where
@@ -235,6 +251,7 @@ impl Encoder {
         let mut ir = rules::token::DocumentIR::parse(text, self.english_indicator);
         ir.state.matrix_context_active = self.matrix_context_active;
         ir.state.math_mode_active = self.math_mode_active;
+        ir.state.jamo_spans = trace.is_some().then(Box::<JamoSpans>::default);
 
         if let Some(mode) = self.default_mode
             && mode != ir.state.current_mode()
@@ -254,7 +271,14 @@ impl Encoder {
         }
 
         let state_before_token_rules = ir.state.clone();
-        self.token_engine.apply_all(&mut ir.tokens, &mut ir.state)?;
+        if trace.is_some() {
+            rules::math::begin_collection();
+        }
+        let mut origins = trace
+            .is_some()
+            .then(|| TokenOrigins::seeded(ir.tokens.len()));
+        self.token_engine
+            .apply_all_tracked(&mut ir.tokens, &mut ir.state, origins.as_mut())?;
         let mode_stack_after_token_rules = ir.state.mode_stack.clone();
         // 제39항 영-한 wrap 활성화 신호는 token 단계의 결정이며 emit 단계에서도
         // 유효해야 한다. mode_stack과 함께 보존한다.
@@ -266,8 +290,15 @@ impl Encoder {
         ir.state.english_dominant_no_indicator = no_indicator_after_token_rules;
         transform(text, &mut ir.tokens)?;
 
-        let output = rules::emit::emit(&mut ir, &mut self.rule_engine)?;
-        result.extend(output);
+        // `transform` injects formatting tokens without origin tracking, so the
+        // side table no longer lines up with the stream and must be dropped.
+        if origins.as_ref().is_some_and(|o| o.len() != ir.tokens.len()) {
+            origins = None;
+        }
+
+        let output = rules::emit::emit(&mut ir, &mut self.rule_engine, trace, origins.as_ref());
+        rules::math::end_collection();
+        result.extend(output?);
 
         self.is_english = ir.state.is_english;
         self.triple_big_english = ir.state.triple_big_english;
@@ -278,6 +309,15 @@ impl Encoder {
     }
 
     pub fn encode(&mut self, text: &str, result: &mut Vec<u8>) -> Result<(), String> {
+        self.encode_traced(text, result, None)
+    }
+
+    pub(crate) fn encode_traced(
+        &mut self,
+        text: &str,
+        result: &mut Vec<u8>,
+        mut trace: Option<TraceSink<'_>>,
+    ) -> Result<(), String> {
         // UEB Grade-2 path: pure-English input (no Korean, UEB-eligible, no
         // explicit mode) is encoded by the unified English engine. It returns
         // `Some` only when it fully handles the input; otherwise we fall through
@@ -298,9 +338,12 @@ impl Encoder {
             && let Some(bytes) = crate::rules::english_ueb::try_encode(text)
         {
             result.extend(bytes);
+            if let Some(sink) = trace.as_mut() {
+                sink.trace.set_path(TracePath::EnglishUeb);
+            }
             return Ok(());
         }
-        self.encode_via_ir(text, result)
+        self.encode_via_ir(text, result, trace)
     }
 
     pub fn encode_with_formatting(
@@ -313,7 +356,7 @@ impl Encoder {
             return self.encode(text, result);
         }
 
-        self.encode_via_ir_with_transform(text, result, |source, tokens| {
+        self.encode_via_ir_with_transform(text, result, None, |source, tokens| {
             inject_formatting_tokens(source, spans, tokens)
         })
     }

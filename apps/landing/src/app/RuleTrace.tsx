@@ -235,9 +235,9 @@ export function RuleTrace({ trace }: { trace: TraceSnapshot }) {
 
       {isPartial ? (
         <Text color="$caption" typography="body" wordBreak="keep-all">
-          출력 {trace.total}칸 가운데 {trace.attributed}칸만 규칙으로 설명됩니다.
-          나머지 {trace.total - trace.attributed}칸은 아직 규칙 추적이 붙지 않은
-          부분입니다.
+          출력 {trace.total}칸 가운데 {trace.attributed}칸만 규칙으로
+          설명됩니다. 나머지 {trace.total - trace.attributed}칸은 아직 규칙
+          추적이 붙지 않은 부분입니다.
         </Text>
       ) : null}
       {emptyNotice ? (

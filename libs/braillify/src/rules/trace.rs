@@ -634,6 +634,53 @@ mod tests {
         assert_eq!(rule_meta(first), Some(rules[0]));
     }
 
+    /// A section is an article number (`46`), a dotted RUEB section (`14.6.2`),
+    /// or `-` for output the standard prescribes without giving it an article,
+    /// such as the blank between words. Anything else is a rule that never had
+    /// its article checked.
+    fn names_an_article(section: &str) -> bool {
+        section == "-"
+            || (section.starts_with(|c: char| c.is_ascii_digit())
+                && section.ends_with(|c: char| c.is_ascii_digit())
+                && section.chars().all(|c| c.is_ascii_digit() || c == '.')
+                && !section.contains(".."))
+    }
+
+    /// Every rule the tracer can credit must name the article it implements, so
+    /// a reader can check the transcription against the standard. Two symbols
+    /// genuinely have none — `∏`, which the standard never mentions, and `⸩`,
+    /// which stands in for a LaTeX delimiter that prints nothing — and they are
+    /// reached through one slot that is allowed to say so. Listing that slot
+    /// here rather than skipping placeholders means a newly undeclared rule
+    /// turns this red, and retiring the last placeholder does too.
+    #[test]
+    fn every_registered_rule_names_its_article() {
+        let kinds = [
+            RuleKind::Korean,
+            RuleKind::Token,
+            RuleKind::Math,
+            RuleKind::Jamo,
+            RuleKind::EnglishUeb,
+            RuleKind::Emitter,
+        ];
+        let unnamed: Vec<(RuleKind, &str, &str)> = kinds
+            .into_iter()
+            .flat_map(|kind| {
+                registered_rules(kind)
+                    .iter()
+                    .map(move |meta| (kind, meta.name, meta.section))
+            })
+            .filter(|(_, _, section)| !names_an_article(section))
+            .collect();
+
+        assert_eq!(
+            unnamed,
+            vec![(RuleKind::Math, "undeclared_math_rule", "?")],
+            "every registered rule must cite an article; only the documented \
+             placeholder may not"
+        );
+    }
+
     /// The UEB partition reserves its first slots for move sources that are not
     /// rule objects, so a contraction rule's id sits at a fixed offset.
     #[test]

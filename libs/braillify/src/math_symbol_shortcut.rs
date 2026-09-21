@@ -500,6 +500,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '\u{03A7}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠯')],
         '\u{03A8}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠽')],
         '\u{03A9}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')],
+        '\u{2126}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')],
     },
     &META_36 => {
         '\u{2322}' => &[decode_unicode('⠈'), decode_unicode('⠪')],
@@ -574,13 +575,15 @@ mod test {
         assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
     }
 
-    /// Longer and n-ary glyphs of a symbol the standard already defines mean the
-    /// same thing, so they take the same cells and the same article. Chemistry
-    /// writes its reaction arrow long and its product sign n-ary, which is the
-    /// only reason these code points reach us at all.
+    /// A second code point for a symbol the standard already defines means the
+    /// same thing, so it takes the same cells and the same article. Chemistry
+    /// writes its reaction arrow long and its product sign n-ary; the ohm sign
+    /// is stronger still, being canonically equivalent to capital omega, so
+    /// Unicode itself forbids treating the two as different characters.
     #[rstest::rstest]
     #[case::long_rightwards_arrow('\u{27F6}', '\u{2192}')]
     #[case::n_ary_times('\u{2A09}', '\u{00D7}')]
+    #[case::ohm_sign('\u{2126}', '\u{03A9}')]
     fn a_glyph_variant_matches_the_symbol_it_varies(#[case] variant: char, #[case] base: char) {
         assert_eq!(SHORTCUT_MAP[&variant].cells, SHORTCUT_MAP[&base].cells);
         assert_eq!(

@@ -23,7 +23,8 @@
   },
   "workspaces": [
     "packages/node",
-    "apps/landing"
+    "apps/landing",
+    "apps/app"
   ],
   "devDependencies": {
     "@types/bun": "^1.4.0",

@@ -270,7 +270,11 @@ macro_rules! encode_word_arm {
 		                                .first()
 		                                .is_some_and(|c| c.is_ascii_lowercase() && ('a'..='j').contains(c))
 		                            {
-		                                $out.push(GRADE1);
+		                                super::push_indicator(
+		                                    &mut $out,
+		                                    super::UebMoveSource::Grade1Indicator,
+		                                    &[GRADE1],
+		                                );
 		                            }
 		                            encode_literal_word($chars, &mut $out)?;
 		                        }

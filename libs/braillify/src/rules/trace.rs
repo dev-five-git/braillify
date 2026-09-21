@@ -651,6 +651,33 @@ mod tests {
         );
     }
 
+    #[rstest::rstest]
+    #[case::grade1(
+        crate::rules::english_ueb::UebMoveSource::Grade1Indicator,
+        "ueb_grade1_indicator",
+        "5"
+    )]
+    #[case::capital_letter(
+        crate::rules::english_ueb::UebMoveSource::CapitalLetterIndicator,
+        "ueb_capital_letter_indicator",
+        "8.3"
+    )]
+    #[case::capitalised_word(
+        crate::rules::english_ueb::UebMoveSource::CapitalisedWordIndicator,
+        "ueb_capitalised_word_indicator",
+        "8.4"
+    )]
+    fn ueb_indicator_slots_resolve_to_their_metadata(
+        #[case] slot: crate::rules::english_ueb::UebMoveSource,
+        #[case] name: &str,
+        #[case] section: &str,
+    ) {
+        let id = RuleId::ueb(slot as usize);
+        assert_eq!(id.kind(), Some(RuleKind::EnglishUeb));
+        assert_eq!(id.meta().map(|meta| meta.name), Some(name));
+        assert_eq!(id.meta().map(|meta| meta.section), Some(section));
+    }
+
     #[test]
     fn unattributed_has_no_metadata_and_no_kind() {
         assert_eq!(RuleId::UNATTRIBUTED.meta(), None);

@@ -84,13 +84,21 @@ impl EnglishUebEngine {
             );
         }
         if shortform_usable && super::super::rule_10_9::is_pure_shortform_abbreviation(&word) {
-            out.push(GRADE1);
+            super::super::push_indicator(
+                out,
+                super::super::UebMoveSource::Grade1Indicator,
+                &[GRADE1],
+            );
         }
         // Inside a §8.4 passage the ⠠⠠⠠ … ⠠⠄ carry capitalisation; `?` still guards
         // any residual mixed-case word there (→ legacy fallback).
         if !suppress_caps && !digit_adjacent && chemical_formula_caps(chars) {
             for &c in chars {
-                out.push(CAPITAL);
+                super::super::push_indicator(
+                    out,
+                    super::super::UebMoveSource::CapitalLetterIndicator,
+                    &[CAPITAL],
+                );
                 out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
             }
             return Some(());
@@ -98,7 +106,11 @@ impl EnglishUebEngine {
         match classify_caps(chars)? {
             _ if suppress_caps => {}
             Caps::None => {}
-            Caps::Single => out.push(CAPITAL),
+            Caps::Single => super::super::push_indicator(
+                out,
+                super::super::UebMoveSource::CapitalLetterIndicator,
+                &[CAPITAL],
+            ),
             Caps::Word => {
                 // §8.7 / UEB §5.7.2: a *standing-alone* all-caps acronym whose
                 // lowercase letters form a multi-letter shortform (e.g. `CD` =
@@ -113,10 +125,17 @@ impl EnglishUebEngine {
                     && !super::super::rule_10_9::is_pure_shortform_abbreviation(&word)
                     && crate::rules::english_shortform::requires_grade1_indicator(&uppercase_word)
                 {
-                    out.push(GRADE1);
+                    super::super::push_indicator(
+                        out,
+                        super::super::UebMoveSource::Grade1Indicator,
+                        &[GRADE1],
+                    );
                 }
-                out.push(CAPITAL);
-                out.push(CAPITAL);
+                super::super::push_indicator(
+                    out,
+                    super::super::UebMoveSource::CapitalisedWordIndicator,
+                    &[CAPITAL, CAPITAL],
+                );
             }
         }
         // §10.12.1: an all-caps initialism directly abutting a digit (`CH6`,

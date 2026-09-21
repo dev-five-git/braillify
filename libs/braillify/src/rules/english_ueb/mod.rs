@@ -56,18 +56,28 @@ pub mod token;
 use engine::EnglishUebEngine;
 
 thread_local! {
-    /// One entry per completed word-encoding attempt, in the order the engine
-    /// made them. The engine encodes a word under several constraint
-    /// combinations and keeps one, so most entries describe output that was
-    /// thrown away; [`align_selected`] separates the kept attempt from the rest.
-    static ATTEMPTS: std::cell::RefCell<Option<Vec<WordAttempt>>> =
+    /// Word attempts and structural indicators, in emission order. The engine
+    /// encodes a word under several constraint combinations and keeps one, so
+    /// [`align_selected`] separates kept attempts from discarded ones while
+    /// retaining indicators emitted directly into the selected output.
+    static ATTRIBUTIONS: std::cell::RefCell<Option<Vec<AttributionRecord>>> =
         const { std::cell::RefCell::new(None) };
+}
+
+enum AttributionRecord {
+    Word(WordAttempt),
+    Indicator(IndicatorAttempt),
 }
 
 /// The cells one attempt produced, plus where each rule's cells sat inside them.
 struct WordAttempt {
     cells: Vec<u8>,
     moves: Vec<(crate::rules::trace::RuleId, u32, u32)>,
+}
+
+struct IndicatorAttempt {
+    cells: Vec<u8>,
+    rule: crate::rules::trace::RuleId,
 }
 
 /// Accumulates the moves of one word-encoding attempt.
@@ -84,7 +94,7 @@ pub(super) struct AttemptRecorder {
 
 impl AttemptRecorder {
     pub(super) fn new() -> Self {
-        let collecting = ATTEMPTS.with(|slot| slot.borrow().is_some());
+        let collecting = ATTRIBUTIONS.with(|slot| slot.borrow().is_some());
         Self {
             moves: collecting.then(Vec::new),
         }
@@ -100,14 +110,14 @@ impl AttemptRecorder {
         let Some(moves) = self.moves else {
             return;
         };
-        ATTEMPTS.with(|slot| {
+        ATTRIBUTIONS.with(|slot| {
             if let Ok(mut slot) = slot.try_borrow_mut()
-                && let Some(attempts) = slot.as_mut()
+                && let Some(records) = slot.as_mut()
             {
-                attempts.push(WordAttempt {
+                records.push(AttributionRecord::Word(WordAttempt {
                     cells: cells.to_vec(),
                     moves,
-                });
+                }));
             }
         });
     }
@@ -142,13 +152,13 @@ pub(crate) type UebSpan = (crate::rules::trace::RuleId, core::ops::Range<u32>);
 
 fn collect_selected(
     encode: impl FnOnce() -> Option<Vec<u8>>,
-) -> Option<(Vec<u8>, Vec<WordAttempt>)> {
-    ATTEMPTS.with(|slot| *slot.borrow_mut() = Some(Vec::new()));
+) -> Option<(Vec<u8>, Vec<AttributionRecord>)> {
+    ATTRIBUTIONS.with(|slot| *slot.borrow_mut() = Some(Vec::new()));
     let encoded = encode();
-    let attempts = ATTEMPTS
+    let records = ATTRIBUTIONS
         .with(|slot| slot.borrow_mut().take())
         .unwrap_or_default();
-    encoded.map(|cells| (cells, attempts))
+    encoded.map(|cells| (cells, records))
 }
 
 /// Place each attempt's moves in the finished output, skipping attempts the
@@ -157,20 +167,44 @@ fn collect_selected(
 /// The scan only moves forward, so an attempt is matched at or after everything
 /// already placed. A discarded attempt is recognised by its cells not appearing
 /// there — the engine never emitted them.
-fn align_selected(cells: &[u8], attempts: &[WordAttempt]) -> Vec<UebSpan> {
+fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
+    let mut indicator_spans = Vec::new();
+    let mut indicator_cursor = 0usize;
+    for record in records {
+        match record {
+            AttributionRecord::Word(_) => {}
+            AttributionRecord::Indicator(indicator) => {
+                if let Some(base) = find_from(cells, &indicator.cells, indicator_cursor) {
+                    let end = base + indicator.cells.len();
+                    indicator_spans.push((indicator.rule, base as u32..end as u32));
+                    indicator_cursor = end;
+                }
+            }
+        }
+    }
+
     let mut spans = Vec::new();
     let mut cursor = 0usize;
-    for attempt in attempts {
+    for record in records {
+        let attempt = match record {
+            AttributionRecord::Word(attempt) => attempt,
+            AttributionRecord::Indicator(_) => continue,
+        };
         let Some(base) = find_from(cells, &attempt.cells, cursor) else {
             continue;
         };
         for (rule, offset, len) in &attempt.moves {
             let start = base + *offset as usize;
             let end = start + *len as usize;
-            spans.push((*rule, start as u32..end as u32));
+            push_without_indicators(
+                &mut spans,
+                (*rule, start as u32..end as u32),
+                &indicator_spans,
+            );
         }
         cursor = base + attempt.cells.len();
     }
+    spans.extend(indicator_spans);
     // An empty cell between words is the inter-word blank, the same structural
     // output the Korean emitter accounts for. It carries no dots, so there is no
     // other thing it could be.
@@ -181,6 +215,26 @@ fn align_selected(cells: &[u8], attempts: &[WordAttempt]) -> Vec<UebSpan> {
         }
     }
     spans
+}
+
+fn push_without_indicators(spans: &mut Vec<UebSpan>, candidate: UebSpan, indicators: &[UebSpan]) {
+    let (rule, range) = candidate;
+    let mut start = range.start;
+    for (_, indicator) in indicators {
+        if indicator.end <= start {
+            continue;
+        }
+        if indicator.start >= range.end {
+            break;
+        }
+        if start < indicator.start {
+            spans.push((rule, start..indicator.start));
+        }
+        start = start.max(indicator.end);
+    }
+    if start < range.end {
+        spans.push((rule, start..range.end));
+    }
 }
 
 fn find_from(haystack: &[u8], needle: &[u8], from: usize) -> Option<usize> {
@@ -208,10 +262,13 @@ pub(crate) enum UebMoveSource {
     LowerWordsign = 5,
     Numeric = 6,
     Symbol = 7,
+    Grade1Indicator = 8,
+    CapitalLetterIndicator = 9,
+    CapitalisedWordIndicator = 10,
 }
 
 /// Number of non-rule slots reserved before the contraction rules.
-pub(crate) const UEB_RESERVED_SLOTS: usize = 8;
+pub(crate) const UEB_RESERVED_SLOTS: usize = 11;
 
 /// Record a whole word that a lookup table resolved in one step, bypassing the
 /// contraction search. Without this a wordsign or shortform would leave its
@@ -219,7 +276,14 @@ pub(crate) const UEB_RESERVED_SLOTS: usize = 8;
 /// How many attempts have been recorded so far, so a caller can tell whether the
 /// encoder it just ran attributed its own output.
 pub(super) fn attempt_count() -> usize {
-    ATTEMPTS.with(|slot| slot.borrow().as_ref().map_or(0, Vec::len))
+    ATTRIBUTIONS.with(|slot| {
+        slot.borrow().as_ref().map_or(0, |records| {
+            records
+                .iter()
+                .filter(|record| matches!(record, AttributionRecord::Word(_)))
+                .count()
+        })
+    })
 }
 
 /// A word whose attribution has not been settled yet: where its cells start in
@@ -249,6 +313,20 @@ pub(super) fn record_whole_word(source: UebMoveSource, cells: &[u8]) {
         cells.len(),
     );
     attempt.finish(cells);
+}
+
+pub(super) fn push_indicator(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    out.extend_from_slice(cells);
+    ATTRIBUTIONS.with(|slot| {
+        if let Ok(mut slot) = slot.try_borrow_mut()
+            && let Some(records) = slot.as_mut()
+        {
+            records.push(AttributionRecord::Indicator(IndicatorAttempt {
+                cells: cells.to_vec(),
+                rule: crate::rules::trace::RuleId::ueb(source as usize),
+            }));
+        }
+    });
 }
 
 static UEB_NON_RULE_METAS: [crate::rules::RuleMeta; UEB_RESERVED_SLOTS] = [
@@ -307,6 +385,27 @@ static UEB_NON_RULE_METAS: [crate::rules::RuleMeta; UEB_RESERVED_SLOTS] = [
         name: "ueb_symbol",
         standard_ref: "UEB 2024 §3",
         description: "General symbol such as percent, ampersand or asterisk",
+    },
+    crate::rules::RuleMeta {
+        section: "5",
+        subsection: None,
+        name: "ueb_grade1_indicator",
+        standard_ref: "RUEB 2024 §5",
+        description: "Grade-1 indicator establishing grade-1 mode",
+    },
+    crate::rules::RuleMeta {
+        section: "8.3",
+        subsection: None,
+        name: "ueb_capital_letter_indicator",
+        standard_ref: "RUEB 2024 §8.3",
+        description: "Capital indicator applying to the following letter",
+    },
+    crate::rules::RuleMeta {
+        section: "8.4",
+        subsection: None,
+        name: "ueb_capitalised_word_indicator",
+        standard_ref: "RUEB 2024 §8.4",
+        description: "Capital indicators applying to the following word",
     },
 ];
 

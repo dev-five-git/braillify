@@ -1646,6 +1646,8 @@ mod trace_tests {
     #[case::math_variables("$x^2+y^2=z^2$")]
     #[case::math_function("$\\sin x$")]
     #[case::latex_fraction("$\\frac{3}{4}$")]
+    #[case::ueb_capital_then_digits("A1")]
+    #[case::ueb_capital_digits_and_decimal("Q50 2.2d")]
     // 제35항 numeric bridge resuming into a lowercase a-j letter: UEB 6.5.2 makes
     // the emitter write a continuation cell there, and it must name itself.
     #[case::roman_number_bridge_into_low_letter("가나 (1c) 다라")]
@@ -1655,7 +1657,36 @@ mod trace_tests {
         assert_eq!(
             trace.attributed_cells(),
             cells.len() as u32,
-            "unattributed cells in {input:?}: {:?}",
+            "unattributed cells in {input:?} with output {cells:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    #[test]
+    fn capitalised_spelled_word_keeps_letter_attribution() {
+        let (cells, trace) = encode_with_trace("MP3").expect("input must encode");
+
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        let letter_cells = trace
+            .events()
+            .iter()
+            .filter(|event| event.rule.meta().is_some_and(|meta| meta.section == "4.1"))
+            .map(|event| event.output.end - event.output.start)
+            .sum::<u32>();
+        assert_eq!(letter_cells, 2, "only M and P belong to the letter rule");
+    }
+
+    #[rstest::rstest]
+    #[case::ethene_hydration("C_{2}H_{4}(g) + H_{2}O(g) -> C_{2}H_{5}OH(g)")]
+    #[case::aluminium_ion("Al<sup>3+</sup>(aq) + 3e<sup>-</sup> -> Al(s)")]
+    #[case::water_formation("2H_{2}(g) + O_{2}(g) -> 2H_{2}O(g)")]
+    fn chemical_equation_cells_are_accounted_for(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(
+            trace.attributed_cells(),
+            cells.len() as u32,
+            "unattributed cells in {input:?} with output {cells:?}: {:?}",
             trace.events()
         );
     }
@@ -1682,26 +1713,6 @@ mod trace_tests {
         );
     }
 
-    /// The capitals and grade-1 indicators are written straight into the output
-    /// by the word encoder, while UEB attribution places whole *attempts* of the
-    /// contraction search — so an indicator belongs to no attempt and stays
-    /// unexplained. A Korean document never reaches this: the whole 467k-sentence
-    /// corpus leaves no cell unexplained, and only one sentence in it takes the
-    /// UEB path at all. Pinned to the exact counts so the gap cannot widen while
-    /// unnoticed, and so closing it shows up here as a failure to update.
-    #[rstest::rstest]
-    #[case::capital_then_digits("A1", 1)]
-    #[case::capital_digits_and_decimal("Q50 2.2d", 3)]
-    fn the_ueb_only_path_still_leaves_its_indicators_unexplained(
-        #[case] input: &str,
-        #[case] expected: u32,
-    ) {
-        let (_, trace) = encode_with_trace(input).expect("input must encode");
-
-        assert_eq!(trace.path(), TracePath::EnglishUeb);
-        assert_eq!(trace.unattributed_cells(), expected);
-    }
-
     /// Every rule must name a cell range that is really its own, so a cell may
     /// never be claimed by two rules at once.
     #[rstest::rstest]
@@ -1710,6 +1721,7 @@ mod trace_tests {
     #[case::measurement("3kg 5%")]
     #[case::english("the child was here")]
     #[case::math("3+4=7")]
+    #[case::chemical("C_{2}H_{4}(g) + H_{2}O(g) -> C_{2}H_{5}OH(g)")]
     fn no_cell_is_claimed_twice(#[case] input: &str) {
         let (cells, trace) = encode_with_trace(input).expect("input must encode");
 

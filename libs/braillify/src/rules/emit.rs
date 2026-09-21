@@ -2306,6 +2306,42 @@ mod spaced_colon_coverage {
         })
     }
 
+    /// 제29항: a spaced `&` joins two Roman words, so it needs a Roman word on
+    /// each side. Already-encoded output and the end of the stream both prove
+    /// nothing, so neither side may be read as Roman.
+    #[rstest::rstest]
+    #[case::nothing_follows(vec![word("A"), Token::Space(SpaceKind::Regular), word("&")], 2)]
+    #[case::encoded_output_follows(
+        vec![
+            word("A"),
+            Token::Space(SpaceKind::Regular),
+            word("&"),
+            Token::Space(SpaceKind::Regular),
+            Token::PreEncoded(vec![1]),
+        ],
+        2
+    )]
+    #[case::nothing_precedes(vec![word("&"), Token::Space(SpaceKind::Regular), word("B")], 0)]
+    #[case::encoded_output_precedes(
+        vec![
+            Token::PreEncoded(vec![1]),
+            Token::Space(SpaceKind::Regular),
+            word("&"),
+            Token::Space(SpaceKind::Regular),
+            word("B"),
+        ],
+        2
+    )]
+    fn an_ampersand_without_a_roman_word_on_both_sides_joins_nothing(
+        #[case] tokens: Vec<Token<'static>>,
+        #[case] ampersand_index: usize,
+    ) {
+        assert!(!spaced_ampersand_connects_roman_words(
+            &tokens,
+            ampersand_index
+        ));
+    }
+
     /// 제29항·제32항·제35항: a standalone colon joins two Roman items only when
     /// the item after it is proved Roman.
     #[test]

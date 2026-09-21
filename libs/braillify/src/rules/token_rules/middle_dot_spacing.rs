@@ -349,6 +349,70 @@ impl TokenRule for LeadingDashSpacingRule {
     }
 }
 
+const OPENING_BRACKETS: [char; 5] = ['(', '《', '〈', '「', '『'];
+const CLOSING_BRACKETS: [char; 5] = [')', '》', '〉', '」', '』'];
+
+fn seam_hugs(before: char, after: char) -> bool {
+    let opens = OPENING_BRACKETS.contains(&before);
+    let closes = CLOSING_BRACKETS.contains(&after);
+    // 여는 짝 바로 뒤에 닫는 짝이 오면(`『 』 안에는`) 무엇을 감싼 것이 아니라
+    // 묶음표 자체를 가리킨 것이므로, 제49항 예시대로 띄운 채로 둔다.
+    if opens && closes {
+        return false;
+    }
+    opens || closes
+}
+
+/// 제49항이 따르는 한글 맞춤법은 묶음표를 그 안쪽 내용에 붙여 쓴다. 묵자가
+/// 편집상 `( 가나 )` 처럼 벌려 놓아도 점자 띄어쓰기는 규정을 따르므로 그 틈을
+/// 닫는다. 바깥쪽(`확인 (가나)` 의 앞, `(가나) 다라` 의 뒤)은 보통의 띄어쓰기라
+/// 손대지 않는다. 빗금은 제33항 예시가 앞뒤를 띄우므로 여기에 넣지 않는다.
+pub struct HuggingPunctuationSpacingRule;
+
+impl TokenRule for HuggingPunctuationSpacingRule {
+    fn phase(&self) -> TokenPhase {
+        TokenPhase::PostWord
+    }
+
+    fn priority(&self) -> u16 {
+        129
+    }
+
+    fn apply<'a>(
+        &self,
+        tokens: &[Token<'a>],
+        index: usize,
+        _state: &mut crate::rules::context::EncoderState,
+    ) -> Result<TokenAction<'a>, String> {
+        let Some(Token::Word(head)) = tokens.get(index) else {
+            return Ok(TokenAction::Noop);
+        };
+        let mut chars = head.chars.clone();
+        let mut consumed = 1usize;
+        while let (Some(Token::Space(_)), Some(Token::Word(next))) = (
+            tokens.get(index + consumed),
+            tokens.get(index + consumed + 1),
+        ) {
+            let hugs = chars
+                .last()
+                .zip(next.chars.first())
+                .is_some_and(|(before, after)| seam_hugs(*before, *after));
+            if !hugs {
+                break;
+            }
+            chars.extend(&next.chars);
+            consumed += 2;
+        }
+        if consumed == 1 {
+            return Ok(TokenAction::Noop);
+        }
+        Ok(TokenAction::ReplaceRange(
+            consumed,
+            vec![owned_word(&chars)],
+        ))
+    }
+}
+
 pub struct TildeSpacingRule;
 
 impl TokenRule for TildeSpacingRule {
@@ -629,5 +693,46 @@ mod leading_dash_spacing {
     fn a_dash_elsewhere_stays_attached(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
         assert!(actual.contains(expected), "⠤ must stay attached: {actual}");
+    }
+}
+
+#[cfg(test)]
+mod hugging_punctuation {
+    /// 제49항이 따르는 한글 맞춤법은 묶음표를 그 안쪽 내용에 붙여 쓴다. 묵자가
+    /// 편집상 벌려 놓은 틈은 점자에서 닫힌다.
+    #[rstest::rstest]
+    #[case::parentheses("확인 ( 가나 ) 다라", "⠦⠄⠫⠉⠠⠴")]
+    #[case::double_angle_brackets("《 소나기 》 를", "⠰⠶⠠⠥⠉⠈⠕⠶⠆")]
+    fn an_editorial_gap_beside_hugging_punctuation_closes(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("punctuation must encode");
+        assert!(actual.contains(expected), "punctuation must hug: {actual}");
+    }
+
+    /// 묶음표 바깥쪽은 보통의 띄어쓰기라 그대로 둔다. 감싼 것이 없는 빈 짝은
+    /// 묶음표 자체를 가리킨 것이라 제49항 예시대로 사이를 띄운다.
+    #[rstest::rstest]
+    #[case::before_an_opening_bracket("확인 ( 가나 ) 다라", "⠟⠀⠦⠄")]
+    #[case::after_a_closing_bracket("《 소나기 》 를", "⠶⠆⠀⠐⠮")]
+    #[case::an_empty_pair_naming_itself("『 』 안에는 책의 제목이", "⠰⠦⠀⠴⠆")]
+    fn the_outer_face_of_a_bracket_keeps_its_space(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("punctuation must encode");
+        assert!(
+            actual.contains(expected),
+            "outer space must remain: {actual}"
+        );
+    }
+
+    /// 빗금은 묶음표와 달리 앞뒤를 띄운다 — 제33항 예시가 한글 사이에서도
+    /// `⠀⠸⠌⠀` 로 적는다. 말뭉치는 이 자리를 붙이지만 근거는 규정이다.
+    #[rstest::rstest]
+    #[case::korean("가나 / 다라 마바")]
+    #[case::digits("12 / 3 을")]
+    #[case::letters("a / b 를")]
+    fn a_spaced_slash_keeps_its_spaces(#[case] input: &str) {
+        let actual = crate::encode_to_unicode(input).expect("slash must encode");
+        assert!(actual.contains("⠀⠸⠌⠀"), "slash must stay spaced: {actual}");
     }
 }

@@ -199,11 +199,15 @@ fn korean_semicolon_split_index(chars: &[char]) -> Option<usize> {
 /// 대비 쌍이다(나머지 예 `오전 10:20`, `요한 3:16` 은 숫자 쌍이라 이 함수 밖이다).
 /// 따라서 한글 사이의 쌍점은 그 어절이 대비 쌍 꼴일 때만 붙이고, 괄호·따옴표 등이
 /// 섞여 표제와 내용을 가르는 꼴이면 본문에 따라 뒤에 한 칸을 둔다.
+///
+/// 표제를 한글이 이끄는 한 내용이 무엇으로 적혔는지는 본문을 바꾸지 않는다
+/// (`모델명:PN50`, `일시:2006년`). 쌍점 앞이 한글이 아니면 애초에 쌍점이 아니라
+/// 로마자 식별자 안의 기호이므로(`NVH:Noise`) 이 함수가 보지 않는다.
 fn korean_label_colon_split_index(chars: &[char]) -> Option<usize> {
     let position = chars.windows(3).position(|window| {
         crate::utils::is_korean_char(window[0])
             && window[1] == ':'
-            && crate::utils::is_korean_char(window[2])
+            && !is_closing_after_colon(window[2])
     })?;
     let is_contrast_pair = chars
         .iter()
@@ -783,5 +787,43 @@ mod hugging_punctuation {
     fn a_spaced_slash_keeps_its_spaces(#[case] input: &str) {
         let actual = crate::encode_to_unicode(input).expect("slash must encode");
         assert!(actual.contains("⠀⠸⠌⠀"), "slash must stay spaced: {actual}");
+    }
+}
+
+#[cfg(test)]
+mod label_colon_before_non_korean {
+    /// 제51항 본문 — a 쌍점 parting a 표제 from its 내용 is attached on its left and
+    /// followed by one blank. What the 내용 is written in does not change that, so
+    /// a label answered in Roman letters or figures takes the blank exactly as a
+    /// Korean one does.
+    #[rstest::rstest]
+    #[case::roman_content("프로젝트명:RP 가나", "⠐⠂⠀⠴")]
+    #[case::roman_and_digits("모델명:PN50 가나", "⠐⠂⠀⠴")]
+    #[case::digit_content("일시:2006년 가나", "⠐⠂⠀⠼")]
+    fn a_label_answered_in_roman_or_figures_takes_the_blank(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("label must encode");
+        assert!(
+            actual.contains(expected),
+            "colon must be followed by a blank: {actual}"
+        );
+    }
+
+    /// 제51항 [다만 2] keeps 시:분 and 장:절 attached, and a 대비 쌍 such as
+    /// `청군:백군` is the same shape. A colon inside a Roman identifier
+    /// (`NVH:Noise`) never was a 쌍점 — nothing Korean stands before it.
+    #[rstest::rstest]
+    #[case::contrast_pair("청군:백군", "⠐⠂⠘⠗")]
+    #[case::hour_and_minute("오전 10:20", "⠼⠁⠚⠐⠂⠼⠃⠚")]
+    #[case::chapter_and_verse("요한 3:16", "⠼⠉⠐⠂⠼⠁⠋")]
+    #[case::roman_identifier("가나 NVH:Noise 다라", "⠓⠒⠠⠝")]
+    fn the_excepted_colons_stay_attached(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("colon must encode");
+        assert!(
+            actual.contains(expected),
+            "colon must stay attached: {actual}"
+        );
     }
 }

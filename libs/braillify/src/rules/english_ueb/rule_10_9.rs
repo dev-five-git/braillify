@@ -98,24 +98,37 @@ fn requires_grade1_before_cells(letters: &str, cells_for: impl Fn(&[char]) -> Ve
             if end == chars.len() {
                 return true;
             }
-
             let suffix = &chars[end..];
-            // §10.9.5 admits an added `s` for every base shortform except
-            // `abouts`, `almosts`, and `hims`.
+            // §10.9.5 adds `s` to every shortform on the list, not only to the
+            // ten of §10.9.3, so `saids` and `accordings` both compete with the
+            // spelled letters (국립국어원 회신 2026-09-20). `abouts`, `almosts`
+            // and `hims` are the rule's own exceptions.
             if suffix == ['s'] && !matches!(*shortform, "about" | "almost" | "him") {
                 return true;
             }
-
-            let hypothetical = shortform
-                .chars()
-                .chain(suffix.iter().copied())
-                .collect::<Vec<_>>();
-            if longer_use_allowed(&hypothetical, 0, shortform) {
+            if rule_10_9_3_reading_exists(shortform, suffix) {
                 return true;
             }
         }
     }
     false
+}
+
+/// §10.9.3: only these ten shortforms may be used inside a word that is not
+/// itself on the shortform list, so only they can give a longer letters-sequence
+/// a competing reading.
+///
+/// 국립국어원 회신(2026-09-17): `GDP` 는 `goodp` 가 §10.9.3(c) 로 `good` 축어를
+/// 쓸 수 있어 1급 점자를 전치하지만, `ACS`/`NEIS`/`ALS` 는 `according`/`neither`/
+/// `also` 가 이 열 개에 없어 `accordings` 등을 만들 수 없으므로 전치하지 않는다.
+fn rule_10_9_3_reading_exists(shortform: &str, suffix: &[char]) -> bool {
+    match shortform {
+        "braille" | "great" => true,
+        "children" | "blind" | "first" | "friend" | "good" | "letter" | "little" | "quick" => {
+            !matches!(suffix.first(), Some('a' | 'e' | 'i' | 'o' | 'u' | 'y'))
+        }
+        _ => false,
+    }
 }
 
 /// Produce the cells that the real Korean-rule-37 Roman body encoder would emit

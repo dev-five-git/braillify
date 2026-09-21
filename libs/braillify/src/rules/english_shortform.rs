@@ -105,7 +105,13 @@ mod tests {
     #[case::groupsign_shd("SHD", true)]
     #[case::official_llc_prefix("LLC", true)]
     #[case::good_prefix("GDP", true)]
-    #[case::added_s("SDS", true)]
+    #[case::official_great_prefix("GRTSAMADA", true)]
+    // 국립국어원 회신(2026-09-20): §10.9.5 의 s 추가는 축어 목록 전체에 적용되어
+    // `saids`/`accordings` 가 성립하므로 1급 점자를 전치한다.
+    #[case::said_plus_s("SDS", true)]
+    #[case::according_plus_s("ACS", true)]
+    // `about` 은 §10.9.5 가 s 추가를 막는 세 축어 중 하나다.
+    #[case::about_has_no_added_s("ABS", false)]
     #[case::because_needs_be("BC", false)]
     #[case::about_unlisted_suffix("ABBA", false)]
     #[case::little_before_vowel("LLAMA", false)]

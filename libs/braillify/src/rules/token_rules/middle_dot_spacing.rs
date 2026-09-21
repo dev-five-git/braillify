@@ -257,8 +257,8 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
 /// therefore joined the same way as the middle dot above.
 /// 제49항이 따르는 한글 맞춤법은 붙임표의 앞뒤를 붙여 쓴다. 묵자가 편집상
 /// `준우승 - 홍길동`처럼 띄워 놓아도 점자 띄어쓰기는 규정을 따르므로 한 어절로
-/// 잇는다. 양쪽이 한글일 때만 적용해 제46항의 뺄셈표(`a - b`)와 가르는데, 뺄셈은
-/// 로마자·숫자 사이에서 쓰이기 때문이다.
+/// 잇는다. 가르는 기준은 제46항의 뺄셈표(`a - b`)뿐이며, 그 피연산자는
+/// 로마자·숫자이므로 양쪽이 모두 로마자·숫자인 자리만 띄운 채로 둔다.
 pub struct KoreanHyphenSpacingRule;
 
 impl TokenRule for KoreanHyphenSpacingRule {
@@ -292,22 +292,124 @@ impl TokenRule for KoreanHyphenSpacingRule {
         else {
             return Ok(TokenAction::Noop);
         };
-        if hyphen.chars.as_slice() != ['-']
-            || !left
-                .chars
-                .last()
-                .is_some_and(|ch| crate::utils::is_korean_char(*ch))
-            || !right
-                .chars
-                .first()
-                .is_some_and(|ch| crate::utils::is_korean_char(*ch))
-        {
+        // 가르는 기준은 양쪽이 한글인지가 아니라 제46항의 뺄셈인지다. 뺄셈의
+        // 피연산자는 로마자·숫자이므로 그 자리만 띄운 채로 두고, 나머지는
+        // 제49항이 따르는 한글 맞춤법대로 붙인다.
+        let subtraction_operands = left.chars.last().is_some_and(char::is_ascii_alphanumeric)
+            && right.chars.first().is_some_and(char::is_ascii_alphanumeric);
+        if hyphen.chars.as_slice() != ['-'] || subtraction_operands {
             return Ok(TokenAction::Noop);
         }
         let mut chars = left.chars.clone();
         chars.extend(&hyphen.chars);
         chars.extend(&right.chars);
         Ok(TokenAction::ReplaceRange(5, vec![owned_word(&chars)]))
+    }
+}
+
+/// 제49항이 붙여 쓰게 하는 붙임표는 낱말과 낱말 사이의 것이다. 글 첫머리에
+/// 홀로 서서 한글을 끌고 오는 붙임표는 그 항목을 여는 표지이므로 뒤를 띄운다
+/// (`-플랫폼이` → `⠤ ⠙⠮…`). 글머리가 아닌 자리는 [`KoreanHyphenSpacingRule`]
+/// 대로 붙인다.
+pub struct LeadingDashSpacingRule;
+
+impl TokenRule for LeadingDashSpacingRule {
+    fn phase(&self) -> TokenPhase {
+        TokenPhase::PostWord
+    }
+
+    fn priority(&self) -> u16 {
+        129
+    }
+
+    fn apply<'a>(
+        &self,
+        tokens: &[Token<'a>],
+        index: usize,
+        _state: &mut crate::rules::context::EncoderState,
+    ) -> Result<TokenAction<'a>, String> {
+        let chars = match tokens.first() {
+            Some(Token::Word(word)) if index == 0 => word.chars.as_slice(),
+            _ => return Ok(TokenAction::Noop),
+        };
+        let ['-', rest @ ..] = chars else {
+            return Ok(TokenAction::Noop);
+        };
+        if !rest
+            .first()
+            .is_some_and(|ch| crate::utils::is_korean_char(*ch))
+        {
+            return Ok(TokenAction::Noop);
+        }
+        Ok(TokenAction::ReplaceMany(vec![
+            owned_word(&['-']),
+            Token::Space(crate::rules::token::SpaceKind::Regular),
+            owned_word(rest),
+        ]))
+    }
+}
+
+const OPENING_BRACKETS: [char; 5] = ['(', '《', '〈', '「', '『'];
+const CLOSING_BRACKETS: [char; 5] = [')', '》', '〉', '」', '』'];
+
+fn seam_hugs(before: char, after: char) -> bool {
+    let opens = OPENING_BRACKETS.contains(&before);
+    let closes = CLOSING_BRACKETS.contains(&after);
+    // 여는 짝 바로 뒤에 닫는 짝이 오면(`『 』 안에는`) 무엇을 감싼 것이 아니라
+    // 묶음표 자체를 가리킨 것이므로, 제49항 예시대로 띄운 채로 둔다.
+    if opens && closes {
+        return false;
+    }
+    opens || closes
+}
+
+/// 제49항이 따르는 한글 맞춤법은 묶음표를 그 안쪽 내용에 붙여 쓴다. 묵자가
+/// 편집상 `( 가나 )` 처럼 벌려 놓아도 점자 띄어쓰기는 규정을 따르므로 그 틈을
+/// 닫는다. 바깥쪽(`확인 (가나)` 의 앞, `(가나) 다라` 의 뒤)은 보통의 띄어쓰기라
+/// 손대지 않는다. 빗금은 제33항 예시가 앞뒤를 띄우므로 여기에 넣지 않는다.
+pub struct HuggingPunctuationSpacingRule;
+
+impl TokenRule for HuggingPunctuationSpacingRule {
+    fn phase(&self) -> TokenPhase {
+        TokenPhase::PostWord
+    }
+
+    fn priority(&self) -> u16 {
+        129
+    }
+
+    fn apply<'a>(
+        &self,
+        tokens: &[Token<'a>],
+        index: usize,
+        _state: &mut crate::rules::context::EncoderState,
+    ) -> Result<TokenAction<'a>, String> {
+        let Some(Token::Word(head)) = tokens.get(index) else {
+            return Ok(TokenAction::Noop);
+        };
+        let mut chars = head.chars.clone();
+        let mut consumed = 1usize;
+        while let (Some(Token::Space(_)), Some(Token::Word(next))) = (
+            tokens.get(index + consumed),
+            tokens.get(index + consumed + 1),
+        ) {
+            let hugs = chars
+                .last()
+                .zip(next.chars.first())
+                .is_some_and(|(before, after)| seam_hugs(*before, *after));
+            if !hugs {
+                break;
+            }
+            chars.extend(&next.chars);
+            consumed += 2;
+        }
+        if consumed == 1 {
+            return Ok(TokenAction::Noop);
+        }
+        Ok(TokenAction::ReplaceRange(
+            consumed,
+            vec![owned_word(&chars)],
+        ))
     }
 }
 
@@ -539,5 +641,98 @@ mod nikl_answer_coverage {
         let chars: Vec<char> = input.chars().collect();
         let split = korean_label_colon_split_index(&chars);
         assert!(split.is_none() || split.is_some());
+    }
+}
+
+#[cfg(test)]
+mod spaced_hyphen_joining {
+    /// 제49항이 따르는 한글 맞춤법은 붙임표의 앞뒤를 붙여 쓴다. 가르는 기준은
+    /// 양쪽이 한글인지가 아니라 제46항의 뺄셈인지다 — 뺄셈은 로마자·숫자
+    /// 사이에서만 쓰이므로 그 자리만 띄운 채로 둔다.
+    #[rstest::rstest]
+    #[case::closing_bracket_then_korean("확인(9일) - 논란 일자", "⠠⠴⠤⠉⠷")]
+    #[case::korean_then_digit("등장 - 2차원 표면", "⠨⠶⠤⠼⠃")]
+    #[case::korean_then_korean("가나 - 다라 마바", "⠫⠉⠤⠊⠐⠣")]
+    fn a_spaced_hyphen_joins_what_it_stands_between(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
+        assert!(actual.contains(expected), "hyphen must join: {actual}");
+    }
+
+    /// 제46항 뺄셈표는 그대로 띄운다.
+    #[rstest::rstest]
+    #[case::digits("12 - 3 을", "⠀⠤⠀")]
+    #[case::letters("a - b 를", "⠀⠤⠀")]
+    fn a_subtraction_sign_keeps_its_spaces(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("subtraction must encode");
+        assert!(
+            actual.contains(expected),
+            "subtraction must stay spaced: {actual}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod leading_dash_spacing {
+    /// 제49항이 붙여 쓰게 하는 붙임표는 낱말 사이의 것이다. 글머리에 홀로 선
+    /// 붙임표는 그 항목을 여는 표지이므로 뒤를 띄운다.
+    #[rstest::rstest]
+    #[case::sentence_initial("-플랫폼이 바닥이라면", "⠤⠀⠙⠮")]
+    #[case::sentence_initial_with_bracket("-심층그룹인터뷰(FGI)했는데", "⠤⠀⠠⠕⠢")]
+    fn a_dash_opening_the_text_is_followed_by_a_space(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("leading dash must encode");
+        assert!(
+            actual.contains(expected),
+            "expected a space after ⠤: {actual}"
+        );
+    }
+
+    /// 글머리가 아닌 붙임표는 그대로 붙인다 — 어절 안이든 어절 첫머리든.
+    #[rstest::rstest]
+    #[case::inside_a_word("가나-다라", "⠫⠉⠤⠊")]
+    #[case::word_initial_mid_text("앞말 -플랫폼이", "⠀⠤⠙⠮")]
+    fn a_dash_elsewhere_stays_attached(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
+        assert!(actual.contains(expected), "⠤ must stay attached: {actual}");
+    }
+}
+
+#[cfg(test)]
+mod hugging_punctuation {
+    /// 제49항이 따르는 한글 맞춤법은 묶음표를 그 안쪽 내용에 붙여 쓴다. 묵자가
+    /// 편집상 벌려 놓은 틈은 점자에서 닫힌다.
+    #[rstest::rstest]
+    #[case::parentheses("확인 ( 가나 ) 다라", "⠦⠄⠫⠉⠠⠴")]
+    #[case::double_angle_brackets("《 소나기 》 를", "⠰⠶⠠⠥⠉⠈⠕⠶⠆")]
+    fn an_editorial_gap_beside_hugging_punctuation_closes(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("punctuation must encode");
+        assert!(actual.contains(expected), "punctuation must hug: {actual}");
+    }
+
+    /// 묶음표 바깥쪽은 보통의 띄어쓰기라 그대로 둔다. 감싼 것이 없는 빈 짝은
+    /// 묶음표 자체를 가리킨 것이라 제49항 예시대로 사이를 띄운다.
+    #[rstest::rstest]
+    #[case::before_an_opening_bracket("확인 ( 가나 ) 다라", "⠟⠀⠦⠄")]
+    #[case::after_a_closing_bracket("《 소나기 》 를", "⠶⠆⠀⠐⠮")]
+    #[case::an_empty_pair_naming_itself("『 』 안에는 책의 제목이", "⠰⠦⠀⠴⠆")]
+    fn the_outer_face_of_a_bracket_keeps_its_space(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("punctuation must encode");
+        assert!(
+            actual.contains(expected),
+            "outer space must remain: {actual}"
+        );
+    }
+
+    /// 빗금은 묶음표와 달리 앞뒤를 띄운다 — 제33항 예시가 한글 사이에서도
+    /// `⠀⠸⠌⠀` 로 적는다. 말뭉치는 이 자리를 붙이지만 근거는 규정이다.
+    #[rstest::rstest]
+    #[case::korean("가나 / 다라 마바")]
+    #[case::digits("12 / 3 을")]
+    #[case::letters("a / b 를")]
+    fn a_spaced_slash_keeps_its_spaces(#[case] input: &str) {
+        let actual = crate::encode_to_unicode(input).expect("slash must encode");
+        assert!(actual.contains("⠀⠸⠌⠀"), "slash must stay spaced: {actual}");
     }
 }

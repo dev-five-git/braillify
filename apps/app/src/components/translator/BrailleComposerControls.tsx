@@ -47,13 +47,12 @@ export function BrailleComposerControls() {
               bg={selected ? '$primary' : '$containerBackground'}
               border="1px solid $border"
               borderRadius="999px"
+              boxSize="42px"
               color={selected ? '$base' : '$text'}
               cursor="pointer"
-              h="42px"
               onClick={() => toggleDot(dot)}
               p="0"
               type="button"
-              w="42px"
             >
               {dot}
             </Button>

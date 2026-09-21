@@ -81,21 +81,20 @@ export function BrailleEditor() {
                 border="none"
                 borderRadius="999px"
                 cursor="pointer"
-                h="22px"
+                h="24px"
                 onClick={() => setIntaglio((current) => !current)}
                 position="relative"
                 type="button"
-                w="38px"
+                w="40px"
               >
                 <Box
                   bg="$containerBackground"
                   borderRadius="50%"
-                  h="16px"
-                  left={intaglio ? '19px' : '3px'}
+                  boxSize="16px"
+                  left={intaglio ? '20px' : '4px'}
                   position="absolute"
-                  top="3px"
+                  top="4px"
                   transition="left 150ms ease"
-                  w="16px"
                 />
               </Button>
             </Flex>
@@ -175,7 +174,7 @@ export function BrailleEditor() {
                 setCopyState('idle')
               }}
               px="14px"
-              py="7px"
+              py="8px"
               type="button"
               typography="sidebarBody"
             >
@@ -263,12 +262,11 @@ function EditableBrailleCell({
                   bg={active ? '$primary' : '$containerBackground'}
                   border="1.5px solid $border"
                   borderRadius="50%"
+                  boxSize="22px"
                   cursor="pointer"
-                  h="22px"
                   onClick={() => onToggleDot(dot)}
                   p="0"
                   type="button"
-                  w="22px"
                 />
               )
             })}
@@ -323,7 +321,7 @@ function OutlineButton({
       cursor="pointer"
       onClick={onClick}
       px="14px"
-      py="7px"
+      py="8px"
       type="button"
       typography="sidebarBody"
     >

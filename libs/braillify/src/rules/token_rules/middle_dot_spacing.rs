@@ -354,7 +354,19 @@ impl TokenRule for KoreanHyphenSpacingRule {
 /// 대로 붙인다.
 pub struct LeadingDashSpacingRule;
 
+static META_LEADING_DASH_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "leading_dash_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Add a blank after a dash that opens a line item",
+};
+
 impl TokenRule for LeadingDashSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_LEADING_DASH_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -410,7 +422,19 @@ fn seam_hugs(before: char, after: char) -> bool {
 /// 손대지 않는다. 빗금은 제33항 예시가 앞뒤를 띄우므로 여기에 넣지 않는다.
 pub struct HuggingPunctuationSpacingRule;
 
+static META_HUGGING_PUNCTUATION_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "hugging_punctuation_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Close editorial gaps inside brackets according to Korean orthography",
+};
+
 impl TokenRule for HuggingPunctuationSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_HUGGING_PUNCTUATION_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -521,6 +545,30 @@ impl TokenRule for TildeSpacingRule {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// 제49항: both LeadingDashSpacingRule and HuggingPunctuationSpacingRule
+    /// declare their metadata so the rule tracer reports section "49" instead of "?".
+    #[test]
+    fn leading_dash_spacing_rule_declares_section_49() {
+        let rule = LeadingDashSpacingRule;
+        let meta = rule.meta();
+        assert_eq!(
+            meta.section, "49",
+            "LeadingDashSpacingRule must declare section 49"
+        );
+    }
+
+    /// 제49항: both LeadingDashSpacingRule and HuggingPunctuationSpacingRule
+    /// declare their metadata so the rule tracer reports section "49" instead of "?".
+    #[test]
+    fn hugging_punctuation_spacing_rule_declares_section_49() {
+        let rule = HuggingPunctuationSpacingRule;
+        let meta = rule.meta();
+        assert_eq!(
+            meta.section, "49",
+            "HuggingPunctuationSpacingRule must declare section 49"
+        );
+    }
 
     /// 제59항: the blank after a Korean semicolon is written even when print
     /// runs the items together; the colon keeps print spacing (제51항 [다만 2]).

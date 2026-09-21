@@ -171,13 +171,14 @@ impl TokenRule for NormalizeAsciiAngleBrackets {
     }
 }
 
+/// 제53항의 가운뎃점·마침표 줄임표 형식에 맞추기 위해 줄임표 표현을 정규화한다.
 pub struct NormalizeEllipsis;
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "53",
     subsection: None,
-    name: "undeclared_ellipsis_normalization",
-    standard_ref: "",
+    name: "ellipsis_normalization",
+    standard_ref: "2024 Korean Braille Standard, 제53항 줄임표",
     description: "말줄임표 문자를 표준 형태로 정규화",
 };
 

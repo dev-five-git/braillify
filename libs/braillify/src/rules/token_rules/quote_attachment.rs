@@ -1,6 +1,7 @@
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// 제54항이 따옴표와 묶음표 안쪽을 붙여 쓰도록 하므로 인접 어절을 연결한다.
 pub struct QuoteAttachmentRule;
 
 fn quote_delta(text: &str) -> i32 {
@@ -56,10 +57,10 @@ fn quote_balance_before<'a>(tokens: &[Token<'a>], index: usize) -> i32 {
 }
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "54",
     subsection: None,
-    name: "undeclared_quote_attachment",
-    standard_ref: "",
+    name: "quote_attachment",
+    standard_ref: "2024 Korean Braille Standard, 제54항 묶음표 붙여 쓰기",
     description: "따옴표를 앞뒤 어절에 붙여 한 토큰으로 묶음",
 };
 

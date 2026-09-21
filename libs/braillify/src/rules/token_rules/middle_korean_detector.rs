@@ -2,6 +2,7 @@ use crate::rules::context::EncodingMode;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// 제19항의 옛 글자표 규정을 적용할 인코딩 모드를 고르기 위해 옛 글자 문맥을 감지한다.
 pub struct MiddleKoreanDetectorRule;
 
 fn is_strong_middle_korean_char(c: char) -> bool {
@@ -73,10 +74,10 @@ fn nearest_next_word<'a>(tokens: &'a [Token<'a>], index: usize) -> Option<&'a [c
 }
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "19",
     subsection: None,
-    name: "undeclared_middle_korean_detector",
-    standard_ref: "",
+    name: "middle_korean_detector",
+    standard_ref: "2024 Korean Braille Standard, 제19항 옛 글자",
     description: "중세국어 문맥 감지 후 인코딩 모드 전환",
 };
 

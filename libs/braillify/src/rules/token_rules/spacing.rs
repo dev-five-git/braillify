@@ -2,6 +2,7 @@ use crate::rules::RuleMeta;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// 제60항이 별표와 참고표의 앞뒤를 한 칸씩 띄우도록 하므로 별표 간격을 조정한다.
 pub struct AsteriskSpacingRule;
 
 /// Compatibility registration for the removed auxiliary-verb normalizer.
@@ -51,10 +52,10 @@ fn is_last_word_index(tokens: &[Token], index: usize) -> bool {
 }
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "60",
     subsection: None,
-    name: "undeclared_asterisk_spacing",
-    standard_ref: "",
+    name: "asterisk_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제60항 별표·참고표",
     description: "별표 앞뒤 띄어쓰기 조정",
 };
 

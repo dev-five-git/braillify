@@ -713,6 +713,29 @@ mod tests {
         assert_eq!(JamoRule::for_vowel(vowel), expected);
     }
 
+    #[rstest::rstest]
+    #[case::ellipsis_normalization("ellipsis_normalization", "53")]
+    #[case::inline_fraction("inline_fraction", "47")]
+    #[case::latex_fraction("latex_fraction", "47")]
+    #[case::asterisk_spacing("asterisk_spacing", "60")]
+    #[case::quote_attachment("quote_attachment", "54")]
+    #[case::historical_gloss_spacing("historical_gloss_spacing", "54")]
+    #[case::digital_notation("digital_notation", "35")]
+    #[case::uppercase_passage("uppercase_passage", "8.4")]
+    #[case::middle_korean_detector("middle_korean_detector", "19")]
+    #[case::latex_merge("latex_merge", "-")]
+    fn token_rules_report_their_declared_sections(
+        #[case] name: &str,
+        #[case] expected_section: &str,
+    ) {
+        let meta = registered_rules(RuleKind::Token)
+            .iter()
+            .find(|meta| meta.name == name)
+            .expect("declared token rule must be registered");
+
+        assert_eq!(meta.section, expected_section);
+    }
+
     #[test]
     fn korean_registry_holds_no_duplicate_rule_names() {
         let mut names: Vec<_> = registered_rules(RuleKind::Korean)

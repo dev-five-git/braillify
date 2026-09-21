@@ -1,4 +1,4 @@
-//! Math symbol encoding with Korean spacing rules.
+//! 제46항: 연산 기호와 비교 기호가 한글 사이에 나올 때에는 기호의 앞뒤를 한 칸씩 띄어 쓴다.
 //!
 //! Math symbols (＋, −, ×, ÷, etc.) need spacing around them when
 //! adjacent to Korean text, unless the Korean is a grammatical particle (josa).
@@ -11,10 +11,10 @@ use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 use crate::utils;
 
 pub static META: RuleMeta = RuleMeta {
-    section: "math",
+    section: "46",
     subsection: None,
     name: "math_symbol_encoding",
-    standard_ref: "2024 Korean Braille Standard (math symbols)",
+    standard_ref: "2024 Korean Braille Standard, 제46항",
     description: "Math symbols with Korean spacing rules",
 };
 
@@ -540,6 +540,13 @@ mod tests {
             crate::encode_to_unicode(&explicit_minus).expect("minus variant must encode"),
             "input={input}"
         );
+    }
+
+    /// 제46항 "연산 기호와 비교 기호가 한글 사이에 나올 때에는 기호의 앞뒤를 한 칸씩 띄어 쓴다"
+    /// 이 규칙의 메타데이터는 제46항을 명시해야 한다.
+    #[test]
+    fn meta_section_is_article_46() {
+        assert_eq!(META.section, "46", "META.section must be article 46");
     }
 }
 

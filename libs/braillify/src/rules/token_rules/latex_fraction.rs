@@ -2,13 +2,14 @@ use crate::fraction;
 use crate::rules::token::{FractionToken, Token};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// 제47항의 분모·분수표·분자 순서를 적용하기 위해 LaTeX 분수를 토큰으로 만든다.
 pub struct LatexFractionRule;
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "47",
     subsection: None,
-    name: "undeclared_latex_fraction",
-    standard_ref: "",
+    name: "latex_fraction",
+    standard_ref: "2024 Korean Braille Standard, 제47항 분수",
     description: "LaTeX \\frac{}{} 표기를 분수 토큰으로 변환",
 };
 

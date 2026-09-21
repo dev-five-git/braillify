@@ -9,6 +9,7 @@ use crate::rules::english_ueb::rule_10_12::{
 use crate::rules::token::{ModeEvent, Token, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// RUEB 2024 §8.4의 대문자 낱말표 규정을 적용하기 위해 연속 대문자 구간을 묶는다.
 pub struct UppercasePassageRule;
 
 /// UEB §5.7.2 + §10.9 grade-1 decision for the capitals run
@@ -232,10 +233,10 @@ fn is_korean_math_letter_list_start(
 }
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "8.4",
     subsection: None,
-    name: "undeclared_uppercase_passage",
-    standard_ref: "",
+    name: "uppercase_passage",
+    standard_ref: "RUEB 2024 §8.4",
     description: "연속 대문자 구간을 하나의 구절로 묶음",
 };
 

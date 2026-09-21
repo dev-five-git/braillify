@@ -17,13 +17,14 @@ use std::sync::LazyLock;
 static DIGITAL_INITIAL_PRON_RULE: LazyLock<InitialContractionPronunciationRule> =
     LazyLock::new(|| InitialContractionPronunciationRule::new(Box::new(CmuDictProvider::new())));
 
+/// 제35항이 로마자와 숫자가 이어질 때 로마자 종료표를 쓰지 않도록 하므로 디지털 표기를 처리한다.
 pub struct DigitalNotationRule;
 
 static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
+    section: "35",
     subsection: None,
-    name: "undeclared_digital_notation",
-    standard_ref: "",
+    name: "digital_notation",
+    standard_ref: "2024 Korean Braille Standard, 제35항 로마자와 숫자",
     description: "숫자·기호가 섞인 디지털 표기 처리",
 };
 

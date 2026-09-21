@@ -292,13 +292,11 @@ impl TokenRule for KoreanHyphenSpacingRule {
         else {
             return Ok(TokenAction::Noop);
         };
-        let (Some(before), Some(after)) = (left.chars.last(), right.chars.first()) else {
-            return Ok(TokenAction::Noop);
-        };
         // 가르는 기준은 양쪽이 한글인지가 아니라 제46항의 뺄셈인지다. 뺄셈의
         // 피연산자는 로마자·숫자이므로 그 자리만 띄운 채로 두고, 나머지는
         // 제49항이 따르는 한글 맞춤법대로 붙인다.
-        let subtraction_operands = before.is_ascii_alphanumeric() && after.is_ascii_alphanumeric();
+        let subtraction_operands = left.chars.last().is_some_and(char::is_ascii_alphanumeric)
+            && right.chars.first().is_some_and(char::is_ascii_alphanumeric);
         if hyphen.chars.as_slice() != ['-'] || subtraction_operands {
             return Ok(TokenAction::Noop);
         }
@@ -330,13 +328,11 @@ impl TokenRule for LeadingDashSpacingRule {
         index: usize,
         _state: &mut crate::rules::context::EncoderState,
     ) -> Result<TokenAction<'a>, String> {
-        if index != 0 {
-            return Ok(TokenAction::Noop);
-        }
-        let Some(Token::Word(word)) = tokens.first() else {
-            return Ok(TokenAction::Noop);
+        let chars = match tokens.first() {
+            Some(Token::Word(word)) if index == 0 => word.chars.as_slice(),
+            _ => return Ok(TokenAction::Noop),
         };
-        let ['-', rest @ ..] = word.chars.as_slice() else {
+        let ['-', rest @ ..] = chars else {
             return Ok(TokenAction::Noop);
         };
         if !rest

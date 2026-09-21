@@ -50,10 +50,11 @@ math_meta! {
     (META_32, "32", "math_congruence_symbol", "Congruence symbols"),
     (META_33, "33", "math_geometric_operator", "Geometric operators"),
     (META_34, "34", "math_relation_symbol", "Relation symbols and their negations"),
-    (META_36, "36", "math_segment_symbol", "Segment and arc symbols"),
+    (META_35, "35", "math_segment_symbol", "Segment bar over two points"),
+    (META_36, "36", "math_arc_symbol", "Arc symbol"),
     (META_37, "37", "math_line_symbol", "Bidirectional line symbols"),
-    (META_38, "38", "math_ray_symbol", "Right-arrow ray symbols"),
-    (META_39, "39", "math_angle_symbol", "Angle and ray symbols"),
+    (META_38, "38", "math_ray_symbol", "Ray symbols, also used for vectors"),
+    (META_39, "39", "math_angle_symbol", "Angle symbol"),
     (META_40, "40", "math_geometric_shape", "Geometric shapes"),
     (META_41, "41", "math_perpendicular_symbol", "Perpendicular symbols"),
     (META_42, "42", "math_similarity_symbol", "Similarity symbols"),
@@ -147,6 +148,7 @@ pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
     &META_32,
     &META_33,
     &META_34,
+    &META_35,
     &META_36,
     &META_37,
     &META_38,
@@ -236,10 +238,11 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     &META_38 => {
         '\u{2192}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
         '\u{27F6}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
-        '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
     },
     &META_37 => {
         '\u{2194}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
     },
     &META_10 => {
         '\u{2190}' => &[decode_unicode('⠪'), decode_unicode('⠒')],
@@ -355,7 +358,6 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     },
     &META_39 => {
         '\u{2220}' => &[decode_unicode('⠹')],
-        '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
     },
     &META_41 => {
         '\u{22A5}' => &[decode_unicode('⠴'), decode_unicode('⠄')],
@@ -502,9 +504,11 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '\u{03A9}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')],
         '\u{2126}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')],
     },
+    &META_35 => {
+        '\u{203E}' => &[decode_unicode('⠈'), decode_unicode('⠉')],
+    },
     &META_36 => {
         '\u{2322}' => &[decode_unicode('⠈'), decode_unicode('⠪')],
-        '\u{203E}' => &[decode_unicode('⠈'), decode_unicode('⠉')],
     },
     &META_64 => {
         '\u{0302}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠢')],
@@ -573,6 +577,41 @@ mod test {
     #[case::not_implies('⇏', "61")]
     fn cell_matched_shortcuts_name_their_article(#[case] symbol: char, #[case] section: &str) {
         assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
+    }
+
+    /// 제35항 to 제39항 run 선분 `@c`, 호 `@[`, 직선 `[3O`, 반직선 `3O`, 각 `?`,
+    /// one article each and in that order. Three of these marks sat one article
+    /// away from the one that defines them, which nothing caught because the
+    /// cells were right either way. The overline is the segment bar of 제35항,
+    /// not 제36항's arc; the two-headed arrow above a pair is 제37항's line, not
+    /// a ray; and the single-headed one is 제38항's ray, which its 붙임 also
+    /// lends to vectors, rather than 제39항's angle.
+    #[rstest::rstest]
+    #[case::segment_bar('\u{203E}', "35")]
+    #[case::arc('\u{2322}', "36")]
+    #[case::line_above('\u{20E1}', "37")]
+    #[case::line_arrow('\u{2194}', "37")]
+    #[case::ray_above('\u{20D7}', "38")]
+    #[case::ray_arrow('\u{2192}', "38")]
+    #[case::angle('\u{2220}', "39")]
+    fn geometry_marks_cite_the_article_that_defines_them(
+        #[case] symbol: char,
+        #[case] section: &str,
+    ) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
+    }
+
+    /// 제23항 gives the bar over a variable — 켤레 복소수 and 평균값 — the same
+    /// `@c` cells as 제35항's segment bar, so the two are told apart by code
+    /// point alone: a combining or spacing macron marks a variable, while the
+    /// overline spans a pair of points.
+    #[rstest::rstest]
+    #[case::combining_macron('\u{0304}')]
+    #[case::combining_overline('\u{0305}')]
+    #[case::spacing_macron('\u{00AF}')]
+    fn a_bar_over_a_variable_stays_with_article_23(#[case] symbol: char) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, "23");
+        assert_eq!(SHORTCUT_MAP[&symbol].cells, SHORTCUT_MAP[&'\u{203E}'].cells);
     }
 
     /// A second code point for a symbol the standard already defines means the

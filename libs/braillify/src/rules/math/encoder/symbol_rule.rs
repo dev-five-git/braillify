@@ -516,7 +516,8 @@ impl MathTokenRule for MathSymbolRule {
 // ============================================================
 #[cfg(test)]
 mod tests {
-    use super::super::super::math_token_rule::MathContext;
+    use super::super::super::math_token_rule::{MathContext, MathTokenResult};
+    use super::super::super::parser::MathToken;
     use super::super::encode_math_expression;
     use super::super::encode_math_expression_with_context;
 
@@ -537,10 +538,7 @@ mod tests {
     #[case::unresolved_product('∏', "?")]
     fn reports_the_selected_symbol_article(#[case] symbol: char, #[case] expected_section: &str) {
         use super::super::super::encoder::math_engine_for_context;
-        use super::super::super::math_token_rule::{
-            MathEncodeState, MathTokenResult, MathTokenRule,
-        };
-        use super::super::super::parser::MathToken;
+        use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};
 
         let context = MathContext::default();
         let engine = math_engine_for_context(context);
@@ -557,6 +555,69 @@ mod tests {
         };
         assert_eq!(tokens, 1);
         assert_eq!(meta.section, expected_section);
+    }
+
+    fn apply_symbol(tokens: &[MathToken]) -> (Vec<u8>, MathTokenResult) {
+        use super::super::super::encoder::math_engine_for_context;
+        use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};
+
+        let context = MathContext::default();
+        let mut output = Vec::new();
+        let mut state = MathEncodeState::with_context(false, context);
+        let outcome = super::MathSymbolRule
+            .apply(
+                tokens,
+                0,
+                &mut output,
+                &mut state,
+                math_engine_for_context(context),
+            )
+            .expect("math symbol should encode");
+        (output, outcome)
+    }
+
+    /// 제25항 writes the summation's bounds in a group and then leaves a blank
+    /// before the body. A summation that already has a space after it, or that
+    /// ends the expression, must not gain a second blank.
+    #[rstest::rstest]
+    #[case::runs_into_the_body(Some(MathToken::Variable('x')), true)]
+    #[case::already_spaced(Some(MathToken::Space), false)]
+    #[case::ends_the_expression(None, false)]
+    fn a_summation_separates_itself_from_the_body(
+        #[case] trailing: Option<MathToken>,
+        #[case] expects_blank: bool,
+    ) {
+        use super::super::super::parser::BracketKind;
+
+        let mut tokens = vec![
+            MathToken::MathSymbol('\u{03A3}'),
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::Variable('n'),
+            MathToken::Operator('='),
+            MathToken::Number("1".to_string()),
+            MathToken::CloseParen(BracketKind::MathParen),
+        ];
+        tokens.extend(trailing);
+
+        let (output, _) = apply_symbol(&tokens);
+
+        assert_eq!(output.last() == Some(&0), expects_blank);
+    }
+
+    /// 제53항 reads a middle dot as the multiplication sign when the same
+    /// expression also composes arithmetically, which is how derivative and
+    /// product formulas are written.
+    #[test]
+    fn a_middle_dot_multiplies_inside_an_equation() {
+        let (output, outcome) =
+            apply_symbol(&[MathToken::MathSymbol('\u{00B7}'), MathToken::Operator('=')]);
+
+        let MathTokenResult::ConsumedWithMeta { tokens, meta } = outcome else {
+            panic!("the middle dot did not report selected metadata");
+        };
+        assert_eq!(tokens, 1);
+        assert_eq!(meta.section, "53");
+        assert!(!output.is_empty());
     }
 
     // ---------------- Specialised prefix arms ----------------

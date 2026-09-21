@@ -58,14 +58,22 @@ pub(super) fn is_combining_math_mark(c: char) -> bool {
 }
 
 pub(super) fn is_middle_dot_numeric_word(chars: &[char]) -> bool {
-    let middle_dot_count = chars
+    // 제주4·3, 광주5·18 — the Korean naming the figures is often set against
+    // them in print, and that prefix is precisely what says the dot joins two
+    // parts of a name rather than multiplying. Read past it before judging the
+    // figures; a word that is Korean throughout has no figures to judge.
+    let figures = chars
+        .iter()
+        .position(|c| !is_korean_char(*c))
+        .map_or(&chars[..0], |start| &chars[start..]);
+    let middle_dot_count = figures
         .iter()
         .filter(|c| matches!(**c, '\u{00B7}' | '\u{22C5}'))
         .count();
     if middle_dot_count == 0 {
         return false;
     }
-    chars.iter().all(|c| {
+    figures.iter().all(|c| {
         c.is_ascii_digit()
             || matches!(
                 *c,
@@ -1078,6 +1086,33 @@ mod korean_prefix_sign_coverage {
             encoded.contains("\u{2800}\u{2800}"),
             is_math,
             "unexpected Article 11 boundary in {encoded}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod korean_prefixed_middle_dot {
+    /// A 가운뎃점 between figures names an event or an issue (`제주4·3`,
+    /// `10·26`), and 제5항 writes it ⠐⠆. The Korean naming the figures may be
+    /// attached to them in print, and that prefix is what says the dot is not a
+    /// product — so it must not push the word onto the math route, where 제11항
+    /// would also wrap it in two blank cells.
+    #[rstest::rstest]
+    #[case::korean_prefix_then_space("제주4·3 70주년")]
+    #[case::korean_prefix_only("가나4·3 다라")]
+    #[case::detached("제주 4·3 70주년")]
+    #[case::korean_suffix("제주4·3운동")]
+    #[case::issue_numbers("통권 제54·55·56호")]
+    fn figures_named_by_korean_keep_the_middle_dot(#[case] input: &str) {
+        let encoded = crate::encode_to_unicode(input).expect("input must encode");
+
+        assert!(
+            encoded.contains('\u{2806}'),
+            "제5항 가운뎃점 ⠐⠆ must survive: {encoded}"
+        );
+        assert!(
+            !encoded.contains("\u{2800}\u{2800}"),
+            "제11항 math boundary must not appear: {encoded}"
         );
     }
 }

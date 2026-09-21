@@ -35,6 +35,11 @@ impl MathEncodeState {
 pub enum MathTokenResult {
     /// Rule consumed N tokens (advance index by N).
     Consumed(usize),
+    /// Rule consumed tokens under one of its declared metadata variants.
+    ConsumedWithMeta {
+        tokens: usize,
+        meta: &'static crate::rules::RuleMeta,
+    },
     /// Rule did not apply. Try next rule.
     Skip,
 }
@@ -61,6 +66,11 @@ pub trait MathTokenRule: Send + Sync {
     /// [`UNDECLARED_MATH_RULE`] until someone checks the article against the PDF.
     fn meta(&self) -> &'static crate::rules::RuleMeta {
         &UNDECLARED_MATH_RULE
+    }
+
+    /// Additional articles this rule can select while dispatching variants.
+    fn variant_metas(&self) -> &'static [&'static crate::rules::RuleMeta] {
+        &[]
     }
 
     /// Priority (lower runs first). Default: 100.
@@ -107,7 +117,12 @@ impl MathTokenEngine {
 
     /// Metadata of every registered math rule, in [`RuleId`] order.
     pub(crate) fn registry(&self) -> Vec<&'static crate::rules::RuleMeta> {
-        self.rules.iter().map(|rule| rule.meta()).collect()
+        self.rules
+            .iter()
+            .flat_map(|rule| {
+                std::iter::once(rule.meta()).chain(rule.variant_metas().iter().copied())
+            })
+            .collect()
     }
 
     /// Encode a sequence of math tokens into braille bytes.
@@ -135,25 +150,48 @@ impl MathTokenEngine {
 
         while i < tokens.len() {
             let mut handled = false;
-            for (rule_index, rule) in self.rules.iter().enumerate() {
+            let mut registry_base = 0usize;
+            for rule in &self.rules {
                 let _ = rule.name();
-                if rule.matches(tokens, i, &state) {
-                    let start = result.len();
-                    let MathTokenResult::Consumed(n) =
-                        rule.apply(tokens, i, result, &mut state, self)?
-                    else {
-                        continue;
-                    };
-                    let rule_id = RuleId::math(rule_index);
-                    attempt.push(rule_id, start - attempt_base, result.len() - start);
-                    if let Some(sink) = trace.as_deref_mut() {
-                        let token_index = sink.token_index() as usize;
-                        sink.record_span(rule_id, token_index, start..result.len());
-                    }
-                    i += n;
-                    handled = true;
-                    break;
+                let variant_metas = rule.variant_metas();
+                let registry_len = 1 + variant_metas.len();
+                if !rule.matches(tokens, i, &state) {
+                    registry_base += registry_len;
+                    continue;
                 }
+
+                let start = result.len();
+                let (consumed, local_offset) =
+                    match rule.apply(tokens, i, result, &mut state, self)? {
+                        MathTokenResult::Consumed(tokens) => (tokens, 0),
+                        MathTokenResult::ConsumedWithMeta { tokens, meta } => {
+                            let local_offset = std::iter::once(rule.meta())
+                                .chain(variant_metas.iter().copied())
+                                .position(|declared| std::ptr::eq(declared, meta))
+                                .ok_or_else(|| {
+                                    format!(
+                                        "{} reported undeclared metadata: {} {}",
+                                        rule.name(),
+                                        meta.section,
+                                        meta.name
+                                    )
+                                })?;
+                            (tokens, local_offset)
+                        }
+                        MathTokenResult::Skip => {
+                            registry_base += registry_len;
+                            continue;
+                        }
+                    };
+                let rule_id = RuleId::math(registry_base + local_offset);
+                attempt.push(rule_id, start - attempt_base, result.len() - start);
+                if let Some(sink) = trace.as_deref_mut() {
+                    let token_index = sink.token_index() as usize;
+                    sink.record_span(rule_id, token_index, start..result.len());
+                }
+                i += consumed;
+                handled = true;
+                break;
             }
             if !handled {
                 return Err(format!(
@@ -193,6 +231,140 @@ impl MathTokenEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::rules::RuleMeta;
+    use crate::rules::trace::Trace;
+
+    static PRIMARY_META: RuleMeta = RuleMeta {
+        section: "101",
+        subsection: None,
+        name: "test_primary",
+        standard_ref: "test primary",
+        description: "test primary",
+    };
+    static SECONDARY_META: RuleMeta = RuleMeta {
+        section: "102",
+        subsection: None,
+        name: "test_secondary",
+        standard_ref: "test secondary",
+        description: "test secondary",
+    };
+    static FOLLOWING_META: RuleMeta = RuleMeta {
+        section: "103",
+        subsection: None,
+        name: "test_following",
+        standard_ref: "test following",
+        description: "test following",
+    };
+    static FOREIGN_META: RuleMeta = RuleMeta {
+        section: "104",
+        subsection: None,
+        name: "test_foreign",
+        standard_ref: "test foreign",
+        description: "test foreign",
+    };
+    static VARIANT_METAS: [&RuleMeta; 1] = [&SECONDARY_META];
+
+    struct VariantRule;
+
+    impl MathTokenRule for VariantRule {
+        fn name(&self) -> &'static str {
+            "VariantRule"
+        }
+
+        fn meta(&self) -> &'static RuleMeta {
+            &PRIMARY_META
+        }
+
+        fn variant_metas(&self) -> &'static [&'static RuleMeta] {
+            &VARIANT_METAS
+        }
+
+        fn priority(&self) -> u16 {
+            10
+        }
+
+        fn matches(&self, tokens: &[MathToken], index: usize, _state: &MathEncodeState) -> bool {
+            matches!(tokens.get(index), Some(MathToken::Variable(_)))
+        }
+
+        fn apply(
+            &self,
+            _tokens: &[MathToken],
+            _index: usize,
+            result: &mut Vec<u8>,
+            _state: &mut MathEncodeState,
+            _engine: &MathTokenEngine,
+        ) -> Result<MathTokenResult, String> {
+            result.push(1);
+            Ok(MathTokenResult::ConsumedWithMeta {
+                tokens: 1,
+                meta: &SECONDARY_META,
+            })
+        }
+    }
+
+    struct FollowingRule;
+
+    impl MathTokenRule for FollowingRule {
+        fn name(&self) -> &'static str {
+            "FollowingRule"
+        }
+
+        fn meta(&self) -> &'static RuleMeta {
+            &FOLLOWING_META
+        }
+
+        fn priority(&self) -> u16 {
+            20
+        }
+
+        fn matches(&self, tokens: &[MathToken], index: usize, _state: &MathEncodeState) -> bool {
+            matches!(tokens.get(index), Some(MathToken::Number(_)))
+        }
+
+        fn apply(
+            &self,
+            _tokens: &[MathToken],
+            _index: usize,
+            result: &mut Vec<u8>,
+            _state: &mut MathEncodeState,
+            _engine: &MathTokenEngine,
+        ) -> Result<MathTokenResult, String> {
+            result.push(2);
+            Ok(MathTokenResult::Consumed(1))
+        }
+    }
+
+    struct UndeclaredMetaRule;
+
+    impl MathTokenRule for UndeclaredMetaRule {
+        fn name(&self) -> &'static str {
+            "UndeclaredMetaRule"
+        }
+
+        fn meta(&self) -> &'static RuleMeta {
+            &PRIMARY_META
+        }
+
+        fn matches(&self, tokens: &[MathToken], index: usize, _state: &MathEncodeState) -> bool {
+            matches!(tokens.get(index), Some(MathToken::Variable(_)))
+        }
+
+        fn apply(
+            &self,
+            _tokens: &[MathToken],
+            _index: usize,
+            result: &mut Vec<u8>,
+            _state: &mut MathEncodeState,
+            _engine: &MathTokenEngine,
+        ) -> Result<MathTokenResult, String> {
+            result.push(1);
+            Ok(MathTokenResult::ConsumedWithMeta {
+                tokens: 1,
+                meta: &FOREIGN_META,
+            })
+        }
+    }
 
     /// `MathTokenRule::priority()` default implementation returns 100.
     /// Exercised by a dummy rule that doesn't override `priority()`.
@@ -225,6 +397,73 @@ mod tests {
         }
         let r = DummyRule;
         assert_eq!(r.priority(), 100);
+        assert!(r.variant_metas().is_empty());
+    }
+
+    #[test]
+    fn registry_flattens_primary_then_variant_metadata_per_rule() {
+        let mut engine = MathTokenEngine::with_context(MathContext::default());
+        engine.register(Box::new(FollowingRule));
+        engine.register(Box::new(VariantRule));
+        engine.finalize();
+
+        let registry = engine.registry();
+
+        assert_eq!(registry.len(), 3);
+        assert!(std::ptr::eq(registry[0], &PRIMARY_META));
+        assert!(std::ptr::eq(registry[1], &SECONDARY_META));
+        assert!(std::ptr::eq(registry[2], &FOLLOWING_META));
+    }
+
+    #[test]
+    fn traced_variant_uses_its_secondary_registry_slot() {
+        let mut engine = MathTokenEngine::with_context(MathContext::default());
+        engine.register(Box::new(VariantRule));
+        engine.finalize();
+        let mut output = Vec::new();
+        let mut trace = Trace::default();
+        let mut sink = TraceSink::new(&mut trace);
+
+        engine
+            .encode_tokens_traced(&[MathToken::Variable('x')], &mut output, Some(&mut sink))
+            .unwrap();
+
+        assert_eq!(trace.events()[0].rule, RuleId::math(1));
+    }
+
+    #[test]
+    fn traced_rule_after_variant_rule_uses_flattened_registry_base() {
+        let mut engine = MathTokenEngine::with_context(MathContext::default());
+        engine.register(Box::new(FollowingRule));
+        engine.register(Box::new(VariantRule));
+        engine.finalize();
+        let mut output = Vec::new();
+        let mut trace = Trace::default();
+        let mut sink = TraceSink::new(&mut trace);
+
+        engine
+            .encode_tokens_traced(
+                &[MathToken::Number("1".to_string())],
+                &mut output,
+                Some(&mut sink),
+            )
+            .unwrap();
+
+        assert_eq!(trace.events()[0].rule, RuleId::math(2));
+    }
+
+    #[test]
+    fn encoded_variant_rejects_metadata_the_rule_never_declared() {
+        let mut engine = MathTokenEngine::with_context(MathContext::default());
+        engine.register(Box::new(UndeclaredMetaRule));
+        engine.finalize();
+        let mut output = Vec::new();
+
+        let error = engine
+            .encode_tokens(&[MathToken::Variable('x')], &mut output)
+            .unwrap_err();
+
+        assert!(error.contains("UndeclaredMetaRule reported undeclared metadata"));
     }
 
     /// math_token_rule.rs line 97 - `MathTokenEngine.encode_tokens` returns Err

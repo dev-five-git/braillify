@@ -14,6 +14,36 @@ use super::{
     rule_54, rule_57,
 };
 use crate::math_symbol_shortcut;
+use crate::rules::RuleMeta;
+
+static DIGIT_SEPARATOR_META: RuleMeta = RuleMeta {
+    section: "41",
+    subsection: None,
+    name: "math_digit_separator",
+    standard_ref: "2024 Korean Braille Standard, 수학 제41항",
+    description: "Comma and grouping point between digits",
+};
+
+static SPACE_META: RuleMeta = RuleMeta {
+    section: "11",
+    subsection: None,
+    name: "math_expression_spacing",
+    standard_ref: "2024 Korean Braille Standard, 수학 제11항",
+    description: "Spacing around mathematical expressions",
+};
+
+static KOREAN_WORD_META: RuleMeta = RuleMeta {
+    section: "6",
+    subsection: None,
+    name: "math_korean_word",
+    standard_ref: "2024 Korean Braille Standard, 수학 제6항",
+    description: "Korean text and grouping brackets inside mathematics",
+};
+
+static RAW_TOKEN_VARIANT_METAS: &[&RuleMeta] = &[
+    &math_symbol_shortcut::META_KOREAN_51,
+    &math_symbol_shortcut::META_KOREAN_59,
+];
 
 struct DigitSeparatorRule;
 
@@ -21,13 +51,17 @@ pub(super) fn encode_generic_math_symbol(
     c: char,
     _is_direct_shortcut_symbol: bool,
     result: &mut Vec<u8>,
-) -> Result<(), String> {
-    let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
-    result.extend_from_slice(encoded);
-    Ok(())
+) -> Result<&'static crate::rules::RuleMeta, String> {
+    let shortcut = math_symbol_shortcut::math_symbol_shortcut(c)?;
+    result.extend_from_slice(shortcut.cells);
+    Ok(shortcut.fallback_meta)
 }
 
 impl MathTokenRule for DigitSeparatorRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &DIGIT_SEPARATOR_META
+    }
+
     fn name(&self) -> &'static str {
         "DigitSeparatorRule"
     }
@@ -113,6 +147,10 @@ fn should_suppress_space(tokens: &[MathToken], index: usize) -> bool {
 }
 
 impl MathTokenRule for SpaceRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &SPACE_META
+    }
+
     fn name(&self) -> &'static str {
         "SpaceRule"
     }
@@ -259,6 +297,10 @@ fn should_suppress_after_operator(tokens: &[MathToken], index: usize) -> bool {
 }
 
 impl MathTokenRule for KoreanWordRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &KOREAN_WORD_META
+    }
+
     fn name(&self) -> &'static str {
         "KoreanWordRule"
     }
@@ -302,6 +344,14 @@ use symbol_rule::MathSymbolRule;
 struct RawTokenRule;
 
 impl MathTokenRule for RawTokenRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &math_symbol_shortcut::META_KOREAN_49
+    }
+
+    fn variant_metas(&self) -> &'static [&'static RuleMeta] {
+        RAW_TOKEN_VARIANT_METAS
+    }
+
     fn name(&self) -> &'static str {
         "RawTokenRule"
     }
@@ -325,13 +375,17 @@ impl MathTokenRule for RawTokenRule {
         let Some(MathToken::Raw(c)) = tokens.get(index) else {
             return Ok(MathTokenResult::Skip);
         };
-        // PDF — 수학 컨텍스트 내 일반 구두점 중 PDF 65항 등에서 정의된 것만 처리한다.
+        // PDF 한글 제49·51·59항 — 수학 입력 안의 물음표·느낌표·쌍점·쌍반점.
         // 무차별 fallback은 다른 컨텍스트(예: 인용 부호)와 충돌하므로 명시적 매핑으로 한정.
-        if matches!(*c, ':' | ';' | '?' | '!')
-            && let Ok(encoded) = crate::symbol_shortcut::encode_char_symbol_shortcut(*c)
-        {
+        let meta = match *c {
+            '?' | '!' => &math_symbol_shortcut::META_KOREAN_49,
+            ':' => &math_symbol_shortcut::META_KOREAN_51,
+            ';' => &math_symbol_shortcut::META_KOREAN_59,
+            _ => return Err(format!("Unrecognized math character: '{}'", c)),
+        };
+        if let Ok(encoded) = crate::symbol_shortcut::encode_char_symbol_shortcut(*c) {
             result.extend_from_slice(encoded);
-            return Ok(MathTokenResult::Consumed(1));
+            return Ok(MathTokenResult::ConsumedWithMeta { tokens: 1, meta });
         }
         Err(format!("Unrecognized math character: '{}'", c))
     }
@@ -749,6 +803,7 @@ mod tests {
         let rule = SpaceRule;
         assert_eq!(rule.name(), "SpaceRule");
         assert_eq!(rule.priority(), 50);
+        assert_eq!(rule.meta().section, "11");
     }
 
     /// DigitSeparatorRule metadata must remain stable.
@@ -757,6 +812,7 @@ mod tests {
         let rule = DigitSeparatorRule;
         assert_eq!(rule.name(), "DigitSeparatorRule");
         assert_eq!(rule.priority(), 50);
+        assert_eq!(rule.meta().section, "41");
         let state = MathEncodeState::with_context(false, MathContext::default());
         // matches returns true ONLY for DigitSeparator.
         let yes = vec![MathToken::DigitSeparator];
@@ -1037,6 +1093,7 @@ mod tests {
         let rule = KoreanWordRule;
         assert_eq!(rule.name(), "KoreanWordRule");
         assert_eq!(rule.priority(), 50);
+        assert_eq!(rule.meta().section, "6");
         let state = MathEncodeState::with_context(false, MathContext::default());
         let yes = vec![kw("원")];
         assert!(rule.matches(&yes, 0, &state));
@@ -1051,6 +1108,14 @@ mod tests {
         let rule = RawTokenRule;
         assert_eq!(rule.name(), "RawTokenRule");
         assert_eq!(rule.priority(), 500);
+        assert_eq!(rule.meta().section, "49");
+        assert_eq!(
+            rule.variant_metas()
+                .iter()
+                .map(|meta| meta.section)
+                .collect::<Vec<_>>(),
+            vec!["51", "59"]
+        );
         let state = MathEncodeState::with_context(false, MathContext::default());
         let yes = vec![MathToken::Raw('?')];
         assert!(rule.matches(&yes, 0, &state));
@@ -1205,6 +1270,44 @@ mod tests {
         });
     }
 
+    #[rstest::rstest]
+    #[case::matrix(MathContext {
+        matrix_context_active: true,
+        math_mode_active: false,
+    })]
+    #[case::math_mode(MathContext {
+        matrix_context_active: false,
+        math_mode_active: true,
+    })]
+    #[case::matrix_math_mode(MathContext {
+        matrix_context_active: true,
+        math_mode_active: true,
+    })]
+    fn every_context_engine_exposes_the_same_flattened_registry(#[case] context: MathContext) {
+        let default_registry = math_engine_for_context(MathContext::default()).registry();
+        let context_registry = math_engine_for_context(context).registry();
+
+        assert_eq!(context_registry.len(), default_registry.len());
+        assert!(
+            context_registry
+                .iter()
+                .zip(default_registry)
+                .all(|(actual, expected)| std::ptr::eq(*actual, expected))
+        );
+    }
+
+    #[test]
+    fn flattened_registry_has_one_explicit_unresolved_symbol_slot() {
+        let unresolved = math_rule_registry()
+            .into_iter()
+            .filter(|meta| {
+                std::ptr::eq(*meta, &super::super::math_token_rule::UNDECLARED_MATH_RULE)
+            })
+            .count();
+
+        assert_eq!(unresolved, 1);
+    }
+
     /// `KoreanWordRule.apply` defensive Skip when token is not KoreanWord.
     /// `matches()` guarantees correctness; the Skip arm is type-safety only.
     #[test]
@@ -1283,6 +1386,32 @@ mod tests {
 
         assert!(res.is_err());
         assert!(result.is_empty());
+    }
+
+    #[rstest::rstest]
+    #[case::question('?', "49")]
+    #[case::exclamation('!', "49")]
+    #[case::colon(':', "51")]
+    #[case::semicolon(';', "59")]
+    fn raw_token_rule_reports_korean_punctuation_article(
+        #[case] symbol: char,
+        #[case] expected_section: &str,
+    ) {
+        let context = MathContext::default();
+        let engine = MathTokenEngine::with_context(context);
+        let tokens = [MathToken::Raw(symbol)];
+        let mut state = MathEncodeState::with_context(false, context);
+        let mut output = Vec::new();
+
+        let outcome = RawTokenRule
+            .apply(&tokens, 0, &mut output, &mut state, &engine)
+            .expect("supported punctuation should encode");
+
+        let MathTokenResult::ConsumedWithMeta { tokens, meta } = outcome else {
+            panic!("raw punctuation did not report selected metadata");
+        };
+        assert_eq!(tokens, 1);
+        assert_eq!(meta.section, expected_section);
     }
 
     /// encoder.rs line 348 — `encode_math_expression_with_context` Roman numeral fast-path

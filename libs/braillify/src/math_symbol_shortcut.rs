@@ -204,6 +204,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '+' => &[decode_unicode('⠢')],
         '\u{2212}' => &[decode_unicode('⠔')],
         '\u{00D7}' => &[decode_unicode('⠡')],
+        '\u{2A09}' => &[decode_unicode('⠡')],
         '\u{00F7}' => &[decode_unicode('⠌'), decode_unicode('⠌')],
         '\u{00B1}' => &[decode_unicode('⠢'), decode_unicode('⠔')],
     },
@@ -234,6 +235,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     },
     &META_38 => {
         '\u{2192}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{27F6}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
         '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
     },
     &META_37 => {
@@ -348,6 +350,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '\u{221A}' => &[decode_unicode('⠜')],
     },
     &META_27 => {
+        '\u{2223}' => &[decode_unicode('⠳')],
         '\u{2224}' => &[decode_unicode('⠨'), decode_unicode('⠳')],
     },
     &META_39 => {
@@ -569,6 +572,30 @@ mod test {
     #[case::not_implies('⇏', "61")]
     fn cell_matched_shortcuts_name_their_article(#[case] symbol: char, #[case] section: &str) {
         assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
+    }
+
+    /// Longer and n-ary glyphs of a symbol the standard already defines mean the
+    /// same thing, so they take the same cells and the same article. Chemistry
+    /// writes its reaction arrow long and its product sign n-ary, which is the
+    /// only reason these code points reach us at all.
+    #[rstest::rstest]
+    #[case::long_rightwards_arrow('\u{27F6}', '\u{2192}')]
+    #[case::n_ary_times('\u{2A09}', '\u{00D7}')]
+    fn a_glyph_variant_matches_the_symbol_it_varies(#[case] variant: char, #[case] base: char) {
+        assert_eq!(SHORTCUT_MAP[&variant].cells, SHORTCUT_MAP[&base].cells);
+        assert_eq!(
+            SHORTCUT_MAP[&variant].fallback_meta.section,
+            SHORTCUT_MAP[&base].fallback_meta.section
+        );
+    }
+
+    /// 제27항 writes 나누어떨어진다 as `\` and negates it to `.\`, so the plain
+    /// sign is the negated one without its leading dot.
+    #[test]
+    fn divides_is_the_undotted_form_of_does_not_divide() {
+        let divides = SHORTCUT_MAP[&'\u{2223}'].cells;
+        let does_not = SHORTCUT_MAP[&'\u{2224}'].cells;
+        assert_eq!(does_not, [decode_unicode('⠨'), divides[0]]);
     }
 
     /// `is_math_symbol_char` true 케이스 — 연산자/그리스/집합/미적분 기호 전체.

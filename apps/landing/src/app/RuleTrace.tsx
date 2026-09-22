@@ -112,6 +112,9 @@ export function readTrace(result: TraceResult): TraceSnapshot {
  * 규칙이 도는 엔진과 규칙이 구현하는 규정의 계열은 서로 다를 수 있다. 동그라미
  * 숫자는 수식 안에서 만나도 한글 제64항이고, 수학 제64항은 햇(단위 벡터)이다.
  * 그래서 계열은 엔진(`kind`)이 아니라 규칙이 밝힌 출처(`standardRef`)에서 읽는다.
+ *
+ * 한 판단이 여러 항에 걸칠 때는 `, `로 이어 적는다. 국립국어원 회신(2026-09-21)이
+ * 그런 경우 항을 하나만 고르지 말고 "다 적으라"고 했다.
  */
 function sectionLabel(
   section: string,
@@ -119,10 +122,25 @@ function sectionLabel(
   standardRef: string,
 ): string | null {
   if (section === '-') return null
-  if (standardRef.includes('한글 제')) return `한글 제${section}항`
-  if (standardRef.includes('수학 제')) return `수학 제${section}항`
-  if (kind === 'english-ueb') return `§${section}`
-  return kind === 'math' ? `수학 제${section}항` : `제${section}항`
+
+  const series = standardRef.includes('한글 제')
+    ? '한글 '
+    : standardRef.includes('수학 제')
+      ? '수학 '
+      : kind === 'math'
+        ? '수학 '
+        : ''
+
+  if (kind === 'english-ueb' && series === '') {
+    return section
+      .split(', ')
+      .map((one) => `§${one}`)
+      .join('·')
+  }
+  return section
+    .split(', ')
+    .map((one) => `${series}제${one}항`)
+    .join('·')
 }
 
 /** 반열린 구간 `[start, end)`를 1부터 세는 사람 기준 표기로 옮긴다. */

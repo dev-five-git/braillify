@@ -635,15 +635,33 @@ mod tests {
     }
 
     /// A section is an article number (`46`), a dotted RUEB section (`14.6.2`),
-    /// or `-` for output the standard prescribes without giving it an article,
-    /// such as the blank between words. Anything else is a rule that never had
-    /// its article checked.
+    /// several of either separated by `, ` when one decision rests on more than
+    /// one article, or `-` for output the standard prescribes without giving it
+    /// an article. Anything else is a rule that never had its article checked.
     fn names_an_article(section: &str) -> bool {
-        section == "-"
-            || (section.starts_with(|c: char| c.is_ascii_digit())
-                && section.ends_with(|c: char| c.is_ascii_digit())
-                && section.chars().all(|c| c.is_ascii_digit() || c == '.')
-                && !section.contains(".."))
+        section == "-" || section.split(", ").all(names_one_article)
+    }
+
+    fn names_one_article(article: &str) -> bool {
+        article.starts_with(|c: char| c.is_ascii_digit())
+            && article.ends_with(|c: char| c.is_ascii_digit())
+            && article.chars().all(|c| c.is_ascii_digit() || c == '.')
+            && !article.contains("..")
+    }
+
+    /// 국립국어원 answered on 2026-09-21 that a cell decided by several articles
+    /// should name them all. A section may therefore carry a list, and the guard
+    /// has to accept it without also accepting a rule that never chose one.
+    #[rstest::rstest]
+    #[case::single("46", true)]
+    #[case::dotted("14.6.2", true)]
+    #[case::structural("-", true)]
+    #[case::several("33, 34, 49", true)]
+    #[case::placeholder("?", false)]
+    #[case::a_word("fraction", false)]
+    #[case::half_a_list("33, ", false)]
+    fn a_section_is_one_article_or_a_list_of_them(#[case] section: &str, #[case] valid: bool) {
+        assert_eq!(names_an_article(section), valid);
     }
 
     /// Every rule the tracer can credit names the article it implements, so a

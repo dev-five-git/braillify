@@ -233,7 +233,7 @@ fn has_nemeth_span(input: &str) -> bool {
 /// they are recorded as they are appended rather than left for a later pass to
 /// guess at.
 fn push_nemeth(out: &mut Vec<u8>, cells: &[u8]) {
-    super::push_direct(out, super::UebMoveSource::InlineNemethCode, cells);
+    super::push_direct_unplaced(out, super::UebMoveSource::InlineNemethCode, cells);
 }
 
 fn encode_nemeth_spans(

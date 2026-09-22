@@ -393,8 +393,16 @@ impl EnglishUebEngine {
             // better convey the print meaning than a capitals-word indicator plus
             // terminator.  Plural/suffix acronyms (`CDs`, `OKd`) remain under §8.6.3.
             for &c in &chars[..2] {
-                out.push(CAPITAL);
-                out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+                super::super::push_indicator(
+                    out,
+                    super::super::UebMoveSource::CapitalLetterIndicator,
+                    &[CAPITAL],
+                );
+                super::super::push_direct(
+                    out,
+                    super::super::UebMoveSource::Letter,
+                    &[crate::english::encode_english(c.to_ascii_lowercase()).ok()?],
+                );
             }
             let suffix: Vec<char> = chars[2..].iter().flat_map(|c| c.to_lowercase()).collect();
             out.extend(

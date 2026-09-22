@@ -79,6 +79,12 @@ struct WordAttempt {
 struct NonWordAttempt {
     cells: Vec<u8>,
     rule: crate::rules::trace::RuleId,
+    /// Where the cells were written, when they went straight into the selected
+    /// output. A one-cell indicator such as `⠠` recurs all over a capitalised
+    /// line, so looking for it afterwards finds an earlier occurrence than the
+    /// one this record wrote. `None` marks a record taken against a buffer that
+    /// is appended elsewhere, whose final position is not known here.
+    offset: Option<usize>,
 }
 
 /// Accumulates the moves of one word-encoding attempt.
@@ -185,32 +191,19 @@ fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
     let mut direct_cursor = 0usize;
     for record in records {
         if let AttributionRecord::Direct(direct) = record
-            && let Some(base) = find_from(cells, &direct.cells, direct_cursor)
+            && let Some(range) = locate(cells, direct, &mut direct_cursor, &[])
         {
-            let end = base + direct.cells.len();
-            direct_spans.push((direct.rule, base as u32..end as u32));
-            direct_cursor = end;
+            direct_spans.push((direct.rule, range));
         }
     }
 
     let mut indicator_spans = Vec::new();
     let mut indicator_cursor = 0usize;
     for record in records {
-        match record {
-            AttributionRecord::Word(_) | AttributionRecord::Direct(_) => {}
-            AttributionRecord::Indicator(indicator) => {
-                if let Some(base) =
-                    find_from_outside(cells, &indicator.cells, indicator_cursor, &direct_spans)
-                {
-                    let end = base + indicator.cells.len();
-                    push_without_indicators(
-                        &mut indicator_spans,
-                        (indicator.rule, base as u32..end as u32),
-                        &direct_spans,
-                    );
-                    indicator_cursor = end;
-                }
-            }
+        if let AttributionRecord::Indicator(indicator) = record
+            && let Some(range) = locate(cells, indicator, &mut indicator_cursor, &direct_spans)
+        {
+            push_without_indicators(&mut indicator_spans, (indicator.rule, range), &direct_spans);
         }
     }
 
@@ -249,6 +242,36 @@ fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
             .map(|(index, _)| (blank, index as u32..index as u32 + 1)),
     );
     spans
+}
+
+/// Where a record's cells sit in the finished output.
+///
+/// The position it was written at wins when the output still carries those
+/// cells there and nothing already claims them. Searching is the fallback, and
+/// the only option for a record taken against a buffer appended elsewhere.
+fn locate(
+    cells: &[u8],
+    record: &NonWordAttempt,
+    cursor: &mut usize,
+    excluded: &[UebSpan],
+) -> Option<core::ops::Range<u32>> {
+    let len = record.cells.len();
+    if let Some(offset) = record.offset
+        && cells.get(offset..offset + len) == Some(record.cells.as_slice())
+        && !excluded
+            .iter()
+            .any(|(_, taken)| taken.start < (offset + len) as u32 && (offset as u32) < taken.end)
+    {
+        *cursor = offset + len;
+        return Some(offset as u32..(offset + len) as u32);
+    }
+    let base = if excluded.is_empty() {
+        find_from(cells, &record.cells, *cursor)?
+    } else {
+        find_from_outside(cells, &record.cells, *cursor, excluded)?
+    };
+    *cursor = base + len;
+    Some(base as u32..(base + len) as u32)
 }
 
 fn push_without_indicators(spans: &mut Vec<UebSpan>, candidate: UebSpan, indicators: &[UebSpan]) {
@@ -379,32 +402,42 @@ pub(super) fn record_whole_word(source: UebMoveSource, cells: &[u8]) {
 }
 
 pub(super) fn push_indicator(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    let offset = Some(out.len());
     out.extend_from_slice(cells);
-    ATTRIBUTIONS.with(|slot| {
-        if let Ok(mut slot) = slot.try_borrow_mut()
-            && let Some(records) = slot.as_mut()
-        {
-            records.push(AttributionRecord::Indicator(NonWordAttempt {
-                cells: cells.to_vec(),
-                rule: crate::rules::trace::RuleId::ueb(source as usize),
-            }));
-        }
-    });
+    push_record(source, cells, offset, AttributionRecord::Indicator);
 }
 
 pub(super) fn push_direct(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    let offset = Some(out.len());
     out.extend_from_slice(cells);
-    record_direct(source, cells);
+    push_record(source, cells, offset, AttributionRecord::Direct);
 }
 
-pub(super) fn record_direct(source: UebMoveSource, cells: &[u8]) {
+/// [`push_direct`] for a buffer that is appended into the output later, where
+/// the position here would not be the position the cells end up at.
+pub(super) fn push_direct_unplaced(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    out.extend_from_slice(cells);
+    push_record(source, cells, None, AttributionRecord::Direct);
+}
+
+pub(super) fn record_direct(source: UebMoveSource, cells: &[u8], offset: usize) {
+    push_record(source, cells, Some(offset), AttributionRecord::Direct);
+}
+
+fn push_record(
+    source: UebMoveSource,
+    cells: &[u8],
+    offset: Option<usize>,
+    wrap: fn(NonWordAttempt) -> AttributionRecord,
+) {
     ATTRIBUTIONS.with(|slot| {
         if let Ok(mut slot) = slot.try_borrow_mut()
             && let Some(records) = slot.as_mut()
         {
-            records.push(AttributionRecord::Direct(NonWordAttempt {
+            records.push(wrap(NonWordAttempt {
                 cells: cells.to_vec(),
                 rule: crate::rules::trace::RuleId::ueb(source as usize),
+                offset,
             }));
         }
     });
@@ -1226,6 +1259,25 @@ mod encode_pipeline_tests {
             expected_technical_cells,
             "events={:?}",
             trace.events()
+        );
+    }
+
+    /// §8.8.2 gives a two-letter chemical symbol its capitals one at a time
+    /// (`CCl`, `HCl`). Those indicators and letters are written straight into
+    /// the output, so each must claim the cell it wrote.
+    #[rstest::rstest]
+    #[case::two_letter_symbols("SO<sub>2</sub>, CCl<sub>4</sub>, HCl, $SF_{6}$")]
+    fn every_cell_of_a_chemical_line_names_a_rule(#[case] input: &str) {
+        let (cells, trace) = crate::encode_with_trace(input).expect("input must encode");
+        let untraced = crate::encode(input).expect("input must encode untraced");
+
+        assert_eq!(cells, untraced, "trace collection must not change output");
+        assert_eq!(
+            trace.unattributed_cells(),
+            0,
+            "{} of {} cells name no rule",
+            trace.unattributed_cells(),
+            cells.len()
         );
     }
 

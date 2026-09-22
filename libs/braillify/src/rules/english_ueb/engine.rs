@@ -66,7 +66,7 @@ fn settle_inline_technical_attribution(start: Option<(usize, usize)>, out: &[u8]
         && out.len() > start
     {
         super::rollback_attributions(checkpoint);
-        super::record_direct(super::UebMoveSource::InlineNemethCode, &out[start..]);
+        super::record_direct(super::UebMoveSource::InlineNemethCode, &out[start..], start);
     }
 }
 

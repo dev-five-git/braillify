@@ -1,19 +1,10 @@
 [
   {
-    "input": ";",
-    "note": "PDF 과학 제7항 3. 아래 첨자 기호 정의",
-    "internal": ";",
-    "expected": "48",
-    "unicode": "⠰",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
     "input": "O₂",
-    "note": "PDF 과학 제7항 3. 아래 첨자 예제",
-    "internal": ",o;#b",
-    "expected": "322148603",
-    "unicode": "⠠⠕⠰⠼⠃",
+    "note": "PDF 한글 제68항 — 아래 첨자는 ; 뒤에 내용. 로마자표 0 포함 (B₆ 0,b;#f 와 같은 형태)",
+    "internal": "0,o;#b",
+    "expected": "52322148603",
+    "unicode": "⠴⠠⠕⠰⠼⠃",
     "world": "",
     "jeomsarang": ""
   },

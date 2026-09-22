@@ -9,7 +9,7 @@
     "jeomsarang": ""
   },
   {
-    "input": "7Li",
+    "input": "⁷Li",
     "note": "PDF 과학 제3항 질량수 예제",
     "internal": ",li~#g",
     "expected": "32710246027",
@@ -18,7 +18,7 @@
     "jeomsarang": ""
   },
   {
-    "input": "8O",
+    "input": "₈O",
     "note": "PDF 과학 제3항 원자 번호 예제",
     "internal": ",o;#h",
     "expected": "3221486019",

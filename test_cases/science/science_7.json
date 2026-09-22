@@ -9,7 +9,7 @@
     "jeomsarang": ""
   },
   {
-    "input": "O2",
+    "input": "O₂",
     "note": "PDF 과학 제7항 3. 아래 첨자 예제",
     "internal": ",o;#b",
     "expected": "322148603",
@@ -18,7 +18,7 @@
     "jeomsarang": ""
   },
   {
-    "input": "Ca(OH)2",
+    "input": "Ca(OH)₂",
     "note": "PDF 과학 제7항 4. 괄호는 수학 제6항에 따른다",
     "internal": ",ca8,o,h0;#b",
     "expected": "329138322132195248603",
@@ -27,7 +27,7 @@
     "jeomsarang": ""
   },
   {
-    "input": "[Cu(NH3)4](OH)2",
+    "input": "[Cu(NH₃)₄](OH)₂",
     "note": "PDF 과학 제7항 4. 대괄호 예제",
     "internal": "(',cu8,n,h;#c0;#d,)8,o,h0;#b",
     "expected": "5543293738322932194860952486025326238322132195248603",

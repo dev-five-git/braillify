@@ -646,13 +646,10 @@ mod tests {
                 && !section.contains(".."))
     }
 
-    /// Every rule the tracer can credit must name the article it implements, so
-    /// a reader can check the transcription against the standard. Two symbols
-    /// genuinely have none — `∏`, which the standard never mentions, and `⸩`,
-    /// which stands in for a LaTeX delimiter that prints nothing — and they are
-    /// reached through one slot that is allowed to say so. Listing that slot
-    /// here rather than skipping placeholders means a newly undeclared rule
-    /// turns this red, and retiring the last placeholder does too.
+    /// Every rule the tracer can credit names the article it implements, so a
+    /// reader can always check the transcription against the standard. The
+    /// expected list is empty rather than absent: a newly undeclared rule turns
+    /// this red, and so does adding a placeholder back.
     #[test]
     fn every_registered_rule_names_its_article() {
         let kinds = [
@@ -675,9 +672,8 @@ mod tests {
 
         assert_eq!(
             unnamed,
-            vec![(RuleKind::Math, "undeclared_math_rule", "?")],
-            "every registered rule must cite an article; only the documented \
-             placeholder may not"
+            Vec::new(),
+            "every registered rule must cite an article"
         );
     }
 

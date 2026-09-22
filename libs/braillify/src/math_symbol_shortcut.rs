@@ -1,7 +1,6 @@
 use phf::phf_map;
 
 use crate::rules::RuleMeta;
-use crate::rules::math::math_token_rule::UNDECLARED_MATH_RULE;
 use crate::unicode::decode_unicode;
 
 #[derive(Debug, Clone, Copy)]
@@ -29,6 +28,7 @@ math_meta! {
     (META_3, "3", "math_equality_symbol", "Equality symbols"),
     (META_4, "4", "math_comparison_symbol", "Comparison symbols"),
     (META_5, "5", "math_ratio_symbol", "Ratio and proportion symbols"),
+    (META_6, "6", "math_bracket_symbol", "Brackets, including the simultaneous-equation brace"),
     (META_7, "7", "math_fraction_symbol", "Fraction notation"),
     (META_9, "9", "math_repeating_decimal", "Repeating decimal marks"),
     (META_10, "10", "math_arrow_symbol", "Arrow symbols"),
@@ -173,7 +173,7 @@ pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
     &META_KOREAN_53,
     &META_KOREAN_64,
     &META_KOREAN_69_APPENDIX_2,
-    &UNDECLARED_MATH_RULE,
+    &META_6,
 ];
 
 macro_rules! shortcut_map {
@@ -311,7 +311,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '\u{2099}' => &[decode_unicode('⠰'), decode_unicode('⠝')],
         '\u{208A}' => &[decode_unicode('⠰'), decode_unicode('⠢')],
     },
-    &UNDECLARED_MATH_RULE => {
+    &META_6 => {
         '\u{2E29}' => &[decode_unicode('⠄')],
     },
     &META_34 => {
@@ -538,26 +538,26 @@ pub fn is_math_symbol_char(text: char) -> bool {
 mod test {
     use super::*;
 
-    const UNRESOLVED_SYMBOLS: &[char] = &['∏', '⇏', '≁', 'ᶜ', 'ℛ', '⁄', '⸩'];
-
+    /// Every character the table can encode names the article that grants it
+    /// those cells. Nothing is exempt: a symbol the standard does not define is
+    /// absent from the table rather than present with an unknown article.
     #[test]
-    fn every_resolved_shortcut_declares_a_real_fallback_article() {
-        let missing = SHORTCUT_MAP.entries().find(|(symbol, shortcut)| {
-            !UNRESOLVED_SYMBOLS.contains(symbol) && shortcut.fallback_meta.section == "?"
-        });
+    fn every_shortcut_declares_a_real_article() {
+        let missing = SHORTCUT_MAP
+            .entries()
+            .find(|(_, shortcut)| shortcut.fallback_meta.section == "?");
 
-        assert!(
-            missing.is_none(),
-            "resolved shortcut without article: {missing:?}"
-        );
+        assert!(missing.is_none(), "shortcut without article: {missing:?}");
     }
 
-    /// `⸩` stands in for LaTeX's `\right.` null delimiter, which prints nothing
-    /// for an article to govern, so it keeps the placeholder rather than
-    /// borrowing an article by resemblance.
+    /// 제6항 1 lists 연립식 괄호 as `7'` and closes it with `,7`. LaTeX writes
+    /// the opening half as `\left\{ ... \right.`, so the sentinel standing for
+    /// `\right.` carries the brace's second cell and belongs to that article —
+    /// it is not a delimiter that prints nothing.
     #[test]
-    fn the_null_delimiter_keeps_the_honest_placeholder() {
-        assert_eq!(SHORTCUT_MAP[&'⸩'].fallback_meta.section, "?");
+    fn the_simultaneous_equation_brace_cites_article_6() {
+        assert_eq!(SHORTCUT_MAP[&'⸩'].fallback_meta.section, "6");
+        assert_eq!(SHORTCUT_MAP[&'⸩'].cells, [decode_unicode('⠄')]);
     }
 
     /// 국립국어원 ruled on 2026-09-21 that the n-ary product cannot be

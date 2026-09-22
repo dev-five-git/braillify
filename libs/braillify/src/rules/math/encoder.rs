@@ -1296,8 +1296,12 @@ mod tests {
         );
     }
 
+    /// The placeholder exists as the trait's default so a rule that never chose
+    /// an article is reported as unattributed rather than credited to one. No
+    /// registered rule keeps it: every article the math engine can report has
+    /// been checked against the standard.
     #[test]
-    fn flattened_registry_has_one_explicit_unresolved_symbol_slot() {
+    fn no_registered_math_rule_keeps_the_placeholder() {
         let unresolved = math_rule_registry()
             .into_iter()
             .filter(|meta| {
@@ -1305,7 +1309,7 @@ mod tests {
             })
             .count();
 
-        assert_eq!(unresolved, 1);
+        assert_eq!(unresolved, 0);
     }
 
     /// `KoreanWordRule.apply` defensive Skip when token is not KoreanWord.

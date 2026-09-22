@@ -1296,20 +1296,18 @@ mod tests {
         );
     }
 
-    /// The placeholder exists as the trait's default so a rule that never chose
-    /// an article is reported as unattributed rather than credited to one. No
-    /// registered rule keeps it: every article the math engine can report has
-    /// been checked against the standard.
+    /// `MathTokenRule::meta` has no default, so a rule without a checked article
+    /// cannot be written at all. What remains to assert is that every article
+    /// the engine reports is a real one.
     #[test]
-    fn no_registered_math_rule_keeps_the_placeholder() {
-        let unresolved = math_rule_registry()
+    fn every_math_rule_reports_a_real_article() {
+        let unnamed: Vec<&str> = math_rule_registry()
             .into_iter()
-            .filter(|meta| {
-                std::ptr::eq(*meta, &super::super::math_token_rule::UNDECLARED_MATH_RULE)
-            })
-            .count();
+            .map(|meta| meta.section)
+            .filter(|section| section.is_empty() || *section == "?")
+            .collect();
 
-        assert_eq!(unresolved, 0);
+        assert_eq!(unnamed, Vec::<&str>::new());
     }
 
     /// `KoreanWordRule.apply` defensive Skip when token is not KoreanWord.

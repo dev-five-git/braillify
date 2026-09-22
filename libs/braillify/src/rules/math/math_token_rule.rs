@@ -46,27 +46,15 @@ pub enum MathTokenResult {
 
 use crate::rules::trace::{RuleId, TraceSink};
 
-/// Placeholder for a math rule that has not declared its source article yet.
-/// Rules keeping this default are reported as unattributed rather than being
-/// credited to an article nobody checked against the standard.
-pub static UNDECLARED_MATH_RULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
-    section: "?",
-    subsection: None,
-    name: "undeclared_math_rule",
-    standard_ref: "",
-    description: "",
-};
-
 /// Plugin interface for math token encoding rules.
 pub trait MathTokenRule: Send + Sync {
     /// Rule name for debugging.
     fn name(&self) -> &'static str;
 
-    /// The standard article this rule implements. Defaults to
-    /// [`UNDECLARED_MATH_RULE`] until someone checks the article against the PDF.
-    fn meta(&self) -> &'static crate::rules::RuleMeta {
-        &UNDECLARED_MATH_RULE
-    }
+    /// The article of the standard this rule implements. Required rather than
+    /// defaulted: a rule that has not been checked against the standard should
+    /// fail to compile, not quietly report an article nobody verified.
+    fn meta(&self) -> &'static crate::rules::RuleMeta;
 
     /// Additional articles this rule can select while dispatching variants.
     fn variant_metas(&self) -> &'static [&'static crate::rules::RuleMeta] {
@@ -366,6 +354,16 @@ mod tests {
         }
     }
 
+    /// Stand-in article for the dummy rules below. They exercise dispatch and
+    /// never reach the registry, so the number only has to be well formed.
+    static TEST_META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+        section: "1",
+        subsection: None,
+        name: "test_rule",
+        standard_ref: "",
+        description: "",
+    };
+
     /// `MathTokenRule::priority()` default implementation returns 100.
     /// Exercised by a dummy rule that doesn't override `priority()`.
     /// Drives the default-impl lines 48-50.
@@ -373,6 +371,9 @@ mod tests {
     fn priority_default_impl_returns_100() {
         struct DummyRule;
         impl MathTokenRule for DummyRule {
+            fn meta(&self) -> &'static crate::rules::RuleMeta {
+                &TEST_META
+            }
             fn name(&self) -> &'static str {
                 "DummyRule"
             }
@@ -485,6 +486,9 @@ mod tests {
     fn encode_tokens_continues_after_matching_rule_skips() {
         struct SkippingRule;
         impl MathTokenRule for SkippingRule {
+            fn meta(&self) -> &'static crate::rules::RuleMeta {
+                &TEST_META
+            }
             fn name(&self) -> &'static str {
                 "SkippingRule"
             }
@@ -513,6 +517,9 @@ mod tests {
 
         struct ConsumingRule;
         impl MathTokenRule for ConsumingRule {
+            fn meta(&self) -> &'static crate::rules::RuleMeta {
+                &TEST_META
+            }
             fn name(&self) -> &'static str {
                 "ConsumingRule"
             }

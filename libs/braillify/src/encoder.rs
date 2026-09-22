@@ -145,6 +145,9 @@ impl Encoder {
             rules::token_rules::digital_notation::DigitalNotationRule,
         ));
         token_engine.register(Box::new(
+            rules::token_rules::structural_formula::StructuralFormulaRule,
+        ));
+        token_engine.register(Box::new(
             rules::token_rules::uppercase_passage::UppercasePassageRule,
         ));
         token_engine.register(Box::new(

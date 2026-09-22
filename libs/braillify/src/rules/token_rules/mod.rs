@@ -14,5 +14,6 @@ pub mod roman_numeral;
 pub mod rule_33_citation;
 pub mod rule_73_appendix_placeholder;
 pub mod spacing;
+pub mod structural_formula;
 pub mod uppercase_passage;
 pub mod word_shortcut;

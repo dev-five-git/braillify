@@ -74,6 +74,11 @@ enum AttributionRecord {
 struct WordAttempt {
     cells: Vec<u8>,
     moves: Vec<(crate::rules::trace::RuleId, u32, u32)>,
+    /// Where the cells were written, for an attempt that went straight into a
+    /// buffer rather than being one of several the engine chose between. The
+    /// literal `<sub>` markup of a chemical line repeats the same two-cell run
+    /// a dozen times, and a search cannot tell those occurrences apart.
+    offset: Option<usize>,
 }
 
 struct NonWordAttempt {
@@ -114,6 +119,10 @@ impl AttemptRecorder {
     }
 
     pub(super) fn finish(self, cells: &[u8]) {
+        self.finish_at(cells, None);
+    }
+
+    pub(super) fn finish_at(self, cells: &[u8], offset: Option<usize>) {
         let Some(moves) = self.moves else {
             return;
         };
@@ -124,6 +133,7 @@ impl AttemptRecorder {
                 records.push(AttributionRecord::Word(WordAttempt {
                     cells: cells.to_vec(),
                     moves,
+                    offset,
                 }));
             }
         });
@@ -184,11 +194,11 @@ fn rebase_attributions(checkpoint: usize, base: usize) {
             && let Some(records) = slot.as_mut()
         {
             for record in records.iter_mut().skip(checkpoint) {
-                let attempt = match record {
-                    AttributionRecord::Word(_) => continue,
-                    AttributionRecord::Indicator(a) | AttributionRecord::Direct(a) => a,
+                let offset = match record {
+                    AttributionRecord::Word(w) => &mut w.offset,
+                    AttributionRecord::Indicator(a) | AttributionRecord::Direct(a) => &mut a.offset,
                 };
-                if let Some(offset) = attempt.offset.as_mut() {
+                if let Some(offset) = offset.as_mut() {
                     *offset += base;
                 }
             }
@@ -242,7 +252,12 @@ fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
             AttributionRecord::Word(attempt) => attempt,
             AttributionRecord::Indicator(_) | AttributionRecord::Direct(_) => continue,
         };
-        let Some(base) = find_from_outside(cells, &attempt.cells, cursor, &direct_spans) else {
+        let placed = attempt.offset.filter(|offset| {
+            cells.get(*offset..offset + attempt.cells.len()) == Some(attempt.cells.as_slice())
+        });
+        let Some(base) =
+            placed.or_else(|| find_from_outside(cells, &attempt.cells, cursor, &direct_spans))
+        else {
             continue;
         };
         for (rule, offset, len) in &attempt.moves {
@@ -403,7 +418,7 @@ pub(super) fn settle_word_attribution(pending: Option<PendingWord>, out: &[u8]) 
         return;
     };
     if attempt_count() == attempts_before && out.len() > start {
-        record_whole_word(UebMoveSource::Letter, &out[start..]);
+        record_whole_word_at(UebMoveSource::Letter, &out[start..], Some(start));
     }
 }
 
@@ -411,18 +426,22 @@ pub(super) fn settle_symbol_attribution(start: Option<usize>, out: &[u8]) {
     if let Some(start) = start
         && out.len() > start
     {
-        record_whole_word(UebMoveSource::Symbol, &out[start..]);
+        record_whole_word_at(UebMoveSource::Symbol, &out[start..], Some(start));
     }
 }
 
 pub(super) fn record_whole_word(source: UebMoveSource, cells: &[u8]) {
+    record_whole_word_at(source, cells, None);
+}
+
+pub(super) fn record_whole_word_at(source: UebMoveSource, cells: &[u8], offset: Option<usize>) {
     let mut attempt = AttemptRecorder::new();
     attempt.push(
         crate::rules::trace::RuleId::ueb(source as usize),
         0,
         cells.len(),
     );
-    attempt.finish(cells);
+    attempt.finish_at(cells, offset);
 }
 
 pub(super) fn push_indicator(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
@@ -1294,6 +1313,7 @@ mod encode_pipeline_tests {
     #[case::camel_subunit_word("aMgO")]
     #[case::camel_caps_word("dCO")]
     #[case::balanced_equation("aMgO(s)$+$bC(s)→cMg(s)$+$dCO(g)$+$eCO<sub>2</sub>(g)")]
+    #[case::repeated_subscript_markup("CO<sub>2</sub>, SO<sub>2</sub>, CO<sub>2</sub>")]
     fn every_cell_of_a_chemical_line_names_a_rule(#[case] input: &str) {
         let (cells, trace) = crate::encode_with_trace(input).expect("input must encode");
         let untraced = crate::encode(input).expect("input must encode untraced");

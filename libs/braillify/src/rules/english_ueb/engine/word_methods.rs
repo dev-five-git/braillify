@@ -545,6 +545,7 @@ impl EnglishUebEngine {
         }
         bounds.push(chars.len());
 
+        let attributions_before_buf = super::super::attribution_checkpoint();
         let mut buf = Vec::new();
         let mut prev_caps_word = false;
         for w in bounds.windows(2) {
@@ -613,12 +614,19 @@ impl EnglishUebEngine {
             // §8.6.3: a §8.4 caps word (`⠠⠠`) is terminated by `⠠⠄` before lowercase
             // letters that continue the same word (`ABCs`, `WALKing`, `unSELFish`).
             if prev_caps_word && matches!(caps, Caps::None) {
-                buf.push(CAPITAL);
-                buf.push(decode_unicode('⠄'));
+                super::super::push_indicator(
+                    &mut buf,
+                    super::super::UebMoveSource::CapitalisedWordIndicator,
+                    &[CAPITAL, decode_unicode('⠄')],
+                );
             }
             if matches!(caps, Caps::Word) && w[0] > 0 && w[1] < chars.len() && seg.len() <= 2 {
                 for cell in &cells {
-                    buf.push(CAPITAL);
+                    super::super::push_indicator(
+                        &mut buf,
+                        super::super::UebMoveSource::CapitalLetterIndicator,
+                        &[CAPITAL],
+                    );
                     buf.push(*cell);
                 }
                 prev_caps_word = false;
@@ -626,16 +634,22 @@ impl EnglishUebEngine {
             } else {
                 match caps {
                     Caps::None => {}
-                    Caps::Single => buf.push(CAPITAL),
-                    Caps::Word => {
-                        buf.push(CAPITAL);
-                        buf.push(CAPITAL);
-                    }
+                    Caps::Single => super::super::push_indicator(
+                        &mut buf,
+                        super::super::UebMoveSource::CapitalLetterIndicator,
+                        &[CAPITAL],
+                    ),
+                    Caps::Word => super::super::push_indicator(
+                        &mut buf,
+                        super::super::UebMoveSource::CapitalisedWordIndicator,
+                        &[CAPITAL, CAPITAL],
+                    ),
                 }
             }
             buf.extend(&cells);
             prev_caps_word = matches!(caps, Caps::Word);
         }
+        super::super::rebase_attributions(attributions_before_buf, out.len());
         out.extend(buf);
         Some(())
     }

@@ -172,6 +172,30 @@ fn attribution_checkpoint() -> usize {
     ATTRIBUTIONS.with(|slot| slot.borrow().as_ref().map_or(0, Vec::len))
 }
 
+/// Move records taken since `checkpoint` from a local buffer's coordinates to
+/// the output's, once that buffer has been appended at `base`.
+///
+/// A word is assembled in its own buffer, so a record made while filling it
+/// knows only its place inside that buffer. Rebasing at the append is what
+/// turns those into positions the finished output can be indexed by.
+fn rebase_attributions(checkpoint: usize, base: usize) {
+    ATTRIBUTIONS.with(|slot| {
+        if let Ok(mut slot) = slot.try_borrow_mut()
+            && let Some(records) = slot.as_mut()
+        {
+            for record in records.iter_mut().skip(checkpoint) {
+                let attempt = match record {
+                    AttributionRecord::Word(_) => continue,
+                    AttributionRecord::Indicator(a) | AttributionRecord::Direct(a) => a,
+                };
+                if let Some(offset) = attempt.offset.as_mut() {
+                    *offset += base;
+                }
+            }
+        }
+    });
+}
+
 fn rollback_attributions(checkpoint: usize) {
     ATTRIBUTIONS.with(|slot| {
         if let Some(records) = slot.borrow_mut().as_mut() {
@@ -1267,6 +1291,8 @@ mod encode_pipeline_tests {
     /// the output, so each must claim the cell it wrote.
     #[rstest::rstest]
     #[case::two_letter_symbols("SO<sub>2</sub>, CCl<sub>4</sub>, HCl, $SF_{6}$")]
+    #[case::camel_subunit_word("aMgO")]
+    #[case::camel_caps_word("dCO")]
     fn every_cell_of_a_chemical_line_names_a_rule(#[case] input: &str) {
         let (cells, trace) = crate::encode_with_trace(input).expect("input must encode");
         let untraced = crate::encode(input).expect("input must encode untraced");

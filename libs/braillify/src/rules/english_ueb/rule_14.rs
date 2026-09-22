@@ -284,12 +284,8 @@ fn encode_nemeth_spans(
             continued = false;
         }
     }
-    if !rest.is_empty() {
-        if let Some(cells) = encode_ueb(rest) {
-            out.extend(cells);
-        } else {
-            out.extend(encode_simple_ueb_symbols(rest)?);
-        }
+    if !rest.is_empty() && extend_prose(&mut out, encode_ueb, rest).is_none() {
+        out.extend(encode_simple_ueb_symbols(rest)?);
     }
     Some(out)
 }

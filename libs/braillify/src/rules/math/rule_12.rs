@@ -246,6 +246,44 @@ pub fn encode_upper_variable(
         }
     }
 
+    /// 과학 제4항 — 화학식의 원소 기호는 모두 1급 점자로 적는다. 수학 제12항의
+    /// 대문자 이어쓰기(`⠠⠠`)가 아니라 글자마다 대문자표를 붙인다.
+    ///
+    /// 아래 첨자가 있는 식으로 한정한다. 한 글자짜리 원소 기호는 수학 변수와
+    /// 글자가 겹치므로(`P`, `V`, `B`, `C`), 첨자라는 화학식 신호가 없으면
+    /// 행렬 아닌 대문자 변수까지 갈라놓게 된다.
+    fn names_element_symbols(tokens: &[MathToken], start: usize, end: usize) -> bool {
+        if !tokens.iter().any(|t| matches!(t, MathToken::Subscript(_))) {
+            return false;
+        }
+        let letters: Vec<char> = tokens[start..end]
+            .iter()
+            .filter_map(|token| match token {
+                MathToken::UpperVariable(letter) => Some(*letter),
+                _ => None,
+            })
+            .collect();
+        letters.len() >= 2
+            && letters.iter().all(|letter| {
+                matches!(
+                    letter,
+                    'H' | 'B'
+                        | 'C'
+                        | 'N'
+                        | 'O'
+                        | 'F'
+                        | 'P'
+                        | 'S'
+                        | 'K'
+                        | 'V'
+                        | 'Y'
+                        | 'I'
+                        | 'W'
+                        | 'U'
+                )
+            })
+    }
+
     let mut seq_end = *i;
     let mut uppercase_count = 0usize;
     while let Some(MathToken::UpperVariable(_)) = tokens.get(seq_end) {
@@ -259,7 +297,8 @@ pub fn encode_upper_variable(
     // PDF 제12항 붙임 1 — 행렬 컨텍스트면 2-cap 행렬명(`AB`)을 ⠠+letter 개별 표기.
     // The seq_end loop above guarantees tokens[*i..seq_end] contains only
     // UpperVariable and Prime tokens (no other arms reachable).
-    if uppercase_count == 2 && matrix_context_active {
+    if (uppercase_count == 2 && matrix_context_active) || names_element_symbols(tokens, *i, seq_end)
+    {
         for token in &tokens[*i..seq_end] {
             if let MathToken::UpperVariable(upper) = token {
                 result.push(32);

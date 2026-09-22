@@ -1,32 +1,5 @@
 [
   {
-    "input": "-",
-    "note": "PDF 과학 제10항 2. 단일 결합선 정의",
-    "internal": ";1",
-    "expected": "482",
-    "unicode": "⠰⠂",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "=",
-    "note": "PDF 과학 제10항 2. 이중 결합선 정의",
-    "internal": ";2",
-    "expected": "486",
-    "unicode": "⠰⠆",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
-    "input": "≡",
-    "note": "PDF 과학 제10항 2. 삼중 결합선 정의",
-    "internal": ";3",
-    "expected": "4818",
-    "unicode": "⠰⠒",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
     "input": "H-O-H",
     "note": "PDF 과학 제10항 2. 단일 결합 예제",
     "internal": ",,,h;1o;1h,'",

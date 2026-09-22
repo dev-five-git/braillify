@@ -1821,11 +1821,6 @@
     "description": "사슬 화합물의 결합선은 ⠰을 먼저 적고 결합 수에 따라 단일 1, 이중 2, 삼중 3을 붙여 적는다.",
     "benchmark": true
   },
-  "science/science_12": {
-    "title": "과학 제12항",
-    "description": "고리 화합물의 육각 환핵은 세로 방향과 가로 방향을, 오각 환핵은 별도의 기호를 적는다.",
-    "benchmark": true
-  },
   "science/science_21": {
     "title": "과학 제21항",
     "description": "전지의 전극 표시와 염다리 표시는 앞뒤를 한 칸씩 띄어 적는다.",

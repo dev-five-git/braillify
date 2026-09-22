@@ -26,6 +26,15 @@ impl MathSymbolRule {
         }
         None
     }
+
+    /// True iff the arrow at `index` is drawn over a pair of points, which is
+    /// how 제37항 and 제38항 write a line and a ray: `3o,,AB`, the arrow ahead of
+    /// both capitals with nothing before it. An arrow with an operand on its
+    /// left is standing between two things and belongs to 제10항 instead.
+    fn names_two_points(tokens: &[MathToken], index: usize) -> bool {
+        matches!(tokens.get(index + 1), Some(MathToken::UpperVariable(_)))
+            && rule_12::prev_non_space(tokens, index).is_none()
+    }
 }
 
 /// True iff tokens at `index+1..=index+5` form the `( N , N )` math-paren
@@ -330,10 +339,11 @@ impl MathTokenRule for MathSymbolRule {
         } else if rule_5::is_proportion_symbol(*c) {
             rule_5::encode_proportion_symbol(*c, result)?;
             &math_symbol_shortcut::META_5
-        } else if rule_37::is_double_arrow_line_symbol(*c) {
+        } else if rule_37::is_double_arrow_line_symbol(*c) && Self::names_two_points(tokens, index)
+        {
             rule_37::encode_double_arrow_line_symbol(*c, result)?;
             &math_symbol_shortcut::META_37
-        } else if rule_38::is_right_arrow_ray_symbol(*c) {
+        } else if rule_38::is_right_arrow_ray_symbol(*c) && Self::names_two_points(tokens, index) {
             rule_38::encode_right_arrow_ray_symbol(*c, result)?;
             &math_symbol_shortcut::META_38
         } else if rule_10::is_arrow_symbol(*c) {
@@ -601,6 +611,50 @@ mod tests {
         let (output, _) = apply_symbol(&tokens);
 
         assert_eq!(output.last() == Some(&0), expects_blank);
+    }
+
+    /// 제37항 and 제38항 draw a line and a ray over a pair of points, writing
+    /// the arrow ahead of both capitals as `3o,,AB`. 제10항 covers the arrow
+    /// standing between two things, which is how a reaction equation and an
+    /// ordinary mapping are written. The cells are the same either way, so only
+    /// the article distinguishes them.
+    #[rstest::rstest]
+    #[case::ray_over_points('\u{2192}', 0, "38")]
+    #[case::line_over_points('\u{2194}', 0, "37")]
+    #[case::ray_between_operands('\u{2192}', 1, "10")]
+    #[case::line_between_operands('\u{2194}', 1, "10")]
+    fn an_arrow_over_points_is_not_an_arrow_between_them(
+        #[case] arrow: char,
+        #[case] index: usize,
+        #[case] section: &str,
+    ) {
+        use super::super::super::encoder::math_engine_for_context;
+        use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};
+
+        let mut tokens = vec![MathToken::MathSymbol(arrow), MathToken::UpperVariable('A')];
+        if index == 1 {
+            tokens.insert(0, MathToken::UpperVariable('B'));
+        } else {
+            tokens.push(MathToken::UpperVariable('B'));
+        }
+
+        let context = MathContext::default();
+        let mut output = Vec::new();
+        let mut state = MathEncodeState::with_context(false, context);
+        let outcome = super::MathSymbolRule
+            .apply(
+                &tokens,
+                index,
+                &mut output,
+                &mut state,
+                math_engine_for_context(context),
+            )
+            .expect("an arrow should encode");
+
+        let MathTokenResult::ConsumedWithMeta { meta, .. } = outcome else {
+            panic!("the arrow did not report selected metadata");
+        };
+        assert_eq!(meta.section, section);
     }
 
     /// 제53항 reads a middle dot as the multiplication sign when the same

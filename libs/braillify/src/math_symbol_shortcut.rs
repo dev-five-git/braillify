@@ -236,15 +236,15 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
         '\u{2236}' => &[decode_unicode('⠐'), decode_unicode('⠂')],
     },
     &META_38 => {
-        '\u{2192}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
-        '\u{27F6}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
         '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
     },
     &META_37 => {
-        '\u{2194}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
         '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
     },
     &META_10 => {
+        '\u{2192}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{27F6}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{2194}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
         '\u{2190}' => &[decode_unicode('⠪'), decode_unicode('⠒')],
         '\u{2191}' => &[decode_unicode('⠰'), decode_unicode('⠒'), decode_unicode('⠕')],
         '\u{2193}' => &[decode_unicode('⠘'), decode_unicode('⠒'), decode_unicode('⠕')],
@@ -596,15 +596,33 @@ mod test {
     #[case::segment_bar('\u{203E}', "35")]
     #[case::arc('\u{2322}', "36")]
     #[case::line_above('\u{20E1}', "37")]
-    #[case::line_arrow('\u{2194}', "37")]
     #[case::ray_above('\u{20D7}', "38")]
-    #[case::ray_arrow('\u{2192}', "38")]
     #[case::angle('\u{2220}', "39")]
     fn geometry_marks_cite_the_article_that_defines_them(
         #[case] symbol: char,
         #[case] section: &str,
     ) {
         assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
+    }
+
+    /// 제10항 lists the arrows together — right, left, up, down and the four
+    /// diagonals — so an arrow standing between operands belongs there. The ray
+    /// of 제38항 is the mark drawn above a pair of points, which Unicode spells
+    /// as a combining character, not as the arrow one types between them.
+    #[rstest::rstest]
+    #[case::right('\u{2192}')]
+    #[case::long_right('\u{27F6}')]
+    #[case::both_ways('\u{2194}')]
+    #[case::left('\u{2190}')]
+    #[case::up('\u{2191}')]
+    #[case::down('\u{2193}')]
+    #[case::upper_left('\u{2196}')]
+    fn a_standing_arrow_belongs_to_the_arrow_article(#[case] symbol: char) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, "10");
+        assert_ne!(
+            SHORTCUT_MAP[&symbol].fallback_meta.section,
+            SHORTCUT_MAP[&'\u{20D7}'].fallback_meta.section
+        );
     }
 
     /// 제23항 gives the bar over a variable — 켤레 복소수 and 평균값 — the same

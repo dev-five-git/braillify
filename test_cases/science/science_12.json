@@ -1,0 +1,29 @@
+[
+  {
+    "input": "⬡",
+    "note": "PDF 과학 제12항 1. 육각 환핵 세로 방향 정의",
+    "internal": "&{oy",
+    "expected": "47422161",
+    "unicode": "⠯⠪⠕⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⬢",
+    "note": "PDF 과학 제12항 1. 육각 환핵 가로 방향 정의",
+    "internal": "&o{y",
+    "expected": "47214261",
+    "unicode": "⠯⠕⠪⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⬠",
+    "note": "PDF 과학 제12항 2. 오각 환핵 정의",
+    "internal": "&{ky",
+    "expected": "4742561",
+    "unicode": "⠯⠪⠅⠽",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

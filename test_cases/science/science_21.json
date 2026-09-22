@@ -1,0 +1,20 @@
+[
+  {
+    "input": "∣",
+    "note": "PDF 과학 제21항 전극 표시 정의",
+    "internal": "|",
+    "expected": "51",
+    "unicode": "⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∥",
+    "note": "PDF 과학 제21항 염다리 표시 정의",
+    "internal": "||",
+    "expected": "5151",
+    "unicode": "⠳⠳",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

@@ -6,7 +6,7 @@ use super::super::math_token_rule::{
 use super::super::parser::{BracketKind, MathToken};
 use super::super::{
     rule_1, rule_2, rule_3, rule_4, rule_5, rule_6, rule_9, rule_10, rule_11, rule_12, rule_13,
-    rule_15, rule_16, rule_17, rule_21, rule_22, rule_23, rule_24, rule_25, rule_26, rule_27,
+    rule_15, rule_16, rule_17, rule_21, rule_22, rule_23, rule_25, rule_26, rule_27,
     rule_28, rule_30, rule_31, rule_32, rule_33, rule_36, rule_37, rule_38, rule_39, rule_40,
     rule_41, rule_42, rule_43, rule_44, rule_50, rule_54, rule_55, rule_56, rule_58, rule_59,
     rule_60, rule_61, rule_64, rule_65,
@@ -337,7 +337,7 @@ impl MathTokenRule for MathSymbolRule {
             &math_symbol_shortcut::META_4
         } else if rule_5::is_proportion_symbol(*c) {
             rule_5::encode_proportion_symbol(*c, result)?;
-            &math_symbol_shortcut::META_5
+            &math_symbol_shortcut::META_SCIENCE_29
         } else if rule_37::is_double_arrow_line_symbol(*c) && Self::names_two_points(tokens, index)
         {
             rule_37::encode_double_arrow_line_symbol(*c, result)?;
@@ -375,9 +375,6 @@ impl MathTokenRule for MathSymbolRule {
         } else if rule_23::is_overline_mark(*c) {
             rule_23::encode_overline(result)?;
             &math_symbol_shortcut::META_23
-        } else if rule_24::is_sequence_brace(*c) {
-            rule_24::encode_sequence_brace(*c, result)?;
-            &math_symbol_shortcut::META_24
         } else if rule_27::is_divisibility_symbol(*c) {
             // `|` is always handled by rule_21::is_absolute_value_bar above; only
             // U+2224 (∤) reaches this arm. Probe-verified 2026-05-23.
@@ -540,6 +537,7 @@ mod tests {
 
     #[rstest::rstest]
     #[case::equality('=', "3")]
+    #[case::proportion('∝', "29")]
     #[case::greek('α', "13")]
     #[case::root('√', "22")]
     #[case::set_membership('∈', "60")]
@@ -921,13 +919,10 @@ mod tests {
         assert!(!result.is_empty(), "a̅ must encode");
     }
 
-    /// `{a,b,c}` — sequence brace (U+007B/U+007D) → rule_24 arm at lines
-    /// 341-342. (Note: parser routes `{` to OpenParen, but a bare math
-    /// symbol `{` outside grouping context can hit this arm.)
+    /// The parser routes `{`/`}` to OpenParen/CloseParen, so a brace
+    /// expression encodes through the bracket path rather than as a symbol.
     #[test]
-    fn sequence_brace_dispatch() {
-        // Use a curly-brace expression — the inner `{`/`}` are parsed as
-        // OpenParen/CloseParen, but rule_24 still detects them.
+    fn brace_expression_encodes_through_the_bracket_path() {
         let result = enc("{a,b}");
         assert!(!result.is_empty(), "{{a,b}} must encode");
     }

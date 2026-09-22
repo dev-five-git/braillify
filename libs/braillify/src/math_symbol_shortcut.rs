@@ -41,7 +41,6 @@ math_meta! {
     (META_21, "21", "math_absolute_value", "Absolute-value bars"),
     (META_22, "22", "math_root_symbol", "Root symbols"),
     (META_23, "23", "math_overline_symbol", "Overline and underline marks"),
-    (META_24, "24", "math_sequence_brace", "Sequence braces"),
     (META_25, "25", "math_sigma_symbol", "Summation symbols"),
     (META_27, "27", "math_divisibility_symbol", "Divisibility symbols"),
     (META_28, "28", "math_norm_symbol", "Norm symbols"),
@@ -126,11 +125,19 @@ pub(crate) static META_KOREAN_69_APPENDIX_2: RuleMeta = RuleMeta {
     standard_ref: "2024 Korean Braille Standard, 한글 제69항 [붙임 2]",
     description: "Degree sign inside math input",
 };
+pub(crate) static META_SCIENCE_29: RuleMeta = RuleMeta {
+    section: "29",
+    subsection: None,
+    name: "science_proportion_symbol",
+    standard_ref: "2024 Korean Braille Standard, 과학 제29항",
+    description: "Proportionality sign",
+};
 
 pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
     &META_2,
     &META_4,
     &META_5,
+    &META_SCIENCE_29,
     &META_7,
     &META_9,
     &META_10,
@@ -143,7 +150,6 @@ pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
     &META_21,
     &META_22,
     &META_23,
-    &META_24,
     &META_25,
     &META_27,
     &META_28,
@@ -238,6 +244,9 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     },
     &META_5 => {
         '\u{2236}' => &[decode_unicode('⠐'), decode_unicode('⠂')],
+    },
+    &META_SCIENCE_29 => {
+        '\u{221D}' => &[decode_unicode('⠬'), decode_unicode('⠒')],
     },
     &META_38 => {
         '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')],

@@ -1293,6 +1293,7 @@ mod encode_pipeline_tests {
     #[case::two_letter_symbols("SO<sub>2</sub>, CCl<sub>4</sub>, HCl, $SF_{6}$")]
     #[case::camel_subunit_word("aMgO")]
     #[case::camel_caps_word("dCO")]
+    #[case::balanced_equation("aMgO(s)$+$bC(s)→cMg(s)$+$dCO(g)$+$eCO<sub>2</sub>(g)")]
     fn every_cell_of_a_chemical_line_names_a_rule(#[case] input: &str) {
         let (cells, trace) = crate::encode_with_trace(input).expect("input must encode");
         let untraced = crate::encode(input).expect("input must encode untraced");

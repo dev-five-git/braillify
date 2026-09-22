@@ -236,6 +236,20 @@ fn push_nemeth(out: &mut Vec<u8>, cells: &[u8]) {
     super::push_direct_unplaced(out, super::UebMoveSource::InlineNemethCode, cells);
 }
 
+/// Append prose that was encoded into its own buffer, moving the records it
+/// made from that buffer's coordinates onto this one's.
+fn extend_prose(
+    out: &mut Vec<u8>,
+    encode_ueb: &mut impl FnMut(&str) -> Option<Vec<u8>>,
+    text: &str,
+) -> Option<()> {
+    let checkpoint = super::attribution_checkpoint();
+    let cells = encode_ueb(text)?;
+    super::rebase_attributions(checkpoint, out.len());
+    out.extend(cells);
+    Some(())
+}
+
 fn encode_nemeth_spans(
     input: &str,
     encode_ueb: &mut impl FnMut(&str) -> Option<Vec<u8>>,
@@ -245,13 +259,13 @@ fn encode_nemeth_spans(
     let mut continued = false;
     while let Some(start) = rest.find('$') {
         if continued {
-            out.extend(encode_ueb(&rest[..start])?);
+            extend_prose(&mut out, encode_ueb, &rest[..start])?;
         } else if rest[..start].ends_with('"') {
             let prefix = &rest[..start - '"'.len_utf8()];
-            out.extend(encode_ueb(prefix)?);
+            extend_prose(&mut out, encode_ueb, prefix)?;
             out.push(decode_unicode('⠦'));
         } else {
-            out.extend(encode_ueb(&rest[..start])?);
+            extend_prose(&mut out, encode_ueb, &rest[..start])?;
         }
         let after = &rest[start + '$'.len_utf8()..];
         let end = after.find('$')?;

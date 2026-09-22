@@ -516,6 +516,30 @@ mod tests {
         assert!(result.is_ok(), "Should encode ax+b=0: {:?}", result);
     }
 
+    /// The raw rule carries only the four punctuation marks the Korean articles
+    /// name. A mark outside that list has no article behind it, so it is refused
+    /// rather than borrowed from another context.
+    #[test]
+    fn a_raw_character_outside_the_named_punctuation_is_refused() {
+        let context = MathContext::default();
+        let tokens = [MathToken::Raw('@')];
+        let mut result = Vec::new();
+        let mut state = MathEncodeState::with_context(false, context);
+
+        let outcome = RawTokenRule.apply(
+            &tokens,
+            0,
+            &mut result,
+            &mut state,
+            math_engine_for_context(context),
+        );
+
+        let Err(err) = outcome else {
+            panic!("an unmapped raw character must not encode");
+        };
+        assert!(err.contains("Unrecognized math character"), "{err}");
+    }
+
     #[test]
     fn test_number_encoding() {
         // Pure number should get # prefix

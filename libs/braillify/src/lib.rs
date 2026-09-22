@@ -1589,6 +1589,26 @@ mod trace_tests {
         );
     }
 
+    /// A number written straight against an ASCII unit is emitted as one piece,
+    /// so its cells are credited in the emitter rather than by the character
+    /// loop that attributes the digits and the letters separately.
+    #[rstest::rstest]
+    #[case::centimetre("3cm")]
+    #[case::kilogram("5kg")]
+    fn a_measured_quantity_is_credited_to_the_measurement_rule(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert!(!cells.is_empty(), "the measurement still encodes");
+        assert!(
+            trace
+                .events()
+                .iter()
+                .any(|e| e.rule.meta().is_some_and(|m| m.name == "measurement_symbols")),
+            "the measurement cells name their rule: {:?}",
+            trace.events()
+        );
+    }
+
     /// UEB picks contractions by a cell-minimising search, so only the winning
     /// path may be credited. Every recorded range must therefore land inside the
     /// output and name a UEB rule.

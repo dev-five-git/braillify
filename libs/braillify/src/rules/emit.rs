@@ -2458,3 +2458,31 @@ mod roman_chain_resume_coverage {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
 }
+
+#[cfg(test)]
+mod empty_token_span_tests {
+    use super::record_token_span;
+    use crate::rules::trace::{EmitterRule, RuleId, Trace, TraceSink};
+
+    /// A token can consume input without writing a cell. Attributing it anyway
+    /// would claim an output position the token never wrote, so the span is
+    /// dropped rather than recorded as empty.
+    #[test]
+    fn a_token_that_wrote_no_cells_records_nothing() {
+        let mut trace = Trace::default();
+        let mut sink = Some(TraceSink::new(&mut trace));
+        let result = vec![1, 2, 3];
+
+        record_token_span(
+            &mut sink,
+            None,
+            0,
+            &result,
+            result.len(),
+            RuleId::emitter(EmitterRule::WordSpace),
+        );
+        drop(sink);
+
+        assert!(trace.events().is_empty(), "{:?}", trace.events());
+    }
+}

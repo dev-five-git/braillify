@@ -1237,3 +1237,28 @@ mod encode_pipeline_tests {
         assert_eq!(encode_forced(""), None);
     }
 }
+
+#[cfg(test)]
+mod indicator_clipping_tests {
+    use super::push_without_indicators;
+    use crate::rules::trace::{EmitterRule, RuleId};
+
+    /// An indicator can land inside the cells a rule produced. The cells before
+    /// it still belong to that rule, so they are recorded as their own span
+    /// instead of being surrendered along with the indicator.
+    #[test]
+    fn a_span_interrupted_by_an_indicator_keeps_the_part_before_it() {
+        let rule = RuleId::emitter(EmitterRule::WordSpace);
+        let mut spans = Vec::new();
+
+        push_without_indicators(&mut spans, (rule, 0..6), &[(rule, 2..4)]);
+
+        assert_eq!(
+            spans
+                .iter()
+                .map(|(_, range)| range.clone())
+                .collect::<Vec<_>>(),
+            vec![0..2, 4..6]
+        );
+    }
+}

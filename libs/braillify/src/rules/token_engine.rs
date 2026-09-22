@@ -156,8 +156,21 @@ mod tests {
     use super::*;
     use crate::rules::token::{SpaceKind, WordMeta, WordToken};
 
+    /// Stand-in article for the dummy rules below. They exercise dispatch and
+    /// never reach the registry, so the number only has to be well formed.
+    static TEST_META: RuleMeta = RuleMeta {
+        section: "1",
+        subsection: None,
+        name: "test_rule",
+        standard_ref: "",
+        description: "",
+    };
+
     struct ReplaceWordAt0;
     impl TokenRule for ReplaceWordAt0 {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::Normalization
         }
@@ -179,6 +192,9 @@ mod tests {
 
     struct InsertSpaceBeforeSecond;
     impl TokenRule for InsertSpaceBeforeSecond {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::PostWord
         }
@@ -199,6 +215,9 @@ mod tests {
 
     struct RemoveWordB;
     impl TokenRule for RemoveWordB {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::PostWord
         }
@@ -219,6 +238,9 @@ mod tests {
 
     struct ReplaceManyForB;
     impl TokenRule for ReplaceManyForB {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::PostWord
         }
@@ -315,6 +337,9 @@ mod tests {
     /// empty replacement.
     struct ReplaceRangeEmpty;
     impl TokenRule for ReplaceRangeEmpty {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::Normalization
         }
@@ -356,6 +381,9 @@ mod tests {
     fn token_engine_noop_normalization_continues_to_next_rule() {
         struct AlwaysNoop;
         impl TokenRule for AlwaysNoop {
+            fn meta(&self) -> &'static RuleMeta {
+                &TEST_META
+            }
             fn phase(&self) -> TokenPhase {
                 TokenPhase::Normalization
             }
@@ -386,6 +414,9 @@ mod tests {
     fn token_engine_runtime_noop_normalization_continues_to_next_rule() {
         struct RuntimeNoop;
         impl TokenRule for RuntimeNoop {
+            fn meta(&self) -> &'static RuleMeta {
+                &TEST_META
+            }
             fn phase(&self) -> TokenPhase {
                 std::hint::black_box(TokenPhase::Normalization)
             }
@@ -417,6 +448,9 @@ mod tests {
     fn token_engine_noop_wordshortcut_stops_current_index_rules() {
         struct WordShortcutNoop;
         impl TokenRule for WordShortcutNoop {
+            fn meta(&self) -> &'static RuleMeta {
+                &TEST_META
+            }
             fn phase(&self) -> TokenPhase {
                 TokenPhase::WordShortcut
             }
@@ -435,6 +469,9 @@ mod tests {
 
         struct WordShortcutReplace;
         impl TokenRule for WordShortcutReplace {
+            fn meta(&self) -> &'static RuleMeta {
+                &TEST_META
+            }
             fn phase(&self) -> TokenPhase {
                 TokenPhase::WordShortcut
             }
@@ -472,6 +509,9 @@ mod tests {
 
     struct RewriteB(Rewrite);
     impl TokenRule for RewriteB {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::WordShortcut
         }

@@ -2,17 +2,6 @@ use super::RuleMeta;
 use super::context::EncoderState;
 use super::token::Token;
 
-/// Placeholder for a token rule that has not declared its source article yet.
-/// Rules keeping this default are reported as unattributed rather than being
-/// credited to an article nobody checked against the standard.
-pub static UNDECLARED_TOKEN_RULE: RuleMeta = RuleMeta {
-    section: "?",
-    subsection: None,
-    name: "undeclared_token_rule",
-    standard_ref: "",
-    description: "",
-};
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum TokenPhase {
     Normalization = 0,
@@ -37,12 +26,10 @@ pub enum TokenAction<'a> {
 }
 
 pub trait TokenRule: Send + Sync {
-    /// The standard article this rule implements. Defaults to
-    /// [`UNDECLARED_TOKEN_RULE`] so a rule is reported as unattributed until
-    /// someone checks its article against the PDF.
-    fn meta(&self) -> &'static RuleMeta {
-        &UNDECLARED_TOKEN_RULE
-    }
+    /// The article of the standard this rule implements. Required rather than
+    /// defaulted: a rule that has not been checked against the standard should
+    /// fail to compile, not quietly report an article nobody verified.
+    fn meta(&self) -> &'static RuleMeta;
 
     fn phase(&self) -> TokenPhase;
     fn priority(&self) -> u16 {

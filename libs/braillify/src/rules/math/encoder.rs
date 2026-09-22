@@ -383,11 +383,10 @@ impl MathTokenRule for RawTokenRule {
             ';' => &math_symbol_shortcut::META_KOREAN_59,
             _ => return Err(format!("Unrecognized math character: '{}'", c)),
         };
-        if let Ok(encoded) = crate::symbol_shortcut::encode_char_symbol_shortcut(*c) {
-            result.extend_from_slice(encoded);
-            return Ok(MathTokenResult::ConsumedWithMeta { tokens: 1, meta });
-        }
-        Err(format!("Unrecognized math character: '{}'", c))
+        let encoded = crate::symbol_shortcut::encode_char_symbol_shortcut(*c)
+            .map_err(|_| format!("Unrecognized math character: '{}'", c))?;
+        result.extend_from_slice(encoded);
+        Ok(MathTokenResult::ConsumedWithMeta { tokens: 1, meta })
     }
 }
 

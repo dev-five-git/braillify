@@ -6,10 +6,10 @@ use super::super::math_token_rule::{
 use super::super::parser::{BracketKind, MathToken};
 use super::super::{
     rule_1, rule_2, rule_3, rule_4, rule_5, rule_6, rule_9, rule_10, rule_11, rule_12, rule_13,
-    rule_15, rule_16, rule_17, rule_21, rule_22, rule_23, rule_25, rule_26, rule_27,
-    rule_28, rule_30, rule_31, rule_32, rule_33, rule_36, rule_37, rule_38, rule_39, rule_40,
-    rule_41, rule_42, rule_43, rule_44, rule_50, rule_54, rule_55, rule_56, rule_58, rule_59,
-    rule_60, rule_61, rule_64, rule_65,
+    rule_15, rule_16, rule_17, rule_21, rule_22, rule_23, rule_25, rule_26, rule_27, rule_28,
+    rule_30, rule_31, rule_32, rule_33, rule_36, rule_37, rule_38, rule_39, rule_40, rule_41,
+    rule_42, rule_43, rule_44, rule_50, rule_54, rule_55, rule_56, rule_58, rule_59, rule_60,
+    rule_61, rule_64, rule_65,
 };
 use super::encode_generic_math_symbol;
 use crate::math_symbol_shortcut;

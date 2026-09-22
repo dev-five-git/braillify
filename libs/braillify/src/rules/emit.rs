@@ -2470,18 +2470,18 @@ mod empty_token_span_tests {
     #[test]
     fn a_token_that_wrote_no_cells_records_nothing() {
         let mut trace = Trace::default();
-        let mut sink = Some(TraceSink::new(&mut trace));
         let result = vec![1, 2, 3];
-
-        record_token_span(
-            &mut sink,
-            None,
-            0,
-            &result,
-            result.len(),
-            RuleId::emitter(EmitterRule::WordSpace),
-        );
-        drop(sink);
+        {
+            let mut sink = Some(TraceSink::new(&mut trace));
+            record_token_span(
+                &mut sink,
+                None,
+                0,
+                &result,
+                result.len(),
+                RuleId::emitter(EmitterRule::WordSpace),
+            );
+        }
 
         assert!(trace.events().is_empty(), "{:?}", trace.events());
     }

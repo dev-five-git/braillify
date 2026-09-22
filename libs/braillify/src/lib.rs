@@ -1600,10 +1600,10 @@ mod trace_tests {
 
         assert!(!cells.is_empty(), "the measurement still encodes");
         assert!(
-            trace
-                .events()
-                .iter()
-                .any(|e| e.rule.meta().is_some_and(|m| m.name == "measurement_symbols")),
+            trace.events().iter().any(|e| e
+                .rule
+                .meta()
+                .is_some_and(|m| m.name == "measurement_symbols")),
             "the measurement cells name their rule: {:?}",
             trace.events()
         );

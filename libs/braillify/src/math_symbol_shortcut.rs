@@ -94,12 +94,16 @@ pub(crate) static META_KOREAN_51: RuleMeta = RuleMeta {
     standard_ref: "2024 Korean Braille Standard, 한글 제51항",
     description: "Colon inside math input",
 };
-pub(crate) static META_KOREAN_53: RuleMeta = RuleMeta {
-    section: "53",
-    subsection: None,
-    name: "korean_ellipsis_in_math",
-    standard_ref: "2024 Korean Braille Standard, 한글 제53항",
-    description: "Ellipsis inside math input",
+/// 한글 제53항 governs the ellipsis in prose, but 수학 제12항 [붙임 1] claims it
+/// back inside an expression — "쉼표는 `"`으로 적고, 줄임표는 `,,,`으로 적는다".
+/// Both write ⠠⠠⠠, so only the article tells them apart, and 국립국어원 settled
+/// on 2026-09-21 that an ellipsis inside a formula follows the math standard.
+pub(crate) static META_12_APPENDIX_1: RuleMeta = RuleMeta {
+    section: "12",
+    subsection: Some("붙임 1"),
+    name: "math_ellipsis",
+    standard_ref: "2024 Korean Braille Standard, 수학 제12항 [붙임 1]",
+    description: "Ellipsis inside a mathematical expression",
 };
 pub(crate) static META_KOREAN_59: RuleMeta = RuleMeta {
     section: "59",
@@ -170,7 +174,7 @@ pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
     &META_64,
     &META_65,
     &META_KOREAN_50,
-    &META_KOREAN_53,
+    &META_12_APPENDIX_1,
     &META_KOREAN_64,
     &META_KOREAN_69_APPENDIX_2,
     &META_6,
@@ -344,7 +348,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     &META_KOREAN_50 => {
         '\u{00B7}' => &[decode_unicode('⠐')],
     },
-    &META_KOREAN_53 => {
+    &META_12_APPENDIX_1 => {
         '…' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')],
         '⋯' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')],
     },
@@ -548,6 +552,25 @@ mod test {
             .find(|(_, shortcut)| shortcut.fallback_meta.section == "?");
 
         assert!(missing.is_none(), "shortcut without article: {missing:?}");
+    }
+
+    /// An ellipsis writes ⠠⠠⠠ whether it falls in prose or in a formula, so the
+    /// article is the only thing that separates them: 수학 제12항 [붙임 1] inside
+    /// an expression, 한글 제53항 outside it.
+    #[test]
+    fn an_ellipsis_in_a_formula_cites_the_math_article() {
+        let ellipsis = SHORTCUT_MAP[&'…'];
+
+        assert_eq!(ellipsis.fallback_meta.section, "12");
+        assert_eq!(ellipsis.fallback_meta.subsection, Some("붙임 1"));
+        assert_eq!(
+            ellipsis.cells,
+            [
+                decode_unicode('⠠'),
+                decode_unicode('⠠'),
+                decode_unicode('⠠')
+            ]
+        );
     }
 
     /// 제6항 1 lists 연립식 괄호 as `7'` and closes it with `,7`. LaTeX writes

@@ -21,9 +21,16 @@ pub fn translate_to_braille_font(text: &str) -> Result<String, String> {
 #[derive(Clone)]
 #[wasm_bindgen(getter_with_clone)]
 pub struct RuleSpan {
-    /// Article number of the 2024 Korean Braille Standard, `"-"` for structural
-    /// emitter output and `"?"` for a rule whose article is not yet declared.
+    /// Article number within the standard, or `"-"` for structural output the
+    /// standard prescribes without giving it an article, such as the blank
+    /// between words.
     pub section: String,
+    /// Sub-division of the article, such as a 붙임, when the rule implements one.
+    pub subsection: String,
+    /// The article in full, naming its series. A rule may run in one engine and
+    /// implement an article from another — circled numbers are 한글 제64항 even
+    /// though the math engine encodes them — so the number alone is ambiguous.
+    pub standard_ref: String,
     pub name: String,
     pub description: String,
     /// Which engine produced it: `korean`, `jamo`, `token`, `math`,
@@ -79,6 +86,8 @@ fn rule_span(
     let range = output.start as usize..output.end as usize;
     Some(RuleSpan {
         section: meta.section.to_string(),
+        subsection: meta.subsection.unwrap_or_default().to_string(),
+        standard_ref: meta.standard_ref.to_string(),
         name: meta.name.to_string(),
         description: meta.description.to_string(),
         kind: kind_label(kind).to_string(),

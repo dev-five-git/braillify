@@ -28,6 +28,7 @@ const NO_RULE_NOTICE: Record<string, string> = {
 /** 출력 점자의 일부를 만들어 낸 규칙 하나. WASM 객체를 평범한 값으로 옮긴 것. */
 export interface TraceRule {
   section: string
+  standardRef: string
   name: string
   description: string
   kind: string
@@ -87,6 +88,7 @@ export function readTrace(result: TraceResult): TraceSnapshot {
     path: result.path,
     rules: spans.map((span) => ({
       section: span.section,
+      standardRef: span.standard_ref,
       name: span.name,
       description: span.description,
       kind: span.kind,
@@ -101,16 +103,24 @@ export function readTrace(result: TraceResult): TraceSnapshot {
 }
 
 /**
- * 항 번호 표기. `-`는 규정 항이 없는 구조 출력이고 `?`는 항 번호를 아직
- * 선언하지 않은 규칙이다. 둘 다 `제N항`으로 꾸며내지 않는다.
+ * 항 번호 표기. `-`는 규정 항이 없는 구조 출력이라 `제N항`으로 꾸며내지 않는다.
  *
  * 영어는 한국 점자 규정이 아니라 UEB 규정을 따르므로 `제N항`이 아닌 `§N` 표기를
  * 쓴다. 수학은 같은 규정 안의 별도 장이라 한글 제N항과 번호가 겹치므로 `수학`을
  * 붙여 구분한다. 번호 체계가 다른 규정을 같은 꼴로 적으면 출처를 잘못 읽게 된다.
+ *
+ * 규칙이 도는 엔진과 규칙이 구현하는 규정의 계열은 서로 다를 수 있다. 동그라미
+ * 숫자는 수식 안에서 만나도 한글 제64항이고, 수학 제64항은 햇(단위 벡터)이다.
+ * 그래서 계열은 엔진(`kind`)이 아니라 규칙이 밝힌 출처(`standardRef`)에서 읽는다.
  */
-function sectionLabel(section: string, kind: string): string | null {
+function sectionLabel(
+  section: string,
+  kind: string,
+  standardRef: string,
+): string | null {
   if (section === '-') return null
-  if (section === '?') return '규정 미표기'
+  if (standardRef.includes('한글 제')) return `한글 제${section}항`
+  if (standardRef.includes('수학 제')) return `수학 제${section}항`
   if (kind === 'english-ueb') return `§${section}`
   return kind === 'math' ? `수학 제${section}항` : `제${section}항`
 }
@@ -144,7 +154,7 @@ function BrailleCells({ braille }: { braille: string }) {
 }
 
 function RuleRow({ rule }: { rule: TraceRule }) {
-  const section = sectionLabel(rule.section, rule.kind)
+  const section = sectionLabel(rule.section, rule.kind, rule.standardRef)
 
   return (
     <Flex

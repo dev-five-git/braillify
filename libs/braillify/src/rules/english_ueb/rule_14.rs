@@ -229,6 +229,13 @@ fn has_nemeth_span(input: &str) -> bool {
     false
 }
 
+/// The switch indicators and the maths they wrap are all §14.6.2 output, so
+/// they are recorded as they are appended rather than left for a later pass to
+/// guess at.
+fn push_nemeth(out: &mut Vec<u8>, cells: &[u8]) {
+    super::push_direct(out, super::UebMoveSource::InlineNemethCode, cells);
+}
+
 fn encode_nemeth_spans(
     input: &str,
     encode_ueb: &mut impl FnMut(&str) -> Option<Vec<u8>>,
@@ -249,16 +256,16 @@ fn encode_nemeth_spans(
         let after = &rest[start + '$'.len_utf8()..];
         let end = after.find('$')?;
         if !continued {
-            out.extend(cells("⠸⠩⠀"));
+            push_nemeth(&mut out, &cells("⠸⠩⠀"));
         }
-        out.extend(encode_nemeth_math(&after[..end])?);
+        push_nemeth(&mut out, &encode_nemeth_math(&after[..end])?);
         let tail = &after[end + '$'.len_utf8()..];
         if tail.starts_with(", $") {
-            out.extend(cells("⠠⠀"));
+            push_nemeth(&mut out, &cells("⠠⠀"));
             rest = &tail[", ".len()..];
             continued = true;
         } else {
-            out.extend(cells("⠀⠸⠱"));
+            push_nemeth(&mut out, &cells("⠀⠸⠱"));
             rest = tail;
             continued = false;
         }

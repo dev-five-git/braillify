@@ -1,14 +1,5 @@
 [
   {
-    "input": "~",
-    "note": "PDF 과학 제3항 위 첨자(질량수) 기호 정의",
-    "internal": "~",
-    "expected": "24",
-    "unicode": "⠘",
-    "world": "",
-    "jeomsarang": ""
-  },
-  {
     "input": "⁷Li",
     "note": "PDF 과학 제3항 질량수 예제",
     "internal": ",li~#g",

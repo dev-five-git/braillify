@@ -31,6 +31,47 @@ fn next_non_space(tokens: &[MathToken], mut idx: usize) -> Option<&MathToken> {
 /// PDF 수학 제18항 2 — 좌상첨자: 위첨자가 변수 앞에 단독 위치할 때.
 /// 앞에 피첨자(변수/숫자/괄호닫기)가 없고 뒤에 변수가 이어지면 좌상첨자다.
 /// 단, 합/적분/극한 등 한정자 뒤의 첨자(예: ∑_{k=0}^{∞} 의 ^∞)는 좌상첨자가 아니다.
+/// 원소 기호를 대문자표와 함께 emit하고 소비한 토큰 수를 돌려준다.
+///
+/// 원소 기호가 아니면 `None`을 돌려주고 아무것도 쓰지 않는다. 한 글자짜리
+/// 원소 기호는 수학 변수와 글자가 겹치므로, 실제 원소 기호 목록에 있는 것만
+/// 통과시켜 좌상첨자가 붙은 일반 변수(`ⁿx`)를 건드리지 않는다.
+pub(super) fn emit_element_symbol(
+    tokens: &[MathToken],
+    index: usize,
+    result: &mut Vec<u8>,
+) -> Result<Option<usize>, String> {
+    const SYMBOLS: &[&str] = &[
+        "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S",
+        "Cl", "Ar", "K", "Ca", "Fe", "Co", "Ni", "Cu", "Zn", "Br", "Ag", "Sn", "I", "Ba", "Pt",
+        "Au", "Hg", "Pb", "U",
+    ];
+    let Some(MathToken::UpperVariable(upper)) = tokens.get(index) else {
+        return Ok(None);
+    };
+    let lower = match tokens.get(index + 1) {
+        Some(MathToken::Variable(letter)) if letter.is_ascii_lowercase() => Some(*letter),
+        _ => None,
+    };
+    let two: Option<String> = lower.map(|letter| format!("{upper}{letter}"));
+    let (symbol, consumed) = match two {
+        Some(ref name) if SYMBOLS.contains(&name.as_str()) => (name.as_str(), 2),
+        _ if SYMBOLS.contains(&upper.to_string().as_str()) => return single(*upper, result),
+        _ => return Ok(None),
+    };
+    result.push(32);
+    for letter in symbol.chars() {
+        result.push(crate::english::encode_english(letter.to_ascii_lowercase())?);
+    }
+    Ok(Some(consumed))
+}
+
+fn single(upper: char, result: &mut Vec<u8>) -> Result<Option<usize>, String> {
+    result.push(32);
+    result.push(crate::english::encode_english(upper.to_ascii_lowercase())?);
+    Ok(Some(1))
+}
+
 fn is_left_superscript_position(tokens: &[MathToken], index: usize) -> bool {
     let prev_blocks = matches!(
         prev_non_space(tokens, index),
@@ -249,6 +290,15 @@ pub fn encode_superscript(
     // PDF 수학 제18항 2 — 좌상첨자(left superscript): 변수 앞에 위치한 위첨자.
     // 좌상첨자는 단일 토큰이라도 그룹 괄호로 묶는다.
     let is_left_superscript = is_left_superscript_position(tokens, *i);
+
+    // 과학 제3항 — 원소 기호를 먼저 적고 질량수를 위 첨자로 적는다(⁷Li → ,li~#g).
+    // 수학 제18항 2의 좌상첨자는 제자리에 괄호로 묶이지만 동위원소는 원소가 앞선다.
+    if is_left_superscript && let Some(consumed) = emit_element_symbol(tokens, *i + 1, result)? {
+        result.push(24);
+        engine.encode_tokens(sup_content, result)?;
+        *i += 1 + consumed;
+        return Ok(false);
+    }
 
     result.push(24);
     if wrapped_simple_index {

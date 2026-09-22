@@ -80,12 +80,12 @@ pub(crate) static META_KOREAN_49: RuleMeta = RuleMeta {
     standard_ref: "2024 Korean Braille Standard, 한글 제49항",
     description: "Question and exclamation marks inside math input",
 };
-pub(crate) static META_KOREAN_50: RuleMeta = RuleMeta {
-    section: "50",
-    subsection: None,
-    name: "korean_middle_dot_in_math",
-    standard_ref: "2024 Korean Braille Standard, 한글 제50항",
-    description: "Middle dot inside math input",
+pub(crate) static META_2_APPENDIX: RuleMeta = RuleMeta {
+    section: "2",
+    subsection: Some("붙임"),
+    name: "math_dot_multiplication",
+    standard_ref: "2024 Korean Braille Standard, 수학 제2항 [붙임]",
+    description: "Middle dot written as the multiplication sign",
 };
 pub(crate) static META_KOREAN_51: RuleMeta = RuleMeta {
     section: "51",
@@ -173,7 +173,7 @@ pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
     &META_61,
     &META_64,
     &META_65,
-    &META_KOREAN_50,
+    &META_2_APPENDIX,
     &META_12_APPENDIX_1,
     &META_KOREAN_64,
     &META_KOREAN_69_APPENDIX_2,
@@ -345,7 +345,7 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     &META_KOREAN_69_APPENDIX_2 => {
         '\u{00B0}' => &[decode_unicode('⠴'), decode_unicode('⠙')],
     },
-    &META_KOREAN_50 => {
+    &META_2_APPENDIX => {
         '\u{00B7}' => &[decode_unicode('⠐')],
     },
     &META_12_APPENDIX_1 => {
@@ -552,6 +552,23 @@ mod test {
             .find(|(_, shortcut)| shortcut.fallback_meta.section == "?");
 
         assert!(missing.is_none(), "shortcut without article: {missing:?}");
+    }
+
+    /// 한글 제50항's 가운뎃점 is two cells, ⠐⠆. The single ⠐ this table gives the
+    /// same character is 수학 제2항 [붙임] — "점으로 표현된 곱셈 기호는 `"`으로
+    /// 적는다" — so a middle dot met inside a formula is multiplication, not the
+    /// punctuation mark it looks like.
+    #[test]
+    fn a_middle_dot_in_a_formula_is_the_multiplication_sign() {
+        let dot = SHORTCUT_MAP[&'\u{00B7}'];
+
+        assert_eq!(dot.fallback_meta.section, "2");
+        assert_eq!(dot.fallback_meta.subsection, Some("붙임"));
+        assert_eq!(dot.cells, [decode_unicode('⠐')]);
+        assert_ne!(
+            dot.cells,
+            crate::symbol_shortcut::encode_char_symbol_shortcut('\u{00B7}').unwrap()
+        );
     }
 
     /// An ellipsis writes ⠠⠠⠠ whether it falls in prose or in a formula, so the

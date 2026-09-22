@@ -241,11 +241,13 @@ fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
     // output the Korean emitter accounts for. It carries no dots, so there is no
     // other thing it could be.
     let blank = crate::rules::trace::RuleId::emitter(crate::rules::trace::EmitterRule::WordSpace);
-    for (index, cell) in cells.iter().enumerate() {
-        if *cell == 0 {
-            spans.push((blank, index as u32..index as u32 + 1));
-        }
-    }
+    spans.extend(
+        cells
+            .iter()
+            .enumerate()
+            .filter(|(_, cell)| **cell == 0)
+            .map(|(index, _)| (blank, index as u32..index as u32 + 1)),
+    );
     spans
 }
 

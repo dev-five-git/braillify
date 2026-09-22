@@ -778,9 +778,8 @@ fn spaced_ampersand_connects_roman_words(tokens: &[Token<'_>], ampersand_index: 
         return false;
     }
 
-    tokens
+    tokens[ampersand_index + 1..]
         .iter()
-        .skip(ampersand_index + 1)
         .find_map(|token| match token {
             Token::Space(_) | Token::Mode(_) => None,
             Token::Word(word) => Some(

@@ -992,6 +992,8 @@ dependencies = [
  "braillify",
  "console_error_panic_hook",
  "rstest",
+ "serde",
+ "serde_json",
  "wasm-bindgen",
  "wasm-bindgen-test",
 ]

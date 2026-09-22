@@ -1,7 +1,6 @@
 'use client'
 
 import { Box, Flex, Text, VStack } from '@devup-ui/react'
-import type { TraceResult } from 'braillify'
 
 /** 한 번에 그리는 규칙 행의 최대 개수. 키 입력마다 다시 그리므로 상한을 둔다. */
 const MAX_VISIBLE_RULES = 120
@@ -74,19 +73,39 @@ export const FAILED_TRACE: TraceSnapshot = {
   path: '',
 }
 
+interface RuleSpanJson {
+  section: string
+  subsection: string
+  standard_ref: string
+  name: string
+  description: string
+  kind: string
+  start: number
+  end: number
+  braille: string
+}
+
+interface TraceResultJson {
+  braille: string
+  rules: RuleSpanJson[]
+  attributed: number
+  total: number
+  path: string
+}
+
 /**
- * WASM `TraceResult`를 평범한 JS 값으로 복사하고 WASM 쪽 핸들을 해제한다.
- * getter 하나하나가 WASM 메모리를 읽으므로 렌더 중에 다시 만지지 않도록 한 번에 옮긴다.
+ * 점역 결과를 JSON으로 받는다. WASM 쪽은 문자열 하나만 넘기므로 해제할 핸들이
+ * 없고, 렌더 중에 WASM 메모리를 다시 읽는 일도 없다.
  */
-export function readTrace(result: TraceResult): TraceSnapshot {
-  const spans = result.rules
-  const snapshot: TraceSnapshot = {
+export function readTrace(json: string): TraceSnapshot {
+  const result = JSON.parse(json) as TraceResultJson
+  return {
     status: 'ok',
     braille: result.braille,
     attributed: result.attributed,
     total: result.total,
     path: result.path,
-    rules: spans.map((span) => ({
+    rules: result.rules.map((span) => ({
       section: span.section,
       standardRef: span.standard_ref,
       name: span.name,
@@ -97,9 +116,6 @@ export function readTrace(result: TraceResult): TraceSnapshot {
       braille: span.braille,
     })),
   }
-  for (const span of spans) span.free()
-  result.free()
-  return snapshot
 }
 
 /**

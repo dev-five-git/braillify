@@ -18,8 +18,12 @@ pub fn translate_to_braille_font(text: &str) -> Result<String, String> {
 }
 
 /// One rule that produced part of the braille output.
-#[derive(Clone)]
-#[wasm_bindgen(getter_with_clone)]
+///
+/// A plain serialisable struct rather than an exported class. Handing a
+/// `Vec` of exported structs across the boundary makes wasm-bindgen import a
+/// JS constructor into the module, and that import cannot be linked under
+/// Bun, which is what runs this package's tests.
+#[derive(Clone, serde::Serialize)]
 pub struct RuleSpan {
     /// Article number within the standard, or `"-"` for structural output the
     /// standard prescribes without giving it an article, such as the blank
@@ -42,7 +46,11 @@ pub struct RuleSpan {
 }
 
 /// Braille output plus the rules that produced it.
-#[wasm_bindgen(getter_with_clone)]
+///
+/// Serialised rather than exported as a class, for the reason [`RuleSpan`]
+/// gives: an exported struct makes wasm-bindgen import per-field getters into
+/// the module, and Bun cannot link those.
+#[derive(serde::Serialize)]
 pub struct TraceResult {
     pub braille: String,
     pub rules: Vec<RuleSpan>,
@@ -57,22 +65,31 @@ pub struct TraceResult {
 }
 
 #[wasm_bindgen(js_name = "translateToUnicodeWithTrace")]
-pub fn translate_to_unicode_with_trace(text: &str) -> Result<TraceResult, String> {
+pub fn translate_to_unicode_with_trace(text: &str) -> Result<String, String> {
+    let result = trace_result(text)?;
+    serde_json::to_string(&result).map_err(|error| error.to_string())
+}
+
+fn trace_result(text: &str) -> Result<TraceResult, String> {
     let (cells, trace) = braillify::encode_with_trace(text)?;
     let braille = to_braille(&cells);
-    let rules = trace
-        .events()
-        .iter()
-        .filter_map(|event| rule_span(event.rule, event.output.clone(), &cells))
-        .collect();
 
     Ok(TraceResult {
         braille,
-        rules,
+        rules: rule_spans(&cells, &trace),
         attributed: trace.attributed_cells(),
         total: trace.output_len(),
         path: path_label(trace.path()).to_string(),
     })
+}
+
+/// Every traced event that names a rule, in output order.
+fn rule_spans(cells: &[u8], trace: &braillify::Trace) -> Vec<RuleSpan> {
+    trace
+        .events()
+        .iter()
+        .filter_map(|event| rule_span(event.rule, event.output.clone(), cells))
+        .collect()
 }
 
 /// One event as a span, or `None` for an id the registry does not resolve.
@@ -175,8 +192,10 @@ mod tests {
 
     #[test]
     fn trace_reports_the_rules_behind_the_braille() {
-        let result = translate_to_unicode_with_trace("안녕").expect("must succeed");
+        let json = translate_to_unicode_with_trace("안녕").expect("must succeed");
+        let result = trace_result("안녕").expect("must succeed");
 
+        assert!(json.starts_with('{'), "the binding hands back JSON");
         assert_eq!(result.path, "korean");
         assert_eq!(result.attributed, result.total);
         assert!(!result.rules.is_empty());

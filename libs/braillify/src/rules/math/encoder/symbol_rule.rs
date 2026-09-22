@@ -535,7 +535,6 @@ mod tests {
     #[case::root('√', "22")]
     #[case::set_membership('∈', "60")]
     #[case::negation_overlay('\u{0338}', "34")]
-    #[case::unresolved_product('∏', "?")]
     fn reports_the_selected_symbol_article(#[case] symbol: char, #[case] expected_section: &str) {
         use super::super::super::encoder::math_engine_for_context;
         use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};

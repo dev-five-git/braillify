@@ -313,7 +313,6 @@ static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
     },
     &UNDECLARED_MATH_RULE => {
         '\u{2E29}' => &[decode_unicode('⠄')],
-        '\u{220F}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠏')],
     },
     &META_34 => {
         '\u{0338}' => &[decode_unicode('⠨')],
@@ -553,15 +552,22 @@ mod test {
         );
     }
 
-    /// `∏` is written with the cells of Greek capital pi but the standard never
-    /// names it, and `⸩` stands in for LaTeX's `\right.` null delimiter, which
-    /// has no printed counterpart for an article to govern. Both keep the
-    /// placeholder rather than borrowing an article by resemblance.
-    #[rstest::rstest]
-    #[case::product('∏')]
-    #[case::open_ended_delimiter('⸩')]
-    fn unresolved_shortcuts_keep_the_honest_placeholder(#[case] symbol: char) {
-        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, "?");
+    /// `⸩` stands in for LaTeX's `\right.` null delimiter, which prints nothing
+    /// for an article to govern, so it keeps the placeholder rather than
+    /// borrowing an article by resemblance.
+    #[test]
+    fn the_null_delimiter_keeps_the_honest_placeholder() {
+        assert_eq!(SHORTCUT_MAP[&'⸩'].fallback_meta.section, "?");
+    }
+
+    /// 국립국어원 ruled on 2026-09-21 that the n-ary product cannot be
+    /// transcribed: the standard never mentions it. Its cells are those of
+    /// Greek capital pi, which makes borrowing them look reasonable and is
+    /// exactly why the table must not carry it.
+    #[test]
+    fn the_n_ary_product_is_not_transcribable() {
+        assert!(!SHORTCUT_MAP.contains_key(&'∏'));
+        assert!(encode_char_math_symbol_shortcut('∏').is_err());
     }
 
     /// Each of these was identified by matching its cells against the notation

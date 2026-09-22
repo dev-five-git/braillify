@@ -1800,5 +1800,15 @@
     "description": "NIKL Korean-Korean Braille Parallel Corpus 2025 v1.0",
     "benchmark": true,
     "shards": true
+  },
+  "science/science_7": {
+    "title": "과학 제7항",
+    "description": "화학식은 원소 기호 앞에 대문자 기호표를 적고, 아래 첨자는 ⠰ 뒤에 내용을 적는다.",
+    "benchmark": true
+  },
+  "science/science_18": {
+    "title": "과학 제18항",
+    "description": "화학 반응식의 기호는 앞뒤를 한 칸씩 띄어 쓰고, 기체 발생과 침전 기호는 분자식에 붙여 적는다.",
+    "benchmark": true
   }
 }

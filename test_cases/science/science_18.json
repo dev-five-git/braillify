@@ -1,0 +1,56 @@
+[
+  {
+    "input": "+",
+    "note": "PDF 과학 제18항 1. 반응식 더하기 기호 정의",
+    "internal": "5",
+    "expected": "34",
+    "unicode": "⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "→",
+    "note": "PDF 과학 제18항 1. 오른쪽 화살표 정의",
+    "internal": "3o",
+    "expected": "1821",
+    "unicode": "⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "←",
+    "note": "PDF 과학 제18항 1. 왼쪽 화살표 정의",
+    "internal": "{3",
+    "expected": "4218",
+    "unicode": "⠪⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⇄",
+    "note": "PDF 과학 제18항 1. 가역 반응 기호 정의",
+    "internal": "[7o",
+    "expected": "425421",
+    "unicode": "⠪⠶⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↑",
+    "note": "PDF 과학 제18항 2. 기체 발생 기호 정의",
+    "internal": ";3o",
+    "expected": "481821",
+    "unicode": "⠰⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↓",
+    "note": "PDF 과학 제18항 2. 침전 기호 정의",
+    "internal": "^3o",
+    "expected": "241821",
+    "unicode": "⠘⠒⠕",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

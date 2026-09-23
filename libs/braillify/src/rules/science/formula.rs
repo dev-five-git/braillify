@@ -315,7 +315,57 @@ pub(crate) fn parse(text: &str) -> Option<Vec<Item>> {
         });
         at += 1;
     }
-    Some(reorder_prescripts(electron_pairs(items)))
+    Some(quantity_prefixes(reorder_prescripts(electron_pairs(items))))
+}
+
+/// 과학 제7항 2 — 물리량 기호가 앞에 붙는 분자(`PCO₂` 의 CO₂). 앞에 원소 하나가
+/// 붙어 흔한 화학식이 되는 분자(`H₂O` → `CH₂O`, `CO` → `HCO`)는 넣지 않는다.
+static PREFIXED_MOLECULES: phf::Set<&'static str> = phf::phf_set! { "CO₂" };
+
+fn molecule_key(items: &[Item]) -> Option<String> {
+    items
+        .iter()
+        .map(|item| match item {
+            Item::Capital {
+                symbol,
+                element: true,
+                style: None,
+            } => Some(symbol.clone()),
+            Item::Sub(count) => count.chars().map(to_subscript).collect(),
+            _ => None,
+        })
+        .collect()
+}
+
+/// 과학 제7항 2 — 항 첫머리의 한 글자 대문자 뒤가 그대로 분자이면, 그 글자는
+/// 원소 기호와 모양이 같아도 로마자다(`PCO₂` = P + CO₂). 한 글자 대문자가 셋 이상인
+/// 항에서만 제4항 대문자 구절표가 갈리므로 그때만 가른다.
+fn quantity_prefixes(mut items: Vec<Item>) -> Vec<Item> {
+    for at in 0..items.len() {
+        if at > 0 && !items[at - 1].separates_terms() && !matches!(items[at - 1], Item::Open(_)) {
+            continue;
+        }
+        let end = items[at..]
+            .iter()
+            .position(|item| item.separates_terms() || matches!(item, Item::Close(_)))
+            .map_or(items.len(), |len| at + len);
+        let term = &items[at..end];
+        let singles = term
+            .iter()
+            .filter(|item| item.single_capital() == Some(true))
+            .count();
+        let prefixed = matches!(
+            term,
+            [Item::Capital { symbol, element: true, style: None }, rest @ ..]
+                if symbol.len() == 1
+                    && singles >= 3
+                    && molecule_key(rest).is_some_and(|key| PREFIXED_MOLECULES.contains(key.as_str()))
+        );
+        if prefixed && let Item::Capital { element, .. } = &mut items[at] {
+            *element = false;
+        }
+    }
+    items
 }
 
 /// 전자 점식에서는 쌍점이 비율이 아니라 전자 두 개다(`:N⋮⋮N:`). 약어 뒤의
@@ -1075,8 +1125,35 @@ mod tests {
     #[case::electron_dots(":N⋮⋮N:", "⠔⠔⠠⠝⠔⠔⠔⠔⠔⠔⠠⠝⠔⠔")]
     #[case::base_sequence("5′―ATAATG―3′", "⠼⠑⠤⠠⠤⠠⠠⠁⠞⠁⠁⠞⠛⠠⠤⠼⠉⠤")]
     #[case::unit_prefix("mH₂O", "⠍⠠⠓⠰⠼⠃⠠⠕")]
+    #[case::partial_pressure("PCO₂", "⠠⠏⠠⠉⠠⠕⠰⠼⠃")]
+    #[case::gas_volume("VCO₂", "⠠⠧⠠⠉⠠⠕⠰⠼⠃")]
     fn writes_formulas(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(braille(text), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::partial_pressure("PCO₂", vec![false, true, true])]
+    #[case::in_brackets("(PCO₂)", vec![false, true, true])]
+    #[case::after_an_operator("H₂O + PCO₂", vec![true, true, false, true, true])]
+    #[case::carbon_dioxide("CO₂", vec![true, true])]
+    #[case::two_capitals("PO₂", vec![true, true])]
+    #[case::bicarbonate("HCO₃⁻", vec![true, true, true])]
+    #[case::formic_acid("HCO₂H", vec![true, true, true, true])]
+    #[case::formaldehyde("CH₂O", vec![true, true, true])]
+    #[case::saltpeter("KNO₃", vec![true, true, true])]
+    #[case::isocyanic_acid("HNCO", vec![true, true, true, true])]
+    #[case::two_letter_lead("NaHCO₃", vec![true, true, true, true])]
+    #[case::scripted_lead("C₂CO₂", vec![true, true, true])]
+    fn reads_a_quantity_letter_before_a_molecule(#[case] text: &str, #[case] expected: Vec<bool>) {
+        let elements: Vec<bool> = parse(text)
+            .expect("parses")
+            .iter()
+            .filter_map(|item| match item {
+                Item::Capital { element, .. } => Some(*element),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(elements, expected);
     }
 
     #[rstest::rstest]

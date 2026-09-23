@@ -32,6 +32,9 @@ import io.github.kdyann.braillify.Braillify;
 byte[] cells = Braillify.encode("안녕하세요");
 String unicode = Braillify.translateToUnicode("안녕하세요");
 String font = Braillify.translateToBrailleFont("안녕하세요");
+
+// 묵자 모양만으로 규정을 정할 수 없는 글은 문맥("science", "math", "korean" 등)을 밝힌다
+String science = Braillify.translateToUnicode("pOH", "science"); // "⠴⠏⠠⠕⠠⠓"
 ```
 
 Kotlin:

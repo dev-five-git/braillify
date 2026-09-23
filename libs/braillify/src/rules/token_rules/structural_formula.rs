@@ -21,20 +21,28 @@ const SINGLE_LETTER_ELEMENTS: &[char] = &[
 
 /// 결합선. 과학 제10항 2 — ⠰을 먼저 적고 결합 수에 따라 1, 2, 3을 붙인다.
 fn bond_cells(mark: char) -> Option<[u8; 2]> {
-    let count = match mark {
-        '-' => '⠂',
-        '=' => '⠆',
-        '≡' => '⠒',
-        _ => return None,
+    let count = match bond_order(mark)? {
+        1 => '⠂',
+        2 => '⠆',
+        _ => '⠒',
     };
     Some([decode_unicode('⠰'), decode_unicode(count)])
+}
+
+fn bond_order(mark: char) -> Option<u8> {
+    match mark {
+        '-' => Some(1),
+        '=' => Some(2),
+        '≡' => Some(3),
+        _ => None,
+    }
 }
 
 /// 원소와 결합선이 번갈아 놓인 사슬인지 본다.
 ///
 /// 원소를 한 글자짜리 실제 원소 기호로만 한정하고 셋 이상을 요구한다. 수학의
 /// `A-B`는 A가 원소가 아니라서, 두 글자짜리 이름은 길이 때문에 걸리지 않는다.
-fn chain_of_elements(text: &str) -> Option<Vec<char>> {
+pub fn chain_of_elements(text: &str) -> Option<Vec<char>> {
     let chars: Vec<char> = text.chars().collect();
     if chars.len() < 5 || chars.len().is_multiple_of(2) {
         return None;
@@ -53,7 +61,44 @@ fn chain_of_elements(text: &str) -> Option<Vec<char>> {
             return None;
         }
     }
+    // UEB §8.7.1 — 하이픈으로 글자를 띄운 낱말은 철자를 풀어 쓴 것이다(`B-U-S`).
+    // `=`·`≡`는 철자에 쓰이지 않으므로 모호한 것은 하이픈만으로 이은 사슬뿐이다.
+    // 그때는 사슬이 분자 하나를 온전히 이룰 때만 구조식으로 본다.
+    let single_bonds_only = chars.iter().skip(1).step_by(2).all(|mark| *mark == '-');
+    if single_bonds_only && !is_complete_molecule(&chars) {
+        return None;
+    }
     Some(chars)
+}
+
+/// 흔한 원자가. 값이 여럿인 전이 금속은 사슬만으로 분자를 확정할 수 없어 뺀다.
+fn valence(element: char) -> Option<u8> {
+    match element {
+        'H' | 'F' | 'K' | 'I' => Some(1),
+        'O' | 'S' => Some(2),
+        'B' | 'N' | 'P' | 'Y' => Some(3),
+        'C' => Some(4),
+        _ => None,
+    }
+}
+
+/// 모든 원자의 결합 수가 원자가와 같은가. `H-O-H`는 H 1·O 2로 맞고,
+/// `S-O-S`는 양끝 S가 결합 하나뿐이라 분자가 아니다.
+fn is_complete_molecule(chars: &[char]) -> bool {
+    let order = |offset: usize| {
+        chars
+            .get(offset)
+            .and_then(|mark| bond_order(*mark))
+            .unwrap_or(0)
+    };
+    chars
+        .iter()
+        .enumerate()
+        .step_by(2)
+        .all(|(offset, element)| {
+            let bonds = offset.checked_sub(1).map_or(0, order) + order(offset + 1);
+            valence(*element) == Some(bonds)
+        })
 }
 
 fn encode_chain(chars: &[char]) -> Result<Vec<u8>, String> {
@@ -110,6 +155,8 @@ mod tests {
     #[case::double_bond("O=C=O", true)]
     #[case::mixed_bonds("H-C≡C-H", true)]
     #[case::not_elements("A-B", false)]
+    #[case::spelled_out_word("B-U-S", false)]
+    #[case::spelled_out_distress("S-O-S", false)]
     #[case::two_elements("H-O", false)]
     #[case::plain_word("water", false)]
     fn recognises_only_element_chains(#[case] text: &str, #[case] expected: bool) {

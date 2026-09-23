@@ -754,6 +754,11 @@ fn push_rule4_letter_without_leading_cap(c: char, out: &mut Vec<u8>) -> Option<(
 /// (U+0332) — so a *letterless* but emphasised input (`3̲4̲`, `27.̲9`, `83%̲`) is
 /// still UEB's. Korean is excluded by the callers' own `is_korean_char` guard.
 pub fn is_ueb_eligible(text: &str) -> bool {
+    // 과학 제10항의 구조식은 로마자만으로 이뤄지지만 영어 낱말이 아니다. 결합선으로
+    // 이어진 원소 사슬은 한국어 경로의 구조식 규칙이 대문자 구절표와 함께 적는다.
+    if crate::rules::token_rules::structural_formula::chain_of_elements(text).is_some() {
+        return false;
+    }
     text.chars().any(|c| {
         c.is_ascii_alphabetic()
             || c == '\u{0332}'

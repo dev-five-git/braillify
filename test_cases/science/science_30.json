@@ -1,0 +1,251 @@
+[
+  {
+    "input": "μm",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0.mm4",
+    "expected": "5240131350",
+    "unicode": "⠴⠨⠍⠍⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "in",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0in4",
+    "expected": "52102950",
+    "unicode": "⠴⠊⠝⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Å",
+    "note": "PDF 과학 제30항",
+    "internal": "0*",
+    "expected": "5233",
+    "unicode": "⠴⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yard",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0y>d4",
+    "expected": "5261282550",
+    "unicode": "⠴⠽⠜⠙⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "min",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0m94",
+    "expected": "52132050",
+    "unicode": "⠴⠍⠔⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "kg중",
+    "note": "PDF 과학 제30항",
+    "internal": "0kg4.m7",
+    "expected": "5252750401354",
+    "unicode": "⠴⠅⠛⠲⠨⠍⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "℃",
+    "note": "PDF 과학 제30항",
+    "internal": "0d,c",
+    "expected": "5225329",
+    "unicode": "⠴⠙⠠⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "℉",
+    "note": "PDF 과학 제30항",
+    "internal": "0d,f",
+    "expected": "52253211",
+    "unicode": "⠴⠙⠠⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hPa",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0h,pa4",
+    "expected": "52193215150",
+    "unicode": "⠴⠓⠠⠏⠁⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "㎜Hg",
+    "note": "PDF 과학 제30항",
+    "internal": "0mm,hg4",
+    "expected": "52131332192750",
+    "unicode": "⠴⠍⠍⠠⠓⠛⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "kgf/m²",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0kgf_/m^#b",
+    "expected": "525271156121324603",
+    "unicode": "⠴⠅⠛⠋⠸⠌⠍⠘⠼⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "°",
+    "note": "PDF 과학 제30항",
+    "internal": "0d",
+    "expected": "5225",
+    "unicode": "⠴⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "′",
+    "note": "PDF 과학 제30항",
+    "internal": "0-",
+    "expected": "5236",
+    "unicode": "⠴⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "″",
+    "note": "PDF 과학 제30항",
+    "internal": "0--",
+    "expected": "523636",
+    "unicode": "⠴⠤⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "kg/㎥",
+    "note": "PDF 과학 제30항",
+    "internal": "0kg_/m^#c",
+    "expected": "5252756121324609",
+    "unicode": "⠴⠅⠛⠸⠌⠍⠘⠼⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "erg",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0}g4",
+    "expected": "52592750",
+    "unicode": "⠴⠻⠛⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "HP",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0,,hp4",
+    "expected": "523232191550",
+    "unicode": "⠴⠠⠠⠓⠏⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ω",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0,.w4",
+    "expected": "5232405850",
+    "unicode": "⠴⠠⠨⠺⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "dB",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0d,b4",
+    "expected": "522532350",
+    "unicode": "⠴⠙⠠⠃⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Hz",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0,hz4",
+    "expected": "5232195350",
+    "unicode": "⠴⠠⠓⠵⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "pH",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다",
+    "context": "korean",
+    "internal": "0p,h4",
+    "expected": "5215321950",
+    "unicode": "⠴⠏⠠⠓⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "%",
+    "note": "PDF 과학 제30항",
+    "internal": "0p",
+    "expected": "5215",
+    "unicode": "⠴⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "‰",
+    "note": "PDF 과학 제30항",
+    "internal": "0pm",
+    "expected": "521513",
+    "unicode": "⠴⠏⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mH₂O",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다 — [붙임] 단위 안 화학식",
+    "context": "korean",
+    "internal": "0m,h;#b,o",
+    "expected": "52133219486033221",
+    "unicode": "⠴⠍⠠⠓⠰⠼⠃⠠⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "pOH",
+    "note": "PDF 과학 제30항 단위 표(한글 제69항). 단독 입력은 영어 낱말·그리스 문자(한글 제30항 μm → .mm)와 구별되지 않아 국어 문맥(context)을 밝힌다 — [붙임] 단위 안 화학식",
+    "context": "korean",
+    "internal": "0p,o,h",
+    "expected": "521532213219",
+    "unicode": "⠴⠏⠠⠕⠠⠓",
+    "limitation": "pOH 의 OH 가 화학식(원소 기호마다 대문자표, 과학 제30항 [붙임])이라는 정보가 입력에 없다. 같은 모양의 iOS 는 대문자 단어표를 쓴다(한글 제28항 [붙임])",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "수주미터는 압력의 단위로 기호는 mH₂O 또는 mAq이다.",
+    "note": "PDF 과학 제30항 [붙임]",
+    "internal": ",m.meohscz`<b\":aw`i3mr\"u`@ojucz`0m,h;#b,o4`,iucz`0m,aq4oi4",
+    "expected": "321340131721191495303531649158010181323163708212637953052133219486033221500321037953052133213150211050",
+    "unicode": "⠠⠍⠨⠍⠑⠕⠓⠎⠉⠵⠀⠣⠃⠐⠱⠁⠺⠀⠊⠒⠍⠗⠐⠥⠀⠈⠕⠚⠥⠉⠵⠀⠴⠍⠠⠓⠰⠼⠃⠠⠕⠲⠀⠠⠊⠥⠉⠵⠀⠴⠍⠠⠁⠟⠲⠕⠊⠲",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

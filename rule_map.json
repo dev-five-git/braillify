@@ -1824,5 +1824,77 @@
   "science/science_22": {
     "title": "과학 제22항",
     "description": "여성 기호와 남성 기호를 적는 방법을 정한다."
+  },
+  "science/science_1": {
+    "title": "과학 제1항",
+    "description": "원소 기호는 한글 제29항의 로마자 표기법을 따르며 약자로 적지 않는 1급 점자로 적는다."
+  },
+  "science/science_2": {
+    "title": "과학 제2항",
+    "description": "이온은 위 첨자 기호 뒤에 + 는 ⠢, - 는 ⠔ 을 적고, 이온 표시 뒤에는 로마자 종료표 없이 한 칸 띄어 쓴다."
+  },
+  "science/science_4": {
+    "title": "과학 제4항",
+    "description": "로마자 하나로 된 원소 기호가 3개 이상 이어 나오면 대문자 구절표 표기법에 따라 적는다."
+  },
+  "science/science_5": {
+    "title": "과학 제5항",
+    "description": "대문자 구절표 안에서 숫자 다음에 붙어 나오는 H, B, C, F, I 앞에는 ⠐ 을 적는다."
+  },
+  "science/science_6": {
+    "title": "과학 제6항",
+    "description": "국어 문장 안에 연산·비교 기호나 화살표가 든 식은 앞뒤를 두 칸씩 띄고 로마자표를 적지 않는다."
+  },
+  "science/science_8": {
+    "title": "과학 제8항",
+    "description": "화학식과 비교 기호가 어울린 식에서는 비교 기호의 앞뒤를 한 칸씩 띄어 쓴다."
+  },
+  "science/science_16": {
+    "title": "과학 제16항",
+    "description": "전자 점식의 기호 표기 형식에서 전자는 ⠔ 으로 적고 원소 기호와 붙여 적는다."
+  },
+  "science/science_19": {
+    "title": "과학 제19항",
+    "description": "오비탈 기호는 숫자와 방위 양자수 기호 사이에 혼동이 있을 때에만 ⠐ 을 적는다."
+  },
+  "science/science_20": {
+    "title": "과학 제20항",
+    "description": "식은 문자대로 적되 글자체는 반영하지 않는다."
+  },
+  "science/science_23": {
+    "title": "과학 제23항",
+    "description": "대문자로 표시된 유전자는 1급 점자로 적고, 대문자가 2개 이상이면 대문자 단어표를 쓴다."
+  },
+  "science/science_24": {
+    "title": "과학 제24항",
+    "description": "유전자의 염기 서열이 국어 문장 중에 나오면 앞뒤를 두 칸씩 띄어 쓴다."
+  },
+  "science/science_26": {
+    "title": "과학 제26항",
+    "description": "치식은 묶음 괄호를 사용하여 분수 표기법으로 적는다."
+  },
+  "science/science_27": {
+    "title": "과학 제27항",
+    "description": "화식에서 밑선(상부 씨방)은 ⠠⠤, 윗선(하위 씨방)은 ⠈⠉ 으로 적는다."
+  },
+  "science/science_28": {
+    "title": "과학 제28항",
+    "description": "호흡량과 같이 분자식이 아래 첨자인 경우 묶음 괄호로 묶어 적는다."
+  },
+  "science/science_29": {
+    "title": "과학 제29항",
+    "description": "비례 기호는 ⠬⠒ 으로 적는다."
+  },
+  "science/science_30": {
+    "title": "과학 제30항",
+    "description": "단위는 한글 제69항에 따르고, 단위에 화학식이 있으면 화학식 표기 방법에 따른다."
+  },
+  "science/science_31": {
+    "title": "과학 제31항",
+    "description": "한 수식이 두 줄 이상으로 이어질 때에는 수학 제66항에 따라 적는다."
+  },
+  "science/science_32": {
+    "title": "과학 제32항",
+    "description": "대문자 구절표 안에서 로마자 관련 기호를 제외한 모든 기호는 한글 점자와 수학 점자에 따라 적는다."
   }
 }

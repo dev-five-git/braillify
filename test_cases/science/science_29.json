@@ -1,0 +1,29 @@
+[
+  {
+    "input": "∝",
+    "note": "PDF 과학 제29항 비례 기호 정의",
+    "internal": "+3",
+    "expected": "4418",
+    "unicode": "⠬⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "위치에너지 ∝ 질량",
+    "note": "PDF 과학 제29항",
+    "internal": "mr;oncs.o`+3`.o1\">7",
+    "expected": "1323482129914402104418040212162854",
+    "unicode": "⠍⠗⠰⠕⠝⠉⠎⠨⠕⠀⠬⠒⠀⠨⠕⠂⠐⠜⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$Q∝\\frac{1}{R}$",
+    "note": "PDF 과학 제29항",
+    "internal": ",q+3,r/#a",
+    "expected": "32314418322312601",
+    "unicode": "⠠⠟⠬⠒⠠⠗⠌⠼⠁",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

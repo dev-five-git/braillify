@@ -1,7 +1,25 @@
 [
   {
+    "input": "²³⁵₉₂U",
+    "note": "PDF 과학 제3항",
+    "internal": ",u;#ib~#bce",
+    "expected": "3237486010324603917",
+    "unicode": "⠠⠥⠰⠼⠊⠃⠘⠼⠃⠉⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₈O",
+    "note": "PDF 과학 제3항",
+    "internal": ",o;#h",
+    "expected": "3221486019",
+    "unicode": "⠠⠕⠰⠼⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "⁷Li",
-    "note": "PDF 과학 제3항 질량수 예제",
+    "note": "PDF 과학 제3항",
     "internal": ",li~#g",
     "expected": "32710246027",
     "unicode": "⠠⠇⠊⠘⠼⠛",
@@ -9,11 +27,20 @@
     "jeomsarang": ""
   },
   {
-    "input": "₈O",
-    "note": "PDF 과학 제3항 원자 번호 예제",
-    "internal": ",o;#h",
-    "expected": "3221486019",
-    "unicode": "⠠⠕⠰⠼⠓",
+    "input": "ₐZnᵐ",
+    "note": "PDF 과학 제3항",
+    "internal": ",zn;a~m",
+    "expected": "3253294812413",
+    "unicode": "⠠⠵⠝⠰⠁⠘⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⁹₄Be²⁺",
+    "note": "PDF 과학 제3항",
+    "internal": ",be;#d^#i^#b5",
+    "expected": "323174860252460102460334",
+    "unicode": "⠠⠃⠑⠰⠼⠙⠘⠼⠊⠘⠼⠃⠢",
     "world": "",
     "jeomsarang": ""
   }

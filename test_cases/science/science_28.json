@@ -1,0 +1,20 @@
+[
+  {
+    "input": "$Q_{O_2}$",
+    "note": "PDF 과학 제28항 — 분자식이 아래 첨자",
+    "internal": ",q;(,o;#b)",
+    "expected": "3231485532214860362",
+    "unicode": "⠠⠟⠰⠷⠠⠕⠰⠼⠃⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$Q_{CO_2}$",
+    "note": "PDF 과학 제28항",
+    "internal": ",q;(,c,o;#b)",
+    "expected": "3231485532932214860362",
+    "unicode": "⠠⠟⠰⠷⠠⠉⠠⠕⠰⠼⠃⠾",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

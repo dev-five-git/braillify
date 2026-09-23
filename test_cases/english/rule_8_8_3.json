@@ -52,6 +52,7 @@
   },
   {
     "input": "HOCH₂",
+    "context": "english",
     "internal": ",h,o,c,h;5#b",
     "expected": "3219322132932194834603",
     "unicode": "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃",

@@ -82,6 +82,10 @@ pub(crate) enum Item {
     Dash,
     /// 줄임표 `…` — 제24항.
     Ellipsis,
+    /// 결합선 — 제10항 2, ⠰ 뒤에 결합 수 1·2·3.
+    Bond(u8),
+    /// 측쇄의 방향 표지 — 제10항 3·제16항 3·4. 적을 점형을 담는다.
+    Branch(char),
 }
 
 impl Item {
@@ -888,6 +892,10 @@ fn encode_item(item: &Item, out: &mut Vec<u8>) -> Result<bool, String> {
         Item::Prime => out.extend(cells("⠤")),
         Item::Dash => out.extend(cells("⠠⠤")),
         Item::Ellipsis => out.extend(cells("⠄⠄⠄")),
+        Item::Bond(1) => out.extend(cells("⠰⠂")),
+        Item::Bond(2) => out.extend(cells("⠰⠆")),
+        Item::Bond(_) => out.extend(cells("⠰⠒")),
+        Item::Branch(mark) => out.push(decode_unicode(*mark)),
     }
     Ok(false)
 }

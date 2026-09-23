@@ -37,6 +37,12 @@ pub(crate) fn encode_genotype(text: &str) -> Option<Vec<u8>> {
     if !is_genotype(&chars) {
         return None;
     }
+    gene_cells(&chars)
+}
+
+/// 유전자 기호를 적는다. 대문자가 둘 이상 이어지면 대문자 단어표, 그 뒤에 소문자가
+/// 오면 대문자 종료표를 적는다(`AA` → ⠠⠠⠁⠁, `Aa` → ⠠⠁⠁, `aa` → ⠁⠁).
+pub(crate) fn gene_cells(chars: &[char]) -> Option<Vec<u8>> {
     let capital = decode_unicode('⠠');
     let mut out = Vec::new();
     let mut at = 0;

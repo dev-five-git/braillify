@@ -45,6 +45,10 @@ pub enum EncodingMode {
     /// `[ ]`는 ⠐⠘⠷ … ⠘⠾, `/ /`는 ⠐⠘⠌ … ⠘⠌으로 묶는다.
     /// 음운 기호(ə, ː, θ, ŋ, æ 등)는 국제음성기호 점자 변환표에 따라 점역한다.
     Ipa,
+    /// 과학 점자로 적는 국어 글. 묵자 모양만으로는 과학 기호인지 알 수 없는 글을
+    /// 과학 규정으로 읽는다 — 연산 기호가 든 로마자 식(제6항), 유전자(제23항),
+    /// 치식(제26항), 단위 속 화학식(제30항 [붙임]).
+    Science,
 }
 
 impl std::str::FromStr for EncodingMode {
@@ -62,6 +66,7 @@ impl std::str::FromStr for EncodingMode {
             "middle_korean" => Ok(Self::MiddleKorean),
             "object_symbol" => Ok(Self::ObjectSymbol),
             "ipa" => Ok(Self::Ipa),
+            "science" => Ok(Self::Science),
             _ => Err(()),
         }
     }
@@ -115,6 +120,8 @@ pub struct EncoderState {
     /// sentence even when it carries no Hangul, as the unit table of 과학 제30항
     /// does (`mH₂O` → ⠴⠍⠠⠓⠰⠼⠃⠠⠕).
     pub korean_context_active: bool,
+    /// Explicit science context (`context = science`).
+    pub science_context_active: bool,
     /// 짝맞춤 작은따옴표(`‘…’`) 추적: `‘`를 만나면 +1, 닫음 `’`로 -1.
     /// 0보다 크면 현재 위치는 paired closing 위치이므로 `’`를 `⠴⠄`로 emit.
     /// 0이면 standalone apostrophe로 `⠄` 한 셀만 emit. (PDF 제61항)
@@ -149,6 +156,7 @@ impl EncoderState {
             matrix_context_active: false,
             math_mode_active: false,
             korean_context_active: false,
+            science_context_active: false,
             unmatched_open_single_quotes: 0,
             jamo_spans: None,
         }
@@ -263,21 +271,17 @@ mod tests {
     use super::*;
     use std::str::FromStr;
 
-    #[test]
-    fn encoding_mode_from_str_all_variants() {
-        assert_eq!(EncodingMode::from_str("korean"), Ok(EncodingMode::Korean));
-        assert_eq!(EncodingMode::from_str("english"), Ok(EncodingMode::English));
-        assert_eq!(EncodingMode::from_str("math"), Ok(EncodingMode::Math));
-        assert_eq!(EncodingMode::from_str("number"), Ok(EncodingMode::Number));
-        assert_eq!(
-            EncodingMode::from_str("middle_korean"),
-            Ok(EncodingMode::MiddleKorean)
-        );
-        assert_eq!(
-            EncodingMode::from_str("object_symbol"),
-            Ok(EncodingMode::ObjectSymbol)
-        );
-        assert_eq!(EncodingMode::from_str("ipa"), Ok(EncodingMode::Ipa));
+    #[rstest::rstest]
+    #[case::korean("korean", EncodingMode::Korean)]
+    #[case::english("english", EncodingMode::English)]
+    #[case::math("math", EncodingMode::Math)]
+    #[case::number("number", EncodingMode::Number)]
+    #[case::middle_korean("middle_korean", EncodingMode::MiddleKorean)]
+    #[case::object_symbol("object_symbol", EncodingMode::ObjectSymbol)]
+    #[case::ipa("ipa", EncodingMode::Ipa)]
+    #[case::science("science", EncodingMode::Science)]
+    fn encoding_mode_from_str_all_variants(#[case] name: &str, #[case] mode: EncodingMode) {
+        assert_eq!(EncodingMode::from_str(name), Ok(mode));
     }
 
     #[test]

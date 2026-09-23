@@ -550,8 +550,9 @@ pub(crate) fn is_formula(items: &[Item], single_element: bool) -> bool {
     enough && well_formed && has_formula_signal(items)
 }
 
-/// 글 전체가 화학식인가. LaTeX 로 적힌 식(`$...$`)도 받는다.
-pub(crate) fn owns_text(text: &str) -> bool {
+/// 글 전체가 화학식인가. LaTeX 로 적힌 식(`$...$`)도 받는다. `science` 는 과학
+/// 문맥이라 [`science_reading`] 도 식으로 받을지 정한다.
+pub(crate) fn owns_text(text: &str, science: bool) -> bool {
     if configuration(text).is_some() || super::genotype::encode_genotype(text).is_some() {
         return true;
     }
@@ -559,7 +560,67 @@ pub(crate) fn owns_text(text: &str) -> bool {
         Some(latex) => parse_latex(latex),
         None => parse(text),
     };
-    items.is_some_and(|items| is_formula(&items, false))
+    items.is_some_and(|items| {
+        is_formula(&items, false) || science && science_reading(&items).is_some()
+    })
+}
+
+/// 과학 문맥에서만 식으로 읽는 것. 묵자 모양만으로는 로마자 낱말과 구별되지 않는다.
+///
+/// - 원소 기호만 이어지고 두 글자 원소 기호가 든 것(`NaCl`) — 제7항 1. 한 글자
+///   원소 기호만 이어진 것은 단위(`HP`, 제30항)와 모양이 같아 받지 않는다.
+/// - 단위 앞머리 뒤에 원소 기호만 이어진 것(`pOH`) — 단위 속 화학식(제30항 [붙임]).
+/// - 수와 대문자를 `+` 로 이은 것(`44+XX`) — 염색체 구성(제23항). 대문자는 원소가
+///   아닌 유전자라 대문자 단어표로 적는다.
+pub(crate) fn science_reading(items: &[Item]) -> Option<Vec<Item>> {
+    let is_element = |item: &Item| {
+        matches!(
+            item,
+            Item::Capital {
+                element: true,
+                style: None,
+                ..
+            }
+        )
+    };
+    let element_word = items.len() >= 2
+        && items.iter().all(is_element)
+        && items
+            .iter()
+            .any(|item| matches!(item, Item::Capital { symbol, .. } if symbol.len() == 2));
+    let unit_formula = matches!(items, [Item::Unit(_), rest @ ..]
+        if rest.len() >= 2 && rest.iter().all(is_element));
+    if element_word || unit_formula {
+        return Some(items.to_vec());
+    }
+    let mut numbers = 0;
+    let mut genes = 0;
+    for term in items.split(|item| *item == Item::Op('+')) {
+        if matches!(term, [Item::Number(_)]) {
+            numbers += 1;
+        } else if !term.is_empty()
+            && term
+                .iter()
+                .all(|item| matches!(item, Item::Capital { style: None, .. }))
+        {
+            genes += 1;
+        } else {
+            return None;
+        }
+    }
+    (numbers > 0 && genes > 0).then(|| {
+        items
+            .iter()
+            .map(|item| match item {
+                Item::Capital { symbol, .. } => Item::Capital {
+                    symbol: symbol.clone(),
+                    element: false,
+                    style: None,
+                },
+                other => other.clone(),
+            })
+            .collect()
+    })
 }
 
 /// 대문자 구절 하나: 여는 원소의 자리와 종료표를 적을 마지막 낱낱의 자리.
@@ -1183,7 +1244,50 @@ mod tests {
     #[case::latex_variable("$A_1$", false)]
     #[case::plain_word("water", false)]
     fn owns_only_scientific_text(#[case] text: &str, #[case] expected: bool) {
-        assert_eq!(owns_text(text), expected);
+        assert_eq!(owns_text(text, false), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::two_letter_element_word("NaCl", false, true)]
+    #[case::unit_holding_a_formula("pOH", false, true)]
+    #[case::chromosome_count("44+XX", false, true)]
+    #[case::sum_of_terms("2+3", false, false)]
+    #[case::single_letter_elements_only("CO", false, false)]
+    fn owns_what_only_science_reads(
+        #[case] text: &str,
+        #[case] outside_science: bool,
+        #[case] in_science: bool,
+    ) {
+        assert_eq!(owns_text(text, false), outside_science);
+        assert_eq!(owns_text(text, true), in_science);
+    }
+
+    #[rstest::rstest]
+    #[case::two_letter_element_word("NaOH", "⠠⠝⠁⠠⠕⠠⠓")]
+    #[case::unit_holding_a_formula("pOH", "⠏⠠⠕⠠⠓")]
+    #[case::chromosome_count("44+XX", "⠼⠙⠙⠢⠠⠠⠭⠭")]
+    #[case::gene_that_is_also_an_element("44+XY", "⠼⠙⠙⠢⠠⠠⠭⠽")]
+    #[case::single_gene("22+X", "⠼⠃⠃⠢⠠⠭")]
+    fn writes_what_only_science_reads(#[case] text: &str, #[case] expected: &str) {
+        let items = science_reading(&parse(text).expect("parses")).expect("science reads it");
+        let braille: String = encode(&items)
+            .expect("encodes")
+            .iter()
+            .map(|cell| char::from_u32(0x2800 + u32::from(*cell)).expect("braille cell"))
+            .collect();
+        assert_eq!(braille, expected);
+    }
+
+    #[rstest::rstest]
+    #[case::unit_with_one_element("pH")]
+    #[case::unit_with_a_two_letter_element("hPa")]
+    #[case::roman_letter_with_an_element("CoA")]
+    #[case::number_joined_to_a_word("DF1+DF8")]
+    #[case::genes_without_a_count("XX+XY")]
+    #[case::styled_gene("44+𝐗")]
+    #[case::trailing_operator("44+")]
+    fn leaves_ordinary_text_to_other_rules(#[case] text: &str) {
+        assert!(parse(text).is_none_or(|items| science_reading(&items).is_none()));
     }
 
     #[rstest::rstest]

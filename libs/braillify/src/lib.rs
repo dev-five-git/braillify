@@ -1129,13 +1129,16 @@ fn encode_with_options_traced(
     // N개 한글 음절을 cross-word 묶음으로 wrap. sentinel은 symbol_shortcut에서
     // braille marker (⠠⠤/⠤⠄)로 emit된다.
     let normalization_triggers = NormalizationTriggers::scan(text);
+    // 과학 문맥은 글의 모양으로 경로를 정하는 기본 경로를 그대로 따른다. 다만 영어
+    // 점자로는 보내지 않는다.
+    let science = matches!(options.default_mode, Some(EncodingMode::Science));
+    let routed_by_content = options.default_mode.is_none() || science;
     // 과학 제4·7항 — 화학식은 로마자 낱말도 수식도 아니다. 영어·수학 경로와 글꼴
     // 정규화를 건너뛰어, 토큰 단계의 화학식 규칙이 강조(제7항 5)까지 그대로 본다.
-    let chemistry =
-        options.default_mode.is_none() && crate::rules::science::formula::owns_text(text);
+    let chemistry = routed_by_content && crate::rules::science::formula::owns_text(text, science);
     // 한글 제69항 — 한글 없이 단위 기호 글자(`㎜Hg`, `㎾h`)로 적힌 글은 로마자 낱말이
     // 아니라 단위다. 정규화가 글자를 `mm`·`kW` 로 풀기 전에 그 신호를 잡아 둔다.
-    let unit_glyphs = options.default_mode.is_none()
+    let unit_glyphs = routed_by_content
         && !text.chars().any(crate::utils::is_korean_char)
         && text
             .chars()
@@ -1321,7 +1324,7 @@ fn encode_with_options_traced(
     // unambiguous math-only signal (`x′`, `p → q`, `|x|`, `△ABC`). Otherwise the
     // token pipeline sees each space-separated word independently and can mark
     // variables/operators as UEB grade-1 text instead of one math expression.
-    let default_math_owned = options.default_mode.is_none()
+    let default_math_owned = routed_by_content
         && !chemistry
         && default_math_expression_needs_whole_route(text)
         && !text.chars().any(crate::utils::is_korean_char);
@@ -1449,8 +1452,15 @@ fn encode_with_options_traced(
         // 전부 ASCII 알파벳)은 로마자표 ⠴(52) … 종료표 ⠲(50)로 감싼다. 단독
         // `EncodingMode::English` 입력도 동일한 로마자 구간이므로 같은 처리를 받는다.
         // `%p`(제69항 단위표)처럼 비알파벳이 섞인 입력은 제외된다.
+        // 과학 문맥의 로마자 구간은 단위다(과학 제30항). 화학식과 유전자(제23항)는
+        // 과학 기호로 따로 적는다.
+        let science_roman_section = science
+            && !chemistry
+            && !crate::rules::science::genotype::is_allele_pairs(&text.chars().collect::<Vec<_>>());
         let wrap_roman_section = matches!(options.default_mode, Some(EncodingMode::English))
-            || ((unit_glyphs || matches!(options.default_mode, Some(EncodingMode::Korean)))
+            || ((unit_glyphs
+                || science_roman_section
+                || matches!(options.default_mode, Some(EncodingMode::Korean)))
                 && is_isolated_roman_section(text));
         if wrap_roman_section && !result.is_empty() {
             result.insert(0, 52);
@@ -3876,5 +3886,29 @@ mod print_variant_fold_coverage {
             normalize_pure_roman_compatibility_units(Cow::Borrowed("\u{338F}")).as_ref(),
             "\u{338F}"
         );
+    }
+}
+
+#[cfg(test)]
+mod science_context_tests {
+    use super::*;
+
+    /// 과학 문맥에서 따로 선 로마자는 단위만 로마자 구간이고(제30항), 화학식과
+    /// 유전자는 과학 기호로 적는다(제7·23항).
+    #[rstest::rstest]
+    #[case::formula_with_a_two_letter_element("NaCl", "⠠⠝⠁⠠⠉⠇")]
+    #[case::unit("HP", "⠴⠠⠠⠓⠏⠲")]
+    #[case::gene("AA", "⠠⠠⠁⠁")]
+    #[case::chromosomes_in_a_sentence("염색체는 44+XY이다.", "⠱⠢⠠⠗⠁⠰⠝⠉⠵⠀⠀⠼⠙⠙⠢⠠⠠⠭⠽⠀⠀⠕⠊⠲")]
+    fn writes_science_notation_apart_from_units(#[case] input: &str, #[case] expected: &str) {
+        let options = EncodeOptions {
+            default_mode: Some(crate::rules::context::EncodingMode::Science),
+        };
+        let braille: String = encode_with_options(input, &options)
+            .expect("input must encode")
+            .iter()
+            .map(|cell| unicode::encode_unicode(*cell))
+            .collect();
+        assert_eq!(braille, expected);
     }
 }

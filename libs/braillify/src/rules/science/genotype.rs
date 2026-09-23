@@ -7,17 +7,21 @@
 use crate::english::encode_english;
 use crate::unicode::decode_unicode;
 
-/// 한 글자의 대립 유전자 두 개가 짝을 이룬 유전자형인가(`RRyy`, `AaBb`).
-/// 대문자와 소문자가 모두 있어야 통일영어점자와 적는 법이 갈린다.
-fn is_genotype(chars: &[char]) -> bool {
-    chars.len() >= 4
+/// 한 글자의 대립 유전자 두 개씩 짝을 이룬 유전자 기호인가(`AA`, `Aa`, `RRYY`).
+pub(crate) fn is_allele_pairs(chars: &[char]) -> bool {
+    !chars.is_empty()
         && chars.len().is_multiple_of(2)
         && chars.iter().all(char::is_ascii_alphabetic)
         && chars
             .chunks(2)
             .all(|pair| pair[0].eq_ignore_ascii_case(&pair[1]))
         && chars.iter().any(char::is_ascii_uppercase)
-        && chars.iter().any(char::is_ascii_lowercase)
+}
+
+/// 짝이 둘 이상이고 대문자와 소문자가 모두 있는 유전자형(`RRyy`, `AaBb`). 그래야
+/// 통일영어점자와 적는 법이 갈린다.
+fn is_genotype(chars: &[char]) -> bool {
+    chars.len() >= 4 && is_allele_pairs(chars) && chars.iter().any(char::is_ascii_lowercase)
 }
 
 pub(crate) fn encode_genotype(text: &str) -> Option<Vec<u8>> {
@@ -85,5 +89,18 @@ mod tests {
     #[case::odd_length("RRy")]
     fn leaves_other_words_alone(#[case] text: &str) {
         assert!(encode_genotype(text).is_none());
+    }
+
+    #[rstest::rstest]
+    #[case::homozygous("AA", true)]
+    #[case::heterozygous("Aa", true)]
+    #[case::two_genes("RRYY", true)]
+    #[case::recessive_only("aa", false)]
+    #[case::unit("HP", false)]
+    #[case::odd_length("AAA", false)]
+    #[case::empty("", false)]
+    fn knows_allele_pairs(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_allele_pairs(&chars), expected);
     }
 }

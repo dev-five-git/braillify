@@ -101,7 +101,19 @@ struct Span {
     tail: String,
 }
 
-fn span_at(tokens: &[Token<'_>], index: usize, korean: bool) -> Option<Span> {
+fn read(items: Vec<Item>, korean: bool, science: bool) -> Option<Vec<Item>> {
+    if formula::is_formula(&items, korean) {
+        return Some(items);
+    }
+    science.then(|| formula::science_reading(&items)).flatten()
+}
+
+/// 과학 제30항 — 단위는 「한글 점자」 제69항에 따라 로마자표를 앞세운다.
+fn sits_in_korean(items: &[Item], korean: bool, science: bool) -> bool {
+    korean || science && matches!(items.first(), Some(Item::Unit(_)))
+}
+
+fn span_at(tokens: &[Token<'_>], index: usize, korean: bool, science: bool) -> Option<Span> {
     let Some(Token::Word(first)) = tokens.get(index) else {
         return None;
     };
@@ -132,12 +144,10 @@ fn span_at(tokens: &[Token<'_>], index: usize, korean: bool) -> Option<Span> {
                 continue;
             }
             let text: String = body[..end].iter().collect();
-            let Some(items) = formula::parse(&text) else {
+            let Some(items) = formula::parse(&text).and_then(|items| read(items, korean, science))
+            else {
                 continue;
             };
-            if !formula::is_formula(&items, korean) {
-                continue;
-            }
             if head > 0 && formula::stands_apart(&items) {
                 continue;
             }
@@ -151,6 +161,7 @@ fn span_at(tokens: &[Token<'_>], index: usize, korean: bool) -> Option<Span> {
             {
                 continue;
             }
+            let korean = sits_in_korean(&items, korean, science);
             let cells = layout(&items, tail, korean, preceded, followed).ok()?;
             return Some(Span {
                 tokens: count,
@@ -205,7 +216,12 @@ fn neighbours(tokens: &[Token<'_>], index: usize, count: usize) -> (bool, bool) 
 
 /// 낱말 하나가 통째로 전자 배치(제19항)나 유전자형(제23항)이거나, 조사·문장
 /// 부호가 붙은 LaTeX 화학식(`$H_{2}PO_{4}^{-}$가`)인 경우.
-fn whole_word<'a>(tokens: &[Token<'a>], index: usize, korean: bool) -> Option<TokenAction<'a>> {
+fn whole_word<'a>(
+    tokens: &[Token<'a>],
+    index: usize,
+    korean: bool,
+    science: bool,
+) -> Option<TokenAction<'a>> {
     let Some(Token::Word(first)) = tokens.get(index) else {
         return None;
     };
@@ -220,11 +236,9 @@ fn whole_word<'a>(tokens: &[Token<'a>], index: usize, korean: bool) -> Option<To
     if !is_tail(&tail) {
         return None;
     }
-    let items = formula::parse_latex(latex)?;
-    if !formula::is_formula(&items, korean) {
-        return None;
-    }
+    let items = read(formula::parse_latex(latex)?, korean, science)?;
     let (preceded, followed) = neighbours(tokens, index, 1);
+    let korean = sits_in_korean(&items, korean, science);
     let cells = layout(&items, &tail, korean, preceded, followed).ok()?;
     let mut replacement = vec![Token::PreEncoded(cells)];
     if !tail.is_empty() {
@@ -259,10 +273,11 @@ impl TokenRule for ChemicalFormulaRule {
             return Ok(TokenAction::Noop);
         }
         let korean = state.english_indicator || state.korean_context_active;
-        if let Some(action) = whole_word(tokens, index, korean) {
+        let science = state.science_context_active;
+        if let Some(action) = whole_word(tokens, index, korean, science) {
             return Ok(action);
         }
-        let Some(span) = span_at(tokens, index, korean) else {
+        let Some(span) = span_at(tokens, index, korean, science) else {
             return Ok(TokenAction::Noop);
         };
         let mut replacement = Vec::new();

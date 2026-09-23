@@ -261,9 +261,12 @@ impl Encoder {
         ir.state.matrix_context_active = self.matrix_context_active;
         ir.state.math_mode_active = self.math_mode_active;
         ir.state.korean_context_active = self.default_mode == Some(EncodingMode::Korean);
+        ir.state.science_context_active = self.default_mode == Some(EncodingMode::Science);
         ir.state.jamo_spans = trace.is_some().then(Box::<JamoSpans>::default);
 
+        // 과학 글도 국어 점자 문장이므로 모드 스택은 국어로 둔다.
         if let Some(mode) = self.default_mode
+            && mode != EncodingMode::Science
             && mode != ir.state.current_mode()
         {
             while ir.state.pop_mode().is_some() {}
@@ -344,7 +347,7 @@ impl Encoder {
             // of the math detector would swallow `child-ish-ly`, `with(er)`, …).
             && !crate::rules::english_ueb::is_math_owned(text)
             // 과학 제4·7항 — 화학식은 영어 낱말이 아니다.
-            && !crate::rules::science::formula::owns_text(text)
+            && !crate::rules::science::formula::owns_text(text, false)
         {
             let encoded = if trace.is_some() {
                 crate::rules::english_ueb::try_encode_traced(text)

@@ -1,5 +1,6 @@
 pub mod cell_notation;
 pub mod chemical_formula;
+pub mod dental_formula;
 pub mod digital_notation;
 pub mod emphasis_ring;
 pub mod english_dominant_korean_wrap;

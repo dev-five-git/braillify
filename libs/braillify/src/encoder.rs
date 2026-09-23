@@ -154,6 +154,9 @@ impl Encoder {
             rules::token_rules::chemical_formula::ChemicalFormulaRule,
         ));
         token_engine.register(Box::new(
+            rules::token_rules::dental_formula::DentalFormulaRule,
+        ));
+        token_engine.register(Box::new(
             rules::token_rules::uppercase_passage::UppercasePassageRule,
         ));
         token_engine.register(Box::new(

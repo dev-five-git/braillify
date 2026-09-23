@@ -566,17 +566,14 @@ mod tests {
         let _ = crate::encode("3--다");
     }
 
-    /// rule_68:108 — direct call to `encode_compact_ascii_notation` with a base
-    /// letter followed by a single ⁺/⁻ then a non-super char. The inner loop
-    /// breaks at line 108 when next char is neither ⁺ nor ⁻.
-    #[test]
-    fn rule68_superscript_block_breaks_on_non_super_direct() {
-        // "A⁺x" — uppercase A + ⁺ (consumed) + x (breaks loop)
-        let word: Vec<char> = "A\u{207A}x".chars().collect();
-        let result = encode_compact_ascii_notation(&word, 0, false).unwrap();
-        assert!(result.is_some());
-        let (_, consumed) = result.unwrap();
-        // Only A and ⁺ are consumed; x triggers the break at line 108.
+    #[rstest::rstest]
+    #[case::superscript_then_letter("A\u{207A}x")]
+    #[case::subscript_then_letter("H\u{2082}O")]
+    fn compact_notation_stops_at_the_first_non_script(#[case] text: &str) {
+        let word: Vec<char> = text.chars().collect();
+        let (_, consumed) = encode_compact_ascii_notation(&word, 0, false)
+            .unwrap()
+            .expect("a capital with a script is compact notation");
         assert_eq!(consumed, 2);
     }
 

@@ -420,6 +420,15 @@ mod tests {
         assert_eq!(braille, expected);
     }
 
+    #[rstest::rstest]
+    #[case::capital_that_is_no_element(vec![MathToken::UpperVariable('Q')])]
+    #[case::pair_that_is_no_element(vec![MathToken::UpperVariable('Q'), MathToken::Variable('x')])]
+    fn leaves_capitals_that_are_no_element_symbol(#[case] tokens: Vec<MathToken>) {
+        let mut result = Vec::new();
+        assert_eq!(emit_element_symbol(&tokens, 0, &mut result), Ok(None));
+        assert!(result.is_empty());
+    }
+
     #[test]
     fn is_simple_signed_number_paths() {
         let with_ascii_minus = vec![MathToken::Operator('-'), MathToken::Number("1".into())];

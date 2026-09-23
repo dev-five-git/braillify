@@ -865,6 +865,12 @@ mod tests {
         let _ = try_encode_math_slice(&chars, MathContext::default());
     }
 
+    #[test]
+    fn try_encode_math_slice_leaves_compact_notation_to_rule_68() {
+        let chars: Vec<char> = "O\u{2082}".chars().collect();
+        assert!(try_encode_math_slice(&chars, MathContext::default()).is_none());
+    }
+
     /// helpers:243 — `try_encode_mixed_math_slice` returns None for empty chars.
     #[test]
     fn try_encode_mixed_math_slice_empty_returns_none() {

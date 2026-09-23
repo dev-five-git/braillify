@@ -1803,32 +1803,26 @@
   },
   "science/science_7": {
     "title": "과학 제7항",
-    "description": "화학식은 원소 기호 앞에 대문자 기호표를 적고, 아래 첨자는 ⠰ 뒤에 내용을 적는다.",
-    "benchmark": true
+    "description": "화학식은 원소 기호 앞에 대문자 기호표를 적고, 아래 첨자는 ⠰ 뒤에 내용을 적는다."
   },
   "science/science_18": {
     "title": "과학 제18항",
-    "description": "화학 반응식의 기호는 앞뒤를 한 칸씩 띄어 쓰고, 기체 발생과 침전 기호는 분자식에 붙여 적는다.",
-    "benchmark": true
+    "description": "화학 반응식의 기호는 앞뒤를 한 칸씩 띄어 쓰고, 기체 발생과 침전 기호는 분자식에 붙여 적는다."
   },
   "science/science_3": {
     "title": "과학 제3항",
-    "description": "원소 기호를 먼저 적고 원자 번호는 아래 첨자로, 질량수는 위 첨자로 적는다.",
-    "benchmark": true
+    "description": "원소 기호를 먼저 적고 원자 번호는 아래 첨자로, 질량수는 위 첨자로 적는다."
   },
   "science/science_10": {
     "title": "과학 제10항",
-    "description": "사슬 화합물의 결합선은 ⠰을 먼저 적고 결합 수에 따라 단일 1, 이중 2, 삼중 3을 붙여 적는다.",
-    "benchmark": true
+    "description": "사슬 화합물의 결합선은 ⠰을 먼저 적고 결합 수에 따라 단일 1, 이중 2, 삼중 3을 붙여 적는다."
   },
   "science/science_21": {
     "title": "과학 제21항",
-    "description": "전지의 전극 표시와 염다리 표시는 앞뒤를 한 칸씩 띄어 적는다.",
-    "benchmark": true
+    "description": "전지의 전극 표시와 염다리 표시는 앞뒤를 한 칸씩 띄어 적는다."
   },
   "science/science_22": {
     "title": "과학 제22항",
-    "description": "여성 기호와 남성 기호를 적는 방법을 정한다.",
-    "benchmark": true
+    "description": "여성 기호와 남성 기호를 적는 방법을 정한다."
   }
 }

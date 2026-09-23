@@ -215,11 +215,9 @@ function runShardedIntegrityTests(dir: string, label: string) {
 
 runIntegrityTests('korean', 'Korean')
 runIntegrityTests('math', 'Math')
-// The chemistry engine is not written yet, so these fixtures are checked for
-// internal consistency only — `runConversionTests` would ask the encoder to
-// produce output it cannot produce.
 runIntegrityTests('science', 'Science')
 runShardedIntegrityTests('2024_corpus', 'NIKL 2024 corpus')
 runShardedIntegrityTests('2025_corpus', 'NIKL 2025 corpus')
 runConversionTests('korean', 'Korean')
 runConversionTests('math', 'Math')
+runConversionTests('science', 'Science')

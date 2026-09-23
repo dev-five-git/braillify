@@ -230,6 +230,13 @@ impl BrailleRule for Rule68 {
             return Ok(RuleResult::Skip);
         };
         let is_roman_unit = matches!(ctx.current_char(), '㎡' | '㏊');
+        // 제69항 [붙임 3] — 빗금으로 이어진 로마자 단위(`kgf/㎡`)는 한 로마자 구간이다.
+        if is_roman_unit
+            && super::rule_69::roman_unit_chain_continues_before(ctx)
+            && encoded.first() == Some(&ROMAN_INDICATOR)
+        {
+            encoded.remove(0);
+        }
         let continues = is_roman_unit
             && super::rule_69::adjust_roman_unit_boundary(ctx, ctx.index + 1, &mut encoded);
         ctx.emit_slice(&encoded);

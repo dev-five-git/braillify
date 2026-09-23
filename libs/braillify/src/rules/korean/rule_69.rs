@@ -187,10 +187,10 @@ fn encode_compatibility_unit(
 }
 
 fn is_roman_unit_component(ch: char) -> bool {
-    ch.is_ascii_alphabetic() || ch == 'μ' || compatibility_unit_decomposition(ch).is_some()
+    ch.is_ascii_alphabetic() || ch == 'μ' || is_compatibility_unit_presentation(ch)
 }
 
-fn roman_unit_chain_continues_before(ctx: &RuleContext) -> bool {
+pub(crate) fn roman_unit_chain_continues_before(ctx: &RuleContext) -> bool {
     ctx.index >= 2
         && ctx.word_chars.get(ctx.index - 1) == Some(&'/')
         && ctx
@@ -1406,6 +1406,7 @@ mod tests {
     #[rstest::rstest]
     #[case::milligram_per_decilitre("160㎎/㎗", "⠼⠁⠋⠚⠴⠍⠛⠸⠌⠙⠇⠲")]
     #[case::calorie_per_square_centimetre_per_minute("cal/㎠/min", "⠴⠉⠁⠇⠸⠌⠉⠍⠘⠼⠃⠸⠌⠍⠔⠲")]
+    #[case::kilogram_force_per_square_metre("kgf/㎡이", "⠴⠅⠛⠋⠸⠌⠍⠘⠼⠃⠕")]
     #[case::megahertz("96.7 ㎒", "⠼⠊⠋⠲⠛⠀⠴⠠⠍⠠⠓⠵⠲")]
     #[case::kilometres_per_hour("80 ㎞/시", "⠼⠓⠚⠀⠴⠅⠍⠲⠸⠌⠠⠕")]
     fn preserves_pdf_unit_examples(#[case] input: &str, #[case] expected: &str) {

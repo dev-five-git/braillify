@@ -18,9 +18,12 @@ require "braillify"
 Braillify.translate_to_unicode("안녕하세요")      # => 점자 유니코드 String
 Braillify.translate_to_braille_font("안녕하세요") # => 점자 폰트 String
 Braillify.encode("안녕하세요")                    # => ASCII-8BIT String (점자 셀 바이트)
+
+# 묵자 모양만으로 규정을 정할 수 없는 글은 문맥("science", "math", "korean" 등)을 밝힌다
+Braillify.translate_to_unicode_in_context("pOH", "science") # => "⠴⠏⠠⠕⠠⠓"
 ```
 
-변환할 수 없는 입력은 `ArgumentError`를 발생시킵니다.
+변환할 수 없는 입력이나 알 수 없는 문맥은 `ArgumentError`를 발생시킵니다.
 
 ## 개발
 

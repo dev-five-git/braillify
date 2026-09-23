@@ -113,10 +113,13 @@ fn sits_in_korean(items: &[Item], korean: bool, science: bool) -> bool {
     korean || science && matches!(items.first(), Some(Item::Unit(_)))
 }
 
-fn span_at(tokens: &[Token<'_>], index: usize, korean: bool, science: bool) -> Option<Span> {
-    let Some(Token::Word(first)) = tokens.get(index) else {
-        return None;
-    };
+fn span_at(
+    tokens: &[Token<'_>],
+    index: usize,
+    first: &WordToken<'_>,
+    korean: bool,
+    science: bool,
+) -> Option<Span> {
     let head = prefix_len(&first.chars)?;
     let run = tokens[index..]
         .iter()
@@ -219,12 +222,10 @@ fn neighbours(tokens: &[Token<'_>], index: usize, count: usize) -> (bool, bool) 
 fn whole_word<'a>(
     tokens: &[Token<'a>],
     index: usize,
+    first: &WordToken<'_>,
     korean: bool,
     science: bool,
 ) -> Option<TokenAction<'a>> {
-    let Some(Token::Word(first)) = tokens.get(index) else {
-        return None;
-    };
     let whole = formula::configuration(&first.text)
         .or_else(|| crate::rules::science::genotype::encode_genotype(&first.text));
     if let Some(cells) = whole {
@@ -274,10 +275,10 @@ impl TokenRule for ChemicalFormulaRule {
         }
         let korean = state.english_indicator || state.korean_context_active;
         let science = state.science_context_active;
-        if let Some(action) = whole_word(tokens, index, korean, science) {
+        if let Some(action) = whole_word(tokens, index, first, korean, science) {
             return Ok(action);
         }
-        let Some(span) = span_at(tokens, index, korean, science) else {
+        let Some(span) = span_at(tokens, index, first, korean, science) else {
             return Ok(TokenAction::Noop);
         };
         let mut replacement = Vec::new();

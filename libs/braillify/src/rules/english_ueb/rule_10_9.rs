@@ -139,7 +139,10 @@ fn rule_10_9_3_reading_exists(shortform: &str, suffix: &[char]) -> bool {
 /// and would consequently miss cell-equivalent sequences such as `fst` (`f` +
 /// the `st` groupsign) and `shd` (the `sh` groupsign + `d`).
 fn korean_letter_sequence_cells(letters: &[char]) -> Vec<u8> {
-    super::span::encode_korean_word(
+    // A collision test only compares cells. Left recorded, its attempts are
+    // matched against a later identical word in the output (`CO … CO`).
+    let checkpoint = super::attribution_checkpoint();
+    let cells = super::span::encode_korean_word(
         letters, true,  // capitalization indicators are compared separately
         false, // do not recursively prepend grade 1
         false, // rule 37 suppresses whole-word signs on Roman entry
@@ -150,7 +153,9 @@ fn korean_letter_sequence_cells(letters: &[char]) -> Vec<u8> {
         false, // not split by an apostrophe
         false, // lowercase, so never a §10.12.1 initialism
     )
-    .expect("a lowercase ASCII letters-sequence must be encodable")
+    .expect("a lowercase ASCII letters-sequence must be encodable");
+    super::rollback_attributions(checkpoint);
+    cells
 }
 
 /// Encode a word as the §10.10.2 cell-minimising contraction sequence.

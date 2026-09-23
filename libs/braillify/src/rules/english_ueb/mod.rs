@@ -1319,6 +1319,8 @@ mod encode_pipeline_tests {
     #[case::camel_caps_word("dCO")]
     #[case::balanced_equation("aMgO(s)$+$bC(s)→cMg(s)$+$dCO(g)$+$eCO<sub>2</sub>(g)")]
     #[case::repeated_subscript_markup("CO<sub>2</sub>, SO<sub>2</sub>, CO<sub>2</sub>")]
+    #[case::word_repeated_later_in_the_line("CO$+$H<sub>2</sub>O↔CO<sub>2</sub>$+$H<sub>2</sub>")]
+    #[case::lone_capitals_between_inline_spans("A $1s^{2}2s^{2}2p^{5}$, B $1s^{2}2s^{2}2p^{2}$")]
     fn every_cell_of_a_chemical_line_names_a_rule(#[case] input: &str) {
         let (cells, trace) = crate::encode_with_trace(input).expect("input must encode");
         let untraced = crate::encode(input).expect("input must encode untraced");

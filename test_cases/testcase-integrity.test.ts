@@ -181,12 +181,13 @@ function runConversionTests(dir: string, label: string) {
         for (let i = 0; i < entries.length; i++) {
           const entry = entries[i]
 
-          // `translateToUnicode` takes no encoding mode, so an entry that names its
-          // `context` can only be checked by `test_by_testcase`. A `limitation` entry
-          // is known not to convert and is guarded there as well.
+          // A `limitation` entry is known not to convert and is guarded by
+          // `test_by_testcase`, as is the ad hoc `strip_prefix:` context, which
+          // is a harness instruction rather than a reading.
           const alternatives = alternativeTriples(entry)
           if (!entry.input || alternatives.length === 0) continue
-          if (entry.note === 'LaTeX' || entry.context || entry.limitation) continue
+          if (entry.note === 'LaTeX' || entry.limitation) continue
+          if (entry.context?.startsWith('strip_prefix:')) continue
 
           const inputPreview =
             entry.input.length > 30
@@ -194,7 +195,7 @@ function runConversionTests(dir: string, label: string) {
               : entry.input
 
           test(`[${i}] "${inputPreview}" → unicode`, () => {
-            const result = translateToUnicode(entry.input)
+            const result = translateToUnicode(entry.input, entry.context)
             expect(alternatives.map(({ unicode }) => unicode)).toContain(result)
           })
         }

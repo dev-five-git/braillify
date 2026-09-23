@@ -2,19 +2,30 @@ mod utils;
 
 use wasm_bindgen::prelude::*;
 
+/// `context` names how to read text whose print shape alone does not decide
+/// the rule — `science`, `math`, `korean`, … (see `braillify::encode_in_context`).
 #[wasm_bindgen(js_name = "encode")]
-pub fn encode(text: &str) -> Result<Vec<u8>, String> {
-    braillify::encode(text)
+pub fn encode(text: &str, context: Option<String>) -> Result<Vec<u8>, String> {
+    match context {
+        Some(context) => braillify::encode_in_context(text, &context),
+        None => braillify::encode(text),
+    }
 }
 
 #[wasm_bindgen(js_name = "translateToUnicode")]
-pub fn translate_to_unicode(text: &str) -> Result<String, String> {
-    braillify::encode_to_unicode(text)
+pub fn translate_to_unicode(text: &str, context: Option<String>) -> Result<String, String> {
+    match context {
+        Some(context) => braillify::encode_to_unicode_in_context(text, &context),
+        None => braillify::encode_to_unicode(text),
+    }
 }
 
 #[wasm_bindgen(js_name = "translateToBrailleFont")]
-pub fn translate_to_braille_font(text: &str) -> Result<String, String> {
-    braillify::encode_to_braille_font(text)
+pub fn translate_to_braille_font(text: &str, context: Option<String>) -> Result<String, String> {
+    match context {
+        Some(context) => braillify::encode_to_braille_font_in_context(text, &context),
+        None => braillify::encode_to_braille_font(text),
+    }
 }
 
 /// One rule that produced part of the braille output.
@@ -149,19 +160,19 @@ mod tests {
 
     #[test]
     fn encode_delegates_to_core() {
-        let result = encode("안녕").expect("encode must succeed");
+        let result = encode("안녕", None).expect("encode must succeed");
         assert!(!result.is_empty());
     }
 
     #[test]
     fn encode_propagates_error() {
         // Emoji is rejected by core encoder → wasm shim propagates `Err`.
-        assert!(encode("😀").is_err());
+        assert!(encode("😀", None).is_err());
     }
 
     #[test]
     fn translate_to_unicode_delegates_to_core() {
-        let result = translate_to_unicode("hi").expect("must succeed");
+        let result = translate_to_unicode("hi", None).expect("must succeed");
         for ch in result.chars() {
             let cp = ch as u32;
             assert!((0x2800..=0x28FF).contains(&cp), "non-braille char {ch:?}");
@@ -170,18 +181,37 @@ mod tests {
 
     #[test]
     fn translate_to_unicode_propagates_error() {
-        assert!(translate_to_unicode("😀").is_err());
+        assert!(translate_to_unicode("😀", None).is_err());
     }
 
     #[test]
     fn translate_to_braille_font_delegates_to_core() {
-        let result = translate_to_braille_font("hi").expect("must succeed");
+        let result = translate_to_braille_font("hi", None).expect("must succeed");
         assert!(!result.is_empty());
     }
 
     #[test]
     fn translate_to_braille_font_propagates_error() {
-        assert!(translate_to_braille_font("😀").is_err());
+        assert!(translate_to_braille_font("😀", None).is_err());
+    }
+
+    #[test]
+    fn every_function_reads_the_named_context() {
+        let science = Some("science".to_string());
+        assert_eq!(
+            translate_to_unicode("pOH", science.clone()).as_deref(),
+            Ok("⠴⠏⠠⠕⠠⠓")
+        );
+        assert_eq!(
+            translate_to_braille_font("pOH", science.clone()).as_deref(),
+            Ok("⠴⠏⠠⠕⠠⠓")
+        );
+        assert_eq!(encode("pOH", science).map(|cells| cells.len()), Ok(6));
+    }
+
+    #[test]
+    fn an_unknown_context_is_an_error() {
+        assert!(translate_to_unicode("pOH", Some("chemistry".to_string())).is_err());
     }
 
     #[test]

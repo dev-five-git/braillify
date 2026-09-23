@@ -78,6 +78,14 @@ pub(super) fn needs_grouping_in_fraction(expr: &str) -> bool {
     if chars.is_empty() {
         return false;
     }
+    // 함수와 그 인수 하나(`sin i`)는 한 항이다 — 과학 제20항 `sin i / sin r`.
+    if let Some((name, _)) = crate::rules::math::function::match_function_prefix(expr)
+        && let argument = expr[name.len()..].trim_start()
+        && (argument.chars().count() == 1 && argument.chars().all(|c| c.is_ascii_alphabetic())
+            || !argument.is_empty() && argument.chars().all(|c| c.is_ascii_digit()))
+    {
+        return false;
+    }
     if chars.first() == Some(&'(') && chars.last() == Some(&')') {
         // 외곽이 단일 괄호 쌍이면 wrap 불필요. 단, `(...)(...)` 같이 인접한 다중 괄호
         // 그룹이면 외곽이 단일 쌍이 아니므로 wrap 필요.
@@ -224,35 +232,29 @@ mod tests {
     }
 
     /// `needs_grouping_in_fraction` decision matrix.
-    #[test]
-    fn fraction_grouping_decision_matrix() {
-        // Empty body → false
-        assert!(!needs_grouping_in_fraction(""));
-        // Single outer paren pair → false (single-pair check at line 81-101)
-        assert!(!needs_grouping_in_fraction("(x+1)"));
-        // Adjacent paren pairs → true (depth returns to 0 before end)
-        assert!(needs_grouping_in_fraction("(a)(b)"));
-        // Arithmetic operator → true
-        assert!(needs_grouping_in_fraction("a+b"));
-        assert!(needs_grouping_in_fraction("a-b"));
-        assert!(needs_grouping_in_fraction("a\u{00D7}b"));
-        assert!(needs_grouping_in_fraction("a\u{00F7}b"));
-        assert!(needs_grouping_in_fraction("a\u{2212}b"));
-        // Space at top level → true
-        assert!(needs_grouping_in_fraction("a b"));
-        // Partial-derivative `∂` → true (multi-token form)
-        assert!(needs_grouping_in_fraction("\u{2202}f"));
-        // Differential `dx` etc. → false
-        assert!(!needs_grouping_in_fraction("dx"));
-        assert!(!needs_grouping_in_fraction("dxy"));
-        // 2+ adjacent paren groups → true
-        assert!(needs_grouping_in_fraction("(x)(y)(z)"));
-        // Single alpha char only → false (single letter denominator)
-        assert!(!needs_grouping_in_fraction("a"));
-        // Pure digits → false (no alpha, no operator)
-        assert!(!needs_grouping_in_fraction("123"));
-        // Multiple alpha chars (non-differential prefix) → true
-        // (e.g., variable product like "ab" treated as multi-token)
-        assert!(needs_grouping_in_fraction("ab"));
+    #[rstest::rstest]
+    #[case::empty("", false)]
+    #[case::single_outer_paren("(x+1)", false)]
+    #[case::adjacent_parens("(a)(b)", true)]
+    #[case::plus("a+b", true)]
+    #[case::minus("a-b", true)]
+    #[case::times("a\u{00D7}b", true)]
+    #[case::divide("a\u{00F7}b", true)]
+    #[case::unicode_minus("a\u{2212}b", true)]
+    #[case::top_level_space("a b", true)]
+    #[case::partial_derivative("\u{2202}f", true)]
+    #[case::differential("dx", false)]
+    #[case::differential_product("dxy", false)]
+    #[case::three_paren_groups("(x)(y)(z)", true)]
+    #[case::single_letter("a", false)]
+    #[case::digits("123", false)]
+    #[case::variable_product("ab", true)]
+    #[case::function_of_one_letter("sin i", false)]
+    #[case::function_joined_to_its_letter("sini", false)]
+    #[case::hyperbolic_function_alone("sinh", true)]
+    #[case::function_of_a_number("sin 30", false)]
+    #[case::function_of_a_product("sin ab", true)]
+    fn fraction_grouping_decision_matrix(#[case] body: &str, #[case] expected: bool) {
+        assert_eq!(needs_grouping_in_fraction(body), expected);
     }
 }

@@ -293,7 +293,10 @@ impl TokenRule for UppercasePassageRule {
         let upcoming_second_group = upcoming_second.and_then(capitalized_group);
         let is_korean_math_letter_list =
             is_korean_math_letter_list_start(tokens, index, word, upcoming_first, upcoming_second);
-        let can_start_passage = capitalized.is_some_and(|group| group.end == word_len)
+        // 과학 제23항 — 대문자로 된 유전자는 3개 이상 이어져도 대문자 구절표를 쓰지
+        // 않는다.
+        let can_start_passage = !state.science_context_active
+            && capitalized.is_some_and(|group| group.end == word_len)
             && upcoming_first
                 .zip(upcoming_first_group)
                 .is_some_and(|(next, group)| group.start == 0 && group.end == next.chars.len())

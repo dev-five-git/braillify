@@ -41,11 +41,7 @@ pub(super) fn emit_element_symbol(
     index: usize,
     result: &mut Vec<u8>,
 ) -> Result<Option<usize>, String> {
-    const SYMBOLS: &[&str] = &[
-        "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S",
-        "Cl", "Ar", "K", "Ca", "Fe", "Co", "Ni", "Cu", "Zn", "Br", "Ag", "Sn", "I", "Ba", "Pt",
-        "Au", "Hg", "Pb", "U",
-    ];
+    use crate::rules::science::elements::is_element;
     let Some(MathToken::UpperVariable(upper)) = tokens.get(index) else {
         return Ok(None);
     };
@@ -55,8 +51,8 @@ pub(super) fn emit_element_symbol(
     };
     let two: Option<String> = lower.map(|letter| format!("{upper}{letter}"));
     let (symbol, consumed) = match two {
-        Some(ref name) if SYMBOLS.contains(&name.as_str()) => (name.as_str(), 2),
-        _ if SYMBOLS.contains(&upper.to_string().as_str()) => return single(*upper, result),
+        Some(ref name) if is_element(name) => (name.as_str(), 2),
+        _ if is_element(&upper.to_string()) => return single(*upper, result),
         _ => return Ok(None),
     };
     result.push(32);
@@ -70,6 +66,31 @@ fn single(upper: char, result: &mut Vec<u8>) -> Result<Option<usize>, String> {
     result.push(32);
     result.push(crate::english::encode_english(upper.to_ascii_lowercase())?);
     Ok(Some(1))
+}
+
+/// 과학 제3항 — 동위원소 표기의 앞 첨자인가. 원자 번호와 질량수는 수이고, 첨자는
+/// 식의 처음이나 연산자·여는 괄호 뒤에 선다. `\mu_{0}I` 의 `₀` 는 μ 의 첨자이고
+/// `1/^{\circ}C` 의 `°` 는 수가 아니므로 원소 앞으로 옮기지 않는다.
+pub(super) fn is_isotope_prescript(
+    tokens: &[MathToken],
+    index: usize,
+    content: &[MathToken],
+) -> bool {
+    // LaTeX 는 앞 첨자를 빈 묶음 뒤에 적는다(`{}^{235}_{92}U`).
+    let after_empty_group = index >= 2
+        && matches!(tokens[index - 1], MathToken::CloseParen(_))
+        && matches!(tokens[index - 2], MathToken::OpenParen(_));
+    !content.is_empty()
+        && content
+            .iter()
+            .all(|token| matches!(token, MathToken::Number(_)))
+        && (after_empty_group
+            || matches!(
+                prev_non_space(tokens, index),
+                None | Some(
+                    MathToken::Operator(_) | MathToken::OpenParen(_) | MathToken::KoreanWord(_)
+                )
+            ))
 }
 
 fn is_left_superscript_position(tokens: &[MathToken], index: usize) -> bool {
@@ -291,13 +312,27 @@ pub fn encode_superscript(
     // 좌상첨자는 단일 토큰이라도 그룹 괄호로 묶는다.
     let is_left_superscript = is_left_superscript_position(tokens, *i);
 
-    // 과학 제3항 — 원소 기호를 먼저 적고 질량수를 위 첨자로 적는다(⁷Li → ,li~#g).
-    // 수학 제18항 2의 좌상첨자는 제자리에 괄호로 묶이지만 동위원소는 원소가 앞선다.
-    if is_left_superscript && let Some(consumed) = emit_element_symbol(tokens, *i + 1, result)? {
-        result.push(24);
-        engine.encode_tokens(sup_content, result)?;
-        *i += 1 + consumed;
-        return Ok(false);
+    // 과학 제3항 — 원소 기호를 먼저 적고 원자 번호·질량수를 아래·위 첨자로 적는다
+    // (⁷Li → ,li~#g, ²³⁵₉₂U → ,u;#ib~#bce). 수학 제18항 2의 좌상첨자는 제자리에
+    // 괄호로 묶이지만 동위원소는 원소가 앞선다.
+    let atomic_number = match tokens.get(*i + 1) {
+        Some(MathToken::Subscript(sub)) if is_isotope_prescript(tokens, *i, sub) => Some(sub),
+        _ => None,
+    };
+    if (is_left_superscript || atomic_number.is_some())
+        && is_isotope_prescript(tokens, *i, sup_content)
+    {
+        let base = *i + 1 + usize::from(atomic_number.is_some());
+        if let Some(consumed) = emit_element_symbol(tokens, base, result)? {
+            if let Some(sub) = atomic_number {
+                result.push(48);
+                engine.encode_tokens(sub, result)?;
+            }
+            result.push(24);
+            engine.encode_tokens(sup_content, result)?;
+            *i = base + consumed;
+            return Ok(false);
+        }
     }
 
     result.push(24);
@@ -366,6 +401,23 @@ mod tests {
 
     fn enc(input: &str) -> Vec<u8> {
         crate::encode(input).unwrap_or_default()
+    }
+
+    /// 과학 제3항 — 식 첫머리의 수 첨자만 원소 뒤로 옮긴다.
+    #[rstest::rstest]
+    #[case::mass_number("⁷Li", "⠠⠇⠊⠘⠼⠛")]
+    #[case::atomic_and_mass_number_in_a_sentence(
+        "우라늄 ${}^{235}_{92}U$가 있다",
+        "⠍⠐⠣⠉⠩⠢⠀⠀⠠⠥⠰⠼⠊⠃⠘⠼⠃⠉⠑⠀⠀⠫⠀⠕⠌⠊"
+    )]
+    #[case::greek_base_keeps_its_script("$\\mu_{0}I$", "⠨⠍⠰⠷⠼⠚⠾⠠⠊")]
+    #[case::degree_is_not_a_mass_number("$1/^{\\circ}C$", "⠼⠁⠌⠘⠷⠸⠴⠾⠠⠉")]
+    fn moves_only_isotope_numbers_behind_the_element(#[case] input: &str, #[case] expected: &str) {
+        let braille: String = enc(input)
+            .iter()
+            .map(|cell| crate::unicode::encode_unicode(*cell))
+            .collect();
+        assert_eq!(braille, expected);
     }
 
     #[test]

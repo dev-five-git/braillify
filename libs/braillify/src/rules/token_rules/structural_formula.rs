@@ -1,5 +1,6 @@
 use crate::english::encode_english;
 use crate::rules::context::EncoderState;
+use crate::rules::science::elements::is_single_letter_element;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::unicode::decode_unicode;
@@ -13,11 +14,6 @@ static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
     standard_ref: "2024 Korean Braille Standard, 과학 제10항",
     description: "사슬 화합물의 기호 표기 형식",
 };
-
-/// 한 글자로 된 원소 기호. 과학 제4항이 대문자 구절표를 요구하는 대상이다.
-const SINGLE_LETTER_ELEMENTS: &[char] = &[
-    'H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U',
-];
 
 /// 결합선. 과학 제10항 2 — ⠰을 먼저 적고 결합 수에 따라 1, 2, 3을 붙인다.
 fn bond_cells(mark: char) -> Option<[u8; 2]> {
@@ -49,7 +45,7 @@ pub fn chain_of_elements(text: &str) -> Option<Vec<char>> {
     }
     for (offset, mark) in chars.iter().enumerate() {
         let valid = if offset % 2 == 0 {
-            SINGLE_LETTER_ELEMENTS.contains(mark)
+            is_single_letter_element(*mark)
         } else {
             bond_cells(*mark).is_some()
         };

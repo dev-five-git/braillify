@@ -172,6 +172,7 @@ pub fn encode_subscript(
     // 과학 제3항 — 원소 기호를 먼저 적고 원자 번호를 아래 첨자로 적는다(₈O → ,o;#h).
     // 수학 제19항 2의 좌하첨자는 제자리에 묶이지만 원자 번호는 원소가 앞선다.
     if is_left_subscript_position(tokens, *i)
+        && super::rule_18::is_isotope_prescript(tokens, *i, content)
         && let Some(consumed) = super::rule_18::emit_element_symbol(tokens, *i + 1, result)?
     {
         result.push(48);

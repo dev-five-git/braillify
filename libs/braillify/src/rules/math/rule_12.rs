@@ -255,10 +255,8 @@ pub fn encode_upper_variable(
     ///
     /// 프라임이 낀 대문자열(`O′H`)은 수학 변수이지 원소 기호의 나열이 아니다.
     fn names_element_symbols(tokens: &[MathToken], start: usize, end: usize) -> bool {
-        const ELEMENTS: &[char] = &[
-            'H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U',
-        ];
-        let is_element = |token: &MathToken| matches!(token, MathToken::UpperVariable(letter) if ELEMENTS.contains(letter));
+        use crate::rules::science::elements::is_single_letter_element;
+        let is_element = |token: &MathToken| matches!(token, MathToken::UpperVariable(letter) if is_single_letter_element(*letter));
         tokens.iter().any(|t| matches!(t, MathToken::Subscript(_)))
             && end - start >= 2
             && tokens[start..end].iter().all(is_element)

@@ -1,6 +1,7 @@
 use crate::english::encode_english;
 use crate::number::encode_number;
 use crate::rules::context::EncoderState;
+use crate::rules::science::elements::is_element;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::unicode::decode_unicode;
@@ -17,17 +18,6 @@ static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
 
 const ELECTRODE: char = '\u{2223}';
 const SALT_BRIDGE: char = '\u{2225}';
-
-const ELEMENTS: &[&str] = &[
-    "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl",
-    "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As",
-    "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In",
-    "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb",
-    "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl",
-    "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk",
-    "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh",
-    "Fl", "Mc", "Lv", "Ts", "Og",
-];
 
 /// 상태 기호. 과학 제18항 3 — 구별된 글자체를 나타내는 괄호는 한글 소괄호로 적는다.
 const STATES: &[&str] = &["aq", "s", "l", "g"];
@@ -79,9 +69,9 @@ fn formula_cells(word: &str) -> Option<Vec<u8>> {
                 .filter(|next| next.is_ascii_lowercase())
                 .map(|next| format!("{ch}{next}"));
             let symbol = match two {
-                Some(name) if ELEMENTS.contains(&name.as_str()) => name,
+                Some(name) if is_element(&name) => name,
                 Some(_) => return None,
-                None if ELEMENTS.contains(&ch.to_string().as_str()) => ch.to_string(),
+                None if is_element(&ch.to_string()) => ch.to_string(),
                 None => return None,
             };
             out.push(decode_unicode('⠠'));

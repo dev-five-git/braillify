@@ -2299,6 +2299,55 @@ mod test {
         )]
     }
 
+    /// 과학 문맥은 과학 점자 전체를 적는 문맥이다. fixture 가 밝힌 문맥과 상관없이
+    /// 과학 fixture 는 모두 과학 문맥에서도 같은 답을 내야 한다.
+    #[test]
+    fn every_science_fixture_holds_in_the_science_context() {
+        let rule_map = load_test_case_rule_map();
+        let options = EncodeOptions {
+            default_mode: Some(crate::rules::context::EncodingMode::Science),
+        };
+        let mut checked = 0;
+        let mut failures = Vec::new();
+        for (path, key) in collect_test_files(&rule_map) {
+            if !key.starts_with("science/") {
+                continue;
+            }
+            let filename = path.file_name().unwrap().to_string_lossy().to_string();
+            let records: Vec<serde_json::Value> =
+                serde_json::from_str(&std::fs::read_to_string(&path).unwrap()).unwrap();
+            for (line, record) in records.iter().enumerate() {
+                if record.get("limitation").is_some() {
+                    continue;
+                }
+                checked += 1;
+                let input = record["input"].as_str().unwrap();
+                let answers: Vec<String> = testcase_answer_forms(record, &filename, line)
+                    .into_iter()
+                    .map(|(_, _, unicode)| unicode)
+                    .collect();
+                let actual = encode_with_options(input, &options).map(|cells| {
+                    cells
+                        .iter()
+                        .map(|cell| unicode::encode_unicode(*cell))
+                        .collect::<String>()
+                });
+                if !actual.as_ref().is_ok_and(|actual| answers.contains(actual)) {
+                    failures.push(format!(
+                        "{filename}:{line} {input:?} {answers:?} != {actual:?}"
+                    ));
+                }
+            }
+        }
+        assert!(checked > 0, "no science fixture was found");
+        assert!(
+            failures.is_empty(),
+            "{} of {checked} science fixtures differ in the science context:\n{}",
+            failures.len(),
+            failures.join("\n")
+        );
+    }
+
     #[derive(serde::Deserialize)]
     struct NiklCorpusCase {
         input: String,

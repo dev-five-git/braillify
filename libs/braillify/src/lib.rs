@@ -1562,6 +1562,40 @@ pub fn encode_to_braille_font(text: &str) -> Result<String, String> {
         .collect::<String>())
 }
 
+/// [`encode`] with the text read in a named context, for input whose print
+/// shape alone does not decide the rule (`44+XX` is a Roman section in plain
+/// Korean text but a stand-apart expression in science).
+///
+/// The names are the ones the test fixtures use: `korean`, `english`, `math`,
+/// `number`, `middle_korean`, `object_symbol`, `ipa` and `science`.
+pub fn encode_in_context(text: &str, context: &str) -> Result<Vec<u8>, String> {
+    let mode = context
+        .parse::<crate::rules::context::EncodingMode>()
+        .map_err(|()| format!("unknown context: {context}"))?;
+    encode_with_options(
+        text,
+        &EncodeOptions {
+            default_mode: Some(mode),
+        },
+    )
+}
+
+/// Unicode version of [`encode_in_context`].
+pub fn encode_to_unicode_in_context(text: &str, context: &str) -> Result<String, String> {
+    Ok(encode_in_context(text, context)?
+        .iter()
+        .map(|c| unicode::encode_unicode(*c))
+        .collect())
+}
+
+/// Braille-font version of [`encode_in_context`].
+pub fn encode_to_braille_font_in_context(text: &str, context: &str) -> Result<String, String> {
+    Ok(encode_in_context(text, context)?
+        .iter()
+        .map(|c| unicode::encode_unicode(*c))
+        .collect())
+}
+
 #[cfg(test)]
 mod trace_tests {
     use super::*;
@@ -3954,14 +3988,31 @@ mod science_context_tests {
         "⠴⠠⠠⠠⠙⠝⠁⠂⠀⠗⠝⠁⠂⠀⠁⠞⠏⠠⠄⠲⠉⠵⠀⠨⠍⠶⠬⠚⠊⠲"
     )]
     fn writes_science_notation_apart_from_units(#[case] input: &str, #[case] expected: &str) {
-        let options = EncodeOptions {
-            default_mode: Some(crate::rules::context::EncodingMode::Science),
-        };
-        let braille: String = encode_with_options(input, &options)
-            .expect("input must encode")
-            .iter()
-            .map(|cell| unicode::encode_unicode(*cell))
-            .collect();
-        assert_eq!(braille, expected);
+        assert_eq!(
+            encode_to_unicode_in_context(input, "science"),
+            Ok(expected.to_string())
+        );
+        assert_eq!(
+            encode_to_braille_font_in_context(input, "science"),
+            Ok(expected.to_string())
+        );
+    }
+
+    #[test]
+    fn names_the_context_it_cannot_read() {
+        assert_eq!(
+            encode_in_context("pOH", "chemistry"),
+            Err("unknown context: chemistry".to_string())
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::science("science", "⠴⠏⠠⠕⠠⠓")]
+    #[case::korean("korean", "⠴⠏⠠⠠⠕⠓⠲")]
+    fn reads_the_same_text_by_its_context(#[case] context: &str, #[case] expected: &str) {
+        assert_eq!(
+            encode_to_unicode_in_context("pOH", context),
+            Ok(expected.to_string())
+        );
     }
 }

@@ -47,10 +47,6 @@ pub fn chain_of_elements(text: &str) -> Option<Vec<char>> {
     if chars.len() < 5 || chars.len().is_multiple_of(2) {
         return None;
     }
-    let elements = chars.iter().step_by(2).count();
-    if elements < 3 {
-        return None;
-    }
     for (offset, mark) in chars.iter().enumerate() {
         let valid = if offset % 2 == 0 {
             SINGLE_LETTER_ELEMENTS.contains(mark)
@@ -157,6 +153,8 @@ mod tests {
     #[case::not_elements("A-B", false)]
     #[case::spelled_out_word("B-U-S", false)]
     #[case::spelled_out_distress("S-O-S", false)]
+    #[case::unsaturated_carbon("H-C-H", false)]
+    #[case::unknown_valence("U-O-U", false)]
     #[case::two_elements("H-O", false)]
     #[case::plain_word("water", false)]
     fn recognises_only_element_chains(#[case] text: &str, #[case] expected: bool) {

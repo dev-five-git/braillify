@@ -252,36 +252,16 @@ pub fn encode_upper_variable(
     /// 아래 첨자가 있는 식으로 한정한다. 한 글자짜리 원소 기호는 수학 변수와
     /// 글자가 겹치므로(`P`, `V`, `B`, `C`), 첨자라는 화학식 신호가 없으면
     /// 행렬 아닌 대문자 변수까지 갈라놓게 된다.
+    ///
+    /// 프라임이 낀 대문자열(`O′H`)은 수학 변수이지 원소 기호의 나열이 아니다.
     fn names_element_symbols(tokens: &[MathToken], start: usize, end: usize) -> bool {
-        if !tokens.iter().any(|t| matches!(t, MathToken::Subscript(_))) {
-            return false;
-        }
-        let letters: Vec<char> = tokens[start..end]
-            .iter()
-            .filter_map(|token| match token {
-                MathToken::UpperVariable(letter) => Some(*letter),
-                _ => None,
-            })
-            .collect();
-        letters.len() >= 2
-            && letters.iter().all(|letter| {
-                matches!(
-                    letter,
-                    'H' | 'B'
-                        | 'C'
-                        | 'N'
-                        | 'O'
-                        | 'F'
-                        | 'P'
-                        | 'S'
-                        | 'K'
-                        | 'V'
-                        | 'Y'
-                        | 'I'
-                        | 'W'
-                        | 'U'
-                )
-            })
+        const ELEMENTS: &[char] = &[
+            'H', 'B', 'C', 'N', 'O', 'F', 'P', 'S', 'K', 'V', 'Y', 'I', 'W', 'U',
+        ];
+        let is_element = |token: &MathToken| matches!(token, MathToken::UpperVariable(letter) if ELEMENTS.contains(letter));
+        tokens.iter().any(|t| matches!(t, MathToken::Subscript(_)))
+            && end - start >= 2
+            && tokens[start..end].iter().all(is_element)
     }
 
     let mut seq_end = *i;

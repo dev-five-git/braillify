@@ -273,6 +273,9 @@ mod tests {
     #[case::leading_prose("전지는 Zn∣ZnSO₄∥CuSO₄∣Cu")]
     #[case::not_an_element("Qx∣Zn∥Cu∣Zn")]
     #[case::unknown_state("Zn(zz)∣Zn∥Cu∣Cu")]
+    #[case::lone_non_element("Q∣Zn∥Cu∣Zn")]
+    #[case::starts_with_electrode("∣Zn∥Cu∣Zn")]
+    #[case::stray_word("Zn∣xyz∥Cu∣Cu")]
     fn leaves_everything_else_alone(#[case] text: &str) {
         assert!(encode_cell(text).is_none());
     }

@@ -86,6 +86,16 @@ struct CapitalizedGroup {
     end: usize,
 }
 
+/// 과학 제23항 — 대문자로 된 유전자는 3개 이상 이어져도 대문자 구절표를 쓰지 않는다.
+fn is_gene(word: &WordToken<'_>, group: CapitalizedGroup) -> bool {
+    let letters: Vec<char> = word.chars[group.start..group.end]
+        .iter()
+        .copied()
+        .filter(char::is_ascii_alphabetic)
+        .collect();
+    crate::rules::science::genotype::is_gene_symbol(&letters)
+}
+
 fn is_opening_passage_punctuation(ch: char) -> bool {
     matches!(
         ch,
@@ -293,9 +303,15 @@ impl TokenRule for UppercasePassageRule {
         let upcoming_second_group = upcoming_second.and_then(capitalized_group);
         let is_korean_math_letter_list =
             is_korean_math_letter_list_start(tokens, index, word, upcoming_first, upcoming_second);
-        // 과학 제23항 — 대문자로 된 유전자는 3개 이상 이어져도 대문자 구절표를 쓰지
-        // 않는다.
-        let can_start_passage = !state.science_context_active
+        let genes = state.science_context_active
+            && capitalized.is_some_and(|group| is_gene(word, group))
+            && upcoming_first
+                .zip(upcoming_first_group)
+                .is_some_and(|(next, group)| is_gene(next, group))
+            && upcoming_second
+                .zip(upcoming_second_group)
+                .is_some_and(|(next, group)| is_gene(next, group));
+        let can_start_passage = !genes
             && capitalized.is_some_and(|group| group.end == word_len)
             && upcoming_first
                 .zip(upcoming_first_group)

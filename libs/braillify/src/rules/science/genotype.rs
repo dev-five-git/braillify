@@ -18,6 +18,14 @@ pub(crate) fn is_allele_pairs(chars: &[char]) -> bool {
         && chars.iter().any(char::is_ascii_uppercase)
 }
 
+/// 대문자로 적은 유전자 기호 — 한두 글자(`A`, `AB`)나 대립 유전자 짝(`RRYY`).
+/// 세 글자 이상의 약어(`DNA`)는 유전자로 보지 않는다.
+pub(crate) fn is_gene_symbol(letters: &[char]) -> bool {
+    !letters.is_empty()
+        && letters.iter().all(char::is_ascii_uppercase)
+        && (letters.len() <= 2 || is_allele_pairs(letters))
+}
+
 /// 짝이 둘 이상이고 대문자와 소문자가 모두 있는 유전자형(`RRyy`, `AaBb`). 그래야
 /// 통일영어점자와 적는 법이 갈린다.
 fn is_genotype(chars: &[char]) -> bool {
@@ -102,5 +110,17 @@ mod tests {
     fn knows_allele_pairs(#[case] text: &str, #[case] expected: bool) {
         let chars: Vec<char> = text.chars().collect();
         assert_eq!(is_allele_pairs(&chars), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::single_letter("A", true)]
+    #[case::two_letters("AO", true)]
+    #[case::allele_pairs("RRYY", true)]
+    #[case::abbreviation("DNA", false)]
+    #[case::lowercase("aa", false)]
+    #[case::empty("", false)]
+    fn knows_gene_symbols(#[case] text: &str, #[case] expected: bool) {
+        let letters: Vec<char> = text.chars().collect();
+        assert_eq!(is_gene_symbol(&letters), expected);
     }
 }

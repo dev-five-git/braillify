@@ -3949,6 +3949,10 @@ mod science_context_tests {
     #[case::unit("HP", "⠴⠠⠠⠓⠏⠲")]
     #[case::gene("AA", "⠠⠠⠁⠁")]
     #[case::chromosomes_in_a_sentence("염색체는 44+XY이다.", "⠱⠢⠠⠗⠁⠰⠝⠉⠵⠀⠀⠼⠙⠙⠢⠠⠠⠭⠽⠀⠀⠕⠊⠲")]
+    #[case::abbreviations_keep_the_capital_phrase(
+        "DNA, RNA, ATP는 중요하다.",
+        "⠴⠠⠠⠠⠙⠝⠁⠂⠀⠗⠝⠁⠂⠀⠁⠞⠏⠠⠄⠲⠉⠵⠀⠨⠍⠶⠬⠚⠊⠲"
+    )]
     fn writes_science_notation_apart_from_units(#[case] input: &str, #[case] expected: &str) {
         let options = EncodeOptions {
             default_mode: Some(crate::rules::context::EncodingMode::Science),

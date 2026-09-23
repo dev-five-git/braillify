@@ -25,5 +25,41 @@
     "unicode": "⠠⠠⠠⠓⠰⠂⠉⠰⠒⠉⠰⠂⠓⠠⠄",
     "world": "",
     "jeomsarang": ""
+  },
+  {
+    "input": "    O\n    ‖\nO = S - OH\n    |\n    OH",
+    "note": "PDF 과학 제10항 3 가 — H₂SO₄, 위로 향한 측쇄",
+    "internal": ",,,o;2s+;2o%;1oh-;1oh,'",
+    "expected": "32323221486144448621414822119364822119324",
+    "unicode": "⠠⠠⠠⠕⠰⠆⠎⠬⠰⠆⠕⠩⠰⠂⠕⠓⠤⠰⠂⠕⠓⠠⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "CH₃ - CH - CH₃\n      |\n      CH₃",
+    "note": "PDF 과학 제10항 3 나 — C₄H₁₀, 아래로 향한 측쇄",
+    "internal": ",,,ch;#c;1ch%;1ch;#c-;1ch;#c,'",
+    "expected": "3232329194860948291941482919486093648291948609324",
+    "unicode": "⠠⠠⠠⠉⠓⠰⠼⠉⠰⠂⠉⠓⠩⠰⠂⠉⠓⠰⠼⠉⠤⠰⠂⠉⠓⠰⠼⠉⠠⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "    O\n    ‖\nH - C\n    |\n    O - H",
+    "note": "PDF 과학 제10항 3 다 — HCOOH, 측쇄에 달린 측쇄",
+    "internal": ",,,h;1c+;2o%;1o>;1h,'",
+    "expected": "323232194829444862141482212848219324",
+    "unicode": "⠠⠠⠠⠓⠰⠂⠉⠬⠰⠆⠕⠩⠰⠂⠕⠜⠰⠂⠓⠠⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "    H\n    |\nH - C - H\n    |\n    H",
+    "note": "PDF 과학 제10항 3 라 — CH₄, 오른쪽 원소 앞의 ⠤",
+    "internal": ",,,h;1c+;1h%;1h-;1h,'",
+    "expected": "323232194829444821941482193648219324",
+    "unicode": "⠠⠠⠠⠓⠰⠂⠉⠬⠰⠂⠓⠩⠰⠂⠓⠤⠰⠂⠓⠠⠄",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

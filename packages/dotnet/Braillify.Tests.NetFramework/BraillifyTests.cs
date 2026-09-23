@@ -80,6 +80,27 @@ public sealed class BraillifyTests
     }
 
     [TestMethod]
+    public void EncodeInContext_Science_ReadsTheUnitFormula()
+    {
+        Assert.AreEqual("⠴⠏⠠⠕⠠⠓", Braillify.EncodeToUnicode("pOH", "science"));
+        Assert.AreEqual("⠴⠏⠠⠠⠕⠓⠲", Braillify.EncodeToUnicode("pOH", "korean"));
+        Assert.AreEqual("⠴⠏⠠⠕⠠⠓", Braillify.EncodeToBrailleFont("pOH", "science"));
+        Assert.AreEqual(6, Braillify.Encode("pOH", "science").Length);
+    }
+
+    [TestMethod]
+    public void EncodeInContext_UnknownContext_ThrowsBraillifyException()
+    {
+        Assert.ThrowsExactly<BraillifyException>(() => Braillify.EncodeToUnicode("pOH", "chemistry"));
+    }
+
+    [TestMethod]
+    public void EncodeInContext_NullContext_ThrowsArgumentNullException()
+    {
+        Assert.ThrowsExactly<ArgumentNullException>(() => Braillify.EncodeToUnicode("pOH", null!));
+    }
+
+    [TestMethod]
     public void Encode_EmptyString_ReturnsEmptyArray()
     {
         // Arrange

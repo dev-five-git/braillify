@@ -2,9 +2,7 @@ namespace Braillify;
 
 using System;
 using System.Runtime.InteropServices;
-#if !NET6_0_OR_GREATER
 using System.Text;
-#endif
 
 /// <summary>
 /// 한국어 텍스트를 점자로 변환하는 라이브러리입니다.
@@ -268,6 +266,119 @@ public static class Braillify
 #endif
     }
 
+    /// <summary>
+    /// 문맥("science", "math", "korean" 등)을 밝혀 텍스트를 점자 바이트 배열로 인코딩합니다.
+    /// 묵자 모양만으로 규정을 정할 수 없는 글(예: 과학의 <c>44+XX</c>)에 씁니다.
+    /// </summary>
+    /// <param name="text">변환할 텍스트</param>
+    /// <param name="context">문맥 이름</param>
+    /// <returns>점자 바이트 배열</returns>
+    /// <exception cref="ArgumentNullException">텍스트나 문맥이 null인 경우</exception>
+    /// <exception cref="BraillifyException">알 수 없는 문맥이거나 인코딩 실패 시</exception>
+    public static byte[] Encode(string text, string context)
+    {
+        RequireNonNull(text, nameof(text));
+        RequireNonNull(context, nameof(context));
+        IntPtr textPtr = StringToUtf8Ptr(text);
+        IntPtr contextPtr = StringToUtf8Ptr(context);
+        try
+        {
+            IntPtr resultPtr = NativeMethods.braillify_encode_in_context(textPtr, contextPtr, out UIntPtr length);
+
+            if (resultPtr == IntPtr.Zero)
+            {
+                ThrowLastError();
+            }
+
+            try
+            {
+                var len = (int)length.ToUInt32();
+                var result = new byte[len];
+                Marshal.Copy(resultPtr, result, 0, len);
+                return result;
+            }
+            finally
+            {
+                NativeMethods.braillify_free_bytes(resultPtr, length);
+            }
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(textPtr);
+            Marshal.FreeHGlobal(contextPtr);
+        }
+    }
+
+    /// <summary>
+    /// 문맥을 밝혀 텍스트를 점자 유니코드 문자열로 인코딩합니다.
+    /// </summary>
+    /// <param name="text">변환할 텍스트</param>
+    /// <param name="context">문맥 이름 (science, math, korean 등)</param>
+    /// <returns>점자 유니코드 문자열</returns>
+    /// <exception cref="ArgumentNullException">텍스트나 문맥이 null인 경우</exception>
+    /// <exception cref="BraillifyException">알 수 없는 문맥이거나 인코딩 실패 시</exception>
+    public static string EncodeToUnicode(string text, string context) =>
+        TranslateInContext(text, context, NativeMethods.braillify_encode_to_unicode_in_context);
+
+    /// <summary>
+    /// 문맥을 밝혀 텍스트를 점자 폰트 문자열로 인코딩합니다.
+    /// </summary>
+    /// <param name="text">변환할 텍스트</param>
+    /// <param name="context">문맥 이름 (science, math, korean 등)</param>
+    /// <returns>점자 폰트 문자열</returns>
+    /// <exception cref="ArgumentNullException">텍스트나 문맥이 null인 경우</exception>
+    /// <exception cref="BraillifyException">알 수 없는 문맥이거나 인코딩 실패 시</exception>
+    public static string EncodeToBrailleFont(string text, string context) =>
+        TranslateInContext(text, context, NativeMethods.braillify_encode_to_braille_font_in_context);
+
+    private static string TranslateInContext(string text, string context, Func<IntPtr, IntPtr, IntPtr> translate)
+    {
+        RequireNonNull(text, nameof(text));
+        RequireNonNull(context, nameof(context));
+        IntPtr textPtr = StringToUtf8Ptr(text);
+        IntPtr contextPtr = StringToUtf8Ptr(context);
+        try
+        {
+            IntPtr resultPtr = translate(textPtr, contextPtr);
+
+            if (resultPtr == IntPtr.Zero)
+            {
+                ThrowLastError();
+            }
+
+            try
+            {
+                return ReadUtf8(resultPtr);
+            }
+            finally
+            {
+                NativeMethods.braillify_free_string(resultPtr);
+            }
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(textPtr);
+            Marshal.FreeHGlobal(contextPtr);
+        }
+    }
+
+    private static void RequireNonNull(string value, string name)
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException(name);
+        }
+    }
+
+    private static string ReadUtf8(IntPtr ptr)
+    {
+#if NET6_0_OR_GREATER
+        return Marshal.PtrToStringUTF8(ptr) ?? string.Empty;
+#else
+        return PtrToStringUtf8(ptr);
+#endif
+    }
+
     private static void ThrowLastError()
     {
 #if NET5_0_OR_GREATER
@@ -347,7 +458,6 @@ public static class Braillify
     }
 #endif
 
-#if !NETCOREAPP3_0_OR_GREATER
     private static IntPtr StringToUtf8Ptr(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -364,5 +474,4 @@ public static class Braillify
         Marshal.WriteByte(ptr, utf8Bytes.Length, 0); // null-terminator
         return ptr;
     }
-#endif
 }

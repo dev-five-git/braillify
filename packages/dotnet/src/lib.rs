@@ -151,6 +151,98 @@ pub unsafe extern "C" fn braillify_encode_to_braille_font(text: *const c_char) -
     }
 }
 
+/// # Safety
+/// `value` must be null or a valid NUL-terminated string for the duration of the call.
+unsafe fn read_str<'a>(value: *const c_char) -> Result<&'a str, String> {
+    if value.is_null() {
+        return Err("Null pointer argument".to_string());
+    }
+    unsafe { CStr::from_ptr(value) }
+        .to_str()
+        .map_err(|e| format!("Invalid UTF-8: {}", e))
+}
+
+/// 문맥("science", "math" 등)을 밝혀 텍스트를 점자 바이트 배열로 인코딩합니다.
+/// Encodes text read in a named context to a braille byte array.
+/// An unknown context is an error.
+///
+/// # Safety
+/// `text`, `context` and `out_len` must be valid non-null pointers for the duration of the call.
+/// `text` and `context` must point to valid NUL-terminated UTF-8 strings.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn braillify_encode_in_context(
+    text: *const c_char,
+    context: *const c_char,
+    out_len: *mut usize,
+) -> *mut u8 {
+    clear_last_error();
+    if out_len.is_null() {
+        set_last_error("Null pointer argument".to_string());
+        return ptr::null_mut();
+    }
+    let encoded = unsafe { read_str(text) }.and_then(|text| {
+        let context = unsafe { read_str(context) }?;
+        braillify::encode_in_context(text, context)
+    });
+    match encoded {
+        Ok(result) => {
+            unsafe { *out_len = result.len() };
+            Box::into_raw(result.into_boxed_slice()) as *mut u8
+        }
+        Err(e) => {
+            set_last_error(e);
+            ptr::null_mut()
+        }
+    }
+}
+
+/// # Safety
+/// `text` and `context` must be null or valid NUL-terminated strings for the duration of the call.
+unsafe fn translate_in_context(
+    text: *const c_char,
+    context: *const c_char,
+    translate: fn(&str, &str) -> Result<String, String>,
+) -> *mut c_char {
+    clear_last_error();
+    let translated = unsafe { read_str(text) }.and_then(|text| {
+        let context = unsafe { read_str(context) }?;
+        translate(text, context)
+    });
+    match translated {
+        Ok(result) => into_cstring_ptr_or_null(result),
+        Err(e) => {
+            set_last_error(e);
+            ptr::null_mut()
+        }
+    }
+}
+
+/// 문맥을 밝혀 텍스트를 점자 유니코드 문자열로 인코딩합니다.
+/// Encodes text read in a named context to a braille unicode string.
+///
+/// # Safety
+/// `text` and `context` must be valid non-null pointers to NUL-terminated UTF-8 strings.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn braillify_encode_to_unicode_in_context(
+    text: *const c_char,
+    context: *const c_char,
+) -> *mut c_char {
+    unsafe { translate_in_context(text, context, braillify::encode_to_unicode_in_context) }
+}
+
+/// 문맥을 밝혀 텍스트를 점자 폰트 문자열로 인코딩합니다.
+/// Encodes text read in a named context to a braille font string.
+///
+/// # Safety
+/// `text` and `context` must be valid non-null pointers to NUL-terminated UTF-8 strings.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn braillify_encode_to_braille_font_in_context(
+    text: *const c_char,
+    context: *const c_char,
+) -> *mut c_char {
+    unsafe { translate_in_context(text, context, braillify::encode_to_braille_font_in_context) }
+}
+
 /// Rust에서 할당한 문자열을 해제합니다.
 /// Frees a string allocated by Rust.
 ///
@@ -309,6 +401,71 @@ mod tests {
         let input = cstring("😀");
         let ptr = unsafe { braillify_encode_to_braille_font(input.as_ptr()) };
         assert!(ptr.is_null());
+    }
+
+    fn take_string(ptr: *mut c_char) -> String {
+        assert!(!ptr.is_null());
+        let value = unsafe { CStr::from_ptr(ptr) }.to_str().unwrap().to_owned();
+        unsafe { braillify_free_string(ptr) };
+        value
+    }
+
+    #[test]
+    fn context_functions_read_the_named_context() {
+        let text = cstring("pOH");
+        let context = cstring("science");
+        let unicode = take_string(unsafe {
+            braillify_encode_to_unicode_in_context(text.as_ptr(), context.as_ptr())
+        });
+        let font = take_string(unsafe {
+            braillify_encode_to_braille_font_in_context(text.as_ptr(), context.as_ptr())
+        });
+        assert_eq!(unicode, "⠴⠏⠠⠕⠠⠓");
+        assert_eq!(font, unicode);
+
+        let mut out_len: usize = 0;
+        let bytes =
+            unsafe { braillify_encode_in_context(text.as_ptr(), context.as_ptr(), &mut out_len) };
+        assert!(!bytes.is_null());
+        assert_eq!(out_len, 6);
+        unsafe { braillify_free_bytes(bytes, out_len) };
+    }
+
+    #[test]
+    fn context_functions_reject_null_and_invalid_input() {
+        let text = cstring("pOH");
+        let invalid: [u8; 3] = [0xFF, 0xFE, 0x00];
+        let null_context =
+            unsafe { braillify_encode_to_unicode_in_context(text.as_ptr(), std::ptr::null()) };
+        assert!(null_context.is_null());
+        assert_eq!(
+            take_string(braillify_get_last_error()),
+            "Null pointer argument"
+        );
+
+        let invalid_text = unsafe {
+            braillify_encode_to_braille_font_in_context(
+                invalid.as_ptr() as *const c_char,
+                text.as_ptr(),
+            )
+        };
+        assert!(invalid_text.is_null());
+        assert!(take_string(braillify_get_last_error()).starts_with("Invalid UTF-8"));
+
+        let context = cstring("science");
+        let null_len = unsafe {
+            braillify_encode_in_context(text.as_ptr(), context.as_ptr(), std::ptr::null_mut())
+        };
+        assert!(null_len.is_null());
+        let mut out_len: usize = 0;
+        let unknown = cstring("chemistry");
+        let failed =
+            unsafe { braillify_encode_in_context(text.as_ptr(), unknown.as_ptr(), &mut out_len) };
+        assert!(failed.is_null());
+        assert_eq!(
+            take_string(braillify_get_last_error()),
+            "unknown context: chemistry"
+        );
     }
 
     #[test]

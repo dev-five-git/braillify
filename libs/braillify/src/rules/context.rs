@@ -111,6 +111,10 @@ pub struct EncoderState {
     /// Explicit math mode (`context = math` in fixtures/API options).
     /// Keeps parentheses in math form even when their contents include Hangul.
     pub math_mode_active: bool,
+    /// Explicit Korean context (`context = korean`): the text sits in a Korean
+    /// sentence even when it carries no Hangul, as the unit table of 과학 제30항
+    /// does (`mH₂O` → ⠴⠍⠠⠓⠰⠼⠃⠠⠕).
+    pub korean_context_active: bool,
     /// 짝맞춤 작은따옴표(`‘…’`) 추적: `‘`를 만나면 +1, 닫음 `’`로 -1.
     /// 0보다 크면 현재 위치는 paired closing 위치이므로 `’`를 `⠴⠄`로 emit.
     /// 0이면 standalone apostrophe로 `⠄` 한 셀만 emit. (PDF 제61항)
@@ -144,6 +148,7 @@ impl EncoderState {
             doc_summary: DocumentSummary::default(),
             matrix_context_active: false,
             math_mode_active: false,
+            korean_context_active: false,
             unmatched_open_single_quotes: 0,
             jamo_spans: None,
         }

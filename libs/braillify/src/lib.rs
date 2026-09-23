@@ -461,6 +461,9 @@ fn normalize_pure_roman_compatibility_units<'a>(text: Cow<'a, str>) -> Cow<'a, s
 /// zero-width marks U+200B–U+200D and U+FEFF carry no print at all, so they are
 /// dropped like the soft hyphen.
 ///
+/// U+212B ANGSTROM SIGN is the canonical equivalent (NFC) of `Å`, the unit
+/// symbol of 제69항 [붙임 2] and 과학 제30항.
+///
 /// U+FF1A `：` and U+FF03 `＃` are excluded: the standard gives those fullwidth
 /// glyphs their own meanings — the 옛한글 장음 표시 of 제27항 and the 기수 기호 of
 /// 수학 제65항 — so they are not print variants of ASCII `:` and `#`.
@@ -479,7 +482,15 @@ fn parenthesized_number_expansion(c: char) -> Option<String> {
 fn may_normalize_print_variant(c: char) -> bool {
     matches!(
         c,
-        '\u{02DA}' | '\u{2010}' | '\u{2011}' | '\u{2043}' | '\u{00AD}' | '\u{00B0}' | '²' | '³'
+        '\u{02DA}'
+            | '\u{2010}'
+            | '\u{2011}'
+            | '\u{2043}'
+            | '\u{00AD}'
+            | '\u{00B0}'
+            | '²'
+            | '³'
+            | '\u{212B}'
     ) || is_foldable_fullwidth(c)
         || parenthesized_number_expansion(c).is_some()
         || matches!(
@@ -563,6 +574,7 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
                 out.push('\u{00B7}');
             }
             '\u{2A2F}' => out.push('\u{00D7}'),
+            '\u{212B}' => out.push('\u{00C5}'),
             _ if parenthesized_number_expansion(ch).is_some() => {
                 out.push_str(&parenthesized_number_expansion(ch).unwrap_or_default());
             }
@@ -1066,20 +1078,14 @@ fn decompose_accented_latin<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
 /// 제37항 — 입력이 (공백을 제외하고) 전부 ASCII 로마자(알파벳)로만 이루어진
 /// "고립된 로마자 구간"인지 판별한다. 이런 입력은 국어 점자 문맥(context:korean)에서
 /// 로마자표 ⠴ … 종료표 ⠲로 감싼다. `%p`(제69항 단위표)처럼 비알파벳 기호가 섞인
-/// 입력은 로마자 구간이 아니므로 제외된다.
+/// 입력은 로마자 구간이 아니므로 제외된다. 그리스 문자만으로 된 입력도 국어 문장
+/// 안에서는 로마자표와 종료표로 감싼다(제31항). 로마자와 섞인 `μm` 은 단위
+/// 기호(제69항 [붙임 1])라 따로 적는다.
 fn is_isolated_roman_section(text: &str) -> bool {
-    let mut has_letter = false;
-    for ch in text.chars() {
-        if ch == ' ' {
-            continue;
-        }
-        if ch.is_ascii_alphabetic() {
-            has_letter = true;
-        } else {
-            return false;
-        }
-    }
-    has_letter
+    let letters: Vec<char> = text.chars().filter(|ch| *ch != ' ').collect();
+    !letters.is_empty()
+        && (letters.iter().all(char::is_ascii_alphabetic)
+            || letters.iter().all(|ch| matches!(ch, 'Α'..='Ω' | 'α'..='ω')))
 }
 
 /// Encode text to braille with explicit options.
@@ -1123,6 +1129,17 @@ fn encode_with_options_traced(
     // N개 한글 음절을 cross-word 묶음으로 wrap. sentinel은 symbol_shortcut에서
     // braille marker (⠠⠤/⠤⠄)로 emit된다.
     let normalization_triggers = NormalizationTriggers::scan(text);
+    // 과학 제4·7항 — 화학식은 로마자 낱말도 수식도 아니다. 영어·수학 경로와 글꼴
+    // 정규화를 건너뛰어, 토큰 단계의 화학식 규칙이 강조(제7항 5)까지 그대로 본다.
+    let chemistry =
+        options.default_mode.is_none() && crate::rules::science::formula::owns_text(text);
+    // 한글 제69항 — 한글 없이 단위 기호 글자(`㎜Hg`, `㎾h`)로 적힌 글은 로마자 낱말이
+    // 아니라 단위다. 정규화가 글자를 `mm`·`kW` 로 풀기 전에 그 신호를 잡아 둔다.
+    let unit_glyphs = options.default_mode.is_none()
+        && !text.chars().any(crate::utils::is_korean_char)
+        && text
+            .chars()
+            .any(crate::rules::korean::rule_69::is_compatibility_unit_presentation);
     // Content-routed English must be considered before math normalization. The
     // legacy math path decomposes accented Latin for Korean math 제65항, which turns
     // UEB §4.2 modified letters (`Rhône`, `Hwǣr`) into combining-mark sequences and
@@ -1131,6 +1148,8 @@ fn encode_with_options_traced(
     // through the UEB engine here; ambiguous letterless/single-accent inputs remain
     // with the legacy Korean/math defaults because `is_ueb_eligible` rejects them.
     if options.default_mode.is_none()
+        && !chemistry
+        && !unit_glyphs
         && !text.chars().any(crate::utils::is_korean_char)
         && crate::rules::english_ueb::is_ueb_eligible(text)
         && !crate::rules::english_ueb::is_math_owned(text)
@@ -1159,7 +1178,7 @@ fn encode_with_options_traced(
         mark_trace_path(&mut trace, TracePath::EnglishUeb);
         return Ok(bytes);
     }
-    let normalized_text = if normalization_triggers.has_math_alphanumeric {
+    let normalized_text = if normalization_triggers.has_math_alphanumeric && !chemistry {
         normalize_math_alphanumeric_string(text)
     } else {
         Cow::Borrowed(text)
@@ -1303,6 +1322,7 @@ fn encode_with_options_traced(
     // token pipeline sees each space-separated word independently and can mark
     // variables/operators as UEB grade-1 text instead of one math expression.
     let default_math_owned = options.default_mode.is_none()
+        && !chemistry
         && default_math_expression_needs_whole_route(text)
         && !text.chars().any(crate::utils::is_korean_char);
     if matches!(options.default_mode, Some(EncodingMode::Math)) || default_math_owned {
@@ -1430,13 +1450,23 @@ fn encode_with_options_traced(
         // `EncodingMode::English` 입력도 동일한 로마자 구간이므로 같은 처리를 받는다.
         // `%p`(제69항 단위표)처럼 비알파벳이 섞인 입력은 제외된다.
         let wrap_roman_section = matches!(options.default_mode, Some(EncodingMode::English))
-            || (matches!(options.default_mode, Some(EncodingMode::Korean))
+            || ((unit_glyphs || matches!(options.default_mode, Some(EncodingMode::Korean)))
                 && is_isolated_roman_section(text));
         if wrap_roman_section && !result.is_empty() {
             result.insert(0, 52);
             result.push(50);
             if let Some(sink) = trace {
                 sink.shift_output(1);
+                let end = result.len() as u32;
+                for output in [0..1, end - 1..end] {
+                    sink.push(TraceEvent {
+                        rule: RuleId::emitter(EmitterRule::RomanSectionMarker),
+                        outcome: RuleOutcome::Consumed,
+                        token_index: 0,
+                        word_chars: 0..0,
+                        output,
+                    });
+                }
             }
         }
         Ok(result)
@@ -3406,6 +3436,7 @@ mod coverage_targeted_tests {
     #[case::word("but", true)]
     #[case::phrase_with_spaces("Table of Contents", true)]
     #[case::percent_unit("%p", false)]
+    #[case::greek_unit("Ω", true)]
     #[case::has_digit("abc123", false)]
     #[case::empty("", false)]
     #[case::only_space(" ", false)]
@@ -3785,6 +3816,7 @@ mod print_variant_fold_coverage {
     #[case::hyphenation_point("\u{2027}", "\u{00B7}")]
     #[case::one_dot_leader("\u{2024}", "\u{00B7}")]
     #[case::vector_cross("\u{2A2F}", "\u{00D7}")]
+    #[case::angstrom_sign("\u{212B}", "\u{00C5}")]
     #[case::parenthesised_five("\u{2478}", "(5)")]
     #[case::parenthesised_twenty("\u{2487}", "(20)")]
     #[case::wave_dash("\u{301C}", "~")]

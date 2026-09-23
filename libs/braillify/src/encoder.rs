@@ -151,6 +151,9 @@ impl Encoder {
             rules::token_rules::cell_notation::CellNotationRule,
         ));
         token_engine.register(Box::new(
+            rules::token_rules::chemical_formula::ChemicalFormulaRule,
+        ));
+        token_engine.register(Box::new(
             rules::token_rules::uppercase_passage::UppercasePassageRule,
         ));
         token_engine.register(Box::new(
@@ -257,6 +260,7 @@ impl Encoder {
         let mut ir = rules::token::DocumentIR::parse(text, self.english_indicator);
         ir.state.matrix_context_active = self.matrix_context_active;
         ir.state.math_mode_active = self.math_mode_active;
+        ir.state.korean_context_active = self.default_mode == Some(EncodingMode::Korean);
         ir.state.jamo_spans = trace.is_some().then(Box::<JamoSpans>::default);
 
         if let Some(mode) = self.default_mode
@@ -339,6 +343,8 @@ impl Encoder {
             // contains `-`, `(`, `,`, `.` is NOT blocked (that over-broad reading
             // of the math detector would swallow `child-ish-ly`, `with(er)`, …).
             && !crate::rules::english_ueb::is_math_owned(text)
+            // 과학 제4·7항 — 화학식은 영어 낱말이 아니다.
+            && !crate::rules::science::formula::owns_text(text)
         {
             let encoded = if trace.is_some() {
                 crate::rules::english_ueb::try_encode_traced(text)

@@ -651,7 +651,9 @@ fn is_closed_roman_annotation_suffix(chars: &[char]) -> bool {
 /// (`영업이익(100→95)`) is the 한글 제70항 arrow of an ordinary sentence (국립국어원
 /// 회신 8), and a 가운뎃점 lists them (`동구(1·2)`). The square bracket annotates the
 /// same way (`한미약품[128940]`), and a bracket that closes in a later word
-/// (`시간대(09:00 18:00)`) annotates from its opening on.
+/// (`시간대(09:00 18:00)`) annotates from its opening on. A figure may carry the
+/// 제69항 unit written after it (`종목(1000m, …)`) and a sign where no term precedes
+/// it (`전기장비(+12p)`, `전망(109·+10p)`).
 fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
     let close_mark = match chars.first() {
         Some('(') => ')',
@@ -672,14 +674,25 @@ fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
         });
     let body = &chars[1..close];
     let trailing = chars.get(close + 1..).unwrap_or_default();
+    let is_mark = |c: char| {
+        matches!(
+            c,
+            '/' | ':' | '.' | ',' | '~' | '\u{223C}' | '→' | '←' | '↔' | '\u{00B7}'
+        )
+    };
+    let fits = |at: usize| {
+        let c = body[at];
+        let previous = at.checked_sub(1).map(|p| body[p]);
+        c.is_ascii_digit()
+            || is_mark(c)
+            || (matches!(c, '+' | '-')
+                && previous.is_none_or(is_mark)
+                && body.get(at + 1).is_some_and(char::is_ascii_digit))
+            || (c.is_ascii_alphabetic()
+                && previous.is_some_and(|p| p.is_ascii_digit() || p.is_ascii_alphabetic()))
+    };
     body.iter().any(char::is_ascii_digit)
-        && body.iter().all(|c| {
-            c.is_ascii_digit()
-                || matches!(
-                    *c,
-                    '/' | ':' | '.' | ',' | '~' | '\u{223C}' | '→' | '←' | '↔' | '\u{00B7}'
-                )
-        })
+        && (0..body.len()).all(fits)
         && trailing.iter().all(is_trailing)
 }
 
@@ -1107,10 +1120,25 @@ mod figure_annotation_coverage {
     #[case::decimal_then_a_word("가나 특별담화(4.13 호헌조치)를", "⠦⠄⠼⠙⠲⠁⠉")]
     #[case::slash_after_a_korean_word("가나 무선충전/NFC 다라", "⠸⠌⠴⠠⠠⠝⠋⠉")]
     #[case::middle_dot_after_a_korean_word("가나 한·EU, 다라", "⠐⠆⠴⠠⠠⠑⠥")]
+    #[case::unit_after_a_figure("가나 종목(1000m, 1500m) 다라", "⠦⠄⠼⠁⠚⠚⠚⠴⠍")]
+    #[case::signed_figure("가나 전기장비(+12p), 다라", "⠦⠄⠢⠼⠁⠃⠴⠏⠠⠴")]
     fn an_annotation_of_figures_stays_korean(#[case] input: &str, #[case] annotation: &str) {
         let encoded = crate::encode_to_unicode(input).unwrap();
         assert!(encoded.contains(annotation), "{encoded}");
         assert!(!encoded.contains("\u{2800}\u{2800}"), "{encoded}");
+    }
+
+    /// 앞 항이 있는 부호는 연산이고, 숫자에서 떨어진 글자는 변수다.
+    #[rstest::rstest]
+    #[case::sign_opens_the_figure("(+12p)", true)]
+    #[case::sign_after_a_mark("(109·+10p)", true)]
+    #[case::unit_after_a_figure("(1000m,", true)]
+    #[case::operator_after_a_figure("(3+1)", false)]
+    #[case::variable_term("(x+1)", false)]
+    #[case::sign_before_a_letter("(+a)", false)]
+    fn a_figure_annotation_takes_units_and_signs(#[case] text: &str, #[case] expected: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(super::is_closed_numeric_annotation_suffix(&chars), expected);
     }
 }
 

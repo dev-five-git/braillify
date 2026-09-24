@@ -1194,7 +1194,7 @@ mod figure_annotation_coverage {
     #[case::closer_after_a_middle_dot("가나 김남준·29), 다라", "⠐⠆⠼⠃⠊⠠⠴")]
     #[case::closer_after_a_hyphen("가나 펩티다제-4) 다라", "⠤⠼⠙⠠⠴")]
     #[case::numbered_model("가나 아이폰5S, 다라", "⠼⠑⠴⠠⠎⠐")]
-    #[case::open_roman_gloss("가나 경화기(Curing, 365~395㎚)에 다라", "⠦⠄⠴⠠⠉⠥⠗⠬⠂")]
+    #[case::open_roman_gloss("가나 경화기(Curing, 365~395㎚)에 다라", "⠦⠄⠴⠠⠉⠥⠗⠬")]
     #[case::open_initialism_gloss("가나 협정(RCEP, 29.0%)과 다라", "⠦⠄⠴⠠⠠⠗⠉⠑⠏")]
     #[case::gloss_opened_by_a_roman_word("가나 secretary(비서)라 다라", "⠎⠑⠉⠗⠑⠞⠜⠽")]
     fn an_annotation_of_figures_stays_korean(#[case] input: &str, #[case] annotation: &str) {

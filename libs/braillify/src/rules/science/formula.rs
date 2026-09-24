@@ -871,6 +871,26 @@ pub(crate) fn encode(items: &[Item]) -> Result<Vec<u8>, String> {
     Ok(out)
 }
 
+/// 대문자 구절 안에서처럼 원소 기호를 대문자표 없이 적는다 — 과학 제11항 2 의
+/// 구절표 사이. 숫자 뒤의 A~J 앞에는 ⠐ 을 적는다(제5항).
+pub(crate) fn encode_in_phrase(items: &[Item]) -> Result<Vec<u8>, String> {
+    let mut out = Vec::new();
+    let mut numeric = false;
+    for item in items {
+        numeric = match item {
+            Item::Capital { symbol, .. } => {
+                if numeric && symbol.starts_with(|c: char| ('A'..='J').contains(&c)) {
+                    out.push(decode_unicode('⠐'));
+                }
+                write_letters(item, &mut out)?;
+                false
+            }
+            _ => encode_item(item, &mut out)?,
+        };
+    }
+    Ok(out)
+}
+
 fn write_letters(item: &Item, out: &mut Vec<u8>) -> Result<(), String> {
     if let Item::Capital { symbol, .. } = item {
         for letter in symbol.chars() {
@@ -1129,6 +1149,19 @@ mod tests {
     #[case::gas_volume("VCO₂", "⠠⠧⠠⠉⠠⠕⠰⠼⠃")]
     fn writes_formulas(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(braille(text), expected);
+    }
+
+    #[rstest::rstest]
+    #[case::methyl("CH₃", "⠉⠓⠰⠼⠉")]
+    #[case::number_before_hydrogen("C₂H₅", "⠉⠰⠼⠃⠐⠓⠰⠼⠑")]
+    #[case::number_before_oxygen("C₂O", "⠉⠰⠼⠃⠕")]
+    fn writes_a_group_inside_a_capital_phrase(#[case] text: &str, #[case] expected: &str) {
+        let cells = encode_in_phrase(&parse(text).expect("parses")).expect("encodes");
+        let braille: String = cells
+            .iter()
+            .map(|cell| char::from_u32(0x2800 + u32::from(*cell)).expect("braille cell"))
+            .collect();
+        assert_eq!(braille, expected);
     }
 
     #[rstest::rstest]

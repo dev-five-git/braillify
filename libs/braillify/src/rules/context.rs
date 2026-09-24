@@ -49,6 +49,16 @@ pub enum EncodingMode {
     /// 과학 규정으로 읽는다 — 연산 기호가 든 로마자 식(제6항), 유전자(제23항),
     /// 치식(제26항), 단위 속 화학식(제30항 [붙임]).
     Science,
+    /// [`Self::Science`] 와 같되, 구조식과 전자 점식을 공간 표기 형식으로 적는다.
+    /// 제9항·제15항은 같은 묵자를 기호 표기와 공간 표기 가운데 어느 쪽으로도 적게 한다.
+    ScienceSpatial,
+}
+
+impl EncodingMode {
+    /// 과학 점자로 읽는 문맥인가.
+    pub fn reads_science(self) -> bool {
+        matches!(self, Self::Science | Self::ScienceSpatial)
+    }
 }
 
 impl std::str::FromStr for EncodingMode {
@@ -67,6 +77,7 @@ impl std::str::FromStr for EncodingMode {
             "object_symbol" => Ok(Self::ObjectSymbol),
             "ipa" => Ok(Self::Ipa),
             "science" => Ok(Self::Science),
+            "science_spatial" => Ok(Self::ScienceSpatial),
             _ => Err(()),
         }
     }
@@ -280,6 +291,7 @@ mod tests {
     #[case::object_symbol("object_symbol", EncodingMode::ObjectSymbol)]
     #[case::ipa("ipa", EncodingMode::Ipa)]
     #[case::science("science", EncodingMode::Science)]
+    #[case::science_spatial("science_spatial", EncodingMode::ScienceSpatial)]
     fn encoding_mode_from_str_all_variants(#[case] name: &str, #[case] mode: EncodingMode) {
         assert_eq!(EncodingMode::from_str(name), Ok(mode));
     }

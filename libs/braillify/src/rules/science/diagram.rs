@@ -14,14 +14,15 @@ const LINE_BREAK: u8 = 255;
 #[derive(Clone, Copy)]
 enum Link {
     Bond(u8),
-    Electrons(usize),
+    /// 전자 기호 하나에 든 전자 수와 그 기호의 개수(`::` 은 둘씩 둘).
+    Electrons(usize, usize),
 }
 
 impl Link {
     fn item(self) -> Item {
         match self {
             Link::Bond(order) => Item::Bond(order),
-            Link::Electrons(count) => Item::Electrons(count),
+            Link::Electrons(count, marks) => Item::Electrons(count * marks),
         }
     }
 }
@@ -42,11 +43,16 @@ fn horizontal_link(gap: &[char]) -> Option<Link> {
         ['-' | '–'] => Some(Link::Bond(1)),
         ['='] => Some(Link::Bond(2)),
         ['≡'] => Some(Link::Bond(3)),
-        dots => dots
-            .iter()
-            .map(|mark| electrons(*mark))
-            .sum::<Option<usize>>()
-            .map(Link::Electrons),
+        dots => {
+            let counts: Vec<usize> = dots
+                .iter()
+                .map(|mark| electrons(*mark))
+                .collect::<Option<_>>()?;
+            counts
+                .iter()
+                .all(|count| *count == counts[0])
+                .then(|| Link::Electrons(counts[0], counts.len()))
+        }
     }
 }
 
@@ -55,7 +61,7 @@ fn vertical_link(mark: char) -> Option<Link> {
         '|' | '│' => Some(Link::Bond(1)),
         '‖' => Some(Link::Bond(2)),
         '⦀' => Some(Link::Bond(3)),
-        _ => electrons(mark).map(Link::Electrons),
+        _ => electrons(mark).map(|count| Link::Electrons(count, 1)),
     }
 }
 
@@ -63,7 +69,7 @@ fn vertical_link(mark: char) -> Option<Link> {
 fn dangling(gap: &[char]) -> Option<Option<Link>> {
     match horizontal_link(gap) {
         None if gap.iter().all(|c| *c == ' ') => Some(None),
-        Some(link @ Link::Electrons(_)) => Some(Some(link)),
+        Some(link @ Link::Electrons(..)) => Some(Some(link)),
         _ => None,
     }
 }
@@ -224,32 +230,50 @@ impl Walk<'_> {
     }
 }
 
-/// 과학 제9항 1·제10항 3·제15항 1·제16항 — 2차원 구조식과 전자 점식을 기호 표기
-/// 형식으로 적는다. 왼쪽에서 오른쪽으로, 위쪽에서 아래쪽으로 풀어 적는다.
-fn structural(text: &str) -> Option<Vec<u8>> {
-    let rows: Vec<Vec<char>> = text.lines().map(|line| line.chars().collect()).collect();
+struct Mark {
+    row: usize,
+    column: usize,
+    link: Link,
+}
+
+struct Diagram {
+    atoms: Vec<Atom>,
+    chains: Vec<Chain>,
+    marks: Vec<Mark>,
+    neighbours: Vec<Neighbours>,
+    /// 도식 위에 따로 적은 화학식(제11항의 `CH₄`) — 첫 줄에서 어디에도 잇지 않은 원소.
+    caption: Option<usize>,
+    main: usize,
+}
+
+fn parse(text: &str) -> Option<Diagram> {
     let mut atoms = Vec::new();
     let mut chains = Vec::new();
-    let mut verticals = Vec::new();
-    for (row, chars) in rows.iter().enumerate() {
+    let mut marks = Vec::new();
+    for (row, line) in text.lines().enumerate() {
+        let chars: Vec<char> = line.chars().collect();
         if chars.iter().copied().any(is_atom_char) {
-            chains.push(atom_row(row, chars, &mut atoms)?);
+            chains.push(atom_row(row, &chars, &mut atoms)?);
             continue;
         }
-        let marks: Vec<(usize, char)> = chars
+        let row_marks: Vec<(usize, char)> = chars
             .iter()
             .copied()
             .enumerate()
             .filter(|(_, ch)| *ch != ' ')
             .collect();
-        if marks.is_empty() {
+        if row_marks.is_empty() {
             return None;
         }
-        for (column, mark) in marks {
-            verticals.push((row, column, vertical_link(mark)?));
+        for (column, mark) in row_marks {
+            marks.push(Mark {
+                row,
+                column,
+                link: vertical_link(mark)?,
+            });
         }
     }
-    if verticals.is_empty() {
+    if marks.is_empty() {
         return None;
     }
 
@@ -261,53 +285,293 @@ fn structural(text: &str) -> Option<Vec<u8>> {
             neighbours[right].left = Some((*link, left));
         }
     }
-    let atom_at = |row: Option<usize>, column: usize| {
-        let row = row?;
-        atoms
-            .iter()
-            .position(|atom| atom.row == row && atom.columns.contains(&column))
-    };
-    for &(row, column, link) in &verticals {
-        let above = atom_at(row.checked_sub(1), column);
-        let below = atom_at(Some(row + 1), column);
-        match (above, below, link) {
+    for mark in &marks {
+        let above = atom_at(&atoms, mark.row.checked_sub(1), mark.column);
+        let below = atom_at(&atoms, Some(mark.row + 1), mark.column);
+        match (above, below, mark.link) {
             (None, None, _) | (None, _, Link::Bond(_)) | (_, None, Link::Bond(_)) => return None,
             _ => {}
         }
         for (end, side, other) in [(above, DOWN, below), (below, UP, above)] {
             if let Some(end) = end {
                 let slot = &mut neighbours[end].vertical[side];
-                if slot.replace((link, other)).is_some() {
+                if slot.replace((mark.link, other)).is_some() {
                     return None;
                 }
             }
         }
     }
 
-    let main = chains.iter().min_by_key(|chain| {
-        (
-            atoms[chain.atoms[0]].columns.start,
-            atoms[chain.atoms[0]].row,
-        )
-    })?;
-    if chains
+    let isolated = |atom: usize| {
+        let n = &neighbours[atom];
+        n.left.is_none() && n.right.is_none() && n.vertical.iter().all(Option::is_none)
+    };
+    let caption = chains
+        .first()
+        .filter(|chain| {
+            chains.len() > 1
+                && chain.atoms.len() == 1
+                && chain.lead.is_none()
+                && chain.trail.is_none()
+                && atoms[chain.atoms[0]].row == 0
+                && isolated(chain.atoms[0])
+        })
+        .map(|chain| chain.atoms[0]);
+    let main = (0..chains.len())
+        .filter(|at| caption != Some(chains[*at].atoms[0]))
+        .min_by_key(|at| {
+            let first = &atoms[chains[*at].atoms[0]];
+            (first.columns.start, first.row)
+        })?;
+    Some(Diagram {
+        atoms,
+        chains,
+        marks,
+        neighbours,
+        caption,
+        main,
+    })
+}
+
+fn atom_at(atoms: &[Atom], row: Option<usize>, column: usize) -> Option<usize> {
+    let row = row?;
+    atoms
         .iter()
-        .any(|chain| !std::ptr::eq(chain, main) && (chain.lead.is_some() || chain.trail.is_some()))
-    {
+        .position(|atom| atom.row == row && atom.columns.contains(&column))
+}
+
+/// 과학 제9항 1·제10항 3·제15항 1·제16항 — 2차원 구조식과 전자 점식을 기호 표기
+/// 형식으로 적는다. 왼쪽에서 오른쪽으로, 위쪽에서 아래쪽으로 풀어 적는다. 도식
+/// 위의 화학식은 적지 않는다(제10항의 예).
+fn symbol_form(diagram: &Diagram) -> Option<Vec<u8>> {
+    let side_electrons =
+        diagram.chains.iter().enumerate().any(|(at, chain)| {
+            at != diagram.main && (chain.lead.is_some() || chain.trail.is_some())
+        });
+    if side_electrons {
         return None;
     }
     let mut walk = Walk {
-        atoms: &atoms,
-        neighbours: &neighbours,
-        seen: vec![false; atoms.len()],
+        atoms: &diagram.atoms,
+        neighbours: &diagram.neighbours,
+        seen: vec![false; diagram.atoms.len()],
         vertical_links: 0,
         items: Vec::new(),
     };
-    walk.main_chain(main)?;
-    let complete = walk.seen.iter().all(|seen| *seen) && walk.vertical_links == verticals.len();
+    if let Some(caption) = diagram.caption {
+        walk.seen[caption] = true;
+    }
+    walk.main_chain(&diagram.chains[diagram.main])?;
+    let complete = walk.seen.iter().all(|seen| *seen) && walk.vertical_links == diagram.marks.len();
     complete
         .then(|| formula::encode(&walk.items).ok())
         .flatten()
+}
+
+/// 전자 기호마다 전자 수만큼 ⠔ 을 적고 기호 사이를 한 칸 띄운다(제17항 2·3).
+fn electron_cells(count: usize, marks: usize) -> Vec<u8> {
+    let mut out = Vec::new();
+    for mark in 0..marks {
+        if mark > 0 {
+            out.push(0);
+        }
+        out.extend(std::iter::repeat_n(decode_unicode('⠔'), count));
+    }
+    out
+}
+
+fn bond_count(order: u8) -> u8 {
+    decode_unicode(match order {
+        1 => '⠂',
+        2 => '⠆',
+        _ => '⠒',
+    })
+}
+
+/// 공간 표기 형식의 결합선과 전자 — 가로 결합선 ⠠⠤, 세로 결합선 ⠸ 뒤에 결합 수를
+/// 적는다(제11항 4).
+fn link_cells(link: Link, vertical: bool) -> Vec<u8> {
+    match link {
+        Link::Bond(order) if vertical => vec![decode_unicode('⠸'), bond_count(order)],
+        Link::Bond(order) => vec![decode_unicode('⠠'), decode_unicode('⠤'), bond_count(order)],
+        Link::Electrons(count, marks) => electron_cells(count, marks),
+    }
+}
+
+struct Row {
+    cells: Vec<u8>,
+    starts: Vec<(usize, usize)>,
+}
+
+fn lay_out_chain(chain: &Chain, atom_cells: &[Vec<u8>], dots: bool) -> Row {
+    let mut row = Row {
+        cells: Vec::new(),
+        starts: Vec::new(),
+    };
+    let mut segments: Vec<(Vec<u8>, Option<usize>)> = Vec::new();
+    segments.extend(chain.lead.map(|link| (link_cells(link, false), None)));
+    for (at, &atom) in chain.atoms.iter().enumerate() {
+        if at > 0 {
+            segments.push((link_cells(chain.links[at - 1], false), None));
+        }
+        segments.push((atom_cells[atom].clone(), Some(atom)));
+    }
+    segments.extend(chain.trail.map(|link| (link_cells(link, false), None)));
+    for (at, (cells, atom)) in segments.into_iter().enumerate() {
+        if dots && at > 0 {
+            row.cells.push(0);
+        }
+        if let Some(atom) = atom {
+            row.starts.push((atom, row.cells.len()));
+        }
+        row.cells.extend(cells);
+    }
+    row
+}
+
+/// 과학 제9항 2·제11항·제15항 2·제17항 — 구조식과 전자 점식을 모양대로 여러 줄에
+/// 적는다. 세로로 잇는 결합선·전자와 위아래 원소는 이어지는 원소의 첫 칸(대문자
+/// 기호표가 있으면 그 칸)에 맞추고, 도식 위의 화학식은 첫 줄에 적는다.
+fn spatial_form(diagram: &Diagram) -> Option<Vec<u8>> {
+    let links = diagram
+        .chains
+        .iter()
+        .flat_map(|chain| chain.links.iter().chain(&chain.lead).chain(&chain.trail))
+        .chain(diagram.marks.iter().map(|mark| &mark.link));
+    let dots = links
+        .clone()
+        .any(|link| matches!(link, Link::Electrons(..)));
+    // 제11항 2 — 한 글자 원소가 붙어 나오는 묶음(`OH`, `CH₃`)이 있으면 대문자 구절표로
+    // 감싸고 원소 기호마다의 대문자 기호표는 적지 않는다.
+    let passage = !dots
+        && diagram.atoms.iter().enumerate().any(|(at, atom)| {
+            Some(at) != diagram.caption
+                && atom
+                    .items
+                    .iter()
+                    .filter(|item| matches!(item, Item::Capital { symbol, element: true, .. } if symbol.len() == 1))
+                    .count()
+                    >= 2
+        });
+    let atom_cells = diagram
+        .atoms
+        .iter()
+        .enumerate()
+        .map(|(at, atom)| {
+            if passage && Some(at) != diagram.caption {
+                formula::encode_in_phrase(&atom.items)
+            } else {
+                formula::encode(&atom.items)
+            }
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .ok()?;
+    let rows: Vec<Row> = diagram
+        .chains
+        .iter()
+        .map(|chain| lay_out_chain(chain, &atom_cells, dots))
+        .collect();
+    let mut chain_of = vec![0; diagram.atoms.len()];
+    let mut start_of = vec![0; diagram.atoms.len()];
+    for (at, row) in rows.iter().enumerate() {
+        for &(atom, start) in &row.starts {
+            chain_of[atom] = at;
+            start_of[atom] = start;
+        }
+    }
+
+    let mut offsets: Vec<Option<isize>> = vec![None; rows.len()];
+    offsets[diagram.main] = Some(0);
+    let column = |atom: usize, offsets: &[Option<isize>]| {
+        offsets[chain_of[atom]].map(|offset| offset + start_of[atom] as isize)
+    };
+    loop {
+        let mut placed = false;
+        for mark in &diagram.marks {
+            let above = atom_at(&diagram.atoms, mark.row.checked_sub(1), mark.column);
+            let below = atom_at(&diagram.atoms, Some(mark.row + 1), mark.column);
+            let (Some(above), Some(below)) = (above, below) else {
+                continue;
+            };
+            match (column(above, &offsets), column(below, &offsets)) {
+                (Some(top), None) => {
+                    offsets[chain_of[below]] = Some(top - start_of[below] as isize);
+                    placed = true;
+                }
+                (None, Some(bottom)) => {
+                    offsets[chain_of[above]] = Some(bottom - start_of[above] as isize);
+                    placed = true;
+                }
+                (Some(top), Some(bottom)) if top != bottom => return None,
+                _ => {}
+            }
+        }
+        if !placed {
+            break;
+        }
+    }
+    let unplaced = offsets.iter().enumerate().any(|(at, offset)| {
+        offset.is_none() && Some(diagram.chains[at].atoms[0]) != diagram.caption
+    });
+    if unplaced {
+        return None;
+    }
+    let margin = offsets.iter().flatten().copied().min().unwrap_or(0);
+
+    let mut lines: Vec<(usize, Vec<u8>)> = Vec::new();
+    for (at, row) in rows.iter().enumerate() {
+        let line_row = diagram.atoms[diagram.chains[at].atoms[0]].row;
+        match offsets[at] {
+            Some(offset) => {
+                let mut line = vec![0; (offset - margin) as usize];
+                line.extend(&row.cells);
+                lines.push((line_row, line));
+            }
+            None => lines.push((line_row, row.cells.clone())),
+        }
+    }
+    let mut mark_lines: std::collections::BTreeMap<usize, Vec<(usize, Vec<u8>)>> =
+        std::collections::BTreeMap::new();
+    for mark in &diagram.marks {
+        let anchor = atom_at(&diagram.atoms, mark.row.checked_sub(1), mark.column)
+            .or_else(|| atom_at(&diagram.atoms, Some(mark.row + 1), mark.column))?;
+        let at = (column(anchor, &offsets)? - margin) as usize;
+        mark_lines
+            .entry(mark.row)
+            .or_default()
+            .push((at, link_cells(mark.link, true)));
+    }
+    for (row, mut placed) in mark_lines {
+        placed.sort_by_key(|(at, _)| *at);
+        let mut line = Vec::new();
+        for (at, cells) in placed {
+            if line.len() > at {
+                return None;
+            }
+            line.resize(at, 0);
+            line.extend(cells);
+        }
+        lines.push((row, line));
+    }
+    lines.sort_by_key(|(row, _)| *row);
+
+    let caption_row = diagram.caption.map(|atom| diagram.atoms[atom].row);
+    let (caption, body): (Vec<_>, Vec<_>) = lines
+        .into_iter()
+        .partition(|(row, _)| Some(*row) == caption_row);
+    let mut out_lines: Vec<Vec<u8>> = caption.into_iter().map(|(_, line)| line).collect();
+    if passage {
+        out_lines.push(cells_of("⠐⠐⠿⠠⠠⠠"));
+    }
+    out_lines.extend(body.into_iter().map(|(_, line)| line));
+    if passage {
+        out_lines.push(cells_of("⠐⠐⠿⠠⠄"));
+    }
+    Some(out_lines.join(&LINE_BREAK))
+}
+
+fn cells_of(pattern: &str) -> Vec<u8> {
+    pattern.chars().map(decode_unicode).collect()
 }
 
 fn is_connector_row(line: &str) -> bool {
@@ -404,12 +668,21 @@ fn pedigree(text: &str) -> Option<Vec<u8>> {
     Some(out)
 }
 
-/// 여러 줄로 그린 과학 도식을 점자로 적는다. 도식이 아니면 `None`.
-pub(crate) fn encode(text: &str) -> Option<Vec<u8>> {
+/// 여러 줄로 그린 과학 도식을 점자로 적는다. 도식이 아니면 `None`. `spatial` 이면
+/// 구조식과 전자 점식을 공간 표기 형식으로 적는다(제9항·제15항은 두 형식을 다 둔다).
+pub(crate) fn encode(text: &str, spatial: bool) -> Option<Vec<u8>> {
     if !text.contains('\n') {
         return None;
     }
-    structural(text).or_else(|| pedigree(text))
+    parse(text)
+        .and_then(|diagram| {
+            if spatial {
+                spatial_form(&diagram)
+            } else {
+                symbol_form(&diagram)
+            }
+        })
+        .or_else(|| pedigree(text))
 }
 
 #[cfg(test)]
@@ -431,11 +704,77 @@ mod tests {
     #[case::lone_pairs(" ‥\n:F:\n ‥", "⠔⠔⠠⠋⠬⠔⠔⠩⠔⠔⠤⠔⠔")]
     #[case::triple_bonds("C≡N\n⦀\nN", "⠠⠠⠠⠉⠩⠰⠒⠝⠤⠰⠒⠝⠠⠄")]
     #[case::three_and_four_electrons("H⋮N\n  ∷\n  H", "⠠⠠⠠⠓⠔⠔⠔⠝⠩⠔⠔⠔⠔⠓⠠⠄")]
+    #[case::caption_is_left_out("OH₂\n  H\n  |\nH-O", "⠠⠠⠠⠓⠰⠂⠕⠬⠰⠂⠓⠠⠄")]
     fn writes_diagrams_in_symbol_form(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(
-            encode(text).map(|cells| braille(&cells)).as_deref(),
+            encode(text, false).map(|cells| braille(&cells)).as_deref(),
             Some(expected)
         );
+    }
+
+    #[rstest::rstest]
+    #[case::ammonia(
+        "  H\n  |\nH-N\n  |\n  H",
+        "     ,h\n     _1\n,h,-1,n\n     _1\n     ,h"
+    )]
+    #[case::caption_first(
+        "NH₃\n  H\n  |\nH-N\n  |\n  H",
+        ",n,h;#c\n     ,h\n     _1\n,h,-1,n\n     _1\n     ,h"
+    )]
+    #[case::grouped_atoms_in_a_passage("CH₃-OH\n|\nH", "\"\"=,,,\nch;#c,-1oh\n_1\nh\n\"\"=,'")]
+    #[case::caption_outside_the_passage(
+        "CH₄O\nCH₃-OH\n|\nH",
+        ",,,ch;#do,'\n\"\"=,,,\nch;#c,-1oh\n_1\nh\n\"\"=,'"
+    )]
+    #[case::row_above_aligns_to_its_atom("  H-O\n  |\nH-C", "     ,h,-1,o\n     _1\n,h,-1,c")]
+    #[case::electron_pairs(" ‥\n:F:F:", "   99\n99 ,f 99 ,f 99")]
+    #[case::shared_pair_between_rows(
+        "  :O:\n   ‥\n:O:P:O:",
+        "      99 ,o 99\n         99\n99 ,o 99 ,p 99 ,o 99"
+    )]
+    #[case::triple_vertical("N\n⦀\nN", ",n\n_3\n,n")]
+    #[case::three_electrons("N⋮N\n‥", ",n 999 ,n\n99")]
+    fn writes_diagrams_in_spatial_form(#[case] text: &str, #[case] internal: &str) {
+        let expected: String = internal
+            .chars()
+            .map(|ch| match ch {
+                '\n' => '\n',
+                ' ' => '⠀',
+                ',' => '⠠',
+                '-' => '⠤',
+                '_' => '⠸',
+                '"' => '⠐',
+                '=' => '⠿',
+                '\'' => '⠄',
+                ';' => '⠰',
+                '#' => '⠼',
+                '1' => '⠂',
+                '2' => '⠆',
+                '3' => '⠒',
+                '9' => '⠔',
+                'a' => '⠁',
+                'c' => '⠉',
+                'd' => '⠙',
+                'f' => '⠋',
+                'h' => '⠓',
+                'n' => '⠝',
+                'o' => '⠕',
+                'p' => '⠏',
+                _ => unreachable!("unmapped internal cell {ch}"),
+            })
+            .collect();
+        assert_eq!(
+            encode(text, true).map(|cells| braille(&cells)).as_deref(),
+            Some(expected.as_str())
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::unconnected_row("H\n|\nH\nO-H")]
+    #[case::rows_disagree("O:O\n‥ ‥\nO⋮O")]
+    #[case::pedigree_is_not_spatial("P  BB × bb\n    |\nF₁  Bb")]
+    fn leaves_other_text_alone_in_spatial_form(#[case] text: &str) {
+        assert_eq!(parse(text).and_then(|diagram| spatial_form(&diagram)), None);
     }
 
     #[rstest::rstest]
@@ -457,7 +796,7 @@ mod tests {
     #[case::unreached_atom("H\n|\nH\nO")]
     #[case::mixed_marks("H-:O\n|\nH")]
     fn leaves_other_text_alone(#[case] text: &str) {
-        assert_eq!(encode(text), None);
+        assert_eq!(encode(text, false), None);
     }
 
     #[rstest::rstest]
@@ -465,7 +804,7 @@ mod tests {
     #[case::siblings("F₁  Bb\n  ┌──┐\nF₂  BB bb", "⠠⠋⠰⠼⠁⠀⠀⠠⠃⠃⠀⠒⠕\n⠠⠋⠰⠼⠃⠀⠀⠷⠠⠠⠃⠃⠀⠃⠃⠾")]
     fn writes_pedigrees(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(
-            encode(text).map(|cells| braille(&cells)).as_deref(),
+            encode(text, false).map(|cells| braille(&cells)).as_deref(),
             Some(expected)
         );
     }

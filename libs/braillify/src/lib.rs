@@ -1147,9 +1147,13 @@ fn encode_with_options_traced(
     let normalization_triggers = NormalizationTriggers::scan(text);
     // 과학 문맥은 글의 모양으로 경로를 정하는 기본 경로를 그대로 따른다. 다만 영어
     // 점자로는 보내지 않는다.
-    let science = matches!(options.default_mode, Some(EncodingMode::Science));
+    let science = options
+        .default_mode
+        .is_some_and(EncodingMode::reads_science);
     let routed_by_content = options.default_mode.is_none() || science;
-    if routed_by_content && let Some(cells) = crate::rules::science::diagram::encode(text) {
+    let spatial = options.default_mode == Some(EncodingMode::ScienceSpatial);
+    if routed_by_content && let Some(cells) = crate::rules::science::diagram::encode(text, spatial)
+    {
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);
     }
@@ -1587,7 +1591,8 @@ pub fn encode_to_braille_font(text: &str) -> Result<String, String> {
 /// Korean text but a stand-apart expression in science).
 ///
 /// The names are the ones the test fixtures use: `korean`, `english`, `math`,
-/// `number`, `middle_korean`, `object_symbol`, `ipa` and `science`.
+/// `number`, `middle_korean`, `object_symbol`, `ipa`, `science`, and
+/// `science_spatial` (science, writing diagrams in the spatial form).
 pub fn encode_in_context(text: &str, context: &str) -> Result<Vec<u8>, String> {
     let mode = context
         .parse::<crate::rules::context::EncodingMode>()
@@ -2354,13 +2359,12 @@ mod test {
     }
 
     /// 과학 문맥은 과학 점자 전체를 적는 문맥이다. fixture 가 밝힌 문맥과 상관없이
-    /// 과학 fixture 는 모두 과학 문맥에서도 같은 답을 내야 한다.
+    /// 과학 fixture 는 모두 과학 문맥에서도 같은 답을 내야 한다. 공간 표기 형식을
+    /// 밝힌 fixture 는 그 형식을 고른 과학 문맥에서 본다.
     #[test]
     fn every_science_fixture_holds_in_the_science_context() {
+        use crate::rules::context::EncodingMode;
         let rule_map = load_test_case_rule_map();
-        let options = EncodeOptions {
-            default_mode: Some(crate::rules::context::EncodingMode::Science),
-        };
         let mut checked = 0;
         let mut failures = Vec::new();
         for (path, key) in collect_test_files(&rule_map) {
@@ -2380,6 +2384,15 @@ mod test {
                     .into_iter()
                     .map(|(_, _, unicode)| unicode)
                     .collect();
+                let spatial =
+                    record.get("context").and_then(|c| c.as_str()) == Some("science_spatial");
+                let options = EncodeOptions {
+                    default_mode: Some(if spatial {
+                        EncodingMode::ScienceSpatial
+                    } else {
+                        EncodingMode::Science
+                    }),
+                };
                 let actual = encode_with_options(input, &options).map(|cells| {
                     cells
                         .iter()

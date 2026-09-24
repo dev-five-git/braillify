@@ -43,7 +43,6 @@ fn superscript(ch: char) -> Option<char> {
         '³' => Some('3'),
         '⁴'..='⁹' => char::from_digit(ch as u32 - '⁴' as u32 + 4, 10),
         '⁻' => Some('-'),
-        '⁺' => Some('+'),
         _ => None,
     }
 }
@@ -112,7 +111,6 @@ fn encode_run(pieces: &[Piece]) -> Result<Vec<u8>, String> {
                 for ch in exponent.chars() {
                     match ch {
                         '-' => out.push(decode_unicode('⠔')),
-                        '+' => out.push(decode_unicode('⠢')),
                         digit => {
                             if !number {
                                 out.push(decode_unicode('⠼'));

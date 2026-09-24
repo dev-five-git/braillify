@@ -545,9 +545,7 @@ fn spatial_form(diagram: &Diagram) -> Option<Vec<u8>> {
         placed.sort_by_key(|(at, _)| *at);
         let mut line = Vec::new();
         for (at, cells) in placed {
-            if line.len() > at {
-                return None;
-            }
+            (line.len() <= at).then_some(())?;
             line.resize(at, 0);
             line.extend(cells);
         }

@@ -509,11 +509,11 @@ impl TokenRule for HuggingPunctuationSpacingRule {
     }
 
     fn phase(&self) -> TokenPhase {
-        TokenPhase::PostWord
+        TokenPhase::Normalization
     }
 
     fn priority(&self) -> u16 {
-        129
+        190
     }
 
     fn apply<'a>(

@@ -268,6 +268,19 @@ fn without_unopened_closers(chars: &[char]) -> &[char] {
     &chars[..chars.len() - tail]
 }
 
+/// 제34항: 한글 낱말에 붙어 열린 괄호 속 로마자 낱말이 뒤 어절로 이어지는 주석
+/// (`경화기(Curing, 365~395㎚)`). 한 글자는 함수의 변수(`함수(x,`)일 수 있어 뺀다.
+fn is_open_roman_gloss_suffix(chars: &[char]) -> bool {
+    let Some(('(', rest)) = chars.split_first().map(|(head, rest)| (*head, rest)) else {
+        return false;
+    };
+    let letters = rest.iter().take_while(|c| c.is_ascii_alphabetic()).count();
+    letters >= 2
+        && rest[letters..]
+            .iter()
+            .all(|c| matches!(*c, ',' | ';' | ':'))
+}
+
 /// 제35항: 수에 로마자 한 글자가 붙은 모델·단계 표기(`5S,`, `1b`).
 fn is_numbered_roman_designation(chars: &[char]) -> bool {
     let digits = chars.iter().take_while(|c| c.is_ascii_digit()).count();
@@ -816,6 +829,7 @@ pub(super) fn split_mixed_math_word(
                 && is_closed_numeric_annotation_suffix(&suffix_chars[initialism_len..]))
             || is_hyphenated_number_suffix(core)
             || is_numbered_roman_designation(suffix_chars)
+            || is_open_roman_gloss_suffix(suffix_chars)
         {
             return None;
         }
@@ -1180,6 +1194,8 @@ mod figure_annotation_coverage {
     #[case::closer_after_a_middle_dot("가나 김남준·29), 다라", "⠐⠆⠼⠃⠊⠠⠴")]
     #[case::closer_after_a_hyphen("가나 펩티다제-4) 다라", "⠤⠼⠙⠠⠴")]
     #[case::numbered_model("가나 아이폰5S, 다라", "⠼⠑⠴⠠⠎⠐")]
+    #[case::open_roman_gloss("가나 경화기(Curing, 365~395㎚)에 다라", "⠦⠄⠴⠠⠉⠥⠗⠬⠂")]
+    #[case::open_initialism_gloss("가나 협정(RCEP, 29.0%)과 다라", "⠦⠄⠴⠠⠠⠗⠉⠑⠏")]
     #[case::gloss_opened_by_a_roman_word("가나 secretary(비서)라 다라", "⠎⠑⠉⠗⠑⠞⠜⠽")]
     fn an_annotation_of_figures_stays_korean(#[case] input: &str, #[case] annotation: &str) {
         let encoded = crate::encode_to_unicode(input).unwrap();

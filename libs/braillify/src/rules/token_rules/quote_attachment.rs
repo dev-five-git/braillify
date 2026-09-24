@@ -198,12 +198,6 @@ mod tests {
             crate::rules::token_rules::emphasis_ring::EmphasisRingRule,
         ));
         engine.register(Box::new(
-            crate::rules::token_rules::latex_fraction::LatexFractionRule,
-        ));
-        engine.register(Box::new(
-            crate::rules::token_rules::inline_fraction::InlineFractionRule,
-        ));
-        engine.register(Box::new(
             crate::rules::token_rules::word_shortcut::WordShortcutRule,
         ));
         engine.register(Box::new(

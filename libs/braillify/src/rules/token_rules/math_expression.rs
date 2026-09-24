@@ -33,7 +33,7 @@ impl TokenRule for MathExpressionTokenRule {
     }
 
     fn priority(&self) -> u16 {
-        50 // Before InlineFractionRule (120) and LatexFractionRule
+        50
     }
 
     fn apply<'a>(

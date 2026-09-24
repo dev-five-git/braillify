@@ -130,16 +130,7 @@ impl Encoder {
             rules::token_rules::math_expression::MathExpressionTokenRule,
         ));
         token_engine.register(Box::new(
-            rules::token_rules::latex_fraction::LatexFractionRule,
-        ));
-        token_engine.register(Box::new(
-            rules::token_rules::inline_fraction::InlineFractionRule,
-        ));
-        token_engine.register(Box::new(
             rules::token_rules::word_shortcut::WordShortcutRule,
-        ));
-        token_engine.register(Box::new(
-            rules::token_rules::roman_numeral::RomanNumeralRule,
         ));
         token_engine.register(Box::new(
             rules::token_rules::digital_notation::DigitalNotationRule,
@@ -183,9 +174,6 @@ impl Encoder {
         token_engine.register(Box::new(rules::token_rules::spacing::AsteriskSpacingRule));
         token_engine.register(Box::new(
             rules::token_rules::spacing::LeadingAsteriskSpacingRule,
-        ));
-        token_engine.register(Box::new(
-            rules::token_rules::spacing::KoreanAuxiliaryVerbSpacingRule,
         ));
         token_engine.register(Box::new(
             rules::token_rules::english_dominant_korean_wrap::EnglishDominantKoreanWrapRule,

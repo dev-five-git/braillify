@@ -803,8 +803,6 @@ mod tests {
 
     #[rstest::rstest]
     #[case::ellipsis_normalization("ellipsis_normalization", "53")]
-    #[case::inline_fraction("inline_fraction", "47")]
-    #[case::latex_fraction("latex_fraction", "47")]
     #[case::asterisk_spacing("asterisk_spacing", "60")]
     #[case::quote_attachment("quote_attachment", "54")]
     #[case::historical_gloss_spacing("historical_gloss_spacing", "54")]

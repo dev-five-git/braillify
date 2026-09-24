@@ -1,6 +1,5 @@
 use std::borrow::Cow;
 
-use crate::rules::RuleMeta;
 use crate::rules::token::{SpaceKind, Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
@@ -11,45 +10,6 @@ pub struct AsteriskSpacingRule;
 /// 띄운다(`*조용제 지사 이야기는`). [다만 2] 가 묵자를 따르게 하는 것은 본문 속에서
 /// 주석을 가리키는 별표(`*가온 음자리표`)다.
 pub struct LeadingAsteriskSpacingRule;
-
-/// Compatibility registration for the removed auxiliary-verb normalizer.
-///
-/// Korean rule 49 says that braille spacing follows print. Consequently the
-/// encoder must not correct an attached `있다` by inserting a space that is not
-/// present in the input. The registry type remains temporarily stable, but the
-/// rule deliberately performs no transformation.
-pub struct KoreanAuxiliaryVerbSpacingRule;
-
-static META_AUXILIARY_SPACING: RuleMeta = RuleMeta {
-    section: "49",
-    subsection: None,
-    name: "korean_auxiliary_verb_spacing",
-    standard_ref: "2024 Korean Braille Standard, 제49항",
-    description: "Preserve Korean print spacing for auxiliary verbs",
-};
-
-impl TokenRule for KoreanAuxiliaryVerbSpacingRule {
-    fn meta(&self) -> &'static RuleMeta {
-        &META_AUXILIARY_SPACING
-    }
-
-    fn phase(&self) -> TokenPhase {
-        TokenPhase::Normalization
-    }
-
-    fn priority(&self) -> u16 {
-        50 // Registry compatibility; no normalization is performed.
-    }
-
-    fn apply<'a>(
-        &self,
-        _tokens: &[Token<'a>],
-        _index: usize,
-        _state: &mut crate::rules::context::EncoderState,
-    ) -> Result<TokenAction<'a>, String> {
-        Ok(TokenAction::Noop)
-    }
-}
 
 fn is_last_word_index(tokens: &[Token], index: usize) -> bool {
     !tokens

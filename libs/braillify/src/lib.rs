@@ -482,19 +482,20 @@ fn parenthesized_number_expansion(c: char) -> Option<String> {
     (1..=20).contains(&value).then(|| format!("({value})"))
 }
 
-fn may_normalize_print_variant(c: char) -> bool {
+fn carries_no_print(c: char) -> bool {
     matches!(
         c,
-        '\u{02DA}'
-            | '\u{2010}'
-            | '\u{2011}'
-            | '\u{2043}'
-            | '\u{00AD}'
-            | '\u{00B0}'
-            | '²'
-            | '³'
-            | '\u{212B}'
-    ) || is_foldable_fullwidth(c)
+        '\u{00AD}' | '\u{200B}' | '\u{200C}' | '\u{200D}' | '\u{FEFF}' | '\u{FE00}'..='\u{FE0F}'
+    )
+}
+
+fn may_normalize_print_variant(c: char) -> bool {
+    carries_no_print(c)
+        || matches!(
+            c,
+            '\u{02DA}' | '\u{2010}' | '\u{2011}' | '\u{2043}' | '\u{00B0}' | '²' | '³' | '\u{212B}'
+        )
+        || is_foldable_fullwidth(c)
         || parenthesized_number_expansion(c).is_some()
         || matches!(
             c,
@@ -508,11 +509,6 @@ fn may_normalize_print_variant(c: char) -> bool {
                 | '`'
                 | '\u{02D9}'
                 | '\u{2503}'
-                | '\u{200B}'
-                | '\u{200C}'
-                | '\u{200D}'
-                | '\u{FEFF}'
-                | '\u{FE00}'..='\u{FE0F}'
         )
 }
 
@@ -598,12 +594,7 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
             {
                 out.push('\u{00B7}');
             }
-            '\u{00AD}'
-            | '\u{200B}'
-            | '\u{200C}'
-            | '\u{200D}'
-            | '\u{FEFF}'
-            | '\u{FE00}'..='\u{FE0F}' => {}
+            _ if carries_no_print(ch) => {}
             _ if is_foldable_fullwidth(ch) => {
                 out.push(char::from_u32(ch as u32 - 0xFEE0).unwrap_or(ch));
             }
@@ -3079,6 +3070,7 @@ mod test {
                     // asserted by `rule_64::lone_combining_square_is_no_op`).
                     let is_only_nonemitting = s.chars().all(|c| {
                         c == ' '
+                            || carries_no_print(c)
                             || matches!(
                                 crate::char_struct::CharType::new(c),
                                 Ok(crate::char_struct::CharType::CombiningMark)
@@ -4016,6 +4008,7 @@ mod print_variant_fold_coverage {
     #[case::dot_above_ending_a_word("\u{C601}\u{02D9}", "\u{C601}\u{02D9}")]
     #[case::heavy_vertical_line("\u{2503}\u{ADF8}", "|\u{ADF8}")]
     #[case::soft_hyphen("\u{00AD}", "")]
+    #[case::variation_selector("\u{FE00}", "")]
     #[case::zero_width_space("\u{200B}", "")]
     #[case::zero_width_joiner("\u{200D}", "")]
     #[case::byte_order_mark("\u{FEFF}", "")]

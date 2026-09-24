@@ -649,16 +649,29 @@ fn is_closed_roman_annotation_suffix(chars: &[char]) -> bool {
 /// digits joined by ordinary marks qualifies; an operator or a letter leaves the
 /// parenthetical to the math engine (`정수(x+1)`). An arrow between the numbers
 /// (`영업이익(100→95)`) is the 한글 제70항 arrow of an ordinary sentence (국립국어원
-/// 회신 8), and a 가운뎃점 lists them (`동구(1·2)`).
+/// 회신 8), and a 가운뎃점 lists them (`동구(1·2)`). The square bracket annotates the
+/// same way (`한미약품[128940]`), and a bracket that closes in a later word
+/// (`시간대(09:00 18:00)`) annotates from its opening on.
 fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
-    if chars.first() != Some(&'(') {
-        return false;
-    }
-    let Some(close) = chars.iter().position(|c| *c == ')') else {
-        return false;
+    let close_mark = match chars.first() {
+        Some('(') => ')',
+        Some('[') => ']',
+        _ => return false,
     };
+    let is_trailing = |c: &char| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"');
+    let close = chars
+        .iter()
+        .position(|c| *c == close_mark)
+        .unwrap_or_else(|| {
+            chars.len()
+                - chars[1..]
+                    .iter()
+                    .rev()
+                    .take_while(|c| is_trailing(c))
+                    .count()
+        });
     let body = &chars[1..close];
-    let trailing = &chars[close + 1..];
+    let trailing = chars.get(close + 1..).unwrap_or_default();
     body.iter().any(char::is_ascii_digit)
         && body.iter().all(|c| {
             c.is_ascii_digit()
@@ -667,9 +680,7 @@ fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
                     '/' | ':' | '.' | ',' | '~' | '\u{223C}' | '→' | '←' | '↔' | '\u{00B7}'
                 )
         })
-        && trailing
-            .iter()
-            .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
+        && trailing.iter().all(is_trailing)
 }
 
 /// 제49항 붙임표 `⠤` follows print spacing, and 제55항 [다만] keeps an affix
@@ -748,6 +759,26 @@ pub(super) fn split_mixed_math_word(
         if suffix_chars
             .iter()
             .all(|ch| ch.is_ascii_digit() || matches!(*ch, '+' | '-' | '\u{2212}' | '.' | ','))
+        {
+            return None;
+        }
+        // 빗금·가운뎃점의 앞 항이 한글 낱말이면(`무선충전/NFC`, `한·EU`) 그것은 두 말을
+        // 나란히 적는 제49항의 문장 부호이지 분수선이나 곱셈 점이 아니다.
+        let (term, punctuation) = suffix_chars
+            .get(1..)
+            .map(|rest| {
+                let tail = rest
+                    .iter()
+                    .rev()
+                    .take_while(|ch| matches!(**ch, ',' | '.' | ';' | ':' | '!' | '?'))
+                    .count();
+                rest.split_at(rest.len() - tail)
+            })
+            .unwrap_or_default();
+        if matches!(suffix_chars.first(), Some('/' | '\u{00B7}'))
+            && !term.is_empty()
+            && term.iter().all(char::is_ascii_alphanumeric)
+            && punctuation.len() <= 1
         {
             return None;
         }
@@ -1071,6 +1102,11 @@ mod figure_annotation_coverage {
     #[case::arrow("가나 영업이익(100→95), 다라", "⠦⠄⠼⠁⠚⠚⠀⠒⠕⠀⠼⠊⠑⠠⠴")]
     #[case::decimal_arrow("가나 수준(13.2→7.8), 다라", "⠦⠄⠼⠁⠉⠲⠃⠀⠒⠕⠀⠼⠛⠲⠓⠠⠴")]
     #[case::middle_dot("가나 동구(1·2), 다라", "⠦⠄⠼⠁⠐⠆⠼⠃⠠⠴")]
+    #[case::square_bracket("가나 한미약품[128940] 다라", "⠦⠆⠼⠁⠃⠓⠊⠙⠚⠰⠴")]
+    #[case::closes_in_a_later_word("가나 시간대(09:00 18:00) 다라", "⠦⠄⠼⠚⠊⠐⠂⠼⠚⠚")]
+    #[case::decimal_then_a_word("가나 특별담화(4.13 호헌조치)를", "⠦⠄⠼⠙⠲⠁⠉")]
+    #[case::slash_after_a_korean_word("가나 무선충전/NFC 다라", "⠸⠌⠴⠠⠠⠝⠋⠉")]
+    #[case::middle_dot_after_a_korean_word("가나 한·EU, 다라", "⠐⠆⠴⠠⠠⠑⠥")]
     fn an_annotation_of_figures_stays_korean(#[case] input: &str, #[case] annotation: &str) {
         let encoded = crate::encode_to_unicode(input).unwrap();
         assert!(encoded.contains(annotation), "{encoded}");

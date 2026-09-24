@@ -243,6 +243,58 @@ fn is_balanced_contrast_pair(chars: &[char]) -> bool {
     left.len().max(right.len()) <= 3 && left.len().abs_diff(right.len()) <= 1
 }
 
+fn balanced_pair_split_index(chars: &[char]) -> Option<usize> {
+    let pair = chars
+        .iter()
+        .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':')
+        && chars.last() != Some(&':')
+        && is_balanced_contrast_pair(chars);
+    pair.then(|| chars.iter().position(|ch| *ch == ':')?.checked_sub(1))
+        .flatten()
+}
+
+/// 국립국어원 회신 2026-09-11: 대비 쌍 꼴의 쌍점은 '대' 를 대신할 때만 붙인다. 쌍 하나만
+/// 적은 글(제51항 [다만 2] 의 `청군:백군`)이나 쌍점 항목이 더 있는 글은 맞세운 항목이고,
+/// 문장 속에 홀로 선 쌍 꼴(`뉴:홈 공급`)은 제목과 부제를 가르는 본문의 쌍점이다.
+fn reads_as_versus(tokens: &[Token<'_>], index: usize) -> bool {
+    let mut words = tokens
+        .iter()
+        .enumerate()
+        .filter_map(|(at, token)| match token {
+            Token::Word(word) => Some((at, word)),
+            _ => None,
+        });
+    let alone = words.clone().count() == 1;
+    alone || words.any(|(at, word)| at != index && word.chars.contains(&':'))
+}
+
+/// 비율 바로 뒤 괄호에서 그 항을 밝힌 쌍(`69:31(남성:여성)`, `4대 6(지방비:국비)`)도
+/// '대' 로 읽는다(국립국어원 회신 2026-09-11).
+fn names_ratio_terms(tokens: &[Token<'_>], index: usize, chars: &[char]) -> bool {
+    let Some(open) = chars.iter().position(|ch| *ch == '(') else {
+        return false;
+    };
+    let legend = chars[open + 1..]
+        .split(|ch| *ch == ')')
+        .next()
+        .unwrap_or_default();
+    let pair = legend.contains(&':')
+        && legend
+            .iter()
+            .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':');
+    let all_digits = |part: &[char]| !part.is_empty() && part.iter().all(char::is_ascii_digit);
+    let terms = &chars[..open];
+    let colon_ratio = terms.contains(&':') && terms.split(|ch| *ch == ':').all(all_digits);
+    let previous = tokens[..index]
+        .iter()
+        .rev()
+        .find(|token| !matches!(token, Token::Space(_) | Token::Mode(_)));
+    let spelled_ratio = all_digits(terms)
+        && matches!(previous, Some(Token::Word(word)) if word.chars.split_last()
+            .is_some_and(|(last, number)| *last == '대' && all_digits(number)));
+    pair && (colon_ratio || spelled_ratio)
+}
+
 fn owned_word<'a>(chars: &[char]) -> Token<'a> {
     Token::Word(WordToken {
         text: Cow::Owned(chars.iter().collect()),
@@ -273,9 +325,14 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
         let Some(Token::Word(word)) = tokens.get(index) else {
             return Ok(TokenAction::Noop);
         };
+        let title_colon =
+            balanced_pair_split_index(&word.chars).filter(|_| !reads_as_versus(tokens, index));
+        let label_colon = korean_label_colon_split_index(&word.chars)
+            .filter(|_| !names_ratio_terms(tokens, index, &word.chars));
         let split = korean_semicolon_split_index(&word.chars)
             .into_iter()
-            .chain(korean_label_colon_split_index(&word.chars))
+            .chain(label_colon)
+            .chain(title_colon)
             .min();
         let Some(split) = split else {
             return Ok(TokenAction::Noop);
@@ -749,6 +806,23 @@ mod nikl_answer_coverage {
             attached,
             "unexpected colon spacing for {input}"
         );
+    }
+
+    #[rstest::rstest]
+    #[case::pair_on_its_own("청군:백군", false)]
+    #[case::title_in_a_sentence("뉴:홈 공급을 늘린다", true)]
+    #[case::chained_items("대의원 투표:당원 투표:국민", false)]
+    #[case::colon_before_a_printed_blank("기자 주: 설정값", true)]
+    #[case::legend_of_a_ratio("평균 69:31(남성:여성)로", false)]
+    #[case::legend_of_a_spelled_ratio("4대 6(지방비:국비)이던", false)]
+    #[case::label_after_a_number("2016(회장:홍길동)", true)]
+    #[case::label_after_a_word("오늘 강원대(총장:김헌영)가", true)]
+    #[case::label_in_brackets("강원대 (총장:김헌영)", true)]
+    #[case::bracket_without_a_pair("52:48(신입)로", false)]
+    #[case::label_without_brackets("일시:2006년", true)]
+    fn a_colon_pair_in_running_text(#[case] input: &str, #[case] spaced: bool) {
+        let braille = crate::encode_to_unicode(input).expect("encodes");
+        assert_eq!(braille.contains("⠐⠂⠀"), spaced, "{input} → {braille}");
     }
 
     #[rstest::rstest]

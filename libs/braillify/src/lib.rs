@@ -457,7 +457,10 @@ fn normalize_pure_roman_compatibility_units<'a>(text: Cow<'a, str>) -> Cow<'a, s
 /// already defines: U+FF01–U+FF5E are the fullwidth forms of ASCII `!`–`~`
 /// (`％`, `ｍ`, `＆`), U+30FB/U+FF65/U+2027 are CJK spellings of the 가운뎃점 `·`
 /// (제50항), U+301C is the wave-dash form of the 물결표 `~` (제49항), and U+00B4
-/// is a typed acute accent standing for the 아포스트로피 `'` (제61항). The
+/// is a typed acute accent standing for the 아포스트로피 `'` (제61항). The grave
+/// accent U+0060 is typed for the same quotation mark (제49항), U+02D9 DOT ABOVE
+/// between two letters for the 가운뎃점 (제50항; after `"` it is the 제56항 input
+/// notation), and U+2503 is a heavy-weight 세로선 `|` (제71항). The
 /// zero-width marks U+200B–U+200D and U+FEFF carry no print at all, so they are
 /// dropped like the soft hyphen.
 ///
@@ -502,6 +505,9 @@ fn may_normalize_print_variant(c: char) -> bool {
                 | '\u{2A2F}'
                 | '\u{301C}'
                 | '\u{00B4}'
+                | '`'
+                | '\u{02D9}'
+                | '\u{2503}'
                 | '\u{200B}'
                 | '\u{200C}'
                 | '\u{200D}'
@@ -580,7 +586,18 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
                 out.push_str(&parenthesized_number_expansion(ch).unwrap_or_default());
             }
             '\u{301C}' => out.push('~'),
-            '\u{00B4}' => out.push('\''),
+            '\u{00B4}' | '`' => out.push('\''),
+            '\u{2503}' => out.push('|'),
+            '\u{02D9}'
+                if index
+                    .checked_sub(1)
+                    .is_some_and(|previous| chars[previous].is_alphanumeric())
+                    && chars
+                        .get(index + 1)
+                        .is_some_and(|next| next.is_alphanumeric()) =>
+            {
+                out.push('\u{00B7}');
+            }
             '\u{00AD}'
             | '\u{200B}'
             | '\u{200C}'
@@ -3974,6 +3991,14 @@ mod print_variant_fold_coverage {
     #[case::parenthesised_twenty("\u{2487}", "(20)")]
     #[case::wave_dash("\u{301C}", "~")]
     #[case::acute_accent("\u{00B4}", "'")]
+    #[case::grave_accent_quote("`\u{D06C}\u{B9BC}`", "'\u{D06C}\u{B9BC}'")]
+    #[case::dot_above_between_words(
+        "\u{C601}\u{C5C5}\u{02D9}\u{B9C8}",
+        "\u{C601}\u{C5C5}\u{00B7}\u{B9C8}"
+    )]
+    #[case::dot_above_opening_emphasis("\"\u{02D9}\u{AC15}", "\"\u{02D9}\u{AC15}")]
+    #[case::dot_above_ending_a_word("\u{C601}\u{02D9}", "\u{C601}\u{02D9}")]
+    #[case::heavy_vertical_line("\u{2503}\u{ADF8}", "|\u{ADF8}")]
     #[case::soft_hyphen("\u{00AD}", "")]
     #[case::zero_width_space("\u{200B}", "")]
     #[case::zero_width_joiner("\u{200D}", "")]

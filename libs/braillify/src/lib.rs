@@ -1266,6 +1266,16 @@ fn encode_with_options_traced(
     } else {
         normalized_text
     };
+    // 한글 제60항 — 참고표는 별표와 같이 ⠐⠔ 으로 적고, [다만 1] 둘을 가려야 할 때만
+    // ⠸⠔ 으로 적는다. 별표가 없는 국어 글에서는 가를 것이 없다.
+    let normalized_text = if normalized_text.contains('※')
+        && !normalized_text.contains('*')
+        && normalized_text.chars().any(crate::utils::is_korean_char)
+    {
+        Cow::Owned(normalized_text.replace('※', "*"))
+    } else {
+        normalized_text
+    };
     let normalized_text = if normalization_triggers.has_hanja {
         expand_hanja_readings(normalized_text)
     } else {

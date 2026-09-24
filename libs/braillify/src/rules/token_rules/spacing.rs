@@ -1,9 +1,16 @@
+use std::borrow::Cow;
+
 use crate::rules::RuleMeta;
-use crate::rules::token::Token;
+use crate::rules::token::{SpaceKind, Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 /// 제60항이 별표와 참고표의 앞뒤를 한 칸씩 띄우도록 하므로 별표 간격을 조정한다.
 pub struct AsteriskSpacingRule;
+
+/// 제60항 — 글의 첫머리에 선 별표는 주석을 이끄는 표이므로 본문대로 뒤를 한 칸
+/// 띄운다(`*조용제 지사 이야기는`). [다만 2] 가 묵자를 따르게 하는 것은 본문 속에서
+/// 주석을 가리키는 별표(`*가온 음자리표`)다.
+pub struct LeadingAsteriskSpacingRule;
 
 /// Compatibility registration for the removed auxiliary-verb normalizer.
 ///
@@ -101,6 +108,69 @@ impl TokenRule for AsteriskSpacingRule {
             Token::PreEncoded(vec![0; trailing_spaces]),
         ];
         Ok(TokenAction::ReplaceMany(replacement))
+    }
+}
+
+fn owned_word<'a>(chars: &[char]) -> Token<'a> {
+    Token::Word(WordToken {
+        text: Cow::Owned(chars.iter().collect()),
+        chars: chars.to_vec(),
+        meta: WordMeta::from_chars(chars),
+    })
+}
+
+impl TokenRule for LeadingAsteriskSpacingRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
+    fn phase(&self) -> TokenPhase {
+        TokenPhase::Normalization
+    }
+
+    fn priority(&self) -> u16 {
+        195
+    }
+
+    fn apply<'a>(
+        &self,
+        tokens: &[Token<'a>],
+        index: usize,
+        _state: &mut crate::rules::context::EncoderState,
+    ) -> Result<TokenAction<'a>, String> {
+        let Some(Token::Word(current)) = tokens.get(index) else {
+            return Ok(TokenAction::Noop);
+        };
+        let opens_the_text = !tokens[..index]
+            .iter()
+            .any(|token| matches!(token, Token::Word(_)));
+        match current.chars.as_slice() {
+            ['*', rest @ ..] if opens_the_text && !rest.is_empty() && !rest.contains(&'*') => {
+                Ok(TokenAction::ReplaceMany(vec![
+                    owned_word(&['*']),
+                    Token::Space(SpaceKind::Regular),
+                    owned_word(rest),
+                ]))
+            }
+            _ => Ok(TokenAction::Noop),
+        }
+    }
+}
+
+#[cfg(test)]
+mod leading_asterisk {
+    /// 제60항: 글을 여는 별표 뒤는 한 칸 띄우고, 본문 속 별표와 겹별표는 묵자를 따른다.
+    #[rstest::rstest]
+    #[case::note_heading("*조용제 지사 이야기는", "⠐⠔⠀⠨⠥")]
+    #[case::already_spaced("* 조용제 지사", "⠐⠔⠀⠨⠥")]
+    #[case::pointer_in_the_text("가나 *가온 음자리표", "⠐⠔⠫⠷")]
+    #[case::double_asterisk("**가나", "⠐⠔⠐⠔⠫")]
+    #[case::asterisks_around_a_word("*안녕*", "⠐⠔⠣⠒")]
+    #[case::reference_mark_alone("※한국리서치는", "⠐⠔⠀⠚⠒")]
+    #[case::reference_mark_beside_an_asterisk("가 ※ 나 *", "⠸⠔")]
+    fn a_note_heading_asterisk_takes_a_blank(#[case] input: &str, #[case] cells: &str) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert!(encoded.contains(cells), "{encoded}");
     }
 }
 

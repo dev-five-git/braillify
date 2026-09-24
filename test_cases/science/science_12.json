@@ -48,5 +48,25 @@
     "unicode": "⠯⠪⠅⠽",
     "world": "",
     "jeomsarang": ""
+  },
+  {
+    "input": "□",
+    "note": "PDF 과학 제12항 3 — 사각 환핵. 입력은 □(U+25A1). 과학 문맥에서 글 전체가 이 글자일 때만 환핵으로 읽는다(기본 문맥에서는 한글 제72항 글머리 기호)",
+    "context": "science",
+    "internal": "&.ky",
+    "expected": "4740561",
+    "unicode": "⠯⠨⠅⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "△",
+    "note": "PDF 과학 제12항 4 — 삼각 환핵. 입력은 △(U+25B3). 과학 문맥에서 글 전체가 이 글자일 때만 환핵으로 읽는다(기본 문맥에서는 한글 제72항 글머리 기호)",
+    "context": "science",
+    "internal": "&+y",
+    "expected": "474461",
+    "unicode": "⠯⠬⠽",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

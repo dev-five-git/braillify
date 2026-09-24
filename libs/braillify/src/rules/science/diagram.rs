@@ -1,4 +1,4 @@
-//! 과학 제9·10·15·16·25항 — 묵자에서 2차원으로 그린 구조식·전자 점식·가계도.
+//! 과학 제9·10·13·15·16·25항 — 묵자에서 2차원으로 그린 구조식·전자 점식·가계도.
 //!
 //! 입력은 묵자 배치를 줄마다 옮긴 여러 줄 글이다. 구조식과 전자 점식은 기호 표기
 //! 형식(제10항 3, 제16항 3·4)으로 풀어 한 줄에 적고, 가계도는 세대마다 한 줄씩
@@ -403,6 +403,22 @@ struct Row {
     starts: Vec<(usize, usize)>,
 }
 
+type Encoder = fn(&[Item]) -> Result<Vec<u8>, String>;
+
+/// 과학 제13항 6 — 세로 결합선은 원소 묶음에서 수소가 아닌 첫 원소(`H₂C` 의 `C`)의 첫
+/// 칸에 닿는다. 그 칸이 묶음의 몇째 칸인지.
+fn bonding_cell(items: &[Item], encode: Encoder) -> usize {
+    let Some(element) = items
+        .iter()
+        .position(|item| matches!(item, Item::Capital { symbol, .. } if symbol != "H"))
+    else {
+        return 0;
+    };
+    let through = encode(&items[..=element]).map_or(0, |cells| cells.len());
+    let alone = encode(&items[element..=element]).map_or(0, |cells| cells.len());
+    through.saturating_sub(alone)
+}
+
 fn lay_out_chain(chain: &Chain, atom_cells: &[Vec<u8>], dots: bool) -> Row {
     let mut row = Row {
         cells: Vec::new(),
@@ -429,8 +445,8 @@ fn lay_out_chain(chain: &Chain, atom_cells: &[Vec<u8>], dots: bool) -> Row {
     row
 }
 
-/// 과학 제9항 2·제11항·제15항 2·제17항 — 구조식과 전자 점식을 모양대로 여러 줄에
-/// 적는다. 세로로 잇는 결합선·전자와 위아래 원소는 이어지는 원소의 첫 칸(대문자
+/// 과학 제9항 2·제11항·제13항 6·제15항 2·제17항 — 구조식과 전자 점식을 모양대로 여러
+/// 줄에 적는다. 세로로 잇는 결합선·전자와 위아래 원소는 이어지는 원소의 첫 칸(대문자
 /// 기호표가 있으면 그 칸)에 맞추고, 도식 위의 화학식은 첫 줄에 적는다.
 fn spatial_form(diagram: &Diagram) -> Option<Vec<u8>> {
     let links = diagram
@@ -453,17 +469,18 @@ fn spatial_form(diagram: &Diagram) -> Option<Vec<u8>> {
                     .count()
                     >= 2
         });
+    let encoder = |at: usize| -> Encoder {
+        if passage && Some(at) != diagram.caption {
+            formula::encode_in_phrase
+        } else {
+            formula::encode
+        }
+    };
     let atom_cells = diagram
         .atoms
         .iter()
         .enumerate()
-        .map(|(at, atom)| {
-            if passage && Some(at) != diagram.caption {
-                formula::encode_in_phrase(&atom.items)
-            } else {
-                formula::encode(&atom.items)
-            }
-        })
+        .map(|(at, atom)| encoder(at)(&atom.items))
         .collect::<Result<Vec<_>, _>>()
         .ok()?;
     let rows: Vec<Row> = diagram
@@ -472,18 +489,18 @@ fn spatial_form(diagram: &Diagram) -> Option<Vec<u8>> {
         .map(|chain| lay_out_chain(chain, &atom_cells, dots))
         .collect();
     let mut chain_of = vec![0; diagram.atoms.len()];
-    let mut start_of = vec![0; diagram.atoms.len()];
+    let mut anchor_of = vec![0; diagram.atoms.len()];
     for (at, row) in rows.iter().enumerate() {
         for &(atom, start) in &row.starts {
             chain_of[atom] = at;
-            start_of[atom] = start;
+            anchor_of[atom] = start + bonding_cell(&diagram.atoms[atom].items, encoder(atom));
         }
     }
 
     let mut offsets: Vec<Option<isize>> = vec![None; rows.len()];
     offsets[diagram.main] = Some(0);
     let column = |atom: usize, offsets: &[Option<isize>]| {
-        offsets[chain_of[atom]].map(|offset| offset + start_of[atom] as isize)
+        offsets[chain_of[atom]].map(|offset| offset + anchor_of[atom] as isize)
     };
     loop {
         let mut placed = false;
@@ -495,11 +512,11 @@ fn spatial_form(diagram: &Diagram) -> Option<Vec<u8>> {
             };
             match (column(above, &offsets), column(below, &offsets)) {
                 (Some(top), None) => {
-                    offsets[chain_of[below]] = Some(top - start_of[below] as isize);
+                    offsets[chain_of[below]] = Some(top - anchor_of[below] as isize);
                     placed = true;
                 }
                 (None, Some(bottom)) => {
-                    offsets[chain_of[above]] = Some(bottom - start_of[above] as isize);
+                    offsets[chain_of[above]] = Some(bottom - anchor_of[above] as isize);
                     placed = true;
                 }
                 (Some(top), Some(bottom)) if top != bottom => return None,
@@ -732,6 +749,14 @@ mod tests {
     )]
     #[case::triple_vertical("N\n⦀\nN", ",n\n_3\n,n")]
     #[case::three_electrons("N⋮N\n‥", ",n 999 ,n\n99")]
+    #[case::square_ring(
+        "H₂C - CH₂\n  |     |\nH₂C - CH₂",
+        "\"\"=,,,\nh;#b\"c,-1ch;#b\n     _1  _1\nh;#b\"c,-1ch;#b\n\"\"=,'"
+    )]
+    #[case::bond_under_the_carbon(
+        "H₃C-OH\n  |\n  H",
+        "\"\"=,,,\nh;#c\"c,-1oh\n     _1\n     h\n\"\"=,'"
+    )]
     fn writes_diagrams_in_spatial_form(#[case] text: &str, #[case] internal: &str) {
         let expected: String = internal
             .chars()
@@ -751,6 +776,7 @@ mod tests {
                 '3' => '⠒',
                 '9' => '⠔',
                 'a' => '⠁',
+                'b' => '⠃',
                 'c' => '⠉',
                 'd' => '⠙',
                 'f' => '⠋',

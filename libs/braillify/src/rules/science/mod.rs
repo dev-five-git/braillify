@@ -4,3 +4,4 @@ pub mod diagram;
 pub mod elements;
 pub mod formula;
 pub mod genotype;
+pub mod quantity;

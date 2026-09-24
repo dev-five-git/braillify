@@ -1157,6 +1157,14 @@ fn encode_with_options_traced(
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);
     }
+    if routed_by_content
+        && let Some(cells) = crate::rules::science::quantity::encode(text, |segment| {
+            encode_with_options(segment, options)
+        })
+    {
+        mark_trace_path(&mut trace, TracePath::MathExpression);
+        return Ok(cells);
+    }
     // 과학 제4·7항 — 화학식은 로마자 낱말도 수식도 아니다. 영어·수학 경로와 글꼴
     // 정규화를 건너뛰어, 토큰 단계의 화학식 규칙이 강조(제7항 5)까지 그대로 본다.
     let chemistry = routed_by_content && crate::rules::science::formula::owns_text(text, science);

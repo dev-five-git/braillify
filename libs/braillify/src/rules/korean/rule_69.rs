@@ -52,7 +52,7 @@ const PDF_ASCII_UNIT_SYMBOLS: &[&str] = &[
 
 /// SI prefixes are case-sensitive. This set is used only as the grammar for a
 /// complete measured-unit suffix; it never reclassifies a separated Roman word.
-const SI_PREFIXES: &[&str] = &[
+pub(crate) const SI_PREFIXES: &[&str] = &[
     "q", "r", "y", "z", "a", "f", "p", "n", "u", "m", "c", "d", "da", "h", "k", "M", "G", "T", "P",
     "E", "Z", "Y", "R", "Q",
 ];

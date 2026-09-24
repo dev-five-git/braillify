@@ -263,8 +263,9 @@ impl BrailleRule for Rule68 {
     }
 }
 
-/// PDF — `1++등급` 같은 digit + 연속 `+` 등급 표기 패턴인지 검사.
-/// 직전이 digit이고 현재가 `+`이며 이후에 한글 등급 키워드(등급)가 나오면 true.
+/// 제68항 [붙임 2] — `1++등급` 의 `+` 는 등급을 나타내는 위 첨자다. 수 뒤에 붙은
+/// `+`·`-` 는 그 뒤에 `등급` 이 이어질 때만 첨자이고, 그 밖의 한글 앞(`50+캠퍼스`,
+/// `4.1+실업률`)에서는 덧셈표다.
 fn is_digit_grade_plus_notation(word: &[char], index: usize) -> bool {
     if index == 0 {
         return false;
@@ -281,9 +282,7 @@ fn is_digit_grade_plus_notation(word: &[char], index: usize) -> bool {
             break;
         }
     }
-    // 직후에 한글이 와야 grade context로 본다 (`1++등급` 등).
-    word.get(cursor)
-        .is_some_and(|c| crate::utils::is_korean_char(*c))
+    word[cursor..].starts_with(&['등', '급'])
 }
 
 #[cfg(test)]
@@ -437,22 +436,21 @@ mod tests {
         assert!(result.is_none());
     }
 
-    #[test]
-    fn is_digit_grade_plus_notation_paths() {
-        // "1+등급"
-        let word: Vec<char> = "1+등급".chars().collect();
-        assert!(is_digit_grade_plus_notation(&word, 1));
-        // "1++등급"
-        let word: Vec<char> = "1++등급".chars().collect();
-        assert!(is_digit_grade_plus_notation(&word, 1));
-        // Index 0 - not preceded by digit
-        assert!(!is_digit_grade_plus_notation(&word, 0));
-        // Without Korean following
-        let word: Vec<char> = "1++x".chars().collect();
-        assert!(!is_digit_grade_plus_notation(&word, 1));
-        // Not preceded by digit
-        let word: Vec<char> = "a+등급".chars().collect();
-        assert!(!is_digit_grade_plus_notation(&word, 1));
+    #[rstest::rstest]
+    #[case::one_plus_grade("1+등급", 1, true)]
+    #[case::double_plus_grade("1++등급", 1, true)]
+    #[case::at_the_start("1++등급", 0, false)]
+    #[case::before_a_letter("1++x", 1, false)]
+    #[case::after_a_letter("a+등급", 1, false)]
+    #[case::fifty_plus_campus("50+캠퍼스", 2, false)]
+    #[case::sum_of_rates("4.1+실업률", 3, false)]
+    fn a_plus_after_a_number_is_a_script_only_before_a_grade(
+        #[case] text: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let word: Vec<char> = text.chars().collect();
+        assert_eq!(is_digit_grade_plus_notation(&word, index), expected);
     }
 
     #[test]
@@ -575,15 +573,9 @@ mod tests {
         assert!(should_insert_separator_after_symbol(&ctx));
     }
 
-    /// rule_68:198 — digit-grade chain with `-` triggers the `'-' => ⠔` arm.
-    /// Input MUST have a Korean char after the +/- chain to satisfy
-    /// is_digit_grade_plus_notation (per the function source).
     #[test]
-    fn rule68_digit_grade_with_minus_in_chain() {
-        // 1+-가 — digit, then +, -, then Korean → satisfies notation predicate.
-        let _ = crate::encode("1+-가");
-        let _ = crate::encode("5-+나");
-        let _ = crate::encode("3--다");
+    fn a_grade_script_writes_plus_and_minus_in_order() {
+        assert_eq!(crate::encode_to_unicode("1+-등급").unwrap(), "⠼⠁⠘⠢⠔⠀⠊⠪⠶⠈⠪⠃");
     }
 
     #[rstest::rstest]

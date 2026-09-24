@@ -203,12 +203,15 @@ fn korean_semicolon_split_index(chars: &[char]) -> Option<usize> {
 /// 표제를 한글이 이끄는 한 내용이 무엇으로 적혔는지는 본문을 바꾸지 않는다
 /// (`모델명:PN50`, `일시:2006년`). 내용이 한글이면 표제가 로마자나 숫자여도 국어
 /// 문장의 쌍점이다(`A:우리나라는`, `Drive:할레마우마우`). 앞뒤가 모두 로마자인
-/// 쌍점은 로마자 식별자 안의 기호라(`NVH:Noise`) 이 함수가 보지 않는다.
+/// 쌍점은 로마자 식별자 안의 기호라(`NVH:Noise`) 이 함수가 보지 않는다. 괄호로 끝난
+/// 표제(`A(정 셰프):도저히`)도 같으나, 뒤도 괄호를 단 같은 꼴이면(`찬성(5):반대(5)`)
+/// 두 항목을 맞세운 [다만 2] 의 대비다.
 fn korean_label_colon_split_index(chars: &[char]) -> Option<usize> {
     let position = chars.windows(3).enumerate().position(|(at, window)| {
         let korean_label = crate::utils::is_korean_char(window[0]) && !is_ratio(chars, at + 1);
-        let korean_content =
-            window[0].is_ascii_alphanumeric() && crate::utils::is_korean_char(window[2]);
+        let bracketed_label = window[0] == ')' && !chars[at + 2..].contains(&'(');
+        let korean_content = (window[0].is_ascii_alphanumeric() || bracketed_label)
+            && crate::utils::is_korean_char(window[2]);
         window[1] == ':' && !is_closing_after_colon(window[2]) && (korean_label || korean_content)
     })?;
     let is_contrast_pair = chars
@@ -753,6 +756,8 @@ mod nikl_answer_coverage {
     #[case::roman_title("Drive:할레마우마우", Some(4))]
     #[case::numbered_title("도수코3:스포일러", Some(3))]
     #[case::korean_label_before_a_number("응답률:7.8%", Some(2))]
+    #[case::bracketed_label("A(정셰프):도저히", Some(5))]
+    #[case::mirrored_contrast("찬성(5):반대(5)로", None)]
     #[case::roman_identifier("NVH:Noise", None)]
     #[case::clock_time("10:20", None)]
     #[case::ratio_in_ten_thousands("200만:1의", None)]

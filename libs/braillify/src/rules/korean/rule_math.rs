@@ -350,7 +350,14 @@ impl BrailleRule for RuleMath {
             ctx.emit(0);
         }
 
-        let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
+        let mut encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
+        if super::rule_68::is_superscript_digit(c)
+            && super::rule_68::continues_superscript(ctx.word_chars, ctx.index)
+        {
+            let number_continues =
+                super::rule_68::is_superscript_digit(ctx.word_chars[ctx.index - 1]);
+            encoded = &encoded[if number_continues { 2 } else { 1 }..];
+        }
         ctx.emit_slice(encoded);
 
         if pad_after {

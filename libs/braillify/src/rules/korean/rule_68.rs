@@ -64,6 +64,19 @@ fn is_superscript_symbol(c: char) -> bool {
     matches!(c, '⁺' | '⁻')
 }
 
+pub(crate) fn is_superscript_digit(c: char) -> bool {
+    matches!(c, '⁰' | '¹' | '²' | '³' | '⁴'..='⁹')
+}
+
+/// 위 첨자가 이어진 자리인가. 제68항은 위 첨자 기호 ⠘ 뒤에 첨자의 내용을 적으므로
+/// 이어진 첨자(`⁻¹`, `²³`)는 ⠘ 하나 뒤에 적는다 — 수학 제18항 `x⁻¹` = ⠭⠘⠔⠼⠁.
+pub(crate) fn continues_superscript(word: &[char], index: usize) -> bool {
+    index
+        .checked_sub(1)
+        .and_then(|previous| word.get(previous))
+        .is_some_and(|c| is_superscript_symbol(*c) || is_superscript_digit(*c))
+}
+
 fn is_subscript_digit(c: char) -> bool {
     matches!(c, '₀'..='₉')
 }
@@ -299,6 +312,13 @@ mod tests {
         }
         assert!(!is_rule_68_symbol('a'));
         assert!(!is_rule_68_symbol('1'));
+    }
+
+    #[rstest::rstest]
+    #[case::negative_exponents("cm³g⁻¹sec⁻²", "⠴⠉⠍⠘⠼⠉⠛⠘⠔⠼⠁⠎⠑⠉⠘⠔⠼⠃")]
+    #[case::two_digit_exponent("cm³g⁻¹⁰", "⠴⠉⠍⠘⠼⠉⠛⠘⠔⠼⠁⠚")]
+    fn writes_a_superscript_run_after_one_sign(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
     }
 
     #[test]

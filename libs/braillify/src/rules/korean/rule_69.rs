@@ -593,12 +593,22 @@ pub(crate) fn parse_numeric_ascii_unit_expression(word: &[char]) -> Option<usize
             saw_unit = true;
             component_has_unit = true;
         }
+        // 제69항: 가운뎃점으로 곱한 단위(`kgf·m`, `N·m`)는 한 단위다.
+        while component_has_unit && word.get(cursor) == Some(&'·') {
+            let Some((_, unit_len)) = encode_complete_numeric_ascii_unit(word, cursor + 1) else {
+                break;
+            };
+            cursor += 1 + unit_len;
+        }
 
         if current_component_requires_unit && !component_has_unit {
             return None;
         }
 
-        if word.get(cursor).is_some_and(|ch| matches!(ch, '~' | '∼')) {
+        let hyphen_range = !component_has_unit
+            && word.get(cursor) == Some(&'-')
+            && word.get(cursor + 1).is_some_and(char::is_ascii_digit);
+        if hyphen_range || word.get(cursor).is_some_and(|ch| matches!(ch, '~' | '∼')) {
             cursor += 1;
             current_component_requires_unit = false;
             continue;
@@ -1125,6 +1135,11 @@ mod tests {
     #[case::middle_dot_missing_right_unit("3kg·4", 0)]
     #[case::middle_dot_numeric_list("54·55·56", 0)]
     #[case::unknown_ascii_suffix("3.5~8.5models", 0)]
+    #[case::hyphen_range("100-130mm", 9)]
+    #[case::hyphen_after_unit("3kg-4", 3)]
+    #[case::hyphen_before_letter("100-mm", 0)]
+    #[case::middle_dot_product_unit("36.0kgf·m", 9)]
+    #[case::middle_dot_before_non_unit("5N·x", 0)]
     fn recognizes_only_complete_numeric_unit_expressions(
         #[case] input: &str,
         #[case] expected_consumed: usize,

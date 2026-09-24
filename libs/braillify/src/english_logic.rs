@@ -545,6 +545,12 @@ pub(crate) fn should_render_symbol_as_english(
         {
             false
         }
+        // 제29항: 로마자 사이의 느낌표·물음표(`Wow! Perfect`)는 로마자 구간 안에 있다.
+        '!' | '?' => {
+            is_english
+                && prev_ascii_letter_or_digit(word_chars, index)
+                && next_ascii_letter_or_digit(word_chars, index, remaining_words)
+        }
         '/' | '@' | '#' | '.' | '_' | ':' => {
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
             let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words);
@@ -770,6 +776,36 @@ mod tests {
         let word: Vec<char> = input.chars().collect();
         assert_eq!(
             should_render_symbol_as_english(true, is_english, false, &[], ',', &word, 1, &[],),
+            expected
+        );
+    }
+
+    /// 제29항 — 로마자 사이의 느낌표·물음표는 로마자 구간을 닫지 않는다.
+    #[rstest::rstest]
+    #[case::exclamation_before_next_word("Wow!", '!', true, &["Busan"], true)]
+    #[case::question_before_next_word("Wow?", '?', true, &["Perfect"], true)]
+    #[case::before_korean("Wow!", '!', true, &["나"], false)]
+    #[case::at_text_end("Wow!", '!', true, &[], false)]
+    #[case::outside_roman_section("Wow!", '!', false, &["Busan"], false)]
+    fn exclamation_between_roman_words_stays_in_the_section(
+        #[case] input: &str,
+        #[case] symbol: char,
+        #[case] is_english: bool,
+        #[case] remaining: &[&str],
+        #[case] expected: bool,
+    ) {
+        let word: Vec<char> = input.chars().collect();
+        assert_eq!(
+            should_render_symbol_as_english(
+                true,
+                is_english,
+                false,
+                &[],
+                symbol,
+                &word,
+                word.len() - 1,
+                remaining,
+            ),
             expected
         );
     }

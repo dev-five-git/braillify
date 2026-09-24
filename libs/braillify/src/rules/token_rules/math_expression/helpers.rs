@@ -237,6 +237,48 @@ pub(super) fn is_strong_mixed_math_candidate(chars: &[char], text: &str) -> bool
         || has_function_call
 }
 
+/// 수식은 괄호가 맞물린다. 한쪽만 남은 괄호는 앞뒤 어절로 이어지는 산문의 조각
+/// 이므로(`LTE),`, `S(PLAN`) 제11항의 경계를 두지 않는다.
+pub(super) fn has_balanced_brackets(chars: &[char]) -> bool {
+    let mut depth = 0i32;
+    for ch in chars {
+        match ch {
+            '(' | '[' | '{' => depth += 1,
+            ')' | ']' | '}' => depth -= 1,
+            _ => {}
+        }
+        if depth < 0 {
+            return false;
+        }
+    }
+    depth == 0
+}
+
+/// 제54항: 앞 어절에서 열린 괄호를 닫는 부호와 뒤따르는 문장 부호(`·29),`)를 떼어
+/// 낸 앞부분.
+fn without_unopened_closers(chars: &[char]) -> &[char] {
+    if chars.iter().any(|c| matches!(*c, '(' | '[' | '{')) {
+        return chars;
+    }
+    let tail = chars
+        .iter()
+        .rev()
+        .take_while(|c| matches!(**c, ')' | ']' | '}' | ',' | '.' | ';' | ':' | '!' | '?'))
+        .count();
+    &chars[..chars.len() - tail]
+}
+
+/// 제35항: 수에 로마자 한 글자가 붙은 모델·단계 표기(`5S,`, `1b`).
+fn is_numbered_roman_designation(chars: &[char]) -> bool {
+    let digits = chars.iter().take_while(|c| c.is_ascii_digit()).count();
+    let rest = &chars[digits..];
+    digits > 0
+        && rest.first().is_some_and(char::is_ascii_alphabetic)
+        && rest[1..]
+            .iter()
+            .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?'))
+}
+
 pub(super) fn is_rule_68_compact_notation(chars: &[char]) -> bool {
     if chars.len() < 2 || !chars[0].is_ascii_uppercase() {
         return false;
@@ -677,7 +719,7 @@ fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
     let is_mark = |c: char| {
         matches!(
             c,
-            '/' | ':' | '.' | ',' | '~' | '\u{223C}' | '→' | '←' | '↔' | '\u{00B7}'
+            '/' | ':' | '.' | ',' | '~' | '\u{223C}' | '→' | '←' | '↔' | '\u{00B7}' | '\u{00D7}'
         )
     };
     let fits = |at: usize| {
@@ -729,6 +771,9 @@ pub(super) fn split_mixed_math_word(
     // try_encode_mixed_math_prefix는 suffix가 empty인 경우 Some을 반환하지 않으므로
     // end == len에서 Some이 나오는 경로는 도달 不可. 명시적 가드 제거됨.
     let math_prefix_result = (1..len).rev().find_map(|end| {
+        if !has_balanced_brackets(&chars[..end]) {
+            return None;
+        }
         let bytes = try_encode_mixed_math_prefix(&chars[..end], &chars[end..], math_context)?;
         let suffix_chars = &chars[end..];
         let suffix_is_korean = suffix_chars.iter().all(|c| is_korean_suffix_char(*c))
@@ -760,9 +805,17 @@ pub(super) fn split_mixed_math_word(
         if !prefix_all_korean || !suffix_no_korean {
             return None;
         }
+        let core = without_unopened_closers(suffix_chars);
+        let initialism_len = suffix_chars
+            .iter()
+            .take_while(|c| c.is_ascii_uppercase())
+            .count();
         if is_closed_roman_annotation_suffix(suffix_chars)
             || is_closed_numeric_annotation_suffix(suffix_chars)
-            || is_hyphenated_number_suffix(suffix_chars)
+            || (initialism_len >= 2
+                && is_closed_numeric_annotation_suffix(&suffix_chars[initialism_len..]))
+            || is_hyphenated_number_suffix(core)
+            || is_numbered_roman_designation(suffix_chars)
         {
             return None;
         }
@@ -777,7 +830,7 @@ pub(super) fn split_mixed_math_word(
         }
         // 빗금·가운뎃점의 앞 항이 한글 낱말이면(`무선충전/NFC`, `한·EU`) 그것은 두 말을
         // 나란히 적는 제49항의 문장 부호이지 분수선이나 곱셈 점이 아니다.
-        let (term, punctuation) = suffix_chars
+        let (term, punctuation) = core
             .get(1..)
             .map(|rest| {
                 let tail = rest
@@ -788,7 +841,7 @@ pub(super) fn split_mixed_math_word(
                 rest.split_at(rest.len() - tail)
             })
             .unwrap_or_default();
-        if matches!(suffix_chars.first(), Some('/' | '\u{00B7}'))
+        if matches!(core.first(), Some('/' | '\u{00B7}'))
             && !term.is_empty()
             && term.iter().all(char::is_ascii_alphanumeric)
             && punctuation.len() <= 1
@@ -1122,6 +1175,12 @@ mod figure_annotation_coverage {
     #[case::middle_dot_after_a_korean_word("가나 한·EU, 다라", "⠐⠆⠴⠠⠠⠑⠥")]
     #[case::unit_after_a_figure("가나 종목(1000m, 1500m) 다라", "⠦⠄⠼⠁⠚⠚⠚⠴⠍")]
     #[case::signed_figure("가나 전기장비(+12p), 다라", "⠦⠄⠢⠼⠁⠃⠴⠏⠠⠴")]
+    #[case::times_between_figures("가나 러그(150×200, 다라", "⠦⠄⠼⠁⠑⠚⠡⠼⠃⠚⠚")]
+    #[case::initialism_before_figures("가나 풀HD(1920×1080) 다라", "⠴⠠⠠⠓⠙⠦⠄⠼⠁⠊⠃⠚⠡")]
+    #[case::closer_after_a_middle_dot("가나 김남준·29), 다라", "⠐⠆⠼⠃⠊⠠⠴")]
+    #[case::closer_after_a_hyphen("가나 펩티다제-4) 다라", "⠤⠼⠙⠠⠴")]
+    #[case::numbered_model("가나 아이폰5S, 다라", "⠼⠑⠴⠠⠎⠐")]
+    #[case::gloss_opened_by_a_roman_word("가나 secretary(비서)라 다라", "⠎⠑⠉⠗⠑⠞⠜⠽")]
     fn an_annotation_of_figures_stays_korean(#[case] input: &str, #[case] annotation: &str) {
         let encoded = crate::encode_to_unicode(input).unwrap();
         assert!(encoded.contains(annotation), "{encoded}");

@@ -816,23 +816,6 @@ pub(super) fn is_korean_prose_acronym_parenthetical(chars: &[char]) -> bool {
     })
 }
 
-/// 수식은 괄호가 맞물린다. 한쪽만 남은 괄호는 앞뒤 어절로 이어지는 산문의 조각
-/// 이므로(`LTE),`, `S(PLAN`) 제11항의 경계를 두지 않는다.
-fn has_balanced_brackets(chars: &[char]) -> bool {
-    let mut depth = 0i32;
-    for ch in chars {
-        match ch {
-            '(' | '[' | '{' => depth += 1,
-            ')' | ']' | '}' => depth -= 1,
-            _ => {}
-        }
-        if depth < 0 {
-            return false;
-        }
-    }
-    depth == 0
-}
-
 /// 붙임표로 이은 로마자 낱말(`know-how`, `well-made`)은 제37항의 로마자이지 뺄셈이
 /// 아니다. 숫자도 관계 기호도 없이 글자와 붙임표만 있으면 수식으로 보지 않는다.
 fn is_hyphenated_roman_word(chars: &[char]) -> bool {

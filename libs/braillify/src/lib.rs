@@ -506,6 +506,7 @@ fn may_normalize_print_variant(c: char) -> bool {
                 | '\u{200C}'
                 | '\u{200D}'
                 | '\u{FEFF}'
+                | '\u{FE00}'..='\u{FE0F}'
         )
 }
 
@@ -580,7 +581,12 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
             }
             '\u{301C}' => out.push('~'),
             '\u{00B4}' => out.push('\''),
-            '\u{00AD}' | '\u{200B}' | '\u{200C}' | '\u{200D}' | '\u{FEFF}' => {}
+            '\u{00AD}'
+            | '\u{200B}'
+            | '\u{200C}'
+            | '\u{200D}'
+            | '\u{FEFF}'
+            | '\u{FE00}'..='\u{FE0F}' => {}
             _ if is_foldable_fullwidth(ch) => {
                 out.push(char::from_u32(ch as u32 - 0xFEE0).unwrap_or(ch));
             }
@@ -598,11 +604,21 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
 /// (`轉輪륜王` → `⠊⠸⠩⠱⠒…`) 그 문맥은 건너뛴다. 옛한글임을 알리는 표시는 홀로 쓴
 /// 자모(`洪ㄱ字`), 방점(`·갈`, `中國·귁`), 한자 뒤에 곧바로 붙인 독음(`君군`,
 /// `轉輪륜王`의 `輪륜`), 그리고 한글이 하나도 없는 한자만의 표기(`榮養`)다.
+/// 방점은 음절 앞에 선다. 낱말 사이의 가운뎃점(`5·18`)은 방점이 아니다 — 국립국어원
+/// 회신 5: 중세국어에는 가운뎃점이 쓰이지 않는다.
 fn is_middle_korean_hanja_context(chars: &[char]) -> bool {
     let has_old_jamo = chars.iter().any(|c| {
         matches!(*c, '\u{3131}'..='\u{318E}' | '\u{1100}'..='\u{11FF}' | '\u{E000}'..='\u{F8FF}')
     });
-    let has_tone_mark = chars.iter().any(|c| matches!(*c, '\u{00B7}' | '\u{FF1A}'));
+    let has_tone_mark = chars.iter().enumerate().any(|(index, c)| {
+        matches!(*c, '\u{00B7}' | '\u{FF1A}')
+            && chars
+                .get(index + 1)
+                .is_some_and(|next| matches!(*next, '\u{AC00}'..='\u{D7A3}'))
+            && index.checked_sub(1).is_none_or(|previous| {
+                chars[previous].is_whitespace() || hanja::is_hanja(chars[previous])
+            })
+    });
     let has_modern_hangul = chars.iter().any(|c| matches!(*c, '\u{AC00}'..='\u{D7A3}'));
     let has_gloss = chars.iter().enumerate().any(|(index, c)| {
         hanja::reading(*c).is_some_and(|reading| {
@@ -3149,6 +3165,25 @@ mod coverage_targeted_tests {
         #[case] end: [u8; 2],
     ) {
         assert_eq!(kind.markers(), (start, end));
+    }
+
+    #[rstest::rstest]
+    #[case::tone_mark_opens_a_word("·갈 〔 刀 〕", true)]
+    #[case::rising_tone_opens_a_word("：돌 〔 石 〕", true)]
+    #[case::tone_mark_after_hanja("中國·귁", true)]
+    #[case::separator_between_numbers("5·18 고(故)", false)]
+    #[case::separator_between_words("영업·마케팅 지선(支線)", false)]
+    #[case::separator_after_a_bracket("최연고(80)·서정수 고(故)", false)]
+    fn tells_a_tone_mark_from_a_middle_dot(#[case] text: &str, #[case] middle_korean: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_middle_korean_hanja_context(&chars), middle_korean);
+    }
+
+    #[rstest::rstest]
+    #[case::hanja_after_a_middle_dot("5·18 고(故)", "5·18 고(고)")]
+    #[case::variation_selector("\u{FE0F}가로 350mm", "가로 350mm")]
+    fn writes_what_the_print_shows(#[case] text: &str, #[case] same_as: &str) {
+        assert_eq!(encode(text), encode(same_as));
     }
 
     /// Mathematical italic small h (U+210E) normalizes to plain 'h'.

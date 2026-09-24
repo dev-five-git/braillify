@@ -238,7 +238,7 @@ bun test test_cases/                 # JSON integrity checks (packages/node/pkg 
 한국어-한국점자 병렬 말뭉치 46만 7121문장이 들어 있다. 말뭉치는 `rule_map.json` 에서
 `benchmark: true` 로 표시되어 **pass/fail 에 들어가지 않고 정확도만 보고**한다.
 
-**Current status: 규정 fixture 5281/5281 (100%, `limitation` 없음), 말뭉치 456,112/467,121 (97.64%).**
+**Current status: 규정 fixture 5284/5284 (100%, `limitation` 없음), 말뭉치 456,307/467,121 (97.68%).**
 
 ⚠️ `roman_marker_bench` 는 **어절 수가 맞는 문장만** 센다. 띄어쓰기를 바꾸면
 비교 모집단 자체가 움직이므로 네 수치를 그대로 빼서 비교하면 안 된다. 실제로

@@ -647,7 +647,9 @@ fn is_closed_roman_annotation_suffix(chars: &[char]) -> bool {
 /// bracket closed onto its contents, so `목요일(6/4)`, `일대일(1:1)` and
 /// `1500m(1)` are Korean-mode annotations written with 한글 괄호. Only a body of
 /// digits joined by ordinary marks qualifies; an operator or a letter leaves the
-/// parenthetical to the math engine (`정수(x+1)`).
+/// parenthetical to the math engine (`정수(x+1)`). An arrow between the numbers
+/// (`영업이익(100→95)`) is the 한글 제70항 arrow of an ordinary sentence (국립국어원
+/// 회신 8), and a 가운뎃점 lists them (`동구(1·2)`).
 fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
     if chars.first() != Some(&'(') {
         return false;
@@ -658,9 +660,13 @@ fn is_closed_numeric_annotation_suffix(chars: &[char]) -> bool {
     let body = &chars[1..close];
     let trailing = &chars[close + 1..];
     body.iter().any(char::is_ascii_digit)
-        && body
-            .iter()
-            .all(|c| c.is_ascii_digit() || matches!(*c, '/' | ':' | '.' | ',' | '~' | '\u{223C}'))
+        && body.iter().all(|c| {
+            c.is_ascii_digit()
+                || matches!(
+                    *c,
+                    '/' | ':' | '.' | ',' | '~' | '\u{223C}' | '→' | '←' | '↔' | '\u{00B7}'
+                )
+        })
         && trailing
             .iter()
             .all(|c| matches!(*c, ',' | '.' | ';' | ':' | '!' | '?' | '\'' | '"'))
@@ -1054,6 +1060,21 @@ mod numeric_annotation_coverage {
             has_attached_korean_name_and_case_particle(&chars, start, end),
             expected
         );
+    }
+}
+
+#[cfg(test)]
+mod figure_annotation_coverage {
+    /// 제34항·한글 제70항(국립국어원 회신 8): 한글 낱말에 붙은 괄호 속 수의 변화나
+    /// 나열은 그 낱말의 주석이지 제11항의 수식이 아니다.
+    #[rstest::rstest]
+    #[case::arrow("가나 영업이익(100→95), 다라", "⠦⠄⠼⠁⠚⠚⠀⠒⠕⠀⠼⠊⠑⠠⠴")]
+    #[case::decimal_arrow("가나 수준(13.2→7.8), 다라", "⠦⠄⠼⠁⠉⠲⠃⠀⠒⠕⠀⠼⠛⠲⠓⠠⠴")]
+    #[case::middle_dot("가나 동구(1·2), 다라", "⠦⠄⠼⠁⠐⠆⠼⠃⠠⠴")]
+    fn an_annotation_of_figures_stays_korean(#[case] input: &str, #[case] annotation: &str) {
+        let encoded = crate::encode_to_unicode(input).unwrap();
+        assert!(encoded.contains(annotation), "{encoded}");
+        assert!(!encoded.contains("\u{2800}\u{2800}"), "{encoded}");
     }
 }
 

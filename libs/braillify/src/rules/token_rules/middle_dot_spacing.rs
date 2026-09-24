@@ -201,19 +201,32 @@ fn korean_semicolon_split_index(chars: &[char]) -> Option<usize> {
 /// 섞여 표제와 내용을 가르는 꼴이면 본문에 따라 뒤에 한 칸을 둔다.
 ///
 /// 표제를 한글이 이끄는 한 내용이 무엇으로 적혔는지는 본문을 바꾸지 않는다
-/// (`모델명:PN50`, `일시:2006년`). 쌍점 앞이 한글이 아니면 애초에 쌍점이 아니라
-/// 로마자 식별자 안의 기호이므로(`NVH:Noise`) 이 함수가 보지 않는다.
+/// (`모델명:PN50`, `일시:2006년`). 내용이 한글이면 표제가 로마자나 숫자여도 국어
+/// 문장의 쌍점이다(`A:우리나라는`, `Drive:할레마우마우`). 앞뒤가 모두 로마자인
+/// 쌍점은 로마자 식별자 안의 기호라(`NVH:Noise`) 이 함수가 보지 않는다.
 fn korean_label_colon_split_index(chars: &[char]) -> Option<usize> {
-    let position = chars.windows(3).position(|window| {
-        crate::utils::is_korean_char(window[0])
-            && window[1] == ':'
-            && !is_closing_after_colon(window[2])
+    let position = chars.windows(3).enumerate().position(|(at, window)| {
+        let korean_label = crate::utils::is_korean_char(window[0]) && !is_ratio(chars, at + 1);
+        let korean_content =
+            window[0].is_ascii_alphanumeric() && crate::utils::is_korean_char(window[2]);
+        window[1] == ':' && !is_closing_after_colon(window[2]) && (korean_label || korean_content)
     })?;
     let is_contrast_pair = chars
         .iter()
         .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':')
         && is_balanced_contrast_pair(chars);
     (!is_contrast_pair).then_some(position)
+}
+
+/// [다만 2] — 수를 맞세운 비율(`200만:1`)은 쌍점의 앞뒤를 붙인다. 쌍점 앞의
+/// `만`·`억`·`조` 는 수의 단위다.
+fn is_ratio(chars: &[char], colon: usize) -> bool {
+    chars.get(colon + 1).is_some_and(char::is_ascii_digit)
+        && chars[..colon]
+            .iter()
+            .rev()
+            .find(|ch| !matches!(ch, '만' | '억' | '조'))
+            .is_some_and(char::is_ascii_digit)
 }
 
 /// [다만 2] 의 `청군:백군` 은 같은 층위의 두 항목을 맞세운 대비 쌍이고, 본문의
@@ -733,6 +746,22 @@ mod nikl_answer_coverage {
             attached,
             "unexpected colon spacing for {input}"
         );
+    }
+
+    #[rstest::rstest]
+    #[case::roman_label("A:우리나라는", Some(0))]
+    #[case::roman_title("Drive:할레마우마우", Some(4))]
+    #[case::numbered_title("도수코3:스포일러", Some(3))]
+    #[case::korean_label_before_a_number("응답률:7.8%", Some(2))]
+    #[case::roman_identifier("NVH:Noise", None)]
+    #[case::clock_time("10:20", None)]
+    #[case::ratio_in_ten_thousands("200만:1의", None)]
+    fn a_colon_before_korean_content_takes_the_blank(
+        #[case] input: &str,
+        #[case] split: Option<usize>,
+    ) {
+        let chars: Vec<char> = input.chars().collect();
+        assert_eq!(korean_label_colon_split_index(&chars), split);
     }
 
     #[rstest::rstest]

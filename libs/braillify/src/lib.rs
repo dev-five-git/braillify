@@ -1169,6 +1169,12 @@ fn encode_with_options_traced(
         .is_some_and(EncodingMode::reads_science);
     let routed_by_content = options.default_mode.is_none() || science;
     let spatial = options.default_mode == Some(EncodingMode::ScienceSpatial);
+    if options.default_mode == Some(EncodingMode::Science)
+        && let Some(cells) = crate::rules::science::ring::encode(text)
+    {
+        mark_trace_path(&mut trace, TracePath::KoreanRules);
+        return Ok(cells);
+    }
     if routed_by_content && let Some(cells) = crate::rules::science::diagram::encode(text, spatial)
     {
         mark_trace_path(&mut trace, TracePath::KoreanRules);

@@ -1,0 +1,52 @@
+[
+  {
+    "input": "⬡",
+    "note": "PDF 과학 제12항 1 — 세로 방향 육각 환핵. 세로 방향 육각 환핵은 ⬡(U+2B21), 가로 방향은 ⎔(U+2394), 오각 환핵은 ⬠(U+2B20)으로 입력한다",
+    "context": "science",
+    "internal": "&[oy",
+    "expected": "47422161",
+    "unicode": "⠯⠪⠕⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⎔",
+    "note": "PDF 과학 제12항 1 — 가로 방향 육각 환핵",
+    "context": "science",
+    "internal": "&o[y",
+    "expected": "47214261",
+    "unicode": "⠯⠕⠪⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⬡ ⬡",
+    "note": "PDF 과학 제12항 1 가 — 나프탈렌 C₁₀H₈환. 세로 결합선을 나눈 두 핵은 같은 줄에 두 칸 떨어뜨려 놓는다",
+    "context": "science",
+    "internal": "&{oy&{oy",
+    "expected": "4742216147422161",
+    "unicode": "⠯⠪⠕⠽⠯⠪⠕⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⬡ ⬡ ⬡",
+    "note": "PDF 과학 제12항 1 나 — 안트라센 C₁₄H₁₀환",
+    "context": "science",
+    "internal": "&{oy&{oy&{oy",
+    "expected": "474221614742216147422161",
+    "unicode": "⠯⠪⠕⠽⠯⠪⠕⠽⠯⠪⠕⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⬠",
+    "note": "PDF 과학 제12항 2 — 오각 환핵",
+    "context": "science",
+    "internal": "&{ky",
+    "expected": "4742561",
+    "unicode": "⠯⠪⠅⠽",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

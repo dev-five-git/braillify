@@ -309,11 +309,11 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
     }
 
     fn phase(&self) -> TokenPhase {
-        TokenPhase::PostWord
+        TokenPhase::Normalization
     }
 
     fn priority(&self) -> u16 {
-        127
+        200
     }
 
     fn apply<'a>(

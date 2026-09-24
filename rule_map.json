@@ -383,10 +383,6 @@
     "title": "수학 제4항",
     "description": "부등호는 다음과 같이 적는다. 같지않다(≠) ⠨⠶⠶, 보다크다(>) ⠔⠔, 보다작다(<) ⠢⠢, 크거나같다(≥) ⠶⠶, 작거나같다(≤) ⠶⠶"
   },
-  "math/math_5": {
-    "title": "수학 제2항~제4항",
-    "description": "사칙연산 기호: 덧셈표(+) ⠐, 뺄셈표(-) ⠤, 곱셈표(×) ⠰, 나눗셈표(÷) ⠌⠌와 비교 기호 종합 예시"
-  },
   "math/math_6": {
     "title": "수학 제6항",
     "description": "괄호와 묶음 괄호는 다음과 같이 적는다. 소괄호 ⠦ ⠴, 중괄호 ⠶ ⠶, 대괄호 ⠠⠶ ⠠⠴"
@@ -826,10 +822,6 @@
   "english/rule_4_3_6": {
     "title": "4.3.6",
     "description": "Letters and Their Modifiers - Ligatured letters"
-  },
-  "english/rule_4_4_1": {
-    "title": "4.4.1",
-    "description": "Letters and Their Modifiers - Eng and schwa"
   },
   "english/rule_4_5_1": {
     "title": "4.5.1",

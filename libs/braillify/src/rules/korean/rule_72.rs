@@ -207,11 +207,14 @@ impl BrailleRule for Rule72 {
         // 실제로 이어지는지만 판정한다.
         let tight_before_content = matches!(current, '△' | '▲' | '▴')
             && ctx.next_char().is_some_and(|c| !c.is_whitespace());
+        // 칠한 세모는 제49항 사물부호가 아니므로 어절 끝에 붙어도(`씨▲ 도의상`) 같은 표지다.
+        let closes_word = matches!(current, '▲' | '▴') && ctx.next_char().is_none();
         let contextual_marker = ctx.word_len() == 1
             || ctx
                 .next_char()
                 .is_some_and(|c| c.is_whitespace() || matches!(c, '(' | '\'' | '"'))
             || tight_before_content
+            || closes_word
             || matches!(current, '◎' | '▣');
         if !contextual_marker {
             return Ok(RuleResult::Skip);
@@ -279,6 +282,13 @@ mod tests {
     #[case::numeric_token("목록은 △2025")]
     fn attached_triangle_list_markers_stay_attached(#[case] input: &str) {
         assert_ne!(cell_after_triangle_marker(input), Some('\u{2800}'));
+    }
+
+    #[rstest::rstest]
+    #[case::filled("씨▲ 도의상")]
+    #[case::small_filled("씨▴ 도의상")]
+    fn a_filled_triangle_closing_a_word_is_the_same_marker(#[case] input: &str) {
+        assert_eq!(crate::encode_to_unicode(input).unwrap(), "⠠⠠⠕⠸⠬⠀⠊⠥⠺⠇⠶");
     }
 
     #[rstest::rstest]

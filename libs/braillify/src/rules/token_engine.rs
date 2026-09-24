@@ -70,15 +70,9 @@ impl TokenRuleEngine {
                         continue;
                     }
 
-                    let action = rule.apply(tokens, i, state)?;
-                    let is_noop_fallthrough = matches!(action, TokenAction::Noop)
-                        && matches!(phase, TokenPhase::Normalization | TokenPhase::PostWord);
-                    if is_noop_fallthrough {
-                        continue;
-                    }
                     let id = RuleId::token(rule_index);
-                    match action {
-                        TokenAction::Noop => {}
+                    match rule.apply(tokens, i, state)? {
+                        TokenAction::Noop => continue,
                         TokenAction::Replace(t) => {
                             tokens[i] = t;
                             if let Some(origins) = origins.as_deref_mut() {
@@ -374,129 +368,65 @@ mod tests {
         assert!(matches!(&tokens[1], Token::Word(w) if w.text == "c"));
     }
 
-    /// token_engine:55 — `TokenAction::Noop` arm coverage (re-attribution via
-    /// direct dispatch test). A rule returning Noop in Normalization phase
-    /// allows fall-through to next rule.
-    #[test]
-    fn token_engine_noop_normalization_continues_to_next_rule() {
-        struct AlwaysNoop;
-        impl TokenRule for AlwaysNoop {
-            fn meta(&self) -> &'static RuleMeta {
-                &TEST_META
-            }
-            fn phase(&self) -> TokenPhase {
-                TokenPhase::Normalization
-            }
-            fn priority(&self) -> u16 {
-                10 // run before ReplaceWordAt0
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(TokenAction::Noop)
-            }
+    struct NoopIn(TokenPhase);
+    impl TokenRule for NoopIn {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
         }
-        let mut engine = TokenRuleEngine::new();
-        engine.register(Box::new(AlwaysNoop));
-        engine.register(Box::new(ReplaceWordAt0));
-
-        let mut tokens = vec![word_token("a")];
-        let mut state = EncoderState::new(false);
-        engine.apply_all(&mut tokens, &mut state).unwrap();
-        // AlwaysNoop returns Noop → fall through to ReplaceWordAt0 which fires at index 0.
-        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![9]));
+        fn phase(&self) -> TokenPhase {
+            self.0
+        }
+        fn priority(&self) -> u16 {
+            10
+        }
+        fn apply<'a>(
+            &self,
+            _tokens: &[Token<'a>],
+            _index: usize,
+            _state: &mut EncoderState,
+        ) -> Result<TokenAction<'a>, String> {
+            Ok(TokenAction::Noop)
+        }
     }
 
-    #[test]
-    fn token_engine_runtime_noop_normalization_continues_to_next_rule() {
-        struct RuntimeNoop;
-        impl TokenRule for RuntimeNoop {
-            fn meta(&self) -> &'static RuleMeta {
-                &TEST_META
-            }
-            fn phase(&self) -> TokenPhase {
-                std::hint::black_box(TokenPhase::Normalization)
-            }
-            fn priority(&self) -> u16 {
-                std::hint::black_box(10)
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(std::hint::black_box(TokenAction::Noop))
-            }
+    struct ReplaceIn(TokenPhase);
+    impl TokenRule for ReplaceIn {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
         }
-
-        let mut engine = TokenRuleEngine::new();
-        engine.register(Box::new(RuntimeNoop));
-        engine.register(Box::new(ReplaceWordAt0));
-        let mut tokens = vec![word_token("a")];
-        let mut state = EncoderState::new(false);
-
-        engine.apply_all(&mut tokens, &mut state).unwrap();
-
-        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![9]));
+        fn phase(&self) -> TokenPhase {
+            self.0
+        }
+        fn priority(&self) -> u16 {
+            20
+        }
+        fn apply<'a>(
+            &self,
+            _tokens: &[Token<'a>],
+            _index: usize,
+            _state: &mut EncoderState,
+        ) -> Result<TokenAction<'a>, String> {
+            Ok(TokenAction::Replace(Token::PreEncoded(vec![7])))
+        }
     }
 
-    #[test]
-    fn token_engine_noop_wordshortcut_stops_current_index_rules() {
-        struct WordShortcutNoop;
-        impl TokenRule for WordShortcutNoop {
-            fn meta(&self) -> &'static RuleMeta {
-                &TEST_META
-            }
-            fn phase(&self) -> TokenPhase {
-                TokenPhase::WordShortcut
-            }
-            fn priority(&self) -> u16 {
-                10
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(TokenAction::Noop)
-            }
-        }
-
-        struct WordShortcutReplace;
-        impl TokenRule for WordShortcutReplace {
-            fn meta(&self) -> &'static RuleMeta {
-                &TEST_META
-            }
-            fn phase(&self) -> TokenPhase {
-                TokenPhase::WordShortcut
-            }
-            fn priority(&self) -> u16 {
-                20
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(TokenAction::Replace(Token::PreEncoded(vec![7])))
-            }
-        }
-
+    #[rstest::rstest]
+    #[case::normalization(TokenPhase::Normalization)]
+    #[case::fraction_detection(TokenPhase::FractionDetection)]
+    #[case::word_shortcut(TokenPhase::WordShortcut)]
+    #[case::mode_entry(TokenPhase::ModeEntry)]
+    #[case::uppercase_passage(TokenPhase::UppercasePassage)]
+    #[case::post_word(TokenPhase::PostWord)]
+    fn a_noop_hands_the_word_to_the_next_rule_of_its_phase(#[case] phase: TokenPhase) {
         let mut engine = TokenRuleEngine::new();
-        engine.register(Box::new(WordShortcutNoop));
-        engine.register(Box::new(WordShortcutReplace));
+        engine.register(Box::new(NoopIn(phase)));
+        engine.register(Box::new(ReplaceIn(phase)));
 
         let mut tokens = vec![word_token("a")];
         let mut state = EncoderState::new(false);
         engine.apply_all(&mut tokens, &mut state).unwrap();
 
-        assert!(matches!(&tokens[0], Token::Word(w) if w.text == "a"));
+        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![7]));
     }
 
     #[derive(Clone, Copy, Debug)]

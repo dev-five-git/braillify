@@ -37,13 +37,16 @@ src/
 ```
 Input text
   ↓ DocumentIR::parse()         (tokenize into Word/Space/Mode tokens)
-  ↓ TokenRuleEngine::apply_all() (token-level rules by phase)
-  │   ├── LatexMergeRule         (merge $...$ across spaces)
-  │   ├── LatexFractionRule      (detect $\frac{}{})$)
-  │   ├── LatexMathRule          (strip LaTeX → math notation)
-  │   ├── InlineFractionRule     (detect N/N inline fractions)
-  │   ├── MathExpressionTokenRule (detect & encode math expressions)
-  │   └── ...other token rules
+  ↓ TokenRuleEngine::apply_all() (token-level rules by phase, then priority;
+  │                               a rule returning Noop hands the word to the
+  │                               next rule of the same phase)
+  │   ├── Normalization     LatexMergeRule ($...$ across spaces), science notation,
+  │   │                     bracket gap, colon/semicolon split, leading asterisk, …
+  │   ├── FractionDetection MathExpressionTokenRule (math, LaTeX, \frac → Token::Fraction)
+  │   ├── WordShortcut      WordShortcutRule
+  │   ├── ModeEntry         DigitalNotationRule (URL, e-mail)
+  │   ├── UppercasePassage  UppercasePassageRule (capitals word/passage)
+  │   └── PostWord          middle dot, tilde, hyphen, asterisk, English-dominant wrap
   ↓ emit()                      (character-level encoding)
       ├── Token::Word → RuleEngine (BrailleRule trait, char-by-char)
       ├── Token::Space → braille space byte

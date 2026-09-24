@@ -82,11 +82,11 @@ impl TokenRule for MiddleDotSpacingRule {
     }
 
     fn phase(&self) -> TokenPhase {
-        TokenPhase::Normalization
+        TokenPhase::PostWord
     }
 
     fn priority(&self) -> u16 {
-        180
+        126
     }
 
     fn apply<'a>(

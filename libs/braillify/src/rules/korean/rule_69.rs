@@ -802,7 +802,11 @@ impl BrailleRule for Rule69 {
                 encode_complete_numeric_ascii_unit(ctx.word_chars, ctx.index)
         {
             let continues = adjust_roman_unit_boundary(ctx, ctx.index + consumed, &mut encoded);
-            if roman_unit_chain_continues_before(ctx) && encoded.first() == Some(&ROMAN_INDICATOR) {
+            // 제35항 `MP4 Player`: 앞 어절에서 이어진 로마자 구간(`FM 98.1 MHz`)의 단위는
+            // 새 로마자표 없이 잇는다.
+            let continues_section = roman_unit_chain_continues_before(ctx)
+                || (ctx.index == 0 && ctx.roman_section_continues_from_previous_word);
+            if continues_section && encoded.first() == Some(&ROMAN_INDICATOR) {
                 encoded.remove(0);
             }
             trim_recent_english_indicator(ctx.result);
@@ -1154,6 +1158,8 @@ mod tests {
     #[rstest::rstest]
     #[case::ascii_range("범위는 3.5~8.5m이다", "⠼⠉⠲⠑⠈⠔⠼⠓⠲⠑⠴⠍⠲")]
     #[case::unicode_range("범위는 3∼5kg이다", "⠼⠉⠈⠔⠼⠑⠴⠅⠛⠲")]
+    #[case::unit_continuing_a_roman_section("라디오(FM 98.1 MHz) 김", "⠼⠊⠓⠲⠁⠀⠠⠍⠠⠓⠵")]
+    #[case::unit_after_a_korean_number("가 98.1 MHz 나", "⠼⠊⠓⠲⠁⠀⠴⠠⠍")]
     fn numeric_unit_ranges_stay_on_korean_number_and_unit_rules(
         #[case] input: &str,
         #[case] expected_segment: &str,

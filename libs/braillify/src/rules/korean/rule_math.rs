@@ -599,6 +599,13 @@ mod roman_grade_minus_coverage {
     fn a_credit_grade_minus_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
     }
+
+    /// 제34항: 등급 뒤 한글 주석이 붙어도 붙임표는 등급의 뺄셈 기호다.
+    #[test]
+    fn a_grade_before_a_korean_annotation_keeps_its_minus() {
+        let encoded = crate::encode_to_unicode("등급을 AA-(안정적)에서").unwrap();
+        assert!(encoded.contains("⠁⠁⠐⠤⠦⠄"), "{encoded}");
+    }
 }
 
 #[cfg(test)]

@@ -117,6 +117,17 @@ pub(crate) fn begins_korean_mode_number(chars: impl Iterator<Item = char>) -> bo
     true
 }
 
+/// 제33항 — 로마자와 한글 사이의 쉼표·쌍점: 한글이 바로 붙은 수(`1초에`, `27개`)는
+/// 한글 쪽이다.
+pub(crate) fn opens_korean_number(chars: impl Iterator<Item = char>) -> bool {
+    let mut chars = chars.peekable();
+    let mut saw_digit = false;
+    while let Some(ch) = chars.next_if(|ch| ch.is_ascii_digit() || matches!(ch, ',' | '.')) {
+        saw_digit |= ch.is_ascii_digit();
+    }
+    saw_digit && chars.next().is_some_and(utils::is_korean_char)
+}
+
 /// Returns whether `index` is an ampersand inside a complete sequence of
 /// non-empty ASCII-letter segments joined by `&`. Korean rule 35 allows the
 /// resulting Roman text to continue directly into digits and later Roman
@@ -558,7 +569,16 @@ pub(crate) fn should_render_symbol_as_english(
         }
         '/' | '@' | '#' | '.' | '_' | ':' => {
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
-            let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words);
+            let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words)
+                && !(symbol == ':'
+                    && word_chars.get(index + 1).map_or_else(
+                        || {
+                            remaining_words
+                                .first()
+                                .is_some_and(|word| opens_korean_number(word.chars()))
+                        },
+                        |_| opens_korean_number(word_chars[index + 1..].iter().copied()),
+                    ));
 
             // 제33항 [다만] — 앞에 로마자가 없이 숫자만 온 빗금은 단위를 가르는
             // 기호이지 제74항 디지털 표기의 일부가 아니다(`17.1/km`). 구간을 열지
@@ -800,6 +820,25 @@ mod tests {
         let word: Vec<char> = input.chars().collect();
         assert_eq!(
             should_render_symbol_as_english(true, false, false, &[], symbol, &word, index, &[]),
+            expected
+        );
+    }
+
+    /// 제33항 — 로마자 뒤 쌍점 다음이 한글이 붙은 수이면 한글 쌍점이다.
+    #[rstest::rstest]
+    #[case::korean_number_in_the_next_word("Bq:", &["1초에"], false)]
+    #[case::korean_number_in_the_same_word("Bq:1초에", &[], false)]
+    #[case::roman_word_follows("Wat:", &["Arun"], true)]
+    #[case::bare_number_follows("Pt:", &["3"], true)]
+    fn a_colon_before_a_korean_number_is_korean(
+        #[case] input: &str,
+        #[case] remaining: &[&str],
+        #[case] expected: bool,
+    ) {
+        let word: Vec<char> = input.chars().collect();
+        let colon = word.iter().position(|ch| *ch == ':').unwrap();
+        assert_eq!(
+            should_render_symbol_as_english(true, true, false, &[], ':', &word, colon, remaining),
             expected
         );
     }

@@ -61,26 +61,15 @@ impl BrailleRule for Rule41 {
         ((ctx.state.is_number || has_numeric_prefix) && next_is_digit)
             || (has_ascii_prefix
                 && next_is_alphanumeric
-                && !opens_a_korean_number(&ctx.word_chars[ctx.index + 1..]))
+                && !crate::english_logic::opens_korean_number(
+                    ctx.word_chars[ctx.index + 1..].iter().copied(),
+                ))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
         ctx.emit(NUMERIC_COMMA);
         Ok(RuleResult::Consumed)
     }
-}
-
-/// 제33항 — 로마자 뒤 쉼표 다음이 한글이 붙은 수(`KIA,27개`)이면 그 쉼표는 로마자와
-/// 한글 사이의 한글 쉼표다.
-fn opens_a_korean_number(rest: &[char]) -> bool {
-    let number = rest
-        .iter()
-        .take_while(|ch| ch.is_ascii_digit() || matches!(ch, ',' | '.'))
-        .count();
-    number > 0
-        && rest
-            .get(number)
-            .is_some_and(|ch| crate::utils::is_korean_char(*ch))
 }
 
 /// Scan backwards from index to find if preceded by a digit or ASCII letter.

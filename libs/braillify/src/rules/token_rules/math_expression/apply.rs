@@ -502,12 +502,23 @@ pub(super) fn is_korean_prose_roman_minus_grade(chars: &[char]) -> bool {
         .iter()
         .take_while(|ch| is_terminal_plus_closer_char(**ch))
         .count();
+    // 제34항: 등급 뒤에 붙은 한글 주석(`AA-(안정적)에서`)도 등급 표기를 끊지 않는다.
+    let annotation = match trailer.split_first() {
+        Some(('(', body)) => body
+            .iter()
+            .position(|ch| *ch == ')')
+            .filter(|close| *close > 0 && body[..*close].iter().all(|ch| is_korean_char(*ch)))
+            .map_or(0, |close| close + 2),
+        _ => 0,
+    };
     (2..=3).contains(&head_len)
         && before_head
             .iter()
             .all(|ch| is_korean_char(*ch) || matches!(ch, '(' | '[' | '{' | '‘' | '“' | '\'' | '"'))
-        && (trailer.is_empty() || closers > 0)
-        && trailer[closers..].iter().all(|ch| is_korean_char(*ch))
+        && (trailer.is_empty() || closers > 0 || annotation > 0)
+        && trailer[closers.max(annotation)..]
+            .iter()
+            .all(|ch| is_korean_char(*ch))
 }
 
 fn is_attached_plus_prose_trailer_char(ch: char) -> bool {

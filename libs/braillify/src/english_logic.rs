@@ -117,12 +117,12 @@ pub(crate) fn begins_korean_mode_number(chars: impl Iterator<Item = char>) -> bo
     true
 }
 
-/// 제33항 — 로마자와 한글 사이의 쉼표·쌍점: 한글이 바로 붙은 수(`1초에`, `27개`)는
-/// 한글 쪽이다.
+/// 제33항 — 로마자와 한글 사이의 쉼표·쌍점: 한글이 바로 붙은 수(`1초에`, `27개`,
+/// 제51항 시각 `22:35에`)는 한글 쪽이다.
 pub(crate) fn opens_korean_number(chars: impl Iterator<Item = char>) -> bool {
     let mut chars = chars.peekable();
     let mut saw_digit = false;
-    while let Some(ch) = chars.next_if(|ch| ch.is_ascii_digit() || matches!(ch, ',' | '.')) {
+    while let Some(ch) = chars.next_if(|ch| ch.is_ascii_digit() || matches!(ch, ',' | '.' | ':')) {
         saw_digit |= ch.is_ascii_digit();
     }
     saw_digit && chars.next().is_some_and(utils::is_korean_char)
@@ -571,6 +571,7 @@ pub(crate) fn should_render_symbol_as_english(
             let prev_ascii = prev_ascii_letter_or_digit(word_chars, index);
             let next_ascii = next_ascii_letter_or_digit(word_chars, index, remaining_words)
                 && !(symbol == ':'
+                    && prev_char.is_some_and(|ch| ch.is_ascii_alphanumeric())
                     && word_chars.get(index + 1).map_or_else(
                         || {
                             remaining_words
@@ -830,6 +831,9 @@ mod tests {
     #[case::korean_number_in_the_same_word("Bq:1초에", &[], false)]
     #[case::roman_word_follows("Wat:", &["Arun"], true)]
     #[case::bare_number_follows("Pt:", &["3"], true)]
+    #[case::ratio_ending_in_korean("52:24:4이고", &[], false)]
+    #[case::time_ending_in_korean("22:35에", &[], false)]
+    #[case::standalone_colon(":", &["2021을"], true)]
     fn a_colon_before_a_korean_number_is_korean(
         #[case] input: &str,
         #[case] remaining: &[&str],

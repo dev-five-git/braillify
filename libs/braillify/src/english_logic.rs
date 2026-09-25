@@ -417,11 +417,16 @@ pub(crate) fn should_render_symbol_as_english(
         remaining_words.first().and_then(|w| w.chars().next())
     };
 
-    // A non-English closing enclosure is a hard Roman-section boundary.  The
+    // A non-English enclosure mark is a hard Roman-section boundary.  The
     // look-behind helpers deliberately skip punctuation for attached UEB runs,
     // but must not reach through that boundary and pull a following version or
-    // identifier mark (`(XBB).1.5`) back into the closed Roman section.
-    if !is_english && prev_char.is_some_and(|ch| matches!(ch, ')' | ']' | '}')) {
+    // identifier mark (`(XBB).1.5`, `OPS(.837)`) back into the closed section.
+    let opens_after_opening = matches!(symbol, '(' | '[' | '{');
+    if !is_english
+        && prev_char.is_some_and(|ch| {
+            matches!(ch, ')' | ']' | '}') || (matches!(ch, '(' | '[' | '{') && !opens_after_opening)
+        })
+    {
         return false;
     }
 
@@ -776,6 +781,25 @@ mod tests {
         let word: Vec<char> = input.chars().collect();
         assert_eq!(
             should_render_symbol_as_english(true, is_english, false, &[], ',', &word, 1, &[],),
+            expected
+        );
+    }
+
+    /// 제29항 — 닫힌 로마자 구간 뒤 한글 괄호를 넘어 소수점을 끌어오지 않는다.
+    #[rstest::rstest]
+    #[case::after_an_opening_bracket("OPS(.837)", '.', 4, false)]
+    #[case::after_a_closing_bracket("(XBB).1", '.', 5, false)]
+    #[case::between_roman_letters("a.b", '.', 1, true)]
+    #[case::bracket_after_a_bracket("((W)", '(', 1, true)]
+    fn a_dot_after_a_korean_bracket_stays_korean(
+        #[case] input: &str,
+        #[case] symbol: char,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let word: Vec<char> = input.chars().collect();
+        assert_eq!(
+            should_render_symbol_as_english(true, false, false, &[], symbol, &word, index, &[]),
             expected
         );
     }

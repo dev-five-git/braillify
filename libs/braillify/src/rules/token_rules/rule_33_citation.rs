@@ -65,7 +65,10 @@ fn match_year_suffix(text: &str) -> Option<(&str, char, char)> {
     if !chars[..4].iter().all(|c| c.is_ascii_digit()) {
         return None;
     }
-    if !chars[4].is_ascii_lowercase() {
+    // 제69항: 단위 글자(`1500m,`, `6797t,`)는 인용 연도의 구별 글자가 아니다.
+    if !chars[4].is_ascii_lowercase()
+        || crate::rules::korean::rule_69::complete_ascii_unit_len(&chars[4..5], 0).is_some()
+    {
         return None;
     }
     if !matches!(chars[5], ',' | ';' | '.') {
@@ -189,6 +192,7 @@ mod tests {
     #[case::non_digit_in_year("199xa,", false)]
     #[case::uppercase_letter("1998A,", false)]
     #[case::wrong_punctuation("1998a!", false)]
+    #[case::metre_unit("1500m,", false)]
     fn match_year_suffix_paths(#[case] input: &str, #[case] is_match: bool) {
         assert_eq!(match_year_suffix(input).is_some(), is_match);
     }

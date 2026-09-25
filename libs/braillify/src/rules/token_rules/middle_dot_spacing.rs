@@ -390,6 +390,21 @@ impl TokenRule for KoreanHyphenSpacingRule {
         index: usize,
         _state: &mut crate::rules::context::EncoderState,
     ) -> Result<TokenAction<'a>, String> {
+        if let (Some(Token::Word(left)), Some(Token::Space(_)), Some(Token::Word(right))) = (
+            tokens.get(index),
+            tokens.get(index + 1),
+            tokens.get(index + 2),
+        ) && let [.., before, '-'] = left.chars.as_slice()
+            && *before != '-'
+            && !before.is_ascii_alphabetic()
+            && !opens_with_dash_item(tokens)
+            && !(before.is_ascii_digit()
+                && right.chars.first().is_some_and(char::is_ascii_alphanumeric))
+        {
+            let mut chars = left.chars.clone();
+            chars.extend(&right.chars);
+            return Ok(TokenAction::ReplaceRange(3, vec![owned_word(&chars)]));
+        }
         let (
             Some(Token::Word(left)),
             Some(Token::Space(_)),
@@ -419,6 +434,12 @@ impl TokenRule for KoreanHyphenSpacingRule {
         chars.extend(&right.chars);
         Ok(TokenAction::ReplaceRange(5, vec![owned_word(&chars)]))
     }
+}
+
+/// 제49항 — 글이 붙임표 항목(`- 네이버 …`)으로 열리면 뒤의 `제한(20개)- 한` 도
+/// 다음 항목의 표지이지 낱말을 잇는 붙임표가 아니다.
+fn opens_with_dash_item(tokens: &[Token<'_>]) -> bool {
+    matches!(tokens.first(), Some(Token::Word(word)) if word.chars.first() == Some(&'-'))
 }
 
 /// 제49항이 붙여 쓰게 하는 붙임표는 낱말과 낱말 사이의 것이다. 글 첫머리에
@@ -489,6 +510,15 @@ fn seam_hugs(before: char, after: char) -> bool {
     opens || closes
 }
 
+/// 제49항이 따르는 문장 부호 규정은 마침표와 쉼표를 앞말에 붙여 쓴다(국립국어원
+/// 『문장 부호 해설』). 홀로 선 부호는 부호 자체를 가리킬 수 있으므로(`? 대신`)
+/// 글을 맺는 마침표만 붙인다. 줄임표(`..`)는 글의 일부를 생략할 때 앞뒤를 띄운다
+/// (문장 부호 제21항 [붙임 3]).
+fn attaches_to_preceding_word(before: char, word: &[char], ends_the_text: bool) -> bool {
+    (word == ['.'] && ends_the_text && !matches!(before, '.' | '?' | '!' | '…'))
+        || word.first() == Some(&',')
+}
+
 /// 제49항이 따르는 한글 맞춤법은 묶음표를 그 안쪽 내용에 붙여 쓴다. 묵자가
 /// 편집상 `( 가나 )` 처럼 벌려 놓아도 점자 띄어쓰기는 규정을 따르므로 그 틈을
 /// 닫는다. 바깥쪽(`확인 (가나)` 의 앞, `(가나) 다라` 의 뒤)은 보통의 띄어쓰기라
@@ -531,10 +561,15 @@ impl TokenRule for HuggingPunctuationSpacingRule {
             tokens.get(index + consumed),
             tokens.get(index + consumed + 1),
         ) {
-            let hugs = chars
-                .last()
-                .zip(next.chars.first())
-                .is_some_and(|(before, after)| seam_hugs(*before, *after));
+            let ends_the_text = !tokens[index + consumed + 2..]
+                .iter()
+                .any(|token| matches!(token, Token::Word(_)));
+            let hugs = chars.last().is_some_and(|before| {
+                next.chars
+                    .first()
+                    .is_some_and(|after| seam_hugs(*before, *after))
+                    || attaches_to_preceding_word(*before, &next.chars, ends_the_text)
+            });
             if !hugs {
                 break;
             }
@@ -862,6 +897,8 @@ mod spaced_hyphen_joining {
     #[case::closing_bracket_then_korean("확인(9일) - 논란 일자", "⠠⠴⠤⠉⠷")]
     #[case::korean_then_digit("등장 - 2차원 표면", "⠨⠶⠤⠼⠃")]
     #[case::korean_then_korean("가나 - 다라 마바", "⠫⠉⠤⠊⠐⠣")]
+    #[case::space_after_only("월드컵(8강)- 2010 남아공", "⠠⠴⠤⠼⠃")]
+    #[case::korean_space_after_only("밴 해켄- 양현종", "⠒⠤⠜⠶")]
     fn a_spaced_hyphen_joins_what_it_stands_between(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
         assert!(actual.contains(expected), "hyphen must join: {actual}");
@@ -871,6 +908,9 @@ mod spaced_hyphen_joining {
     #[rstest::rstest]
     #[case::digits("12 - 3 을", "⠀⠤⠀")]
     #[case::letters("a - b 를", "⠀⠤⠀")]
+    #[case::digits_space_after_only("12- 3 을", "⠤⠀⠼")]
+    #[case::roman_grade("A- 학점이", "⠘⠔⠀⠚")]
+    #[case::next_item_of_a_dash_list("- 가나(20개)- 한 개", "⠠⠴⠤⠀⠚⠒")]
     fn a_subtraction_sign_keeps_its_spaces(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("subtraction must encode");
         assert!(
@@ -912,6 +952,8 @@ mod hugging_punctuation {
     #[rstest::rstest]
     #[case::parentheses("확인 ( 가나 ) 다라", "⠦⠄⠫⠉⠠⠴")]
     #[case::double_angle_brackets("《 소나기 》 를", "⠰⠶⠠⠥⠉⠈⠕⠶⠆")]
+    #[case::period_closing_the_text("있었다 .", "⠌⠊⠲")]
+    #[case::comma_opening_the_next_word("(31명) ,상위", "⠠⠴⠐⠇")]
     fn an_editorial_gap_beside_hugging_punctuation_closes(
         #[case] input: &str,
         #[case] expected: &str,
@@ -926,6 +968,11 @@ mod hugging_punctuation {
     #[case::before_an_opening_bracket("확인 ( 가나 ) 다라", "⠟⠀⠦⠄")]
     #[case::after_a_closing_bracket("《 소나기 》 를", "⠶⠆⠀⠐⠮")]
     #[case::an_empty_pair_naming_itself("『 』 안에는 책의 제목이", "⠰⠦⠀⠴⠆")]
+    #[case::omission_ellipsis("했습니다 .. 다라", "⠊⠀⠲⠲")]
+    #[case::decimal_after_a_space("타율 .304", "⠂⠀⠼⠲")]
+    #[case::period_inside_the_text("가 . 나", "⠫⠀⠲")]
+    #[case::cited_question_mark("때는 ? 대신", "⠵⠀⠸⠦")]
+    #[case::period_after_a_period("참가했다. .", "⠊⠲⠀⠲")]
     fn the_outer_face_of_a_bracket_keeps_its_space(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("punctuation must encode");
         assert!(

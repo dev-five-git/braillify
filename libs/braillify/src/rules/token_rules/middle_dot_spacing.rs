@@ -398,8 +398,6 @@ impl TokenRule for KoreanHyphenSpacingRule {
             && *before != '-'
             && !before.is_ascii_alphabetic()
             && !opens_with_dash_item(tokens)
-            && !(before.is_ascii_digit()
-                && right.chars.first().is_some_and(char::is_ascii_alphanumeric))
         {
             let mut chars = left.chars.clone();
             chars.extend(&right.chars);
@@ -514,6 +512,15 @@ fn seam_hugs(before: char, after: char) -> bool {
 /// 『문장 부호 해설』). 홀로 선 부호는 부호 자체를 가리킬 수 있으므로(`? 대신`)
 /// 글을 맺는 마침표만 붙인다. 줄임표(`..`)는 글의 일부를 생략할 때 앞뒤를 띄운다
 /// (문장 부호 제21항 [붙임 3]).
+/// 제49항 — 빗금은 앞뒤를 붙여 쓰는 것이 원칙이고 대비되는 어구가 여러 어절이면
+/// 앞뒤를 띄울 수 있다(『문장 부호 해설』 7). 한쪽만 띄운 빗금(`업그레이드/ 새일센터`)은
+/// 어느 쪽도 아니므로 붙인다.
+fn slash_spaced_on_one_side(left: &[char], right: &[char]) -> bool {
+    let standalone = |word: &[char]| word.iter().all(|ch| *ch == '/');
+    (left.last() == Some(&'/') && !standalone(left) && right.first() != Some(&'/'))
+        || (right.first() == Some(&'/') && !standalone(right) && left.last() != Some(&'/'))
+}
+
 fn attaches_to_preceding_word(before: char, word: &[char], ends_the_text: bool) -> bool {
     (word == ['.'] && ends_the_text && !matches!(before, '.' | '?' | '!' | '…'))
         || word.first() == Some(&',')
@@ -569,7 +576,7 @@ impl TokenRule for HuggingPunctuationSpacingRule {
                     .first()
                     .is_some_and(|after| seam_hugs(*before, *after))
                     || attaches_to_preceding_word(*before, &next.chars, ends_the_text)
-            });
+            }) || slash_spaced_on_one_side(&chars, &next.chars);
             if !hugs {
                 break;
             }
@@ -899,6 +906,7 @@ mod spaced_hyphen_joining {
     #[case::korean_then_korean("가나 - 다라 마바", "⠫⠉⠤⠊⠐⠣")]
     #[case::space_after_only("월드컵(8강)- 2010 남아공", "⠠⠴⠤⠼⠃")]
     #[case::korean_space_after_only("밴 해켄- 양현종", "⠒⠤⠜⠶")]
+    #[case::score_space_after_only("팀에게 0- 2로", "⠼⠚⠤⠼⠃")]
     fn a_spaced_hyphen_joins_what_it_stands_between(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
         assert!(actual.contains(expected), "hyphen must join: {actual}");
@@ -908,7 +916,6 @@ mod spaced_hyphen_joining {
     #[rstest::rstest]
     #[case::digits("12 - 3 을", "⠀⠤⠀")]
     #[case::letters("a - b 를", "⠀⠤⠀")]
-    #[case::digits_space_after_only("12- 3 을", "⠤⠀⠼")]
     #[case::roman_grade("A- 학점이", "⠘⠔⠀⠚")]
     #[case::next_item_of_a_dash_list("- 가나(20개)- 한 개", "⠠⠴⠤⠀⠚⠒")]
     fn a_subtraction_sign_keeps_its_spaces(#[case] input: &str, #[case] expected: &str) {
@@ -954,6 +961,8 @@ mod hugging_punctuation {
     #[case::double_angle_brackets("《 소나기 》 를", "⠰⠶⠠⠥⠉⠈⠕⠶⠆")]
     #[case::period_closing_the_text("있었다 .", "⠌⠊⠲")]
     #[case::comma_opening_the_next_word("(31명) ,상위", "⠠⠴⠐⠇")]
+    #[case::slash_spaced_after("업그레이드/ 새일센터", "⠪⠸⠌⠠⠗")]
+    #[case::slash_spaced_before("(28.83㎡ /안내, 홍보", "⠼⠃⠸⠌⠣⠒")]
     fn an_editorial_gap_beside_hugging_punctuation_closes(
         #[case] input: &str,
         #[case] expected: &str,
@@ -990,6 +999,15 @@ mod hugging_punctuation {
     fn a_spaced_slash_keeps_its_spaces(#[case] input: &str) {
         let actual = crate::encode_to_unicode(input).expect("slash must encode");
         assert!(actual.contains("⠀⠸⠌⠀"), "slash must stay spaced: {actual}");
+    }
+
+    #[test]
+    fn a_spaced_verse_break_keeps_its_spaces() {
+        let actual = crate::encode_to_unicode("밀밭길을 // 구름에").expect("slash must encode");
+        assert!(
+            actual.contains("⠀⠸⠌⠸⠌⠀"),
+            "verse break must stay spaced: {actual}"
+        );
     }
 }
 

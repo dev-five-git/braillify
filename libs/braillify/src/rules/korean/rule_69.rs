@@ -726,7 +726,23 @@ fn omit_trailing_roman_terminator(encoded: &mut Vec<u8>) {
 /// `roman_number_chain`; in that state the unit's self-contained Rule-69 entry
 /// marker would be a duplicate.
 fn omit_unit_entry_in_open_roman_number_chain(encoded: &mut Vec<u8>, state: &EncoderState) {
-    if state.roman_number_chain && encoded.first() == Some(&ROMAN_INDICATOR) {
+    if state.roman_number_chain {
+        continue_unit_after_number(encoded);
+    }
+}
+
+/// UEB 6.5.2: 숫자 바로 뒤 소문자 a–j 는 숫자로 읽히므로 로마자표 자리에 1급 표시
+/// ⠰ 를 둔다(`GS 450h`).
+fn continue_unit_after_number(encoded: &mut Vec<u8>) {
+    if encoded.first() != Some(&ROMAN_INDICATOR) {
+        return;
+    }
+    let reads_as_digit = encoded
+        .get(1)
+        .is_some_and(|cell| matches!(*cell, 1 | 3 | 9 | 25 | 17 | 11 | 27 | 19 | 10 | 26));
+    if reads_as_digit {
+        encoded[0] = ENGLISH_CONTINUATION;
+    } else {
         encoded.remove(0);
     }
 }
@@ -804,10 +820,19 @@ impl BrailleRule for Rule69 {
             let continues = adjust_roman_unit_boundary(ctx, ctx.index + consumed, &mut encoded);
             // 제35항 `MP4 Player`: 앞 어절에서 이어진 로마자 구간(`FM 98.1 MHz`)의 단위는
             // 새 로마자표 없이 잇는다.
-            let continues_section = roman_unit_chain_continues_before(ctx)
-                || (ctx.index == 0 && ctx.roman_section_continues_from_previous_word);
-            if continues_section && encoded.first() == Some(&ROMAN_INDICATOR) {
+            if roman_unit_chain_continues_before(ctx) && encoded.first() == Some(&ROMAN_INDICATOR) {
                 encoded.remove(0);
+            } else if ctx.index == 0 && ctx.roman_section_continues_from_previous_word {
+                if ctx
+                    .prev_word
+                    .chars()
+                    .last()
+                    .is_some_and(|ch| ch.is_ascii_digit())
+                {
+                    continue_unit_after_number(&mut encoded);
+                } else if encoded.first() == Some(&ROMAN_INDICATOR) {
+                    encoded.remove(0);
+                }
             }
             trim_recent_english_indicator(ctx.result);
             ctx.emit_slice(&encoded);
@@ -1160,6 +1185,8 @@ mod tests {
     #[case::unicode_range("범위는 3∼5kg이다", "⠼⠉⠈⠔⠼⠑⠴⠅⠛⠲")]
     #[case::unit_continuing_a_roman_section("라디오(FM 98.1 MHz) 김", "⠼⠊⠓⠲⠁⠀⠠⠍⠠⠓⠵")]
     #[case::unit_after_a_korean_number("가 98.1 MHz 나", "⠼⠊⠓⠲⠁⠀⠴⠠⠍")]
+    #[case::digit_like_unit_after_a_number("가 GS 450h 나", "⠼⠙⠑⠚⠰⠓")]
+    #[case::digit_like_unit_before_a_bracket("가 ES 300h(하이브리드)를", "⠼⠉⠚⠚⠰⠓⠦⠄")]
     fn numeric_unit_ranges_stay_on_korean_number_and_unit_rules(
         #[case] input: &str,
         #[case] expected_segment: &str,

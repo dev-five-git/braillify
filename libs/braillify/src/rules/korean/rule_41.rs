@@ -59,13 +59,28 @@ impl BrailleRule for Rule41 {
 
         // Comma between numbers, or between ASCII and alphanumeric
         ((ctx.state.is_number || has_numeric_prefix) && next_is_digit)
-            || (has_ascii_prefix && next_is_alphanumeric)
+            || (has_ascii_prefix
+                && next_is_alphanumeric
+                && !opens_a_korean_number(&ctx.word_chars[ctx.index + 1..]))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
         ctx.emit(NUMERIC_COMMA);
         Ok(RuleResult::Consumed)
     }
+}
+
+/// 제33항 — 로마자 뒤 쉼표 다음이 한글이 붙은 수(`KIA,27개`)이면 그 쉼표는 로마자와
+/// 한글 사이의 한글 쉼표다.
+fn opens_a_korean_number(rest: &[char]) -> bool {
+    let number = rest
+        .iter()
+        .take_while(|ch| ch.is_ascii_digit() || matches!(ch, ',' | '.'))
+        .count();
+    number > 0
+        && rest
+            .get(number)
+            .is_some_and(|ch| crate::utils::is_korean_char(*ch))
 }
 
 /// Scan backwards from index to find if preceded by a digit or ASCII letter.
@@ -164,6 +179,16 @@ mod tests {
 
         assert!(actual.starts_with(&prefix));
         assert_eq!(comma_cell, Some(expected_comma));
+    }
+
+    /// 제33항 — 로마자와 한글이 붙은 수 사이의 쉼표는 한글 쉼표다. 로마자 뒤 맨 수는
+    /// 제41항대로 로마자 쉼표를 쓴다.
+    #[rstest::rstest]
+    #[case::korean_counter_follows("최희섭(KIA,27개)과의", "⠅⠊⠁⠐⠼⠃⠛")]
+    #[case::bare_number_follows("A,1", "⠁⠂⠼⠁")]
+    fn a_comma_before_a_korean_number_is_korean(#[case] input: &str, #[case] cells: &str) {
+        let actual = crate::encode_to_unicode(input).expect("comma must encode");
+        assert!(actual.contains(cells), "{actual}");
     }
 
     /// rule_41 line 75 — `j -= 1;` when prev char is a space (continues backward scan).

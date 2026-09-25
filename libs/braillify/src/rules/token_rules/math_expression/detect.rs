@@ -84,7 +84,7 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     // Common phone/date/range tokens like 02-799-1000 should stay non-math.
     let all_phone_chars = chars
         .iter()
-        .all(|c| c.is_ascii_digit() || matches!(c, '-' | '~' | '(' | ')' | ','));
+        .all(|c| c.is_ascii_digit() || matches!(c, '-' | '~' | '(' | ')' | '[' | ']' | ','));
     let starts_with_signed_minus = chars
         .first()
         .is_some_and(|c| matches!(*c, '-' | '\u{2212}'));
@@ -335,6 +335,9 @@ mod tests {
     #[case::number_factorial("2002!", true)]
     #[case::single_letter_product("a·b,", true)]
     #[case::relation("aRb", true)]
+    #[case::bracketed_reference_number("[3]", false)]
+    #[case::closing_a_bracket_opened_before("2]", false)]
+    #[case::score_before_set_scores("3-2[6-4,", false)]
     fn prose_punctuation_after_roman_words_is_not_math(
         #[case] input: &str,
         #[case] expected: bool,

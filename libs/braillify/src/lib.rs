@@ -509,6 +509,7 @@ fn may_normalize_print_variant(c: char) -> bool {
                 | '`'
                 | '\u{02D9}'
                 | '\u{2503}'
+                | '\u{00B7}'
         )
 }
 
@@ -569,6 +570,16 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
                 index = run_end + 1;
                 continue;
             }
+        }
+        // 문장 부호 제21항 [붙임 1·2]: 가운데에 찍은 세 점 이상은 줄임표다.
+        let dot_run = chars[index..]
+            .iter()
+            .take_while(|c| **c == '\u{00B7}')
+            .count();
+        if dot_run >= 3 {
+            out.push('…');
+            index += dot_run;
+            continue;
         }
         match ch {
             '\u{02DA}' => out.push('\u{00B0}'),
@@ -4007,6 +4018,15 @@ mod print_variant_fold_coverage {
     #[case::dot_above_opening_emphasis("\"\u{02D9}\u{AC15}", "\"\u{02D9}\u{AC15}")]
     #[case::dot_above_ending_a_word("\u{C601}\u{02D9}", "\u{C601}\u{02D9}")]
     #[case::heavy_vertical_line("\u{2503}\u{ADF8}", "|\u{ADF8}")]
+    #[case::three_middle_dots(
+        "\u{AC00}\u{00B7}\u{00B7}\u{00B7}\u{B098}",
+        "\u{AC00}\u{2026}\u{B098}"
+    )]
+    #[case::six_middle_dots("\u{00B7}\u{00B7}\u{00B7}\u{00B7}\u{00B7}\u{00B7}", "\u{2026}")]
+    #[case::two_middle_dots_stay(
+        "\u{AC00}\u{00B7}\u{00B7}\u{B098}",
+        "\u{AC00}\u{00B7}\u{00B7}\u{B098}"
+    )]
     #[case::soft_hyphen("\u{00AD}", "")]
     #[case::variation_selector("\u{FE00}", "")]
     #[case::zero_width_space("\u{200B}", "")]

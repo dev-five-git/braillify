@@ -270,16 +270,17 @@ mod tests {
         assert!(encode_cell(text).is_none());
     }
 
-    #[test]
-    fn leaves_a_cell_outside_korean_and_science_text_alone() {
-        let text = "Zn∣ZnSO₄∥CuSO₄∣Cu";
+    #[rstest::rstest]
+    #[case::cell_outside_korean_and_science_text("Zn∣ZnSO₄∥CuSO₄∣Cu", false)]
+    #[case::parallel_lines_in_korean_text("AB∥CD", true)]
+    fn leaves_the_word_to_other_rules(#[case] text: &str, #[case] korean_text: bool) {
         let chars: Vec<char> = text.chars().collect();
         let tokens = vec![Token::Word(crate::rules::token::WordToken {
             meta: crate::rules::token::WordMeta::from_chars(&chars),
             chars,
             text: std::borrow::Cow::Borrowed(text),
         })];
-        let mut state = EncoderState::new(false);
+        let mut state = EncoderState::new(korean_text);
         let action = CellNotationRule
             .apply(&tokens, 0, &mut state)
             .expect("applies");

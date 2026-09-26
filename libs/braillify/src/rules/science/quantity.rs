@@ -270,4 +270,16 @@ mod tests {
             ))
         );
     }
+
+    #[test]
+    fn reads_a_two_digit_exponent() {
+        let chars: Vec<char> = "g⁻¹⁰".chars().collect();
+        assert_eq!(
+            unit_run(&chars, 0),
+            Some((
+                vec![Piece::Unit("g".into()), Piece::Exponent("-10".into())],
+                4
+            ))
+        );
+    }
 }

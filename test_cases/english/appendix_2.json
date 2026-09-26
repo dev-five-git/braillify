@@ -32,6 +32,14 @@
     "jeomsarang": ""
   },
   {
+    "input": "alt.",
+    "internal": ";alt4",
+    "expected": "48173050",
+    "unicode": "⠰⠁⠇⠞⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Andy",
     "internal": ",&y",
     "expected": "324761",
@@ -344,6 +352,14 @@
     "jeomsarang": ""
   },
   {
+    "input": "IT (Information Technology)",
+    "internal": ",,it \"<,9=ma;n ,te*nology\">",
+    "expected": "32321030016353220631314829032301733292172127611628",
+    "unicode": "⠠⠠⠊⠞⠀⠐⠣⠠⠔⠿⠍⠁⠰⠝⠀⠠⠞⠑⠡⠝⠕⠇⠕⠛⠽⠐⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "it's",
     "internal": "x's",
     "expected": "45414",
@@ -460,6 +476,14 @@
     "internal": "m's",
     "expected": "13414",
     "unicode": "⠍⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mst file",
+    "internal": "mst file",
+    "expected": "13143001110717",
+    "unicode": "⠍⠎⠞⠀⠋⠊⠇⠑",
     "world": "",
     "jeomsarang": ""
   },
@@ -584,6 +608,14 @@
     "jeomsarang": ""
   },
   {
+    "input": "so la ti",
+    "internal": "s la ti",
+    "expected": "1407103010",
+    "unicode": "⠎⠀⠇⠁⠀⠞⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "so-and-so",
     "internal": "s-&-s",
     "expected": "1436473614",
@@ -644,6 +676,14 @@
     "internal": "tm's",
     "expected": "3013414",
     "unicode": "⠞⠍⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "US (United States)",
+    "internal": ",,us \"<,unit$ ,/ates\">",
+    "expected": "32323714016353237291030430321213017141628",
+    "unicode": "⠠⠠⠥⠎⠀⠐⠣⠠⠥⠝⠊⠞⠫⠀⠠⠌⠁⠞⠑⠎⠐⠜",
     "world": "",
     "jeomsarang": ""
   },

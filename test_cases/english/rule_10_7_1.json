@@ -1,5 +1,157 @@
 [
   {
+    "input": "word",
+    "internal": "^w",
+    "expected": "2458",
+    "unicode": "⠘⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "many",
+    "internal": "_m",
+    "expected": "5613",
+    "unicode": "⠸⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "spirit",
+    "internal": "_s",
+    "expected": "5614",
+    "unicode": "⠸⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "their",
+    "internal": "_!",
+    "expected": "5646",
+    "unicode": "⠸⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "world",
+    "internal": "_w",
+    "expected": "5658",
+    "unicode": "⠸⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "day",
+    "internal": "\"d",
+    "expected": "1625",
+    "unicode": "⠐⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "father",
+    "internal": "\"f",
+    "expected": "1611",
+    "unicode": "⠐⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "know",
+    "internal": "\"k",
+    "expected": "165",
+    "unicode": "⠐⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "lord",
+    "internal": "\"l",
+    "expected": "167",
+    "unicode": "⠐⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mother",
+    "internal": "\"m",
+    "expected": "1613",
+    "unicode": "⠐⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "part",
+    "internal": "\"p",
+    "expected": "1615",
+    "unicode": "⠐⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "question",
+    "internal": "\"q",
+    "expected": "1631",
+    "unicode": "⠐⠟",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "right",
+    "internal": "\"r",
+    "expected": "1623",
+    "unicode": "⠐⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "young",
+    "internal": "\"y",
+    "expected": "1661",
+    "unicode": "⠐⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "character",
+    "internal": "\"*",
+    "expected": "1633",
+    "unicode": "⠐⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "through",
+    "internal": "\"?",
+    "expected": "1657",
+    "unicode": "⠐⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "where",
+    "internal": "\":",
+    "expected": "1649",
+    "unicode": "⠐⠱",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ought",
+    "internal": "\"\\",
+    "expected": "1651",
+    "unicode": "⠐⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "work",
+    "internal": "\"w",
+    "expected": "1658",
+    "unicode": "⠐⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "acknowledge",
     "internal": "ac\"kl$ge",
     "expected": "191657432717",

@@ -1,0 +1,46 @@
+[
+  {
+    "input": "ŋ",
+    "context": "english",
+    "internal": "^n",
+    "expected": "2429",
+    "unicode": "⠘⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ŋ",
+    "context": "english",
+    "internal": ",^n",
+    "expected": "322429",
+    "unicode": "⠠⠘⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ə",
+    "context": "english",
+    "internal": "_5",
+    "expected": "5634",
+    "unicode": "⠸⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ə",
+    "context": "english",
+    "internal": ",_5",
+    "expected": "325634",
+    "unicode": "⠠⠸⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "meningococcus (mə niŋʹ gō käkʹ əs)",
+    "internal": "m5+oco3us \"<m_5 ni^n^.2 g@-o k^3ak^.b _5s\">",
+    "expected": "13344421921183714016351356340291024292440602783621052418152440305634141628",
+    "unicode": "⠍⠢⠬⠕⠉⠕⠒⠥⠎⠀⠐⠣⠍⠸⠢⠀⠝⠊⠘⠝⠘⠨⠆⠀⠛⠈⠤⠕⠀⠅⠘⠒⠁⠅⠘⠨⠃⠀⠸⠢⠎⠐⠜",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

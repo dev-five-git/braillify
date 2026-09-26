@@ -1,5 +1,14 @@
 [
   {
+    "input": "@",
+    "context": "english",
+    "internal": "@a",
+    "expected": "81",
+    "unicode": "⠈⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "FLASH@lightning.net",
     "internal": ",,fla%@ali<tn+4net",
     "expected": "3232117141817103530294450291730",

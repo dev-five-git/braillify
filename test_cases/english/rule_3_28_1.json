@@ -1,5 +1,13 @@
 [
   {
+    "input": "✓",
+    "internal": "@%",
+    "expected": "841",
+    "unicode": "⠈⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Homework:",
     "internal": ",home\"w3",
     "expected": "3219211317165818",

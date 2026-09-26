@@ -1,5 +1,14 @@
 [
   {
+    "input": "∣",
+    "context": "science",
+    "internal": "\\",
+    "expected": "51",
+    "unicode": "⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Cu ∣CuSO₄(aq)∥ZnSO₄(aq)∣Zn",
     "note": "PDF 과학 제21항 — 전극 \\, 염다리 \\\\ 앞뒤 한 칸, 상태 괄호는 제18항 3의 한글 소괄호",
     "context": "science",

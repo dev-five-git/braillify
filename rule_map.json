@@ -635,6 +635,10 @@
     "title": "수학 제66항",
     "description": "한 수식이 두 줄 이상 이어질 경우에는 사칙연산, 등호, 분수표 뒤에서 줄바꿈을 한다."
   },
+  "english/rule_2_4_7": {
+    "title": "2.4.7",
+    "description": "Terminology and General Rules - Modes and code switches"
+  },
   "english/rule_2_6_1": {
     "title": "2.6.1",
     "description": "Terminology and General Rules - Standing alone"
@@ -822,6 +826,10 @@
   "english/rule_4_3_6": {
     "title": "4.3.6",
     "description": "Letters and Their Modifiers - Ligatured letters"
+  },
+  "english/rule_4_4_1": {
+    "title": "4.4.1",
+    "description": "Letters and Their Modifiers - Eng and schwa"
   },
   "english/rule_4_5_1": {
     "title": "4.5.1",
@@ -1762,6 +1770,14 @@
   "english/rule_16_5_1": {
     "title": "16.5.1",
     "description": "Line Mode, Guide Dots - Guide dots"
+  },
+  "english/appendix_1": {
+    "title": "Appendix 1",
+    "description": "Shortforms List"
+  },
+  "english/appendix_2": {
+    "title": "Appendix 2",
+    "description": "Word List"
   },
   "2021_corpus/sentence": {
     "title": "NIKL 2021 말뭉치",

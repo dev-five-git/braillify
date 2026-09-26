@@ -1,0 +1,98 @@
+[
+  {
+    "input": "ahimsa",
+    "internal": "ahimsa",
+    "expected": "1191013141",
+    "unicode": "⠁⠓⠊⠍⠎⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "braillist",
+    "internal": "brailli/",
+    "expected": "323110771012",
+    "unicode": "⠃⠗⠁⠊⠇⠇⠊⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declaration",
+    "internal": "decl>a;n",
+    "expected": "2517972814829",
+    "unicode": "⠙⠑⠉⠇⠜⠁⠰⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "drafter",
+    "internal": "draft]",
+    "expected": "25231113059",
+    "unicode": "⠙⠗⠁⠋⠞⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "lacrosse",
+    "internal": "lacrosse",
+    "expected": "7192321141417",
+    "unicode": "⠇⠁⠉⠗⠕⠎⠎⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "marabout",
+    "internal": "m>ab\\t",
+    "expected": "1328135130",
+    "unicode": "⠍⠜⠁⠃⠳⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustache",
+    "internal": "mu/a*e",
+    "expected": "13371213317",
+    "unicode": "⠍⠥⠌⠁⠡⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustang",
+    "internal": "mu/ang",
+    "expected": "13371212927",
+    "unicode": "⠍⠥⠌⠁⠝⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "muster",
+    "internal": "mu/]",
+    "expected": "13371259",
+    "unicode": "⠍⠥⠌⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "necessarily",
+    "internal": "necess>ily",
+    "expected": "291791714142810761",
+    "unicode": "⠝⠑⠉⠑⠎⠎⠜⠊⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rafter",
+    "internal": "raft]",
+    "expected": "231113059",
+    "unicode": "⠗⠁⠋⠞⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shoulder",
+    "internal": "%\\ld]",
+    "expected": "415172559",
+    "unicode": "⠩⠳⠇⠙⠻",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

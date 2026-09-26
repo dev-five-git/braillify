@@ -9,6 +9,26 @@
     "jeomsarang": ""
   },
   {
+    "input": "H - N - H\n    |\n    H",
+    "note": "PDF 과학 제4항 2 — 구조식",
+    "context": "science",
+    "internal": ",,,h;1n%;1h-;1h,'",
+    "expected": "323232194822941482193648219324",
+    "unicode": "⠠⠠⠠⠓⠰⠂⠝⠩⠰⠂⠓⠤⠰⠂⠓⠠⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "    ‥\nH : N : H\n    ‥\n    H",
+    "note": "PDF 과학 제4항 2 — 전자 점식",
+    "context": "science",
+    "internal": ",,,h99n+99%99h-99h,'",
+    "expected": "323232192020294420204120201936202019324",
+    "unicode": "⠠⠠⠠⠓⠔⠔⠝⠬⠔⠔⠩⠔⠔⠓⠤⠔⠔⠓⠠⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "HNCO + ROH → NH₂·CO·OR → NH₂CO·NH·CO₂R",
     "note": "PDF 과학 제4항 2",
     "context": "science",

@@ -1,5 +1,32 @@
 [
   {
+    "input": "♮",
+    "context": "english",
+    "internal": "#*",
+    "expected": "6033",
+    "unicode": "⠼⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "♭",
+    "context": "english",
+    "internal": "#<",
+    "expected": "6035",
+    "unicode": "⠼⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "♯",
+    "context": "english",
+    "internal": "#%",
+    "expected": "6041",
+    "unicode": "⠼⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "B♭ trumpet",
     "internal": ",b#< trumpet",
     "expected": "3236035030233713151730",

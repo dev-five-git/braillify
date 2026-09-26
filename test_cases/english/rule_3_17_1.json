@@ -1,5 +1,86 @@
 [
   {
+    "input": "∶",
+    "context": "english",
+    "internal": "3",
+    "expected": "18",
+    "unicode": "⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∷",
+    "context": "english",
+    "internal": "33",
+    "expected": "1818",
+    "unicode": "⠒⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "<",
+    "context": "english",
+    "internal": "@<",
+    "expected": "835",
+    "unicode": "⠈⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": ">",
+    "context": "english",
+    "internal": "@>",
+    "expected": "828",
+    "unicode": "⠈⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "+",
+    "context": "english",
+    "internal": "\"6",
+    "expected": "1622",
+    "unicode": "⠐⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "=",
+    "context": "english",
+    "internal": "\"7",
+    "expected": "1654",
+    "unicode": "⠐⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "×",
+    "context": "english",
+    "internal": "\"8",
+    "expected": "1638",
+    "unicode": "⠐⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "÷",
+    "context": "english",
+    "internal": "\"/",
+    "expected": "1612",
+    "unicode": "⠐⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "−",
+    "context": "english",
+    "internal": "\"-",
+    "expected": "1636",
+    "unicode": "⠐⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "as easy as 2 + 2 = 4",
     "internal": "z easy z #b \"6 #b \"7 #d",
     "expected": "530171146105306030162206030165406025",

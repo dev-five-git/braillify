@@ -1,5 +1,13 @@
 [
   {
+    "input": "ever",
+    "internal": "\"e",
+    "expected": "1617",
+    "unicode": "⠐⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "asseverate",
     "internal": "ass\"eate",
     "expected": "11414161713017",

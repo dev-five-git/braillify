@@ -1,5 +1,41 @@
 [
   {
+    "input": "-",
+    "context": "english",
+    "internal": "-",
+    "expected": "36",
+    "unicode": "⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "–",
+    "context": "english",
+    "internal": ",-",
+    "expected": "3236",
+    "unicode": "⠠⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "—",
+    "context": "english",
+    "internal": "\",-",
+    "expected": "163236",
+    "unicode": "⠐⠠⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "_",
+    "context": "english",
+    "internal": ".-",
+    "expected": "4036",
+    "unicode": "⠨⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "He sees it  —  feels it.",
     "internal": ",he sees x ,- feels x4",
     "expected": "32191701417171404503236011171771404550",

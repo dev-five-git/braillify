@@ -1,5 +1,81 @@
 [
   {
+    "input": "→",
+    "note": "홀로 선 기호: 기호 표(PDF 49쪽) 형태와 ⠰를 앞세운 형태(PDF 51쪽 §3.2.1 예)",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "\\o",
+        "expected": "5121",
+        "unicode": "⠳⠕"
+      },
+      {
+        "internal": ";\\o",
+        "expected": "485121",
+        "unicode": "⠰⠳⠕"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "←",
+    "note": "홀로 선 기호: 기호 표(PDF 49쪽) 형태와 ⠰를 앞세운 형태(PDF 51쪽 §3.2.1 예)",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "\\[",
+        "expected": "5142",
+        "unicode": "⠳⠪"
+      },
+      {
+        "internal": ";\\[",
+        "expected": "485142",
+        "unicode": "⠰⠳⠪"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↑",
+    "note": "홀로 선 기호: 기호 표(PDF 49쪽) 형태와 ⠰를 앞세운 형태(PDF 51쪽 §3.2.1 예)",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "\\+",
+        "expected": "5144",
+        "unicode": "⠳⠬"
+      },
+      {
+        "internal": ";\\+",
+        "expected": "485144",
+        "unicode": "⠰⠳⠬"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "↵",
+    "note": "홀로 선 기호: 기호 표(PDF 49쪽) 형태와 ⠰를 앞세운 형태(PDF 51쪽 §3.2.1 예)",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "\\4%",
+        "expected": "515041",
+        "unicode": "⠳⠲⠩"
+      },
+      {
+        "internal": ";\\4%",
+        "expected": "48515041",
+        "unicode": "⠰⠳⠲⠩"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Road signs of → and ← mark detours.",
     "internal": ",road signs ( ;\\o & ;\\[ m>k det\\rs4",
     "expected": "3223211250141027291405504851210470485142013285025173051231450",

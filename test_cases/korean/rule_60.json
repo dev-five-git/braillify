@@ -1,5 +1,31 @@
 [
   {
+    "input": "*",
+    "internal": "\"9",
+    "expected": "1620",
+    "unicode": "⠐⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "※",
+    "note": "[다만 1] 별표와 구별해야 할 때에는 참고표를 ⠸⠔으로 적는다",
+    "alternatives": [
+      {
+        "internal": "\"9",
+        "expected": "1620",
+        "unicode": "⠐⠔"
+      },
+      {
+        "internal": "_9",
+        "expected": "5620",
+        "unicode": "⠸⠔"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "* 야애: 들에 낀 안개",
     "internal": "\"9`>-r\"1`i!n`,@q`<3@r",
     "expected": "16200283623162010462903283103518823",

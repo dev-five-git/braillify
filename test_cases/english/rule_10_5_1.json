@@ -1,5 +1,29 @@
 [
   {
+    "input": "be",
+    "internal": "2",
+    "expected": "6",
+    "unicode": "⠆",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "were",
+    "internal": "7",
+    "expected": "54",
+    "unicode": "⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "his",
+    "internal": "8",
+    "expected": "38",
+    "unicode": "⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "to be",
     "internal": "to 2",
     "expected": "302106",

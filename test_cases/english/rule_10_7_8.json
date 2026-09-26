@@ -1,5 +1,13 @@
 [
   {
+    "input": "time",
+    "internal": "\"t",
+    "expected": "1630",
+    "unicode": "⠐⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "daytime",
     "internal": "\"d\"t",
     "expected": "16251630",

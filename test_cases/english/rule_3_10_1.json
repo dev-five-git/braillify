@@ -1,5 +1,65 @@
 [
   {
+    "input": "¢",
+    "internal": "@c",
+    "expected": "89",
+    "unicode": "⠈⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "€",
+    "context": "english",
+    "internal": "@e",
+    "expected": "817",
+    "unicode": "⠈⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₣",
+    "context": "english",
+    "internal": "@f",
+    "expected": "811",
+    "unicode": "⠈⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "£",
+    "internal": "@l",
+    "expected": "87",
+    "unicode": "⠈⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "₦",
+    "context": "english",
+    "internal": "@n",
+    "expected": "829",
+    "unicode": "⠈⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "$",
+    "context": "english",
+    "internal": "@s",
+    "expected": "814",
+    "unicode": "⠈⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "¥",
+    "internal": "@y",
+    "expected": "861",
+    "unicode": "⠈⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "10¢",
     "internal": "#aj@c",
     "expected": "6012689",

@@ -1,5 +1,21 @@
 [
   {
+    "input": "here",
+    "internal": "\"h",
+    "expected": "1619",
+    "unicode": "⠐⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "name",
+    "internal": "\"n",
+    "expected": "1629",
+    "unicode": "⠐⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "adhere",
     "internal": "ad\"h",
     "expected": "1251619",

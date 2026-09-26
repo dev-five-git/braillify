@@ -1,0 +1,682 @@
+[
+  {
+    "input": "about-face",
+    "internal": "ab-face",
+    "expected": "1336111917",
+    "unicode": "⠁⠃⠤⠋⠁⠉⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftercare",
+    "internal": "afc>e",
+    "expected": "11192817",
+    "unicode": "⠁⠋⠉⠜⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterdinner",
+    "internal": "afd9n]",
+    "expected": "11125202959",
+    "unicode": "⠁⠋⠙⠔⠝⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Al's",
+    "internal": ";,al's",
+    "expected": "483217414",
+    "unicode": "⠰⠠⠁⠇⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Andy",
+    "internal": ",&y",
+    "expected": "324761",
+    "unicode": "⠠⠯⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Belinda",
+    "internal": ",2l9da",
+    "expected": "326720251",
+    "unicode": "⠠⠆⠇⠔⠙⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Bisquick",
+    "internal": ",bisquick",
+    "expected": "323101431371095",
+    "unicode": "⠠⠃⠊⠎⠟⠥⠊⠉⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blossomed",
+    "internal": "blossom$",
+    "expected": "37211414211343",
+    "unicode": "⠃⠇⠕⠎⠎⠕⠍⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "boyfriends",
+    "internal": "boyfrs",
+    "expected": "32161112314",
+    "unicode": "⠃⠕⠽⠋⠗⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Braillette",
+    "internal": ",brltte",
+    "expected": "323237303017",
+    "unicode": "⠠⠃⠗⠇⠞⠞⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "brailling",
+    "internal": "braill+",
+    "expected": "3231107744",
+    "unicode": "⠃⠗⠁⠊⠇⠇⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "buts",
+    "internal": "buts",
+    "expected": "3373014",
+    "unicode": "⠃⠥⠞⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "can-can",
+    "internal": "c-c",
+    "expected": "9369",
+    "unicode": "⠉⠤⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "childlike",
+    "internal": "*ildlike",
+    "expected": "3310725710517",
+    "unicode": "⠡⠊⠇⠙⠇⠊⠅⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "child-like",
+    "internal": "*-l",
+    "expected": "33367",
+    "unicode": "⠡⠤⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "child-proof",
+    "internal": "*-pro(",
+    "expected": "333615232155",
+    "unicode": "⠡⠤⠏⠗⠕⠷",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "child's",
+    "internal": "*'s",
+    "expected": "33414",
+    "unicode": "⠡⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ch'ing",
+    "internal": ",*'+",
+    "expected": "3233444",
+    "unicode": "⠠⠡⠄⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "comin'",
+    "internal": "com9'",
+    "expected": "92113204",
+    "unicode": "⠉⠕⠍⠔⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "contact",
+    "internal": "3tact",
+    "expected": "18301930",
+    "unicode": "⠒⠞⠁⠉⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "could've",
+    "internal": "cd've",
+    "expected": "92543917",
+    "unicode": "⠉⠙⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "dacoity",
+    "internal": "dacoity",
+    "expected": "251921103061",
+    "unicode": "⠙⠁⠉⠕⠊⠞⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "dislikes",
+    "internal": "4likes",
+    "expected": "5071051714",
+    "unicode": "⠲⠇⠊⠅⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "display",
+    "internal": "4play",
+    "expected": "50157161",
+    "unicode": "⠲⠏⠇⠁⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "district",
+    "internal": "4trict",
+    "expected": "50302310930",
+    "unicode": "⠲⠞⠗⠊⠉⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "enough's",
+    "internal": "5's",
+    "expected": "34414",
+    "unicode": "⠢⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "evermore",
+    "internal": "\"emore",
+    "expected": "161713212317",
+    "unicode": "⠐⠑⠍⠕⠗⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "everyday",
+    "internal": "\"ey\"d",
+    "expected": "1617611625",
+    "unicode": "⠐⠑⠽⠐⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Feelgreat",
+    "internal": ",feelgrt",
+    "expected": "321117177272330",
+    "unicode": "⠠⠋⠑⠑⠇⠛⠗⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "force",
+    "internal": "=ce",
+    "expected": "63917",
+    "unicode": "⠿⠉⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "fro-ing",
+    "internal": "fro-9g",
+    "expected": "112321362027",
+    "unicode": "⠋⠗⠕⠤⠔⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "go-between",
+    "internal": "g-2t",
+    "expected": "2736630",
+    "unicode": "⠛⠤⠆⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "good-bye",
+    "internal": "gd-bye",
+    "expected": "27253636117",
+    "unicode": "⠛⠙⠤⠃⠽⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Goodena",
+    "internal": ",good5a",
+    "expected": "3227212125341",
+    "unicode": "⠠⠛⠕⠕⠙⠢⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Goodge",
+    "internal": ",gdge",
+    "expected": "3227252717",
+    "unicode": "⠠⠛⠙⠛⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Greatford",
+    "internal": ",grt=d",
+    "expected": "322723306325",
+    "unicode": "⠠⠛⠗⠞⠿⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "greatgreatgrandchildren",
+    "internal": "grtgrtgr&*n",
+    "expected": "2723302723302723473329",
+    "unicode": "⠛⠗⠞⠛⠗⠞⠛⠗⠯⠡⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "had-enough",
+    "internal": "_h-5",
+    "expected": "56193634",
+    "unicode": "⠸⠓⠤⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "have-nots",
+    "internal": "h-nots",
+    "expected": "193629213014",
+    "unicode": "⠓⠤⠝⠕⠞⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "haves",
+    "internal": "haves",
+    "expected": "191391714",
+    "unicode": "⠓⠁⠧⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "his-and-hers",
+    "internal": "his-&-h]s",
+    "expected": "191014364736195914",
+    "unicode": "⠓⠊⠎⠤⠯⠤⠓⠻⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hoity-toity",
+    "internal": "hoity-toity",
+    "expected": "1921103061363021103061",
+    "unicode": "⠓⠕⠊⠞⠽⠤⠞⠕⠊⠞⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "in-depth",
+    "internal": "9-dep?",
+    "expected": "203625171557",
+    "unicode": "⠔⠤⠙⠑⠏⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "it's",
+    "internal": "x's",
+    "expected": "45414",
+    "unicode": "⠭⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "just's",
+    "internal": "j's",
+    "expected": "26414",
+    "unicode": "⠚⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Letterewe",
+    "internal": ",lett]ewe",
+    "expected": "32717303059175817",
+    "unicode": "⠠⠇⠑⠞⠞⠻⠑⠺⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Letterkenny",
+    "internal": ",lrk5ny",
+    "expected": "327235342961",
+    "unicode": "⠠⠇⠗⠅⠢⠝⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Letterman",
+    "internal": ",lrman",
+    "expected": "3272313129",
+    "unicode": "⠠⠇⠗⠍⠁⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "likeness",
+    "internal": "like;s",
+    "expected": "7105174814",
+    "unicode": "⠇⠊⠅⠑⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "likes",
+    "internal": "likes",
+    "expected": "71051714",
+    "unicode": "⠇⠊⠅⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "linen",
+    "internal": "l95",
+    "expected": "72034",
+    "unicode": "⠇⠔⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Linkletter",
+    "internal": ",l9klett]",
+    "expected": "327205717303059",
+    "unicode": "⠠⠇⠔⠅⠇⠑⠞⠞⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Littleport",
+    "internal": ",llport",
+    "expected": "327715212330",
+    "unicode": "⠠⠇⠇⠏⠕⠗⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Little-Smythe",
+    "internal": ",ll-,smy!",
+    "expected": "3277363214136146",
+    "unicode": "⠠⠇⠇⠤⠠⠎⠍⠽⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Makegood",
+    "internal": ",makegood",
+    "expected": "3213151727212125",
+    "unicode": "⠠⠍⠁⠅⠑⠛⠕⠕⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Marcillat-en-Combraille",
+    "internal": ",m>cillat-en-,combrl",
+    "expected": "321328910771303617293632921133237",
+    "unicode": "⠠⠍⠜⠉⠊⠇⠇⠁⠞⠤⠑⠝⠤⠠⠉⠕⠍⠃⠗⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "moreover",
+    "internal": "moreov]",
+    "expected": "13212317213959",
+    "unicode": "⠍⠕⠗⠑⠕⠧⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "more's",
+    "internal": "m's",
+    "expected": "13414",
+    "unicode": "⠍⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustn't",
+    "internal": "m/n't",
+    "expected": "131229430",
+    "unicode": "⠍⠌⠝⠄⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "newsletter",
+    "internal": "newslr",
+    "expected": "29175814723",
+    "unicode": "⠝⠑⠺⠎⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ow",
+    "internal": "[",
+    "expected": "42",
+    "unicode": "⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "par",
+    "internal": "p>",
+    "expected": "1528",
+    "unicode": "⠏⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Portlittle",
+    "internal": ",portlittle",
+    "expected": "32152123307103030717",
+    "unicode": "⠠⠏⠕⠗⠞⠇⠊⠞⠞⠇⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "proofread",
+    "internal": "pro(r1d",
+    "expected": "1523215523225",
+    "unicode": "⠏⠗⠕⠷⠗⠂⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quicker",
+    "internal": "qk]",
+    "expected": "31559",
+    "unicode": "⠟⠅⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickly",
+    "internal": "qkly",
+    "expected": "315761",
+    "unicode": "⠟⠅⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Quicksburg",
+    "internal": ",qksburg",
+    "expected": "32315143372327",
+    "unicode": "⠠⠟⠅⠎⠃⠥⠗⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quick-witted",
+    "internal": "qk-witt$",
+    "expected": "315365810303043",
+    "unicode": "⠟⠅⠤⠺⠊⠞⠞⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ransomed",
+    "internal": "ransom$",
+    "expected": "2312914211343",
+    "unicode": "⠗⠁⠝⠎⠕⠍⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rebrailled",
+    "internal": "rebrld",
+    "expected": "2317323725",
+    "unicode": "⠗⠑⠃⠗⠇⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "sh",
+    "internal": "sh",
+    "expected": "1419",
+    "unicode": "⠎⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shhh",
+    "internal": "%hh",
+    "expected": "411919",
+    "unicode": "⠩⠓⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Smith-Inge",
+    "internal": ",smi?-,9ge",
+    "expected": "32141310573632202717",
+    "unicode": "⠠⠎⠍⠊⠹⠤⠠⠔⠛⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "so-and-so",
+    "internal": "s-&-s",
+    "expected": "1436473614",
+    "unicode": "⠎⠤⠯⠤⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ste",
+    "internal": ",/e",
+    "expected": "321217",
+    "unicode": "⠠⠌⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "still-life",
+    "internal": "/-life",
+    "expected": "12367101117",
+    "unicode": "⠌⠤⠇⠊⠋⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Stillson",
+    "internal": ",/illson",
+    "expected": "32121077142129",
+    "unicode": "⠠⠌⠊⠇⠇⠎⠕⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "sudden",
+    "internal": "sudd5",
+    "expected": "1437252534",
+    "unicode": "⠎⠥⠙⠙⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "teach-in",
+    "internal": "t1*-9",
+    "expected": "302333620",
+    "unicode": "⠞⠂⠡⠤⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Thelma",
+    "internal": ",!lma",
+    "expected": "32467131",
+    "unicode": "⠠⠮⠇⠍⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tomorrow's",
+    "internal": "tm's",
+    "expected": "3013414",
+    "unicode": "⠞⠍⠄⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whiskey-still",
+    "internal": ":iskey-/",
+    "expected": "491014517613612",
+    "unicode": "⠱⠊⠎⠅⠑⠽⠤⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "withstand",
+    "internal": ")/&",
+    "expected": "621247",
+    "unicode": "⠾⠌⠯",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "would-be",
+    "internal": "wd-be",
+    "expected": "582536317",
+    "unicode": "⠺⠙⠤⠃⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "wrench",
+    "internal": "wr5*",
+    "expected": "58233433",
+    "unicode": "⠺⠗⠢⠡",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

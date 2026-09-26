@@ -1,5 +1,23 @@
 [
   {
+    "input": "¡",
+    "context": "english",
+    "internal": "^;6",
+    "expected": "244822",
+    "unicode": "⠘⠰⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "¿",
+    "context": "english",
+    "internal": "^;8",
+    "expected": "244838",
+    "unicode": "⠘⠰⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "He walked past the great masses of the 𝑔𝑟𝑎𝑛𝑑𝑒𝑠 𝑒́𝑐𝑜𝑙𝑒𝑠.",
     "internal": ",he walk$ pa/ ! grt masses ( ! .1grandes .1^/ecoles4",
     "expected": "3219170581754301511204602723300131141417140550460402272312925171404022412179217171450",

@@ -125,6 +125,30 @@ fn translate_impl(
     Ok(env.new_string(translated)?.into_raw())
 }
 
+fn encode_in_context_impl(
+    env: &mut Env<'_>,
+    input: &JString<'_>,
+    context: &JString<'_>,
+) -> Result<jbyteArray, BridgeError> {
+    let text = get_string_strict(env, input)?;
+    let context = get_string_strict(env, context)?;
+    let encoded = braillify::encode_in_context(&text, &context).map_err(BridgeError::Core)?;
+    let array: JByteArray<'_> = env.byte_array_from_slice(&encoded)?;
+    Ok(array.into_raw())
+}
+
+fn translate_in_context_impl(
+    env: &mut Env<'_>,
+    input: &JString<'_>,
+    context: &JString<'_>,
+    translate: fn(&str, &str) -> Result<String, String>,
+) -> Result<jstring, BridgeError> {
+    let text = get_string_strict(env, input)?;
+    let context = get_string_strict(env, context)?;
+    let translated = translate(&text, &context).map_err(BridgeError::Core)?;
+    Ok(env.new_string(translated)?.into_raw())
+}
+
 struct BridgePolicy;
 
 impl<T: Default> ErrorPolicy<T, BridgeError> for BridgePolicy {
@@ -186,6 +210,60 @@ pub extern "system" fn Java_io_github_kdyann_braillify_Braillify_translateToBrai
         .resolve::<BridgePolicy>()
 }
 
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_io_github_kdyann_braillify_Braillify_encodeInContextNative<'local>(
+    mut unowned_env: EnvUnowned<'local>,
+    _class: JClass<'local>,
+    input: JString<'local>,
+    context: JString<'local>,
+) -> jbyteArray {
+    unowned_env
+        .with_env(|env| encode_in_context_impl(env, &input, &context))
+        .resolve::<BridgePolicy>()
+}
+
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_io_github_kdyann_braillify_Braillify_translateToUnicodeInContextNative<
+    'local,
+>(
+    mut unowned_env: EnvUnowned<'local>,
+    _class: JClass<'local>,
+    input: JString<'local>,
+    context: JString<'local>,
+) -> jstring {
+    unowned_env
+        .with_env(|env| {
+            translate_in_context_impl(
+                env,
+                &input,
+                &context,
+                braillify::encode_to_unicode_in_context,
+            )
+        })
+        .resolve::<BridgePolicy>()
+}
+
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_io_github_kdyann_braillify_Braillify_translateToBrailleFontInContextNative<
+    'local,
+>(
+    mut unowned_env: EnvUnowned<'local>,
+    _class: JClass<'local>,
+    input: JString<'local>,
+    context: JString<'local>,
+) -> jstring {
+    unowned_env
+        .with_env(|env| {
+            translate_in_context_impl(
+                env,
+                &input,
+                &context,
+                braillify::encode_to_braille_font_in_context,
+            )
+        })
+        .resolve::<BridgePolicy>()
+}
+
 /// Test-only JNI entry point used to prove that a panic is mapped to the
 /// internal exception class. It is excluded from release artifacts.
 #[cfg(debug_assertions)]
@@ -240,6 +318,9 @@ mod tests {
         assert!(braillify::encode(input).is_ok());
         assert!(braillify::encode_to_unicode(input).is_ok());
         assert!(braillify::encode_to_braille_font(input).is_ok());
+        assert!(braillify::encode_in_context(input, "korean").is_ok());
+        assert!(braillify::encode_to_unicode_in_context(input, "korean").is_ok());
+        assert!(braillify::encode_to_braille_font_in_context(input, "korean").is_ok());
     }
 
     #[test]

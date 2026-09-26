@@ -1,5 +1,14 @@
 [
   {
+    "input": "~",
+    "context": "english",
+    "internal": "@9",
+    "expected": "820",
+    "unicode": "⠈⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "head n. the top part of the body ... –𝐛𝐲 𝐚 ~ by the length of the animal's head, as in horse racing –~ 𝐨𝐯𝐞𝐫 𝐡𝐞𝐞𝐥𝐬 tumbling as in a somersault",
     "internal": "h1d ;n4 ! top \"p ( ! body 444 ,-^7by a @9^' by ! l5g? ( ! animal's h1d1 z 9 horse rac+ ,-^7@9 ov] heels^' tumbl+ z 9 a som]sault",
     "expected": "1922504829500460302115016150550460321256105050500323624543610108202440361046073427570550460129101317414019225205302001921231417023194403236245482002139590191717714244030371337440530200101421135914137730",

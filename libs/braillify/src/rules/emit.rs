@@ -1,4 +1,4 @@
-﻿use crate::char_struct::{CharType, KoreanChar};
+use crate::char_struct::{CharType, KoreanChar};
 use crate::english_logic;
 use crate::fraction;
 use crate::rules::context::{EncoderState, RuleContext};
@@ -6,6 +6,7 @@ use crate::rules::engine::RuleEngine;
 use crate::rules::korean::rule_29::{ENGLISH_CONTINUATION, ROMAN_INDICATOR, ROMAN_TERMINATOR};
 use crate::rules::korean::rule_69::parse_numeric_ascii_unit_prefix;
 use crate::rules::roman_mode;
+use crate::rules::trace::{EmitterRule, RuleId, TokenOrigins, TraceSink};
 use crate::rules::traits::Phase;
 
 use super::token::{DocumentIR, ModeEvent, SpaceKind, Token, WordToken};
@@ -435,7 +436,12 @@ fn is_math_operator_space_suppression<'a>(tokens: &'a [Token<'a>], space_idx: us
     false
 }
 
-pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>, String> {
+pub fn emit(
+    ir: &mut DocumentIR,
+    char_engine: &mut RuleEngine,
+    mut trace: Option<TraceSink<'_>>,
+    origins: Option<&TokenOrigins>,
+) -> Result<Vec<u8>, String> {
     let mut result = Vec::new();
     let word_texts = if ir.tokens.len() > 1 {
         collect_word_texts(&ir.tokens)
@@ -463,12 +469,22 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
                     &ir.tokens,
                     context,
                     &mut result,
+                    trace.as_mut().map(|sink| sink.at_token(idx)),
                 )?;
                 word_index += 1;
             }
             Token::Space(SpaceKind::Regular) => {
                 if !is_math_operator_space_suppression(&ir.tokens, idx) {
+                    let start = result.len();
                     result.push(0);
+                    record_token_span(
+                        &mut trace,
+                        origins,
+                        idx,
+                        &result,
+                        start,
+                        RuleId::emitter(EmitterRule::WordSpace),
+                    );
                 }
             }
             Token::Mode(event) => {
@@ -497,10 +513,20 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
                     ir.state.roman_section_is_english_context =
                         roman_section_has_english_phrase_context(&ir.tokens, idx);
                 }
+                let start = result.len();
                 enter_roman_before_ueb_prefix(&ir.tokens, idx, event, &mut ir.state, &mut result);
                 emit_mode_event(event, &mut ir.state, &mut result);
+                record_token_span(
+                    &mut trace,
+                    origins,
+                    idx,
+                    &result,
+                    start,
+                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput),
+                );
             }
             Token::Fraction(frac) => {
+                let start = result.len();
                 if let Some(ref w) = frac.whole {
                     result.extend(fraction::encode_mixed_fraction(
                         w,
@@ -514,6 +540,14 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
                     )?);
                 }
                 ir.state.is_number = true;
+                record_token_span(
+                    &mut trace,
+                    origins,
+                    idx,
+                    &result,
+                    start,
+                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput),
+                );
             }
             Token::PreEncoded(bytes) => {
                 // 제39항 한글 wrap 점형은 영어 모드를 자동으로 휴면(⠸⠷)·재개(⠸⠾)시킨다.
@@ -524,7 +558,16 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
                 } else if bytes.as_slice() == HANGUL_WRAP_END_BYTES {
                     roman_mode::set_section_open_keeping_number_chain(&mut ir.state, true);
                 }
+                let start = result.len();
                 result.extend(bytes);
+                record_token_span(
+                    &mut trace,
+                    origins,
+                    idx,
+                    &result,
+                    start,
+                    RuleId::emitter(EmitterRule::UndeclaredTokenOutput),
+                );
             }
         }
     }
@@ -538,6 +581,62 @@ pub fn emit(ir: &mut DocumentIR, char_engine: &mut RuleEngine) -> Result<Vec<u8>
     }
 
     Ok(result)
+}
+
+/// Attribute `start..end` to the rule that produced token `idx`.
+///
+/// A math expression arrives here as one pre-encoded run, so its own rules would
+/// be hidden behind the token rule that detected it. When the run is one the math
+/// engine produced, its per-rule spans replace the single token-rule span.
+/// Close the Roman section and attribute whatever terminator it wrote.
+///
+/// The emitter decides section boundaries from the token stream, so these cells
+/// never pass through a character rule and would otherwise be the one part of a
+/// Korean/Roman sentence left unexplained.
+fn close_roman_section_traced(
+    result: &mut Vec<u8>,
+    state: &mut EncoderState,
+    all_tokens: &[Token<'_>],
+    token_index: usize,
+    trace: &mut Option<TraceSink<'_>>,
+) {
+    let start = result.len();
+    close_roman_section(result, state, all_tokens, token_index);
+    if let Some(sink) = trace.as_mut()
+        && result.len() > start
+    {
+        sink.record_span(
+            RuleId::emitter(EmitterRule::RomanSectionMarker),
+            token_index,
+            start..result.len(),
+        );
+    }
+}
+
+fn record_token_span(
+    trace: &mut Option<TraceSink<'_>>,
+    origins: Option<&TokenOrigins>,
+    idx: usize,
+    result: &[u8],
+    start: usize,
+    fallback: RuleId,
+) {
+    let Some(sink) = trace.as_mut() else {
+        return;
+    };
+    let end = result.len();
+    if start == end {
+        return;
+    }
+    if let Some(spans) = crate::rules::math::spans_for(&result[start..end]) {
+        for (rule, offset, len) in spans {
+            let span_start = start + offset as usize;
+            sink.record_span(rule, idx, span_start..span_start + len as usize);
+        }
+        return;
+    }
+    let rule = origins.and_then(|o| o.get(idx)).unwrap_or(fallback);
+    sink.record_span(rule, idx, start..end);
 }
 
 fn collect_word_texts<'tokens, 'source>(tokens: &'tokens [Token<'source>]) -> Vec<&'tokens str> {
@@ -679,9 +778,8 @@ fn spaced_ampersand_connects_roman_words(tokens: &[Token<'_>], ampersand_index: 
         return false;
     }
 
-    tokens
+    tokens[ampersand_index + 1..]
         .iter()
-        .skip(ampersand_index + 1)
         .find_map(|token| match token {
             Token::Space(_) | Token::Mode(_) => None,
             Token::Word(word) => Some(
@@ -891,6 +989,7 @@ fn apply_core_encoding_rules(
     remaining_words: &[&str],
     prev_word: &str,
     result: &mut Vec<u8>,
+    trace: Option<TraceSink<'_>>,
 ) -> Result<crate::rules::traits::RuleResult, String> {
     let mut ctx = RuleContext {
         word_chars,
@@ -906,7 +1005,7 @@ fn apply_core_encoding_rules(
         state,
         result,
     };
-    engine.apply_phase(Phase::CoreEncoding, &mut ctx)
+    engine.apply_phase(Phase::CoreEncoding, &mut ctx, trace)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -924,6 +1023,7 @@ fn apply_inter_character_rules(
     remaining_words: &[&str],
     prev_word: &str,
     result: &mut Vec<u8>,
+    trace: Option<TraceSink<'_>>,
 ) -> Result<crate::rules::traits::RuleResult, String> {
     let mut ctx = RuleContext {
         word_chars,
@@ -939,9 +1039,10 @@ fn apply_inter_character_rules(
         state,
         result,
     };
-    engine.apply_phase(Phase::InterCharacter, &mut ctx)
+    engine.apply_phase(Phase::InterCharacter, &mut ctx, trace)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn emit_word(
     word: &WordToken,
     token_index: usize,
@@ -950,6 +1051,7 @@ fn emit_word(
     all_tokens: &[Token],
     context: WordContext<'_>,
     result: &mut Vec<u8>,
+    mut trace: Option<TraceSink<'_>>,
 ) -> Result<(), String> {
     let prev_word = context.prev_word;
     let remaining_words = context.remaining_words;
@@ -982,7 +1084,15 @@ fn emit_word(
             }
             let mut encoded = crate::encode(&numeric)?;
             encoded.extend(unit);
+            let start = result.len();
             result.extend(encoded);
+            if let Some(sink) = trace.as_mut() {
+                sink.record_span(
+                    crate::rules::trace::korean_rule_id("measurement_symbols"),
+                    token_index,
+                    start..result.len(),
+                );
+            }
             roman_mode::set_section_open_keeping_number_chain(state, continues_roman_section);
             return Ok(());
         }
@@ -1010,7 +1120,17 @@ fn emit_word(
         }
 
         // English entry (제28/35/39항) — 로마자표/연속표 emit + 영어 모드 전환.
+        let roman_open_start = result.len();
         roman_mode::enter_english_if_starting(state, word_chars, has_ascii_alphabetic, result);
+        if let Some(sink) = trace.as_mut()
+            && result.len() > roman_open_start
+        {
+            sink.record_span(
+                RuleId::emitter(EmitterRule::RomanSectionMarker),
+                token_index,
+                roman_open_start..result.len(),
+            );
+        }
 
         let first_ascii_index = word_chars.iter().position(|c| c.is_ascii_alphabetic());
         let ascii_starts_at_beginning = matches!(first_ascii_index, Some(0));
@@ -1087,7 +1207,13 @@ fn emit_word(
                         } else if english_logic::should_force_terminator_before_symbol(*sym)
                             || !english_logic::should_skip_terminator_for_symbol(*sym)
                         {
-                            close_roman_section(result, state, all_tokens, token_index);
+                            close_roman_section_traced(
+                                result,
+                                state,
+                                all_tokens,
+                                token_index,
+                                &mut trace,
+                            );
                         } else {
                             roman_mode::exit_english(
                                 state,
@@ -1096,7 +1222,13 @@ fn emit_word(
                         }
                     }
                     _ => {
-                        close_roman_section(result, state, all_tokens, token_index);
+                        close_roman_section_traced(
+                            result,
+                            state,
+                            all_tokens,
+                            token_index,
+                            &mut trace,
+                        );
                     }
                 }
             }
@@ -1111,7 +1243,15 @@ fn emit_word(
                         // a capital indicator or a lowercase k-z cell is sufficient
                         // for every other Roman letter class.
                         if matches!(*c, 'a'..='j') {
+                            let bridge_start = result.len();
                             result.push(crate::rules::korean::rule_29::ENGLISH_CONTINUATION);
+                            if let Some(sink) = trace.as_mut() {
+                                sink.record_span(
+                                    RuleId::emitter(EmitterRule::RomanSectionMarker),
+                                    token_index,
+                                    bridge_start..result.len(),
+                                );
+                            }
                         }
                         roman_mode::resume_english_from_roman_number_chain(state);
                     }
@@ -1188,6 +1328,7 @@ fn emit_word(
                 remaining_words,
                 prev_word,
                 result,
+                trace.as_mut().map(TraceSink::reborrow),
             )?;
             is_number = state.is_number;
             is_big_english = state.is_big_english;
@@ -1217,6 +1358,7 @@ fn emit_word(
                     remaining_words,
                     prev_word,
                     result,
+                    trace.as_mut().map(TraceSink::reborrow),
                 )?;
                 is_number = state.is_number;
                 is_big_english = state.is_big_english;
@@ -1242,7 +1384,7 @@ fn emit_word(
         // 영어 주도 문서: 영어 단어 사이의 종료표 ⠲ 모두 생략하고 영어 모드를 유지.
     } else if state.english_indicator && state.is_english {
         if remaining_words.is_empty() {
-            close_roman_section(result, state, all_tokens, token_index);
+            close_roman_section_traced(result, state, all_tokens, token_index, &mut trace);
         } else if let Some(next_word) = remaining_words.first() {
             let ascii_letters = next_word
                 .chars()
@@ -1284,7 +1426,13 @@ fn emit_word(
                             // print has whitespace first (`Poison (모래성)`),
                             // Rule 29 closes the Roman run before that space.
                             if next_word_is_separated && !separated_continuation {
-                                close_roman_section(result, state, all_tokens, token_index);
+                                close_roman_section_traced(
+                                    result,
+                                    state,
+                                    all_tokens,
+                                    token_index,
+                                    &mut trace,
+                                );
                             } else if separated_continuation && sym == '&' {
                                 // A standalone ampersand joining Roman words is
                                 // itself part of the current Roman section.
@@ -1297,7 +1445,13 @@ fn emit_word(
                             } else if english_logic::should_force_terminator_before_symbol(sym)
                                 || !english_logic::should_skip_terminator_for_symbol(sym)
                             {
-                                close_roman_section(result, state, all_tokens, token_index);
+                                close_roman_section_traced(
+                                    result,
+                                    state,
+                                    all_tokens,
+                                    token_index,
+                                    &mut trace,
+                                );
                             } else {
                                 roman_mode::exit_english(
                                     state,
@@ -1306,11 +1460,17 @@ fn emit_word(
                             }
                         }
                         _ => {
-                            close_roman_section(result, state, all_tokens, token_index);
+                            close_roman_section_traced(
+                                result,
+                                state,
+                                all_tokens,
+                                token_index,
+                                &mut trace,
+                            );
                         }
                     }
                 } else {
-                    close_roman_section(result, state, all_tokens, token_index);
+                    close_roman_section_traced(result, state, all_tokens, token_index, &mut trace);
                 }
             }
         }
@@ -1382,10 +1542,7 @@ mod tests {
             crate::rules::token_rules::emphasis_ring::EmphasisRingRule,
         ));
         engine.register(Box::new(
-            crate::rules::token_rules::latex_fraction::LatexFractionRule,
-        ));
-        engine.register(Box::new(
-            crate::rules::token_rules::inline_fraction::InlineFractionRule,
+            crate::rules::token_rules::math_expression::MathExpressionTokenRule,
         ));
         engine.register(Box::new(
             crate::rules::token_rules::word_shortcut::WordShortcutRule,
@@ -1424,7 +1581,7 @@ mod tests {
             .apply_all(&mut ir.tokens, &mut ir.state)
             .unwrap();
         ir.state = state_before_token_rules;
-        let emitted = emit(&mut ir, &mut engine).unwrap();
+        let emitted = emit(&mut ir, &mut engine, None, None).unwrap();
         let expected = encode(text).unwrap();
         assert_eq!(
             emitted, expected,
@@ -1664,7 +1821,8 @@ mod tests {
         let mut ir = DocumentIR::parse("ABC/한글", true);
         let mut engine = make_char_engine();
 
-        let output = emit(&mut ir, &mut engine).expect("mixed Roman/Korean word must encode");
+        let output =
+            emit(&mut ir, &mut engine, None, None).expect("mixed Roman/Korean word must encode");
 
         assert!(output.contains(&crate::unicode::decode_unicode('⠲')));
         assert!(!ir.state.is_english);
@@ -1693,6 +1851,7 @@ mod tests {
                 remaining_words: &remaining_words,
             },
             &mut result,
+            None,
         )
         .expect("Roman word must encode");
 
@@ -1748,7 +1907,7 @@ mod tests {
             state: EncoderState::new(false),
         };
         let mut engine = make_char_engine();
-        let out = emit(&mut ir, &mut engine).unwrap();
+        let out = emit(&mut ir, &mut engine, None, None).unwrap();
         assert_eq!(out, vec![52, 48, 32, 32, 32, 32, 32, 32, 4, 48]);
     }
 
@@ -1770,7 +1929,7 @@ mod tests {
         };
         let mut engine = make_char_engine();
 
-        let out = emit(&mut ir, &mut engine).unwrap();
+        let out = emit(&mut ir, &mut engine, None, None).unwrap();
 
         assert!(out.starts_with(&[52, 32, 32]));
     }
@@ -1792,7 +1951,7 @@ mod tests {
         };
         let mut engine = make_char_engine();
 
-        let out = emit(&mut ir, &mut engine).unwrap();
+        let out = emit(&mut ir, &mut engine, None, None).unwrap();
 
         assert!(out.starts_with(&[52, 32, 32]));
         assert_eq!(out.iter().filter(|byte| **byte == 52).count(), 1);
@@ -1827,7 +1986,7 @@ mod tests {
         };
         let mut engine = make_char_engine();
 
-        let out = emit(&mut ir, &mut engine).unwrap();
+        let out = emit(&mut ir, &mut engine, None, None).unwrap();
 
         assert_eq!(out.iter().filter(|byte| **byte == 52).count(), 1);
     }
@@ -2057,7 +2216,7 @@ mod tests {
             state: EncoderState::new(false),
         };
         let mut engine = make_char_engine();
-        let out = emit(&mut ir, &mut engine).unwrap();
+        let out = emit(&mut ir, &mut engine, None, None).unwrap();
 
         let mut expected = fraction::encode_fraction("1", "2").unwrap();
         expected.push(0);
@@ -2120,7 +2279,7 @@ mod tests {
         let mut ir = DocumentIR::parse("", false);
         ir.state.triple_big_english = true;
         let mut engine = RuleEngine::new();
-        let result = emit(&mut ir, &mut engine).unwrap();
+        let result = emit(&mut ir, &mut engine, None, None).unwrap();
         assert_eq!(
             result,
             vec![32, 4],
@@ -2141,6 +2300,42 @@ mod spaced_colon_coverage {
             meta: WordMeta::from_chars(&chars),
             chars,
         })
+    }
+
+    /// 제29항: a spaced `&` joins two Roman words, so it needs a Roman word on
+    /// each side. Already-encoded output and the end of the stream both prove
+    /// nothing, so neither side may be read as Roman.
+    #[rstest::rstest]
+    #[case::nothing_follows(vec![word("A"), Token::Space(SpaceKind::Regular), word("&")], 2)]
+    #[case::encoded_output_follows(
+        vec![
+            word("A"),
+            Token::Space(SpaceKind::Regular),
+            word("&"),
+            Token::Space(SpaceKind::Regular),
+            Token::PreEncoded(vec![1]),
+        ],
+        2
+    )]
+    #[case::nothing_precedes(vec![word("&"), Token::Space(SpaceKind::Regular), word("B")], 0)]
+    #[case::encoded_output_precedes(
+        vec![
+            Token::PreEncoded(vec![1]),
+            Token::Space(SpaceKind::Regular),
+            word("&"),
+            Token::Space(SpaceKind::Regular),
+            word("B"),
+        ],
+        2
+    )]
+    fn an_ampersand_without_a_roman_word_on_both_sides_joins_nothing(
+        #[case] tokens: Vec<Token<'static>>,
+        #[case] ampersand_index: usize,
+    ) {
+        assert!(!spaced_ampersand_connects_roman_words(
+            &tokens,
+            ampersand_index
+        ));
     }
 
     /// 제29항·제32항·제35항: a standalone colon joins two Roman items only when
@@ -2258,5 +2453,33 @@ mod roman_chain_resume_coverage {
     #[case::plus_identifier("그는 A1+B2 를")]
     fn a_symbol_inside_a_roman_number_chain_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
+    }
+}
+
+#[cfg(test)]
+mod empty_token_span_tests {
+    use super::record_token_span;
+    use crate::rules::trace::{EmitterRule, RuleId, Trace, TraceSink};
+
+    /// A token can consume input without writing a cell. Attributing it anyway
+    /// would claim an output position the token never wrote, so the span is
+    /// dropped rather than recorded as empty.
+    #[test]
+    fn a_token_that_wrote_no_cells_records_nothing() {
+        let mut trace = Trace::default();
+        let result = vec![1, 2, 3];
+        {
+            let mut sink = Some(TraceSink::new(&mut trace));
+            record_token_span(
+                &mut sink,
+                None,
+                0,
+                &result,
+                result.len(),
+                RuleId::emitter(EmitterRule::WordSpace),
+            );
+        }
+
+        assert!(trace.events().is_empty(), "{:?}", trace.events());
     }
 }

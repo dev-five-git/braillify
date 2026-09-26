@@ -30,6 +30,12 @@ function convert(internal: string): { expected: string; unicode: string } {
   let expected = ''
   let unicode = ''
   for (const ch of internal) {
+    // 여러 줄로 적는 점자(과학 제31항 등)는 줄바꿈을 그대로 둔다.
+    if (ch === '\n') {
+      expected += '\n'
+      unicode += '\n'
+      continue
+    }
     let idx: number
     if (ch in SPECIAL) {
       idx = SPECIAL[ch]
@@ -52,6 +58,8 @@ function convert(internal: string): { expected: string; unicode: string } {
 interface TestEntry {
   input: string
   note?: string
+  context?: string
+  limitation?: string
   internal?: string
   expected?: string
   unicode?: string
@@ -86,6 +94,15 @@ function loadTestCases(dir: string): { file: string; entries: TestEntry[] }[] {
     return { file, entries: JSON.parse(content) as TestEntry[] }
   })
 }
+
+describe('multi-line braille integrity', () => {
+  test('a line break passes through to expected and unicode', () => {
+    expect(convert('#a\n#b')).toEqual({
+      expected: '601\n603',
+      unicode: '⠼⠁\n⠼⠃',
+    })
+  })
+})
 
 describe('alternative answer integrity', () => {
   test('alternatives objects are validated together', () => {
@@ -164,10 +181,13 @@ function runConversionTests(dir: string, label: string) {
         for (let i = 0; i < entries.length; i++) {
           const entry = entries[i]
 
-          // Skip entries with empty input, empty unicode, or LaTeX note (engine may not support yet)
+          // A `limitation` entry is known not to convert and is guarded by
+          // `test_by_testcase`, as is the ad hoc `strip_prefix:` context, which
+          // is a harness instruction rather than a reading.
           const alternatives = alternativeTriples(entry)
           if (!entry.input || alternatives.length === 0) continue
-          if (entry.note === 'LaTeX') continue
+          if (entry.note === 'LaTeX' || entry.limitation) continue
+          if (entry.context?.startsWith('strip_prefix:')) continue
 
           const inputPreview =
             entry.input.length > 30
@@ -175,12 +195,8 @@ function runConversionTests(dir: string, label: string) {
               : entry.input
 
           test(`[${i}] "${inputPreview}" → unicode`, () => {
-            try {
-              const result = translateToUnicode(entry.input)
-              expect(alternatives.map(({ unicode }) => unicode)).toContain(result)
-            } catch {
-              // Engine doesn't support this input yet — skip gracefully
-            }
+            const result = translateToUnicode(entry.input, entry.context)
+            expect(alternatives.map(({ unicode }) => unicode)).toContain(result)
           })
         }
       })
@@ -215,7 +231,10 @@ function runShardedIntegrityTests(dir: string, label: string) {
 
 runIntegrityTests('korean', 'Korean')
 runIntegrityTests('math', 'Math')
+runIntegrityTests('science', 'Science')
+runIntegrityTests('english', 'English')
 runShardedIntegrityTests('2024_corpus', 'NIKL 2024 corpus')
 runShardedIntegrityTests('2025_corpus', 'NIKL 2025 corpus')
 runConversionTests('korean', 'Korean')
 runConversionTests('math', 'Math')
+runConversionTests('science', 'Science')

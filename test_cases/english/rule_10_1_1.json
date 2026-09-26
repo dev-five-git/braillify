@@ -1,5 +1,181 @@
 [
   {
+    "input": "but",
+    "internal": "b",
+    "expected": "3",
+    "unicode": "⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "can",
+    "internal": "c",
+    "expected": "9",
+    "unicode": "⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "do",
+    "internal": "d",
+    "expected": "25",
+    "unicode": "⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "every",
+    "internal": "e",
+    "expected": "17",
+    "unicode": "⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "from",
+    "internal": "f",
+    "expected": "11",
+    "unicode": "⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "go",
+    "internal": "g",
+    "expected": "27",
+    "unicode": "⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "have",
+    "internal": "h",
+    "expected": "19",
+    "unicode": "⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "just",
+    "internal": "j",
+    "expected": "26",
+    "unicode": "⠚",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "knowledge",
+    "internal": "k",
+    "expected": "5",
+    "unicode": "⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "like",
+    "internal": "l",
+    "expected": "7",
+    "unicode": "⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "more",
+    "internal": "m",
+    "expected": "13",
+    "unicode": "⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "not",
+    "internal": "n",
+    "expected": "29",
+    "unicode": "⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "people",
+    "internal": "p",
+    "expected": "15",
+    "unicode": "⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quite",
+    "internal": "q",
+    "expected": "31",
+    "unicode": "⠟",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rather",
+    "internal": "r",
+    "expected": "23",
+    "unicode": "⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "so",
+    "internal": "s",
+    "expected": "14",
+    "unicode": "⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "that",
+    "internal": "t",
+    "expected": "30",
+    "unicode": "⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "us",
+    "internal": "u",
+    "expected": "37",
+    "unicode": "⠥",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "very",
+    "internal": "v",
+    "expected": "39",
+    "unicode": "⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "you",
+    "internal": "y",
+    "expected": "61",
+    "unicode": "⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "as",
+    "internal": "z",
+    "expected": "53",
+    "unicode": "⠵",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "will",
+    "internal": "w",
+    "expected": "58",
+    "unicode": "⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "When will Will meet us?",
     "internal": ",:5 w ,w meet u8",
     "expected": "3249340580325801317173003738",

@@ -182,6 +182,11 @@ mod test_helpers {
 }
 
 pub use encoder::Encoder;
+use rules::trace::TraceSink;
+pub use rules::trace::{
+    EmitterRule, RuleId, RuleKind, RuleOutcome, Trace, TraceEvent, TracePath, registered_rules,
+    rule_meta,
+};
 
 thread_local! {
     static ENCODER_CACHE: RefCell<Option<Encoder>> = const { RefCell::new(None) };
@@ -452,9 +457,15 @@ fn normalize_pure_roman_compatibility_units<'a>(text: Cow<'a, str>) -> Cow<'a, s
 /// already defines: U+FF01–U+FF5E are the fullwidth forms of ASCII `!`–`~`
 /// (`％`, `ｍ`, `＆`), U+30FB/U+FF65/U+2027 are CJK spellings of the 가운뎃점 `·`
 /// (제50항), U+301C is the wave-dash form of the 물결표 `~` (제49항), and U+00B4
-/// is a typed acute accent standing for the 아포스트로피 `'` (제61항). The
+/// is a typed acute accent standing for the 아포스트로피 `'` (제61항). The grave
+/// accent U+0060 is typed for the same quotation mark (제49항), U+02D9 DOT ABOVE
+/// between two letters for the 가운뎃점 (제50항; after `"` it is the 제56항 input
+/// notation), and U+2503 is a heavy-weight 세로선 `|` (제71항). The
 /// zero-width marks U+200B–U+200D and U+FEFF carry no print at all, so they are
 /// dropped like the soft hyphen.
+///
+/// U+212B ANGSTROM SIGN is the canonical equivalent (NFC) of `Å`, the unit
+/// symbol of 제69항 [붙임 2] and 과학 제30항.
 ///
 /// U+FF1A `：` and U+FF03 `＃` are excluded: the standard gives those fullwidth
 /// glyphs their own meanings — the 옛한글 장음 표시 of 제27항 and the 기수 기호 of
@@ -471,11 +482,20 @@ fn parenthesized_number_expansion(c: char) -> Option<String> {
     (1..=20).contains(&value).then(|| format!("({value})"))
 }
 
-fn may_normalize_print_variant(c: char) -> bool {
+fn carries_no_print(c: char) -> bool {
     matches!(
         c,
-        '\u{02DA}' | '\u{2010}' | '\u{2011}' | '\u{2043}' | '\u{00AD}' | '\u{00B0}' | '²' | '³'
-    ) || is_foldable_fullwidth(c)
+        '\u{00AD}' | '\u{200B}' | '\u{200C}' | '\u{200D}' | '\u{FEFF}' | '\u{FE00}'..='\u{FE0F}'
+    )
+}
+
+fn may_normalize_print_variant(c: char) -> bool {
+    carries_no_print(c)
+        || matches!(
+            c,
+            '\u{02DA}' | '\u{2010}' | '\u{2011}' | '\u{2043}' | '\u{00B0}' | '²' | '³' | '\u{212B}'
+        )
+        || is_foldable_fullwidth(c)
         || parenthesized_number_expansion(c).is_some()
         || matches!(
             c,
@@ -486,10 +506,10 @@ fn may_normalize_print_variant(c: char) -> bool {
                 | '\u{2A2F}'
                 | '\u{301C}'
                 | '\u{00B4}'
-                | '\u{200B}'
-                | '\u{200C}'
-                | '\u{200D}'
-                | '\u{FEFF}'
+                | '`'
+                | '\u{02D9}'
+                | '\u{2503}'
+                | '\u{00B7}'
         )
 }
 
@@ -551,6 +571,16 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
                 continue;
             }
         }
+        // 문장 부호 제21항 [붙임 1·2]: 가운데에 찍은 세 점 이상은 줄임표다.
+        let dot_run = chars[index..]
+            .iter()
+            .take_while(|c| **c == '\u{00B7}')
+            .count();
+        if dot_run >= 3 {
+            out.push('…');
+            index += dot_run;
+            continue;
+        }
         match ch {
             '\u{02DA}' => out.push('\u{00B0}'),
             '\u{2010}' | '\u{2011}' | '\u{2043}' => out.push('-'),
@@ -558,12 +588,24 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
                 out.push('\u{00B7}');
             }
             '\u{2A2F}' => out.push('\u{00D7}'),
+            '\u{212B}' => out.push('\u{00C5}'),
             _ if parenthesized_number_expansion(ch).is_some() => {
                 out.push_str(&parenthesized_number_expansion(ch).unwrap_or_default());
             }
             '\u{301C}' => out.push('~'),
-            '\u{00B4}' => out.push('\''),
-            '\u{00AD}' | '\u{200B}' | '\u{200C}' | '\u{200D}' | '\u{FEFF}' => {}
+            '\u{00B4}' | '`' => out.push('\''),
+            '\u{2503}' => out.push('|'),
+            '\u{02D9}'
+                if index
+                    .checked_sub(1)
+                    .is_some_and(|previous| chars[previous].is_alphanumeric())
+                    && chars
+                        .get(index + 1)
+                        .is_some_and(|next| next.is_alphanumeric()) =>
+            {
+                out.push('\u{00B7}');
+            }
+            _ if carries_no_print(ch) => {}
             _ if is_foldable_fullwidth(ch) => {
                 out.push(char::from_u32(ch as u32 - 0xFEE0).unwrap_or(ch));
             }
@@ -581,11 +623,21 @@ fn normalize_print_variants<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
 /// (`轉輪륜王` → `⠊⠸⠩⠱⠒…`) 그 문맥은 건너뛴다. 옛한글임을 알리는 표시는 홀로 쓴
 /// 자모(`洪ㄱ字`), 방점(`·갈`, `中國·귁`), 한자 뒤에 곧바로 붙인 독음(`君군`,
 /// `轉輪륜王`의 `輪륜`), 그리고 한글이 하나도 없는 한자만의 표기(`榮養`)다.
+/// 방점은 음절 앞에 선다. 낱말 사이의 가운뎃점(`5·18`)은 방점이 아니다 — 국립국어원
+/// 회신 5: 중세국어에는 가운뎃점이 쓰이지 않는다.
 fn is_middle_korean_hanja_context(chars: &[char]) -> bool {
     let has_old_jamo = chars.iter().any(|c| {
         matches!(*c, '\u{3131}'..='\u{318E}' | '\u{1100}'..='\u{11FF}' | '\u{E000}'..='\u{F8FF}')
     });
-    let has_tone_mark = chars.iter().any(|c| matches!(*c, '\u{00B7}' | '\u{FF1A}'));
+    let has_tone_mark = chars.iter().enumerate().any(|(index, c)| {
+        matches!(*c, '\u{00B7}' | '\u{FF1A}')
+            && chars
+                .get(index + 1)
+                .is_some_and(|next| matches!(*next, '\u{AC00}'..='\u{D7A3}'))
+            && index.checked_sub(1).is_none_or(|previous| {
+                chars[previous].is_whitespace() || hanja::is_hanja(chars[previous])
+            })
+    });
     let has_modern_hangul = chars.iter().any(|c| matches!(*c, '\u{AC00}'..='\u{D7A3}'));
     let has_gloss = chars.iter().enumerate().any(|(index, c)| {
         hanja::reading(*c).is_some_and(|reading| {
@@ -1061,24 +1113,45 @@ fn decompose_accented_latin<'a>(text: Cow<'a, str>) -> Cow<'a, str> {
 /// 제37항 — 입력이 (공백을 제외하고) 전부 ASCII 로마자(알파벳)로만 이루어진
 /// "고립된 로마자 구간"인지 판별한다. 이런 입력은 국어 점자 문맥(context:korean)에서
 /// 로마자표 ⠴ … 종료표 ⠲로 감싼다. `%p`(제69항 단위표)처럼 비알파벳 기호가 섞인
-/// 입력은 로마자 구간이 아니므로 제외된다.
+/// 입력은 로마자 구간이 아니므로 제외된다. 그리스 문자만으로 된 입력도 국어 문장
+/// 안에서는 로마자표와 종료표로 감싼다(제31항). 로마자와 섞인 `μm` 은 단위
+/// 기호(제69항 [붙임 1])라 따로 적는다.
 fn is_isolated_roman_section(text: &str) -> bool {
-    let mut has_letter = false;
-    for ch in text.chars() {
-        if ch == ' ' {
-            continue;
-        }
-        if ch.is_ascii_alphabetic() {
-            has_letter = true;
-        } else {
-            return false;
-        }
-    }
-    has_letter
+    let letters: Vec<char> = text.chars().filter(|ch| *ch != ' ').collect();
+    !letters.is_empty()
+        && (letters.iter().all(char::is_ascii_alphabetic)
+            || letters.iter().all(|ch| matches!(ch, 'Α'..='Ω' | 'α'..='ω')))
 }
 
 /// Encode text to braille with explicit options.
 pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8>, String> {
+    encode_with_options_traced(text, options, None)
+}
+
+/// Encode `text` and report which rules produced which output cells.
+///
+/// Read [`Trace::path`] before drawing conclusions from partial attribution:
+/// each engine reports only the rule families it instruments.
+pub fn encode_with_trace(text: &str) -> Result<(Vec<u8>, Trace), String> {
+    encode_with_options_and_trace(text, &EncodeOptions::default())
+}
+
+/// [`encode_with_trace`] with an explicit encoding mode.
+pub fn encode_with_options_and_trace(
+    text: &str,
+    options: &EncodeOptions,
+) -> Result<(Vec<u8>, Trace), String> {
+    let mut trace = Trace::default();
+    let cells = encode_with_options_traced(text, options, Some(&mut trace))?;
+    trace.set_output_len(cells.len() as u32);
+    Ok((cells, trace))
+}
+
+fn encode_with_options_traced(
+    text: &str,
+    options: &EncodeOptions,
+    mut trace: Option<&mut Trace>,
+) -> Result<Vec<u8>, String> {
     use crate::rules::context::EncodingMode;
 
     // PDF 수학 — Mathematical Alphanumeric 변형(italic/bold/script 등)을 ASCII로
@@ -1091,6 +1164,48 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     // N개 한글 음절을 cross-word 묶음으로 wrap. sentinel은 symbol_shortcut에서
     // braille marker (⠠⠤/⠤⠄)로 emit된다.
     let normalization_triggers = NormalizationTriggers::scan(text);
+    // 과학 문맥은 글의 모양으로 경로를 정하는 기본 경로를 그대로 따른다. 다만 영어
+    // 점자로는 보내지 않는다.
+    let science = options
+        .default_mode
+        .is_some_and(EncodingMode::reads_science);
+    let routed_by_content = options.default_mode.is_none() || science;
+    let has_korean = text.chars().any(crate::utils::is_korean_char);
+    // 통일영어점자 §8.8.3 — 한글 없는 글의 화학식은 영어 점자로 적는다. 과학 기호로는
+    // 과학 문맥에서만 읽는다.
+    let reads_science_shapes = science || (options.default_mode.is_none() && has_korean);
+    let spatial = options.default_mode == Some(EncodingMode::ScienceSpatial);
+    if options.default_mode == Some(EncodingMode::Science)
+        && let Some(cells) = crate::rules::science::ring::encode(text)
+    {
+        mark_trace_path(&mut trace, TracePath::KoreanRules);
+        return Ok(cells);
+    }
+    if reads_science_shapes
+        && let Some(cells) = crate::rules::science::diagram::encode(text, spatial)
+    {
+        mark_trace_path(&mut trace, TracePath::KoreanRules);
+        return Ok(cells);
+    }
+    if reads_science_shapes
+        && let Some(cells) = crate::rules::science::quantity::encode(text, |segment| {
+            encode_with_options(segment, options)
+        })
+    {
+        mark_trace_path(&mut trace, TracePath::MathExpression);
+        return Ok(cells);
+    }
+    // 과학 제4·7항 — 화학식은 로마자 낱말도 수식도 아니다. 영어·수학 경로와 글꼴
+    // 정규화를 건너뛰어, 토큰 단계의 화학식 규칙이 강조(제7항 5)까지 그대로 본다.
+    let chemistry =
+        reads_science_shapes && crate::rules::science::formula::owns_text(text, science);
+    // 한글 제69항 — 한글 없이 단위 기호 글자(`㎜Hg`, `㎾h`)로 적힌 글은 로마자 낱말이
+    // 아니라 단위다. 정규화가 글자를 `mm`·`kW` 로 풀기 전에 그 신호를 잡아 둔다.
+    let unit_glyphs = science
+        && !has_korean
+        && text
+            .chars()
+            .any(crate::rules::korean::rule_69::is_compatibility_unit_presentation);
     // Content-routed English must be considered before math normalization. The
     // legacy math path decomposes accented Latin for Korean math 제65항, which turns
     // UEB §4.2 modified letters (`Rhône`, `Hwǣr`) into combining-mark sequences and
@@ -1099,11 +1214,17 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     // through the UEB engine here; ambiguous letterless/single-accent inputs remain
     // with the legacy Korean/math defaults because `is_ueb_eligible` rejects them.
     if options.default_mode.is_none()
-        && !text.chars().any(crate::utils::is_korean_char)
+        && !has_korean
         && crate::rules::english_ueb::is_ueb_eligible(text)
         && !crate::rules::english_ueb::is_math_owned(text)
-        && let Some(bytes) = crate::rules::english_ueb::try_encode(text)
+        && let Some(bytes) = encode_ueb(
+            text,
+            &mut trace,
+            crate::rules::english_ueb::try_encode,
+            crate::rules::english_ueb::try_encode_traced,
+        )
     {
+        mark_trace_path(&mut trace, TracePath::EnglishUeb);
         return Ok(bytes);
     }
     // `EncodingMode::English` forces the UEB engine even for a letterless numeric or
@@ -1111,11 +1232,17 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     // treat it as a Korean-context number (colon `⠐⠂`). A bare `N:M`/`N(x)` is
     // ambiguous from input alone, so the testcase declares its language via `context`.
     if matches!(options.default_mode, Some(EncodingMode::English))
-        && let Some(bytes) = crate::rules::english_ueb::encode_forced(text)
+        && let Some(bytes) = encode_ueb(
+            text,
+            &mut trace,
+            crate::rules::english_ueb::encode_forced,
+            crate::rules::english_ueb::encode_forced_traced,
+        )
     {
+        mark_trace_path(&mut trace, TracePath::EnglishUeb);
         return Ok(bytes);
     }
-    let normalized_text = if normalization_triggers.has_math_alphanumeric {
+    let normalized_text = if normalization_triggers.has_math_alphanumeric && !chemistry {
         normalize_math_alphanumeric_string(text)
     } else {
         Cow::Borrowed(text)
@@ -1142,6 +1269,16 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     };
     let normalized_text = if normalization_triggers.has_print_variant {
         normalize_print_variants(normalized_text)
+    } else {
+        normalized_text
+    };
+    // 한글 제60항 — 참고표는 별표와 같이 ⠐⠔ 으로 적고, [다만 1] 둘을 가려야 할 때만
+    // ⠸⠔ 으로 적는다. 별표가 없는 국어 글에서는 가를 것이 없다.
+    let normalized_text = if normalized_text.contains('※')
+        && !normalized_text.contains('*')
+        && normalized_text.chars().any(crate::utils::is_korean_char)
+    {
+        Cow::Owned(normalized_text.replace('※', "*"))
     } else {
         normalized_text
     };
@@ -1258,7 +1395,8 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
     // unambiguous math-only signal (`x′`, `p → q`, `|x|`, `△ABC`). Otherwise the
     // token pipeline sees each space-separated word independently and can mark
     // variables/operators as UEB grade-1 text instead of one math expression.
-    let default_math_owned = options.default_mode.is_none()
+    let default_math_owned = routed_by_content
+        && !chemistry
         && default_math_expression_needs_whole_route(text)
         && !text.chars().any(crate::utils::is_korean_char);
     if matches!(options.default_mode, Some(EncodingMode::Math)) || default_math_owned {
@@ -1344,10 +1482,25 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
             }
             s
         };
-        if let Ok(bytes) =
-            rules::math::encoder::encode_math_expression_with_context(&cleaned, math_context)
-        {
-            return Ok(bytes);
+        let mark = trace.as_deref().map(Trace::mark);
+        let attempt = {
+            let mut sink = trace.as_deref_mut().map(TraceSink::new);
+            rules::math::encoder::encode_math_expression_traced(
+                &cleaned,
+                math_context,
+                sink.as_mut(),
+            )
+        };
+        match attempt {
+            Ok(bytes) => {
+                mark_trace_path(&mut trace, TracePath::MathExpression);
+                return Ok(bytes);
+            }
+            Err(_) => {
+                if let (Some(sink), Some(mark)) = (trace.as_deref_mut(), mark) {
+                    sink.rollback_to(mark);
+                }
+            }
         }
     }
 
@@ -1365,20 +1518,73 @@ pub fn encode_with_options(text: &str, options: &EncodeOptions) -> Result<Vec<u8
         }
 
         let mut result = Vec::new();
-        encoder.encode(text, &mut result)?;
+        encoder.encode_traced(text, &mut result, trace.as_deref_mut().map(TraceSink::new))?;
         // 제37항 — 국어 점자 문맥(context:korean) 안의 "고립된 로마자 구간"(공백 제외
         // 전부 ASCII 알파벳)은 로마자표 ⠴(52) … 종료표 ⠲(50)로 감싼다. 단독
         // `EncodingMode::English` 입력도 동일한 로마자 구간이므로 같은 처리를 받는다.
         // `%p`(제69항 단위표)처럼 비알파벳이 섞인 입력은 제외된다.
+        // 과학 문맥의 로마자 구간은 단위다(과학 제30항). 화학식과 유전자(제23항)는
+        // 과학 기호로 따로 적는다.
+        let science_roman_section = science
+            && !chemistry
+            && !crate::rules::science::genotype::is_allele_pairs(&text.chars().collect::<Vec<_>>());
         let wrap_roman_section = matches!(options.default_mode, Some(EncodingMode::English))
-            || (matches!(options.default_mode, Some(EncodingMode::Korean))
+            || ((unit_glyphs
+                || science_roman_section
+                || matches!(options.default_mode, Some(EncodingMode::Korean)))
                 && is_isolated_roman_section(text));
         if wrap_roman_section && !result.is_empty() {
             result.insert(0, 52);
             result.push(50);
+            if let Some(sink) = trace {
+                sink.shift_output(1);
+                let end = result.len() as u32;
+                for output in [0..1, end - 1..end] {
+                    sink.push(TraceEvent {
+                        rule: RuleId::emitter(EmitterRule::RomanSectionMarker),
+                        outcome: RuleOutcome::Consumed,
+                        token_index: 0,
+                        word_chars: 0..0,
+                        output,
+                    });
+                }
+            }
         }
         Ok(result)
     })
+}
+
+/// Run a UEB entry point, recording its rule spans when a trace is collected.
+///
+/// Both closures must invoke the SAME entry point: `traced` differs only by
+/// collecting spans around it. Crossing them would make a traced encode take a
+/// different route than an untraced one and silently change output.
+fn encode_ueb(
+    text: &str,
+    trace: &mut Option<&mut Trace>,
+    untraced: impl FnOnce(&str) -> Option<Vec<u8>>,
+    traced: impl FnOnce(&str) -> Option<(Vec<u8>, Vec<crate::rules::english_ueb::UebSpan>)>,
+) -> Option<Vec<u8>> {
+    let Some(sink) = trace.as_deref_mut() else {
+        return untraced(text);
+    };
+    let (bytes, spans) = traced(text)?;
+    for (rule, output) in spans {
+        sink.push(TraceEvent {
+            rule,
+            outcome: RuleOutcome::Consumed,
+            token_index: 0,
+            word_chars: 0..0,
+            output,
+        });
+    }
+    Some(bytes)
+}
+
+fn mark_trace_path(trace: &mut Option<&mut Trace>, path: TracePath) {
+    if let Some(sink) = trace.as_deref_mut() {
+        sink.set_path(path);
+    }
 }
 
 /// Encode text with explicit formatting spans.
@@ -1425,6 +1631,488 @@ pub fn encode_to_braille_font(text: &str) -> Result<String, String> {
         .iter()
         .map(|c| unicode::encode_unicode(*c))
         .collect::<String>())
+}
+
+/// [`encode`] with the text read in a named context, for input whose print
+/// shape alone does not decide the rule (`44+XX` is a Roman section in plain
+/// Korean text but a stand-apart expression in science).
+///
+/// The names are the ones the test fixtures use: `korean`, `english`, `math`,
+/// `number`, `middle_korean`, `object_symbol`, `ipa`, `science`, and
+/// `science_spatial` (science, writing diagrams in the spatial form).
+pub fn encode_in_context(text: &str, context: &str) -> Result<Vec<u8>, String> {
+    let mode = context
+        .parse::<crate::rules::context::EncodingMode>()
+        .map_err(|()| format!("unknown context: {context}"))?;
+    encode_with_options(
+        text,
+        &EncodeOptions {
+            default_mode: Some(mode),
+        },
+    )
+}
+
+/// Unicode version of [`encode_in_context`].
+pub fn encode_to_unicode_in_context(text: &str, context: &str) -> Result<String, String> {
+    Ok(encode_in_context(text, context)?
+        .iter()
+        .map(|c| unicode::encode_unicode(*c))
+        .collect())
+}
+
+/// Braille-font version of [`encode_in_context`].
+pub fn encode_to_braille_font_in_context(text: &str, context: &str) -> Result<String, String> {
+    Ok(encode_in_context(text, context)?
+        .iter()
+        .map(|c| unicode::encode_unicode(*c))
+        .collect())
+}
+
+#[cfg(test)]
+mod trace_tests {
+    use super::*;
+    use crate::rules::context::EncodingMode;
+
+    fn korean_mode() -> EncodeOptions {
+        EncodeOptions {
+            default_mode: Some(EncodingMode::Korean),
+        }
+    }
+
+    #[rstest::rstest]
+    #[case::korean_syllables("안녕")]
+    #[case::korean_abbreviation("그래서")]
+    #[case::english_prose("hello")]
+    #[case::latex_fraction("$\\frac{3}{4}$")]
+    #[case::mixed_sentence("가나다 라마")]
+    #[case::roman_inside_korean("가 ABC")]
+    #[case::digits("2024년")]
+    fn tracing_leaves_the_encoded_cells_unchanged(#[case] input: &str) {
+        let plain = encode(input).expect("input must encode");
+        let (traced, _) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(plain, traced);
+    }
+
+    #[rstest::rstest]
+    #[case::korean("안녕", TracePath::KoreanRules)]
+    #[case::mixed("가나다 라마", TracePath::KoreanRules)]
+    #[case::english("hello", TracePath::EnglishUeb)]
+    fn path_names_the_engine_that_ran(#[case] input: &str, #[case] expected: TracePath) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.path(), expected);
+    }
+
+    #[test]
+    fn korean_syllables_attribute_every_cell_to_a_registered_rule() {
+        let (cells, trace) = encode_with_trace("안녕").expect("input must encode");
+
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        assert_eq!(trace.unattributed_cells(), 0);
+        assert!(
+            trace.events().iter().all(|e| e.rule.meta().is_some()),
+            "every recorded id resolves against the registry"
+        );
+    }
+
+    /// 약자 abbreviation is a token-level rewrite whose cells never reach the
+    /// character engine, so it is attributed through the token-origin side table
+    /// rather than by the character rule loop.
+    #[test]
+    fn token_rule_output_is_attributed_to_the_token_engine() {
+        let (cells, trace) = encode_with_trace("그래서").expect("input must encode");
+
+        assert!(!cells.is_empty(), "the abbreviation still encodes");
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        assert!(
+            trace
+                .events()
+                .iter()
+                .all(|e| e.rule.kind() == Some(RuleKind::Token)),
+            "abbreviation cells come from a token rule: {:?}",
+            trace.events()
+        );
+    }
+
+    /// A number written straight against an ASCII unit is emitted as one piece,
+    /// so its cells are credited in the emitter rather than by the character
+    /// loop that attributes the digits and the letters separately.
+    #[rstest::rstest]
+    #[case::centimetre("3cm")]
+    #[case::kilogram("5kg")]
+    fn a_measured_quantity_is_credited_to_the_measurement_rule(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert!(!cells.is_empty(), "the measurement still encodes");
+        assert!(
+            trace.events().iter().any(|e| e
+                .rule
+                .meta()
+                .is_some_and(|m| m.name == "measurement_symbols")),
+            "the measurement cells name their rule: {:?}",
+            trace.events()
+        );
+    }
+
+    /// UEB picks contractions by a cell-minimising search, so only the winning
+    /// path may be credited. Every recorded range must therefore land inside the
+    /// output and name a UEB rule.
+    #[rstest::rstest]
+    #[case::uncontracted("hello")]
+    #[case::sentence("the child was here")]
+    #[case::accented("naive")]
+    fn english_attributes_only_the_selected_contraction_path(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.path(), TracePath::EnglishUeb);
+        assert!(trace.attributed_cells() > 0, "UEB now names its rules");
+        assert!(
+            trace.events().iter().all(|event| {
+                // Inter-word blanks belong to the emitter, not to a UEB rule.
+                matches!(
+                    event.rule.kind(),
+                    Some(RuleKind::EnglishUeb | RuleKind::Emitter)
+                ) && event.output.start < event.output.end
+                    && event.output.end as usize <= cells.len()
+            }),
+            "{:?}",
+            trace.events()
+        );
+    }
+
+    /// A whole-word sign is a table lookup rather than a contraction search, so
+    /// it is recorded where the table is consulted. Its section is known exactly,
+    /// so the cells are named rather than left unexplained.
+    #[rstest::rstest]
+    #[case::alphabetic_wordsign("knowledge", "10.1")]
+    #[case::shortform("about", "10.9")]
+    #[case::lower_wordsign("enough", "10.5")]
+    fn english_wordsigns_name_their_section(#[case] input: &str, #[case] section: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        let sections: Vec<&str> = trace
+            .events()
+            .iter()
+            .filter_map(|event| event.rule.meta().map(|meta| meta.section))
+            .collect();
+        assert!(
+            sections.contains(&section),
+            "expected §{section} among {sections:?}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::korean("가나다 라마")]
+    #[case::korean_prose("나는 학교에 간다")]
+    #[case::english("the child was here")]
+    #[case::mixed_numbers("2024년 제12항")]
+    #[case::math_plain("3+4=7")]
+    #[case::math_variables("$x^2+y^2=z^2$")]
+    #[case::math_function("$\\sin x$")]
+    #[case::latex_fraction("$\\frac{3}{4}$")]
+    #[case::ueb_capital_then_digits("A1")]
+    #[case::ueb_capital_digits_and_decimal("Q50 2.2d")]
+    // 제35항 numeric bridge resuming into a lowercase a-j letter: UEB 6.5.2 makes
+    // the emitter write a continuation cell there, and it must name itself.
+    #[case::roman_number_bridge_into_low_letter("가나 (1c) 다라")]
+    fn every_output_cell_is_accounted_for(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(
+            trace.attributed_cells(),
+            cells.len() as u32,
+            "unattributed cells in {input:?} with output {cells:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    #[test]
+    fn capitalised_spelled_word_keeps_letter_attribution() {
+        let (cells, trace) = encode_with_trace("MP3").expect("input must encode");
+
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        let letter_cells = trace
+            .events()
+            .iter()
+            .filter(|event| event.rule.meta().is_some_and(|meta| meta.section == "4.1"))
+            .map(|event| event.output.end - event.output.start)
+            .sum::<u32>();
+        assert_eq!(letter_cells, 2, "only M and P belong to the letter rule");
+    }
+
+    #[rstest::rstest]
+    #[case::ethene_hydration("C_{2}H_{4}(g) + H_{2}O(g) -> C_{2}H_{5}OH(g)")]
+    #[case::aluminium_ion("Al<sup>3+</sup>(aq) + 3e<sup>-</sup> -> Al(s)")]
+    #[case::water_formation("2H_{2}(g) + O_{2}(g) -> 2H_{2}O(g)")]
+    fn chemical_equation_cells_are_accounted_for(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(
+            trace.attributed_cells(),
+            cells.len() as u32,
+            "unattributed cells in {input:?} with output {cells:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// The two paths that still leave cells unexplained, pinned to their exact
+    /// numbers so the gap cannot widen unnoticed and any narrowing is visible.
+    ///
+    /// Both are mode indicators rather than content: the Roman indicator the
+    /// emitter writes ahead of a Roman run, and the numeric/symbol cells the UEB
+    /// engine writes outside its contraction search.
+    #[rstest::rstest]
+    #[case::roman_in_korean("가영이는 Los Angeles에 산다")]
+    #[case::numbers_and_symbols("50% & 3 items")]
+    #[case::measurement("3kg 5%")]
+    #[case::acronym_with_digit("MP3 player")]
+    fn indicator_and_numeric_cells_are_accounted_for(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(
+            trace.attributed_cells(),
+            cells.len() as u32,
+            "unattributed cells in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// Every rule must name a cell range that is really its own, so a cell may
+    /// never be claimed by two rules at once.
+    #[rstest::rstest]
+    #[case::korean("안녕하세요")]
+    #[case::mixed("가영이는 Los Angeles에 산다")]
+    #[case::measurement("3kg 5%")]
+    #[case::english("the child was here")]
+    #[case::math("3+4=7")]
+    #[case::chemical("C_{2}H_{4}(g) + H_{2}O(g) -> C_{2}H_{5}OH(g)")]
+    #[case::inline_chemical("$C_{2}H_{4}$(g)＋$H_{2}O$(g)→$C_{2}H_{5}OH$(g)")]
+    fn no_cell_is_claimed_twice(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        let mut claims = vec![0u32; cells.len()];
+        for event in trace.events() {
+            for cell in event.output.clone() {
+                claims[cell as usize] += 1;
+            }
+        }
+
+        assert!(
+            claims.iter().all(|count| *count == 1),
+            "cells claimed {claims:?} times in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// A math expression reaches the emitter as one pre-encoded run, so without
+    /// the math engine's own spans it would report only the token rule that
+    /// detected it.
+    #[rstest::rstest]
+    #[case::sum("3+4=7", "1")]
+    #[case::superscript("$x^2$", "18")]
+    #[case::function("$\\sin x$", "47")]
+    fn math_expressions_name_their_math_article(#[case] input: &str, #[case] section: &str) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        let sections: Vec<&str> = trace
+            .events()
+            .iter()
+            .filter(|event| event.rule.kind() == Some(RuleKind::Math))
+            .filter_map(|event| event.rule.meta().map(|meta| meta.section))
+            .collect();
+
+        assert!(
+            sections.contains(&section),
+            "expected 수학 제{section}항 among {sections:?}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::korean("안녕하세요")]
+    #[case::mixed("가나다 라마 ABC")]
+    #[case::numbers("제12항 3개")]
+    fn every_recorded_range_lies_inside_the_output(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        for event in trace.events() {
+            assert!(
+                event.output.end as usize <= cells.len(),
+                "{event:?} runs past {} cells",
+                cells.len()
+            );
+            assert!(event.output.start <= event.output.end);
+        }
+    }
+
+    /// 제37항 inserts the Roman indicator at cell 0 *after* encoding, so every
+    /// range recorded before that insertion points one cell short unless shifted.
+    #[test]
+    fn roman_wrap_shifts_recorded_ranges_onto_the_right_cells() {
+        let (cells, trace) =
+            encode_with_options_and_trace("ABC", &korean_mode()).expect("input must encode");
+
+        assert_eq!(cells.first(), Some(&52), "제37항 로마자표");
+        let spans: Vec<&[u8]> = trace
+            .events()
+            .iter()
+            .map(|event| &cells[event.output.start as usize..event.output.end as usize])
+            .collect();
+        assert!(
+            spans.contains(&&[1u8, 3, 9][..]),
+            "one span must render A, B, C; got {spans:?}"
+        );
+    }
+
+    /// The encoder is cached per thread, so a leaked sink would make the second
+    /// trace of the same input differ from the first.
+    #[test]
+    fn trace_does_not_bleed_across_calls_on_the_cached_encoder() {
+        let (_, before) = encode_with_trace("안녕").expect("input must encode");
+        let _ = encode_with_trace("hello").expect("input must encode");
+        let (_, after) = encode_with_trace("안녕").expect("input must encode");
+
+        assert_eq!(before, after);
+    }
+
+    /// 안 = ㅇ + ㅏ + ㄴ, so its two cells are the 제6항 vowel and the 제3항 받침
+    /// rather than one composite entry for the syllable.
+    #[test]
+    fn syllable_cells_name_their_own_article() {
+        let (cells, trace) = encode_with_trace("안녕").expect("input must encode");
+
+        let article_at = |cell: u32| {
+            trace
+                .rules_at_cell(cell)
+                .first()
+                .and_then(|rule| rule.meta())
+                .map(|meta| (meta.section, meta.name))
+        };
+
+        assert_eq!(article_at(0), Some(("6", "syllable_jungseong")));
+        assert_eq!(article_at(1), Some(("3", "syllable_jongseong")));
+        assert!(trace.rules_at_cell(cells.len() as u32).is_empty());
+    }
+
+    #[rstest::rstest]
+    #[case::vowel("안녕", "6")]
+    #[case::final_consonant("안녕", "3")]
+    #[case::double_initial("깎다", "2")]
+    #[case::initial_consonant("라", "1")]
+    fn syllable_composition_cites_jamo_articles(#[case] input: &str, #[case] section: &str) {
+        let (_, trace) = encode_with_trace(input).expect("input must encode");
+
+        let sections: Vec<&str> = trace
+            .events()
+            .iter()
+            .filter(|event| event.rule.kind() == Some(RuleKind::Jamo))
+            .filter_map(|event| event.rule.meta().map(|meta| meta.section))
+            .collect();
+
+        assert!(
+            sections.contains(&section),
+            "expected 제{section}항 among {sections:?}"
+        );
+    }
+
+    /// 수학 제32·33항's 합동/기하 glyphs (`△`, `→`, `□`, `≅`) pull the whole string
+    /// onto the math route, which encodes *before* the token pipeline and so
+    /// carries its own sink instead of the emitter's origin table. Without that
+    /// sink the expression would encode with nothing recorded at all.
+    #[rstest::rstest]
+    #[case::congruence_triangle("△ABC")]
+    #[case::implication("p → q")]
+    #[case::relation("A≅B")]
+    fn a_whole_route_math_expression_names_its_math_rules(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_eq!(encode(input).expect("input must encode"), cells);
+        assert_eq!(trace.path(), TracePath::MathExpression);
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+        assert!(
+            trace
+                .events()
+                .iter()
+                .any(|event| event.rule.kind() == Some(RuleKind::Math)),
+            "the math engine must name itself: {:?}",
+            trace.events()
+        );
+    }
+
+    /// The whole-route math encoder runs speculatively: it emits cells for the
+    /// tokens it consumed and only then discovers a token it cannot encode, at
+    /// which point the Korean pipeline re-encodes the whole input. The discarded
+    /// cells never ship, so crediting their rules would name rules that did not
+    /// produce the output — and would leave two rules claiming the same cell.
+    #[rstest::rstest]
+    #[case::trailing_at_sign("△AB@")]
+    #[case::percent_between_operands("△A%B")]
+    #[case::bare_at_sign("A□@B")]
+    fn a_failed_math_route_credits_no_rule_for_the_cells_it_threw_away(#[case] input: &str) {
+        let (cells, trace) = encode_with_trace(input).expect("input must encode");
+
+        assert_ne!(
+            trace.path(),
+            TracePath::MathExpression,
+            "the math route must have failed for this case to mean anything"
+        );
+        assert!(
+            trace
+                .events()
+                .iter()
+                .all(|event| event.rule.kind() != Some(RuleKind::Math)),
+            "rolled-back math rules must not survive: {:?}",
+            trace.events()
+        );
+
+        let mut claims = vec![0u32; cells.len()];
+        for event in trace.events() {
+            for cell in event.output.clone() {
+                claims[cell as usize] += 1;
+            }
+        }
+        assert!(
+            claims.iter().all(|count| *count == 1),
+            "cells claimed {claims:?} times in {input:?}: {:?}",
+            trace.events()
+        );
+    }
+
+    /// `EncodingMode::English` forces the UEB engine even where content routing
+    /// would not pick it — a letterless `4:30` reads as a Korean-context number
+    /// otherwise. The forced entry point has to collect the same spans as the
+    /// content-routed one, or a declared-English testcase would trace as though
+    /// no rule had run.
+    #[rstest::rstest]
+    #[case::letterless_time("4:30")]
+    #[case::prose("the child")]
+    fn forced_english_mode_still_names_its_ueb_rules(#[case] input: &str) {
+        let options = EncodeOptions {
+            default_mode: Some(EncodingMode::English),
+        };
+        let (cells, trace) =
+            encode_with_options_and_trace(input, &options).expect("input must encode");
+
+        assert_eq!(
+            encode_with_options(input, &options).expect("input must encode"),
+            cells
+        );
+        assert_eq!(trace.path(), TracePath::EnglishUeb);
+        assert_eq!(trace.attributed_cells(), cells.len() as u32);
+    }
+
+    #[test]
+    fn contributing_rules_lists_each_rule_once() {
+        let (_, trace) = encode_with_trace("가나다 라마").expect("input must encode");
+        let contributing = trace.contributing_rules();
+        let mut unique = contributing.clone();
+        unique.sort_unstable();
+        unique.dedup();
+
+        assert!(!contributing.is_empty());
+        assert_eq!(contributing.len(), unique.len());
+    }
 }
 
 #[cfg(test)]
@@ -1715,6 +2403,63 @@ mod test {
             expected.to_string(),
             unicode.to_string(),
         )]
+    }
+
+    /// 과학 문맥은 과학 점자 전체를 적는 문맥이다. fixture 가 밝힌 문맥과 상관없이
+    /// 과학 fixture 는 모두 과학 문맥에서도 같은 답을 내야 한다. 공간 표기 형식을
+    /// 밝힌 fixture 는 그 형식을 고른 과학 문맥에서 본다.
+    #[test]
+    fn every_science_fixture_holds_in_the_science_context() {
+        use crate::rules::context::EncodingMode;
+        let rule_map = load_test_case_rule_map();
+        let mut checked = 0;
+        let mut failures = Vec::new();
+        for (path, key) in collect_test_files(&rule_map) {
+            if !key.starts_with("science/") {
+                continue;
+            }
+            let filename = path.file_name().unwrap().to_string_lossy().to_string();
+            let records: Vec<serde_json::Value> =
+                serde_json::from_str(&std::fs::read_to_string(&path).unwrap()).unwrap();
+            for (line, record) in records.iter().enumerate() {
+                if record.get("limitation").is_some() {
+                    continue;
+                }
+                checked += 1;
+                let input = record["input"].as_str().unwrap();
+                let answers: Vec<String> = testcase_answer_forms(record, &filename, line)
+                    .into_iter()
+                    .map(|(_, _, unicode)| unicode)
+                    .collect();
+                let spatial =
+                    record.get("context").and_then(|c| c.as_str()) == Some("science_spatial");
+                let options = EncodeOptions {
+                    default_mode: Some(if spatial {
+                        EncodingMode::ScienceSpatial
+                    } else {
+                        EncodingMode::Science
+                    }),
+                };
+                let actual = encode_with_options(input, &options).map(|cells| {
+                    cells
+                        .iter()
+                        .map(|cell| unicode::encode_unicode(*cell))
+                        .collect::<String>()
+                });
+                if !actual.as_ref().is_ok_and(|actual| answers.contains(actual)) {
+                    failures.push(format!(
+                        "{filename}:{line} {input:?} {answers:?} != {actual:?}"
+                    ));
+                }
+            }
+        }
+        assert!(checked > 0, "no science fixture was found");
+        assert!(
+            failures.is_empty(),
+            "{} of {checked} science fixtures differ in the science context:\n{}",
+            failures.len(),
+            failures.join("\n")
+        );
     }
 
     #[derive(serde::Deserialize)]
@@ -2340,6 +3085,7 @@ mod test {
                     // asserted by `rule_64::lone_combining_square_is_no_op`).
                     let is_only_nonemitting = s.chars().all(|c| {
                         c == ' '
+                            || carries_no_print(c)
                             || matches!(
                                 crate::char_struct::CharType::new(c),
                                 Ok(crate::char_struct::CharType::CombiningMark)
@@ -2480,6 +3226,25 @@ mod coverage_targeted_tests {
         #[case] end: [u8; 2],
     ) {
         assert_eq!(kind.markers(), (start, end));
+    }
+
+    #[rstest::rstest]
+    #[case::tone_mark_opens_a_word("·갈 〔 刀 〕", true)]
+    #[case::rising_tone_opens_a_word("：돌 〔 石 〕", true)]
+    #[case::tone_mark_after_hanja("中國·귁", true)]
+    #[case::separator_between_numbers("5·18 고(故)", false)]
+    #[case::separator_between_words("영업·마케팅 지선(支線)", false)]
+    #[case::separator_after_a_bracket("최연고(80)·서정수 고(故)", false)]
+    fn tells_a_tone_mark_from_a_middle_dot(#[case] text: &str, #[case] middle_korean: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(is_middle_korean_hanja_context(&chars), middle_korean);
+    }
+
+    #[rstest::rstest]
+    #[case::hanja_after_a_middle_dot("5·18 고(故)", "5·18 고(고)")]
+    #[case::variation_selector("\u{FE0F}가로 350mm", "가로 350mm")]
+    fn writes_what_the_print_shows(#[case] text: &str, #[case] same_as: &str) {
+        assert_eq!(encode(text), encode(same_as));
     }
 
     /// Mathematical italic small h (U+210E) normalizes to plain 'h'.
@@ -2864,6 +3629,7 @@ mod coverage_targeted_tests {
     #[case::word("but", true)]
     #[case::phrase_with_spaces("Table of Contents", true)]
     #[case::percent_unit("%p", false)]
+    #[case::greek_unit("Ω", true)]
     #[case::has_digit("abc123", false)]
     #[case::empty("", false)]
     #[case::only_space(" ", false)]
@@ -3243,11 +4009,30 @@ mod print_variant_fold_coverage {
     #[case::hyphenation_point("\u{2027}", "\u{00B7}")]
     #[case::one_dot_leader("\u{2024}", "\u{00B7}")]
     #[case::vector_cross("\u{2A2F}", "\u{00D7}")]
+    #[case::angstrom_sign("\u{212B}", "\u{00C5}")]
     #[case::parenthesised_five("\u{2478}", "(5)")]
     #[case::parenthesised_twenty("\u{2487}", "(20)")]
     #[case::wave_dash("\u{301C}", "~")]
     #[case::acute_accent("\u{00B4}", "'")]
+    #[case::grave_accent_quote("`\u{D06C}\u{B9BC}`", "'\u{D06C}\u{B9BC}'")]
+    #[case::dot_above_between_words(
+        "\u{C601}\u{C5C5}\u{02D9}\u{B9C8}",
+        "\u{C601}\u{C5C5}\u{00B7}\u{B9C8}"
+    )]
+    #[case::dot_above_opening_emphasis("\"\u{02D9}\u{AC15}", "\"\u{02D9}\u{AC15}")]
+    #[case::dot_above_ending_a_word("\u{C601}\u{02D9}", "\u{C601}\u{02D9}")]
+    #[case::heavy_vertical_line("\u{2503}\u{ADF8}", "|\u{ADF8}")]
+    #[case::three_middle_dots(
+        "\u{AC00}\u{00B7}\u{00B7}\u{00B7}\u{B098}",
+        "\u{AC00}\u{2026}\u{B098}"
+    )]
+    #[case::six_middle_dots("\u{00B7}\u{00B7}\u{00B7}\u{00B7}\u{00B7}\u{00B7}", "\u{2026}")]
+    #[case::two_middle_dots_stay(
+        "\u{AC00}\u{00B7}\u{00B7}\u{B098}",
+        "\u{AC00}\u{00B7}\u{00B7}\u{B098}"
+    )]
     #[case::soft_hyphen("\u{00AD}", "")]
+    #[case::variation_selector("\u{FE00}", "")]
     #[case::zero_width_space("\u{200B}", "")]
     #[case::zero_width_joiner("\u{200D}", "")]
     #[case::byte_order_mark("\u{FEFF}", "")]
@@ -3301,6 +4086,68 @@ mod print_variant_fold_coverage {
         assert_eq!(
             normalize_pure_roman_compatibility_units(Cow::Borrowed("\u{338F}")).as_ref(),
             "\u{338F}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod science_context_tests {
+    use super::*;
+
+    /// 과학 문맥에서 따로 선 로마자는 단위만 로마자 구간이고(제30항), 화학식과
+    /// 유전자는 과학 기호로 적는다(제7·23항).
+    #[rstest::rstest]
+    #[case::formula_with_a_two_letter_element("NaCl", "⠠⠝⠁⠠⠉⠇")]
+    #[case::unit("HP", "⠴⠠⠠⠓⠏⠲")]
+    #[case::gene("AA", "⠠⠠⠁⠁")]
+    #[case::chromosomes_in_a_sentence("염색체는 44+XY이다.", "⠱⠢⠠⠗⠁⠰⠝⠉⠵⠀⠀⠼⠙⠙⠢⠠⠠⠭⠽⠀⠀⠕⠊⠲")]
+    #[case::abbreviations_keep_the_capital_phrase(
+        "DNA, RNA, ATP는 중요하다.",
+        "⠴⠠⠠⠠⠙⠝⠁⠂⠀⠗⠝⠁⠂⠀⠁⠞⠏⠠⠄⠲⠉⠵⠀⠨⠍⠶⠬⠚⠊⠲"
+    )]
+    fn writes_science_notation_apart_from_units(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(
+            encode_to_unicode_in_context(input, "science"),
+            Ok(expected.to_string())
+        );
+        assert_eq!(
+            encode_to_braille_font_in_context(input, "science"),
+            Ok(expected.to_string())
+        );
+    }
+
+    /// 통일영어점자 §8.8.3 — 한글 없는 글의 화학식은 영어 점자로 적고, 과학 문맥에서만
+    /// 과학 기호로 적는다.
+    #[rstest::rstest]
+    #[case::formula("HOCH₂", "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃", "⠠⠠⠠⠓⠕⠉⠓⠰⠼⠃⠠⠄")]
+    #[case::chain_of_elements("H-O-H", "⠰⠰⠠⠓⠤⠠⠕⠤⠠⠓", "⠠⠠⠠⠓⠰⠂⠕⠰⠂⠓⠠⠄")]
+    fn reads_hangul_free_text_as_science_only_in_its_context(
+        #[case] input: &str,
+        #[case] without_context: &str,
+        #[case] in_science: &str,
+    ) {
+        assert_eq!(encode_to_unicode(input), Ok(without_context.to_string()));
+        assert_eq!(
+            encode_to_unicode_in_context(input, "science"),
+            Ok(in_science.to_string())
+        );
+    }
+
+    #[test]
+    fn names_the_context_it_cannot_read() {
+        assert_eq!(
+            encode_in_context("pOH", "chemistry"),
+            Err("unknown context: chemistry".to_string())
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::science("science", "⠴⠏⠠⠕⠠⠓")]
+    #[case::korean("korean", "⠴⠏⠠⠠⠕⠓⠲")]
+    fn reads_the_same_text_by_its_context(#[case] context: &str, #[case] expected: &str) {
+        assert_eq!(
+            encode_to_unicode_in_context("pOH", context),
+            Ok(expected.to_string())
         );
     }
 }

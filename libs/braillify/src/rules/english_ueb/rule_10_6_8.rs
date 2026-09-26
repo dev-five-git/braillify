@@ -37,7 +37,19 @@ impl EnInBeforeNessRule {
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.6",
+    subsection: Some("8"),
+    name: "ueb_en_in_before_ness",
+    standard_ref: "UEB 2024 §10.6.8",
+    description: "en/in kept or dropped where they overlap a final ness",
+};
+
 impl ContractionRule for EnInBeforeNessRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let mut m = LowerGroupsignRule.try_match(word, pos)?;
         // §10.6.8: where `en`/`in` overlaps a following `ness` at the shared `n`,

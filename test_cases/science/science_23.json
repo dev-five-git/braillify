@@ -1,0 +1,62 @@
+[
+  {
+    "input": "AA",
+    "note": "PDF 과학 제23항 — 대문자 2개 이상은 대문자 단어표",
+    "context": "science",
+    "internal": ",,aa",
+    "expected": "323211",
+    "unicode": "⠠⠠⠁⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Aa",
+    "note": "PDF 과학 제23항",
+    "context": "science",
+    "internal": ",aa",
+    "expected": "3211",
+    "unicode": "⠠⠁⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "RRYY",
+    "note": "PDF 과학 제23항",
+    "context": "science",
+    "internal": ",,rryy",
+    "expected": "323223236161",
+    "unicode": "⠠⠠⠗⠗⠽⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "RRyy",
+    "note": "PDF 과학 제23항",
+    "context": "science",
+    "internal": ",,rr,'yy",
+    "expected": "323223233246161",
+    "unicode": "⠠⠠⠗⠗⠠⠄⠽⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "AB형과 A형이 결합하면 AA, AB, AO, BO가 나온다.",
+    "note": "PDF 과학 제23항 — 유전자는 셋 이상 이어져도 대문자 구절표를 쓰지 않는다. 일반 문장은 대문자 구절표를 쓰므로(한글 제28항 [붙임]) 과학 문맥(context)을 밝힌다",
+    "context": "science",
+    "internal": "0;,,ab4j]@v`0,a4j]o`@\\jbje*`0,,aa1`;,,ab1`,,ao1`,,bo4$`c<(i4",
+    "expected": "5248323213502659839052321502659210851263261733052323211204832321320323212120323232150430935551050",
+    "unicode": "⠴⠰⠠⠠⠁⠃⠲⠚⠻⠈⠧⠀⠴⠠⠁⠲⠚⠻⠕⠀⠈⠳⠚⠃⠚⠑⠡⠀⠴⠠⠠⠁⠁⠂⠀⠰⠠⠠⠁⠃⠂⠀⠠⠠⠁⠕⠂⠀⠠⠠⠃⠕⠲⠫⠀⠉⠣⠷⠊⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "정상 여자의 염색체는 44+XX이다.",
+    "note": "PDF 과학 제23항 — 연산 기호가 있는 식은 앞뒤 두 칸(제6항). 같은 모양의 DF1+DF8 은 국어 문장 속 로마자 구간이므로(말뭉치) 과학 문맥(context)을 밝힌다",
+    "context": "science",
+    "internal": ".]l7`:.<w`:5,ra;ncz``#dd5,,xx``oi4",
+    "expected": "40597540494035580493432231482995300602525343232454500211050",
+    "unicode": "⠨⠻⠇⠶⠀⠱⠨⠣⠺⠀⠱⠢⠠⠗⠁⠰⠝⠉⠵⠀⠀⠼⠙⠙⠢⠠⠠⠭⠭⠀⠀⠕⠊⠲",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

@@ -1,5 +1,14 @@
 [
   {
+    "input": "〃",
+    "context": "english",
+    "internal": "\"1",
+    "expected": "162",
+    "unicode": "⠐⠂",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "living room:  pioneer blue",
     "internal": "liv+ room3 pione] blue",
     "expected": "71039440232121131801510212917590373717",

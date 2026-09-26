@@ -1,9 +1,18 @@
 use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 pub struct MiddleDotSpacingRule;
+
+static META_MIDDLE_DOT: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "middle_dot_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Join Korean words around a middle dot according to print spacing",
+};
 
 fn previous_word<'a, 'b>(tokens: &'b [Token<'a>], index: usize) -> Option<&'b WordToken<'a>> {
     tokens[..index]
@@ -68,6 +77,10 @@ fn space_precedes_korean_colon_or_semicolon(
 }
 
 impl TokenRule for MiddleDotSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_MIDDLE_DOT
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -186,17 +199,37 @@ fn korean_semicolon_split_index(chars: &[char]) -> Option<usize> {
 /// 대비 쌍이다(나머지 예 `오전 10:20`, `요한 3:16` 은 숫자 쌍이라 이 함수 밖이다).
 /// 따라서 한글 사이의 쌍점은 그 어절이 대비 쌍 꼴일 때만 붙이고, 괄호·따옴표 등이
 /// 섞여 표제와 내용을 가르는 꼴이면 본문에 따라 뒤에 한 칸을 둔다.
+///
+/// 표제를 한글이 이끄는 한 내용이 무엇으로 적혔는지는 본문을 바꾸지 않는다
+/// (`모델명:PN50`, `일시:2006년`). 내용이 한글이면 표제가 로마자나 숫자여도 국어
+/// 문장의 쌍점이다(`A:우리나라는`, `Drive:할레마우마우`). 앞뒤가 모두 로마자인
+/// 쌍점은 로마자 식별자 안의 기호라(`NVH:Noise`) 이 함수가 보지 않는다. 괄호로 끝난
+/// 표제(`A(정 셰프):도저히`)도 같으나, 뒤도 괄호를 단 같은 꼴이면(`찬성(5):반대(5)`)
+/// 두 항목을 맞세운 [다만 2] 의 대비다.
 fn korean_label_colon_split_index(chars: &[char]) -> Option<usize> {
-    let position = chars.windows(3).position(|window| {
-        crate::utils::is_korean_char(window[0])
-            && window[1] == ':'
-            && crate::utils::is_korean_char(window[2])
+    let position = chars.windows(3).enumerate().position(|(at, window)| {
+        let korean_label = crate::utils::is_korean_char(window[0]) && !is_ratio(chars, at + 1);
+        let bracketed_label = window[0] == ')' && !chars[at + 2..].contains(&'(');
+        let korean_content = (window[0].is_ascii_alphanumeric() || bracketed_label)
+            && crate::utils::is_korean_char(window[2]);
+        window[1] == ':' && !is_closing_after_colon(window[2]) && (korean_label || korean_content)
     })?;
     let is_contrast_pair = chars
         .iter()
         .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':')
         && is_balanced_contrast_pair(chars);
     (!is_contrast_pair).then_some(position)
+}
+
+/// [다만 2] — 수를 맞세운 비율(`200만:1`)은 쌍점의 앞뒤를 붙인다. 쌍점 앞의
+/// `만`·`억`·`조` 는 수의 단위다.
+fn is_ratio(chars: &[char], colon: usize) -> bool {
+    chars.get(colon + 1).is_some_and(char::is_ascii_digit)
+        && chars[..colon]
+            .iter()
+            .rev()
+            .find(|ch| !matches!(ch, '만' | '억' | '조'))
+            .is_some_and(char::is_ascii_digit)
 }
 
 /// [다만 2] 의 `청군:백군` 은 같은 층위의 두 항목을 맞세운 대비 쌍이고, 본문의
@@ -210,6 +243,58 @@ fn is_balanced_contrast_pair(chars: &[char]) -> bool {
     left.len().max(right.len()) <= 3 && left.len().abs_diff(right.len()) <= 1
 }
 
+fn balanced_pair_split_index(chars: &[char]) -> Option<usize> {
+    let pair = chars
+        .iter()
+        .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':')
+        && chars.last() != Some(&':')
+        && is_balanced_contrast_pair(chars);
+    pair.then(|| chars.iter().position(|ch| *ch == ':')?.checked_sub(1))
+        .flatten()
+}
+
+/// 국립국어원 회신 2026-09-11: 대비 쌍 꼴의 쌍점은 '대' 를 대신할 때만 붙인다. 쌍 하나만
+/// 적은 글(제51항 [다만 2] 의 `청군:백군`)이나 쌍점 항목이 더 있는 글은 맞세운 항목이고,
+/// 문장 속에 홀로 선 쌍 꼴(`뉴:홈 공급`)은 제목과 부제를 가르는 본문의 쌍점이다.
+fn reads_as_versus(tokens: &[Token<'_>], index: usize) -> bool {
+    let mut words = tokens
+        .iter()
+        .enumerate()
+        .filter_map(|(at, token)| match token {
+            Token::Word(word) => Some((at, word)),
+            _ => None,
+        });
+    let alone = words.clone().count() == 1;
+    alone || words.any(|(at, word)| at != index && word.chars.contains(&':'))
+}
+
+/// 비율 바로 뒤 괄호에서 그 항을 밝힌 쌍(`69:31(남성:여성)`, `4대 6(지방비:국비)`)도
+/// '대' 로 읽는다(국립국어원 회신 2026-09-11).
+fn names_ratio_terms(tokens: &[Token<'_>], index: usize, chars: &[char]) -> bool {
+    let Some(open) = chars.iter().position(|ch| *ch == '(') else {
+        return false;
+    };
+    let legend = chars[open + 1..]
+        .split(|ch| *ch == ')')
+        .next()
+        .unwrap_or_default();
+    let pair = legend.contains(&':')
+        && legend
+            .iter()
+            .all(|ch| crate::utils::is_korean_char(*ch) || *ch == ':');
+    let all_digits = |part: &[char]| !part.is_empty() && part.iter().all(char::is_ascii_digit);
+    let terms = &chars[..open];
+    let colon_ratio = terms.contains(&':') && terms.split(|ch| *ch == ':').all(all_digits);
+    let previous = tokens[..index]
+        .iter()
+        .rev()
+        .find(|token| !matches!(token, Token::Space(_) | Token::Mode(_)));
+    let spelled_ratio = all_digits(terms)
+        && matches!(previous, Some(Token::Word(word)) if word.chars.split_last()
+            .is_some_and(|(last, number)| *last == '대' && all_digits(number)));
+    pair && (colon_ratio || spelled_ratio)
+}
+
 fn owned_word<'a>(chars: &[char]) -> Token<'a> {
     Token::Word(WordToken {
         text: Cow::Owned(chars.iter().collect()),
@@ -219,12 +304,16 @@ fn owned_word<'a>(chars: &[char]) -> Token<'a> {
 }
 
 impl TokenRule for KoreanSemicolonTrailingSpaceRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_SEMICOLON_SPACE
+    }
+
     fn phase(&self) -> TokenPhase {
-        TokenPhase::PostWord
+        TokenPhase::Normalization
     }
 
     fn priority(&self) -> u16 {
-        127
+        200
     }
 
     fn apply<'a>(
@@ -236,9 +325,14 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
         let Some(Token::Word(word)) = tokens.get(index) else {
             return Ok(TokenAction::Noop);
         };
+        let title_colon =
+            balanced_pair_split_index(&word.chars).filter(|_| !reads_as_versus(tokens, index));
+        let label_colon = korean_label_colon_split_index(&word.chars)
+            .filter(|_| !names_ratio_terms(tokens, index, &word.chars));
         let split = korean_semicolon_split_index(&word.chars)
             .into_iter()
-            .chain(korean_label_colon_split_index(&word.chars))
+            .chain(label_colon)
+            .chain(title_colon)
             .min();
         let Some(split) = split else {
             return Ok(TokenAction::Noop);
@@ -261,7 +355,27 @@ impl TokenRule for KoreanSemicolonTrailingSpaceRule {
 /// 로마자·숫자이므로 양쪽이 모두 로마자·숫자인 자리만 띄운 채로 둔다.
 pub struct KoreanHyphenSpacingRule;
 
+static META_SEMICOLON_SPACE: RuleMeta = RuleMeta {
+    section: "59",
+    subsection: None,
+    name: "korean_semicolon_trailing_space",
+    standard_ref: "2024 Korean Braille Standard, 제59항",
+    description: "Add the standard trailing blank after a Korean semicolon",
+};
+
+static META_HYPHEN_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "korean_hyphen_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Join Korean words around an editorial hyphen",
+};
+
 impl TokenRule for KoreanHyphenSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_HYPHEN_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -276,6 +390,19 @@ impl TokenRule for KoreanHyphenSpacingRule {
         index: usize,
         _state: &mut crate::rules::context::EncoderState,
     ) -> Result<TokenAction<'a>, String> {
+        if let (Some(Token::Word(left)), Some(Token::Space(_)), Some(Token::Word(right))) = (
+            tokens.get(index),
+            tokens.get(index + 1),
+            tokens.get(index + 2),
+        ) && let [.., before, '-'] = left.chars.as_slice()
+            && *before != '-'
+            && !before.is_ascii_alphabetic()
+            && !opens_with_dash_item(tokens)
+        {
+            let mut chars = left.chars.clone();
+            chars.extend(&right.chars);
+            return Ok(TokenAction::ReplaceRange(3, vec![owned_word(&chars)]));
+        }
         let (
             Some(Token::Word(left)),
             Some(Token::Space(_)),
@@ -307,13 +434,31 @@ impl TokenRule for KoreanHyphenSpacingRule {
     }
 }
 
+/// 제49항 — 글이 붙임표 항목(`- 네이버 …`)으로 열리면 뒤의 `제한(20개)- 한` 도
+/// 다음 항목의 표지이지 낱말을 잇는 붙임표가 아니다.
+fn opens_with_dash_item(tokens: &[Token<'_>]) -> bool {
+    matches!(tokens.first(), Some(Token::Word(word)) if word.chars.first() == Some(&'-'))
+}
+
 /// 제49항이 붙여 쓰게 하는 붙임표는 낱말과 낱말 사이의 것이다. 글 첫머리에
 /// 홀로 서서 한글을 끌고 오는 붙임표는 그 항목을 여는 표지이므로 뒤를 띄운다
 /// (`-플랫폼이` → `⠤ ⠙⠮…`). 글머리가 아닌 자리는 [`KoreanHyphenSpacingRule`]
 /// 대로 붙인다.
 pub struct LeadingDashSpacingRule;
 
+static META_LEADING_DASH_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "leading_dash_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Add a blank after a dash that opens a line item",
+};
+
 impl TokenRule for LeadingDashSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_LEADING_DASH_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -363,19 +508,49 @@ fn seam_hugs(before: char, after: char) -> bool {
     opens || closes
 }
 
+/// 제49항이 따르는 문장 부호 규정은 마침표와 쉼표를 앞말에 붙여 쓴다(국립국어원
+/// 『문장 부호 해설』). 홀로 선 부호는 부호 자체를 가리킬 수 있으므로(`? 대신`)
+/// 글을 맺는 마침표만 붙인다. 줄임표(`..`)는 글의 일부를 생략할 때 앞뒤를 띄운다
+/// (문장 부호 제21항 [붙임 3]).
+/// 제49항 — 빗금은 앞뒤를 붙여 쓰는 것이 원칙이고 대비되는 어구가 여러 어절이면
+/// 앞뒤를 띄울 수 있다(『문장 부호 해설』 7). 한쪽만 띄운 빗금(`업그레이드/ 새일센터`)은
+/// 어느 쪽도 아니므로 붙인다.
+fn slash_spaced_on_one_side(left: &[char], right: &[char]) -> bool {
+    let standalone = |word: &[char]| word.iter().all(|ch| *ch == '/');
+    (left.last() == Some(&'/') && !standalone(left) && right.first() != Some(&'/'))
+        || (right.first() == Some(&'/') && !standalone(right) && left.last() != Some(&'/'))
+}
+
+fn attaches_to_preceding_word(before: char, word: &[char], ends_the_text: bool) -> bool {
+    (word == ['.'] && ends_the_text && !matches!(before, '.' | '?' | '!' | '…'))
+        || word.first() == Some(&',')
+}
+
 /// 제49항이 따르는 한글 맞춤법은 묶음표를 그 안쪽 내용에 붙여 쓴다. 묵자가
 /// 편집상 `( 가나 )` 처럼 벌려 놓아도 점자 띄어쓰기는 규정을 따르므로 그 틈을
 /// 닫는다. 바깥쪽(`확인 (가나)` 의 앞, `(가나) 다라` 의 뒤)은 보통의 띄어쓰기라
 /// 손대지 않는다. 빗금은 제33항 예시가 앞뒤를 띄우므로 여기에 넣지 않는다.
 pub struct HuggingPunctuationSpacingRule;
 
+static META_HUGGING_PUNCTUATION_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "hugging_punctuation_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Close editorial gaps inside brackets according to Korean orthography",
+};
+
 impl TokenRule for HuggingPunctuationSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_HUGGING_PUNCTUATION_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
-        TokenPhase::PostWord
+        TokenPhase::Normalization
     }
 
     fn priority(&self) -> u16 {
-        129
+        190
     }
 
     fn apply<'a>(
@@ -393,10 +568,15 @@ impl TokenRule for HuggingPunctuationSpacingRule {
             tokens.get(index + consumed),
             tokens.get(index + consumed + 1),
         ) {
-            let hugs = chars
-                .last()
-                .zip(next.chars.first())
-                .is_some_and(|(before, after)| seam_hugs(*before, *after));
+            let ends_the_text = !tokens[index + consumed + 2..]
+                .iter()
+                .any(|token| matches!(token, Token::Word(_)));
+            let hugs = chars.last().is_some_and(|before| {
+                next.chars
+                    .first()
+                    .is_some_and(|after| seam_hugs(*before, *after))
+                    || attaches_to_preceding_word(*before, &next.chars, ends_the_text)
+            }) || slash_spaced_on_one_side(&chars, &next.chars);
             if !hugs {
                 break;
             }
@@ -415,7 +595,19 @@ impl TokenRule for HuggingPunctuationSpacingRule {
 
 pub struct TildeSpacingRule;
 
+static META_TILDE_SPACING: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "korean_tilde_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제49항",
+    description: "Join Korean words around a tilde according to print spacing",
+};
+
 impl TokenRule for TildeSpacingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META_TILDE_SPACING
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::PostWord
     }
@@ -468,6 +660,30 @@ impl TokenRule for TildeSpacingRule {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// 제49항: both LeadingDashSpacingRule and HuggingPunctuationSpacingRule
+    /// declare their metadata so the rule tracer reports section "49" instead of "?".
+    #[test]
+    fn leading_dash_spacing_rule_declares_section_49() {
+        let rule = LeadingDashSpacingRule;
+        let meta = rule.meta();
+        assert_eq!(
+            meta.section, "49",
+            "LeadingDashSpacingRule must declare section 49"
+        );
+    }
+
+    /// 제49항: both LeadingDashSpacingRule and HuggingPunctuationSpacingRule
+    /// declare their metadata so the rule tracer reports section "49" instead of "?".
+    #[test]
+    fn hugging_punctuation_spacing_rule_declares_section_49() {
+        let rule = HuggingPunctuationSpacingRule;
+        let meta = rule.meta();
+        assert_eq!(
+            meta.section, "49",
+            "HuggingPunctuationSpacingRule must declare section 49"
+        );
+    }
 
     /// 제59항: the blank after a Korean semicolon is written even when print
     /// runs the items together; the colon keeps print spacing (제51항 [다만 2]).
@@ -635,6 +851,41 @@ mod nikl_answer_coverage {
     }
 
     #[rstest::rstest]
+    #[case::pair_on_its_own("청군:백군", false)]
+    #[case::title_in_a_sentence("뉴:홈 공급을 늘린다", true)]
+    #[case::chained_items("대의원 투표:당원 투표:국민", false)]
+    #[case::colon_before_a_printed_blank("기자 주: 설정값", true)]
+    #[case::legend_of_a_ratio("평균 69:31(남성:여성)로", false)]
+    #[case::legend_of_a_spelled_ratio("4대 6(지방비:국비)이던", false)]
+    #[case::label_after_a_number("2016(회장:홍길동)", true)]
+    #[case::label_after_a_word("오늘 강원대(총장:김헌영)가", true)]
+    #[case::label_in_brackets("강원대 (총장:김헌영)", true)]
+    #[case::bracket_without_a_pair("52:48(신입)로", false)]
+    #[case::label_without_brackets("일시:2006년", true)]
+    fn a_colon_pair_in_running_text(#[case] input: &str, #[case] spaced: bool) {
+        let braille = crate::encode_to_unicode(input).expect("encodes");
+        assert_eq!(braille.contains("⠐⠂⠀"), spaced, "{input} → {braille}");
+    }
+
+    #[rstest::rstest]
+    #[case::roman_label("A:우리나라는", Some(0))]
+    #[case::roman_title("Drive:할레마우마우", Some(4))]
+    #[case::numbered_title("도수코3:스포일러", Some(3))]
+    #[case::korean_label_before_a_number("응답률:7.8%", Some(2))]
+    #[case::bracketed_label("A(정셰프):도저히", Some(5))]
+    #[case::mirrored_contrast("찬성(5):반대(5)로", None)]
+    #[case::roman_identifier("NVH:Noise", None)]
+    #[case::clock_time("10:20", None)]
+    #[case::ratio_in_ten_thousands("200만:1의", None)]
+    fn a_colon_before_korean_content_takes_the_blank(
+        #[case] input: &str,
+        #[case] split: Option<usize>,
+    ) {
+        let chars: Vec<char> = input.chars().collect();
+        assert_eq!(korean_label_colon_split_index(&chars), split);
+    }
+
+    #[rstest::rstest]
     #[case::no_colon("청군백군")]
     #[case::three_parts("가:나:다")]
     fn a_token_without_a_hangul_pair_has_no_split(#[case] input: &str) {
@@ -653,6 +904,9 @@ mod spaced_hyphen_joining {
     #[case::closing_bracket_then_korean("확인(9일) - 논란 일자", "⠠⠴⠤⠉⠷")]
     #[case::korean_then_digit("등장 - 2차원 표면", "⠨⠶⠤⠼⠃")]
     #[case::korean_then_korean("가나 - 다라 마바", "⠫⠉⠤⠊⠐⠣")]
+    #[case::space_after_only("월드컵(8강)- 2010 남아공", "⠠⠴⠤⠼⠃")]
+    #[case::korean_space_after_only("밴 해켄- 양현종", "⠒⠤⠜⠶")]
+    #[case::score_space_after_only("팀에게 0- 2로", "⠼⠚⠤⠼⠃")]
     fn a_spaced_hyphen_joins_what_it_stands_between(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("hyphen must encode");
         assert!(actual.contains(expected), "hyphen must join: {actual}");
@@ -662,6 +916,8 @@ mod spaced_hyphen_joining {
     #[rstest::rstest]
     #[case::digits("12 - 3 을", "⠀⠤⠀")]
     #[case::letters("a - b 를", "⠀⠤⠀")]
+    #[case::roman_grade("A- 학점이", "⠘⠔⠀⠚")]
+    #[case::next_item_of_a_dash_list("- 가나(20개)- 한 개", "⠠⠴⠤⠀⠚⠒")]
     fn a_subtraction_sign_keeps_its_spaces(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("subtraction must encode");
         assert!(
@@ -703,6 +959,10 @@ mod hugging_punctuation {
     #[rstest::rstest]
     #[case::parentheses("확인 ( 가나 ) 다라", "⠦⠄⠫⠉⠠⠴")]
     #[case::double_angle_brackets("《 소나기 》 를", "⠰⠶⠠⠥⠉⠈⠕⠶⠆")]
+    #[case::period_closing_the_text("있었다 .", "⠌⠊⠲")]
+    #[case::comma_opening_the_next_word("(31명) ,상위", "⠠⠴⠐⠇")]
+    #[case::slash_spaced_after("업그레이드/ 새일센터", "⠪⠸⠌⠠⠗")]
+    #[case::slash_spaced_before("(28.83㎡ /안내, 홍보", "⠼⠃⠸⠌⠣⠒")]
     fn an_editorial_gap_beside_hugging_punctuation_closes(
         #[case] input: &str,
         #[case] expected: &str,
@@ -717,6 +977,11 @@ mod hugging_punctuation {
     #[case::before_an_opening_bracket("확인 ( 가나 ) 다라", "⠟⠀⠦⠄")]
     #[case::after_a_closing_bracket("《 소나기 》 를", "⠶⠆⠀⠐⠮")]
     #[case::an_empty_pair_naming_itself("『 』 안에는 책의 제목이", "⠰⠦⠀⠴⠆")]
+    #[case::omission_ellipsis("했습니다 .. 다라", "⠊⠀⠲⠲")]
+    #[case::decimal_after_a_space("타율 .304", "⠂⠀⠼⠲")]
+    #[case::period_inside_the_text("가 . 나", "⠫⠀⠲")]
+    #[case::cited_question_mark("때는 ? 대신", "⠵⠀⠸⠦")]
+    #[case::period_after_a_period("참가했다. .", "⠊⠲⠀⠲")]
     fn the_outer_face_of_a_bracket_keeps_its_space(#[case] input: &str, #[case] expected: &str) {
         let actual = crate::encode_to_unicode(input).expect("punctuation must encode");
         assert!(
@@ -734,5 +999,52 @@ mod hugging_punctuation {
     fn a_spaced_slash_keeps_its_spaces(#[case] input: &str) {
         let actual = crate::encode_to_unicode(input).expect("slash must encode");
         assert!(actual.contains("⠀⠸⠌⠀"), "slash must stay spaced: {actual}");
+    }
+
+    #[test]
+    fn a_spaced_verse_break_keeps_its_spaces() {
+        let actual = crate::encode_to_unicode("밀밭길을 // 구름에").expect("slash must encode");
+        assert!(
+            actual.contains("⠀⠸⠌⠸⠌⠀"),
+            "verse break must stay spaced: {actual}"
+        );
+    }
+}
+
+#[cfg(test)]
+mod label_colon_before_non_korean {
+    /// 제51항 본문 — a 쌍점 parting a 표제 from its 내용 is attached on its left and
+    /// followed by one blank. What the 내용 is written in does not change that, so
+    /// a label answered in Roman letters or figures takes the blank exactly as a
+    /// Korean one does.
+    #[rstest::rstest]
+    #[case::roman_content("프로젝트명:RP 가나", "⠐⠂⠀⠴")]
+    #[case::roman_and_digits("모델명:PN50 가나", "⠐⠂⠀⠴")]
+    #[case::digit_content("일시:2006년 가나", "⠐⠂⠀⠼")]
+    fn a_label_answered_in_roman_or_figures_takes_the_blank(
+        #[case] input: &str,
+        #[case] expected: &str,
+    ) {
+        let actual = crate::encode_to_unicode(input).expect("label must encode");
+        assert!(
+            actual.contains(expected),
+            "colon must be followed by a blank: {actual}"
+        );
+    }
+
+    /// 제51항 [다만 2] keeps 시:분 and 장:절 attached, and a 대비 쌍 such as
+    /// `청군:백군` is the same shape. A colon inside a Roman identifier
+    /// (`NVH:Noise`) never was a 쌍점 — nothing Korean stands before it.
+    #[rstest::rstest]
+    #[case::contrast_pair("청군:백군", "⠐⠂⠘⠗")]
+    #[case::hour_and_minute("오전 10:20", "⠼⠁⠚⠐⠂⠼⠃⠚")]
+    #[case::chapter_and_verse("요한 3:16", "⠼⠉⠐⠂⠼⠁⠋")]
+    #[case::roman_identifier("가나 NVH:Noise 다라", "⠓⠒⠠⠝")]
+    fn the_excepted_colons_stay_attached(#[case] input: &str, #[case] expected: &str) {
+        let actual = crate::encode_to_unicode(input).expect("colon must encode");
+        assert!(
+            actual.contains(expected),
+            "colon must stay attached: {actual}"
+        );
     }
 }

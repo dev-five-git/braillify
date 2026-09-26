@@ -169,6 +169,18 @@ pub fn encode_subscript(
         return Ok(false);
     }
 
+    // 과학 제3항 — 원소 기호를 먼저 적고 원자 번호를 아래 첨자로 적는다(₈O → ,o;#h).
+    // 수학 제19항 2의 좌하첨자는 제자리에 묶이지만 원자 번호는 원소가 앞선다.
+    if is_left_subscript_position(tokens, *i)
+        && super::rule_18::is_isotope_prescript(tokens, *i, content)
+        && let Some(consumed) = super::rule_18::emit_element_symbol(tokens, *i + 1, result)?
+    {
+        result.push(48);
+        engine.encode_tokens(content, result)?;
+        *i += 1 + consumed;
+        return Ok(false);
+    }
+
     result.push(48);
     // 적분/합/곱(∫ ∑ ∏ 등) 한정자 뒤 첨자는 묶음 없이 본문 그대로 출력한다.
     // PDF 제51항 [붙임] — `\substack`로 펼쳐진 두 번째 이상 첨자도 동일한 한정자
@@ -270,7 +282,19 @@ fn needs_quantifier_trailing_space(tokens: &[MathToken], idx: usize) -> bool {
 
 pub struct SubscriptRule;
 
+static META_SUBSCRIPTRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "19",
+    subsection: None,
+    name: "math_subscript",
+    standard_ref: "2024 Korean Braille Standard, 수학 제19항",
+    description: "아래첨자",
+};
+
 impl MathTokenRule for SubscriptRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_SUBSCRIPTRULE
+    }
+
     fn name(&self) -> &'static str {
         "SubscriptRule"
     }

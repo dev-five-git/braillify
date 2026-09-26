@@ -1,5 +1,45 @@
 [
   {
+    "input": "and",
+    "internal": "&",
+    "expected": "47",
+    "unicode": "⠯",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "for",
+    "internal": "=",
+    "expected": "63",
+    "unicode": "⠿",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "of",
+    "internal": "(",
+    "expected": "55",
+    "unicode": "⠷",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "the",
+    "internal": "!",
+    "expected": "46",
+    "unicode": "⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "with",
+    "internal": ")",
+    "expected": "62",
+    "unicode": "⠾",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "afford",
     "internal": "af=d",
     "expected": "1116325",

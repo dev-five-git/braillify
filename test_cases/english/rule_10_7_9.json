@@ -1,5 +1,13 @@
 [
   {
+    "input": "under",
+    "internal": "\"u",
+    "expected": "1637",
+    "unicode": "⠐⠥",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "blunder",
     "internal": "bl\"u",
     "expected": "371637",

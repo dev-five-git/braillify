@@ -1,4 +1,4 @@
-//! Math symbol encoding with Korean spacing rules.
+//! 제46항: 연산 기호와 비교 기호가 한글 사이에 나올 때에는 기호의 앞뒤를 한 칸씩 띄어 쓴다.
 //!
 //! Math symbols (＋, −, ×, ÷, etc.) need spacing around them when
 //! adjacent to Korean text, unless the Korean is a grammatical particle (josa).
@@ -11,10 +11,10 @@ use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 use crate::utils;
 
 pub static META: RuleMeta = RuleMeta {
-    section: "math",
+    section: "46",
     subsection: None,
     name: "math_symbol_encoding",
-    standard_ref: "2024 Korean Braille Standard (math symbols)",
+    standard_ref: "2024 Korean Braille Standard, 제46항",
     description: "Math symbols with Korean spacing rules",
 };
 
@@ -350,7 +350,14 @@ impl BrailleRule for RuleMath {
             ctx.emit(0);
         }
 
-        let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
+        let mut encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
+        if super::rule_68::is_superscript_digit(c)
+            && super::rule_68::continues_superscript(ctx.word_chars, ctx.index)
+        {
+            let number_continues =
+                super::rule_68::is_superscript_digit(ctx.word_chars[ctx.index - 1]);
+            encoded = &encoded[if number_continues { 2 } else { 1 }..];
+        }
         ctx.emit_slice(encoded);
 
         if pad_after {
@@ -541,6 +548,13 @@ mod tests {
             "input={input}"
         );
     }
+
+    /// 제46항 "연산 기호와 비교 기호가 한글 사이에 나올 때에는 기호의 앞뒤를 한 칸씩 띄어 쓴다"
+    /// 이 규칙의 메타데이터는 제46항을 명시해야 한다.
+    #[test]
+    fn meta_section_is_article_46() {
+        assert_eq!(META.section, "46", "META.section must be article 46");
+    }
 }
 
 #[cfg(test)]
@@ -584,6 +598,13 @@ mod roman_grade_minus_coverage {
     #[case::single_letter_grade("신용등급 A- 로")]
     fn a_credit_grade_minus_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    /// 제34항: 등급 뒤 한글 주석이 붙어도 붙임표는 등급의 뺄셈 기호다.
+    #[test]
+    fn a_grade_before_a_korean_annotation_keeps_its_minus() {
+        let encoded = crate::encode_to_unicode("등급을 AA-(안정적)에서").unwrap();
+        assert!(encoded.contains("⠁⠁⠐⠤⠦⠄"), "{encoded}");
     }
 }
 

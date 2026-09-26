@@ -61,6 +61,15 @@ pub(super) const SPACE: u8 = 0;
 type ForeignScope = Option<(super::rule_13::AccentCode, bool)>;
 type ActiveTypeformPassage = (usize, super::token::Typeform, bool, ForeignScope);
 
+fn settle_inline_technical_attribution(start: Option<(usize, usize)>, out: &[u8]) {
+    if let Some((start, checkpoint)) = start
+        && out.len() > start
+    {
+        super::rollback_attributions(checkpoint);
+        super::record_direct(super::UebMoveSource::InlineNemethCode, &out[start..], start);
+    }
+}
+
 /// Capitalisation pattern of a word (§8 subset currently supported).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Caps {
@@ -191,6 +200,11 @@ impl EnglishUebEngine {
             )),
         ));
         Self { contractions }
+    }
+
+    /// Metadata of every contraction rule, in registration index order.
+    pub(super) fn contraction_rule_metas(&self) -> Vec<&'static crate::rules::RuleMeta> {
+        self.contractions.registry()
     }
 
     /// Encode one Roman word embedded in Korean text according to Korean rule 37.
@@ -544,7 +558,24 @@ impl EnglishUebEngine {
                 255,
             ]);
         }
+        // Most word branches leave the match with `continue`, so a word cannot be
+        // checked right after its arm. Carrying the mark to the next iteration
+        // (and past the loop) reaches every branch without touching any of them.
+        let mut pending_word: Option<(usize, usize)> = None;
+        let mut pending_symbol = None;
+        let mut inline_technical_start = None;
+        let mut pending_inline_technical = None;
+        let mut suppress_next_inline_dollar = false;
+
         for i in 0..tokens.len() {
+            settle_inline_technical_attribution(pending_inline_technical.take(), &out);
+            super::settle_word_attribution(pending_word.take(), &out);
+            super::settle_symbol_attribution(pending_symbol.take(), &out);
+            if matches!(tokens[i], EnglishToken::Technical(_)) {
+                let start = inline_technical_start.take();
+                suppress_next_inline_dollar |= start.is_some();
+                settle_inline_technical_attribution(start, &out);
+            }
             if let Some((end, form)) = nested_inner_passage
                 && i >= end
             {
@@ -622,6 +653,18 @@ impl EnglishUebEngine {
             if !spatial_grade1_passage && cap_start[i] {
                 out.extend([CAPITAL, CAPITAL, CAPITAL]);
             }
+            if matches!(tokens[i], EnglishToken::Symbol(_)) {
+                pending_symbol = Some(out.len());
+            }
+            if matches!(tokens[i], EnglishToken::Symbol('$')) {
+                if suppress_next_inline_dollar {
+                    suppress_next_inline_dollar = false;
+                } else if let Some(start) = inline_technical_start.take() {
+                    pending_inline_technical = Some(start);
+                } else {
+                    inline_technical_start = Some((out.len(), super::attribution_checkpoint()));
+                }
+            }
             match &tokens[i] {
                 EnglishToken::Space => {
                     encode_space_arm!(tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, preserve_spatial_newlines, flatten_line_layout, spatial_grade1_passage, poem_linear_context, collapse_prose_double_space, skip_flattened_line_indent, numeric_separator_count, i)
@@ -629,6 +672,7 @@ impl EnglishUebEngine {
                 EnglishToken::Number(digits) => {
                     skip_flattened_line_indent = false;
                     line_mode_active = false;
+                    let number_start = out.len();
                     if numeric_mode {
                         // §6.3: already in numeric mode (digit-separator `,`/`.`
                         // bridged us here) — emit digits only, no second `⠼`.
@@ -639,16 +683,26 @@ impl EnglishUebEngine {
                         out.extend(super::rule_6::encode_number(digits)?);
                         numeric_separator_count = 0;
                     }
+                    super::record_whole_word(super::UebMoveSource::Numeric, &out[number_start..]);
                     prev_was_number = true;
                     numeric_mode = true;
                 }
                 EnglishToken::Technical(chars) => {
                     skip_flattened_line_indent = false;
-                    out.extend(super::rule_11::encode_technical(chars)?);
+                    let cells = super::rule_11::encode_technical(chars)?;
+                    // Direct records do not change `attempt_count`, so the next
+                    // spelled-out word can still settle to §4.1. They also mask
+                    // any nested word attempts from this complete §14.6.2 span.
+                    super::push_direct(
+                        &mut out,
+                        super::UebMoveSource::InlineNemethCode,
+                        &cells,
+                    );
                     prev_was_number = false;
                     numeric_mode = false;
                 }
                 EnglishToken::Word(chars) => {
+                    pending_word = Some((out.len(), super::attempt_count()));
                     encode_word_arm!(self, tokens, explicit_english, out, prev_was_number, numeric_mode, skip_to, line_mode_active, grade1_passage, cap_start_grade1, in_passage, escaped_code, regex_listing, spanish_foreign, foreign_passage, scansion_stress_context, early_english, spatial_grade1_passage, skip_flattened_line_indent, i, chars)
                 }
                 EnglishToken::WordDivision { chars, break_at } if poem_linear_context => {
@@ -886,7 +940,7 @@ impl EnglishUebEngine {
                     numeric_mode = true;
                 }
                 EnglishToken::Symbol(c) => {
-                    encode_symbol_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, passage, cap_term, in_passage, url_listing, regex_listing, foreign_code, spanish_foreign, foreign_passage, early_english, preserve_spatial_newlines, skip_flattened_line_indent, numeric_separator_count, i, c)
+                    encode_symbol_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, passage, cap_term, in_passage, url_listing, regex_listing, foreign_code, spanish_foreign, foreign_passage, early_english, preserve_spatial_newlines, skip_flattened_line_indent, numeric_separator_count, i, c);
                 }
                 EnglishToken::Styled(_, form) => {
                     encode_styled_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, passage, in_passage, foreign_code, spanish_foreign, foreign_passage, drop_styled_typeform_for_code_switch, skip_flattened_line_indent, nested_inner_passage, i, form)
@@ -897,6 +951,9 @@ impl EnglishUebEngine {
                 out.extend([CAPITAL, decode_unicode('⠄')]);
             }
         }
+        settle_inline_technical_attribution(pending_inline_technical.take(), &out);
+        super::settle_word_attribution(pending_word.take(), &out);
+        super::settle_symbol_attribution(pending_symbol.take(), &out);
         if let Some(span) = grade1_passage
             && span.needs_terminator
         {

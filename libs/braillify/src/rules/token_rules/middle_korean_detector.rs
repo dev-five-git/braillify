@@ -2,6 +2,7 @@ use crate::rules::context::EncodingMode;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// 제19항의 옛 글자표 규정을 적용할 인코딩 모드를 고르기 위해 옛 글자 문맥을 감지한다.
 pub struct MiddleKoreanDetectorRule;
 
 fn is_strong_middle_korean_char(c: char) -> bool {
@@ -36,8 +37,6 @@ fn is_strong_middle_korean_char(c: char) -> bool {
         // Hangul Jamo Extended-A/B
         || (0xA960..=0xA97C).contains(&code)
         || (0xD7B0..=0xD7FB).contains(&code)
-        // Hanja in historical contexts
-        || (0x4E00..=0x9FFF).contains(&code)
         // Precomposed old Hangul syllables in PUA
         || (0xE000..=0xF8FF).contains(&code)
 }
@@ -72,7 +71,19 @@ fn nearest_next_word<'a>(tokens: &'a [Token<'a>], index: usize) -> Option<&'a [c
     None
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "19",
+    subsection: None,
+    name: "middle_korean_detector",
+    standard_ref: "2024 Korean Braille Standard, 제19항 옛 글자",
+    description: "중세국어 문맥 감지 후 인코딩 모드 전환",
+};
+
 impl TokenRule for MiddleKoreanDetectorRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }
@@ -135,6 +146,25 @@ mod tests {
             meta: WordMeta::from_chars(&chars),
             chars,
         })
+    }
+
+    /// 국립국어원 answered on 2026-09-21 that the mode follows the 옛글자 — "옛글자가
+    /// 들어가면 그 글자에 대하여 그렇게 표기합니다" — and that 한자 is not
+    /// transcribable at all, so a Hanja is no evidence of a historical text. A
+    /// modern sentence that quotes one in parentheses is ordinary Korean.
+    #[rstest::rstest]
+    #[case::gloss_in_parentheses("中國")]
+    #[case::single_hanja("州")]
+    #[case::reading_then_hanja("지천명")]
+    fn a_hanja_alone_does_not_enter_middle_korean_mode(#[case] text: &str) {
+        let tokens = [word(text)];
+        let mut state = EncoderState::new(false);
+
+        MiddleKoreanDetectorRule
+            .apply(&tokens, 0, &mut state)
+            .expect("middle Korean detector should not fail");
+
+        assert_ne!(state.current_mode(), EncodingMode::MiddleKorean);
     }
 
     #[test]

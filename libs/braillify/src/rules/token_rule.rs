@@ -1,3 +1,4 @@
+use super::RuleMeta;
 use super::context::EncoderState;
 use super::token::Token;
 
@@ -25,6 +26,11 @@ pub enum TokenAction<'a> {
 }
 
 pub trait TokenRule: Send + Sync {
+    /// The article of the standard this rule implements. Required rather than
+    /// defaulted: a rule that has not been checked against the standard should
+    /// fail to compile, not quietly report an article nobody verified.
+    fn meta(&self) -> &'static RuleMeta;
+
     fn phase(&self) -> TokenPhase;
     fn priority(&self) -> u16 {
         100

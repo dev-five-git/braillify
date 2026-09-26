@@ -17,9 +17,19 @@
   },
   {
     "input": "1,234,567",
-    "internal": "#a1bcd1efg",
-    "expected": "601239252171127",
-    "unicode": "⠼⠁⠂⠃⠉⠙⠂⠑⠋⠛",
+    "note": "줄바꿈: PDF 그대로(줄 끝 연결표 ⠠) / 한 줄로 이은 형태",
+    "alternatives": [
+      {
+        "internal": "#a1bcd1,\nefg",
+        "expected": "60123925232\n171127",
+        "unicode": "⠼⠁⠂⠃⠉⠙⠂⠠\n⠑⠋⠛"
+      },
+      {
+        "internal": "#a1bcd1efg",
+        "expected": "601239252171127",
+        "unicode": "⠼⠁⠂⠃⠉⠙⠂⠑⠋⠛"
+      }
+    ],
     "world": "⠼⠁⠂⠃⠉⠙⠂⠑⠋⠛",
     "jeomsarang": "⠼⠁⠂⠃⠉⠙⠂⠑⠋⠛"
   }

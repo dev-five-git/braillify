@@ -4,23 +4,36 @@
 //! function names, superscript/subscript chars, etc.) and encodes them
 //! using the math braille engine instead of Korean character rules.
 
+use crate::rules::RuleMeta;
 use crate::rules::context::EncoderState;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
 pub struct MathExpressionTokenRule;
 
+static META: RuleMeta = RuleMeta {
+    section: "11",
+    subsection: None,
+    name: "math_expression_token",
+    standard_ref: "2024 Korean Braille Standard, 수학 제11항",
+    description: "Detect and encode mathematical expressions embedded in text",
+};
+
 mod apply;
 mod detect;
 mod helpers;
 
 impl TokenRule for MathExpressionTokenRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::FractionDetection
     }
 
     fn priority(&self) -> u16 {
-        50 // Before InlineFractionRule (120) and LatexFractionRule
+        50
     }
 
     fn apply<'a>(

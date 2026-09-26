@@ -229,5 +229,13 @@
     "unicode": "⠈⠔⠌",
     "world": "⠈⠔⠴⠎⠞⠲",
     "jeomsarang": "⠤⠤⠎⠞"
+  },
+  {
+    "input": "[open tn]every",
+    "internal": "@.<e",
+    "expected": "8403517",
+    "unicode": "⠈⠨⠣⠑",
+    "world": "",
+    "jeomsarang": ""
   }
 ]

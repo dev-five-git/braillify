@@ -229,6 +229,27 @@ fn has_nemeth_span(input: &str) -> bool {
     false
 }
 
+/// The switch indicators and the maths they wrap are all §14.6.2 output, so
+/// they are recorded as they are appended rather than left for a later pass to
+/// guess at.
+fn push_nemeth(out: &mut Vec<u8>, cells: &[u8]) {
+    super::push_direct_unplaced(out, super::UebMoveSource::InlineNemethCode, cells);
+}
+
+/// Append prose that was encoded into its own buffer, moving the records it
+/// made from that buffer's coordinates onto this one's.
+fn extend_prose(
+    out: &mut Vec<u8>,
+    encode_ueb: &mut impl FnMut(&str) -> Option<Vec<u8>>,
+    text: &str,
+) -> Option<()> {
+    let checkpoint = super::attribution_checkpoint();
+    let cells = encode_ueb(text)?;
+    super::rebase_attributions(checkpoint, out.len());
+    out.extend(cells);
+    Some(())
+}
+
 fn encode_nemeth_spans(
     input: &str,
     encode_ueb: &mut impl FnMut(&str) -> Option<Vec<u8>>,
@@ -238,37 +259,33 @@ fn encode_nemeth_spans(
     let mut continued = false;
     while let Some(start) = rest.find('$') {
         if continued {
-            out.extend(encode_ueb(&rest[..start])?);
+            extend_prose(&mut out, encode_ueb, &rest[..start])?;
         } else if rest[..start].ends_with('"') {
             let prefix = &rest[..start - '"'.len_utf8()];
-            out.extend(encode_ueb(prefix)?);
+            extend_prose(&mut out, encode_ueb, prefix)?;
             out.push(decode_unicode('⠦'));
         } else {
-            out.extend(encode_ueb(&rest[..start])?);
+            extend_prose(&mut out, encode_ueb, &rest[..start])?;
         }
         let after = &rest[start + '$'.len_utf8()..];
         let end = after.find('$')?;
         if !continued {
-            out.extend(cells("⠸⠩⠀"));
+            push_nemeth(&mut out, &cells("⠸⠩⠀"));
         }
-        out.extend(encode_nemeth_math(&after[..end])?);
+        push_nemeth(&mut out, &encode_nemeth_math(&after[..end])?);
         let tail = &after[end + '$'.len_utf8()..];
         if tail.starts_with(", $") {
-            out.extend(cells("⠠⠀"));
+            push_nemeth(&mut out, &cells("⠠⠀"));
             rest = &tail[", ".len()..];
             continued = true;
         } else {
-            out.extend(cells("⠀⠸⠱"));
+            push_nemeth(&mut out, &cells("⠀⠸⠱"));
             rest = tail;
             continued = false;
         }
     }
-    if !rest.is_empty() {
-        if let Some(cells) = encode_ueb(rest) {
-            out.extend(cells);
-        } else {
-            out.extend(encode_simple_ueb_symbols(rest)?);
-        }
+    if !rest.is_empty() && extend_prose(&mut out, encode_ueb, rest).is_none() {
+        out.extend(encode_simple_ueb_symbols(rest)?);
     }
     Some(out)
 }

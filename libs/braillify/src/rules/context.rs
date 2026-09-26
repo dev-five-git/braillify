@@ -45,6 +45,20 @@ pub enum EncodingMode {
     /// `[ ]`는 ⠐⠘⠷ … ⠘⠾, `/ /`는 ⠐⠘⠌ … ⠘⠌으로 묶는다.
     /// 음운 기호(ə, ː, θ, ŋ, æ 등)는 국제음성기호 점자 변환표에 따라 점역한다.
     Ipa,
+    /// 과학 점자로 적는 국어 글. 묵자 모양만으로는 과학 기호인지 알 수 없는 글을
+    /// 과학 규정으로 읽는다 — 연산 기호가 든 로마자 식(제6항), 유전자(제23항),
+    /// 치식(제26항), 단위 속 화학식(제30항 [붙임]).
+    Science,
+    /// [`Self::Science`] 와 같되, 구조식과 전자 점식을 공간 표기 형식으로 적는다.
+    /// 제9항·제15항은 같은 묵자를 기호 표기와 공간 표기 가운데 어느 쪽으로도 적게 한다.
+    ScienceSpatial,
+}
+
+impl EncodingMode {
+    /// 과학 점자로 읽는 문맥인가.
+    pub fn reads_science(self) -> bool {
+        matches!(self, Self::Science | Self::ScienceSpatial)
+    }
 }
 
 impl std::str::FromStr for EncodingMode {
@@ -62,6 +76,8 @@ impl std::str::FromStr for EncodingMode {
             "middle_korean" => Ok(Self::MiddleKorean),
             "object_symbol" => Ok(Self::ObjectSymbol),
             "ipa" => Ok(Self::Ipa),
+            "science" => Ok(Self::Science),
+            "science_spatial" => Ok(Self::ScienceSpatial),
             _ => Err(()),
         }
     }
@@ -111,10 +127,24 @@ pub struct EncoderState {
     /// Explicit math mode (`context = math` in fixtures/API options).
     /// Keeps parentheses in math form even when their contents include Hangul.
     pub math_mode_active: bool,
+    /// Explicit Korean context (`context = korean`): the text sits in a Korean
+    /// sentence even when it carries no Hangul, as the unit table of 과학 제30항
+    /// does (`mH₂O` → ⠴⠍⠠⠓⠰⠼⠃⠠⠕).
+    pub korean_context_active: bool,
+    /// Explicit science context (`context = science`).
+    pub science_context_active: bool,
     /// 짝맞춤 작은따옴표(`‘…’`) 추적: `‘`를 만나면 +1, 닫음 `’`로 -1.
     /// 0보다 크면 현재 위치는 paired closing 위치이므로 `’`를 `⠴⠄`로 emit.
     /// 0이면 standalone apostrophe로 `⠄` 한 셀만 emit. (PDF 제61항)
     pub unmatched_open_single_quotes: i32,
+    /// Per-article spans the last Korean syllable produced, handed from
+    /// `RuleKorean` to the trace recorder in [`super::engine`].
+    ///
+    /// `None` whenever no trace is being collected, which is both the signal to
+    /// rules that this work is unwanted and the reason the untraced encoder pays
+    /// only one pointer for the feature — this struct is carried by `&mut`
+    /// through the per-character loop, so its size is on the hot path.
+    pub jamo_spans: Option<Box<crate::korean_char::JamoSpans>>,
 }
 
 impl EncoderState {
@@ -136,8 +166,15 @@ impl EncoderState {
             doc_summary: DocumentSummary::default(),
             matrix_context_active: false,
             math_mode_active: false,
+            korean_context_active: false,
+            science_context_active: false,
             unmatched_open_single_quotes: 0,
+            jamo_spans: None,
         }
+    }
+
+    pub fn reads_science_shapes(&self) -> bool {
+        self.english_indicator || self.korean_context_active || self.science_context_active
     }
 
     /// Get the current encoding mode (top of stack, default Korean).
@@ -249,21 +286,18 @@ mod tests {
     use super::*;
     use std::str::FromStr;
 
-    #[test]
-    fn encoding_mode_from_str_all_variants() {
-        assert_eq!(EncodingMode::from_str("korean"), Ok(EncodingMode::Korean));
-        assert_eq!(EncodingMode::from_str("english"), Ok(EncodingMode::English));
-        assert_eq!(EncodingMode::from_str("math"), Ok(EncodingMode::Math));
-        assert_eq!(EncodingMode::from_str("number"), Ok(EncodingMode::Number));
-        assert_eq!(
-            EncodingMode::from_str("middle_korean"),
-            Ok(EncodingMode::MiddleKorean)
-        );
-        assert_eq!(
-            EncodingMode::from_str("object_symbol"),
-            Ok(EncodingMode::ObjectSymbol)
-        );
-        assert_eq!(EncodingMode::from_str("ipa"), Ok(EncodingMode::Ipa));
+    #[rstest::rstest]
+    #[case::korean("korean", EncodingMode::Korean)]
+    #[case::english("english", EncodingMode::English)]
+    #[case::math("math", EncodingMode::Math)]
+    #[case::number("number", EncodingMode::Number)]
+    #[case::middle_korean("middle_korean", EncodingMode::MiddleKorean)]
+    #[case::object_symbol("object_symbol", EncodingMode::ObjectSymbol)]
+    #[case::ipa("ipa", EncodingMode::Ipa)]
+    #[case::science("science", EncodingMode::Science)]
+    #[case::science_spatial("science_spatial", EncodingMode::ScienceSpatial)]
+    fn encoding_mode_from_str_all_variants(#[case] name: &str, #[case] mode: EncodingMode) {
+        assert_eq!(EncodingMode::from_str(name), Ok(mode));
     }
 
     #[test]

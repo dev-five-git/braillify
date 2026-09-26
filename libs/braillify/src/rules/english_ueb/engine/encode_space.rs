@@ -30,12 +30,17 @@ macro_rules! encode_space_arm {
                     }
                     if is_numeric_space($tokens, $i) {
                         $numeric_separator_count += 1;
+                        let numeric_space_start = $out.len();
                         $skip_to = encode_following_number_as_numeric_space(
                             $tokens,
                             $i,
                             &mut $out,
                             $numeric_separator_count == 6,
                         )?;
+                        super::record_whole_word(
+                            super::UebMoveSource::Numeric,
+                            &$out[numeric_space_start..],
+                        );
                         $prev_was_number = true;
                         $numeric_mode = true;
                         $line_mode_active = false;

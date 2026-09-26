@@ -1,5 +1,13 @@
 [
   {
+    "input": "had",
+    "internal": "_h",
+    "expected": "5619",
+    "unicode": "⠸⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Galahad",
     "internal": ",gala_h",
     "expected": "32271715619",

@@ -1,4 +1,4 @@
-﻿use super::*;
+use super::*;
 
 impl EnglishUebEngine {
     pub(super) fn encode_word(
@@ -84,13 +84,21 @@ impl EnglishUebEngine {
             );
         }
         if shortform_usable && super::super::rule_10_9::is_pure_shortform_abbreviation(&word) {
-            out.push(GRADE1);
+            super::super::push_indicator(
+                out,
+                super::super::UebMoveSource::Grade1Indicator,
+                &[GRADE1],
+            );
         }
         // Inside a §8.4 passage the ⠠⠠⠠ … ⠠⠄ carry capitalisation; `?` still guards
         // any residual mixed-case word there (→ legacy fallback).
         if !suppress_caps && !digit_adjacent && chemical_formula_caps(chars) {
             for &c in chars {
-                out.push(CAPITAL);
+                super::super::push_indicator(
+                    out,
+                    super::super::UebMoveSource::CapitalLetterIndicator,
+                    &[CAPITAL],
+                );
                 out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
             }
             return Some(());
@@ -98,7 +106,11 @@ impl EnglishUebEngine {
         match classify_caps(chars)? {
             _ if suppress_caps => {}
             Caps::None => {}
-            Caps::Single => out.push(CAPITAL),
+            Caps::Single => super::super::push_indicator(
+                out,
+                super::super::UebMoveSource::CapitalLetterIndicator,
+                &[CAPITAL],
+            ),
             Caps::Word => {
                 // §8.7 / UEB §5.7.2: a *standing-alone* all-caps acronym whose
                 // lowercase letters form a multi-letter shortform (e.g. `CD` =
@@ -113,10 +125,17 @@ impl EnglishUebEngine {
                     && !super::super::rule_10_9::is_pure_shortform_abbreviation(&word)
                     && crate::rules::english_shortform::requires_grade1_indicator(&uppercase_word)
                 {
-                    out.push(GRADE1);
+                    super::super::push_indicator(
+                        out,
+                        super::super::UebMoveSource::Grade1Indicator,
+                        &[GRADE1],
+                    );
                 }
-                out.push(CAPITAL);
-                out.push(CAPITAL);
+                super::super::push_indicator(
+                    out,
+                    super::super::UebMoveSource::CapitalisedWordIndicator,
+                    &[CAPITAL, CAPITAL],
+                );
             }
         }
         // §10.12.1: an all-caps initialism directly abutting a digit (`CH6`,
@@ -185,20 +204,29 @@ impl EnglishUebEngine {
             let cell = upper_usable
                 .then(|| {
                     super::super::rule_10_1::wordsign(&word)
-                        .or_else(|| super::super::rule_10_2::wordsign(&word))
+                        .map(|c| (c, super::super::UebMoveSource::AlphabeticWordsign))
+                        .or_else(|| {
+                            super::super::rule_10_2::wordsign(&word)
+                                .map(|c| (c, super::super::UebMoveSource::StrongWordsign))
+                        })
                 })
                 .flatten()
                 .or_else(|| {
                     lower_usable
-                        .then(|| super::super::rule_10_5::wordsign(&word))
+                        .then(|| {
+                            super::super::rule_10_5::wordsign(&word)
+                                .map(|c| (c, super::super::UebMoveSource::LowerWordsign))
+                        })
                         .flatten()
                 });
-            if let Some(cell) = cell {
+            if let Some((cell, source)) = cell {
+                super::super::record_whole_word(source, &[cell]);
                 out.push(cell);
                 return Some(());
             }
         }
         if shortform_usable && let Some(cells) = super::super::rule_10_9::whole_word_cells(&word) {
+            super::super::record_whole_word(super::super::UebMoveSource::Shortform, &cells);
             out.extend(cells);
             return Some(());
         }
@@ -365,8 +393,16 @@ impl EnglishUebEngine {
             // better convey the print meaning than a capitals-word indicator plus
             // terminator.  Plural/suffix acronyms (`CDs`, `OKd`) remain under §8.6.3.
             for &c in &chars[..2] {
-                out.push(CAPITAL);
-                out.push(crate::english::encode_english(c.to_ascii_lowercase()).ok()?);
+                super::super::push_indicator(
+                    out,
+                    super::super::UebMoveSource::CapitalLetterIndicator,
+                    &[CAPITAL],
+                );
+                super::super::push_direct(
+                    out,
+                    super::super::UebMoveSource::Letter,
+                    &[crate::english::encode_english(c.to_ascii_lowercase()).ok()?],
+                );
             }
             let suffix: Vec<char> = chars[2..].iter().flat_map(|c| c.to_lowercase()).collect();
             out.extend(
@@ -509,6 +545,7 @@ impl EnglishUebEngine {
         }
         bounds.push(chars.len());
 
+        let attributions_before_buf = super::super::attribution_checkpoint();
         let mut buf = Vec::new();
         let mut prev_caps_word = false;
         for w in bounds.windows(2) {
@@ -577,12 +614,19 @@ impl EnglishUebEngine {
             // §8.6.3: a §8.4 caps word (`⠠⠠`) is terminated by `⠠⠄` before lowercase
             // letters that continue the same word (`ABCs`, `WALKing`, `unSELFish`).
             if prev_caps_word && matches!(caps, Caps::None) {
-                buf.push(CAPITAL);
-                buf.push(decode_unicode('⠄'));
+                super::super::push_indicator(
+                    &mut buf,
+                    super::super::UebMoveSource::CapitalisedWordIndicator,
+                    &[CAPITAL, decode_unicode('⠄')],
+                );
             }
             if matches!(caps, Caps::Word) && w[0] > 0 && w[1] < chars.len() && seg.len() <= 2 {
                 for cell in &cells {
-                    buf.push(CAPITAL);
+                    super::super::push_indicator(
+                        &mut buf,
+                        super::super::UebMoveSource::CapitalLetterIndicator,
+                        &[CAPITAL],
+                    );
                     buf.push(*cell);
                 }
                 prev_caps_word = false;
@@ -590,16 +634,22 @@ impl EnglishUebEngine {
             } else {
                 match caps {
                     Caps::None => {}
-                    Caps::Single => buf.push(CAPITAL),
-                    Caps::Word => {
-                        buf.push(CAPITAL);
-                        buf.push(CAPITAL);
-                    }
+                    Caps::Single => super::super::push_indicator(
+                        &mut buf,
+                        super::super::UebMoveSource::CapitalLetterIndicator,
+                        &[CAPITAL],
+                    ),
+                    Caps::Word => super::super::push_indicator(
+                        &mut buf,
+                        super::super::UebMoveSource::CapitalisedWordIndicator,
+                        &[CAPITAL, CAPITAL],
+                    ),
                 }
             }
             buf.extend(&cells);
             prev_caps_word = matches!(caps, Caps::Word);
         }
+        super::super::rebase_attributions(attributions_before_buf, out.len());
         out.extend(buf);
         Some(())
     }

@@ -60,7 +60,19 @@ fn is_bridging_digraph(a: char, b: char) -> bool {
 /// splits its two letters) is left to spell out.
 pub struct BridgeAwareStrongGroupsignRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.11",
+    subsection: None,
+    name: "ueb_bridge_aware_strong_groupsign",
+    standard_ref: "UEB 2024 §10.11",
+    description: "Strong groupsign that must not bridge a compound boundary",
+};
+
 impl ContractionRule for BridgeAwareStrongGroupsignRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let m = StrongGroupsignRule.try_match(word, pos)?;
         if m.consumed == 2

@@ -1,5 +1,113 @@
 [
   {
+    "input": ",",
+    "context": "english",
+    "internal": "1",
+    "expected": "2",
+    "unicode": "⠂",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": ";",
+    "context": "english",
+    "internal": "2",
+    "expected": "6",
+    "unicode": "⠆",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": ":",
+    "context": "english",
+    "internal": "3",
+    "expected": "18",
+    "unicode": "⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": ".",
+    "context": "english",
+    "internal": "4",
+    "expected": "50",
+    "unicode": "⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "!",
+    "context": "english",
+    "internal": "6",
+    "expected": "22",
+    "unicode": "⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "(",
+    "context": "english",
+    "internal": "\"<",
+    "expected": "1635",
+    "unicode": "⠐⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": ")",
+    "context": "english",
+    "internal": "\">",
+    "expected": "1628",
+    "unicode": "⠐⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "[",
+    "context": "english",
+    "internal": ".<",
+    "expected": "4035",
+    "unicode": "⠨⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "]",
+    "context": "english",
+    "internal": ".>",
+    "expected": "4028",
+    "unicode": "⠨⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "{",
+    "context": "english",
+    "internal": "_<",
+    "expected": "5635",
+    "unicode": "⠸⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "}",
+    "context": "english",
+    "internal": "_>",
+    "expected": "5628",
+    "unicode": "⠸⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "\\",
+    "context": "english",
+    "internal": "_*",
+    "expected": "5633",
+    "unicode": "⠸⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "U.S.A.",
     "internal": ",u4,s4,a4",
     "expected": "32375032145032150",

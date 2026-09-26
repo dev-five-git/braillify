@@ -33,7 +33,19 @@ pub fn encode_number_literal(digits: &str, result: &mut Vec<u8>) {
 
 pub struct NumberRule;
 
+static META_NUMBERRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "1",
+    subsection: None,
+    name: "math_number",
+    standard_ref: "2024 Korean Braille Standard, 수학 제1항",
+    description: "수 표기",
+};
+
 impl MathTokenRule for NumberRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_NUMBERRULE
+    }
+
     fn name(&self) -> &'static str {
         "NumberRule"
     }

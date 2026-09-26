@@ -24,7 +24,19 @@ impl RestrictedLowerGroupsignRule {
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.6",
+    subsection: Some("restricted"),
+    name: "ueb_restricted_lower_groupsign",
+    standard_ref: "UEB 2024 §10.6",
+    description: "Restricted lower groupsigns be, con, dis",
+};
+
 impl ContractionRule for RestrictedLowerGroupsignRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         // Restricted groupsigns are word-initial only (§10.6.2).
         if pos != 0 {

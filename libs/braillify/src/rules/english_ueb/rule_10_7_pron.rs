@@ -264,7 +264,19 @@ impl InitialContractionPronunciationRule {
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.7",
+    subsection: Some("pronunciation"),
+    name: "ueb_initial_contraction_pronunciation",
+    standard_ref: "UEB 2024 §10.7",
+    description: "Initial-letter contractions gated by pronunciation",
+};
+
 impl ContractionRule for InitialContractionPronunciationRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let full: String = word.iter().collect();
         let mut best: Option<(usize, [u8; 2])> = None;

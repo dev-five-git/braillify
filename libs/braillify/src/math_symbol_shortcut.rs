@@ -1,250 +1,546 @@
 use phf::phf_map;
 
+use crate::rules::RuleMeta;
 use crate::unicode::decode_unicode;
 
-static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
-    // PDF 한국 점자 규정 (수학) — 동그라미 숫자 ①②③④⑤⑥⑦⑧⑨⑩
-    '\u{2460}' => &[decode_unicode('⠼'), decode_unicode('⠂')], // ①
-    '\u{2461}' => &[decode_unicode('⠼'), decode_unicode('⠆')], // ②
-    '\u{2462}' => &[decode_unicode('⠼'), decode_unicode('⠒')], // ③
-    '\u{2463}' => &[decode_unicode('⠼'), decode_unicode('⠲')], // ④
-    '\u{2464}' => &[decode_unicode('⠼'), decode_unicode('⠢')], // ⑤
-    '\u{2465}' => &[decode_unicode('⠼'), decode_unicode('⠖')], // ⑥
-    '\u{2466}' => &[decode_unicode('⠼'), decode_unicode('⠶')], // ⑦
-    '\u{2467}' => &[decode_unicode('⠼'), decode_unicode('⠦')], // ⑧
-    '\u{2468}' => &[decode_unicode('⠼'), decode_unicode('⠔')], // ⑨
-    '\u{2469}' => &[decode_unicode('⠼'), decode_unicode('⠴')], // ⑩
-    '+' => &[decode_unicode('⠢')], // 5 (덧셈표)
-    '/' => &[decode_unicode('⠸'), decode_unicode('⠌')], // _/ (분수 기호)
-    '\u{2212}' => &[decode_unicode('⠔')], // 9 (뺄셈표)
-    '\u{00D7}' => &[decode_unicode('⠡')], // * (곱셈표)
-    '\u{00F7}' => &[decode_unicode('⠌'), decode_unicode('⠌')], // // (나눗셈표)
-    '=' => &[decode_unicode('⠒'), decode_unicode('⠒')], // 33 (등호)
-    '>' => &[decode_unicode('⠢'), decode_unicode('⠢')], // 55 (보다크다)
-    '<' => &[decode_unicode('⠔'), decode_unicode('⠔')], // 99 (보다작다)
-    '\u{2260}' => &[decode_unicode('⠨'), decode_unicode('⠒'), decode_unicode('⠒')], // .33 (같지않다)
-    '\u{2265}' => &[decode_unicode('⠲'), decode_unicode('⠲')], // 44 (크거나같다)
-    '\u{2267}' => &[decode_unicode('⠲'), decode_unicode('⠲')], // 44 (크거나같다)
-    '\u{2264}' => &[decode_unicode('⠖'), decode_unicode('⠖')], // 66 (작거나같다)
-    '\u{2266}' => &[decode_unicode('⠖'), decode_unicode('⠖')], // 66 (작거나같다)
-    '\u{2252}' => &[decode_unicode('⠐'), decode_unicode('⠒'), decode_unicode('⠒')], // "33 (근삿값)
-    '\u{2236}' => &[decode_unicode('⠐'), decode_unicode('⠂')], // "1 (비)
-    '\u{2192}' => &[decode_unicode('⠒'), decode_unicode('⠕')], // 3o (오른쪽 화살표)
-    '\u{2190}' => &[decode_unicode('⠪'), decode_unicode('⠒')], // [3 (왼쪽 화살표)
-    '\u{2194}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')], // [3o (양쪽 화살표)
-    '\u{2191}' => &[decode_unicode('⠰'), decode_unicode('⠒'), decode_unicode('⠕')], // ;3o (위쪽 화살표)
-    '\u{2193}' => &[decode_unicode('⠘'), decode_unicode('⠒'), decode_unicode('⠕')], // ^3o (아래쪽 화살표)
-    '\u{21D2}' => &[decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')], // 33o (항진명제)
-    '\u{21D4}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')], // [33o (필요충분)
-    '\u{21C4}' => &[decode_unicode('⠪'), decode_unicode('⠶'), decode_unicode('⠕')], // [7o (동치명제)
-    '\u{2032}' => &[decode_unicode('⠤')], // - (프라임)
-    '\u{2033}' => &[decode_unicode('⠤'), decode_unicode('⠤')], // -- (더블 프라임, PDF 제17항)
-    '\u{2034}' => &[decode_unicode('⠤'), decode_unicode('⠤'), decode_unicode('⠤')], // --- (트리플 프라임)
-    '\u{00B2}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠃')], // ^#b (제곱)
-    '\u{00B3}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠉')], // ^#c (세제곱)
-    '\u{2074}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠙')], // ^#d (네제곱)
-    '\u{2075}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠑')], // ^#e (오제곱)
-    '\u{2077}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠛')], // ^#g (칠제곱)
-    '\u{2079}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠊')], // ^#i (구제곱)
-    '\u{00B9}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠁')], // ^#a (1제곱)
-    '\u{2070}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠚')], // ^#j (0제곱)
-    '\u{1D4F}' => &[decode_unicode('⠘'), decode_unicode('⠅')], // ^k (위첨자 k)
-    '\u{1D50}' => &[decode_unicode('⠘'), decode_unicode('⠍')], // ^m (위첨자 m)
-    '\u{02E3}' => &[decode_unicode('⠘'), decode_unicode('⠭')], // ^x (위첨자 x)
-    '\u{207D}' => &[decode_unicode('⠘'), decode_unicode('⠦')], // ^8 (위첨자 ()
-    '\u{207E}' => &[decode_unicode('⠴')], // 0 (위첨자 ))
-    '\u{207F}' => &[decode_unicode('⠘'), decode_unicode('⠝')], // ^n (위첨자 n)
-    '\u{207B}' => &[decode_unicode('⠘'), decode_unicode('⠔')], // ^9 (위첨자 마이너스)
-    '\u{207A}' => &[decode_unicode('⠘'), decode_unicode('⠢')], // ^5 (위첨자 플러스)
-    '\u{2080}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠚')], // ;#j (아래첨자 0)
-    '\u{2081}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠁')], // ;#a (아래첨자 1)
-    '\u{2082}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠃')], // ;#b (아래첨자 2)
-    '\u{2083}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠉')], // ;#c (아래첨자 3)
-    '\u{2084}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠙')], // ;#d (아래첨자 4)
-    '\u{2085}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠑')], // ;#e (아래첨자 5)
-    '\u{2086}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠋')], // ;#f (아래첨자 6)
-    '\u{2087}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠛')], // ;#g (아래첨자 7)
-    '\u{2088}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠓')], // ;#h (아래첨자 8)
-    '\u{2089}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠊')], // ;#i (아래첨자 9)
-    '\u{208D}' => &[decode_unicode('⠰'), decode_unicode('⠦')], // ;8 (아래첨자 ()
-    '\u{208E}' => &[decode_unicode('⠴')], // 0 (아래첨자 ))
-    '\u{2090}' => &[decode_unicode('⠰'), decode_unicode('⠁')], // ;a (아래첨자 a)
-    '\u{2098}' => &[decode_unicode('⠰'), decode_unicode('⠍')], // ;m (아래첨자 m)
-    '\u{2093}' => &[decode_unicode('⠰'), decode_unicode('⠭')], // ;x (아래첨자 x)
-    '\u{2099}' => &[decode_unicode('⠰'), decode_unicode('⠝')], // ;n (아래첨자 n)
-    '\u{208A}' => &[decode_unicode('⠰'), decode_unicode('⠢')], // ;5 (아래첨자 +)
-    '\u{2044}' => &[decode_unicode('⠌')], // / (분수 슬래시)
-    '\u{2500}' => &[decode_unicode('⠌')], // ─ (괘선 — PDF 제7항 분수선 기호 형태)
-    '\u{2E29}' => &[decode_unicode('⠄')], // open-ended right delimiter (`\right.`)
-    '_' => &[decode_unicode('⠠'), decode_unicode('⠤')], // 밑줄 marker (PDF 제23항 2)
-    '\u{0332}' => &[decode_unicode('⠠'), decode_unicode('⠤')], // ̲ (combining low line — 밑줄 결합부호)
-    '|' => &[decode_unicode('⠳')], // | (절댓값)
-    '\u{00AC}' => &[decode_unicode('⠈'), decode_unicode('⠔')], // @9 (부정)
-    '\u{00B0}' => &[decode_unicode('⠴'), decode_unicode('⠙')], // 0d (도)
-    '\u{00B1}' => &[decode_unicode('⠢'), decode_unicode('⠔')], // ± (PDF 제2항 — plus-minus)
-    '\u{00B7}' => &[decode_unicode('⠐')], // " (점 곱셈)
-    '…' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')], // ,,, (줄임표)
-    '⋯' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')], // ,,, (줄임표)
-    '\u{221A}' => &[decode_unicode('⠜')], // > (근호)
-    '\u{2224}' => &[decode_unicode('⠨'), decode_unicode('⠳')], // .\ (나누어떨어지지않는다)
-    '\u{2220}' => &[decode_unicode('⠹')], // ? (각)
-    '\u{22A5}' => &[decode_unicode('⠴'), decode_unicode('⠄')], // 0' (수직)
-    '\u{2225}' => &[decode_unicode('⠰'), decode_unicode('⠆')], // ;2 (평행)
-    '\u{2AFD}' => &[decode_unicode('⠰'), decode_unicode('⠆')], // ;2 (평행)
-    '\u{223D}' => &[decode_unicode('⠠'), decode_unicode('⠄')], // ,' (닮음)
-    '\u{2261}' => &[decode_unicode('⠶'), decode_unicode('⠶')], // 77 (합동)
-    '\u{221E}' => &[decode_unicode('⠿')], // = (무한대)
-    '\u{222B}' => &[decode_unicode('⠮')], // ! (부정적분)
-    '\u{222E}' => &[decode_unicode('⠾')], // ) (선적분)
-    '\u{222C}' => &[decode_unicode('⠮'), decode_unicode('⠮')], // !! (이중적분)
-    '\u{2207}' => &[decode_unicode('⠸'), decode_unicode('⠩')], // _% (델연산자)
-    '\u{2202}' => &[decode_unicode('⠫')], // $ (편도함수)
-    '\u{2208}' => &[decode_unicode('⠖')], // 6 (원소 왼쪽)
-    '\u{220B}' => &[decode_unicode('⠲')], // 4 (원소 오른쪽)
-    '\u{2209}' => &[decode_unicode('⠨'), decode_unicode('⠖')], // .6 (원소 아닌)
-    '\u{220C}' => &[decode_unicode('⠨'), decode_unicode('⠲')], // .4 (원소아닌 오른쪽)
-    '\u{2282}' => &[decode_unicode('⠖'), decode_unicode('⠂')], // 61 (부분집합 왼쪽)
-    '\u{2283}' => &[decode_unicode('⠐'), decode_unicode('⠲')], // "4 (부분집합 오른쪽)
-    '\u{2284}' => &[decode_unicode('⠨'), decode_unicode('⠖'), decode_unicode('⠂')], // .61 (부분집합 아님)
-    '\u{2285}' => &[decode_unicode('⠨'), decode_unicode('⠐'), decode_unicode('⠲')], // ."4 (부분집합 아님)
-    '\u{2205}' => &[decode_unicode('⠨'), decode_unicode('⠋')], // .f (공집합)
-    '\u{222A}' => &[decode_unicode('⠬')], // + (합집합)
-    '\u{2229}' => &[decode_unicode('⠩')], // % (교집합)
-    '\u{2200}' => &[decode_unicode('⠨'), decode_unicode('⠄')], // .' (모든)
-    '\u{2203}' => &[decode_unicode('⠨'), decode_unicode('⠢')], // .5 (존재하는)
-    '\u{2204}' => &[decode_unicode('⠨'), decode_unicode('⠨'), decode_unicode('⠢')], // ..5 (존재하지 않는)
-    '\u{2227}' => &[decode_unicode('⠹')], // ? (논리곱)
-    '\u{2228}' => &[decode_unicode('⠼')], // # (논리합)
-    '\u{22BB}' => &[decode_unicode('⠼'), decode_unicode('⠤')], // #- (배타적 논리합)
-    '\u{2234}' => &[decode_unicode('⠠'), decode_unicode('⠡')], // ,* (그러므로)
-    '\u{2235}' => &[decode_unicode('⠈'), decode_unicode('⠌')], // @/ (왜냐하면)
-    '\u{2248}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔')], // @9@9 (이중물결)
-    '\u{224A}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠒')], // @9@93 (이중물결 아래줄)
-    '\u{2243}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠒')], // @93 (물결 아래줄)
-    '\u{2245}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠒'), decode_unicode('⠒')], // @933 (물결아래등호)
-    '\u{2241}' => &[decode_unicode('⠨'), decode_unicode('⠈'), decode_unicode('⠔')], // .@9 (not sim)
-    '\u{226E}' => &[decode_unicode('⠨'), decode_unicode('⠔'), decode_unicode('⠔')], // .99 (보다작지않다)
-    '\u{226F}' => &[decode_unicode('⠨'), decode_unicode('⠢'), decode_unicode('⠢')], // .55 (보다크지않다)
-    '\u{2270}' => &[decode_unicode('⠨'), decode_unicode('⠖'), decode_unicode('⠖')], // .66 (작거나같지않다)
-    '\u{2271}' => &[decode_unicode('⠨'), decode_unicode('⠲'), decode_unicode('⠲')], // .44 (크거나같지않다)
-    '\u{25B7}' => &[decode_unicode('⠸'), decode_unicode('⠜')], // _> (오른쪽 세모꼴)
-    '\u{25C1}' => &[decode_unicode('⠸'), decode_unicode('⠣')], // _< (왼쪽 세모꼴)
-    '\u{25A1}' => &[decode_unicode('⠸'), decode_unicode('⠶')], // _7 (네모)
-    '\u{25B3}' => &[decode_unicode('⠸'), decode_unicode('⠬')], // _+ (세모)
-    '\u{25B1}' => &[decode_unicode('⠸'), decode_unicode('⠌'), decode_unicode('⠌')], // _// (평행사변형)
-    '\u{23E2}' => &[decode_unicode('⠸'), decode_unicode('⠌'), decode_unicode('⠡')], // _/* (사다리꼴)
-    '\u{2302}' => &[decode_unicode('⠸'), decode_unicode('⠪'), decode_unicode('⠅')], // _[k (집)
-    '\u{2394}' => &[decode_unicode('⠸'), decode_unicode('⠪'), decode_unicode('⠕')], // _[o (기하 기호)
-    '\u{29BE}' => &[decode_unicode('⠸'), decode_unicode('⠴'), decode_unicode('⠴')], // _00 (원안점)
-    '\u{03A3}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠎')], // ,.s (총합)
-    '\u{2295}' => &[decode_unicode('⠸'), decode_unicode('⠢')], // _5 (동그라미 덧셈표)
-    '\u{2296}' => &[decode_unicode('⠸'), decode_unicode('⠔')], // _9 (동그라미 뺄셈표)
-    '\u{2297}' => &[decode_unicode('⠸'), decode_unicode('⠡')], // _* (동그라미 곱셈표)
-    '\u{2217}' => &[decode_unicode('⠸'), decode_unicode('⠣')], // _< (별표)
-    '\u{2218}' => &[decode_unicode('⠸'), decode_unicode('⠴')], // _0 (동그라미)
-    '\u{03B1}' => &[decode_unicode('⠨'), decode_unicode('⠁')], // .a (알파)
-    '\u{03B2}' => &[decode_unicode('⠨'), decode_unicode('⠃')], // .b (베타)
-    '\u{03B3}' => &[decode_unicode('⠨'), decode_unicode('⠛')], // .g (감마)
-    '\u{03B4}' => &[decode_unicode('⠨'), decode_unicode('⠙')], // .d (델타)
-    '\u{03B5}' => &[decode_unicode('⠨'), decode_unicode('⠑')], // .e (엡실론)
-    '\u{03B6}' => &[decode_unicode('⠨'), decode_unicode('⠵')], // .z (제타)
-    '\u{03B7}' => &[decode_unicode('⠨'), decode_unicode('⠱')], // .: (에타)
-    '\u{03B8}' => &[decode_unicode('⠨'), decode_unicode('⠹')], // .? (세타)
-    '\u{03B9}' => &[decode_unicode('⠨'), decode_unicode('⠊')], // .i (요타)
-    '\u{03BA}' => &[decode_unicode('⠨'), decode_unicode('⠅')], // .k (카파)
-    '\u{03BB}' => &[decode_unicode('⠨'), decode_unicode('⠇')], // .l (람다)
-    '\u{03BC}' => &[decode_unicode('⠨'), decode_unicode('⠍')], // .m (뮤)
-    '\u{03BD}' => &[decode_unicode('⠨'), decode_unicode('⠝')], // .n (뉴)
-    '\u{03BE}' => &[decode_unicode('⠨'), decode_unicode('⠭')], // .x (크시)
-    '\u{03BF}' => &[decode_unicode('⠨'), decode_unicode('⠕')], // .o (오미크론)
-    '\u{03C0}' => &[decode_unicode('⠨'), decode_unicode('⠏')], // .p (파이)
-    '\u{03C1}' => &[decode_unicode('⠨'), decode_unicode('⠗')], // .r (로)
-    '\u{03C3}' => &[decode_unicode('⠨'), decode_unicode('⠎')], // .s (시그마)
-    '\u{03C4}' => &[decode_unicode('⠨'), decode_unicode('⠞')], // .t (타우)
-    '\u{03C5}' => &[decode_unicode('⠨'), decode_unicode('⠥')], // .u (입실론)
-    '\u{03C6}' => &[decode_unicode('⠨'), decode_unicode('⠋')], // .f (피)
-    '\u{03C7}' => &[decode_unicode('⠨'), decode_unicode('⠯')], // .& (키)
-    '\u{03C8}' => &[decode_unicode('⠨'), decode_unicode('⠽')], // .y (프시)
-    '\u{03C9}' => &[decode_unicode('⠨'), decode_unicode('⠺')], // .w (오메가)
-    '\u{0391}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠁')], // ,.a (대문자 알파)
-    '\u{0392}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠃')], // ,.b (대문자 베타)
-    '\u{0393}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠛')], // ,.g (대문자 감마)
-    '\u{0395}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠑')], // ,.e (대문자 엡실론)
-    '\u{0396}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠵')], // ,.z (대문자 제타)
-    '\u{0397}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠱')], // ,.: (대문자 에타)
-    '\u{0398}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠹')], // ,.? (대문자 세타)
-    '\u{0399}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠊')], // ,.i (대문자 요타)
-    '\u{039A}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠅')], // ,.k (대문자 카파)
-    '\u{039B}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠇')], // ,.l (대문자 람다)
-    '\u{039C}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠍')], // ,.m (대문자 뮤)
-    '\u{039D}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠝')], // ,.n (대문자 뉴)
-    '\u{039E}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠭')], // ,.x (대문자 크시)
-    '\u{039F}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠕')], // ,.o (대문자 오미크론)
-    '\u{03A0}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠏')], // ,.p (대문자 파이)
-    '\u{03A1}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠗')], // ,.r (대문자 로)
-    '\u{03A4}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠞')], // ,.t (대문자 타우)
-    '\u{03A5}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠥')], // ,.u (대문자 입실론)
-    '\u{03A6}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠋')], // ,.f (대문자 피)
-    '\u{03A7}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠯')], // ,.& (대문자 키)
-    '\u{03A8}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠽')], // ,.y (대문자 프시)
-    '\u{03A9}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')], // ,.w (대문자 오메가)
-    '\u{0394}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠙')], // ,.d (대문자 델타)
-    '\u{2196}' => &[decode_unicode('⠪'), decode_unicode('⠢')], // [5 (왼쪽 위 화살표)
-    '\u{2197}' => &[decode_unicode('⠔'), decode_unicode('⠕')], // 9o (오른쪽 위 화살표)
-    '\u{2198}' => &[decode_unicode('⠢'), decode_unicode('⠕')], // 5o (오른쪽 아래 화살표)
-    '\u{2199}' => &[decode_unicode('⠪'), decode_unicode('⠔')], // [9 (왼쪽 아래 화살표)
-    '\u{21CF}' => &[decode_unicode('⠨'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')], // .33o (함의 부정)
-    '\u{2135}' => &[decode_unicode('⠗'), decode_unicode('⠋')], // rf (알레프)
-    '\u{2206}' => &[decode_unicode('⠸'), decode_unicode('⠬')], // _+ (세모꼴)
-    '\u{2219}' => &[decode_unicode('⠸'), decode_unicode('⠲')], // _4 (검정 동그라미)
-    '\u{FF03}' => &[decode_unicode('⠸'), decode_unicode('⠹')], // _? (샤프 기호)
-    '\u{1D9C}' => &[decode_unicode('⠘'), decode_unicode('⠉')], // ^c (여집합)
-    '\u{0302}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠢')], // @@5 (결합 hat)
-    '\u{0304}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (결합 가로바)
-    '\u{0305}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (결합 윗줄)
-    '\u{2016}' => &[decode_unicode('⠳'), decode_unicode('⠳')], // \\ (이중 세로선)
-    '\u{2322}' => &[decode_unicode('⠈'), decode_unicode('⠪')], // @[ (호)
-    // PDF 수학 제65항 5 — 문자 위 결합 부호 (틸데)
-    '\u{0303}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')], // @@9 (결합 틸데)
-    // 결합 윗 한 점 U+0307은 컨텍스트에 따라 의미가 다르다:
-    //   - 숫자 뒤  : 순환소수 마크 (PDF 수학 제9항) → ⠈
-    //   - 문자 뒤  : 문자 위 한 점 (PDF 수학 제65항 5) → ⠈⠲
-    // 이 SHORTCUT_MAP의 값은 숫자 뒤 기본형이고, 문자 뒤 처리는 rule_65에서 별도 분기한다.
-    '\u{0307}' => &[decode_unicode('⠈')], // @ (결합 윗점 - 기본/숫자 뒤)
-    '\u{0308}' => &[decode_unicode('⠈'), decode_unicode('⠲'), decode_unicode('⠲')], // @44 (결합 윗 두 점)
-    '\u{0309}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')], // @@9 (결합 고리/훅)
-    '\u{030A}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')], // @@9 (결합 윗고리)
-    '\u{211B}' => &[decode_unicode('⠠'), decode_unicode('⠗')], // ,R (ℛ = script R)
-    '~' => &[decode_unicode('⠈'), decode_unicode('⠔')], // @9 (물결 = 닮음)
-    '\u{0338}' => &[decode_unicode('⠨')], // . (부정 표지)
-    '\u{203E}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (선분 기호 U+203E)
-    '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')], // [3O (직선 기호 U+20E1)
-    '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')], // 3O (반직선 기호 U+20D7)
-    // PDF 수학 제60항 6 — 추론 기호 ⊢/⊣/⊨/⫤
-    '\u{22A2}' => &[decode_unicode('⠸'), decode_unicode('⠒')], // _3 (⊢ vdash)
-    '\u{22A3}' => &[decode_unicode('⠈'), decode_unicode('⠸'), decode_unicode('⠒')], // @_3 (⊣ dashv)
-    '\u{22A8}' => &[decode_unicode('⠘'), decode_unicode('⠸'), decode_unicode('⠒')], // ^_3 (⊨ models)
-    '\u{2AE4}' => &[decode_unicode('⠨'), decode_unicode('⠸'), decode_unicode('⠒')], // ._3 (⫤ Dashv)
-    // PDF 수학 제60항 7 — 앞선다 ≲ (보다같거나 작다 + 닮음)
-    '\u{2272}' => &[decode_unicode('⠔'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔')], // 99@9 (≲ lesssim)
-    // PDF 수학 제60항 8 — 앞서고같지않다 ≺ (보다작다)
-    '\u{227A}' => &[decode_unicode('⠔'), decode_unicode('⠔')], // 99 (≺ prec — same as <)
-    // PDF 수학 제61항 7 — 동치명제 ⇌
-    '\u{21CC}' => &[decode_unicode('⠪'), decode_unicode('⠶'), decode_unicode('⠕')], // [7o (⇌ rightleftharpoons)
-    // PDF 수학 제23항 1 — 켤레복소수/평균값 macron ¯
-    '\u{00AF}' => &[decode_unicode('⠈'), decode_unicode('⠉')], // @c (¯ macron)
-    // PDF 수학 제25항 — 총합 기호 ∑ (Greek capital Sigma과 동일 점형)
-    '\u{2211}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠎')], // ,.s
-    // PDF 수학 제26항 — 곱 기호 ∏
-    '\u{220F}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠏')], // ,.p
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct MathSymbolShortcut {
+    pub(crate) cells: &'static [u8],
+    pub(crate) fallback_meta: &'static RuleMeta,
+}
+
+macro_rules! math_meta {
+    ($(($constant:ident, $section:literal, $name:literal, $description:literal)),+ $(,)?) => {
+        $(
+            pub(crate) static $constant: RuleMeta = RuleMeta {
+                section: $section,
+                subsection: None,
+                name: $name,
+                standard_ref: concat!("2024 Korean Braille Standard, 수학 제", $section, "항"),
+                description: $description,
+            };
+        )+
+    };
+}
+
+math_meta! {
+    (META_2, "2", "math_arithmetic_operator", "Arithmetic operators"),
+    (META_3, "3", "math_equality_symbol", "Equality symbols"),
+    (META_4, "4", "math_comparison_symbol", "Comparison symbols"),
+    (META_5, "5", "math_ratio_symbol", "Ratio and proportion symbols"),
+    (META_6, "6", "math_bracket_symbol", "Brackets, including the simultaneous-equation brace"),
+    (META_7, "7", "math_fraction_symbol", "Fraction notation"),
+    (META_9, "9", "math_repeating_decimal", "Repeating decimal marks"),
+    (META_10, "10", "math_arrow_symbol", "Arrow symbols"),
+    (META_13, "13", "math_greek_symbol", "Greek letters"),
+    (META_15, "15", "math_custom_binary_operator", "Custom binary operators"),
+    (META_16, "16", "math_base_subscript", "Base-notation subscripts"),
+    (META_17, "17", "math_prime_mark", "Prime marks"),
+    (META_18, "18", "math_superscript_symbol", "Superscript symbols"),
+    (META_19, "19", "math_subscript_symbol", "Subscript symbols"),
+    (META_21, "21", "math_absolute_value", "Absolute-value bars"),
+    (META_22, "22", "math_root_symbol", "Root symbols"),
+    (META_23, "23", "math_overline_symbol", "Overline and underline marks"),
+    (META_25, "25", "math_sigma_symbol", "Summation symbols"),
+    (META_27, "27", "math_divisibility_symbol", "Divisibility symbols"),
+    (META_28, "28", "math_norm_symbol", "Norm symbols"),
+    (META_30, "30", "math_dot_congruence", "Dot-congruence symbols"),
+    (META_31, "31", "math_asymptotic_equality", "Asymptotic equality"),
+    (META_32, "32", "math_congruence_symbol", "Congruence symbols"),
+    (META_33, "33", "math_geometric_operator", "Geometric operators"),
+    (META_34, "34", "math_relation_symbol", "Relation symbols and their negations"),
+    (META_35, "35", "math_segment_symbol", "Segment bar over two points"),
+    (META_36, "36", "math_arc_symbol", "Arc symbol"),
+    (META_37, "37", "math_line_symbol", "Bidirectional line symbols"),
+    (META_38, "38", "math_ray_symbol", "Ray symbols, also used for vectors"),
+    (META_39, "39", "math_angle_symbol", "Angle symbol"),
+    (META_40, "40", "math_geometric_shape", "Geometric shapes"),
+    (META_41, "41", "math_perpendicular_symbol", "Perpendicular symbols"),
+    (META_42, "42", "math_similarity_symbol", "Similarity symbols"),
+    (META_43, "43", "math_identity_symbol", "Identity symbols"),
+    (META_44, "44", "math_parallel_symbol", "Parallel symbols"),
+    (META_50, "50", "math_infinity_symbol", "Infinity"),
+    (META_53, "53", "math_derivative_product", "Product signs in derivative formulas"),
+    (META_54, "54", "math_partial_derivative", "Partial derivatives"),
+    (META_55, "55", "math_nabla_symbol", "Nabla"),
+    (META_56, "56", "math_integral_symbol", "Indefinite integrals"),
+    (META_58, "58", "math_double_integral", "Double integrals"),
+    (META_59, "59", "math_contour_integral", "Contour integrals"),
+    (META_60, "60", "math_set_symbol", "Set and inference symbols"),
+    (META_61, "61", "math_logic_symbol", "Logic symbols"),
+    (META_64, "64", "math_hat_symbol", "Hat notation"),
+    (META_65, "65", "math_miscellaneous_symbol", "Miscellaneous math symbols"),
+}
+
+pub(crate) static META_KOREAN_49: RuleMeta = RuleMeta {
+    section: "49",
+    subsection: None,
+    name: "korean_sentence_punctuation_in_math",
+    standard_ref: "2024 Korean Braille Standard, 한글 제49항",
+    description: "Question and exclamation marks inside math input",
+};
+pub(crate) static META_2_APPENDIX: RuleMeta = RuleMeta {
+    section: "2",
+    subsection: Some("붙임"),
+    name: "math_dot_multiplication",
+    standard_ref: "2024 Korean Braille Standard, 수학 제2항 [붙임]",
+    description: "Middle dot written as the multiplication sign",
+};
+pub(crate) static META_KOREAN_51: RuleMeta = RuleMeta {
+    section: "51",
+    subsection: None,
+    name: "korean_colon_in_math",
+    standard_ref: "2024 Korean Braille Standard, 한글 제51항",
+    description: "Colon inside math input",
+};
+/// 한글 제53항 governs the ellipsis in prose, but 수학 제12항 [붙임 1] claims it
+/// back inside an expression — "쉼표는 `"`으로 적고, 줄임표는 `,,,`으로 적는다".
+/// Both write ⠠⠠⠠, so only the article tells them apart, and 국립국어원 settled
+/// on 2026-09-21 that an ellipsis inside a formula follows the math standard.
+pub(crate) static META_12_APPENDIX_1: RuleMeta = RuleMeta {
+    section: "12",
+    subsection: Some("붙임 1"),
+    name: "math_ellipsis",
+    standard_ref: "2024 Korean Braille Standard, 수학 제12항 [붙임 1]",
+    description: "Ellipsis inside a mathematical expression",
+};
+pub(crate) static META_KOREAN_59: RuleMeta = RuleMeta {
+    section: "59",
+    subsection: None,
+    name: "korean_semicolon_in_math",
+    standard_ref: "2024 Korean Braille Standard, 한글 제59항",
+    description: "Semicolon inside math input",
+};
+pub(crate) static META_KOREAN_64: RuleMeta = RuleMeta {
+    section: "64",
+    subsection: None,
+    name: "korean_enclosed_number_in_math",
+    standard_ref: "2024 Korean Braille Standard, 한글 제64항",
+    description: "Circled numbers inside math input",
+};
+pub(crate) static META_KOREAN_69_APPENDIX_2: RuleMeta = RuleMeta {
+    section: "69",
+    subsection: Some("붙임 2"),
+    name: "korean_degree_symbol_in_math",
+    standard_ref: "2024 Korean Braille Standard, 한글 제69항 [붙임 2]",
+    description: "Degree sign inside math input",
+};
+pub(crate) static META_SCIENCE_29: RuleMeta = RuleMeta {
+    section: "29",
+    subsection: None,
+    name: "science_proportion_symbol",
+    standard_ref: "2024 Korean Braille Standard, 과학 제29항",
+    description: "Proportionality sign",
+};
+
+pub(crate) static MATH_SYMBOL_VARIANT_METAS: &[&RuleMeta] = &[
+    &META_2,
+    &META_4,
+    &META_5,
+    &META_SCIENCE_29,
+    &META_7,
+    &META_9,
+    &META_10,
+    &META_13,
+    &META_15,
+    &META_16,
+    &META_17,
+    &META_18,
+    &META_19,
+    &META_21,
+    &META_22,
+    &META_23,
+    &META_25,
+    &META_27,
+    &META_28,
+    &META_30,
+    &META_31,
+    &META_32,
+    &META_33,
+    &META_34,
+    &META_35,
+    &META_36,
+    &META_37,
+    &META_38,
+    &META_39,
+    &META_40,
+    &META_41,
+    &META_42,
+    &META_43,
+    &META_44,
+    &META_50,
+    &META_53,
+    &META_54,
+    &META_55,
+    &META_56,
+    &META_58,
+    &META_59,
+    &META_60,
+    &META_61,
+    &META_64,
+    &META_65,
+    &META_2_APPENDIX,
+    &META_12_APPENDIX_1,
+    &META_KOREAN_64,
+    &META_KOREAN_69_APPENDIX_2,
+    &META_6,
+];
+
+macro_rules! shortcut_map {
+    ($($meta:expr => { $($symbol:expr => $cells:expr),+ $(,)? }),+ $(,)?) => {
+        phf_map! {
+            $($(
+                $symbol => MathSymbolShortcut {
+                    cells: $cells,
+                    fallback_meta: $meta,
+                },
+            )+)+
+        }
+    };
+}
+
+static SHORTCUT_MAP: phf::Map<char, MathSymbolShortcut> = shortcut_map! {
+    &META_KOREAN_64 => {
+        '\u{2460}' => &[decode_unicode('⠼'), decode_unicode('⠂')],
+        '\u{2461}' => &[decode_unicode('⠼'), decode_unicode('⠆')],
+        '\u{2462}' => &[decode_unicode('⠼'), decode_unicode('⠒')],
+        '\u{2463}' => &[decode_unicode('⠼'), decode_unicode('⠲')],
+        '\u{2464}' => &[decode_unicode('⠼'), decode_unicode('⠢')],
+        '\u{2465}' => &[decode_unicode('⠼'), decode_unicode('⠖')],
+        '\u{2466}' => &[decode_unicode('⠼'), decode_unicode('⠶')],
+        '\u{2467}' => &[decode_unicode('⠼'), decode_unicode('⠦')],
+        '\u{2468}' => &[decode_unicode('⠼'), decode_unicode('⠔')],
+        '\u{2469}' => &[decode_unicode('⠼'), decode_unicode('⠴')],
+    },
+    &META_2 => {
+        '+' => &[decode_unicode('⠢')],
+        '\u{2212}' => &[decode_unicode('⠔')],
+        '\u{00D7}' => &[decode_unicode('⠡')],
+        '\u{2A09}' => &[decode_unicode('⠡')],
+        '\u{00F7}' => &[decode_unicode('⠌'), decode_unicode('⠌')],
+        '\u{00B1}' => &[decode_unicode('⠢'), decode_unicode('⠔')],
+    },
+    &META_7 => {
+        '/' => &[decode_unicode('⠸'), decode_unicode('⠌')],
+        '\u{2500}' => &[decode_unicode('⠌')],
+    },
+    &META_3 => {
+        '=' => &[decode_unicode('⠒'), decode_unicode('⠒')],
+        '\u{2260}' => &[decode_unicode('⠨'), decode_unicode('⠒'), decode_unicode('⠒')],
+        '\u{2252}' => &[decode_unicode('⠐'), decode_unicode('⠒'), decode_unicode('⠒')],
+        '\u{2248}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔')],
+    },
+    &META_4 => {
+        '>' => &[decode_unicode('⠢'), decode_unicode('⠢')],
+        '<' => &[decode_unicode('⠔'), decode_unicode('⠔')],
+        '\u{2265}' => &[decode_unicode('⠲'), decode_unicode('⠲')],
+        '\u{2267}' => &[decode_unicode('⠲'), decode_unicode('⠲')],
+        '\u{2264}' => &[decode_unicode('⠖'), decode_unicode('⠖')],
+        '\u{2266}' => &[decode_unicode('⠖'), decode_unicode('⠖')],
+        '\u{226E}' => &[decode_unicode('⠨'), decode_unicode('⠔'), decode_unicode('⠔')],
+        '\u{226F}' => &[decode_unicode('⠨'), decode_unicode('⠢'), decode_unicode('⠢')],
+        '\u{2270}' => &[decode_unicode('⠨'), decode_unicode('⠖'), decode_unicode('⠖')],
+        '\u{2271}' => &[decode_unicode('⠨'), decode_unicode('⠲'), decode_unicode('⠲')],
+    },
+    &META_5 => {
+        '\u{2236}' => &[decode_unicode('⠐'), decode_unicode('⠂')],
+    },
+    &META_SCIENCE_29 => {
+        '\u{221D}' => &[decode_unicode('⠬'), decode_unicode('⠒')],
+    },
+    &META_38 => {
+        '\u{20D7}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
+    },
+    &META_37 => {
+        '\u{20E1}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
+    },
+    &META_10 => {
+        '\u{2192}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{27F6}' => &[decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{2194}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{2190}' => &[decode_unicode('⠪'), decode_unicode('⠒')],
+        '\u{2191}' => &[decode_unicode('⠰'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{2193}' => &[decode_unicode('⠘'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{21D2}' => &[decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{21D4}' => &[decode_unicode('⠪'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')],
+        '\u{2196}' => &[decode_unicode('⠪'), decode_unicode('⠢')],
+        '\u{2197}' => &[decode_unicode('⠔'), decode_unicode('⠕')],
+        '\u{2198}' => &[decode_unicode('⠢'), decode_unicode('⠕')],
+        '\u{2199}' => &[decode_unicode('⠪'), decode_unicode('⠔')],
+    },
+    &META_61 => {
+        '\u{21C4}' => &[decode_unicode('⠪'), decode_unicode('⠶'), decode_unicode('⠕')],
+        '\u{21CC}' => &[decode_unicode('⠪'), decode_unicode('⠶'), decode_unicode('⠕')],
+        '\u{00AC}' => &[decode_unicode('⠈'), decode_unicode('⠔')],
+        '\u{2200}' => &[decode_unicode('⠨'), decode_unicode('⠄')],
+        '\u{2203}' => &[decode_unicode('⠨'), decode_unicode('⠢')],
+        '\u{2204}' => &[decode_unicode('⠨'), decode_unicode('⠨'), decode_unicode('⠢')],
+        '\u{2227}' => &[decode_unicode('⠹')],
+        '\u{2228}' => &[decode_unicode('⠼')],
+        '\u{22BB}' => &[decode_unicode('⠼'), decode_unicode('⠤')],
+        '~' => &[decode_unicode('⠈'), decode_unicode('⠔')],
+    },
+    &META_17 => {
+        '\u{2032}' => &[decode_unicode('⠤')],
+        '\u{2033}' => &[decode_unicode('⠤'), decode_unicode('⠤')],
+        '\u{2034}' => &[decode_unicode('⠤'), decode_unicode('⠤'), decode_unicode('⠤')],
+    },
+    &META_18 => {
+        '\u{00B2}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠃')],
+        '\u{00B3}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠉')],
+        '\u{2074}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠙')],
+        '\u{2075}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠑')],
+        '\u{2077}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠛')],
+        '\u{2079}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠊')],
+        '\u{00B9}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠁')],
+        '\u{2070}' => &[decode_unicode('⠘'), decode_unicode('⠼'), decode_unicode('⠚')],
+        '\u{1D4F}' => &[decode_unicode('⠘'), decode_unicode('⠅')],
+        '\u{1D50}' => &[decode_unicode('⠘'), decode_unicode('⠍')],
+        '\u{02E3}' => &[decode_unicode('⠘'), decode_unicode('⠭')],
+        '\u{207D}' => &[decode_unicode('⠘'), decode_unicode('⠦')],
+        '\u{207E}' => &[decode_unicode('⠴')],
+        '\u{207F}' => &[decode_unicode('⠘'), decode_unicode('⠝')],
+        '\u{207B}' => &[decode_unicode('⠘'), decode_unicode('⠔')],
+        '\u{207A}' => &[decode_unicode('⠘'), decode_unicode('⠢')],
+    },
+    &META_16 => {
+        '\u{2080}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠚')],
+        '\u{2081}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠁')],
+        '\u{2082}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠃')],
+        '\u{2083}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠉')],
+        '\u{2084}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠙')],
+        '\u{2085}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠑')],
+        '\u{2086}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠋')],
+        '\u{2087}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠛')],
+        '\u{2088}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠓')],
+        '\u{2089}' => &[decode_unicode('⠰'), decode_unicode('⠼'), decode_unicode('⠊')],
+        '\u{208D}' => &[decode_unicode('⠰'), decode_unicode('⠦')],
+        '\u{208E}' => &[decode_unicode('⠴')],
+    },
+    &META_19 => {
+        '\u{2090}' => &[decode_unicode('⠰'), decode_unicode('⠁')],
+        '\u{2098}' => &[decode_unicode('⠰'), decode_unicode('⠍')],
+        '\u{2093}' => &[decode_unicode('⠰'), decode_unicode('⠭')],
+        '\u{2099}' => &[decode_unicode('⠰'), decode_unicode('⠝')],
+        '\u{208A}' => &[decode_unicode('⠰'), decode_unicode('⠢')],
+    },
+    &META_6 => {
+        '\u{2E29}' => &[decode_unicode('⠄')],
+    },
+    &META_34 => {
+        '\u{0338}' => &[decode_unicode('⠨')],
+        '\u{211B}' => &[decode_unicode('⠠'), decode_unicode('⠗')],
+        '\u{2241}' => &[decode_unicode('⠨'), decode_unicode('⠈'), decode_unicode('⠔')],
+    },
+    &META_60 => {
+        '\u{1D9C}' => &[decode_unicode('⠘'), decode_unicode('⠉')],
+    },
+    &META_61 => {
+        '\u{21CF}' => &[decode_unicode('⠨'), decode_unicode('⠒'), decode_unicode('⠒'), decode_unicode('⠕')],
+    },
+    &META_7 => {
+        '\u{2044}' => &[decode_unicode('⠌')],
+    },
+    &META_23 => {
+        '_' => &[decode_unicode('⠠'), decode_unicode('⠤')],
+        '\u{0332}' => &[decode_unicode('⠠'), decode_unicode('⠤')],
+        '\u{0304}' => &[decode_unicode('⠈'), decode_unicode('⠉')],
+        '\u{0305}' => &[decode_unicode('⠈'), decode_unicode('⠉')],
+        '\u{00AF}' => &[decode_unicode('⠈'), decode_unicode('⠉')],
+    },
+    &META_21 => {
+        '|' => &[decode_unicode('⠳')],
+    },
+    &META_KOREAN_69_APPENDIX_2 => {
+        '\u{00B0}' => &[decode_unicode('⠴'), decode_unicode('⠙')],
+    },
+    &META_2_APPENDIX => {
+        '\u{00B7}' => &[decode_unicode('⠐')],
+    },
+    &META_12_APPENDIX_1 => {
+        '…' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')],
+        '⋯' => &[decode_unicode('⠠'), decode_unicode('⠠'), decode_unicode('⠠')],
+    },
+    &META_22 => {
+        '\u{221A}' => &[decode_unicode('⠜')],
+    },
+    &META_27 => {
+        '\u{2223}' => &[decode_unicode('⠳')],
+        '\u{2224}' => &[decode_unicode('⠨'), decode_unicode('⠳')],
+    },
+    &META_39 => {
+        '\u{2220}' => &[decode_unicode('⠹')],
+    },
+    &META_41 => {
+        '\u{22A5}' => &[decode_unicode('⠴'), decode_unicode('⠄')],
+    },
+    &META_44 => {
+        '\u{2225}' => &[decode_unicode('⠰'), decode_unicode('⠆')],
+        '\u{2AFD}' => &[decode_unicode('⠰'), decode_unicode('⠆')],
+    },
+    &META_42 => {
+        '\u{223D}' => &[decode_unicode('⠠'), decode_unicode('⠄')],
+    },
+    &META_43 => {
+        '\u{2261}' => &[decode_unicode('⠶'), decode_unicode('⠶')],
+    },
+    &META_50 => {
+        '\u{221E}' => &[decode_unicode('⠿')],
+    },
+    &META_56 => {
+        '\u{222B}' => &[decode_unicode('⠮')],
+    },
+    &META_59 => {
+        '\u{222E}' => &[decode_unicode('⠾')],
+    },
+    &META_58 => {
+        '\u{222C}' => &[decode_unicode('⠮'), decode_unicode('⠮')],
+    },
+    &META_55 => {
+        '\u{2207}' => &[decode_unicode('⠸'), decode_unicode('⠩')],
+    },
+    &META_54 => {
+        '\u{2202}' => &[decode_unicode('⠫')],
+    },
+    &META_60 => {
+        '\u{2208}' => &[decode_unicode('⠖')],
+        '\u{220B}' => &[decode_unicode('⠲')],
+        '\u{2209}' => &[decode_unicode('⠨'), decode_unicode('⠖')],
+        '\u{220C}' => &[decode_unicode('⠨'), decode_unicode('⠲')],
+        '\u{2282}' => &[decode_unicode('⠖'), decode_unicode('⠂')],
+        '\u{2283}' => &[decode_unicode('⠐'), decode_unicode('⠲')],
+        '\u{2284}' => &[decode_unicode('⠨'), decode_unicode('⠖'), decode_unicode('⠂')],
+        '\u{2285}' => &[decode_unicode('⠨'), decode_unicode('⠐'), decode_unicode('⠲')],
+        '\u{2205}' => &[decode_unicode('⠨'), decode_unicode('⠋')],
+        '\u{222A}' => &[decode_unicode('⠬')],
+        '\u{2229}' => &[decode_unicode('⠩')],
+        '\u{22A2}' => &[decode_unicode('⠸'), decode_unicode('⠒')],
+        '\u{22A3}' => &[decode_unicode('⠈'), decode_unicode('⠸'), decode_unicode('⠒')],
+        '\u{22A8}' => &[decode_unicode('⠘'), decode_unicode('⠸'), decode_unicode('⠒')],
+        '\u{2AE4}' => &[decode_unicode('⠨'), decode_unicode('⠸'), decode_unicode('⠒')],
+        '\u{2272}' => &[decode_unicode('⠔'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔')],
+        '\u{227A}' => &[decode_unicode('⠔'), decode_unicode('⠔')],
+    },
+    &META_65 => {
+        '\u{2234}' => &[decode_unicode('⠠'), decode_unicode('⠡')],
+        '\u{2235}' => &[decode_unicode('⠈'), decode_unicode('⠌')],
+        '\u{2135}' => &[decode_unicode('⠗'), decode_unicode('⠋')],
+        '\u{FF03}' => &[decode_unicode('⠸'), decode_unicode('⠹')],
+        '\u{0303}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')],
+        '\u{0308}' => &[decode_unicode('⠈'), decode_unicode('⠲'), decode_unicode('⠲')],
+        '\u{0309}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')],
+        '\u{030A}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠔')],
+    },
+    &META_30 => {
+        '\u{224A}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠒')],
+    },
+    &META_31 => {
+        '\u{2243}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠒')],
+    },
+    &META_32 => {
+        '\u{2245}' => &[decode_unicode('⠈'), decode_unicode('⠔'), decode_unicode('⠒'), decode_unicode('⠒')],
+    },
+    &META_33 => {
+        '\u{25B7}' => &[decode_unicode('⠸'), decode_unicode('⠜')],
+        '\u{25C1}' => &[decode_unicode('⠸'), decode_unicode('⠣')],
+    },
+    &META_40 => {
+        '\u{25A1}' => &[decode_unicode('⠸'), decode_unicode('⠶')],
+        '\u{25B3}' => &[decode_unicode('⠸'), decode_unicode('⠬')],
+        '\u{25B1}' => &[decode_unicode('⠸'), decode_unicode('⠌'), decode_unicode('⠌')],
+        '\u{23E2}' => &[decode_unicode('⠸'), decode_unicode('⠌'), decode_unicode('⠡')],
+        '\u{2302}' => &[decode_unicode('⠸'), decode_unicode('⠪'), decode_unicode('⠅')],
+        '\u{2394}' => &[decode_unicode('⠸'), decode_unicode('⠪'), decode_unicode('⠕')],
+        '\u{29BE}' => &[decode_unicode('⠸'), decode_unicode('⠴'), decode_unicode('⠴')],
+        '\u{2206}' => &[decode_unicode('⠸'), decode_unicode('⠬')],
+        '\u{2219}' => &[decode_unicode('⠸'), decode_unicode('⠲')],
+    },
+    &META_25 => {
+        '\u{2211}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠎')],
+    },
+    &META_15 => {
+        '\u{2295}' => &[decode_unicode('⠸'), decode_unicode('⠢')],
+        '\u{2296}' => &[decode_unicode('⠸'), decode_unicode('⠔')],
+        '\u{2297}' => &[decode_unicode('⠸'), decode_unicode('⠡')],
+        '\u{2217}' => &[decode_unicode('⠸'), decode_unicode('⠣')],
+        '\u{2218}' => &[decode_unicode('⠸'), decode_unicode('⠴')],
+    },
+    &META_13 => {
+        '\u{03B1}' => &[decode_unicode('⠨'), decode_unicode('⠁')],
+        '\u{03B2}' => &[decode_unicode('⠨'), decode_unicode('⠃')],
+        '\u{03B3}' => &[decode_unicode('⠨'), decode_unicode('⠛')],
+        '\u{03B4}' => &[decode_unicode('⠨'), decode_unicode('⠙')],
+        '\u{03B5}' => &[decode_unicode('⠨'), decode_unicode('⠑')],
+        '\u{03B6}' => &[decode_unicode('⠨'), decode_unicode('⠵')],
+        '\u{03B7}' => &[decode_unicode('⠨'), decode_unicode('⠱')],
+        '\u{03B8}' => &[decode_unicode('⠨'), decode_unicode('⠹')],
+        '\u{03B9}' => &[decode_unicode('⠨'), decode_unicode('⠊')],
+        '\u{03BA}' => &[decode_unicode('⠨'), decode_unicode('⠅')],
+        '\u{03BB}' => &[decode_unicode('⠨'), decode_unicode('⠇')],
+        '\u{03BC}' => &[decode_unicode('⠨'), decode_unicode('⠍')],
+        '\u{03BD}' => &[decode_unicode('⠨'), decode_unicode('⠝')],
+        '\u{03BE}' => &[decode_unicode('⠨'), decode_unicode('⠭')],
+        '\u{03BF}' => &[decode_unicode('⠨'), decode_unicode('⠕')],
+        '\u{03C0}' => &[decode_unicode('⠨'), decode_unicode('⠏')],
+        '\u{03C1}' => &[decode_unicode('⠨'), decode_unicode('⠗')],
+        '\u{03C3}' => &[decode_unicode('⠨'), decode_unicode('⠎')],
+        '\u{03C4}' => &[decode_unicode('⠨'), decode_unicode('⠞')],
+        '\u{03C5}' => &[decode_unicode('⠨'), decode_unicode('⠥')],
+        '\u{03C6}' => &[decode_unicode('⠨'), decode_unicode('⠋')],
+        '\u{03C7}' => &[decode_unicode('⠨'), decode_unicode('⠯')],
+        '\u{03C8}' => &[decode_unicode('⠨'), decode_unicode('⠽')],
+        '\u{03C9}' => &[decode_unicode('⠨'), decode_unicode('⠺')],
+        '\u{0391}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠁')],
+        '\u{0392}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠃')],
+        '\u{0393}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠛')],
+        '\u{0394}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠙')],
+        '\u{0395}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠑')],
+        '\u{0396}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠵')],
+        '\u{0397}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠱')],
+        '\u{0398}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠹')],
+        '\u{0399}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠊')],
+        '\u{039A}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠅')],
+        '\u{039B}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠇')],
+        '\u{039C}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠍')],
+        '\u{039D}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠝')],
+        '\u{039E}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠭')],
+        '\u{039F}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠕')],
+        '\u{03A0}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠏')],
+        '\u{03A1}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠗')],
+        '\u{03A3}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠎')],
+        '\u{03A4}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠞')],
+        '\u{03A5}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠥')],
+        '\u{03A6}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠋')],
+        '\u{03A7}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠯')],
+        '\u{03A8}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠽')],
+        '\u{03A9}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')],
+        '\u{2126}' => &[decode_unicode('⠠'), decode_unicode('⠨'), decode_unicode('⠺')],
+    },
+    &META_35 => {
+        '\u{203E}' => &[decode_unicode('⠈'), decode_unicode('⠉')],
+    },
+    &META_36 => {
+        '\u{2322}' => &[decode_unicode('⠈'), decode_unicode('⠪')],
+    },
+    &META_64 => {
+        '\u{0302}' => &[decode_unicode('⠈'), decode_unicode('⠈'), decode_unicode('⠢')],
+    },
+    &META_28 => {
+        '\u{2016}' => &[decode_unicode('⠳'), decode_unicode('⠳')],
+    },
+    &META_9 => {
+        '\u{0307}' => &[decode_unicode('⠈')],
+    },
 };
 
 pub fn encode_char_math_symbol_shortcut(text: char) -> Result<&'static [u8], String> {
-    if let Some(code) = SHORTCUT_MAP.get(&text) {
-        Ok(code)
-    } else {
-        Err("Invalid math symbol character".to_string())
-    }
+    math_symbol_shortcut(text).map(|shortcut| shortcut.cells)
+}
+
+pub(crate) fn math_symbol_shortcut(text: char) -> Result<&'static MathSymbolShortcut, String> {
+    SHORTCUT_MAP
+        .get(&text)
+        .ok_or_else(|| "Invalid math symbol character".to_string())
 }
 
 pub fn is_math_symbol_char(text: char) -> bool {
@@ -254,6 +550,168 @@ pub fn is_math_symbol_char(text: char) -> bool {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    /// Every character the table can encode names the article that grants it
+    /// those cells. Nothing is exempt: a symbol the standard does not define is
+    /// absent from the table rather than present with an unknown article.
+    #[test]
+    fn every_shortcut_declares_a_real_article() {
+        let missing = SHORTCUT_MAP
+            .entries()
+            .find(|(_, shortcut)| shortcut.fallback_meta.section == "?");
+
+        assert!(missing.is_none(), "shortcut without article: {missing:?}");
+    }
+
+    /// 한글 제50항's 가운뎃점 is two cells, ⠐⠆. The single ⠐ this table gives the
+    /// same character is 수학 제2항 [붙임] — "점으로 표현된 곱셈 기호는 `"`으로
+    /// 적는다" — so a middle dot met inside a formula is multiplication, not the
+    /// punctuation mark it looks like.
+    #[test]
+    fn a_middle_dot_in_a_formula_is_the_multiplication_sign() {
+        let dot = SHORTCUT_MAP[&'\u{00B7}'];
+
+        assert_eq!(dot.fallback_meta.section, "2");
+        assert_eq!(dot.fallback_meta.subsection, Some("붙임"));
+        assert_eq!(dot.cells, [decode_unicode('⠐')]);
+        assert_ne!(
+            dot.cells,
+            crate::symbol_shortcut::encode_char_symbol_shortcut('\u{00B7}').unwrap()
+        );
+    }
+
+    /// An ellipsis writes ⠠⠠⠠ whether it falls in prose or in a formula, so the
+    /// article is the only thing that separates them: 수학 제12항 [붙임 1] inside
+    /// an expression, 한글 제53항 outside it.
+    #[test]
+    fn an_ellipsis_in_a_formula_cites_the_math_article() {
+        let ellipsis = SHORTCUT_MAP[&'…'];
+
+        assert_eq!(ellipsis.fallback_meta.section, "12");
+        assert_eq!(ellipsis.fallback_meta.subsection, Some("붙임 1"));
+        assert_eq!(
+            ellipsis.cells,
+            [
+                decode_unicode('⠠'),
+                decode_unicode('⠠'),
+                decode_unicode('⠠')
+            ]
+        );
+    }
+
+    /// 제6항 1 lists 연립식 괄호 as `7'` and closes it with `,7`. LaTeX writes
+    /// the opening half as `\left\{ ... \right.`, so the sentinel standing for
+    /// `\right.` carries the brace's second cell and belongs to that article —
+    /// it is not a delimiter that prints nothing.
+    #[test]
+    fn the_simultaneous_equation_brace_cites_article_6() {
+        assert_eq!(SHORTCUT_MAP[&'⸩'].fallback_meta.section, "6");
+        assert_eq!(SHORTCUT_MAP[&'⸩'].cells, [decode_unicode('⠄')]);
+    }
+
+    /// 국립국어원 ruled on 2026-09-21 that the n-ary product cannot be
+    /// transcribed: the standard never mentions it. Its cells are those of
+    /// Greek capital pi, which makes borrowing them look reasonable and is
+    /// exactly why the table must not carry it.
+    #[test]
+    fn the_n_ary_product_is_not_transcribable() {
+        assert!(!SHORTCUT_MAP.contains_key(&'∏'));
+        assert!(encode_char_math_symbol_shortcut('∏').is_err());
+    }
+
+    /// Each of these was identified by matching its cells against the notation
+    /// printed in the standard, not by searching for the character itself:
+    /// `⠌` is the 분수표 of 제7항 1, `⠠⠗`/`⠨⠈⠔` are 관계가있다/관계가없다 of
+    /// 제34항, `⠘⠉` is 여집합 of 제60항 5, `⠨⠒⠒⠕` is 항진명제의 부정 of 제61항 4.
+    #[rstest::rstest]
+    #[case::fraction_slash('⁄', "7")]
+    #[case::script_r('ℛ', "34")]
+    #[case::not_similar('≁', "34")]
+    #[case::negation_overlay('\u{0338}', "34")]
+    #[case::superscript_c('ᶜ', "60")]
+    #[case::not_implies('⇏', "61")]
+    fn cell_matched_shortcuts_name_their_article(#[case] symbol: char, #[case] section: &str) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
+    }
+
+    /// 제35항 to 제39항 run 선분 `@c`, 호 `@[`, 직선 `[3O`, 반직선 `3O`, 각 `?`,
+    /// one article each and in that order. Three of these marks sat one article
+    /// away from the one that defines them, which nothing caught because the
+    /// cells were right either way. The overline is the segment bar of 제35항,
+    /// not 제36항's arc; the two-headed arrow above a pair is 제37항's line, not
+    /// a ray; and the single-headed one is 제38항's ray, which its 붙임 also
+    /// lends to vectors, rather than 제39항's angle.
+    #[rstest::rstest]
+    #[case::segment_bar('\u{203E}', "35")]
+    #[case::arc('\u{2322}', "36")]
+    #[case::line_above('\u{20E1}', "37")]
+    #[case::ray_above('\u{20D7}', "38")]
+    #[case::angle('\u{2220}', "39")]
+    fn geometry_marks_cite_the_article_that_defines_them(
+        #[case] symbol: char,
+        #[case] section: &str,
+    ) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, section);
+    }
+
+    /// 제10항 lists the arrows together — right, left, up, down and the four
+    /// diagonals — so an arrow standing between operands belongs there. The ray
+    /// of 제38항 is the mark drawn above a pair of points, which Unicode spells
+    /// as a combining character, not as the arrow one types between them.
+    #[rstest::rstest]
+    #[case::right('\u{2192}')]
+    #[case::long_right('\u{27F6}')]
+    #[case::both_ways('\u{2194}')]
+    #[case::left('\u{2190}')]
+    #[case::up('\u{2191}')]
+    #[case::down('\u{2193}')]
+    #[case::upper_left('\u{2196}')]
+    fn a_standing_arrow_belongs_to_the_arrow_article(#[case] symbol: char) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, "10");
+        assert_ne!(
+            SHORTCUT_MAP[&symbol].fallback_meta.section,
+            SHORTCUT_MAP[&'\u{20D7}'].fallback_meta.section
+        );
+    }
+
+    /// 제23항 gives the bar over a variable — 켤레 복소수 and 평균값 — the same
+    /// `@c` cells as 제35항's segment bar, so the two are told apart by code
+    /// point alone: a combining or spacing macron marks a variable, while the
+    /// overline spans a pair of points.
+    #[rstest::rstest]
+    #[case::combining_macron('\u{0304}')]
+    #[case::combining_overline('\u{0305}')]
+    #[case::spacing_macron('\u{00AF}')]
+    fn a_bar_over_a_variable_stays_with_article_23(#[case] symbol: char) {
+        assert_eq!(SHORTCUT_MAP[&symbol].fallback_meta.section, "23");
+        assert_eq!(SHORTCUT_MAP[&symbol].cells, SHORTCUT_MAP[&'\u{203E}'].cells);
+    }
+
+    /// A second code point for a symbol the standard already defines means the
+    /// same thing, so it takes the same cells and the same article. Chemistry
+    /// writes its reaction arrow long and its product sign n-ary; the ohm sign
+    /// is stronger still, being canonically equivalent to capital omega, so
+    /// Unicode itself forbids treating the two as different characters.
+    #[rstest::rstest]
+    #[case::long_rightwards_arrow('\u{27F6}', '\u{2192}')]
+    #[case::n_ary_times('\u{2A09}', '\u{00D7}')]
+    #[case::ohm_sign('\u{2126}', '\u{03A9}')]
+    fn a_glyph_variant_matches_the_symbol_it_varies(#[case] variant: char, #[case] base: char) {
+        assert_eq!(SHORTCUT_MAP[&variant].cells, SHORTCUT_MAP[&base].cells);
+        assert_eq!(
+            SHORTCUT_MAP[&variant].fallback_meta.section,
+            SHORTCUT_MAP[&base].fallback_meta.section
+        );
+    }
+
+    /// 제27항 writes 나누어떨어진다 as `\` and negates it to `.\`, so the plain
+    /// sign is the negated one without its leading dot.
+    #[test]
+    fn divides_is_the_undotted_form_of_does_not_divide() {
+        let divides = SHORTCUT_MAP[&'\u{2223}'].cells;
+        let does_not = SHORTCUT_MAP[&'\u{2224}'].cells;
+        assert_eq!(does_not, [decode_unicode('⠨'), divides[0]]);
+    }
 
     /// `is_math_symbol_char` true 케이스 — 연산자/그리스/집합/미적분 기호 전체.
     #[rstest::rstest]

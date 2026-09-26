@@ -62,7 +62,19 @@ pub fn find_matching_paren(tokens: &[MathToken], start: usize) -> Option<usize> 
 
 pub struct BracketRule;
 
+static META_BRACKETRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "6",
+    subsection: None,
+    name: "math_bracket",
+    standard_ref: "2024 Korean Braille Standard, 수학 제6항",
+    description: "괄호",
+};
+
 impl MathTokenRule for BracketRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_BRACKETRULE
+    }
+
     fn name(&self) -> &'static str {
         "BracketRule"
     }

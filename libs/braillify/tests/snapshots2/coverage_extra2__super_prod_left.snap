@@ -3,5 +3,5 @@ source: libs/braillify/tests/coverage_extra2.rs
 expression: rendered
 ---
 input  = "∏^k j"
-unicode = ok: "⠠⠨⠏⠘⠅⠀⠚"
-bytes   = ok: [32, 40, 15, 24, 5, 0, 26]
+unicode = err: Invalid character
+bytes   = err: Invalid character

@@ -1,0 +1,22 @@
+[
+  {
+    "input": "A₅G(7̲)",
+    "note": "PDF 과학 제27항 — 밑선(상부 씨방)",
+    "context": "science",
+    "internal": ",a;#e,g8#g,-0",
+    "expected": "3214860173227386027323652",
+    "unicode": "⠠⠁⠰⠼⠑⠠⠛⠦⠼⠛⠠⠤⠴",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "A₃G(5̅)",
+    "note": "PDF 과학 제27항 — 윗선(하위 씨방)",
+    "context": "science",
+    "internal": ",a;#c,g8#e@c0",
+    "expected": "3214860932273860178952",
+    "unicode": "⠠⠁⠰⠼⠉⠠⠛⠦⠼⠑⠈⠉⠴",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

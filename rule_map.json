@@ -383,10 +383,6 @@
     "title": "수학 제4항",
     "description": "부등호는 다음과 같이 적는다. 같지않다(≠) ⠨⠶⠶, 보다크다(>) ⠔⠔, 보다작다(<) ⠢⠢, 크거나같다(≥) ⠶⠶, 작거나같다(≤) ⠶⠶"
   },
-  "math/math_5": {
-    "title": "수학 제2항~제4항",
-    "description": "사칙연산 기호: 덧셈표(+) ⠐, 뺄셈표(-) ⠤, 곱셈표(×) ⠰, 나눗셈표(÷) ⠌⠌와 비교 기호 종합 예시"
-  },
   "math/math_6": {
     "title": "수학 제6항",
     "description": "괄호와 묶음 괄호는 다음과 같이 적는다. 소괄호 ⠦ ⠴, 중괄호 ⠶ ⠶, 대괄호 ⠠⠶ ⠠⠴"
@@ -638,6 +634,10 @@
   "math/math_66": {
     "title": "수학 제66항",
     "description": "한 수식이 두 줄 이상 이어질 경우에는 사칙연산, 등호, 분수표 뒤에서 줄바꿈을 한다."
+  },
+  "english/rule_2_4_7": {
+    "title": "2.4.7",
+    "description": "Terminology and General Rules - Modes and code switches"
   },
   "english/rule_2_6_1": {
     "title": "2.6.1",
@@ -1771,6 +1771,14 @@
     "title": "16.5.1",
     "description": "Line Mode, Guide Dots - Guide dots"
   },
+  "english/appendix_1": {
+    "title": "Appendix 1",
+    "description": "Shortforms List"
+  },
+  "english/appendix_2": {
+    "title": "Appendix 2",
+    "description": "Word List"
+  },
   "2021_corpus/sentence": {
     "title": "NIKL 2021 말뭉치",
     "description": "NIKL Korean-Korean Braille Parallel Corpus 2021 v1.0 (revision 최신본 기준)",
@@ -1800,5 +1808,133 @@
     "description": "NIKL Korean-Korean Braille Parallel Corpus 2025 v1.0",
     "benchmark": true,
     "shards": true
+  },
+  "science/science_7": {
+    "title": "과학 제7항",
+    "description": "화학식은 원소 기호 앞에 대문자 기호표를 적고, 아래 첨자는 ⠰ 뒤에 내용을 적는다."
+  },
+  "science/science_18": {
+    "title": "과학 제18항",
+    "description": "화학 반응식의 기호는 앞뒤를 한 칸씩 띄어 쓰고, 기체 발생과 침전 기호는 분자식에 붙여 적는다."
+  },
+  "science/science_3": {
+    "title": "과학 제3항",
+    "description": "원소 기호를 먼저 적고 원자 번호는 아래 첨자로, 질량수는 위 첨자로 적는다."
+  },
+  "science/science_10": {
+    "title": "과학 제10항",
+    "description": "사슬 화합물의 결합선은 ⠰을 먼저 적고 결합 수에 따라 단일 1, 이중 2, 삼중 3을 붙여 적는다."
+  },
+  "science/science_9": {
+    "title": "과학 제9항",
+    "description": "구조식은 결합 형태를 기호로 나타내는 기호 표기 형식이나 모양으로 나타내는 공간 표기 형식으로 적는다."
+  },
+  "science/science_11": {
+    "title": "과학 제11항",
+    "description": "사슬 화합물의 공간 표기 형식은 원소 기호 앞에 대문자 기호표를 적고, 가로 결합선은 ⠠⠤, 세로 결합선은 ⠸ 뒤에 결합 수를 적는다. 한 글자 원소가 붙어 나오면 점 위치 구분표와 대문자 구절표·종료표로 감싼다."
+  },
+  "science/science_17": {
+    "title": "과학 제17항",
+    "description": "전자 점식의 공간 표기 형식은 원소 기호 앞에 대문자 기호표를 적고, 전자는 ⠔ 으로 적으며, 전자와 원소 기호는 띄어 쓴다."
+  },
+  "science/science_12": {
+    "title": "과학 제12항",
+    "description": "고리 화합물의 기호 표기 형식 — 세로 방향 육각 환핵은 ⠯⠪⠕⠽, 가로 방향은 ⠯⠕⠪⠽, 오각 환핵은 ⠯⠪⠅⠽ 으로 적는다."
+  },
+  "science/science_13": {
+    "title": "과학 제13항",
+    "description": "고리 화합물의 공간 표기 형식 — 원소 기호 앞에 대문자 기호표를 적고, 한 결합선에 한 글자 원소가 둘 이상 붙어 나오면 점 위치 구분표와 대문자 구절표·종료표로 감싼다. 사각 환핵은 사슬 화합물의 결합선 기호와 같이 적는다."
+  },
+  "science/science_14": {
+    "title": "과학 제14항",
+    "description": "축합 다환식 화합물은 왼쪽에서 오른쪽으로, 위쪽에서 아래쪽으로 풀어 적는다. 위쪽 사선 결합선에 붙는 핵에는 ⠬, 아래쪽에는 ⠩ 을 적고, 첫 번째 핵과 결합하는 핵은 ⠤ 을 적은 뒤 적는다."
+  },
+  "science/science_15": {
+    "title": "과학 제15항",
+    "description": "전자 점식은 전자의 배치를 기호로 나타내는 기호 표기 형식이나 모양으로 나타내는 공간 표기 형식으로 적는다."
+  },
+  "science/science_25": {
+    "title": "과학 제25항",
+    "description": "가계도는 세대 문자와 유전자를 두 칸 띄어 쓰고, 다음 세대로의 이동은 오른쪽 화살표로, 동일 세대는 묶음 괄호로 적는다."
+  },
+  "science/science_21": {
+    "title": "과학 제21항",
+    "description": "전지의 전극 표시와 염다리 표시는 앞뒤를 한 칸씩 띄어 적는다."
+  },
+  "science/science_22": {
+    "title": "과학 제22항",
+    "description": "여성 기호와 남성 기호를 적는 방법을 정한다."
+  },
+  "science/science_1": {
+    "title": "과학 제1항",
+    "description": "원소 기호는 한글 제29항의 로마자 표기법을 따르며 약자로 적지 않는 1급 점자로 적는다."
+  },
+  "science/science_2": {
+    "title": "과학 제2항",
+    "description": "이온은 위 첨자 기호 뒤에 + 는 ⠢, - 는 ⠔ 을 적고, 이온 표시 뒤에는 로마자 종료표 없이 한 칸 띄어 쓴다."
+  },
+  "science/science_4": {
+    "title": "과학 제4항",
+    "description": "로마자 하나로 된 원소 기호가 3개 이상 이어 나오면 대문자 구절표 표기법에 따라 적는다."
+  },
+  "science/science_5": {
+    "title": "과학 제5항",
+    "description": "대문자 구절표 안에서 숫자 다음에 붙어 나오는 H, B, C, F, I 앞에는 ⠐ 을 적는다."
+  },
+  "science/science_6": {
+    "title": "과학 제6항",
+    "description": "국어 문장 안에 연산·비교 기호나 화살표가 든 식은 앞뒤를 두 칸씩 띄고 로마자표를 적지 않는다."
+  },
+  "science/science_8": {
+    "title": "과학 제8항",
+    "description": "화학식과 비교 기호가 어울린 식에서는 비교 기호의 앞뒤를 한 칸씩 띄어 쓴다."
+  },
+  "science/science_16": {
+    "title": "과학 제16항",
+    "description": "전자 점식의 기호 표기 형식에서 전자는 ⠔ 으로 적고 원소 기호와 붙여 적는다."
+  },
+  "science/science_19": {
+    "title": "과학 제19항",
+    "description": "오비탈 기호는 숫자와 방위 양자수 기호 사이에 혼동이 있을 때에만 ⠐ 을 적는다."
+  },
+  "science/science_20": {
+    "title": "과학 제20항",
+    "description": "식은 문자대로 적되 글자체는 반영하지 않는다."
+  },
+  "science/science_23": {
+    "title": "과학 제23항",
+    "description": "대문자로 표시된 유전자는 1급 점자로 적고, 대문자가 2개 이상이면 대문자 단어표를 쓴다."
+  },
+  "science/science_24": {
+    "title": "과학 제24항",
+    "description": "유전자의 염기 서열이 국어 문장 중에 나오면 앞뒤를 두 칸씩 띄어 쓴다."
+  },
+  "science/science_26": {
+    "title": "과학 제26항",
+    "description": "치식은 묶음 괄호를 사용하여 분수 표기법으로 적는다."
+  },
+  "science/science_27": {
+    "title": "과학 제27항",
+    "description": "화식에서 밑선(상부 씨방)은 ⠠⠤, 윗선(하위 씨방)은 ⠈⠉ 으로 적는다."
+  },
+  "science/science_28": {
+    "title": "과학 제28항",
+    "description": "호흡량과 같이 분자식이 아래 첨자인 경우 묶음 괄호로 묶어 적는다."
+  },
+  "science/science_29": {
+    "title": "과학 제29항",
+    "description": "비례 기호는 ⠬⠒ 으로 적는다."
+  },
+  "science/science_30": {
+    "title": "과학 제30항",
+    "description": "단위는 한글 제69항에 따르고, 단위에 화학식이 있으면 화학식 표기 방법에 따른다."
+  },
+  "science/science_31": {
+    "title": "과학 제31항",
+    "description": "한 수식이 두 줄 이상으로 이어질 때에는 수학 제66항에 따라 적는다."
+  },
+  "science/science_32": {
+    "title": "과학 제32항",
+    "description": "대문자 구절표 안에서 로마자 관련 기호를 제외한 모든 기호는 한글 점자와 수학 점자에 따라 적는다."
   }
 }

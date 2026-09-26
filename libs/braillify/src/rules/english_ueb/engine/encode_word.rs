@@ -270,7 +270,11 @@ macro_rules! encode_word_arm {
 		                                .first()
 		                                .is_some_and(|c| c.is_ascii_lowercase() && ('a'..='j').contains(c))
 		                            {
-		                                $out.push(GRADE1);
+		                                super::push_indicator(
+		                                    &mut $out,
+		                                    super::UebMoveSource::Grade1Indicator,
+		                                    &[GRADE1],
+		                                );
 		                            }
 		                            encode_literal_word($chars, &mut $out)?;
 		                        }
@@ -588,7 +592,11 @@ macro_rules! encode_word_arm {
 		                        && (matches!(spelled_run, Some((start, _)) if start == $i)
 		                            || matches!(initialism_run, Some((start, _)) if start == $i))
 		                    {
-		                        $out.extend([GRADE1, GRADE1]);
+		                        super::push_indicator(
+		                            &mut $out,
+		                            super::UebMoveSource::Grade1Indicator,
+		                            &[GRADE1, GRADE1],
+		                        );
 		                    }
 			                    let letter_grade1 = !$cap_start_grade1
 			                        && spelled_run.is_none()
@@ -600,7 +608,11 @@ macro_rules! encode_word_arm {
 	                                && super::rule_5_7::is_wordsign_letter($chars[0])
 	                                && matches!(next, Some(EnglishToken::Symbol('!')))));
 			                    if after_number_grade1 || letter_grade1 || apostrophe_wrapped_letter($tokens, $i, $chars) {
-		                        $out.push(GRADE1);
+		                        super::push_indicator(
+		                            &mut $out,
+		                            super::UebMoveSource::Grade1Indicator,
+		                            &[GRADE1],
+		                        );
 		                    }
 		                    if !$foreign_passage
 		                        && document_all_words($tokens).len() >= 3

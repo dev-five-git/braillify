@@ -6,10 +6,10 @@ use super::super::math_token_rule::{
 use super::super::parser::{BracketKind, MathToken};
 use super::super::{
     rule_1, rule_2, rule_3, rule_4, rule_5, rule_6, rule_9, rule_10, rule_11, rule_12, rule_13,
-    rule_15, rule_16, rule_17, rule_21, rule_22, rule_23, rule_24, rule_25, rule_26, rule_27,
-    rule_28, rule_30, rule_31, rule_32, rule_33, rule_36, rule_37, rule_38, rule_39, rule_40,
-    rule_41, rule_42, rule_43, rule_44, rule_50, rule_54, rule_55, rule_56, rule_58, rule_59,
-    rule_60, rule_61, rule_64, rule_65,
+    rule_15, rule_16, rule_17, rule_21, rule_22, rule_23, rule_25, rule_26, rule_27, rule_28,
+    rule_30, rule_31, rule_32, rule_33, rule_36, rule_37, rule_38, rule_39, rule_40, rule_41,
+    rule_42, rule_43, rule_44, rule_50, rule_54, rule_55, rule_56, rule_58, rule_59, rule_60,
+    rule_61, rule_64, rule_65,
 };
 use super::encode_generic_math_symbol;
 use crate::math_symbol_shortcut;
@@ -25,6 +25,15 @@ impl MathSymbolRule {
             idx += 1;
         }
         None
+    }
+
+    /// True iff the arrow at `index` is drawn over a pair of points, which is
+    /// how 제37항 and 제38항 write a line and a ray: `3o,,AB`, the arrow ahead of
+    /// both capitals with nothing before it. An arrow with an operand on its
+    /// left is standing between two things and belongs to 제10항 instead.
+    fn names_two_points(tokens: &[MathToken], index: usize) -> bool {
+        matches!(tokens.get(index + 1), Some(MathToken::UpperVariable(_)))
+            && rule_12::prev_non_space(tokens, index).is_none()
     }
 }
 
@@ -51,6 +60,14 @@ fn is_capital_pi_numeric_pair(tokens: &[MathToken], index: usize) -> bool {
 impl MathTokenRule for MathSymbolRule {
     fn name(&self) -> &'static str {
         "MathSymbolRule"
+    }
+
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &math_symbol_shortcut::META_3
+    }
+
+    fn variant_metas(&self) -> &'static [&'static crate::rules::RuleMeta] {
+        math_symbol_shortcut::MATH_SYMBOL_VARIANT_METAS
     }
 
     fn priority(&self) -> u16 {
@@ -96,7 +113,10 @@ impl MathTokenRule for MathSymbolRule {
             }
             result.push(52);
             state.prev_was_number = false;
-            return Ok(MathTokenResult::Consumed(i - index));
+            return Ok(MathTokenResult::ConsumedWithMeta {
+                tokens: i - index,
+                meta: &math_symbol_shortcut::META_65,
+            });
         }
 
         // PDF 수학 제65항 1 — `＃(UpperVar)` 패턴: 기수 표기.
@@ -138,7 +158,10 @@ impl MathTokenRule for MathSymbolRule {
                         result.push(52); // ⠴ (MathParen close)
                         state.prev_was_number = false;
                         let consumed = i + 1 - index;
-                        return Ok(MathTokenResult::Consumed(consumed));
+                        return Ok(MathTokenResult::ConsumedWithMeta {
+                            tokens: consumed,
+                            meta: &math_symbol_shortcut::META_65,
+                        });
                     }
                 }
             }
@@ -176,7 +199,10 @@ impl MathTokenRule for MathSymbolRule {
                 }
                 result.push(0); // PDF 제61항 ∀x/∃x 다음 한 칸 띄움
                 state.prev_was_number = false;
-                return Ok(MathTokenResult::Consumed(2));
+                return Ok(MathTokenResult::ConsumedWithMeta {
+                    tokens: 2,
+                    meta: &math_symbol_shortcut::META_61,
+                });
             }
         }
 
@@ -218,7 +244,10 @@ impl MathTokenRule for MathSymbolRule {
             }
 
             state.prev_was_number = false;
-            return Ok(MathTokenResult::Consumed(close_idx + 1 - index));
+            return Ok(MathTokenResult::ConsumedWithMeta {
+                tokens: close_idx + 1 - index,
+                meta: &math_symbol_shortcut::META_25,
+            });
         }
 
         if *c == '\u{03A0}' && is_capital_pi_numeric_pair(tokens, index) {
@@ -234,20 +263,25 @@ impl MathTokenRule for MathSymbolRule {
             }
             result.push(62);
             state.prev_was_number = false;
-            return Ok(MathTokenResult::Consumed(6));
+            return Ok(MathTokenResult::ConsumedWithMeta {
+                tokens: 6,
+                meta: &math_symbol_shortcut::META_13,
+            });
         }
 
         // In derivative/product formulas (제53항), middle dot is used as
         // multiplication sign when the same expression also contains
         // arithmetic composition (= or +).
-        if *c == '\u{00B7}'
-            && tokens
-                .iter()
-                .any(|t| matches!(t, MathToken::Operator('=' | '+')))
-        {
+        let composes_arithmetically = tokens
+            .iter()
+            .any(|t| matches!(t, MathToken::Operator('=' | '+')));
+        if *c == '\u{00B7}' && composes_arithmetically {
             rule_2::encode_operator('\u{00D7}', tokens, index, result)?;
             state.prev_was_number = false;
-            return Ok(MathTokenResult::Consumed(1));
+            return Ok(MathTokenResult::ConsumedWithMeta {
+                tokens: 1,
+                meta: &math_symbol_shortcut::META_53,
+            });
         }
 
         let next_for_padding = Self::next_non_space(tokens, index + 1);
@@ -295,24 +329,34 @@ impl MathTokenRule for MathSymbolRule {
             }
         }
 
-        if rule_3::is_equality_symbol(*c) {
+        let selected_meta: &'static crate::rules::RuleMeta = if rule_3::is_equality_symbol(*c) {
             rule_3::encode_equality_symbol(*c, result)?;
+            &math_symbol_shortcut::META_3
         } else if rule_4::is_comparison_symbol(*c) {
             rule_4::encode_comparison_symbol(*c, result)?;
+            &math_symbol_shortcut::META_4
         } else if rule_5::is_proportion_symbol(*c) {
             rule_5::encode_proportion_symbol(*c, result)?;
-        } else if rule_37::is_double_arrow_line_symbol(*c) {
+            &math_symbol_shortcut::META_SCIENCE_29
+        } else if rule_37::is_double_arrow_line_symbol(*c) && Self::names_two_points(tokens, index)
+        {
             rule_37::encode_double_arrow_line_symbol(*c, result)?;
-        } else if rule_38::is_right_arrow_ray_symbol(*c) {
+            &math_symbol_shortcut::META_37
+        } else if rule_38::is_right_arrow_ray_symbol(*c) && Self::names_two_points(tokens, index) {
             rule_38::encode_right_arrow_ray_symbol(*c, result)?;
+            &math_symbol_shortcut::META_38
         } else if rule_10::is_arrow_symbol(*c) {
             rule_10::encode_arrow_symbol(*c, result)?;
+            &math_symbol_shortcut::META_10
         } else if rule_13::is_greek_symbol(*c) {
             rule_13::encode_greek_symbol(*c, result)?;
+            &math_symbol_shortcut::META_13
         } else if rule_15::is_custom_binary_operator(*c) {
             rule_15::encode_custom_binary_operator(*c, result)?;
+            &math_symbol_shortcut::META_15
         } else if rule_17::is_prime_mark(*c) {
             rule_17::encode_prime(*c, result)?;
+            &math_symbol_shortcut::META_17
         // rule_20 (U+2252 ≒) and rule_29 (U+2248 ≈) dispatch arms were removed:
         // both chars are claimed by `rule_3::is_equality_symbol` earlier in the
         // chain, making rule_20/rule_29 arms structurally unreachable.
@@ -327,15 +371,16 @@ impl MathTokenRule for MathSymbolRule {
             } else {
                 rule_21::encode_absolute_value_close(result)?;
             }
+            &math_symbol_shortcut::META_21
         } else if rule_23::is_overline_mark(*c) {
             rule_23::encode_overline(result)?;
-        } else if rule_24::is_sequence_brace(*c) {
-            rule_24::encode_sequence_brace(*c, result)?;
+            &math_symbol_shortcut::META_23
         } else if rule_27::is_divisibility_symbol(*c) {
             // `|` is always handled by rule_21::is_absolute_value_bar above; only
             // U+2224 (∤) reaches this arm. Probe-verified 2026-05-23.
             let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(*c)?;
             result.extend_from_slice(encoded);
+            &math_symbol_shortcut::META_27
         } else if rule_28::is_norm_symbol(*c) {
             if index == 0 {
                 rule_28::encode_norm_open(result)?;
@@ -344,30 +389,43 @@ impl MathTokenRule for MathSymbolRule {
             } else {
                 rule_28::encode_norm_symbol(*c, result)?;
             }
+            &math_symbol_shortcut::META_28
         } else if rule_30::is_dot_congruence(*c) {
             rule_30::encode_dot_congruence(*c, result)?;
+            &math_symbol_shortcut::META_30
         } else if rule_31::is_asymptotic_equal(*c) {
             rule_31::encode_asymptotic_equal(*c, result)?;
+            &math_symbol_shortcut::META_31
         } else if rule_32::is_congruence_symbol(*c) {
             rule_32::encode_congruence_symbol(*c, result)?;
+            &math_symbol_shortcut::META_32
         } else if rule_33::is_geometric_operator(*c) {
             rule_33::encode_geometric_operator(*c, result)?;
+            &math_symbol_shortcut::META_33
         } else if rule_36::is_arc_symbol(*c) {
             rule_36::encode_arc(*c, result)?;
+            &math_symbol_shortcut::META_36
         } else if rule_39::is_angle_symbol(*c) {
             rule_39::encode_angle_symbol(*c, result)?;
+            &math_symbol_shortcut::META_39
         } else if rule_40::is_geometric_shape(*c) {
             rule_40::encode_geometric_shape(*c, result)?;
+            &math_symbol_shortcut::META_40
         } else if rule_41::is_perpendicular_symbol(*c) {
             rule_41::encode_perpendicular(*c, result)?;
+            &math_symbol_shortcut::META_41
         } else if rule_42::is_similarity_symbol(*c) {
             rule_42::encode_similarity_symbol(*c, result)?;
+            &math_symbol_shortcut::META_42
         } else if rule_43::is_identity_symbol(*c) {
             rule_43::encode_identity_symbol(*c, result)?;
+            &math_symbol_shortcut::META_43
         } else if rule_44::is_parallel_symbol(*c) {
             rule_44::encode_parallel_symbol(*c, result)?;
+            &math_symbol_shortcut::META_44
         } else if rule_50::is_special_constant(*c) {
             rule_50::encode_special_constant(*c, result)?;
+            &math_symbol_shortcut::META_50
         }
         // 제52항 (Δ, U+0394) is captured by `rule_13::is_greek_symbol` earlier in
         // this dispatch chain, so an explicit rule_52 arm would be unreachable.
@@ -375,16 +433,22 @@ impl MathTokenRule for MathSymbolRule {
         // callers that want delta encoding without going through MathSymbolRule.
         else if rule_54::is_partial_derivative(*c) {
             rule_54::encode_partial_derivative(*c, result)?;
+            &math_symbol_shortcut::META_54
         } else if rule_55::is_nabla_symbol(*c) {
             rule_55::encode_nabla_symbol(*c, result)?;
+            &math_symbol_shortcut::META_55
         } else if rule_56::is_integral_symbol(*c) {
             rule_56::encode_integral_symbol(*c, result)?;
+            &math_symbol_shortcut::META_56
         } else if *c == '\u{222C}' {
             rule_58::encode_double_integral(*c, result)?;
+            &math_symbol_shortcut::META_58
         } else if rule_59::is_contour_integral(*c) {
             rule_59::encode_contour_integral(*c, result)?;
+            &math_symbol_shortcut::META_59
         } else if rule_65::is_therefore_because(*c) {
             rule_65::encode_therefore_because(*c, result)?;
+            &math_symbol_shortcut::META_65
         } else if *c == '\u{0307}'
             && matches!(
                 rule_12::prev_non_space(tokens, index),
@@ -394,6 +458,7 @@ impl MathTokenRule for MathSymbolRule {
             // PDF 수학 제65항 5 — 문자 뒤 결합 윗 한 점 (ȧ 등). 숫자 뒤 순환소수와 구분.
             result.push(crate::unicode::decode_unicode('⠈'));
             result.push(crate::unicode::decode_unicode('⠲'));
+            &math_symbol_shortcut::META_65
         } else {
             let is_direct_shortcut_symbol = rule_11::is_math_sentence_delimiter(*c)
                 || rule_16::is_base_notation_subscript(*c)
@@ -401,8 +466,8 @@ impl MathTokenRule for MathSymbolRule {
                 || rule_60::is_set_symbol(*c)
                 || rule_61::is_logic_symbol(*c)
                 || rule_64::is_hat_notation(*c);
-            encode_generic_math_symbol(*c, is_direct_shortcut_symbol, result)?;
-        }
+            encode_generic_math_symbol(*c, is_direct_shortcut_symbol, result)?
+        };
 
         if matches!(*c, '\u{2234}' | '\u{2235}') {
             let next_is_space = matches!(tokens.get(index + 1), Some(MathToken::Space));
@@ -434,7 +499,10 @@ impl MathTokenRule for MathSymbolRule {
         }
 
         state.prev_was_number = rule_9::is_repeating_decimal_mark(*c);
-        Ok(MathTokenResult::Consumed(1))
+        Ok(MathTokenResult::ConsumedWithMeta {
+            tokens: 1,
+            meta: selected_meta,
+        })
     }
 }
 
@@ -454,7 +522,8 @@ impl MathTokenRule for MathSymbolRule {
 // ============================================================
 #[cfg(test)]
 mod tests {
-    use super::super::super::math_token_rule::MathContext;
+    use super::super::super::math_token_rule::{MathContext, MathTokenResult};
+    use super::super::super::parser::MathToken;
     use super::super::encode_math_expression;
     use super::super::encode_math_expression_with_context;
 
@@ -464,6 +533,141 @@ mod tests {
 
     fn enc_ctx(s: &str, ctx: MathContext) -> Vec<u8> {
         encode_math_expression_with_context(s, ctx).expect("math encode should succeed")
+    }
+
+    #[rstest::rstest]
+    #[case::equality('=', "3")]
+    #[case::proportion('∝', "29")]
+    #[case::greek('α', "13")]
+    #[case::root('√', "22")]
+    #[case::set_membership('∈', "60")]
+    #[case::negation_overlay('\u{0338}', "34")]
+    fn reports_the_selected_symbol_article(#[case] symbol: char, #[case] expected_section: &str) {
+        use super::super::super::encoder::math_engine_for_context;
+        use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};
+
+        let context = MathContext::default();
+        let engine = math_engine_for_context(context);
+        let tokens = [MathToken::MathSymbol(symbol)];
+        let mut output = Vec::new();
+        let mut state = MathEncodeState::with_context(false, context);
+
+        let outcome = super::MathSymbolRule
+            .apply(&tokens, 0, &mut output, &mut state, engine)
+            .expect("math symbol should encode");
+
+        let MathTokenResult::ConsumedWithMeta { tokens, meta } = outcome else {
+            panic!("math symbol did not report selected metadata");
+        };
+        assert_eq!(tokens, 1);
+        assert_eq!(meta.section, expected_section);
+    }
+
+    fn apply_symbol(tokens: &[MathToken]) -> (Vec<u8>, MathTokenResult) {
+        use super::super::super::encoder::math_engine_for_context;
+        use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};
+
+        let context = MathContext::default();
+        let mut output = Vec::new();
+        let mut state = MathEncodeState::with_context(false, context);
+        let outcome = super::MathSymbolRule
+            .apply(
+                tokens,
+                0,
+                &mut output,
+                &mut state,
+                math_engine_for_context(context),
+            )
+            .expect("math symbol should encode");
+        (output, outcome)
+    }
+
+    /// 제25항 writes the summation's bounds in a group and then leaves a blank
+    /// before the body. A summation that already has a space after it, or that
+    /// ends the expression, must not gain a second blank.
+    #[rstest::rstest]
+    #[case::runs_into_the_body(Some(MathToken::Variable('x')), true)]
+    #[case::already_spaced(Some(MathToken::Space), false)]
+    #[case::ends_the_expression(None, false)]
+    fn a_summation_separates_itself_from_the_body(
+        #[case] trailing: Option<MathToken>,
+        #[case] expects_blank: bool,
+    ) {
+        use super::super::super::parser::BracketKind;
+
+        let mut tokens = vec![
+            MathToken::MathSymbol('\u{03A3}'),
+            MathToken::OpenParen(BracketKind::MathParen),
+            MathToken::Variable('n'),
+            MathToken::Operator('='),
+            MathToken::Number("1".to_string()),
+            MathToken::CloseParen(BracketKind::MathParen),
+        ];
+        tokens.extend(trailing);
+
+        let (output, _) = apply_symbol(&tokens);
+
+        assert_eq!(output.last() == Some(&0), expects_blank);
+    }
+
+    /// 제37항 and 제38항 draw a line and a ray over a pair of points, writing
+    /// the arrow ahead of both capitals as `3o,,AB`. 제10항 covers the arrow
+    /// standing between two things, which is how a reaction equation and an
+    /// ordinary mapping are written. The cells are the same either way, so only
+    /// the article distinguishes them.
+    #[rstest::rstest]
+    #[case::ray_over_points('\u{2192}', 0, "38")]
+    #[case::line_over_points('\u{2194}', 0, "37")]
+    #[case::ray_between_operands('\u{2192}', 1, "10")]
+    #[case::line_between_operands('\u{2194}', 1, "10")]
+    fn an_arrow_over_points_is_not_an_arrow_between_them(
+        #[case] arrow: char,
+        #[case] index: usize,
+        #[case] section: &str,
+    ) {
+        use super::super::super::encoder::math_engine_for_context;
+        use super::super::super::math_token_rule::{MathEncodeState, MathTokenRule};
+
+        let mut tokens = vec![MathToken::MathSymbol(arrow), MathToken::UpperVariable('A')];
+        if index == 1 {
+            tokens.insert(0, MathToken::UpperVariable('B'));
+        } else {
+            tokens.push(MathToken::UpperVariable('B'));
+        }
+
+        let context = MathContext::default();
+        let mut output = Vec::new();
+        let mut state = MathEncodeState::with_context(false, context);
+        let outcome = super::MathSymbolRule
+            .apply(
+                &tokens,
+                index,
+                &mut output,
+                &mut state,
+                math_engine_for_context(context),
+            )
+            .expect("an arrow should encode");
+
+        let MathTokenResult::ConsumedWithMeta { meta, .. } = outcome else {
+            panic!("the arrow did not report selected metadata");
+        };
+        assert_eq!(meta.section, section);
+    }
+
+    /// 제53항 reads a middle dot as the multiplication sign when the same
+    /// expression also composes arithmetically, which is how derivative and
+    /// product formulas are written.
+    #[test]
+    fn a_middle_dot_multiplies_inside_an_equation() {
+        let (output, outcome) =
+            apply_symbol(&[MathToken::MathSymbol('\u{00B7}'), MathToken::Operator('=')]);
+
+        let MathTokenResult::ConsumedWithMeta { tokens, meta } = outcome else {
+            panic!("the middle dot did not report selected metadata");
+        };
+        assert_eq!(tokens, 1);
+        assert_eq!(meta.section, "53");
+        assert!(!output.is_empty());
     }
 
     // ---------------- Specialised prefix arms ----------------
@@ -715,13 +919,10 @@ mod tests {
         assert!(!result.is_empty(), "a̅ must encode");
     }
 
-    /// `{a,b,c}` — sequence brace (U+007B/U+007D) → rule_24 arm at lines
-    /// 341-342. (Note: parser routes `{` to OpenParen, but a bare math
-    /// symbol `{` outside grouping context can hit this arm.)
+    /// The parser routes `{`/`}` to OpenParen/CloseParen, so a brace
+    /// expression encodes through the bracket path rather than as a symbol.
     #[test]
-    fn sequence_brace_dispatch() {
-        // Use a curly-brace expression — the inner `{`/`}` are parsed as
-        // OpenParen/CloseParen, but rule_24 still detects them.
+    fn brace_expression_encodes_through_the_bracket_path() {
         let result = enc("{a,b}");
         assert!(!result.is_empty(), "{{a,b}} must encode");
     }
@@ -1104,7 +1305,10 @@ mod tests {
             .apply(&tokens, 1, &mut result, &mut state, engine)
             .expect("operator should encode");
 
-        assert!(matches!(action, MathTokenResult::Consumed(1)));
+        assert!(matches!(
+            action,
+            MathTokenResult::ConsumedWithMeta { tokens: 1, meta } if meta.section == "61"
+        ));
         assert_eq!(result.first().copied(), Some(0));
         assert!(!state.prev_was_number);
     }

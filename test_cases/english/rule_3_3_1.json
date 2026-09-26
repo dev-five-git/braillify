@@ -1,5 +1,32 @@
 [
   {
+    "input": "†",
+    "context": "english",
+    "internal": "@,?",
+    "expected": "83257",
+    "unicode": "⠈⠠⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "‡",
+    "context": "english",
+    "internal": "@,]",
+    "expected": "83259",
+    "unicode": "⠈⠠⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "*",
+    "context": "english",
+    "internal": "\"9",
+    "expected": "1620",
+    "unicode": "⠐⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "M*A*S*H",
     "internal": ",m\"9,a\"9,s\"9,h",
     "expected": "321316203211620321416203219",

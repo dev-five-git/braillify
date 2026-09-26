@@ -17,9 +17,22 @@ use std::sync::LazyLock;
 static DIGITAL_INITIAL_PRON_RULE: LazyLock<InitialContractionPronunciationRule> =
     LazyLock::new(|| InitialContractionPronunciationRule::new(Box::new(CmuDictProvider::new())));
 
+/// 제35항이 로마자와 숫자가 이어질 때 로마자 종료표를 쓰지 않도록 하므로 디지털 표기를 처리한다.
 pub struct DigitalNotationRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "35",
+    subsection: None,
+    name: "digital_notation",
+    standard_ref: "2024 Korean Braille Standard, 제35항 로마자와 숫자",
+    description: "숫자·기호가 섞인 디지털 표기 처리",
+};
+
 impl TokenRule for DigitalNotationRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::ModeEntry
     }
@@ -172,10 +185,15 @@ pub(crate) fn encode_digital_word(
     }
 
     if prefix_len < chars.len() {
+        // 제33·34항: 뒤에 붙은 쉼표·닫는 괄호 앞에서는 종료표를 적지 않는다.
+        let punctuation_follows =
+            crate::english_logic::should_skip_terminator_for_symbol(chars[prefix_len])
+                && !crate::english_logic::should_force_terminator_before_symbol(chars[prefix_len]);
         if digital_chars
             .last()
             .is_some_and(|ch| ch.is_ascii_alphabetic())
             && needs_roman_markers
+            && !punctuation_follows
         {
             result.push(decode_unicode('⠲'));
         }
@@ -575,6 +593,24 @@ mod tests {
         let _ = crate::encode("e//f");
         let _ = crate::encode("g_h.i");
         let _ = crate::encode("x_y:z");
+    }
+
+    /// 제33·34항 — 주소 뒤에 붙은 쉼표·닫는 괄호 앞에는 종료표가 없고, 한글과 물결표
+    /// 앞에는 있다.
+    #[rstest::rstest]
+    #[case::closing_bracket("http://a.kr)가", "⠅⠗⠠⠴⠫")]
+    #[case::comma("http://a.kr,", "⠅⠗⠐")]
+    #[case::korean_particle("http://a.kr에", "⠅⠗⠲⠝")]
+    #[case::tilde("http://a.kr~", "⠅⠗⠲⠈⠔")]
+    fn a_trailing_mark_decides_the_address_terminator(#[case] text: &str, #[case] cells: &str) {
+        let encoded = encode_digital_word(text, true).expect("address should encode");
+        let expected: Vec<u8> = cells.chars().map(decode_unicode).collect();
+        assert!(
+            encoded
+                .windows(expected.len())
+                .any(|window| window == expected),
+            "{text}"
+        );
     }
 
     #[test]

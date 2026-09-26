@@ -4,6 +4,7 @@
 //! 표준 prefix 시퀀스(`⠸⠦⠦⠄⠫⠠⠴⠴⠇`)를 삽입하고 사이 공백을 제거한다.
 //! 입력에 U+F000 자리표시자가 있는 경우에만 활성화되므로 일반 텍스트에는 영향 없음.
 
+use crate::rules::RuleMeta;
 use crate::rules::context::EncoderState;
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
@@ -11,7 +12,19 @@ use crate::unicode::decode_unicode;
 
 pub struct Rule73AppendixPlaceholderRule;
 
+static META: RuleMeta = RuleMeta {
+    section: "73",
+    subsection: Some("b1"),
+    name: "rule_73_appendix_placeholder",
+    standard_ref: "2024 Korean Braille Standard, 제73항 [붙임 1]",
+    description: "Insert the standard placeholder prefix for blank-marker examples",
+};
+
 impl TokenRule for Rule73AppendixPlaceholderRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

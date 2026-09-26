@@ -1,10 +1,19 @@
 use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::unicode::decode_unicode;
 
 pub struct EmphasisRingRule;
+
+static META: RuleMeta = RuleMeta {
+    section: "56",
+    subsection: None,
+    name: "token_emphasis_ring",
+    standard_ref: "2024 Korean Braille Standard, 제56항",
+    description: "Normalize combining marks used for Korean emphasis",
+};
 
 /// 드러냄표(제56항)에 쓰이는 결합 부호.
 /// - U+030A `◌̊`(combining ring above): 「훈민정음̊」 등 PDF 예시
@@ -36,6 +45,10 @@ fn trim_ring_marks(text: &str) -> String {
 }
 
 impl TokenRule for EmphasisRingRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

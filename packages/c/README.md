@@ -47,6 +47,7 @@ cc example.c -Ipath/to/packages/c/include -Lpath/to/target/release \
 - 입력은 NUL로 끝나는 UTF-8 문자열이어야 합니다.
 - `braillify_encode_unicode`와 `braillify_encode_braille_font`의 반환값은 `braillify_string_free`로 해제합니다.
 - `braillify_encode`의 반환값은 함께 받은 길이를 그대로 사용해 `braillify_bytes_free`로 해제합니다.
+- 묵자 모양만으로 규정을 정할 수 없는 글은 `braillify_encode_in_context`, `braillify_encode_unicode_in_context`, `braillify_encode_braille_font_in_context`에 문맥(`"science"`, `"math"`, `"korean"` 등)을 함께 넘깁니다. 예: `braillify_encode_unicode_in_context("pOH", "science")`는 `⠴⠏⠠⠕⠠⠓`. 알 수 없는 문맥은 오류입니다.
 - 실패 시 인코딩 함수는 `NULL`을 반환합니다. `braillify_last_error`가 반환한 메시지도 `braillify_string_free`로 해제합니다.
 - 마지막 오류는 스레드별로 저장되며, 다음 인코딩 호출이 시작되면 초기화됩니다.
 - 모든 해제 함수는 `NULL`을 허용합니다.

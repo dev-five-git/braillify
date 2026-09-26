@@ -1,5 +1,113 @@
 [
   {
+    "input": "ȝ",
+    "context": "english",
+    "internal": "#y",
+    "expected": "6061",
+    "unicode": "⠼⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ȝ",
+    "context": "english",
+    "internal": ",#y",
+    "expected": "326061",
+    "unicode": "⠠⠼⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "þ",
+    "context": "english",
+    "internal": "#!",
+    "expected": "6046",
+    "unicode": "⠼⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Þ",
+    "context": "english",
+    "internal": ",#!",
+    "expected": "326046",
+    "unicode": "⠠⠼⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ð",
+    "context": "english",
+    "internal": "#$",
+    "expected": "6043",
+    "unicode": "⠼⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ð",
+    "context": "english",
+    "internal": ",#$",
+    "expected": "326043",
+    "unicode": "⠠⠼⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ƿ",
+    "context": "english",
+    "internal": "#w",
+    "expected": "6058",
+    "unicode": "⠼⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ƿ",
+    "context": "english",
+    "internal": ",#w",
+    "expected": "326058",
+    "unicode": "⠠⠼⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "æ",
+    "context": "english",
+    "internal": "a^6e",
+    "expected": "1242217",
+    "unicode": "⠁⠘⠖⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Æ",
+    "context": "english",
+    "internal": ",a,^6e",
+    "expected": "32132242217",
+    "unicode": "⠠⠁⠠⠘⠖⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "œ",
+    "context": "english",
+    "internal": "o^6e",
+    "expected": "21242217",
+    "unicode": "⠕⠘⠖⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Œ",
+    "context": "english",
+    "internal": ",o,^6e",
+    "expected": "322132242217",
+    "unicode": "⠠⠕⠠⠘⠖⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Hwǣr wǣre ðū?",
     "internal": ",hw@-<a^6e>r w@-<a^6e>re #$@-u8",
     "expected": "3219588363512422172823058836351242217282317060438363738",

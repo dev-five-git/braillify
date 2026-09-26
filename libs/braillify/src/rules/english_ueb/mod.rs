@@ -55,6 +55,532 @@ pub mod token;
 
 use engine::EnglishUebEngine;
 
+thread_local! {
+    /// Word attempts and structural indicators, in emission order. The engine
+    /// encodes a word under several constraint combinations and keeps one, so
+    /// [`align_selected`] separates kept attempts from discarded ones while
+    /// retaining indicators emitted directly into the selected output.
+    static ATTRIBUTIONS: std::cell::RefCell<Option<Vec<AttributionRecord>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+enum AttributionRecord {
+    Word(WordAttempt),
+    Indicator(NonWordAttempt),
+    Direct(NonWordAttempt),
+}
+
+/// The cells one attempt produced, plus where each rule's cells sat inside them.
+struct WordAttempt {
+    cells: Vec<u8>,
+    moves: Vec<(crate::rules::trace::RuleId, u32, u32)>,
+    /// Where the cells were written, for an attempt that went straight into a
+    /// buffer rather than being one of several the engine chose between. The
+    /// literal `<sub>` markup of a chemical line repeats the same two-cell run
+    /// a dozen times, and a search cannot tell those occurrences apart.
+    offset: Option<usize>,
+}
+
+struct NonWordAttempt {
+    cells: Vec<u8>,
+    rule: crate::rules::trace::RuleId,
+    /// Where the cells were written, when they went straight into the selected
+    /// output. A one-cell indicator such as `⠠` recurs all over a capitalised
+    /// line, so looking for it afterwards finds an earlier occurrence than the
+    /// one this record wrote. `None` marks a record taken against a buffer that
+    /// is appended elsewhere, whose final position is not known here.
+    offset: Option<usize>,
+}
+
+/// Accumulates the moves of one word-encoding attempt.
+///
+/// Offsets are taken against the attempt's own output as it is built, because
+/// the encoder can insert cells between moves (a §10.13 line break), so a move's
+/// position is not the running sum of the moves before it.
+pub(super) struct AttemptRecorder {
+    /// `None` when no trace is being collected, so an untraced encode allocates
+    /// nothing per word. The check costs one thread-local read per attempt
+    /// rather than one per move.
+    moves: Option<Vec<(crate::rules::trace::RuleId, u32, u32)>>,
+}
+
+impl AttemptRecorder {
+    pub(super) fn new() -> Self {
+        let collecting = ATTRIBUTIONS.with(|slot| slot.borrow().is_some());
+        Self {
+            moves: collecting.then(Vec::new),
+        }
+    }
+
+    pub(super) fn push(&mut self, rule: crate::rules::trace::RuleId, offset: usize, len: usize) {
+        if let Some(moves) = self.moves.as_mut() {
+            moves.push((rule, offset as u32, len as u32));
+        }
+    }
+
+    pub(super) fn finish(self, cells: &[u8]) {
+        self.finish_at(cells, None);
+    }
+
+    pub(super) fn finish_at(self, cells: &[u8], offset: Option<usize>) {
+        let Some(moves) = self.moves else {
+            return;
+        };
+        ATTRIBUTIONS.with(|slot| {
+            if let Ok(mut slot) = slot.try_borrow_mut()
+                && let Some(records) = slot.as_mut()
+            {
+                records.push(AttributionRecord::Word(WordAttempt {
+                    cells: cells.to_vec(),
+                    moves,
+                    offset,
+                }));
+            }
+        });
+    }
+}
+
+/// [`try_encode`] plus the rule behind each stretch of the output.
+///
+/// A word encoder does not know where its cells land in the finished document,
+/// so each attempt's ranges are recovered by locating that attempt's cells in
+/// the output. Attempts whose cells are absent were discarded by the engine and
+/// contribute nothing. A reported range therefore always points at cells its
+/// rule actually produced.
+pub(crate) fn try_encode_traced(text: &str) -> Option<(Vec<u8>, Vec<UebSpan>)> {
+    let encoded = collect_selected(|| try_encode(text));
+    encoded.map(|(cells, moves)| {
+        let spans = align_selected(&cells, &moves);
+        (cells, spans)
+    })
+}
+
+/// [`encode_forced`] plus the rule behind each stretch of the output.
+pub(crate) fn encode_forced_traced(text: &str) -> Option<(Vec<u8>, Vec<UebSpan>)> {
+    let encoded = collect_selected(|| encode_forced(text));
+    encoded.map(|(cells, moves)| {
+        let spans = align_selected(&cells, &moves);
+        (cells, spans)
+    })
+}
+
+/// One stretch of output and the UEB rule that produced it.
+pub(crate) type UebSpan = (crate::rules::trace::RuleId, core::ops::Range<u32>);
+
+fn collect_selected(
+    encode: impl FnOnce() -> Option<Vec<u8>>,
+) -> Option<(Vec<u8>, Vec<AttributionRecord>)> {
+    ATTRIBUTIONS.with(|slot| *slot.borrow_mut() = Some(Vec::new()));
+    let encoded = encode();
+    let records = ATTRIBUTIONS
+        .with(|slot| slot.borrow_mut().take())
+        .unwrap_or_default();
+    encoded.map(|cells| (cells, records))
+}
+
+fn attribution_checkpoint() -> usize {
+    ATTRIBUTIONS.with(|slot| slot.borrow().as_ref().map_or(0, Vec::len))
+}
+
+/// Move records taken since `checkpoint` from a local buffer's coordinates to
+/// the output's, once that buffer has been appended at `base`.
+///
+/// A word is assembled in its own buffer, so a record made while filling it
+/// knows only its place inside that buffer. Rebasing at the append is what
+/// turns those into positions the finished output can be indexed by.
+fn rebase_attributions(checkpoint: usize, base: usize) {
+    ATTRIBUTIONS.with(|slot| {
+        if let Ok(mut slot) = slot.try_borrow_mut()
+            && let Some(records) = slot.as_mut()
+        {
+            for record in records.iter_mut().skip(checkpoint) {
+                let offset = match record {
+                    AttributionRecord::Word(w) => &mut w.offset,
+                    AttributionRecord::Indicator(a) | AttributionRecord::Direct(a) => &mut a.offset,
+                };
+                if let Some(offset) = offset.as_mut() {
+                    *offset += base;
+                }
+            }
+        }
+    });
+}
+
+fn rollback_attributions(checkpoint: usize) {
+    ATTRIBUTIONS.with(|slot| {
+        if let Some(records) = slot.borrow_mut().as_mut() {
+            records.truncate(checkpoint);
+        }
+    });
+}
+
+/// Place each attempt's moves in the finished output, skipping attempts the
+/// engine discarded.
+///
+/// The scan only moves forward, so an attempt is matched at or after everything
+/// already placed. A discarded attempt is recognised by its cells not appearing
+/// there — the engine never emitted them.
+fn align_selected(cells: &[u8], records: &[AttributionRecord]) -> Vec<UebSpan> {
+    let mut direct_spans = Vec::new();
+    let mut direct_cursor = 0usize;
+    for record in records {
+        if let AttributionRecord::Direct(direct) = record
+            && let Some(range) = locate(cells, direct, &mut direct_cursor, &[])
+        {
+            direct_spans.push((direct.rule, range));
+        }
+    }
+
+    let mut indicator_spans = Vec::new();
+    let mut indicator_cursor = 0usize;
+    for record in records {
+        if let AttributionRecord::Indicator(indicator) = record
+            && let Some(range) = locate(cells, indicator, &mut indicator_cursor, &direct_spans)
+        {
+            push_without_indicators(&mut indicator_spans, (indicator.rule, range), &direct_spans);
+        }
+    }
+
+    let mut fixed_spans = direct_spans.clone();
+    fixed_spans.extend(indicator_spans.iter().cloned());
+    fixed_spans.sort_by_key(|(_, range)| range.start);
+
+    let mut spans = Vec::new();
+    let mut cursor = 0usize;
+    for record in records {
+        let attempt = match record {
+            AttributionRecord::Word(attempt) => attempt,
+            AttributionRecord::Indicator(_) | AttributionRecord::Direct(_) => continue,
+        };
+        let placed = attempt.offset.filter(|offset| {
+            cells.get(*offset..offset + attempt.cells.len()) == Some(attempt.cells.as_slice())
+        });
+        let Some(base) =
+            placed.or_else(|| find_from_outside(cells, &attempt.cells, cursor, &direct_spans))
+        else {
+            continue;
+        };
+        for (rule, offset, len) in &attempt.moves {
+            let start = base + *offset as usize;
+            let end = start + *len as usize;
+            push_without_indicators(&mut spans, (*rule, start as u32..end as u32), &fixed_spans);
+        }
+        cursor = base + attempt.cells.len();
+    }
+    spans.extend(indicator_spans);
+    spans.extend(direct_spans);
+    // An empty cell between words is the inter-word blank, the same structural
+    // output the Korean emitter accounts for. It carries no dots, so there is no
+    // other thing it could be.
+    let blank = crate::rules::trace::RuleId::emitter(crate::rules::trace::EmitterRule::WordSpace);
+    spans.extend(
+        cells
+            .iter()
+            .enumerate()
+            .filter(|(_, cell)| **cell == 0)
+            .map(|(index, _)| (blank, index as u32..index as u32 + 1)),
+    );
+    spans
+}
+
+/// Where a record's cells sit in the finished output.
+///
+/// The position it was written at wins when the output still carries those
+/// cells there and nothing already claims them. Searching is the fallback, and
+/// the only option for a record taken against a buffer appended elsewhere.
+fn locate(
+    cells: &[u8],
+    record: &NonWordAttempt,
+    cursor: &mut usize,
+    excluded: &[UebSpan],
+) -> Option<core::ops::Range<u32>> {
+    let len = record.cells.len();
+    if let Some(offset) = record.offset
+        && cells.get(offset..offset + len) == Some(record.cells.as_slice())
+        && !excluded
+            .iter()
+            .any(|(_, taken)| taken.start < (offset + len) as u32 && (offset as u32) < taken.end)
+    {
+        *cursor = offset + len;
+        return Some(offset as u32..(offset + len) as u32);
+    }
+    let base = if excluded.is_empty() {
+        find_from(cells, &record.cells, *cursor)?
+    } else {
+        find_from_outside(cells, &record.cells, *cursor, excluded)?
+    };
+    *cursor = base + len;
+    Some(base as u32..(base + len) as u32)
+}
+
+fn push_without_indicators(spans: &mut Vec<UebSpan>, candidate: UebSpan, indicators: &[UebSpan]) {
+    let (rule, range) = candidate;
+    let mut start = range.start;
+    for (_, indicator) in indicators {
+        if indicator.end <= start {
+            continue;
+        }
+        if indicator.start >= range.end {
+            break;
+        }
+        if start < indicator.start {
+            spans.push((rule, start..indicator.start));
+        }
+        start = start.max(indicator.end);
+    }
+    if start < range.end {
+        spans.push((rule, start..range.end));
+    }
+}
+
+fn find_from(haystack: &[u8], needle: &[u8], from: usize) -> Option<usize> {
+    if needle.is_empty() || from + needle.len() > haystack.len() {
+        return None;
+    }
+    haystack[from..]
+        .windows(needle.len())
+        .position(|window| window == needle)
+        .map(|offset| offset + from)
+}
+
+fn find_from_outside(
+    haystack: &[u8],
+    needle: &[u8],
+    from: usize,
+    excluded: &[UebSpan],
+) -> Option<usize> {
+    let mut cursor = from;
+    loop {
+        let base = find_from(haystack, needle, cursor)?;
+        let end = base + needle.len();
+        let overlap = excluded
+            .iter()
+            .find(|(_, range)| range.start < end as u32 && (base as u32) < range.end);
+        let Some((_, range)) = overlap else {
+            return Some(base);
+        };
+        cursor = range.end as usize;
+    }
+}
+
+/// Sources of a selected contraction move that are not [`ContractionRule`]
+/// objects. They occupy the first slots of the UEB id space so a contraction
+/// rule's id stays a fixed offset from its registration index.
+///
+/// [`ContractionRule`]: contraction::ContractionRule
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum UebMoveSource {
+    Shortform = 0,
+    Anglicised = 1,
+    Letter = 2,
+    AlphabeticWordsign = 3,
+    StrongWordsign = 4,
+    LowerWordsign = 5,
+    Numeric = 6,
+    Symbol = 7,
+    Grade1Indicator = 8,
+    CapitalLetterIndicator = 9,
+    CapitalisedWordIndicator = 10,
+    InlineNemethCode = 11,
+}
+
+/// Number of non-rule slots reserved before the contraction rules.
+pub(crate) const UEB_RESERVED_SLOTS: usize = 12;
+
+/// Record a whole word that a lookup table resolved in one step, bypassing the
+/// contraction search. Without this a wordsign or shortform would leave its
+/// cells unexplained even though its section is known exactly.
+/// How many attempts have been recorded so far, so a caller can tell whether the
+/// encoder it just ran attributed its own output.
+pub(super) fn attempt_count() -> usize {
+    ATTRIBUTIONS.with(|slot| {
+        slot.borrow().as_ref().map_or(0, |records| {
+            records
+                .iter()
+                .filter(|record| matches!(record, AttributionRecord::Word(_)))
+                .count()
+        })
+    })
+}
+
+/// A word whose attribution has not been settled yet: where its cells start in
+/// the output, and how many attempts existed before it ran.
+pub(super) type PendingWord = (usize, usize);
+
+/// Attribute a finished word that nothing else claimed.
+///
+/// A word normally names itself through the contraction search or a wordsign
+/// lookup. The branches that simply spell it out — letters after a digit, an
+/// acronym abutting one — reach neither, and this leaves their cells explained
+/// as §4.1 letters without double-counting the words that did claim themselves.
+pub(super) fn settle_word_attribution(pending: Option<PendingWord>, out: &[u8]) {
+    let Some((start, attempts_before)) = pending else {
+        return;
+    };
+    if attempt_count() == attempts_before && out.len() > start {
+        record_whole_word_at(UebMoveSource::Letter, &out[start..], Some(start));
+    }
+}
+
+pub(super) fn settle_symbol_attribution(start: Option<usize>, out: &[u8]) {
+    if let Some(start) = start
+        && out.len() > start
+    {
+        record_whole_word_at(UebMoveSource::Symbol, &out[start..], Some(start));
+    }
+}
+
+pub(super) fn record_whole_word(source: UebMoveSource, cells: &[u8]) {
+    record_whole_word_at(source, cells, None);
+}
+
+pub(super) fn record_whole_word_at(source: UebMoveSource, cells: &[u8], offset: Option<usize>) {
+    let mut attempt = AttemptRecorder::new();
+    attempt.push(
+        crate::rules::trace::RuleId::ueb(source as usize),
+        0,
+        cells.len(),
+    );
+    attempt.finish_at(cells, offset);
+}
+
+pub(super) fn push_indicator(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    let offset = Some(out.len());
+    out.extend_from_slice(cells);
+    push_record(source, cells, offset, AttributionRecord::Indicator);
+}
+
+pub(super) fn push_direct(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    let offset = Some(out.len());
+    out.extend_from_slice(cells);
+    push_record(source, cells, offset, AttributionRecord::Direct);
+}
+
+/// [`push_direct`] for a buffer that is appended into the output later, where
+/// the position here would not be the position the cells end up at.
+pub(super) fn push_direct_unplaced(out: &mut Vec<u8>, source: UebMoveSource, cells: &[u8]) {
+    out.extend_from_slice(cells);
+    push_record(source, cells, None, AttributionRecord::Direct);
+}
+
+pub(super) fn record_direct(source: UebMoveSource, cells: &[u8], offset: usize) {
+    push_record(source, cells, Some(offset), AttributionRecord::Direct);
+}
+
+fn push_record(
+    source: UebMoveSource,
+    cells: &[u8],
+    offset: Option<usize>,
+    wrap: fn(NonWordAttempt) -> AttributionRecord,
+) {
+    ATTRIBUTIONS.with(|slot| {
+        if let Ok(mut slot) = slot.try_borrow_mut()
+            && let Some(records) = slot.as_mut()
+        {
+            records.push(wrap(NonWordAttempt {
+                cells: cells.to_vec(),
+                rule: crate::rules::trace::RuleId::ueb(source as usize),
+                offset,
+            }));
+        }
+    });
+}
+
+static UEB_NON_RULE_METAS: [crate::rules::RuleMeta; UEB_RESERVED_SLOTS] = [
+    crate::rules::RuleMeta {
+        section: "10.9",
+        subsection: None,
+        name: "ueb_shortform",
+        standard_ref: "UEB 2024 §10.9",
+        description: "Shortform standing for a longer word",
+    },
+    crate::rules::RuleMeta {
+        section: "13.2",
+        subsection: Some("3"),
+        name: "ueb_anglicised_contraction",
+        standard_ref: "UEB 2024 §13.2.3",
+        description: "Contraction in an anglicised or borrowed word",
+    },
+    crate::rules::RuleMeta {
+        section: "4.1",
+        subsection: None,
+        name: "ueb_letter",
+        standard_ref: "UEB 2024 §4.1 / §4.2",
+        description: "Uncontracted letter, with an accent indicator where needed",
+    },
+    crate::rules::RuleMeta {
+        section: "10.1",
+        subsection: None,
+        name: "ueb_alphabetic_wordsign",
+        standard_ref: "UEB 2024 §10.1",
+        description: "Single letter standing for a whole word",
+    },
+    crate::rules::RuleMeta {
+        section: "10.2",
+        subsection: None,
+        name: "ueb_strong_wordsign",
+        standard_ref: "UEB 2024 §10.2",
+        description: "Strong groupsign cell standing for a whole word",
+    },
+    crate::rules::RuleMeta {
+        section: "10.5",
+        subsection: None,
+        name: "ueb_lower_wordsign",
+        standard_ref: "UEB 2024 §10.5",
+        description: "Lower-cell sign standing for a whole word",
+    },
+    crate::rules::RuleMeta {
+        section: "6",
+        subsection: None,
+        name: "ueb_numeric",
+        standard_ref: "UEB 2024 §6",
+        description: "Numeric indicator and the digits that follow it",
+    },
+    crate::rules::RuleMeta {
+        section: "3",
+        subsection: None,
+        name: "ueb_symbol",
+        standard_ref: "UEB 2024 §3",
+        description: "General symbol such as percent, ampersand or asterisk",
+    },
+    crate::rules::RuleMeta {
+        section: "5",
+        subsection: None,
+        name: "ueb_grade1_indicator",
+        standard_ref: "RUEB 2024 §5",
+        description: "Grade-1 indicator establishing grade-1 mode",
+    },
+    crate::rules::RuleMeta {
+        section: "8.3",
+        subsection: None,
+        name: "ueb_capital_letter_indicator",
+        standard_ref: "RUEB 2024 §8.3",
+        description: "Capital indicator applying to the following letter",
+    },
+    crate::rules::RuleMeta {
+        section: "8.4",
+        subsection: None,
+        name: "ueb_capitalised_word_indicator",
+        standard_ref: "RUEB 2024 §8.4",
+        description: "Capital indicators applying to the following word",
+    },
+    crate::rules::RuleMeta {
+        section: "14.6.2",
+        subsection: None,
+        name: "ueb_inline_nemeth_code",
+        standard_ref: "RUEB 2024 §14.6.2",
+        description: "Nemeth Code within UEB text",
+    },
+];
+
+/// Metadata of every UEB move source, in [`crate::rules::trace::RuleId`] order:
+/// the reserved non-rule slots first, then the contraction rules.
+pub(crate) fn ueb_rule_registry() -> Vec<&'static crate::rules::RuleMeta> {
+    let mut metas: Vec<&'static crate::rules::RuleMeta> = UEB_NON_RULE_METAS.iter().collect();
+    metas.extend(EnglishUebEngine::new().contraction_rule_metas());
+    metas
+}
+
 /// Attempt to encode `text` as standalone UEB Grade-2. Returns `None` if the
 /// input is empty or contains a construct the engine does not yet support, so
 /// the caller can fall back to the legacy encoding path.
@@ -106,6 +632,7 @@ fn encode_english(text: &str, explicit_english: bool) -> Option<Vec<u8>> {
     // §14.3.1/14.3.2: non-UEB (Arabic/Greek/IPA/music) runs inside English prose
     // take the non-UEB word/passage indicators, with the surrounding English
     // encoded by the closure. Returns None when no code-switch span is present.
+    let attribution_checkpoint = attribution_checkpoint();
     if let Some(cells) = rule_14::encode_with_code_switches(&composed, |segment| {
         let tokens = parser::parse_english(segment);
         if tokens.is_empty() {
@@ -116,6 +643,7 @@ fn encode_english(text: &str, explicit_english: bool) -> Option<Vec<u8>> {
     }) {
         return Some(cells);
     }
+    rollback_attributions(attribution_checkpoint);
     let tokens = parser::parse_english(&composed);
     if tokens.is_empty() {
         return None;
@@ -731,11 +1259,107 @@ mod is_ueb_eligible_tests {
 mod encode_pipeline_tests {
     use super::encode_forced;
 
+    #[rstest::rstest]
+    #[case::two_assignments("$P_{D}$＝1,000kN, $P_{L}$＝600kN", 12)]
+    #[case::preceded_by_prose("abc $P_{D}$", 6)]
+    #[case::followed_by_prose("$I_{7}H^{T}$(mod 2)", 12)]
+    #[case::ethylene_equation("$C_{2}H_{4}$(g)＋$H_{2}O$(g)→$C_{2}H_{5}OH$(g)", 36)]
+    #[case::carbon_monoxide_equation("$CO$(g)＋$H_{2}O$(g)→$CO_{2}$(g)＋$H_{2}$(g)", 27)]
+    #[case::capitalised_spelled_word_after_span("abc $P_{D}$ Cat", 6)]
+    fn inline_technical_cells_are_claimed_by_14_6_2(
+        #[case] input: &str,
+        #[case] expected_technical_cells: usize,
+    ) {
+        let (cells, trace) =
+            crate::encode_with_trace(input).expect("inline technical input must encode");
+        let untraced = crate::encode(input).expect("inline technical input must encode untraced");
+        let technical_cells: usize = trace
+            .events()
+            .iter()
+            .filter(|event| {
+                event
+                    .rule
+                    .meta()
+                    .is_some_and(|meta| meta.section == "14.6.2")
+            })
+            .map(|event| event.output.len())
+            .sum();
+        let mut claims = vec![0u8; cells.len()];
+        for event in trace.events() {
+            for index in event.output.clone() {
+                claims[index as usize] += 1;
+            }
+        }
+
+        assert_eq!(cells, untraced, "trace collection must not change output");
+        assert!(
+            claims.iter().all(|count| *count == 1),
+            "claims={claims:?}, events={:?}",
+            trace.events()
+        );
+        assert_eq!(
+            technical_cells,
+            expected_technical_cells,
+            "events={:?}",
+            trace.events()
+        );
+    }
+
+    /// §8.8.2 gives a two-letter chemical symbol its capitals one at a time
+    /// (`CCl`, `HCl`). Those indicators and letters are written straight into
+    /// the output, so each must claim the cell it wrote.
+    #[rstest::rstest]
+    #[case::two_letter_symbols("SO<sub>2</sub>, CCl<sub>4</sub>, HCl, $SF_{6}$")]
+    #[case::camel_subunit_word("aMgO")]
+    #[case::camel_caps_word("dCO")]
+    #[case::balanced_equation("aMgO(s)$+$bC(s)→cMg(s)$+$dCO(g)$+$eCO<sub>2</sub>(g)")]
+    #[case::repeated_subscript_markup("CO<sub>2</sub>, SO<sub>2</sub>, CO<sub>2</sub>")]
+    #[case::word_repeated_later_in_the_line("CO$+$H<sub>2</sub>O↔CO<sub>2</sub>$+$H<sub>2</sub>")]
+    #[case::lone_capitals_between_inline_spans("A $1s^{2}2s^{2}2p^{5}$, B $1s^{2}2s^{2}2p^{2}$")]
+    fn every_cell_of_a_chemical_line_names_a_rule(#[case] input: &str) {
+        let (cells, trace) = crate::encode_with_trace(input).expect("input must encode");
+        let untraced = crate::encode(input).expect("input must encode untraced");
+
+        assert_eq!(cells, untraced, "trace collection must not change output");
+        assert_eq!(
+            trace.unattributed_cells(),
+            0,
+            "{} of {} cells name no rule",
+            trace.unattributed_cells(),
+            cells.len()
+        );
+    }
+
     /// An input that parses to zero tokens — the empty string, reached through
     /// the eligibility-free `encode_forced` entry — yields None rather than an
     /// empty cell vector.
     #[test]
     fn forced_empty_input_yields_none() {
         assert_eq!(encode_forced(""), None);
+    }
+}
+
+#[cfg(test)]
+mod indicator_clipping_tests {
+    use super::push_without_indicators;
+    use crate::rules::trace::{EmitterRule, RuleId};
+
+    /// An indicator can land inside the cells a rule produced. The cells before
+    /// it still belong to that rule, so they are recorded as their own span
+    /// instead of being surrendered along with the indicator.
+    #[test]
+    fn a_span_interrupted_by_an_indicator_keeps_the_part_before_it() {
+        let rule = RuleId::emitter(EmitterRule::WordSpace);
+        let mut spans = Vec::new();
+
+        push_without_indicators(&mut spans, (rule, 0..6), &[(rule, 2..4)]);
+
+        assert_eq!(
+            spans
+                .iter()
+                .map(|(_, range)| range.clone())
+                .collect::<Vec<_>>(),
+            vec![0..2, 4..6]
+        );
     }
 }

@@ -12,6 +12,73 @@ pub mod function;
 pub mod math_token_rule;
 pub mod parser;
 
+thread_local! {
+    /// Rule spans of each math expression encoded during one traced encode.
+    ///
+    /// A math expression is normally encoded by a token rule, which emits the
+    /// cells into the document much later. Holding the spans here lets
+    /// [`super::emit`] pair them back to those cells instead of reporting the
+    /// whole expression as one token-rule span.
+    static MATH_ATTEMPTS: std::cell::RefCell<Option<Vec<MathSpans>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+type MathSpans = (Vec<u8>, Vec<(super::trace::RuleId, u32, u32)>);
+
+/// Collects the rule spans of one math expression.
+pub(crate) struct MathAttempt {
+    moves: Option<Vec<(super::trace::RuleId, u32, u32)>>,
+}
+
+impl MathAttempt {
+    pub(crate) fn new() -> Self {
+        let collecting = MATH_ATTEMPTS.with(|slot| slot.borrow().is_some());
+        Self {
+            moves: collecting.then(Vec::new),
+        }
+    }
+
+    pub(crate) fn push(&mut self, rule: super::trace::RuleId, offset: usize, len: usize) {
+        if let Some(moves) = self.moves.as_mut() {
+            moves.push((rule, offset as u32, len as u32));
+        }
+    }
+
+    pub(crate) fn finish(self, cells: &[u8]) {
+        let Some(moves) = self.moves else {
+            return;
+        };
+        MATH_ATTEMPTS.with(|slot| {
+            if let Ok(mut slot) = slot.try_borrow_mut()
+                && let Some(attempts) = slot.as_mut()
+            {
+                attempts.push((cells.to_vec(), moves));
+            }
+        });
+    }
+}
+
+pub(crate) fn begin_collection() {
+    MATH_ATTEMPTS.with(|slot| *slot.borrow_mut() = Some(Vec::new()));
+}
+
+pub(crate) fn end_collection() {
+    MATH_ATTEMPTS.with(|slot| *slot.borrow_mut() = None);
+}
+
+/// Spans of the math expression whose output is exactly `cells`, if one was
+/// encoded during this trace.
+pub(crate) fn spans_for(cells: &[u8]) -> Option<Vec<(super::trace::RuleId, u32, u32)>> {
+    MATH_ATTEMPTS.with(|slot| {
+        let slot = slot.try_borrow().ok()?;
+        let attempts = slot.as_ref()?;
+        attempts
+            .iter()
+            .find(|(produced, _)| produced == cells)
+            .map(|(_, moves)| moves.clone())
+    })
+}
+
 // ── 제1항–제10항: 숫자, 연산, 등식, 비교, 괄호, 분수, 소수, 비 ──
 pub mod rule_1;
 pub mod rule_10;
@@ -40,7 +107,6 @@ pub mod rule_20;
 pub mod rule_21;
 pub mod rule_22;
 pub mod rule_23;
-pub mod rule_24;
 pub mod rule_25;
 pub mod rule_26;
 pub mod rule_27;

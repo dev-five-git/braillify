@@ -1,8 +1,10 @@
 use std::borrow::Cow;
 
+use crate::korean_char::JamoSpans;
 use crate::rules;
 use crate::rules::context::EncodingMode;
 use crate::rules::token::{Token, WordMeta, WordToken};
+use crate::rules::trace::{TokenOrigins, TracePath, TraceSink};
 
 pub struct Encoder {
     pub(crate) is_english: bool,
@@ -128,19 +130,22 @@ impl Encoder {
             rules::token_rules::math_expression::MathExpressionTokenRule,
         ));
         token_engine.register(Box::new(
-            rules::token_rules::latex_fraction::LatexFractionRule,
-        ));
-        token_engine.register(Box::new(
-            rules::token_rules::inline_fraction::InlineFractionRule,
-        ));
-        token_engine.register(Box::new(
             rules::token_rules::word_shortcut::WordShortcutRule,
         ));
         token_engine.register(Box::new(
-            rules::token_rules::roman_numeral::RomanNumeralRule,
+            rules::token_rules::digital_notation::DigitalNotationRule,
         ));
         token_engine.register(Box::new(
-            rules::token_rules::digital_notation::DigitalNotationRule,
+            rules::token_rules::structural_formula::StructuralFormulaRule,
+        ));
+        token_engine.register(Box::new(
+            rules::token_rules::cell_notation::CellNotationRule,
+        ));
+        token_engine.register(Box::new(
+            rules::token_rules::chemical_formula::ChemicalFormulaRule,
+        ));
+        token_engine.register(Box::new(
+            rules::token_rules::dental_formula::DentalFormulaRule,
         ));
         token_engine.register(Box::new(
             rules::token_rules::uppercase_passage::UppercasePassageRule,
@@ -168,7 +173,7 @@ impl Encoder {
         ));
         token_engine.register(Box::new(rules::token_rules::spacing::AsteriskSpacingRule));
         token_engine.register(Box::new(
-            rules::token_rules::spacing::KoreanAuxiliaryVerbSpacingRule,
+            rules::token_rules::spacing::LeadingAsteriskSpacingRule,
         ));
         token_engine.register(Box::new(
             rules::token_rules::english_dominant_korean_wrap::EnglishDominantKoreanWrapRule,
@@ -219,14 +224,28 @@ impl Encoder {
         self.math_mode_active = active;
     }
 
-    fn encode_via_ir(&mut self, text: &str, result: &mut Vec<u8>) -> Result<(), String> {
-        self.encode_via_ir_with_transform(text, result, |_, _| Ok(()))
+    pub(crate) fn char_rule_registry(&mut self) -> Vec<&'static rules::RuleMeta> {
+        self.rule_engine.registry()
+    }
+
+    pub(crate) fn token_rule_registry(&mut self) -> Vec<&'static rules::RuleMeta> {
+        self.token_engine.registry()
+    }
+
+    fn encode_via_ir(
+        &mut self,
+        text: &str,
+        result: &mut Vec<u8>,
+        trace: Option<TraceSink<'_>>,
+    ) -> Result<(), String> {
+        self.encode_via_ir_with_transform(text, result, trace, |_, _| Ok(()))
     }
 
     fn encode_via_ir_with_transform<F>(
         &mut self,
         text: &str,
         result: &mut Vec<u8>,
+        trace: Option<TraceSink<'_>>,
         transform: F,
     ) -> Result<(), String>
     where
@@ -235,8 +254,14 @@ impl Encoder {
         let mut ir = rules::token::DocumentIR::parse(text, self.english_indicator);
         ir.state.matrix_context_active = self.matrix_context_active;
         ir.state.math_mode_active = self.math_mode_active;
+        ir.state.korean_context_active = self.default_mode == Some(EncodingMode::Korean);
+        ir.state.science_context_active =
+            self.default_mode.is_some_and(EncodingMode::reads_science);
+        ir.state.jamo_spans = trace.is_some().then(Box::<JamoSpans>::default);
 
+        // 과학 글도 국어 점자 문장이므로 모드 스택은 국어로 둔다.
         if let Some(mode) = self.default_mode
+            && !mode.reads_science()
             && mode != ir.state.current_mode()
         {
             while ir.state.pop_mode().is_some() {}
@@ -254,7 +279,14 @@ impl Encoder {
         }
 
         let state_before_token_rules = ir.state.clone();
-        self.token_engine.apply_all(&mut ir.tokens, &mut ir.state)?;
+        if trace.is_some() {
+            rules::math::begin_collection();
+        }
+        let mut origins = trace
+            .is_some()
+            .then(|| TokenOrigins::seeded(ir.tokens.len()));
+        self.token_engine
+            .apply_all_tracked(&mut ir.tokens, &mut ir.state, origins.as_mut())?;
         let mode_stack_after_token_rules = ir.state.mode_stack.clone();
         // 제39항 영-한 wrap 활성화 신호는 token 단계의 결정이며 emit 단계에서도
         // 유효해야 한다. mode_stack과 함께 보존한다.
@@ -266,8 +298,13 @@ impl Encoder {
         ir.state.english_dominant_no_indicator = no_indicator_after_token_rules;
         transform(text, &mut ir.tokens)?;
 
-        let output = rules::emit::emit(&mut ir, &mut self.rule_engine)?;
-        result.extend(output);
+        // `transform` injects formatting tokens without origin tracking, so the
+        // side table no longer lines up with the stream and must be dropped.
+        let origins = origins.filter(|o| o.len() == ir.tokens.len());
+
+        let output = rules::emit::emit(&mut ir, &mut self.rule_engine, trace, origins.as_ref());
+        rules::math::end_collection();
+        result.extend(output?);
 
         self.is_english = ir.state.is_english;
         self.triple_big_english = ir.state.triple_big_english;
@@ -278,6 +315,15 @@ impl Encoder {
     }
 
     pub fn encode(&mut self, text: &str, result: &mut Vec<u8>) -> Result<(), String> {
+        self.encode_traced(text, result, None)
+    }
+
+    pub(crate) fn encode_traced(
+        &mut self,
+        text: &str,
+        result: &mut Vec<u8>,
+        mut trace: Option<TraceSink<'_>>,
+    ) -> Result<(), String> {
         // UEB Grade-2 path: pure-English input (no Korean, UEB-eligible, no
         // explicit mode) is encoded by the unified English engine. It returns
         // `Some` only when it fully handles the input; otherwise we fall through
@@ -295,12 +341,30 @@ impl Encoder {
             // contains `-`, `(`, `,`, `.` is NOT blocked (that over-broad reading
             // of the math detector would swallow `child-ish-ly`, `with(er)`, …).
             && !crate::rules::english_ueb::is_math_owned(text)
-            && let Some(bytes) = crate::rules::english_ueb::try_encode(text)
         {
-            result.extend(bytes);
-            return Ok(());
+            let encoded = if trace.is_some() {
+                crate::rules::english_ueb::try_encode_traced(text)
+            } else {
+                crate::rules::english_ueb::try_encode(text).map(|cells| (cells, Vec::new()))
+            };
+            if let Some((bytes, spans)) = encoded {
+                let output_base = result.len();
+                result.extend(bytes);
+                if let Some(sink) = trace.as_mut() {
+                    let token_index = sink.token_index() as usize;
+                    for (rule, output) in spans {
+                        sink.record_span(
+                            rule,
+                            token_index,
+                            output_base + output.start as usize..output_base + output.end as usize,
+                        );
+                    }
+                    sink.trace.set_path(TracePath::EnglishUeb);
+                }
+                return Ok(());
+            }
         }
-        self.encode_via_ir(text, result)
+        self.encode_via_ir(text, result, trace)
     }
 
     pub fn encode_with_formatting(
@@ -313,7 +377,7 @@ impl Encoder {
             return self.encode(text, result);
         }
 
-        self.encode_via_ir_with_transform(text, result, |source, tokens| {
+        self.encode_via_ir_with_transform(text, result, None, |source, tokens| {
             inject_formatting_tokens(source, spans, tokens)
         })
     }

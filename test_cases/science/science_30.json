@@ -22,6 +22,7 @@
   {
     "input": "Å",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0*",
     "expected": "5233",
     "unicode": "⠴⠡",
@@ -60,6 +61,7 @@
   {
     "input": "℃",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0d,c",
     "expected": "5225329",
     "unicode": "⠴⠙⠠⠉",
@@ -69,6 +71,7 @@
   {
     "input": "℉",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0d,f",
     "expected": "52253211",
     "unicode": "⠴⠙⠠⠋",
@@ -88,6 +91,7 @@
   {
     "input": "㎜Hg",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0mm,hg4",
     "expected": "52131332192750",
     "unicode": "⠴⠍⠍⠠⠓⠛⠲",
@@ -107,6 +111,7 @@
   {
     "input": "°",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0d",
     "expected": "5225",
     "unicode": "⠴⠙",
@@ -116,6 +121,7 @@
   {
     "input": "′",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0-",
     "expected": "5236",
     "unicode": "⠴⠤",
@@ -125,6 +131,7 @@
   {
     "input": "″",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0--",
     "expected": "523636",
     "unicode": "⠴⠤⠤",
@@ -134,6 +141,7 @@
   {
     "input": "kg/㎥",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0kg_/m^#c",
     "expected": "5252756121324609",
     "unicode": "⠴⠅⠛⠸⠌⠍⠘⠼⠉",
@@ -203,6 +211,7 @@
   {
     "input": "%",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0p",
     "expected": "5215",
     "unicode": "⠴⠏",
@@ -212,6 +221,7 @@
   {
     "input": "‰",
     "note": "PDF 과학 제30항",
+    "context": "science",
     "internal": "0pm",
     "expected": "521513",
     "unicode": "⠴⠏⠍",

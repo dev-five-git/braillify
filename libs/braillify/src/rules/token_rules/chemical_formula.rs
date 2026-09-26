@@ -270,7 +270,10 @@ impl TokenRule for ChemicalFormulaRule {
         let Some(Token::Word(first)) = tokens.get(index) else {
             return Ok(TokenAction::Noop);
         };
-        if !first.chars.iter().any(|c| c.is_ascii_alphabetic()) && !first.text.starts_with('$') {
+        if !state.reads_science_shapes()
+            || (!first.chars.iter().any(|c| c.is_ascii_alphabetic())
+                && !first.text.starts_with('$'))
+        {
             return Ok(TokenAction::Noop);
         }
         let korean = state.english_indicator || state.korean_context_active;
@@ -315,6 +318,10 @@ mod tests {
     #[case::closed_phrase("C₆H₁₂O₆이다.", "⠴⠠⠠⠠⠉⠰⠼⠋⠐⠓⠰⠼⠁⠃⠕⠰⠼⠋⠠⠄⠲⠕⠊⠲")]
     #[case::korean_parenthesis("분압(PO₂)과", "⠘⠛⠣⠃⠦⠄⠴⠠⠏⠠⠕⠰⠼⠃⠠⠴⠈⠧")]
     #[case::expression("식은 C + O₂ → CO₂이다.", "⠠⠕⠁⠵⠀⠀⠠⠠⠠⠉⠀⠢⠀⠕⠰⠼⠃⠀⠒⠕⠀⠉⠕⠰⠼⠃⠠⠄⠀⠀⠕⠊⠲")]
+    #[case::latex_formula_with_a_particle(
+        "수용액의 $H_{2}PO_{4}^{-}$가 있다",
+        "⠠⠍⠬⠶⠗⠁⠺⠀⠴⠠⠠⠠⠓⠰⠼⠃⠏⠕⠰⠼⠙⠘⠔⠠⠄⠲⠫⠀⠕⠌⠊"
+    )]
     fn places_formulas_in_korean_sentences(#[case] text: &str, #[case] expected: &str) {
         assert_eq!(braille(text), expected);
     }
@@ -327,20 +334,25 @@ mod tests {
         "⠠⠅⠰⠼⠁⠒⠒⠷⠄⠠⠠⠠⠓⠰⠼⠃⠐⠉⠕⠰⠼⠉⠠⠾⠌⠷⠷⠄⠓⠰⠼⠉⠕⠘⠢⠠⠾⠷⠄⠓⠉⠕⠰⠼⠉⠘⠔⠠⠄⠠⠾⠾"
     )]
     #[case::unit_glyphs_without_korean("㎜Hg", "⠴⠍⠍⠠⠓⠛⠲")]
-    #[case::latex_formula_with_a_particle(
-        "수용액의 $H_{2}PO_{4}^{-}$가 있다",
-        "⠠⠍⠬⠶⠗⠁⠺⠀⠴⠠⠠⠠⠓⠰⠼⠃⠏⠕⠰⠼⠙⠘⠔⠠⠄⠲⠫⠀⠕⠌⠊"
-    )]
     #[case::latex_spaces_do_not_print("$Ca Cl_{2}$", "⠠⠉⠁⠠⠉⠇⠰⠼⠃")]
-    #[case::latex_tail_that_is_not_a_particle("$H_{2}O$x", "⠠⠓⠰⠢⠼⠃⠠⠕⠭")]
     fn writes_whole_scientific_words(#[case] text: &str, #[case] expected: &str) {
-        assert_eq!(braille(text), expected);
+        assert_eq!(
+            crate::encode_to_unicode_in_context(text, "science"),
+            Ok(expected.to_string())
+        );
     }
 
     #[test]
-    fn leaves_a_latex_variable_to_the_math_rules() {
-        let tokens = vec![super::word("$A_1$".into())];
-        let mut state = crate::rules::context::EncoderState::new(false);
+    fn leaves_a_latex_formula_with_a_roman_tail_to_english() {
+        assert_eq!(braille("$H_{2}O$x"), "⠠⠓⠰⠢⠼⠃⠠⠕⠭");
+    }
+
+    #[rstest::rstest]
+    #[case::latex_variable("$A_1$", true)]
+    #[case::formula_outside_korean_and_science_text("H₂O", false)]
+    fn leaves_the_word_to_other_rules(#[case] text: &str, #[case] korean_text: bool) {
+        let tokens = vec![super::word(text.into())];
+        let mut state = crate::rules::context::EncoderState::new(korean_text);
         let action = super::TokenRule::apply(&super::ChemicalFormulaRule, &tokens, 0, &mut state)
             .expect("applies");
         assert!(matches!(action, super::TokenAction::Noop));
@@ -348,7 +360,11 @@ mod tests {
 
     #[test]
     fn attributes_the_roman_markers_it_wraps_around_a_unit() {
-        let (cells, trace) = crate::encode_with_trace("㎜Hg").expect("encodes");
+        let options = crate::EncodeOptions {
+            default_mode: Some(crate::rules::context::EncodingMode::Science),
+        };
+        let (cells, trace) =
+            crate::encode_with_options_and_trace("㎜Hg", &options).expect("encodes");
         assert_eq!(cells.len() as u32, trace.output_len());
         assert_eq!(trace.unattributed_cells(), 0);
     }

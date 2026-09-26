@@ -29,6 +29,7 @@
   {
     "input": "O₂",
     "note": "PDF 과학 제7항 3. 문단 전체가 로마자이면 로마자표를 생략할 수 있다(한글 제29항 [다만]) — 로마자표를 적은 형태는 PDF 의 같은 식 문장 예제",
+    "context": "science",
     "alternatives": [
       {
         "internal": ",o;#b",
@@ -47,6 +48,7 @@
   {
     "input": "C₂H₅OH",
     "note": "PDF 과학 제7항 3",
+    "context": "science",
     "internal": ",,,c;#b\"h;#eoh,'",
     "expected": "32323294860316194860172119324",
     "unicode": "⠠⠠⠠⠉⠰⠼⠃⠐⠓⠰⠼⠑⠕⠓⠠⠄",
@@ -56,6 +58,7 @@
   {
     "input": "Ca(OH)₂",
     "note": "PDF 과학 제7항 4 — 괄호는 수학 제6항",
+    "context": "science",
     "internal": ",ca8,o,h0;#b",
     "expected": "329138322132195248603",
     "unicode": "⠠⠉⠁⠦⠠⠕⠠⠓⠴⠰⠼⠃",
@@ -65,6 +68,7 @@
   {
     "input": "[Cu(NH₃)₄](OH)₂",
     "note": "PDF 과학 제7항 4 — 대괄호",
+    "context": "science",
     "internal": "(',cu8,n,h;#c0;#d,)8,o,h0;#b",
     "expected": "5543293738322932194860952486025326238322132195248603",
     "unicode": "⠷⠄⠠⠉⠥⠦⠠⠝⠠⠓⠰⠼⠉⠴⠰⠼⠙⠠⠾⠦⠠⠕⠠⠓⠴⠰⠼⠃",
@@ -74,6 +78,7 @@
   {
     "input": "C₂H₅𝑂𝐻",
     "note": "PDF 과학 제7항 5 — 이탤릭 OH",
+    "context": "science",
     "internal": ",,,c;#b\"h;#e.1oh,'",
     "expected": "32323294860316194860174022119324",
     "unicode": "⠠⠠⠠⠉⠰⠼⠃⠐⠓⠰⠼⠑⠨⠂⠕⠓⠠⠄",
@@ -83,6 +88,7 @@
   {
     "input": "𝐂₂H₅OH",
     "note": "PDF 과학 제7항 5 — 굵은 C",
+    "context": "science",
     "internal": "^2,,,c;#b\"h;#eoh,'",
     "expected": "24632323294860316194860172119324",
     "unicode": "⠘⠆⠠⠠⠠⠉⠰⠼⠃⠐⠓⠰⠼⠑⠕⠓⠠⠄",
@@ -92,6 +98,7 @@
   {
     "input": "C₂H̲₅̲OH",
     "note": "PDF 과학 제7항 5 — 밑줄 H₅",
+    "context": "science",
     "internal": ",,,c;#b_2h;#eoh,'",
     "expected": "323232948603566194860172119324",
     "unicode": "⠠⠠⠠⠉⠰⠼⠃⠸⠆⠓⠰⠼⠑⠕⠓⠠⠄",

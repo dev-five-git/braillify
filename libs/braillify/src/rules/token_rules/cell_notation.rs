@@ -199,9 +199,9 @@ impl TokenRule for CellNotationRule {
         &self,
         tokens: &[Token<'a>],
         index: usize,
-        _state: &mut EncoderState,
+        state: &mut EncoderState,
     ) -> Result<TokenAction<'a>, String> {
-        if !matches!(tokens.get(index), Some(Token::Word(_))) {
+        if !state.reads_science_shapes() || !matches!(tokens.get(index), Some(Token::Word(_))) {
             return Ok(TokenAction::Noop);
         }
         let run = tokens[index..]
@@ -268,5 +268,21 @@ mod tests {
     #[case::stray_word("Zn∣xyz∥Cu∣Cu")]
     fn leaves_everything_else_alone(#[case] text: &str) {
         assert!(encode_cell(text).is_none());
+    }
+
+    #[test]
+    fn leaves_a_cell_outside_korean_and_science_text_alone() {
+        let text = "Zn∣ZnSO₄∥CuSO₄∣Cu";
+        let chars: Vec<char> = text.chars().collect();
+        let tokens = vec![Token::Word(crate::rules::token::WordToken {
+            meta: crate::rules::token::WordMeta::from_chars(&chars),
+            chars,
+            text: std::borrow::Cow::Borrowed(text),
+        })];
+        let mut state = EncoderState::new(false);
+        let action = CellNotationRule
+            .apply(&tokens, 0, &mut state)
+            .expect("applies");
+        assert!(matches!(action, TokenAction::Noop));
     }
 }

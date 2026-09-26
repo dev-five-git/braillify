@@ -2,6 +2,7 @@
   {
     "input": "H⁺",
     "note": "PDF 과학 제2항. 문단 전체가 로마자이면 로마자표를 생략할 수 있다(한글 제29항 [다만]) — 로마자표를 적은 형태는 PDF 의 같은 식 문장 예제",
+    "context": "science",
     "alternatives": [
       {
         "internal": ",h~5",
@@ -20,6 +21,7 @@
   {
     "input": "SO₄²⁻",
     "note": "PDF 과학 제2항. 문단 전체가 로마자이면 로마자표를 생략할 수 있다(한글 제29항 [다만]) — 로마자표를 적은 형태는 PDF 의 같은 식 문장 예제",
+    "context": "science",
     "alternatives": [
       {
         "internal": ",s,o;#d~#b9",
@@ -38,6 +40,7 @@
   {
     "input": "[Fe(CN)₆]⁴⁻",
     "note": "PDF 과학 제2항",
+    "context": "science",
     "internal": "(',fe8,c,n0;#f,)^#d9",
     "expected": "55432111738329322952486011326224602520",
     "unicode": "⠷⠄⠠⠋⠑⠦⠠⠉⠠⠝⠴⠰⠼⠋⠠⠾⠘⠼⠙⠔",

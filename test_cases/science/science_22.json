@@ -2,6 +2,7 @@
   {
     "input": "♀",
     "note": "PDF 과학 제22항 여성 기호 정의",
+    "context": "science",
     "internal": "0^x4",
     "expected": "52244550",
     "unicode": "⠴⠘⠭⠲",
@@ -11,6 +12,7 @@
   {
     "input": "♂",
     "note": "PDF 과학 제22항 남성 기호 정의",
+    "context": "science",
     "internal": "0^y4",
     "expected": "52246150",
     "unicode": "⠴⠘⠽⠲",

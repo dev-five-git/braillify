@@ -2,6 +2,7 @@
   {
     "input": "    H\n    |\nH - N\n    |\n    H",
     "note": "PDF 과학 제9항 1 — 기호 표기 형식",
+    "context": "science",
     "internal": ",,,h;1n+;1h%;1h,'",
     "expected": "323232194822944482194148219324",
     "unicode": "⠠⠠⠠⠓⠰⠂⠝⠬⠰⠂⠓⠩⠰⠂⠓⠠⠄",

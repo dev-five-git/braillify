@@ -1170,6 +1170,10 @@ fn encode_with_options_traced(
         .default_mode
         .is_some_and(EncodingMode::reads_science);
     let routed_by_content = options.default_mode.is_none() || science;
+    let has_korean = text.chars().any(crate::utils::is_korean_char);
+    // 통일영어점자 §8.8.3 — 한글 없는 글의 화학식은 영어 점자로 적는다. 과학 기호로는
+    // 과학 문맥에서만 읽는다.
+    let reads_science_shapes = science || (options.default_mode.is_none() && has_korean);
     let spatial = options.default_mode == Some(EncodingMode::ScienceSpatial);
     if options.default_mode == Some(EncodingMode::Science)
         && let Some(cells) = crate::rules::science::ring::encode(text)
@@ -1177,12 +1181,13 @@ fn encode_with_options_traced(
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);
     }
-    if routed_by_content && let Some(cells) = crate::rules::science::diagram::encode(text, spatial)
+    if reads_science_shapes
+        && let Some(cells) = crate::rules::science::diagram::encode(text, spatial)
     {
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);
     }
-    if routed_by_content
+    if reads_science_shapes
         && let Some(cells) = crate::rules::science::quantity::encode(text, |segment| {
             encode_with_options(segment, options)
         })
@@ -1192,11 +1197,12 @@ fn encode_with_options_traced(
     }
     // 과학 제4·7항 — 화학식은 로마자 낱말도 수식도 아니다. 영어·수학 경로와 글꼴
     // 정규화를 건너뛰어, 토큰 단계의 화학식 규칙이 강조(제7항 5)까지 그대로 본다.
-    let chemistry = routed_by_content && crate::rules::science::formula::owns_text(text, science);
+    let chemistry =
+        reads_science_shapes && crate::rules::science::formula::owns_text(text, science);
     // 한글 제69항 — 한글 없이 단위 기호 글자(`㎜Hg`, `㎾h`)로 적힌 글은 로마자 낱말이
     // 아니라 단위다. 정규화가 글자를 `mm`·`kW` 로 풀기 전에 그 신호를 잡아 둔다.
-    let unit_glyphs = routed_by_content
-        && !text.chars().any(crate::utils::is_korean_char)
+    let unit_glyphs = science
+        && !has_korean
         && text
             .chars()
             .any(crate::rules::korean::rule_69::is_compatibility_unit_presentation);
@@ -1208,9 +1214,7 @@ fn encode_with_options_traced(
     // through the UEB engine here; ambiguous letterless/single-accent inputs remain
     // with the legacy Korean/math defaults because `is_ueb_eligible` rejects them.
     if options.default_mode.is_none()
-        && !chemistry
-        && !unit_glyphs
-        && !text.chars().any(crate::utils::is_korean_char)
+        && !has_korean
         && crate::rules::english_ueb::is_ueb_eligible(text)
         && !crate::rules::english_ueb::is_math_owned(text)
         && let Some(bytes) = encode_ueb(
@@ -4109,6 +4113,23 @@ mod science_context_tests {
         assert_eq!(
             encode_to_braille_font_in_context(input, "science"),
             Ok(expected.to_string())
+        );
+    }
+
+    /// 통일영어점자 §8.8.3 — 한글 없는 글의 화학식은 영어 점자로 적고, 과학 문맥에서만
+    /// 과학 기호로 적는다.
+    #[rstest::rstest]
+    #[case::formula("HOCH₂", "⠠⠓⠠⠕⠠⠉⠠⠓⠰⠢⠼⠃", "⠠⠠⠠⠓⠕⠉⠓⠰⠼⠃⠠⠄")]
+    #[case::chain_of_elements("H-O-H", "⠰⠰⠠⠓⠤⠠⠕⠤⠠⠓", "⠠⠠⠠⠓⠰⠂⠕⠰⠂⠓⠠⠄")]
+    fn reads_hangul_free_text_as_science_only_in_its_context(
+        #[case] input: &str,
+        #[case] without_context: &str,
+        #[case] in_science: &str,
+    ) {
+        assert_eq!(encode_to_unicode(input), Ok(without_context.to_string()));
+        assert_eq!(
+            encode_to_unicode_in_context(input, "science"),
+            Ok(in_science.to_string())
         );
     }
 

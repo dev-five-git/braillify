@@ -2,6 +2,7 @@
   {
     "input": "²³⁵₉₂U",
     "note": "PDF 과학 제3항",
+    "context": "science",
     "internal": ",u;#ib~#bce",
     "expected": "3237486010324603917",
     "unicode": "⠠⠥⠰⠼⠊⠃⠘⠼⠃⠉⠑",
@@ -11,6 +12,7 @@
   {
     "input": "₈O",
     "note": "PDF 과학 제3항",
+    "context": "science",
     "internal": ",o;#h",
     "expected": "3221486019",
     "unicode": "⠠⠕⠰⠼⠓",
@@ -20,6 +22,7 @@
   {
     "input": "⁷Li",
     "note": "PDF 과학 제3항",
+    "context": "science",
     "internal": ",li~#g",
     "expected": "32710246027",
     "unicode": "⠠⠇⠊⠘⠼⠛",
@@ -29,6 +32,7 @@
   {
     "input": "ₐZnᵐ",
     "note": "PDF 과학 제3항",
+    "context": "science",
     "internal": ",zn;a~m",
     "expected": "3253294812413",
     "unicode": "⠠⠵⠝⠰⠁⠘⠍",
@@ -38,6 +42,7 @@
   {
     "input": "⁹₄Be²⁺",
     "note": "PDF 과학 제3항",
+    "context": "science",
     "internal": ",be;#d^#i^#b5",
     "expected": "323174860252460102460334",
     "unicode": "⠠⠃⠑⠰⠼⠙⠘⠼⠊⠘⠼⠃⠢",

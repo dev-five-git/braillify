@@ -2,6 +2,7 @@
   {
     "input": "5′―ATAATGGCACTTTGCGGCACCTAG―3′",
     "note": "PDF 과학 제24항 — 줄 끝 식의 연결표는 한 줄로 펴면서 뺐다",
+    "context": "science",
     "internal": "#e-,-,,ataatggcactttgcggcacctag,-#c-",
     "expected": "60173632363232130113027279193030302792727919930127323660936",
     "unicode": "⠼⠑⠤⠠⠤⠠⠠⠁⠞⠁⠁⠞⠛⠛⠉⠁⠉⠞⠞⠞⠛⠉⠛⠛⠉⠁⠉⠉⠞⠁⠛⠠⠤⠼⠉⠤",

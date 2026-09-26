@@ -173,6 +173,10 @@ impl EncoderState {
         }
     }
 
+    pub fn reads_science_shapes(&self) -> bool {
+        self.english_indicator || self.korean_context_active || self.science_context_active
+    }
+
     /// Get the current encoding mode (top of stack, default Korean).
     pub fn current_mode(&self) -> EncodingMode {
         self.mode_stack

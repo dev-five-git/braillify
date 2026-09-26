@@ -20,6 +20,7 @@
   {
     "input": "F, Cl, Br, I",
     "note": "PDF 과학 제1항 — 문단 전체가 로마자",
+    "context": "science",
     "internal": ",f1`,cl1`,br1`,i",
     "expected": "32112032972032323203210",
     "unicode": "⠠⠋⠂⠀⠠⠉⠇⠂⠀⠠⠃⠗⠂⠀⠠⠊",

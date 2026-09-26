@@ -2,6 +2,7 @@
   {
     "input": "H-O-H",
     "note": "PDF 과학 제10항 2. 단일 결합 예제",
+    "context": "science",
     "internal": ",,,h;1o;1h,'",
     "expected": "323232194822148219324",
     "unicode": "⠠⠠⠠⠓⠰⠂⠕⠰⠂⠓⠠⠄",
@@ -11,6 +12,7 @@
   {
     "input": "O=C=O",
     "note": "PDF 과학 제10항 2. 이중 결합 예제",
+    "context": "science",
     "internal": ",,,o;2c;2o,'",
     "expected": "32323221486948621324",
     "unicode": "⠠⠠⠠⠕⠰⠆⠉⠰⠆⠕⠠⠄",
@@ -20,6 +22,7 @@
   {
     "input": "H-C≡C-H",
     "note": "PDF 과학 제10항 2. 삼중 결합 예제",
+    "context": "science",
     "internal": ",,,h;1c;3c;1h,'",
     "expected": "3232321948294818948219324",
     "unicode": "⠠⠠⠠⠓⠰⠂⠉⠰⠒⠉⠰⠂⠓⠠⠄",
@@ -29,6 +32,7 @@
   {
     "input": "    O\n    ‖\nO = S - OH\n    |\n    OH",
     "note": "PDF 과학 제10항 3 가 — H₂SO₄, 위로 향한 측쇄",
+    "context": "science",
     "internal": ",,,o;2s+;2o%;1oh-;1oh,'",
     "expected": "32323221486144448621414822119364822119324",
     "unicode": "⠠⠠⠠⠕⠰⠆⠎⠬⠰⠆⠕⠩⠰⠂⠕⠓⠤⠰⠂⠕⠓⠠⠄",
@@ -38,6 +42,7 @@
   {
     "input": "CH₃ - CH - CH₃\n      |\n      CH₃",
     "note": "PDF 과학 제10항 3 나 — C₄H₁₀, 아래로 향한 측쇄",
+    "context": "science",
     "internal": ",,,ch;#c;1ch%;1ch;#c-;1ch;#c,'",
     "expected": "3232329194860948291941482919486093648291948609324",
     "unicode": "⠠⠠⠠⠉⠓⠰⠼⠉⠰⠂⠉⠓⠩⠰⠂⠉⠓⠰⠼⠉⠤⠰⠂⠉⠓⠰⠼⠉⠠⠄",
@@ -47,6 +52,7 @@
   {
     "input": "    O\n    ‖\nH - C\n    |\n    O - H",
     "note": "PDF 과학 제10항 3 다 — HCOOH, 측쇄에 달린 측쇄",
+    "context": "science",
     "internal": ",,,h;1c+;2o%;1o>;1h,'",
     "expected": "323232194829444862141482212848219324",
     "unicode": "⠠⠠⠠⠓⠰⠂⠉⠬⠰⠆⠕⠩⠰⠂⠕⠜⠰⠂⠓⠠⠄",
@@ -56,6 +62,7 @@
   {
     "input": "    H\n    |\nH - C - H\n    |\n    H",
     "note": "PDF 과학 제10항 3 라 — CH₄, 오른쪽 원소 앞의 ⠤",
+    "context": "science",
     "internal": ",,,h;1c+;1h%;1h-;1h,'",
     "expected": "323232194829444821941482193648219324",
     "unicode": "⠠⠠⠠⠓⠰⠂⠉⠬⠰⠂⠓⠩⠰⠂⠓⠤⠰⠂⠓⠠⠄",

@@ -2,6 +2,7 @@
   {
     "input": "∝",
     "note": "PDF 과학 제29항 비례 기호 정의",
+    "context": "science",
     "internal": "+3",
     "expected": "4418",
     "unicode": "⠬⠒",
@@ -20,6 +21,7 @@
   {
     "input": "$Q∝\\frac{1}{R}$",
     "note": "PDF 과학 제29항",
+    "context": "science",
     "internal": ",q+3,r/#a",
     "expected": "32314418322312601",
     "unicode": "⠠⠟⠬⠒⠠⠗⠌⠼⠁",

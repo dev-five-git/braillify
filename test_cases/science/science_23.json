@@ -2,6 +2,7 @@
   {
     "input": "AA",
     "note": "PDF 과학 제23항 — 대문자 2개 이상은 대문자 단어표",
+    "context": "science",
     "internal": ",,aa",
     "expected": "323211",
     "unicode": "⠠⠠⠁⠁",
@@ -11,6 +12,7 @@
   {
     "input": "Aa",
     "note": "PDF 과학 제23항",
+    "context": "science",
     "internal": ",aa",
     "expected": "3211",
     "unicode": "⠠⠁⠁",
@@ -20,6 +22,7 @@
   {
     "input": "RRYY",
     "note": "PDF 과학 제23항",
+    "context": "science",
     "internal": ",,rryy",
     "expected": "323223236161",
     "unicode": "⠠⠠⠗⠗⠽⠽",
@@ -29,6 +32,7 @@
   {
     "input": "RRyy",
     "note": "PDF 과학 제23항",
+    "context": "science",
     "internal": ",,rr,'yy",
     "expected": "323223233246161",
     "unicode": "⠠⠠⠗⠗⠠⠄⠽⠽",

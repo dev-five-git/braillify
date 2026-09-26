@@ -124,11 +124,14 @@ impl TokenRule for StructuralFormulaRule {
         &self,
         tokens: &[Token<'a>],
         index: usize,
-        _state: &mut EncoderState,
+        state: &mut EncoderState,
     ) -> Result<TokenAction<'a>, String> {
         let Some(Token::Word(word)) = tokens.get(index) else {
             return Ok(TokenAction::Noop);
         };
+        if !state.reads_science_shapes() {
+            return Ok(TokenAction::Noop);
+        }
         let Some(chain) = chain_of_elements(word.text.as_ref()) else {
             return Ok(TokenAction::Noop);
         };
@@ -155,6 +158,21 @@ mod tests {
     #[case::plain_word("water", false)]
     fn recognises_only_element_chains(#[case] text: &str, #[case] expected: bool) {
         assert_eq!(chain_of_elements(text).is_some(), expected);
+    }
+
+    #[test]
+    fn leaves_a_chain_outside_korean_and_science_text_alone() {
+        let chars: Vec<char> = "H-O-H".chars().collect();
+        let tokens = vec![Token::Word(crate::rules::token::WordToken {
+            meta: crate::rules::token::WordMeta::from_chars(&chars),
+            chars,
+            text: std::borrow::Cow::Borrowed("H-O-H"),
+        })];
+        let mut state = EncoderState::new(false);
+        let action = StructuralFormulaRule
+            .apply(&tokens, 0, &mut state)
+            .expect("applies");
+        assert!(matches!(action, TokenAction::Noop));
     }
 
     #[test]

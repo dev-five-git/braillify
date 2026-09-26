@@ -341,8 +341,6 @@ impl Encoder {
             // contains `-`, `(`, `,`, `.` is NOT blocked (that over-broad reading
             // of the math detector would swallow `child-ish-ly`, `with(er)`, …).
             && !crate::rules::english_ueb::is_math_owned(text)
-            // 과학 제4·7항 — 화학식은 영어 낱말이 아니다.
-            && !crate::rules::science::formula::owns_text(text, false)
         {
             let encoded = if trace.is_some() {
                 crate::rules::english_ueb::try_encode_traced(text)

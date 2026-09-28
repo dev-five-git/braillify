@@ -1152,15 +1152,25 @@ fn is_omicron_ypsilon(word: &[char], i: usize) -> bool {
     matches!(word.get(i), Some('ο' | 'ὀ')) && matches!(word.get(i + 1), Some('υ'))
 }
 
-const fn is_ipa_char(c: char) -> bool {
+/// IPA has no capitals; a capital in print (`SCHWA /Ə/` in an all-capitals
+/// heading) is ornamentation of the lowercase symbol (§2.3.2).
+fn ipa_symbol(c: char) -> char {
+    if c.is_ascii() {
+        c
+    } else {
+        c.to_lowercase().next().unwrap_or(c)
+    }
+}
+
+fn is_ipa_char(c: char) -> bool {
     matches!(
-        c,
+        ipa_symbol(c),
         'ː' | 'ə' | 'ɔ' | 'ˈ' | 'ˌ' | 'ɹ' | 'θ' | 'ɪ' | 'ð' | 'ɾ' | 'ŋ' | 'ʃ' | 'č'
     )
 }
 
 fn ipa_cell(c: char) -> Option<Vec<u8>> {
-    let cells = match c {
+    let cells = match ipa_symbol(c) {
         'ː' => "⠒",
         'ə' => "⠢",
         'ɔ' => "⠣",

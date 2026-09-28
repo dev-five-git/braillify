@@ -1178,6 +1178,17 @@ fn encode_with_options_traced(
     // 한글 제29항 [다만] — 문단 전체가 로마자이면 로마자표와 로마자 종료표를 생략할
     // 수 있다. 과학 제1항의 예(할로젠족의 원소는 … / F, Cl, Br, I)가 그렇게 적으므로
     // 국어 글 속에서 화학식만으로 된 문단은 과학 기호로 따로 적는다.
+    if options.default_mode == Some(EncodingMode::Science)
+        && text.contains('\n')
+        && let Some(cells) = crate::rules::science::conditions::encode(
+            text,
+            |formula| encode_with_options(formula, options).ok(),
+            |condition| encode(condition).ok(),
+        )
+    {
+        mark_trace_path(&mut trace, TracePath::KoreanRules);
+        return Ok(cells);
+    }
     if reads_science_shapes && has_korean && text.contains('\n') {
         let formula_paragraph = |paragraph: &str| {
             !paragraph.chars().any(crate::utils::is_korean_char)

@@ -25,10 +25,19 @@
   },
   {
     "input": "Al",
-    "note": "부록 2 인쇄 그대로. §10.9.7 은 홀로 선 Al 을 ⠰⠠⠁⠇ 로 적는다(예: Al's ⠰⠠⠁⠇⠄⠎)",
-    "internal": ",al",
-    "expected": "3217",
-    "unicode": "⠠⠁⠇",
+    "note": "부록 2 인쇄는 ⠠⠁⠇, §10.9.7 은 홀로 선 Al 을 ⠰⠠⠁⠇ 로 적는다(예: Al's ⠰⠠⠁⠇⠄⠎). 둘 다 받는다",
+    "alternatives": [
+      {
+        "internal": ",al",
+        "expected": "3217",
+        "unicode": "⠠⠁⠇"
+      },
+      {
+        "internal": ";,al",
+        "expected": "483217",
+        "unicode": "⠰⠠⠁⠇"
+      }
+    ],
     "world": "",
     "jeomsarang": ""
   },

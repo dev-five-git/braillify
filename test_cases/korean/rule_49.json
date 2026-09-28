@@ -97,9 +97,19 @@
   },
   {
     "input": "’",
-    "internal": "0'",
-    "expected": "524",
-    "unicode": "⠴⠄",
+    "note": "닫는 작은따옴표. 묵자가 제61항 아포스트로피(’)와 같아 홀로 선 ’는 두 점형을 모두 받는다",
+    "alternatives": [
+      {
+        "internal": "0'",
+        "expected": "524",
+        "unicode": "⠴⠄"
+      },
+      {
+        "internal": "'",
+        "expected": "4",
+        "unicode": "⠄"
+      }
+    ],
     "world": "⠴⠄",
     "jeomsarang": "⠴⠄"
   },

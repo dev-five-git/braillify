@@ -1,10 +1,19 @@
 [
   {
     "input": "’",
-    "note": "아포스트로피 — 제49항의 단독 닫는 작은따옴표(’ ⠴⠄)와 묵자가 같아 이 행만으로는 둘을 가를 수 없다",
-    "internal": "'",
-    "expected": "4",
-    "unicode": "⠄",
+    "note": "아포스트로피. 묵자가 제49항 닫는 작은따옴표(’)와 같아 홀로 선 ’는 두 점형을 모두 받는다",
+    "alternatives": [
+      {
+        "internal": "'",
+        "expected": "4",
+        "unicode": "⠄"
+      },
+      {
+        "internal": "0'",
+        "expected": "524",
+        "unicode": "⠴⠄"
+      }
+    ],
     "world": "",
     "jeomsarang": ""
   },

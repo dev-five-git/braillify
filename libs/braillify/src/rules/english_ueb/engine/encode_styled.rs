@@ -290,7 +290,9 @@ macro_rules! encode_styled_arm {
 					                                if matches!($tokens.get(end - 1), Some(EnglishToken::Symbol('.')))
 					                                    && !styled_passage_introduced_by_colon($tokens, $i)
 					                                    && !bibliography_entry_context($tokens)
-					                                    && (matches!(
+					                                    // A period can carry U+0332, so an unmarked one
+					                                    // after an underlined passage is outside it (§9.1.3).
+					                                    && ((scope.is_none() && *$form == super::token::Typeform::Underline) || matches!(
 					                                        scope,
 					                                        Some((super::rule_13::AccentCode::Ueb, _))
 					                                    ) || (styled_word_in_english_title($tokens, $i, *$form)

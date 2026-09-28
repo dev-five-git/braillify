@@ -6,3 +6,4 @@ pub mod formula;
 pub mod genotype;
 pub mod quantity;
 pub mod ring;
+pub mod weather;

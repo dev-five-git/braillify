@@ -204,6 +204,18 @@ impl TokenRule for CellNotationRule {
         if !state.reads_science_shapes() || !matches!(tokens.get(index), Some(Token::Word(_))) {
             return Ok(TokenAction::Noop);
         }
+        // 과학 제21항 — 글 전체가 염다리 하나이면 그 기호 자체다.
+        if let [Token::Word(word)] = tokens
+            && word.text.chars().eq(std::iter::once(SALT_BRIDGE))
+        {
+            return Ok(TokenAction::ReplaceRange(
+                1,
+                vec![Token::PreEncoded(vec![
+                    decode_unicode('⠳'),
+                    decode_unicode('⠳'),
+                ])],
+            ));
+        }
         let run = tokens[index..]
             .iter()
             .take_while(|token| matches!(token, Token::Word(_) | Token::Space(_)))

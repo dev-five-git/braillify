@@ -1175,8 +1175,37 @@ fn encode_with_options_traced(
     // 과학 문맥에서만 읽는다.
     let reads_science_shapes = science || (options.default_mode.is_none() && has_korean);
     let spatial = options.default_mode == Some(EncodingMode::ScienceSpatial);
+    // 한글 제29항 [다만] — 문단 전체가 로마자이면 로마자표와 로마자 종료표를 생략할
+    // 수 있다. 과학 제1항의 예(할로젠족의 원소는 … / F, Cl, Br, I)가 그렇게 적으므로
+    // 국어 글 속에서 화학식만으로 된 문단은 과학 기호로 따로 적는다.
+    if reads_science_shapes && has_korean && text.contains('\n') {
+        let formula_paragraph = |paragraph: &str| {
+            !paragraph.chars().any(crate::utils::is_korean_char)
+                && crate::rules::science::formula::owns_text(paragraph, false)
+        };
+        if text.split('\n').any(formula_paragraph) {
+            let science_options = EncodeOptions {
+                default_mode: Some(EncodingMode::Science),
+            };
+            let mut cells = Vec::new();
+            for (index, paragraph) in text.split('\n').enumerate() {
+                if index > 0 {
+                    cells.push(255);
+                }
+                let paragraph_options = if formula_paragraph(paragraph) {
+                    &science_options
+                } else {
+                    options
+                };
+                cells.extend(encode_with_options(paragraph, paragraph_options)?);
+            }
+            mark_trace_path(&mut trace, TracePath::KoreanRules);
+            return Ok(cells);
+        }
+    }
     if options.default_mode == Some(EncodingMode::Science)
         && let Some(cells) = crate::rules::science::ring::encode(text)
+            .or_else(|| crate::rules::science::weather::encode(text))
     {
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);
@@ -1525,7 +1554,11 @@ fn encode_with_options_traced(
         // `%p`(제69항 단위표)처럼 비알파벳이 섞인 입력은 제외된다.
         // 과학 문맥의 로마자 구간은 단위다(과학 제30항). 화학식과 유전자(제23항)는
         // 과학 기호로 따로 적는다.
+        // 과학 [부록] 8 — 대문자 하나뿐인 글(고기압 H, 저기압 L)은 단위가 아니라 기호다.
+        let lone_capital =
+            text.chars().count() == 1 && text.chars().all(|c| c.is_ascii_uppercase());
         let science_roman_section = science
+            && !lone_capital
             && !chemistry
             && !crate::rules::science::genotype::is_allele_pairs(&text.chars().collect::<Vec<_>>());
         let wrap_roman_section = matches!(options.default_mode, Some(EncodingMode::English))

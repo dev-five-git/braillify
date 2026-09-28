@@ -351,6 +351,8 @@ mod tests {
 
     #[rstest::rstest]
     #[case::sh_exclamation_spells("Sh!", "⠠⠎⠓⠖")]
+    #[case::sh_alone_spells("sh", "⠎⠓")]
+    #[case::st_abbreviation_spells("St Stephen", "⠠⠎⠞⠀⠠⠌⠑⠏⠓⠢")]
     #[case::th_apostrophe_spells("th'", "⠞⠓⠄")]
     #[case::th_apostrophe_n_contracts("th'n", "⠹⠄⠝")]
     fn strong_groupsign_word_ambiguity_10_4_2(#[case] text: &str, #[case] expected: &str) {

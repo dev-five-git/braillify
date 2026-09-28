@@ -187,7 +187,20 @@ impl EnglishUebEngine {
                     | ['o', 'u']
                     | ['s', 't']
             );
-        if acronym_as_letters || letter_initialism || all_capitals_groupsign_word {
+        // §10.4.2: a standing-alone word that is exactly one of these strong
+        // groupsigns would be read as its strong wordsign (⠩ shall, ⠌ still), so
+        // its letters are brailled individually (`sh` ⠎⠓, `St.` ⠠⠎⠞⠲).
+        let strong_groupsign_word = standing_alone
+            && !digit_adjacent
+            && matches!(
+                lower.as_slice(),
+                ['c', 'h'] | ['s', 'h'] | ['t', 'h'] | ['w', 'h'] | ['o', 'u'] | ['s', 't']
+            );
+        if acronym_as_letters
+            || letter_initialism
+            || all_capitals_groupsign_word
+            || strong_groupsign_word
+        {
             for &c in &lower {
                 match super::super::rule_4::accent_cells(c) {
                     Some(cells) => out.extend(cells),

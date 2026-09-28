@@ -35,12 +35,15 @@ pub(crate) fn final_groupsign_cells(cluster: &str) -> Option<[u8; 2]> {
 }
 
 /// RUEB 2024 §10.8.3 printed exceptions for the `ity` final-letter groupsign.
+/// `hoity-toity` reaches here as its two hyphen-separated halves.
 fn ity_exception(word: &[char]) -> bool {
     matches!(
         word,
         ['b', 'i', 's', 'c', 'u', 'i', 't', 'y']
             | ['d', 'a', 'c', 'o', 'i', 't', 'y']
             | ['f', 'r', 'u', 'i', 't', 'y']
+            | ['h', 'o', 'i', 't', 'y']
+            | ['t', 'o', 'i', 't', 'y']
             | ['p', 'i', 't', 'y', 'a', 'r', 'd']
             | ['r', 'a', 'b', 'b', 'i', 't', 'y']
     )
@@ -105,6 +108,8 @@ mod tests {
     #[case::ount_mid("amount", 2, Some((vec![decode_unicode('⠨'), decode_unicode('⠞')], 4)))]
     #[case::ness_final("baroness", 4, Some((vec![decode_unicode('⠰'), decode_unicode('⠎')], 4)))]
     #[case::ity_final("circuity", 5, Some((vec![decode_unicode('⠰'), decode_unicode('⠽')], 3)))]
+    #[case::hoity_exception("hoity", 2, None)]
+    #[case::toity_exception("toity", 2, None)]
     #[case::no_match_at_start("tion", 0, None)]
     #[case::no_cluster("cat", 1, None)]
     fn matches_final_groupsigns(

@@ -117,11 +117,16 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     // PDF 제33·34·69항: 숫자+로마자 단위와 바로 뒤의 종료표 생략 문장부호는
     // 수식이 아니라 하나의 국어 문장 내 단위 표기다. 일반 operator/symbol 판정보다
     // 먼저 배제해야 `173cm,` 같은 토큰이 comma 때문에 수식 경로로 우회하지 않는다.
+    // 부호가 앞에 붙은 양(`-66kg`)도 제45항 뺄셈표를 앞세운 같은 단위 표기다.
+    let unsigned = match chars.first() {
+        Some('-' | '\u{2212}') => &chars[1..],
+        _ => chars,
+    };
     if let Some(consumed) =
-        crate::rules::korean::rule_69::parse_numeric_ascii_unit_expression(chars)
-        && (consumed == chars.len()
-            || (consumed + 1 == chars.len()
-                && chars.get(consumed).is_some_and(|symbol| {
+        crate::rules::korean::rule_69::parse_numeric_ascii_unit_expression(unsigned)
+        && (consumed == unsigned.len()
+            || (consumed + 1 == unsigned.len()
+                && unsigned.get(consumed).is_some_and(|symbol| {
                     crate::english_logic::should_skip_terminator_for_symbol(*symbol)
                 })))
     {
@@ -368,6 +373,15 @@ mod tests {
     fn is_math_expression_signed_minus_digit() {
         let chars: Vec<char> = "-5".chars().collect();
         assert!(super::is_math_expression(&chars, "-5"));
+    }
+
+    #[rstest::rstest]
+    #[case::signed_weight_class("-66kg", false)]
+    #[case::signed_length_with_comma("-5m,", false)]
+    #[case::signed_variable("-3x", true)]
+    fn signed_quantity_with_a_unit_is_not_math(#[case] text: &str, #[case] math: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(super::is_math_expression(&chars, text), math);
     }
 
     /// detect.rs — bracket+digits without math operator (e.g. partial brace `3}`).

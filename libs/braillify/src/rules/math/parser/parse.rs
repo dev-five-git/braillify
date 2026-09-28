@@ -681,17 +681,6 @@ pub(crate) fn parse_math_expression_with_math_mode(
             c,
             '+' | '=' | '>' | '<' | '/' | '-' | '!' | '×' | '÷' | '\u{2212}'
         ) {
-            // In chained inequalities like -5 < x < -2, the second minus is omitted.
-            if c == '-'
-                && i > 0
-                && chars[i - 1] == '<'
-                && i + 1 < chars.len()
-                && chars[i + 1].is_ascii_digit()
-            {
-                i += 1;
-                continue;
-            }
-
             let op = normalize_operator_char(c);
             if matches!(op, '+' | '×' | '/') {
                 for group in &mut bracket_stack {

@@ -1,5 +1,41 @@
 [
   {
+    "input": "……",
+    "note": "가운뎃점으로 쓴 줄임표(…… , …)",
+    "internal": ",,,",
+    "expected": "323232",
+    "unicode": "⠠⠠⠠",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "…",
+    "note": "가운뎃점으로 쓴 줄임표(…… , …)",
+    "internal": ",,,",
+    "expected": "323232",
+    "unicode": "⠠⠠⠠",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "......",
+    "note": "마침표로 쓴 줄임표(...... , ...)",
+    "internal": "444",
+    "expected": "505050",
+    "unicode": "⠲⠲⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "...",
+    "note": "마침표로 쓴 줄임표(...... , ...)",
+    "internal": "444",
+    "expected": "505050",
+    "unicode": "⠲⠲⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "“빨리 말해!”",
     "internal": "8,~1\"o`e1jr60",
     "expected": "38322421621017226232252",

@@ -652,8 +652,9 @@ macro_rules! encode_word_arm {
 		                        $numeric_mode = false;
 		                        continue;
 		                    }
-	                    let shortform_usable =
-	                        standing_alone && !matches!(next, Some(EnglishToken::Symbol('@' | '/')));
+	                    let shortform_usable = (standing_alone
+	                        || apostrophe_joined_listed_word($tokens, $i))
+	                        && !matches!(next, Some(EnglishToken::Symbol('@' | '/')));
                     // §10.5 lower wordsigns need a stricter boundary than §10.1/§10.2.
                     let mut lower_usable = standing_alone && lower_wordsign_usable(prev, next);
                     // §10.5.2: "enough's" keeps the wordsign (its interior apostrophe is

@@ -272,6 +272,7 @@ pub(super) fn apostrophe_wrapped_letter(
             tokens.get(index + 1),
             Some(EnglishToken::Symbol('\'' | '\u{2019}'))
         )
+        && !matches!(tokens.get(index + 2), Some(EnglishToken::Word(_)))
 }
 
 /// §3.27: detect a transcriber's-note marker `[open tn]` / `[close tn]` starting

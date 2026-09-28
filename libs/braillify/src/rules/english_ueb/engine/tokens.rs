@@ -162,6 +162,35 @@ pub(super) fn apostrophe_joined_recorded_token_word(tokens: &[EnglishToken], i: 
     super::super::pronunciation::apostrophe_elided_recorded_word_at(&joined, run_start, run_end)
 }
 
+/// Appendix 1 lists some words written with an apostrophe (`children'swear`);
+/// each piece of such a word may use its shortform though it does not stand alone.
+pub(super) fn apostrophe_joined_listed_word(tokens: &[EnglishToken], i: usize) -> bool {
+    let apostrophe_at = |index: usize| {
+        matches!(
+            tokens.get(index),
+            Some(EnglishToken::Symbol('\'' | '\u{2019}'))
+        )
+    };
+    let word_at = |index: usize| matches!(tokens.get(index), Some(EnglishToken::Word(_)));
+    let mut start = i;
+    while start >= 2 && apostrophe_at(start - 1) && word_at(start - 2) {
+        start -= 2;
+    }
+    if start > 0 && apostrophe_at(start - 1) {
+        start -= 1;
+    }
+    let mut end = i;
+    while end + 2 < tokens.len() && apostrophe_at(end + 1) && word_at(end + 2) {
+        end += 2;
+    }
+    let joined: String = token_plain_chars(&tokens[start..=end])
+        .iter()
+        .flat_map(|c| c.to_lowercase())
+        .map(|c| if c == '\u{2019}' { '\'' } else { c })
+        .collect();
+    joined.contains('\'') && super::super::rule_10_9_list::is_listed(&joined)
+}
+
 pub(super) fn token_plain_chars_preserve_word_division(tokens: &[EnglishToken]) -> Vec<char> {
     let mut chars = Vec::new();
     for token in tokens {

@@ -76,8 +76,21 @@ static APPENDIX_MIXED_CASE_LONGER_WORDS: Set<&'static str> = phf_set! {
     "deafblind",
 };
 
+/// A listed word written with an apostrophe or hyphen (`couldn't`, `'twould`,
+/// `do-it-yourselfer`) reaches the shortform rules one piece at a time.
+fn is_listed_piece(word: &str) -> bool {
+    APPENDIX_LONGER_WORDS.iter().any(|listed| {
+        listed.split(['\'', '-']).count() > 1
+            && listed.split(['\'', '-']).any(|piece| piece == word)
+    })
+}
+
+pub fn is_listed(word: &str) -> bool {
+    APPENDIX_LONGER_WORDS.contains(word)
+}
+
 pub fn listed_or_added_s(word: &str) -> bool {
-    if APPENDIX_LONGER_WORDS.contains(word) {
+    if APPENDIX_LONGER_WORDS.contains(word) || is_listed_piece(word) {
         return true;
     }
     if matches!(word, "abouts" | "almosts" | "hims") {
@@ -101,6 +114,9 @@ mod tests {
     #[case::listed_base("afterburn", true)]
     #[case::listed_plural("afterburns", true)]
     #[case::listed_longer_variant("afterburner", true)]
+    #[case::piece_before_apostrophe("couldn", true)]
+    #[case::piece_after_apostrophe("twould", true)]
+    #[case::piece_after_hyphen("yourselfer", true)]
     #[case::blocked_abouts("abouts", false)]
     #[case::unlisted_plural("zzzzs", false)]
     #[case::unlisted("zzzz", false)]

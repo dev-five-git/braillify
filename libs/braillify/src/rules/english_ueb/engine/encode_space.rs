@@ -82,9 +82,9 @@ macro_rules! encode_space_arm {
                     // legacy path but land here for Latin-embedded inputs like
                     // `1in는 2.54cm이다.`, where the token stream contains no
                     // multi-space runs and this branch would be a no-op anyway.
-	                    if $collapse_prose_double_space
+	                    if (($collapse_prose_double_space && styled_prose_double_space($tokens, $i))
+	                        || space_run_inside_parentheses($tokens, $i))
 	                        && matches!($tokens.get($i + 1), Some(EnglishToken::Space))
-	                        && styled_prose_double_space($tokens, $i)
 	                    {
 	                        $prev_was_number = false;
 	                        $numeric_mode = false;

@@ -1,5 +1,25 @@
 [
   {
+    "input": "⁺",
+    "note": "PDF 과학 제2항 — 이온의 + 기호: 위 첨자 기호 ⠘ 뒤에 ⠢",
+    "context": "science",
+    "internal": "~5",
+    "expected": "2434",
+    "unicode": "⠘⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⁻",
+    "note": "PDF 과학 제2항 — 이온의 - 기호: 위 첨자 기호 ⠘ 뒤에 ⠔",
+    "context": "science",
+    "internal": "~9",
+    "expected": "2420",
+    "unicode": "⠘⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "H⁺",
     "note": "PDF 과학 제2항. 문단 전체가 로마자이면 로마자표를 생략할 수 있다(한글 제29항 [다만]) — 로마자표를 적은 형태는 PDF 의 같은 식 문장 예제",
     "context": "science",

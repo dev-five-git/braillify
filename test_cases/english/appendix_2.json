@@ -24,6 +24,15 @@
     "jeomsarang": ""
   },
   {
+    "input": "Al",
+    "note": "부록 2 인쇄 그대로. §10.9.7 은 홀로 선 Al 을 ⠰⠠⠁⠇ 로 적는다(예: Al's ⠰⠠⠁⠇⠄⠎)",
+    "internal": ",al",
+    "expected": "3217",
+    "unicode": "⠠⠁⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Al's",
     "internal": ";,al's",
     "expected": "483217414",

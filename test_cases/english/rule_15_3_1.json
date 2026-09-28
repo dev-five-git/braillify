@@ -1,0 +1,32 @@
+[
+  {
+    "input": "˦",
+    "note": "§15.3 표의 예(e.g.) 글자: high tone",
+    "context": "english",
+    "internal": "~.c",
+    "expected": "24409",
+    "unicode": "⠘⠨⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "˧",
+    "note": "§15.3 표의 예(e.g.) 글자: mid tone",
+    "context": "english",
+    "internal": "~.3",
+    "expected": "244018",
+    "unicode": "⠘⠨⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "˨",
+    "note": "§15.3 표의 예(e.g.) 글자: low tone",
+    "context": "english",
+    "internal": "~.-",
+    "expected": "244036",
+    "unicode": "⠘⠨⠤",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

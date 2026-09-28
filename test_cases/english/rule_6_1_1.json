@@ -1,0 +1,102 @@
+[
+  {
+    "input": "1",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#a",
+    "expected": "601",
+    "unicode": "⠼⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "2",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#b",
+    "expected": "603",
+    "unicode": "⠼⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "3",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#c",
+    "expected": "609",
+    "unicode": "⠼⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "4",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#d",
+    "expected": "6025",
+    "unicode": "⠼⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "5",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#e",
+    "expected": "6017",
+    "unicode": "⠼⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "6",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#f",
+    "expected": "6011",
+    "unicode": "⠼⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "7",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#g",
+    "expected": "6027",
+    "unicode": "⠼⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "8",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#h",
+    "expected": "6019",
+    "unicode": "⠼⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "9",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#i",
+    "expected": "6010",
+    "unicode": "⠼⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "0",
+    "note": "§6.1 수표와 숫자",
+    "context": "english",
+    "internal": "#j",
+    "expected": "6026",
+    "unicode": "⠼⠚",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

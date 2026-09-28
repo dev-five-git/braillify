@@ -1,5 +1,23 @@
 [
   {
+    "input": "[open tn]",
+    "note": "§3.27 점역자 주 여는 표지",
+    "internal": "@.<",
+    "expected": "84035",
+    "unicode": "⠈⠨⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "[close tn]",
+    "note": "§3.27 점역자 주 닫는 표지",
+    "internal": "@.>",
+    "expected": "84028",
+    "unicode": "⠈⠨⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "an examination of the tabular information will [open tn]Text continues on page 78.[close tn]",
     "internal": "an exam9a;n ( ! tabul> 9=ma;n w @.<,text 3t9ues on page #gh4@.>",
     "expected": "129017451132014829055046030133772802063131482905808403532301745300183020371714021290151271706027195084028",

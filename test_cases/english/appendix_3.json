@@ -1,0 +1,639 @@
+[
+  {
+    "input": "∫",
+    "note": "부록 3: integral sign [11]",
+    "context": "english",
+    "internal": "!",
+    "expected": "46",
+    "unicode": "⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "“",
+    "note": "부록 3: opening double quotation mark before beginning of word (7.6); §7.6 표의 두 칸 여는 큰따옴표 ⠘⠦ 도 받는다",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "8",
+        "expected": "38",
+        "unicode": "⠦"
+      },
+      {
+        "internal": "~8",
+        "expected": "2438",
+        "unicode": "⠘⠦"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "”",
+    "note": "부록 3: closing double quotation mark (7.6); §7.6 표의 두 칸 닫는 큰따옴표 ⠘⠴ 도 받는다",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "0",
+        "expected": "52",
+        "unicode": "⠴"
+      },
+      {
+        "internal": "~0",
+        "expected": "2452",
+        "unicode": "⠘⠴"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∥",
+    "note": "부록 3: parallel to [11]",
+    "context": "english",
+    "internal": "#l",
+    "expected": "607",
+    "unicode": "⠼⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∞",
+    "note": "부록 3: infinity sign [11]",
+    "context": "english",
+    "internal": "#=",
+    "expected": "6063",
+    "unicode": "⠼⠿",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⟂",
+    "note": "부록 3: perpendicular to [3]",
+    "context": "english",
+    "internal": "#-",
+    "expected": "6036",
+    "unicode": "⠼⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⦀",
+    "note": "부록 3: triple vertical bar [3]",
+    "context": "english",
+    "internal": "#_l",
+    "expected": "60567",
+    "unicode": "⠼⠸⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊾",
+    "note": "부록 3: measured right angle sign [11]",
+    "context": "english",
+    "internal": "#_{",
+    "expected": "605642",
+    "unicode": "⠼⠸⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "’",
+    "note": "부록 3: apostrophe (7.6, 7.6.6); §7.6 표에서 같은 글자가 닫는 작은따옴표 ⠠⠴ 로도 쓰여 둘 다 받는다",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "'",
+        "expected": "4",
+        "unicode": "⠄"
+      },
+      {
+        "internal": ",0",
+        "expected": "3252",
+        "unicode": "⠠⠴"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∂",
+    "note": "부록 3: partial derivative (curly d) [11]",
+    "context": "english",
+    "internal": "@d",
+    "expected": "825",
+    "unicode": "⠈⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∅",
+    "note": "부록 3: null set (slashed zero) [10]",
+    "context": "english",
+    "internal": "@j",
+    "expected": "826",
+    "unicode": "⠈⠚",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∮",
+    "note": "부록 3: closed line integral (small circle halfway up) [11]",
+    "context": "english",
+    "internal": "@!",
+    "expected": "846",
+    "unicode": "⠈⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "¬",
+    "note": "부록 3: \"not\" sign (line horizontal, then down at right) [10]",
+    "context": "english",
+    "internal": "@?",
+    "expected": "857",
+    "unicode": "⠈⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∨",
+    "note": "부록 3: or (upright v shape) [10]",
+    "context": "english",
+    "internal": "@6",
+    "expected": "822",
+    "unicode": "⠈⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∧",
+    "note": "부록 3: and (inverted v shape) [10]",
+    "context": "english",
+    "internal": "@8",
+    "expected": "838",
+    "unicode": "⠈⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∵",
+    "note": "부록 3: \"since\" (three dots in inverted pyramid) [11]",
+    "context": "english",
+    "internal": "@/",
+    "expected": "812",
+    "unicode": "⠈⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∋",
+    "note": "부록 3: contains as an element (reverse variant epsilon) [10]",
+    "context": "english",
+    "internal": "@~e",
+    "expected": "82417",
+    "unicode": "⠈⠘⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊲",
+    "note": "부록 3: is a normal subgroup of (closed \"less than\") [10]",
+    "context": "english",
+    "internal": "@_<",
+    "expected": "85635",
+    "unicode": "⠈⠸⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊣",
+    "note": "부록 3: reverse assertion (\"T\" lying on right side) [10]",
+    "context": "english",
+    "internal": "@_3",
+    "expected": "85618",
+    "unicode": "⠈⠸⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊳",
+    "note": "부록 3: inverse \"is normal subgroup\" (closed \"greater than\") [10]",
+    "context": "english",
+    "internal": "@_>",
+    "expected": "85628",
+    "unicode": "⠈⠸⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∀",
+    "note": "부록 3: \"for all\" (inverted A) [11]",
+    "context": "english",
+    "internal": "~a",
+    "expected": "241",
+    "unicode": "⠘⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∇",
+    "note": "부록 3: del, nabla (inverted capital delta) [11]",
+    "context": "english",
+    "internal": "~d",
+    "expected": "2425",
+    "unicode": "⠘⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∈",
+    "note": "부록 3: is an element of (variant epsilon) [10]",
+    "context": "english",
+    "internal": "~e",
+    "expected": "2417",
+    "unicode": "⠘⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊂",
+    "note": "부록 3: contained in, is a subset of (U open to right) [10]",
+    "context": "english",
+    "internal": "~<",
+    "expected": "2435",
+    "unicode": "⠘⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∃",
+    "note": "부록 3: \"there exists\" (reverse E) [11]",
+    "context": "english",
+    "internal": "~5",
+    "expected": "2434",
+    "unicode": "⠘⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≈",
+    "note": "부록 3: approximately equal to (tilde over tilde) [3]",
+    "context": "english",
+    "internal": "~9",
+    "expected": "2420",
+    "unicode": "⠘⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊃",
+    "note": "부록 3: contains, is a superset of (U open to left) [10]",
+    "context": "english",
+    "internal": "~>",
+    "expected": "2428",
+    "unicode": "⠘⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊨",
+    "note": "부록 3: \"is valid\" sign (assertion with double stem on \"T\") [10]",
+    "context": "english",
+    "internal": "~_3",
+    "expected": "245618",
+    "unicode": "⠘⠸⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⇌",
+    "note": "부록 3: equilibrium arrow (harpoons) [16]",
+    "context": "english",
+    "internal": "~_7",
+    "expected": "245654",
+    "unicode": "⠘⠸⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≏",
+    "note": "부록 3: equals sign with bump in top bar (difference between or approximately equal) [3]",
+    "context": "english",
+    "internal": "~\"7",
+    "expected": "241654",
+    "unicode": "⠘⠐⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≡",
+    "note": "부록 3: equivalent to (three horizontal lines) [3]",
+    "context": "english",
+    "internal": "_=",
+    "expected": "5663",
+    "unicode": "⠸⠿",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∠",
+    "note": "부록 3: angle sign [11]",
+    "context": "english",
+    "internal": "_{",
+    "expected": "5642",
+    "unicode": "⠸⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊦",
+    "note": "부록 3: assertion (\"is a theorem\" sign, \"T\" lying on left side) [10]",
+    "context": "english",
+    "internal": "_3",
+    "expected": "5618",
+    "unicode": "⠸⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "±",
+    "note": "부록 3: plus-or-minus (plus over minus) [3]",
+    "context": "english",
+    "internal": "_6",
+    "expected": "5622",
+    "unicode": "⠸⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≃",
+    "note": "부록 3: approximately equal to (tilde over horizontal straight line) [3]",
+    "context": "english",
+    "internal": "_9",
+    "expected": "5620",
+    "unicode": "⠸⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∓",
+    "note": "부록 3: minus-or-plus (minus over plus) [3]",
+    "context": "english",
+    "internal": "_-",
+    "expected": "5636",
+    "unicode": "⠸⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≤",
+    "note": "부록 3: less than or equal to [3]",
+    "context": "english",
+    "internal": "_@<",
+    "expected": "56835",
+    "unicode": "⠸⠈⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≥",
+    "note": "부록 3: greater than or equal to [3]",
+    "context": "english",
+    "internal": "_@>",
+    "expected": "56828",
+    "unicode": "⠸⠈⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊆",
+    "note": "부록 3: contained in or equal to [10]",
+    "context": "english",
+    "internal": "_~<",
+    "expected": "562435",
+    "unicode": "⠸⠘⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊇",
+    "note": "부록 3: contains or equal to [10]",
+    "context": "english",
+    "internal": "_~>",
+    "expected": "562428",
+    "unicode": "⠸⠘⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊴",
+    "note": "부록 3: is normal subgroup of or equal (closed \"less than\" with line under) [10]",
+    "context": "english",
+    "internal": "__<",
+    "expected": "565635",
+    "unicode": "⠸⠸⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊵",
+    "note": "부록 3: inverse \"normal subgroup or equal\" (closed \"greater than\" with line under) [10]",
+    "context": "english",
+    "internal": "__>",
+    "expected": "565628",
+    "unicode": "⠸⠸⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∝",
+    "note": "부록 3: is proportional to (varies as) [3, 11]",
+    "context": "english",
+    "internal": "_\"7",
+    "expected": "561654",
+    "unicode": "⠸⠐⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "√",
+    "note": "부록 3: radical without vinculum [8]",
+    "context": "english",
+    "internal": "\"%",
+    "expected": "1641",
+    "unicode": "⠐⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∗",
+    "note": "부록 3: asterisk operator, star [3]",
+    "context": "english",
+    "internal": "\"9",
+    "expected": "1620",
+    "unicode": "⠐⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∘",
+    "note": "부록 3: \"hollow dot\" [11]",
+    "context": "english",
+    "internal": "\"0",
+    "expected": "1652",
+    "unicode": "⠐⠴",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≅",
+    "note": "부록 3: tilde over equals sign (approximately equal) [3]",
+    "context": "english",
+    "internal": "\"_9",
+    "expected": "165620",
+    "unicode": "⠐⠸⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ß",
+    "note": "부록 3: German letter sharp s (eszett) (4.6)",
+    "context": "english",
+    "internal": ".!",
+    "expected": "4046",
+    "unicode": "⠨⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "`",
+    "note": "부록 3: grave accent alone",
+    "context": "english",
+    "internal": ".*",
+    "expected": "4033",
+    "unicode": "⠨⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "¦",
+    "note": "부록 3: broken vertical bar [11]",
+    "context": "english",
+    "internal": ".|",
+    "expected": "4051",
+    "unicode": "⠨⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∪",
+    "note": "부록 3: union (upright U shape) [10]",
+    "context": "english",
+    "internal": ".6",
+    "expected": "4022",
+    "unicode": "⠨⠖",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∩",
+    "note": "부록 3: intersection (inverted U shape) [10]",
+    "context": "english",
+    "internal": ".8",
+    "expected": "4038",
+    "unicode": "⠨⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≪",
+    "note": "부록 3: is much less than [3]",
+    "context": "english",
+    "internal": ".@<",
+    "expected": "40835",
+    "unicode": "⠨⠈⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≫",
+    "note": "부록 3: is much greater than [3]",
+    "context": "english",
+    "internal": ".@>",
+    "expected": "40828",
+    "unicode": "⠨⠈⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊊",
+    "note": "부록 3: contained in, but not equal to (proper subset) [10]",
+    "context": "english",
+    "internal": ".~<",
+    "expected": "402435",
+    "unicode": "⠨⠘⠣",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⊋",
+    "note": "부록 3: contains, but is not equal to (proper superset) [10]",
+    "context": "english",
+    "internal": ".~>",
+    "expected": "402428",
+    "unicode": "⠨⠘⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∡",
+    "note": "부록 3: measured angle sign [11]",
+    "context": "english",
+    "internal": "._{",
+    "expected": "405642",
+    "unicode": "⠨⠸⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "⫤",
+    "note": "부록 3: reverse \"is valid\" sign [10]",
+    "context": "english",
+    "internal": "._3",
+    "expected": "405618",
+    "unicode": "⠨⠸⠒",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "≑",
+    "note": "부록 3: equals sign dotted above and below (approximately equal) [3]",
+    "context": "english",
+    "internal": ".\"7",
+    "expected": "401654",
+    "unicode": "⠨⠐⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "∴",
+    "note": "부록 3: \"therefore\" (three dots in upright pyramid) variant left- leaning diagonal line segment [11] when surrounded by spaces/other diagonal line segments (16.3)",
+    "context": "english",
+    "internal": ",*",
+    "expected": "3233",
+    "unicode": "⠠⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ẞ",
+    "note": "부록 3: capital German letter sharp s (eszett) (4.6)",
+    "context": "english",
+    "internal": ",.!",
+    "expected": "324046",
+    "unicode": "⠠⠨⠮",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

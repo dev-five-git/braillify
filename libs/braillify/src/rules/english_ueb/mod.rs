@@ -706,11 +706,8 @@ fn encode_single_caron_word(text: &str, _explicit_english: bool) -> Option<Vec<u
     if !has_caron || !text.chars().all(is_ligature_letter) {
         return None;
     }
-    let mut out = Vec::new();
-    for c in text.chars() {
-        push_rule4_letter(c, &mut out)?;
-    }
-    Some(out)
+    let chars: Vec<char> = text.chars().collect();
+    EnglishUebEngine::new().encode_modified(&chars)
 }
 
 fn is_ligature_letter(c: char) -> bool {

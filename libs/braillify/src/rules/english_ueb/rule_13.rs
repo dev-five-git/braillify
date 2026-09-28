@@ -314,7 +314,8 @@ pub fn encode_uncontracted_word(
 ) -> Option<Vec<u8>> {
     let mut out = Vec::new();
     for &c in chars {
-        if c.is_uppercase() && !is_foreign_letter(c) {
+        let capital_pushed = c.is_uppercase() && !is_foreign_letter(c);
+        if capital_pushed {
             out.push(decode_unicode('⠠'));
         }
         let lower = c.to_lowercase().next()?;
@@ -330,7 +331,9 @@ pub fn encode_uncontracted_word(
             }
             AccentCode::Ueb => {
                 if let Some(cells) = rule_4::accent_cells(c) {
-                    out.extend(cells);
+                    let skip =
+                        usize::from(capital_pushed && cells.first() == Some(&decode_unicode('⠠')));
+                    out.extend(&cells[skip..]);
                 } else if let Some(cells) = rule_12::early_letter(c) {
                     out.extend(cells);
                 } else {

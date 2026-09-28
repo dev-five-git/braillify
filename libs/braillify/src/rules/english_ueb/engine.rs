@@ -156,6 +156,18 @@ impl Default for EnglishUebEngine {
 }
 
 impl EnglishUebEngine {
+    /// §4.2.4: a word with a modified letter, contracted only around that letter.
+    pub(super) fn encode_modified(&self, chars: &[char]) -> Option<Vec<u8>> {
+        let mut out = Vec::new();
+        match classify_caps(chars)? {
+            Caps::None => {}
+            Caps::Single => out.push(CAPITAL),
+            Caps::Word => out.extend([CAPITAL, CAPITAL]),
+        }
+        encode_modified_word(&self.contractions, chars, true, true, &mut out)?;
+        Some(out)
+    }
+
     /// Build the engine with the currently-implemented contraction rules.
     pub fn new() -> Self {
         let mut contractions = ContractionEngine::default();

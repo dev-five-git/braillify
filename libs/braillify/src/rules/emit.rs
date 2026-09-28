@@ -795,7 +795,7 @@ fn spaced_ampersand_connects_roman_words(tokens: &[Token<'_>], ampersand_index: 
 
 /// Rule 29 keeps consecutive Roman/number text in one section even across
 /// print spaces. A separated enclosure continues that section only when the
-/// *complete* enclosure is Roman/number text. This distinguishes
+/// *complete* enclosure is Roman text with no Hangul. This distinguishes
 /// `GRI (Global Reporting Initiative)` from `Poison (모래성)` and from a mixed
 /// gloss such as `TVB (Television - 전시광파유한공사)`.
 fn separated_symbol_continues_roman_section(tokens: &[Token<'_>], token_index: usize) -> bool {
@@ -825,25 +825,30 @@ fn separated_symbol_continues_roman_section(tokens: &[Token<'_>], token_index: u
         return true;
     }
 
-    // Rule 35: punctuation may introduce a numeric continuation (`'23`).
-    if next_word
+    let group = next_word
         .chars
-        .iter()
-        .find(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(**ch))
-        .is_some_and(char::is_ascii_digit)
+        .first()
+        .and_then(|opening| matching_group_close(*opening).map(|closing| (*opening, closing)));
+
+    // Rule 35: punctuation may introduce a numeric continuation (`'23`). A
+    // spaced opening bracket instead starts a group of its own: a number in it
+    // (`KT (32,750원)`, `C (55)`) is not joined to the Roman word before.
+    if group.is_none()
+        && next_word
+            .chars
+            .iter()
+            .find(|ch| ch.is_ascii_alphanumeric() || crate::utils::is_korean_char(**ch))
+            .is_some_and(char::is_ascii_digit)
     {
         return true;
     }
 
-    let Some(opening) = next_word.chars.first().copied() else {
-        return false;
-    };
-    let Some(closing) = matching_group_close(opening) else {
+    let Some((opening, closing)) = group else {
         return false;
     };
 
     let mut depth = 0usize;
-    let mut saw_roman_or_number = false;
+    let mut saw_roman = false;
     let mut saw_korean = false;
     for token in tokens.iter().skip(token_index + 1) {
         match token {
@@ -859,12 +864,12 @@ fn separated_symbol_continues_roman_section(tokens: &[Token<'_>], token_index: u
                         // and the function returns as soon as that level closes.
                         depth -= 1;
                         if depth == 0 {
-                            return saw_roman_or_number && !saw_korean;
+                            return saw_roman && !saw_korean;
                         }
                         continue;
                     }
                     if depth > 0 {
-                        saw_roman_or_number |= ch.is_ascii_alphanumeric();
+                        saw_roman |= ch.is_ascii_alphabetic();
                         saw_korean |= crate::utils::is_korean_char(ch);
                     }
                 }
@@ -1780,6 +1785,8 @@ mod tests {
     #[case::nested_complete_group("nested", true)]
     #[case::non_textual_group_body("non_text", false)]
     #[case::unclosed_group("unclosed", false)]
+    #[case::number_group("number", false)]
+    #[case::apostrophe_year("year", true)]
     fn separated_symbol_requires_a_complete_roman_group(
         #[case] scenario: &str,
         #[case] expected: bool,
@@ -1806,6 +1813,16 @@ mod tests {
                 word_token("Alpha"),
                 Token::Space(SpaceKind::Regular),
                 word_token("(Beta"),
+            ],
+            "number" => vec![
+                word_token("KT"),
+                Token::Space(SpaceKind::Regular),
+                word_token("(55)"),
+            ],
+            "year" => vec![
+                word_token("Class"),
+                Token::Space(SpaceKind::Regular),
+                word_token("'23"),
             ],
             _ => unreachable!("unknown fixture"),
         };

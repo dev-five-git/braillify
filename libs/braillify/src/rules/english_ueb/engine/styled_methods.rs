@@ -162,7 +162,13 @@ impl EnglishUebEngine {
         // anglicised-looking sub-segment (`chai`, `de`) shares the foreign
         // context. This is a span-level context that the per-segment
         // `styled_word_is_foreign` check cannot see.
-        let span_foreign_scope = if ctx.foreign_scope.is_some() {
+        let is_url_span = ctx.tokens[start..span_end].iter().any(|t| {
+            matches!(
+                t,
+                EnglishToken::Symbol(':' | '/') | EnglishToken::Styled(':' | '/', _)
+            )
+        });
+        let span_foreign_scope = if ctx.foreign_scope.is_some() || is_url_span {
             ctx.foreign_scope
         } else {
             let mut any_foreign = false;

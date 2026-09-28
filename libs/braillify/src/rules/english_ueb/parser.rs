@@ -117,10 +117,48 @@ fn dollar_span_is_technical(span: &[char]) -> bool {
     }) || span.iter().any(|c| c.is_ascii_digit())
 }
 
+/// §9.1.3: small capitals that open a paragraph (`Oɴ Tᴜᴇꜱᴅᴀʏ, …`) are a print
+/// convention, so they are read as ordinary lowercase letters.
+fn plain_paragraph_opening(mut chars: Vec<char>) -> Vec<char> {
+    let mut line_start = 0;
+    while line_start < chars.len() {
+        let mut k = line_start;
+        let mut saw_small_cap = false;
+        while k < chars.len() && chars[k] != '\n' {
+            let c = chars[k];
+            if super::rule_9::decode_small_cap(c).is_some() {
+                saw_small_cap = true;
+            } else if !(c.is_ascii_uppercase() || c == ' ') {
+                break;
+            }
+            k += 1;
+        }
+        let line_end = chars[k..]
+            .iter()
+            .position(|c| *c == '\n')
+            .map_or(chars.len(), |p| k + p);
+        let opens_prose = chars.get(line_start).is_some_and(char::is_ascii_uppercase)
+            && chars.get(k).is_some_and(|c| c.is_ascii_punctuation())
+            && chars[k..line_end].iter().any(char::is_ascii_lowercase);
+        if saw_small_cap && opens_prose {
+            for c in &mut chars[line_start..k] {
+                if let Some(cap) = super::rule_9::decode_small_cap(*c) {
+                    *c = cap.to_ascii_lowercase();
+                }
+            }
+        }
+        line_start = chars[line_start..]
+            .iter()
+            .position(|c| *c == '\n')
+            .map_or(chars.len(), |p| line_start + p + 1);
+    }
+    chars
+}
+
 /// Tokenize `text`: runs of word letters become `Word`, runs of ASCII digits
 /// become `Number`, a single space becomes `Space`, anything else `Symbol`.
 pub fn parse_english(text: &str) -> Vec<EnglishToken> {
-    let chars: Vec<char> = text.chars().collect();
+    let chars = plain_paragraph_opening(text.chars().collect());
     let mut tokens = Vec::new();
     let mut i = 0;
     while i < chars.len() {

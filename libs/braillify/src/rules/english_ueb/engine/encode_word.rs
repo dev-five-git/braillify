@@ -606,7 +606,14 @@ macro_rules! encode_word_arm {
 	                            || ($chars.len() == 1
 	                                && $chars[0].is_uppercase()
 	                                && super::rule_5_7::is_wordsign_letter($chars[0])
-	                                && matches!(next, Some(EnglishToken::Symbol('!')))));
+	                                && matches!(next, Some(EnglishToken::Symbol('!'))))
+	                            // §2.6.3: a closing transcriber's note indicator after the
+	                            // letter's punctuation still leaves it standing alone.
+	                            || ($chars.len() == 1
+	                                && super::rule_5_7::is_wordsign_letter($chars[0])
+	                                && closing_transcriber_note_after_transparent_suffix($tokens, $i)
+	                                && (matches!(prev, None | Some(EnglishToken::Space))
+	                                    || transcriber_note_ends_at($tokens, $i, true))));
 			                    if after_number_grade1 || letter_grade1 || apostrophe_wrapped_letter($tokens, $i, $chars) {
 		                        super::push_indicator(
 		                            &mut $out,

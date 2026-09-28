@@ -57,6 +57,22 @@
     "jeomsarang": ""
   },
   {
+    "input": "Road signs of → and ← mark detours.",
+    "internal": ",road signs ( ;\\o & ;\\[ m>k det\\rs4",
+    "expected": "3223211250141027291405504851210470485142013285025173051231450",
+    "unicode": "⠠⠗⠕⠁⠙⠀⠎⠊⠛⠝⠎⠀⠷⠀⠰⠳⠕⠀⠯⠀⠰⠳⠪⠀⠍⠜⠅⠀⠙⠑⠞⠳⠗⠎⠲",
+    "world": "⠴⠠⠗⠕⠁⠙ ⠎⠊⠛⠝⠎ ⠷ ⠰⠳⠕ ⠯ ⠰⠳⠪ ⠍⠜⠅ ⠙⠑⠞⠳⠗⠎⠲",
+    "jeomsarang": "⠠⠗⠕⠁⠙⠀⠎⠊⠛⠝⠎⠀⠕⠋⠀⠒⠕⠀⠁⠝⠙⠀⠪⠒⠀⠍⠁⠗⠅⠀⠙⠑⠞⠕⠥⠗⠎⠲"
+  },
+  {
+    "input": "Put a ↑ on the map to indicate north.",
+    "internal": ",put a ;\\+ on ! map to 9dicate nor?4",
+    "expected": "321537300104851440212904601311503021020251091301702921235750",
+    "unicode": "⠠⠏⠥⠞⠀⠁⠀⠰⠳⠬⠀⠕⠝⠀⠮⠀⠍⠁⠏⠀⠞⠕⠀⠔⠙⠊⠉⠁⠞⠑⠀⠝⠕⠗⠹⠲",
+    "world": "⠴⠠⠏⠥⠞ ⠁ ⠰⠳⠬ ⠕⠝ ⠮ ⠍⠁⠏ ⠞⠕ ⠔⠙⠊⠉⠁⠞⠑ ⠝⠕⠗⠹⠲",
+    "jeomsarang": "⠠⠏⠥⠞⠀⠁⠀⠰⠒⠕⠀⠕⠝⠀⠞⠓⠑⠀⠍⠁⠏⠀⠞⠕⠀⠊⠝⠙⠊⠉⠁⠞⠑⠀⠝⠕⠗⠞⠓⠲"
+  },
+  {
     "input": "↵",
     "note": "홀로 선 기호: 기호 표(PDF 49쪽) 형태와 ⠰를 앞세운 형태(PDF 51쪽 §3.2.1 예)",
     "context": "english",
@@ -74,22 +90,6 @@
     ],
     "world": "",
     "jeomsarang": ""
-  },
-  {
-    "input": "Road signs of → and ← mark detours.",
-    "internal": ",road signs ( ;\\o & ;\\[ m>k det\\rs4",
-    "expected": "3223211250141027291405504851210470485142013285025173051231450",
-    "unicode": "⠠⠗⠕⠁⠙⠀⠎⠊⠛⠝⠎⠀⠷⠀⠰⠳⠕⠀⠯⠀⠰⠳⠪⠀⠍⠜⠅⠀⠙⠑⠞⠳⠗⠎⠲",
-    "world": "⠴⠠⠗⠕⠁⠙ ⠎⠊⠛⠝⠎ ⠷ ⠰⠳⠕ ⠯ ⠰⠳⠪ ⠍⠜⠅ ⠙⠑⠞⠳⠗⠎⠲",
-    "jeomsarang": "⠠⠗⠕⠁⠙⠀⠎⠊⠛⠝⠎⠀⠕⠋⠀⠒⠕⠀⠁⠝⠙⠀⠪⠒⠀⠍⠁⠗⠅⠀⠙⠑⠞⠕⠥⠗⠎⠲"
-  },
-  {
-    "input": "Put a ↑ on the map to indicate north.",
-    "internal": ",put a ;\\+ on ! map to 9dicate nor?4",
-    "expected": "321537300104851440212904601311503021020251091301702921235750",
-    "unicode": "⠠⠏⠥⠞⠀⠁⠀⠰⠳⠬⠀⠕⠝⠀⠮⠀⠍⠁⠏⠀⠞⠕⠀⠔⠙⠊⠉⠁⠞⠑⠀⠝⠕⠗⠹⠲",
-    "world": "⠴⠠⠏⠥⠞ ⠁ ⠰⠳⠬ ⠕⠝ ⠮ ⠍⠁⠏ ⠞⠕ ⠔⠙⠊⠉⠁⠞⠑ ⠝⠕⠗⠹⠲",
-    "jeomsarang": "⠠⠏⠥⠞⠀⠁⠀⠰⠒⠕⠀⠕⠝⠀⠞⠓⠑⠀⠍⠁⠏⠀⠞⠕⠀⠊⠝⠙⠊⠉⠁⠞⠑⠀⠝⠕⠗⠞⠓⠲"
   },
   {
     "input": "The ENTER key is the one with ↵ on it.",

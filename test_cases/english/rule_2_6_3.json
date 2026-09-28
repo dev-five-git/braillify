@@ -88,12 +88,36 @@
     "jeomsarang": "⠋⠗⠊⠑⠝⠙⠎⠄⠀⠝⠥⠍⠃⠑⠗⠎"
   },
   {
+    "input": "𝐻𝑖𝑚𝑠𝑒𝑙𝑓 𝑜𝑟 ℎ𝑒𝑟𝑠𝑒𝑙𝑓?–𝑁𝑒𝑖𝑡ℎ𝑒𝑟!",
+    "internal": ".7,hmf or h]f8,-,nei6.'",
+    "expected": "4054321913110212301959113832363229171022404",
+    "unicode": "⠨⠶⠠⠓⠍⠋⠀⠕⠗⠀⠓⠻⠋⠦⠠⠤⠠⠝⠑⠊⠖⠨⠄",
+    "world": "⠠⠦⠴⠠⠓⠍⠋ ⠕⠗ ⠓⠻⠋⠦⠐⠠⠤⠠⠝⠑⠊⠖⠄",
+    "jeomsarang": "⠠⠦⠠⠓⠊⠍⠎⠑⠇⠋⠀⠕⠗⠀⠓⠑⠗⠎⠑⠇⠋⠦⠤⠤⠠⠝⠑⠊⠞⠓⠑⠗⠖⠴⠄"
+  },
+  {
     "input": "ALWAYS BE YOURSELF",
     "internal": ",,,alw 2 yrf,'",
     "expected": "3232321758060612311324",
     "unicode": "⠠⠠⠠⠁⠇⠺⠀⠆⠀⠽⠗⠋⠠⠄",
     "world": "⠴⠠⠠⠠⠁⠇⠺ ⠆ ⠽⠗⠋⠠⠄⠲",
     "jeomsarang": "⠠⠠⠁⠇⠺⠁⠽⠎⠀⠠⠠⠃⠑⠀⠠⠠⠽⠕⠥⠗⠎⠑⠇⠋"
+  },
+  {
+    "input": "[open tn]His choice was D.[close tn]",
+    "internal": "@.<,8 *oice 0 ;,d4@.>",
+    "expected": "840353238033211091705204832255084028",
+    "unicode": "⠈⠨⠣⠠⠦⠀⠡⠕⠊⠉⠑⠀⠴⠀⠰⠠⠙⠲⠈⠨⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "X' Y\"",
+    "internal": ";,x' ;,y,7",
+    "expected": "483245404832613254",
+    "unicode": "⠰⠠⠭⠄⠀⠰⠠⠽⠠⠶",
+    "world": "⠴⠠⠭⠄ ⠰⠠⠽⠦",
+    "jeomsarang": "⠠⠭⠴⠄⠀⠠⠽⠴"
   },
   {
     "input": "The sun kept setting, setting still;\nNo hue of afternoon\nUpon the village I perceived\nFrom house to house 'twas noon",
@@ -112,14 +136,6 @@
     ],
     "world": "⠴⠠⠮ ⠎⠥⠝ ⠅⠑⠏⠞ ⠎⠑⠞⠞⠬⠂ ⠎⠑⠞⠞⠬ ⠌⠆\n⠴⠠⠝⠕ ⠓⠥⠑ ⠷ ⠁⠋⠝⠲\n⠴⠠⠘⠥ ⠮ ⠧⠊⠇⠇⠁⠛⠑ ⠠⠊ ⠏⠻⠉⠧⠙⠲\n⠴⠠⠋⠗⠕⠍ ⠓⠳⠎⠑ ⠞⠕ ⠓⠳⠎⠑ ⠄⠞⠺⠁⠎ ⠝⠕⠕⠝⠲",
     "jeomsarang": "⠠⠞⠓⠑⠀⠎⠥⠝⠀⠅⠑⠏⠞⠀⠎⠑⠞⠞⠊⠝⠛⠂⠀⠎⠑⠞⠞⠊⠝⠛⠀⠎⠞⠊⠇⠇⠆\n⠠⠝⠕⠀⠓⠥⠑⠀⠕⠋⠀⠁⠋⠞⠑⠗⠝⠕⠕⠝\n⠠⠥⠏⠕⠝⠀⠞⠓⠑⠀⠧⠊⠇⠇⠁⠛⠑⠀⠠⠊⠀⠏⠑⠗⠉⠑⠊⠧⠑⠙\n⠠⠋⠗⠕⠍⠀⠓⠕⠥⠎⠑⠀⠞⠕⠀⠓⠕⠥⠎⠑⠀⠠⠦⠞⠺⠁⠎⠀⠝⠕⠕⠝"
-  },
-  {
-    "input": "X' Y\"",
-    "internal": ";,x' ;,y,7",
-    "expected": "483245404832613254",
-    "unicode": "⠰⠠⠭⠄⠀⠰⠠⠽⠠⠶",
-    "world": "⠴⠠⠭⠄ ⠰⠠⠽⠦",
-    "jeomsarang": "⠠⠭⠴⠄⠀⠠⠽⠴"
   },
   {
     "input": "t'night",
@@ -251,21 +267,5 @@
     "unicode": "⠠⠭⠶⠀⠠⠽⠶⠶",
     "world": "⠴⠠⠭⠶ ⠰⠠⠽⠴⠤⠤",
     "jeomsarang": "⠠⠭⠴⠤⠀⠠⠽⠲⠴⠤⠤"
-  },
-  {
-    "input": "𝐻𝑖𝑚𝑠𝑒𝑙𝑓 𝑜𝑟 ℎ𝑒𝑟𝑠𝑒𝑙𝑓?–𝑁𝑒𝑖𝑡ℎ𝑒𝑟!",
-    "internal": ".7,hmf or h]f8,-,nei6.'",
-    "expected": "4054321913110212301959113832363229171022404",
-    "unicode": "⠨⠶⠠⠓⠍⠋⠀⠕⠗⠀⠓⠻⠋⠦⠠⠤⠠⠝⠑⠊⠖⠨⠄",
-    "world": "⠠⠦⠴⠠⠓⠍⠋ ⠕⠗ ⠓⠻⠋⠦⠐⠠⠤⠠⠝⠑⠊⠖⠄",
-    "jeomsarang": "⠠⠦⠠⠓⠊⠍⠎⠑⠇⠋⠀⠕⠗⠀⠓⠑⠗⠎⠑⠇⠋⠦⠤⠤⠠⠝⠑⠊⠞⠓⠑⠗⠖⠴⠄"
-  },
-  {
-    "input": "[open tn]His choice was D.[close tn]",
-    "internal": "@.<,8 *oice 0 ;,d4@.>",
-    "expected": "840353238033211091705204832255084028",
-    "unicode": "⠈⠨⠣⠠⠦⠀⠡⠕⠊⠉⠑⠀⠴⠀⠰⠠⠙⠲⠈⠨⠜",
-    "world": "",
-    "jeomsarang": ""
   }
 ]

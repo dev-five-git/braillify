@@ -48,20 +48,20 @@
     "jeomsarang": "⠀⠀⠼⠙⠲⠀⠀⠼⠁⠁"
   },
   {
-    "input": "J. Hadfield",
-    "internal": ";,j4 ,_hfield",
-    "expected": "483226500325619111017725",
-    "unicode": "⠰⠠⠚⠲⠀⠠⠸⠓⠋⠊⠑⠇⠙",
-    "world": "⠴⠠⠚⠲ ⠠⠸⠓⠋⠊⠑⠇⠙⠲",
-    "jeomsarang": "⠠⠚⠲⠀⠠⠓⠁⠙⠋⠊⠑⠇⠙"
-  },
-  {
     "input": "Sample ballot:",
     "internal": ",sample ballot3",
     "expected": "32141131571703177213018",
     "unicode": "⠠⠎⠁⠍⠏⠇⠑⠀⠃⠁⠇⠇⠕⠞⠒",
     "world": "⠴⠠⠎⠁⠍⠏⠇⠑ ⠃⠁⠇⠇⠕⠞⠒",
     "jeomsarang": "⠠⠎⠁⠍⠏⠇⠑⠀⠃⠁⠇⠇⠕⠞⠒"
+  },
+  {
+    "input": "J. Hadfield",
+    "internal": ";,j4 ,_hfield",
+    "expected": "483226500325619111017725",
+    "unicode": "⠰⠠⠚⠲⠀⠠⠸⠓⠋⠊⠑⠇⠙",
+    "world": "⠴⠠⠚⠲ ⠠⠸⠓⠋⠊⠑⠇⠙⠲",
+    "jeomsarang": "⠠⠚⠲⠀⠠⠓⠁⠙⠋⠊⠑⠇⠙"
   },
   {
     "input": "S. Marino",

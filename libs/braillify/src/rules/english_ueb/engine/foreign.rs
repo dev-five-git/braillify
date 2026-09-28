@@ -47,6 +47,9 @@ pub(super) fn styled_word_is_foreign(chars: &[char]) -> bool {
     }) {
         return true;
     }
+    if is_capitals_abbreviation(chars) {
+        return false;
+    }
     let word: String = chars.iter().flat_map(|c| c.to_lowercase()).collect();
     // §10.12.12: typeform does not block a contraction when the styled letters
     // themselves form a normal UEB groupsign (`tou𝐜𝐡ed`, `enoug̲h̲`). These short
@@ -87,9 +90,18 @@ pub(super) fn styled_word_has_foreign_signal(chars: &[char]) -> bool {
 /// suppresses contractions inside the styled span. Short digraphs
 /// (`ch`/`gh`/`sh`/`th`/`wh`) which are themselves UEB groupsigns are
 /// exempted so a styled emphatic digraph (`tou𝐜𝐡ed`) keeps its contraction.
+/// An all-capitals ASCII run (`UEB`) is an abbreviation, not foreign vocabulary,
+/// though the pronouncing dictionary does not list it.
+fn is_capitals_abbreviation(chars: &[char]) -> bool {
+    chars.len() >= 2 && chars.iter().all(char::is_ascii_uppercase)
+}
+
 pub(super) fn styled_single_word_is_foreign(chars: &[char]) -> bool {
     if styled_word_has_foreign_signal(chars) {
         return true;
+    }
+    if is_capitals_abbreviation(chars) {
+        return false;
     }
     let word: String = chars.iter().flat_map(|c| c.to_lowercase()).collect();
     // A digraph groupsign (`ch`/`gh`/`sh`/`th`/`wh`) is 2 chars, so it is already

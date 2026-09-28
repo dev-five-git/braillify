@@ -1222,6 +1222,10 @@ fn encode_with_options_traced(
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);
     }
+    if spatial && let Some(cells) = crate::rules::science::bond_lines::encode(text) {
+        mark_trace_path(&mut trace, TracePath::KoreanRules);
+        return Ok(cells);
+    }
     if reads_science_shapes
         && let Some(cells) = crate::rules::science::diagram::encode(text, spatial)
     {

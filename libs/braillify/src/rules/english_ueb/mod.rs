@@ -665,6 +665,14 @@ fn encode_struck_ligature_text(text: &str) -> Option<Vec<u8>> {
         return None;
     }
     let chars: Vec<char> = text.chars().collect();
+    // §9.5: a run of three or more struck letters shows strikeout is a typeform
+    // in this text, so struck letters are not §4.3 ligatures.
+    if chars
+        .windows(6)
+        .any(|w| w[1] == '\u{0336}' && w[3] == '\u{0336}' && w[5] == '\u{0336}')
+    {
+        return None;
+    }
     let mut out = Vec::new();
     let mut i = 0;
     while i < chars.len() {

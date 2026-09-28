@@ -117,6 +117,47 @@ fn dollar_span_is_technical(span: &[char]) -> bool {
     }) || span.iter().any(|c| c.is_ascii_digit())
 }
 
+/// §9.5: a word whose every letter carries a dot below (`ṃục̣ḥ`) is a
+/// transcriber-defined typeform, not accented letters (Yoruba `tọrọ` marks only
+/// some vowels). NFC composes such letters, so spell the dot out again.
+fn dot_below_words(chars: Vec<char>) -> Vec<char> {
+    use unicode_normalization::UnicodeNormalization;
+    let base_of = |c: char| -> Option<char> {
+        let mut parts = std::iter::once(c).nfd();
+        let base = parts.next()?;
+        (parts.next() == Some('\u{0323}') && parts.next().is_none() && base.is_ascii_alphabetic())
+            .then_some(base)
+    };
+    let mut out = Vec::with_capacity(chars.len());
+    let mut i = 0;
+    while i < chars.len() {
+        let mut j = i;
+        let mut letters = Vec::new();
+        while j < chars.len() {
+            if let Some(base) = base_of(chars[j]) {
+                letters.push(base);
+                j += 1;
+            } else if chars[j].is_ascii_alphabetic() && chars.get(j + 1) == Some(&'\u{0323}') {
+                letters.push(chars[j]);
+                j += 2;
+            } else {
+                break;
+            }
+        }
+        let whole_word = letters.len() >= 2 && !chars.get(j).is_some_and(|c| c.is_alphabetic());
+        if whole_word {
+            for base in letters {
+                out.extend([base, '\u{0323}']);
+            }
+            i = j;
+        } else {
+            out.push(chars[i]);
+            i += 1;
+        }
+    }
+    out
+}
+
 /// §9.1.3: small capitals that open a paragraph (`Oɴ Tᴜᴇꜱᴅᴀʏ, …`) are a print
 /// convention, so they are read as ordinary lowercase letters.
 fn plain_paragraph_opening(mut chars: Vec<char>) -> Vec<char> {
@@ -158,7 +199,7 @@ fn plain_paragraph_opening(mut chars: Vec<char>) -> Vec<char> {
 /// Tokenize `text`: runs of word letters become `Word`, runs of ASCII digits
 /// become `Number`, a single space becomes `Space`, anything else `Symbol`.
 pub fn parse_english(text: &str) -> Vec<EnglishToken> {
-    let chars = plain_paragraph_opening(text.chars().collect());
+    let chars = plain_paragraph_opening(dot_below_words(text.chars().collect()));
     let mut tokens = Vec::new();
     let mut i = 0;
     while i < chars.len() {

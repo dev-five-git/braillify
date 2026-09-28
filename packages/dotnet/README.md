@@ -29,6 +29,10 @@ byte[] bytes = Braillify.Encode("안녕하세요");
 
 // 텍스트를 점자 폰트 문자열로 변환
 string font = Braillify.EncodeToBrailleFont("안녕하세요");
+
+// 묵자 모양만으로 규정을 정할 수 없는 글은 문맥("science", "math", "korean" 등)을 밝힌다
+string science = Braillify.EncodeToUnicode("pOH", "science");
+// 결과: "⠴⠏⠠⠕⠠⠓"
 ```
 
 ## CLI 설치

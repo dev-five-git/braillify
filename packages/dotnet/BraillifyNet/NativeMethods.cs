@@ -20,6 +20,15 @@ internal static partial class NativeMethods
     internal static partial nint braillify_encode_to_braille_font(string text);
 
     [LibraryImport(LibraryName)]
+    internal static partial IntPtr braillify_encode_in_context(IntPtr text, IntPtr context, out UIntPtr outLen);
+
+    [LibraryImport(LibraryName)]
+    internal static partial IntPtr braillify_encode_to_unicode_in_context(IntPtr text, IntPtr context);
+
+    [LibraryImport(LibraryName)]
+    internal static partial IntPtr braillify_encode_to_braille_font_in_context(IntPtr text, IntPtr context);
+
+    [LibraryImport(LibraryName)]
     internal static partial nint braillify_get_last_error();
 
     [LibraryImport(LibraryName)]
@@ -53,6 +62,15 @@ internal static class NativeMethods
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
     internal static extern nint braillify_encode_to_braille_font(
         [MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_in_context(IntPtr text, IntPtr context, out UIntPtr outLen);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_to_unicode_in_context(IntPtr text, IntPtr context);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_to_braille_font_in_context(IntPtr text, IntPtr context);
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern nint braillify_get_last_error();
@@ -90,6 +108,15 @@ internal static class NativeMethods
         [MarshalAs(UnmanagedType.LPUTF8Str)] string text);
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_in_context(IntPtr text, IntPtr context, out UIntPtr outLen);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_to_unicode_in_context(IntPtr text, IntPtr context);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_to_braille_font_in_context(IntPtr text, IntPtr context);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr braillify_get_last_error();
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
@@ -122,6 +149,15 @@ internal static class NativeMethods
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr braillify_encode_to_braille_font(IntPtr text);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_in_context(IntPtr text, IntPtr context, out UIntPtr outLen);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_to_unicode_in_context(IntPtr text, IntPtr context);
+
+    [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern IntPtr braillify_encode_to_braille_font_in_context(IntPtr text, IntPtr context);
 
     [DllImport(LibraryName, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr braillify_get_last_error();

@@ -118,18 +118,18 @@
   },
   {
     "input": "-5<x<-2",
-    "internal": "9#e99x99#b",
-    "expected": "2060172020452020603",
-    "unicode": "⠔⠼⠑⠔⠔⠭⠔⠔⠼⠃",
+    "internal": "9#e99x999#b",
+    "expected": "206017202045202020603",
+    "unicode": "⠔⠼⠑⠔⠔⠭⠔⠔⠔⠼⠃",
     "world": "⠤⠼⠑⠔⠔⠴⠭⠔⠔⠤⠼⠃",
     "jeomsarang": "⠤⠼⠑⠣⠭⠣⠤⠼⠃"
   },
   {
     "input": "$-5 < x < -2$",
     "note": "LaTeX",
-    "internal": "9#e99x99#b",
-    "expected": "2060172020452020603",
-    "unicode": "⠔⠼⠑⠔⠔⠭⠔⠔⠼⠃",
+    "internal": "9#e99x999#b",
+    "expected": "206017202045202020603",
+    "unicode": "⠔⠼⠑⠔⠔⠭⠔⠔⠔⠼⠃",
     "world": "",
     "jeomsarang": ""
   },

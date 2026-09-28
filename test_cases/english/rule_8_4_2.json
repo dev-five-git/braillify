@@ -257,10 +257,10 @@
     "jeomsarang": "⠠⠠⠋⠗⠑⠑⠋⠕⠗⠍"
   },
   {
-    "input": "EXAMINE",
+    "input": "E𝑋AMINE",
     "internal": ",e.2,,xam9e",
-    "expected": "323217451132017",
-    "unicode": "⠠⠠⠑⠭⠁⠍⠔⠑",
+    "expected": "32174063232451132017",
+    "unicode": "⠠⠑⠨⠆⠠⠠⠭⠁⠍⠔⠑",
     "world": "⠴⠠⠠⠑⠭⠁⠍⠔⠑⠲",
     "jeomsarang": "⠠⠠⠑⠭⠁⠍⠊⠝⠑"
   }

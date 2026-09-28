@@ -29,21 +29,48 @@ impl EnInBeforeNessRule {
 
     /// Whether the shared `n` onsets a `ness` syllable — the whole word is
     /// pronounced with a final `N <vowel> S`, every recorded variant agreeing.
-    /// An unknown word yields `false` (keep `en`/`in`).
-    fn n_onsets_ness(&self, word: &[char]) -> bool {
+    /// An unknown word takes the `ness` suffix when the letters before it form a
+    /// word, directly or with a final `i` for `y` (`immediate·ness`,
+    /// `musti·ness` ← musty); `captai·ness` has no such stem and keeps `in`.
+    fn n_onsets_ness(&self, word: &[char], pos: usize) -> bool {
         let spelling: String = word.iter().collect();
         let prons = self.provider.pronunciations(&spelling);
-        !prons.is_empty() && prons.iter().all(|p| ends_n_vowel_s(p))
+        if prons.is_empty() {
+            return self.is_ness_stem(&word[..=pos]);
+        }
+        prons.iter().all(|p| ends_n_vowel_s(p))
+    }
+
+    fn is_ness_stem(&self, stem: &[char]) -> bool {
+        if stem.len() < 3 {
+            return false;
+        }
+        let known = |letters: String| !self.provider.pronunciations(&letters).is_empty();
+        known(stem.iter().collect())
+            || (stem.last() == Some(&'i')
+                && known(stem[..stem.len() - 1].iter().chain(['y'].iter()).collect()))
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.6",
+    subsection: Some("8"),
+    name: "ueb_en_in_before_ness",
+    standard_ref: "UEB 2024 §10.6.8",
+    description: "en/in kept or dropped where they overlap a final ness",
+};
+
 impl ContractionRule for EnInBeforeNessRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let mut m = LowerGroupsignRule.try_match(word, pos)?;
         // §10.6.8: where `en`/`in` overlaps a following `ness` at the shared `n`,
         // pronunciation decides which is kept.
         if ness_overlaps(word, pos) {
-            if self.n_onsets_ness(word) {
+            if self.n_onsets_ness(word, pos) {
                 // The `n` onsets the `ness` syllable (`busi·ness`, `fi·ness·e`) →
                 // suppress `en`/`in` so the cheaper `ness` final groupsign wins.
                 return None;
@@ -86,6 +113,8 @@ mod tests {
     #[case::finesse("finesse", 1)]
     #[case::happiness("happiness", 4)]
     #[case::friendliness("friendliness", 7)]
+    #[case::unknown_mustiness("mustiness", 4)]
+    #[case::unknown_immediateness("immediateness", 8)]
     fn suppresses_en_in_before_onset_ness(#[case] word: &str, #[case] pos: usize) {
         let chars: Vec<char> = word.chars().collect();
         assert!(rule().try_match(&chars, pos).is_none());
@@ -93,7 +122,7 @@ mod tests {
 
     /// `en`/`in` is kept (→ `Some`) when the `n` is a coda — the base ends in /n/
     /// (`citi·zen·ess`, `captain·ess`); these base+`ess` words are absent from
-    /// CMUdict, so KEEP by default.
+    /// CMUdict, and their base up to the `n` is a word.
     #[rstest::rstest]
     #[case::citizeness("citizeness", 5)]
     #[case::captainess("captainess", 5)]

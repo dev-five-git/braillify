@@ -1,5 +1,13 @@
 [
   {
+    "input": "enough",
+    "internal": "5",
+    "expected": "34",
+    "unicode": "⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "it was enough",
     "internal": "x 0 5",
     "expected": "45052034",

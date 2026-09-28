@@ -214,8 +214,10 @@ macro_rules! encode_styled_arm {
                         }
 	                    } else if chars.len() == 1 && !chars[0].is_ascii_alphabetic() {
                         // §9: a single styled punctuation/symbol mark (`.̲` → `⠸⠆⠲`,
-                        // `%̲` → `⠸⠆⠨⠴`).
-                        $out.extend(super::rule_9::symbol_indicator(*$form));
+                        // `%̲` → `⠸⠆⠨⠴`). An open passage already covers it (§9.8.1).
+                        if $passage.is_none() {
+                            $out.extend(super::rule_9::symbol_indicator(*$form));
+                        }
                         encode_styled_nonword_symbol(chars[0], &mut $out)?;
                     } else {
 	                        // Styled letters: passage / word / symbol level. The word
@@ -288,7 +290,9 @@ macro_rules! encode_styled_arm {
 					                                if matches!($tokens.get(end - 1), Some(EnglishToken::Symbol('.')))
 					                                    && !styled_passage_introduced_by_colon($tokens, $i)
 					                                    && !bibliography_entry_context($tokens)
-					                                    && (matches!(
+					                                    // A period can carry U+0332, so an unmarked one
+					                                    // after an underlined passage is outside it (§9.1.3).
+					                                    && ((scope.is_none() && *$form == super::token::Typeform::Underline) || matches!(
 					                                        scope,
 					                                        Some((super::rule_13::AccentCode::Ueb, _))
 					                                    ) || (styled_word_in_english_title($tokens, $i, *$form)

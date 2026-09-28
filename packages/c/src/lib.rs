@@ -18,16 +18,17 @@ fn clear_last_error() {
     LAST_ERROR.with(|slot| *slot.borrow_mut() = None);
 }
 
-unsafe fn input_from_ptr<'a>(text: *const c_char) -> Result<&'a str, String> {
-    if text.is_null() {
-        return Err("text must not be NULL".to_owned());
+unsafe fn input_from_ptr<'a>(value: *const c_char, name: &str) -> Result<&'a str, String> {
+    if value.is_null() {
+        return Err(format!("{name} must not be NULL"));
     }
 
-    // SAFETY: The exported functions document that `text` must point to a
-    // readable NUL-terminated byte string for the duration of the call.
-    let text = unsafe { CStr::from_ptr(text) };
-    text.to_str()
-        .map_err(|error| format!("text must be valid UTF-8: {error}"))
+    // SAFETY: The exported functions document that every string argument must
+    // point to a readable NUL-terminated byte string for the duration of the call.
+    let value = unsafe { CStr::from_ptr(value) };
+    value
+        .to_str()
+        .map_err(|error| format!("{name} must be valid UTF-8: {error}"))
 }
 
 fn string_into_raw(value: String) -> Result<*mut c_char, String> {
@@ -44,7 +45,7 @@ unsafe fn encode_string(
     let result = catch_unwind(AssertUnwindSafe(|| {
         // SAFETY: The caller of this helper provides the same pointer guarantee
         // as the exported string-encoding functions.
-        unsafe { input_from_ptr(text) }
+        unsafe { input_from_ptr(text, "text") }
             .and_then(encode)
             .and_then(string_into_raw)
     }));
@@ -79,7 +80,7 @@ unsafe fn encode_bytes(
     let result = catch_unwind(AssertUnwindSafe(|| {
         // SAFETY: The caller of this helper provides the same pointer guarantee
         // as the exported byte-encoding function.
-        unsafe { input_from_ptr(text) }.and_then(encode)
+        unsafe { input_from_ptr(text, "text") }.and_then(encode)
     }));
     match result {
         Ok(Ok(bytes)) => {
@@ -156,6 +157,66 @@ pub unsafe extern "C" fn braillify_encode_unicode(text: *const c_char) -> *mut c
 pub unsafe extern "C" fn braillify_encode_braille_font(text: *const c_char) -> *mut c_char {
     // SAFETY: `text` satisfies this exported function's caller contract.
     unsafe { encode_string(text, braillify::encode_to_braille_font) }
+}
+
+/// [`braillify_encode`] with the text read in a named context — `science`,
+/// `math`, `korean`, … — for input whose print shape alone does not decide the
+/// rule. An unknown context is an error.
+///
+/// # Safety
+///
+/// `text` and `context` must point to readable NUL-terminated byte strings for
+/// the duration of the call. `out_len` must point to writable memory.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn braillify_encode_in_context(
+    text: *const c_char,
+    context: *const c_char,
+    out_len: *mut usize,
+) -> *mut u8 {
+    // SAFETY: All pointers satisfy this exported function's caller contract.
+    unsafe {
+        encode_bytes(text, out_len, |text| {
+            braillify::encode_in_context(text, input_from_ptr(context, "context")?)
+        })
+    }
+}
+
+/// [`braillify_encode_unicode`] with the text read in a named context.
+///
+/// # Safety
+///
+/// `text` and `context` must point to readable NUL-terminated byte strings for
+/// the duration of the call.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn braillify_encode_unicode_in_context(
+    text: *const c_char,
+    context: *const c_char,
+) -> *mut c_char {
+    // SAFETY: Both pointers satisfy this exported function's caller contract.
+    unsafe {
+        encode_string(text, |text| {
+            braillify::encode_to_unicode_in_context(text, input_from_ptr(context, "context")?)
+        })
+    }
+}
+
+/// [`braillify_encode_braille_font`] with the text read in a named context.
+///
+/// # Safety
+///
+/// `text` and `context` must point to readable NUL-terminated byte strings for
+/// the duration of the call.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn braillify_encode_braille_font_in_context(
+    text: *const c_char,
+    context: *const c_char,
+) -> *mut c_char {
+    // SAFETY: Both pointers satisfy this exported function's caller contract.
+    unsafe {
+        encode_string(text, |text| {
+            braillify::encode_to_braille_font_in_context(text, input_from_ptr(context, "context")?)
+        })
+    }
 }
 
 /// Releases a string returned by this library. Passing `NULL` is allowed.
@@ -300,6 +361,55 @@ mod tests {
         assert!(take_error().is_none());
         // SAFETY: This test owns the allocation.
         unsafe { braillify_string_free(encoded) };
+    }
+
+    #[test]
+    fn context_functions_read_the_named_context() {
+        let text = input("pOH");
+        let context = input("science");
+        // SAFETY: Both inputs are valid NUL-terminated strings.
+        let unicode =
+            unsafe { braillify_encode_unicode_in_context(text.as_ptr(), context.as_ptr()) };
+        // SAFETY: Both inputs are valid NUL-terminated strings.
+        let font =
+            unsafe { braillify_encode_braille_font_in_context(text.as_ptr(), context.as_ptr()) };
+        let mut len = 0;
+        // SAFETY: All three arguments are valid for this call.
+        let bytes =
+            unsafe { braillify_encode_in_context(text.as_ptr(), context.as_ptr(), &mut len) };
+        assert!(!unicode.is_null() && !font.is_null() && !bytes.is_null());
+        // SAFETY: Both strings are valid until released below.
+        let (unicode_text, font_text) = unsafe {
+            (
+                CStr::from_ptr(unicode).to_str().unwrap().to_owned(),
+                CStr::from_ptr(font).to_str().unwrap().to_owned(),
+            )
+        };
+        assert_eq!(unicode_text, "⠴⠏⠠⠕⠠⠓");
+        assert_eq!(font_text, unicode_text);
+        assert_eq!(len, 6);
+        // SAFETY: This test owns the three allocations.
+        unsafe {
+            braillify_string_free(unicode);
+            braillify_string_free(font);
+            braillify_bytes_free(bytes, len);
+        }
+    }
+
+    #[test]
+    fn an_unknown_or_null_context_records_an_error() {
+        let text = input("pOH");
+        let unknown = input("chemistry");
+        // SAFETY: Both inputs are valid NUL-terminated strings.
+        let encoded =
+            unsafe { braillify_encode_unicode_in_context(text.as_ptr(), unknown.as_ptr()) };
+        assert!(encoded.is_null());
+        assert_eq!(take_error().as_deref(), Some("unknown context: chemistry"));
+
+        // SAFETY: A null context is an explicitly handled invalid input.
+        let encoded = unsafe { braillify_encode_unicode_in_context(text.as_ptr(), ptr::null()) };
+        assert!(encoded.is_null());
+        assert_eq!(take_error().as_deref(), Some("context must not be NULL"));
     }
 
     #[test]

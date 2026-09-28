@@ -7,9 +7,22 @@ use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use super::encode_latex_math_bytes_with_context;
 use super::math_context_from_state;
 
+/// 조문 없는 전처리(`-`)이므로 공백으로 나뉜 LaTeX 수식 구간을 하나로 합친다.
 pub struct LatexMergeRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "-",
+    subsection: None,
+    name: "latex_merge",
+    standard_ref: "전처리, 조문 없음",
+    description: "공백으로 끊긴 $...$ 수식 구간을 하나로 합침",
+};
+
 impl TokenRule for LatexMergeRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

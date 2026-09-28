@@ -40,7 +40,19 @@ fn split_definite_integral_bounds(
 
 pub struct DefiniteIntegralRule;
 
+static META_DEFINITEINTEGRALRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "57",
+    subsection: None,
+    name: "math_definite_integral",
+    standard_ref: "2024 Korean Braille Standard, 수학 제57항",
+    description: "정적분",
+};
+
 impl MathTokenRule for DefiniteIntegralRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_DEFINITEINTEGRALRULE
+    }
+
     fn name(&self) -> &'static str {
         "DefiniteIntegralRule"
     }

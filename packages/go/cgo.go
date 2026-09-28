@@ -14,6 +14,9 @@ package braillify
 extern uint8_t* braillify_encode(const char* text, size_t* out_len);
 extern char* braillify_encode_to_unicode(const char* text);
 extern char* braillify_encode_to_braille_font(const char* text);
+extern uint8_t* braillify_encode_in_context(const char* text, const char* context, size_t* out_len);
+extern char* braillify_encode_to_unicode_in_context(const char* text, const char* context);
+extern char* braillify_encode_to_braille_font_in_context(const char* text, const char* context);
 extern char* braillify_get_last_error();
 extern void braillify_free_string(char* ptr);
 extern void braillify_free_bytes(uint8_t* ptr, size_t len);
@@ -67,6 +70,61 @@ func cEncodeToBrailleFont(text string) (string, error) {
 	defer C.free(unsafe.Pointer(cText))
 
 	result := C.braillify_encode_to_braille_font(cText)
+	if result == nil {
+		return "", getLastError()
+	}
+	defer C.braillify_free_string(result)
+
+	return C.GoString(result), nil
+}
+
+func cEncodeInContext(text, context string) ([]byte, error) {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
+	cContext := C.CString(context)
+	defer C.free(unsafe.Pointer(cContext))
+
+	var outLen C.size_t
+	result := C.braillify_encode_in_context(cText, cContext, &outLen)
+	if result == nil {
+		return nil, getLastError()
+	}
+	defer C.braillify_free_bytes(result, outLen)
+
+	return C.GoBytes(unsafe.Pointer(result), C.int(outLen)), nil
+}
+
+func cEncodeToUnicodeInContext(text, context string) (string, error) {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
+	cContext := C.CString(context)
+	defer C.free(unsafe.Pointer(cContext))
+
+	result := C.braillify_encode_to_unicode_in_context(cText, cContext)
+	if result == nil {
+		return "", getLastError()
+	}
+	defer C.braillify_free_string(result)
+
+	return C.GoString(result), nil
+}
+
+func cEncodeToBrailleFontInContext(text, context string) (string, error) {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
+	cText := C.CString(text)
+	defer C.free(unsafe.Pointer(cText))
+	cContext := C.CString(context)
+	defer C.free(unsafe.Pointer(cContext))
+
+	result := C.braillify_encode_to_braille_font_in_context(cText, cContext)
 	if result == nil {
 		return "", getLastError()
 	}

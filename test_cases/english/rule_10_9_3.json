@@ -1,5 +1,77 @@
 [
   {
+    "input": "blind",
+    "internal": "bl",
+    "expected": "37",
+    "unicode": "⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "braille",
+    "internal": "brl",
+    "expected": "3237",
+    "unicode": "⠃⠗⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "friend",
+    "internal": "fr",
+    "expected": "1123",
+    "unicode": "⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "first",
+    "internal": "f/",
+    "expected": "1112",
+    "unicode": "⠋⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "good",
+    "internal": "gd",
+    "expected": "2725",
+    "unicode": "⠛⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "great",
+    "internal": "grt",
+    "expected": "272330",
+    "unicode": "⠛⠗⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "little",
+    "internal": "ll",
+    "expected": "77",
+    "unicode": "⠇⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "letter",
+    "internal": "lr",
+    "expected": "723",
+    "unicode": "⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quick",
+    "internal": "qk",
+    "expected": "315",
+    "unicode": "⠟⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Braillette board",
     "internal": ",brltte bo>d",
     "expected": "32323730301703212825",

@@ -1,5 +1,13 @@
 [
   {
+    "input": "one",
+    "internal": "\"o",
+    "expected": "1621",
+    "unicode": "⠐⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "acetone",
     "internal": "acet\"o",
     "expected": "1917301621",

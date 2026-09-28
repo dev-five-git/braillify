@@ -1,12 +1,25 @@
 ﻿use std::borrow::Cow;
 
+use crate::rules::RuleMeta;
 use crate::rules::token::{Token, WordMeta, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 use crate::word_shortcut;
 
 pub struct WordShortcutRule;
 
+static META: RuleMeta = RuleMeta {
+    section: "18",
+    subsection: None,
+    name: "token_word_shortcut",
+    standard_ref: "2024 Korean Braille Standard, 제18항",
+    description: "Apply Korean word abbreviations while preserving punctuation context",
+};
+
 impl TokenRule for WordShortcutRule {
+    fn meta(&self) -> &'static RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::WordShortcut
     }
@@ -26,17 +39,22 @@ impl TokenRule for WordShortcutRule {
         };
 
         // 제18항 [다만] withholds the abbreviation only when another *letter*
-        // precedes it (오그리고); an opening quote or bracket is punctuation,
-        // so `“그러나` still abbreviates.
+        // precedes it (오그리고); a quote, bracket or period is punctuation, so
+        // `“그러나`, `유일한(그리고` and `컸다.그러면서도` still abbreviate.
         let text = word.text.as_ref();
-        let prefix_len = text
-            .chars()
-            .take_while(|ch| is_opening_punctuation(*ch))
-            .map(char::len_utf8)
-            .sum::<usize>();
-        let (prefix, body) = text.split_at(prefix_len);
-
-        let Some((_, code, rest)) = word_shortcut::split_word_shortcut(body) else {
+        let Some((prefix, code, rest)) = text
+            .char_indices()
+            .filter(|(at, _)| {
+                text[..*at]
+                    .chars()
+                    .next_back()
+                    .is_none_or(|previous| !previous.is_alphanumeric())
+            })
+            .find_map(|(at, _)| {
+                word_shortcut::split_word_shortcut(&text[at..])
+                    .map(|(_, code, rest)| (&text[..at], code, rest))
+            })
+        else {
             return Ok(TokenAction::Noop);
         };
 
@@ -54,13 +72,6 @@ impl TokenRule for WordShortcutRule {
         }
         Ok(TokenAction::ReplaceMany(replacement))
     }
-}
-
-fn is_opening_punctuation(ch: char) -> bool {
-    matches!(
-        ch,
-        '“' | '‘' | '"' | '\'' | '(' | '[' | '{' | '「' | '『' | '〈' | '《' | '〔'
-    )
 }
 
 fn owned_word(text: String) -> Token<'static> {
@@ -102,12 +113,22 @@ mod tests {
         assert!(noop_for(&[]));
     }
 
+    /// 제18항 [다만]: 다른 글자가 앞에 붙으면 약어를 쓰지 않는다.
+    #[rstest::rstest]
+    #[case::syllable_before("쭈그리고")]
+    #[case::digit_before("3그리고")]
+    fn a_letter_touching_the_abbreviation_withholds_it(#[case] text: &str) {
+        assert!(noop_for(&[owned_word(text.to_string())]));
+    }
+
     /// 제18항: the abbreviation is written, and an opening quote before it or a
     /// particle after it is kept as its own token.
     #[rstest::rstest]
     #[case::bare("그리고")]
     #[case::quoted("\u{201C}그리고")]
     #[case::with_tail("그리고도")]
+    #[case::after_a_bracketed_word("유일한(그리고")]
+    #[case::after_a_period("컸다.그러면서도")]
     fn an_abbreviated_word_is_replaced(#[case] text: &str) {
         let mut state = EncoderState::new(false);
         let tokens = [owned_word(text.to_string())];

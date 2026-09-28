@@ -367,7 +367,19 @@ mod tests {
 
 pub struct OperatorRule;
 
+static META_OPERATORRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "2",
+    subsection: None,
+    name: "math_operator",
+    standard_ref: "2024 Korean Braille Standard, 수학 제2항",
+    description: "연산 기호",
+};
+
 impl MathTokenRule for OperatorRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_OPERATORRULE
+    }
+
     fn name(&self) -> &'static str {
         "OperatorRule"
     }

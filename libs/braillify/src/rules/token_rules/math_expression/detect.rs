@@ -84,7 +84,7 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     // Common phone/date/range tokens like 02-799-1000 should stay non-math.
     let all_phone_chars = chars
         .iter()
-        .all(|c| c.is_ascii_digit() || matches!(c, '-' | '~' | '(' | ')' | ','));
+        .all(|c| c.is_ascii_digit() || matches!(c, '-' | '~' | '(' | ')' | '[' | ']' | ','));
     let starts_with_signed_minus = chars
         .first()
         .is_some_and(|c| matches!(*c, '-' | '\u{2212}'));
@@ -117,11 +117,16 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     // PDF 제33·34·69항: 숫자+로마자 단위와 바로 뒤의 종료표 생략 문장부호는
     // 수식이 아니라 하나의 국어 문장 내 단위 표기다. 일반 operator/symbol 판정보다
     // 먼저 배제해야 `173cm,` 같은 토큰이 comma 때문에 수식 경로로 우회하지 않는다.
+    // 부호가 앞에 붙은 양(`-66kg`)도 제45항 뺄셈표를 앞세운 같은 단위 표기다.
+    let unsigned = match chars.first() {
+        Some('-' | '\u{2212}') => &chars[1..],
+        _ => chars,
+    };
     if let Some(consumed) =
-        crate::rules::korean::rule_69::parse_numeric_ascii_unit_expression(chars)
-        && (consumed == chars.len()
-            || (consumed + 1 == chars.len()
-                && chars.get(consumed).is_some_and(|symbol| {
+        crate::rules::korean::rule_69::parse_numeric_ascii_unit_expression(unsigned)
+        && (consumed == unsigned.len()
+            || (consumed + 1 == unsigned.len()
+                && unsigned.get(consumed).is_some_and(|symbol| {
                     crate::english_logic::should_skip_terminator_for_symbol(*symbol)
                 })))
     {
@@ -156,6 +161,11 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     // `FUNCTION_NAMES`, so `match_function_prefix` matches them). The previous
     // arc* shortcut here was dead code — probe-verified 2026-05-23.
 
+    // 제69항: 수 없이 적힌 로마자 단위(`kWh`)는 관계 기호 `aRb` 가 아니다.
+    if crate::rules::korean::rule_69::complete_ascii_unit_len(chars, 0) == Some(chars.len()) {
+        return false;
+    }
+
     // Relation shorthand like aRb should be treated as math.
     if chars.len() == 3
         && chars[0].is_ascii_lowercase()
@@ -166,14 +176,26 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     }
 
     // Plain English list tokens/punctuation in prose should remain non-math.
+    // 제49항: 두 글자 이상의 로마자 낱말 뒤 `!` 는 느낌표이고(`ON!`), 수학 제62항의
+    // 계승은 수나 한 글자 변수에 붙는다(`n!`). 제50항: 두 글자 이상의 로마자 낱말
+    // 사이 `·` 는 가운뎃점이다(`IT·SW`).
     if has_letters
         && !has_digits
         && !has_strong_math_symbol
         && !has_superscript
         && !has_subscript
-        && chars
-            .iter()
-            .all(|c| c.is_ascii_alphabetic() || matches!(*c, ',' | '.' | '\'' | '"'))
+        && chars.iter().enumerate().all(|(at, c)| {
+            c.is_ascii_alphabetic()
+                || matches!(*c, ',' | '.' | '\'' | '"' | '’' | '”')
+                || (*c == '!' && (follows_roman_word(chars, at) || at > 0 && chars[at - 1] == '!'))
+                || (*c == '\u{00B7}'
+                    && follows_roman_word(chars, at)
+                    && chars[at + 1..]
+                        .iter()
+                        .take_while(|next| next.is_ascii_alphabetic())
+                        .count()
+                        >= 2)
+        })
     {
         return false;
     }
@@ -294,8 +316,41 @@ pub(super) fn is_math_expression(chars: &[char], text: &str) -> bool {
     false
 }
 
+fn follows_roman_word(chars: &[char], at: usize) -> bool {
+    chars[..at]
+        .iter()
+        .rev()
+        .take_while(|previous| previous.is_ascii_alphabetic())
+        .count()
+        >= 2
+}
+
 #[cfg(test)]
 mod tests {
+    /// 제49·50항 — 로마자 낱말 뒤 느낌표와 낱말 사이 가운뎃점, 수학 제62항 계승.
+    #[rstest::rstest]
+    #[case::exclaimed_word("ON!", false)]
+    #[case::exclaimed_word_before_comma("GO!,", false)]
+    #[case::exclaimed_word_before_quote("Go!’", false)]
+    #[case::doubled_exclamation("STOP!!", false)]
+    #[case::acronym_list("IT·SW,", false)]
+    #[case::three_acronyms("ETF·ETN,", false)]
+    #[case::unit_without_number("kWh", false)]
+    #[case::variable_factorial("n!", true)]
+    #[case::number_factorial("2002!", true)]
+    #[case::single_letter_product("a·b,", true)]
+    #[case::relation("aRb", true)]
+    #[case::bracketed_reference_number("[3]", false)]
+    #[case::closing_a_bracket_opened_before("2]", false)]
+    #[case::score_before_set_scores("3-2[6-4,", false)]
+    fn prose_punctuation_after_roman_words_is_not_math(
+        #[case] input: &str,
+        #[case] expected: bool,
+    ) {
+        let chars = input.chars().collect::<Vec<_>>();
+        assert_eq!(super::is_math_expression(&chars, input), expected);
+    }
+
     /// detect.rs:143 — inverse trig text forms (arcsin/arccos/arctan + letter).
     /// Triggered via encode("arcsinA") full pipeline.
     #[test]
@@ -318,6 +373,15 @@ mod tests {
     fn is_math_expression_signed_minus_digit() {
         let chars: Vec<char> = "-5".chars().collect();
         assert!(super::is_math_expression(&chars, "-5"));
+    }
+
+    #[rstest::rstest]
+    #[case::signed_weight_class("-66kg", false)]
+    #[case::signed_length_with_comma("-5m,", false)]
+    #[case::signed_variable("-3x", true)]
+    fn signed_quantity_with_a_unit_is_not_math(#[case] text: &str, #[case] math: bool) {
+        let chars: Vec<char> = text.chars().collect();
+        assert_eq!(super::is_math_expression(&chars, text), math);
     }
 
     /// detect.rs — bracket+digits without math operator (e.g. partial brace `3}`).

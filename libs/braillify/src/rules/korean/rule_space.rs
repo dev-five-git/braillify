@@ -1,4 +1,4 @@
-//! Space character encoding.
+//! 빈칸 자체는 어떤 규정 항목에도 속하지 않음.
 //!
 //! Spaces → 0, newlines → 255.
 
@@ -8,10 +8,10 @@ use crate::rules::context::RuleContext;
 use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 
 pub static META: RuleMeta = RuleMeta {
-    section: "space",
+    section: "-",
     subsection: None,
     name: "space_encoding",
-    standard_ref: "N/A",
+    standard_ref: "빈칸 자체",
     description: "Encode space (0) and newline (255)",
 };
 
@@ -56,5 +56,15 @@ mod tests {
         let mut owned = crate::test_helpers::CtxOwned::for_text("A", false);
         let ctx = owned.ctx_at(0);
         let _ = RuleSpace.matches(&ctx);
+    }
+
+    /// 빈칸 자체는 어떤 규정 항목에도 속하지 않으므로, 정직한 표시로 "-"를 사용한다.
+    /// trace.rs의 WORD_SPACE_META 선례를 따른다.
+    #[test]
+    fn meta_section_is_dash_for_non_article() {
+        assert_eq!(
+            META.section, "-",
+            "META.section must be dash for non-article blank cell"
+        );
     }
 }

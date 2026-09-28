@@ -1,5 +1,60 @@
 [
   {
+    "input": "‘",
+    "context": "english",
+    "internal": ",8",
+    "expected": "3238",
+    "unicode": "⠠⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "«",
+    "context": "english",
+    "internal": "_8",
+    "expected": "5638",
+    "unicode": "⠸⠦",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "»",
+    "context": "english",
+    "internal": "_0",
+    "expected": "5652",
+    "unicode": "⠸⠴",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "\"",
+    "note": "홀로 선 기호: 기호 표(PDF 103쪽) 형태와 ⠰를 앞세운 형태(PDF 114쪽 예)",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": ",7",
+        "expected": "3254",
+        "unicode": "⠠⠶"
+      },
+      {
+        "internal": ";,7",
+        "expected": "483254",
+        "unicode": "⠰⠠⠶"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "'",
+    "context": "english",
+    "internal": "'",
+    "expected": "4",
+    "unicode": "⠄",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "“Why is that?” he asked.",
     "internal": "8,:y is t80 he ask$4",
     "expected": "3832496101014030385201917011454350",

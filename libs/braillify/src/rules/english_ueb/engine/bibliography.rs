@@ -260,7 +260,12 @@ pub(super) fn poem_linear_context(tokens: &[EnglishToken]) -> bool {
         || (!has_spatial_symbol
             && tokens
                 .iter()
-                .filter(|t| matches!(t, EnglishToken::LineBreak))
+                .filter(|t| {
+                    matches!(
+                        t,
+                        EnglishToken::LineBreak | EnglishToken::WordDivision { .. }
+                    )
+                })
                 .count()
                 >= 2)
 }

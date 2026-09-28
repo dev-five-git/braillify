@@ -66,7 +66,19 @@ pub fn encode_decimal_point(
 
 pub struct DecimalPointRule;
 
+static META_DECIMALPOINTRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "8",
+    subsection: None,
+    name: "math_decimal_point",
+    standard_ref: "2024 Korean Braille Standard, 수학 제8항",
+    description: "소수점",
+};
+
 impl MathTokenRule for DecimalPointRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_DECIMALPOINTRULE
+    }
+
     fn name(&self) -> &'static str {
         "DecimalPointRule"
     }

@@ -52,7 +52,7 @@ const PDF_ASCII_UNIT_SYMBOLS: &[&str] = &[
 
 /// SI prefixes are case-sensitive. This set is used only as the grammar for a
 /// complete measured-unit suffix; it never reclassifies a separated Roman word.
-const SI_PREFIXES: &[&str] = &[
+pub(crate) const SI_PREFIXES: &[&str] = &[
     "q", "r", "y", "z", "a", "f", "p", "n", "u", "m", "c", "d", "da", "h", "k", "M", "G", "T", "P",
     "E", "Z", "Y", "R", "Q",
 ];
@@ -187,10 +187,10 @@ fn encode_compatibility_unit(
 }
 
 fn is_roman_unit_component(ch: char) -> bool {
-    ch.is_ascii_alphabetic() || ch == 'μ' || compatibility_unit_decomposition(ch).is_some()
+    ch.is_ascii_alphabetic() || ch == 'μ' || is_compatibility_unit_presentation(ch)
 }
 
-fn roman_unit_chain_continues_before(ctx: &RuleContext) -> bool {
+pub(crate) fn roman_unit_chain_continues_before(ctx: &RuleContext) -> bool {
     ctx.index >= 2
         && ctx.word_chars.get(ctx.index - 1) == Some(&'/')
         && ctx
@@ -593,12 +593,22 @@ pub(crate) fn parse_numeric_ascii_unit_expression(word: &[char]) -> Option<usize
             saw_unit = true;
             component_has_unit = true;
         }
+        // 제69항: 가운뎃점으로 곱한 단위(`kgf·m`, `N·m`)는 한 단위다.
+        while component_has_unit && word.get(cursor) == Some(&'·') {
+            let Some((_, unit_len)) = encode_complete_numeric_ascii_unit(word, cursor + 1) else {
+                break;
+            };
+            cursor += 1 + unit_len;
+        }
 
         if current_component_requires_unit && !component_has_unit {
             return None;
         }
 
-        if word.get(cursor).is_some_and(|ch| matches!(ch, '~' | '∼')) {
+        let hyphen_range = !component_has_unit
+            && word.get(cursor) == Some(&'-')
+            && word.get(cursor + 1).is_some_and(char::is_ascii_digit);
+        if hyphen_range || word.get(cursor).is_some_and(|ch| matches!(ch, '~' | '∼')) {
             cursor += 1;
             current_component_requires_unit = false;
             continue;
@@ -714,10 +724,19 @@ fn omit_trailing_roman_terminator(encoded: &mut Vec<u8>) {
 /// Rule 35 keeps a Roman unit directly following a number in the already-open
 /// Roman section.  The number temporarily places the emitter in
 /// `roman_number_chain`; in that state the unit's self-contained Rule-69 entry
-/// marker would be a duplicate.
+/// marker would be a duplicate.  UEB 6.5.2: a lowercase a–j right after the
+/// number would read as a digit, so it takes the grade-1 sign ⠰ instead
+/// (`GS 450h`).
 fn omit_unit_entry_in_open_roman_number_chain(encoded: &mut Vec<u8>, state: &EncoderState) {
     if state.roman_number_chain && encoded.first() == Some(&ROMAN_INDICATOR) {
-        encoded.remove(0);
+        let reads_as_digit = encoded
+            .get(1)
+            .is_some_and(|cell| matches!(*cell, 1 | 3 | 9 | 25 | 17 | 11 | 27 | 19 | 10 | 26));
+        if reads_as_digit {
+            encoded[0] = ENGLISH_CONTINUATION;
+        } else {
+            encoded.remove(0);
+        }
     }
 }
 
@@ -792,7 +811,11 @@ impl BrailleRule for Rule69 {
                 encode_complete_numeric_ascii_unit(ctx.word_chars, ctx.index)
         {
             let continues = adjust_roman_unit_boundary(ctx, ctx.index + consumed, &mut encoded);
-            if roman_unit_chain_continues_before(ctx) && encoded.first() == Some(&ROMAN_INDICATOR) {
+            // 제35항 `MP4 Player`: 앞 어절에서 이어진 로마자 구간(`FM 98.1 MHz`)의 단위는
+            // 새 로마자표 없이 잇는다.
+            let continues_section = roman_unit_chain_continues_before(ctx)
+                || (ctx.index == 0 && ctx.roman_section_continues_from_previous_word);
+            if continues_section && encoded.first() == Some(&ROMAN_INDICATOR) {
                 encoded.remove(0);
             }
             trim_recent_english_indicator(ctx.result);
@@ -1125,6 +1148,11 @@ mod tests {
     #[case::middle_dot_missing_right_unit("3kg·4", 0)]
     #[case::middle_dot_numeric_list("54·55·56", 0)]
     #[case::unknown_ascii_suffix("3.5~8.5models", 0)]
+    #[case::hyphen_range("100-130mm", 9)]
+    #[case::hyphen_after_unit("3kg-4", 3)]
+    #[case::hyphen_before_letter("100-mm", 0)]
+    #[case::middle_dot_product_unit("36.0kgf·m", 9)]
+    #[case::middle_dot_before_non_unit("5N·x", 0)]
     fn recognizes_only_complete_numeric_unit_expressions(
         #[case] input: &str,
         #[case] expected_consumed: usize,
@@ -1139,6 +1167,10 @@ mod tests {
     #[rstest::rstest]
     #[case::ascii_range("범위는 3.5~8.5m이다", "⠼⠉⠲⠑⠈⠔⠼⠓⠲⠑⠴⠍⠲")]
     #[case::unicode_range("범위는 3∼5kg이다", "⠼⠉⠈⠔⠼⠑⠴⠅⠛⠲")]
+    #[case::unit_continuing_a_roman_section("라디오(FM 98.1 MHz) 김", "⠼⠊⠓⠲⠁⠀⠠⠍⠠⠓⠵")]
+    #[case::unit_after_a_korean_number("가 98.1 MHz 나", "⠼⠊⠓⠲⠁⠀⠴⠠⠍")]
+    #[case::digit_like_unit_after_a_number("가 GS 450h 나", "⠼⠙⠑⠚⠰⠓")]
+    #[case::digit_like_unit_before_a_bracket("가 ES 300h(하이브리드)를", "⠼⠉⠚⠚⠰⠓⠦⠄")]
     fn numeric_unit_ranges_stay_on_korean_number_and_unit_rules(
         #[case] input: &str,
         #[case] expected_segment: &str,
@@ -1406,6 +1438,7 @@ mod tests {
     #[rstest::rstest]
     #[case::milligram_per_decilitre("160㎎/㎗", "⠼⠁⠋⠚⠴⠍⠛⠸⠌⠙⠇⠲")]
     #[case::calorie_per_square_centimetre_per_minute("cal/㎠/min", "⠴⠉⠁⠇⠸⠌⠉⠍⠘⠼⠃⠸⠌⠍⠔⠲")]
+    #[case::kilogram_force_per_square_metre("kgf/㎡이", "⠴⠅⠛⠋⠸⠌⠍⠘⠼⠃⠕")]
     #[case::megahertz("96.7 ㎒", "⠼⠊⠋⠲⠛⠀⠴⠠⠍⠠⠓⠵⠲")]
     #[case::kilometres_per_hour("80 ㎞/시", "⠼⠓⠚⠀⠴⠅⠍⠲⠸⠌⠠⠕")]
     fn preserves_pdf_unit_examples(#[case] input: &str, #[case] expected: &str) {

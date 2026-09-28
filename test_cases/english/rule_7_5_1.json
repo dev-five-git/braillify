@@ -1,5 +1,24 @@
 [
   {
+    "input": "?",
+    "note": "홀로 선 기호: 기호 표(PDF 103쪽) 형태와 ⠰를 앞세운 형태(PDF 85·106·109쪽 예)",
+    "context": "english",
+    "alternatives": [
+      {
+        "internal": "8",
+        "expected": "38",
+        "unicode": "⠦"
+      },
+      {
+        "internal": ";8",
+        "expected": "4838",
+        "unicode": "⠰⠦"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "What???",
     "internal": ",:at888",
     "expected": "3249130383838",

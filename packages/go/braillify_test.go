@@ -38,6 +38,40 @@ func TestEncode(t *testing.T) {
 	}
 }
 
+func TestContextDecidesHowTextIsRead(t *testing.T) {
+	tests := []struct {
+		context  string
+		expected string
+	}{
+		{"science", "⠴⠏⠠⠕⠠⠓"},
+		{"korean", "⠴⠏⠠⠠⠕⠓⠲"},
+	}
+
+	for _, tt := range tests {
+		unicode, err := EncodeToUnicodeInContext("pOH", tt.context)
+		if err != nil {
+			t.Fatalf("EncodeToUnicodeInContext(%q): unexpected error: %v", tt.context, err)
+		}
+		if unicode != tt.expected {
+			t.Errorf("EncodeToUnicodeInContext(%q) = %q, want %q", tt.context, unicode, tt.expected)
+		}
+		font, err := EncodeToBrailleFontInContext("pOH", tt.context)
+		if err != nil || font != tt.expected {
+			t.Errorf("EncodeToBrailleFontInContext(%q) = %q, %v", tt.context, font, err)
+		}
+		cells, err := EncodeInContext("pOH", tt.context)
+		if err != nil || len(cells) != len([]rune(tt.expected)) {
+			t.Errorf("EncodeInContext(%q) = %v, %v", tt.context, cells, err)
+		}
+	}
+}
+
+func TestUnknownContextIsAnError(t *testing.T) {
+	if _, err := EncodeToUnicodeInContext("pOH", "chemistry"); err == nil {
+		t.Error("expected an error for an unknown context")
+	}
+}
+
 func TestEncodeToBrailleFont(t *testing.T) {
 	result, err := EncodeToBrailleFont("안녕하세요")
 	if err != nil {

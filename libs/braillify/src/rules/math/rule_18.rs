@@ -31,6 +31,68 @@ fn next_non_space(tokens: &[MathToken], mut idx: usize) -> Option<&MathToken> {
 /// PDF 수학 제18항 2 — 좌상첨자: 위첨자가 변수 앞에 단독 위치할 때.
 /// 앞에 피첨자(변수/숫자/괄호닫기)가 없고 뒤에 변수가 이어지면 좌상첨자다.
 /// 단, 합/적분/극한 등 한정자 뒤의 첨자(예: ∑_{k=0}^{∞} 의 ^∞)는 좌상첨자가 아니다.
+/// 원소 기호를 대문자표와 함께 emit하고 소비한 토큰 수를 돌려준다.
+///
+/// 원소 기호가 아니면 `None`을 돌려주고 아무것도 쓰지 않는다. 한 글자짜리
+/// 원소 기호는 수학 변수와 글자가 겹치므로, 실제 원소 기호 목록에 있는 것만
+/// 통과시켜 좌상첨자가 붙은 일반 변수(`ⁿx`)를 건드리지 않는다.
+pub(super) fn emit_element_symbol(
+    tokens: &[MathToken],
+    index: usize,
+    result: &mut Vec<u8>,
+) -> Result<Option<usize>, String> {
+    use crate::rules::science::elements::is_element;
+    let Some(MathToken::UpperVariable(upper)) = tokens.get(index) else {
+        return Ok(None);
+    };
+    let lower = match tokens.get(index + 1) {
+        Some(MathToken::Variable(letter)) if letter.is_ascii_lowercase() => Some(*letter),
+        _ => None,
+    };
+    let two: Option<String> = lower.map(|letter| format!("{upper}{letter}"));
+    let (symbol, consumed) = match two {
+        Some(ref name) if is_element(name) => (name.as_str(), 2),
+        _ if is_element(&upper.to_string()) => return single(*upper, result),
+        _ => return Ok(None),
+    };
+    result.push(32);
+    for letter in symbol.chars() {
+        result.push(crate::english::encode_english(letter.to_ascii_lowercase())?);
+    }
+    Ok(Some(consumed))
+}
+
+fn single(upper: char, result: &mut Vec<u8>) -> Result<Option<usize>, String> {
+    result.push(32);
+    result.push(crate::english::encode_english(upper.to_ascii_lowercase())?);
+    Ok(Some(1))
+}
+
+/// 과학 제3항 — 동위원소 표기의 앞 첨자인가. 원자 번호와 질량수는 수이고, 첨자는
+/// 식의 처음이나 연산자·여는 괄호 뒤에 선다. `\mu_{0}I` 의 `₀` 는 μ 의 첨자이고
+/// `1/^{\circ}C` 의 `°` 는 수가 아니므로 원소 앞으로 옮기지 않는다.
+pub(super) fn is_isotope_prescript(
+    tokens: &[MathToken],
+    index: usize,
+    content: &[MathToken],
+) -> bool {
+    // LaTeX 는 앞 첨자를 빈 묶음 뒤에 적는다(`{}^{235}_{92}U`).
+    let after_empty_group = index >= 2
+        && matches!(tokens[index - 1], MathToken::CloseParen(_))
+        && matches!(tokens[index - 2], MathToken::OpenParen(_));
+    !content.is_empty()
+        && content
+            .iter()
+            .all(|token| matches!(token, MathToken::Number(_)))
+        && (after_empty_group
+            || matches!(
+                prev_non_space(tokens, index),
+                None | Some(
+                    MathToken::Operator(_) | MathToken::OpenParen(_) | MathToken::KoreanWord(_)
+                )
+            ))
+}
+
 fn is_left_superscript_position(tokens: &[MathToken], index: usize) -> bool {
     let prev_blocks = matches!(
         prev_non_space(tokens, index),
@@ -250,6 +312,29 @@ pub fn encode_superscript(
     // 좌상첨자는 단일 토큰이라도 그룹 괄호로 묶는다.
     let is_left_superscript = is_left_superscript_position(tokens, *i);
 
+    // 과학 제3항 — 원소 기호를 먼저 적고 원자 번호·질량수를 아래·위 첨자로 적는다
+    // (⁷Li → ,li~#g, ²³⁵₉₂U → ,u;#ib~#bce). 수학 제18항 2의 좌상첨자는 제자리에
+    // 괄호로 묶이지만 동위원소는 원소가 앞선다.
+    let atomic_number = match tokens.get(*i + 1) {
+        Some(MathToken::Subscript(sub)) if is_isotope_prescript(tokens, *i, sub) => Some(sub),
+        _ => None,
+    };
+    if (is_left_superscript || atomic_number.is_some())
+        && is_isotope_prescript(tokens, *i, sup_content)
+    {
+        let base = *i + 1 + usize::from(atomic_number.is_some());
+        if let Some(consumed) = emit_element_symbol(tokens, base, result)? {
+            if let Some(sub) = atomic_number {
+                result.push(48);
+                engine.encode_tokens(sub, result)?;
+            }
+            result.push(24);
+            engine.encode_tokens(sup_content, result)?;
+            *i = base + consumed;
+            return Ok(false);
+        }
+    }
+
     result.push(24);
     if wrapped_simple_index {
         // 본문 그대로 emit하여 ⠦⠴(MathParen) 보존.
@@ -267,7 +352,19 @@ pub fn encode_superscript(
 
 pub struct SuperscriptRule;
 
+static META_SUPERSCRIPTRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "18",
+    subsection: None,
+    name: "math_superscript",
+    standard_ref: "2024 Korean Braille Standard, 수학 제18항",
+    description: "위첨자",
+};
+
 impl MathTokenRule for SuperscriptRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_SUPERSCRIPTRULE
+    }
+
     fn name(&self) -> &'static str {
         "SuperscriptRule"
     }
@@ -304,6 +401,32 @@ mod tests {
 
     fn enc(input: &str) -> Vec<u8> {
         crate::encode(input).unwrap_or_default()
+    }
+
+    /// 과학 제3항 — 식 첫머리의 수 첨자만 원소 뒤로 옮긴다.
+    #[rstest::rstest]
+    #[case::mass_number("⁷Li", "⠠⠇⠊⠘⠼⠛")]
+    #[case::atomic_and_mass_number_in_a_sentence(
+        "우라늄 ${}^{235}_{92}U$가 있다",
+        "⠍⠐⠣⠉⠩⠢⠀⠀⠠⠥⠰⠼⠊⠃⠘⠼⠃⠉⠑⠀⠀⠫⠀⠕⠌⠊"
+    )]
+    #[case::greek_base_keeps_its_script("$\\mu_{0}I$", "⠨⠍⠰⠷⠼⠚⠾⠠⠊")]
+    #[case::degree_is_not_a_mass_number("$1/^{\\circ}C$", "⠼⠁⠌⠘⠷⠸⠴⠾⠠⠉")]
+    fn moves_only_isotope_numbers_behind_the_element(#[case] input: &str, #[case] expected: &str) {
+        let braille: String = enc(input)
+            .iter()
+            .map(|cell| crate::unicode::encode_unicode(*cell))
+            .collect();
+        assert_eq!(braille, expected);
+    }
+
+    #[rstest::rstest]
+    #[case::capital_that_is_no_element(vec![MathToken::UpperVariable('Q')])]
+    #[case::pair_that_is_no_element(vec![MathToken::UpperVariable('Q'), MathToken::Variable('x')])]
+    fn leaves_capitals_that_are_no_element_symbol(#[case] tokens: Vec<MathToken>) {
+        let mut result = Vec::new();
+        assert_eq!(emit_element_symbol(&tokens, 0, &mut result), Ok(None));
+        assert!(result.is_empty());
     }
 
     #[test]

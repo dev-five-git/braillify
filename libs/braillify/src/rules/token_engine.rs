@@ -1,6 +1,8 @@
+use super::RuleMeta;
 use super::context::EncoderState;
 use super::token::Token;
 use super::token_rule::{TokenAction, TokenPhase, TokenRule};
+use super::trace::{RuleId, TokenOrigins};
 
 pub struct TokenRuleEngine {
     rules: Vec<Box<dyn TokenRule>>,
@@ -27,11 +29,28 @@ impl TokenRuleEngine {
         }
     }
 
+    /// Metadata of every registered token rule, in [`RuleId`] order.
+    pub(crate) fn registry(&mut self) -> Vec<&'static RuleMeta> {
+        self.ensure_sorted();
+        self.rules.iter().map(|rule| rule.meta()).collect()
+    }
+
     /// Apply all rules in phase order. Handle token insertions/removals correctly.
+    #[cfg(test)]
     pub fn apply_all<'a>(
         &mut self,
         tokens: &mut Vec<Token<'a>>,
         state: &mut EncoderState,
+    ) -> Result<(), String> {
+        self.apply_all_tracked(tokens, state, None)
+    }
+
+    /// [`Self::apply_all`], recording which rule produced each resulting token.
+    pub fn apply_all_tracked<'a>(
+        &mut self,
+        tokens: &mut Vec<Token<'a>>,
+        state: &mut EncoderState,
+        mut origins: Option<&mut TokenOrigins>,
     ) -> Result<(), String> {
         self.ensure_sorted();
 
@@ -46,30 +65,34 @@ impl TokenRuleEngine {
             let mut i = 0usize;
 
             'outer: while i < tokens.len() {
-                for rule in &self.rules {
+                for (rule_index, rule) in self.rules.iter().enumerate() {
                     if rule.phase() != phase {
                         continue;
                     }
 
-                    let action = rule.apply(tokens, i, state)?;
-                    let is_noop_fallthrough = matches!(action, TokenAction::Noop)
-                        && matches!(phase, TokenPhase::Normalization | TokenPhase::PostWord);
-                    if is_noop_fallthrough {
-                        continue;
-                    }
-                    match action {
-                        TokenAction::Noop => {}
+                    let id = RuleId::token(rule_index);
+                    match rule.apply(tokens, i, state)? {
+                        TokenAction::Noop => continue,
                         TokenAction::Replace(t) => {
                             tokens[i] = t;
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.set(i, id);
+                            }
                         }
                         #[cfg(test)]
                         TokenAction::InsertBefore(ts) => {
                             let count = ts.len();
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.splice(i..i, id, count);
+                            }
                             tokens.splice(i..i, ts);
                             i += count;
                         }
                         TokenAction::ReplaceMany(ts) => {
                             let count = ts.len();
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.splice(i..i + 1, id, count);
+                            }
                             tokens.splice(i..=i, ts);
                             if count == 0 {
                                 // Array shrank by 1: the next original token now sits at `i`.
@@ -84,6 +107,9 @@ impl TokenRuleEngine {
                             // 현재 위치 i부터 consume_count개의 토큰을 통째로 ts로 교체한다.
                             let end = (i + consume_count).min(tokens.len());
                             let new_count = ts.len();
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.splice(i..end, id, new_count);
+                            }
                             tokens.splice(i..end, ts);
                             if new_count == 0 {
                                 continue 'outer;
@@ -93,9 +119,14 @@ impl TokenRuleEngine {
                         #[cfg(test)]
                         TokenAction::Remove => {
                             tokens.remove(i);
+                            if let Some(origins) = origins.as_deref_mut() {
+                                origins.remove(i);
+                            }
                             continue;
                         }
                     }
+                    let tracked = origins.as_deref().map_or(tokens.len(), TokenOrigins::len);
+                    debug_assert_eq!(tracked, tokens.len(), "origin table lost lockstep");
                     break;
                 }
                 i += 1;
@@ -119,8 +150,21 @@ mod tests {
     use super::*;
     use crate::rules::token::{SpaceKind, WordMeta, WordToken};
 
+    /// Stand-in article for the dummy rules below. They exercise dispatch and
+    /// never reach the registry, so the number only has to be well formed.
+    static TEST_META: RuleMeta = RuleMeta {
+        section: "1",
+        subsection: None,
+        name: "test_rule",
+        standard_ref: "",
+        description: "",
+    };
+
     struct ReplaceWordAt0;
     impl TokenRule for ReplaceWordAt0 {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::Normalization
         }
@@ -142,6 +186,9 @@ mod tests {
 
     struct InsertSpaceBeforeSecond;
     impl TokenRule for InsertSpaceBeforeSecond {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::PostWord
         }
@@ -162,6 +209,9 @@ mod tests {
 
     struct RemoveWordB;
     impl TokenRule for RemoveWordB {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::PostWord
         }
@@ -182,6 +232,9 @@ mod tests {
 
     struct ReplaceManyForB;
     impl TokenRule for ReplaceManyForB {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::PostWord
         }
@@ -278,6 +331,9 @@ mod tests {
     /// empty replacement.
     struct ReplaceRangeEmpty;
     impl TokenRule for ReplaceRangeEmpty {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
         fn phase(&self) -> TokenPhase {
             TokenPhase::Normalization
         }
@@ -312,117 +368,138 @@ mod tests {
         assert!(matches!(&tokens[1], Token::Word(w) if w.text == "c"));
     }
 
-    /// token_engine:55 — `TokenAction::Noop` arm coverage (re-attribution via
-    /// direct dispatch test). A rule returning Noop in Normalization phase
-    /// allows fall-through to next rule.
-    #[test]
-    fn token_engine_noop_normalization_continues_to_next_rule() {
-        struct AlwaysNoop;
-        impl TokenRule for AlwaysNoop {
-            fn phase(&self) -> TokenPhase {
-                TokenPhase::Normalization
-            }
-            fn priority(&self) -> u16 {
-                10 // run before ReplaceWordAt0
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(TokenAction::Noop)
-            }
+    struct NoopIn(TokenPhase);
+    impl TokenRule for NoopIn {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
         }
-        let mut engine = TokenRuleEngine::new();
-        engine.register(Box::new(AlwaysNoop));
-        engine.register(Box::new(ReplaceWordAt0));
-
-        let mut tokens = vec![word_token("a")];
-        let mut state = EncoderState::new(false);
-        engine.apply_all(&mut tokens, &mut state).unwrap();
-        // AlwaysNoop returns Noop → fall through to ReplaceWordAt0 which fires at index 0.
-        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![9]));
+        fn phase(&self) -> TokenPhase {
+            self.0
+        }
+        fn priority(&self) -> u16 {
+            10
+        }
+        fn apply<'a>(
+            &self,
+            _tokens: &[Token<'a>],
+            _index: usize,
+            _state: &mut EncoderState,
+        ) -> Result<TokenAction<'a>, String> {
+            Ok(TokenAction::Noop)
+        }
     }
 
-    #[test]
-    fn token_engine_runtime_noop_normalization_continues_to_next_rule() {
-        struct RuntimeNoop;
-        impl TokenRule for RuntimeNoop {
-            fn phase(&self) -> TokenPhase {
-                std::hint::black_box(TokenPhase::Normalization)
-            }
-            fn priority(&self) -> u16 {
-                std::hint::black_box(10)
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(std::hint::black_box(TokenAction::Noop))
-            }
+    struct ReplaceIn(TokenPhase);
+    impl TokenRule for ReplaceIn {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
         }
-
-        let mut engine = TokenRuleEngine::new();
-        engine.register(Box::new(RuntimeNoop));
-        engine.register(Box::new(ReplaceWordAt0));
-        let mut tokens = vec![word_token("a")];
-        let mut state = EncoderState::new(false);
-
-        engine.apply_all(&mut tokens, &mut state).unwrap();
-
-        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![9]));
+        fn phase(&self) -> TokenPhase {
+            self.0
+        }
+        fn priority(&self) -> u16 {
+            20
+        }
+        fn apply<'a>(
+            &self,
+            _tokens: &[Token<'a>],
+            _index: usize,
+            _state: &mut EncoderState,
+        ) -> Result<TokenAction<'a>, String> {
+            Ok(TokenAction::Replace(Token::PreEncoded(vec![7])))
+        }
     }
 
-    #[test]
-    fn token_engine_noop_wordshortcut_stops_current_index_rules() {
-        struct WordShortcutNoop;
-        impl TokenRule for WordShortcutNoop {
-            fn phase(&self) -> TokenPhase {
-                TokenPhase::WordShortcut
-            }
-            fn priority(&self) -> u16 {
-                10
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(TokenAction::Noop)
-            }
-        }
-
-        struct WordShortcutReplace;
-        impl TokenRule for WordShortcutReplace {
-            fn phase(&self) -> TokenPhase {
-                TokenPhase::WordShortcut
-            }
-            fn priority(&self) -> u16 {
-                20
-            }
-            fn apply<'a>(
-                &self,
-                _tokens: &[Token<'a>],
-                _index: usize,
-                _state: &mut EncoderState,
-            ) -> Result<TokenAction<'a>, String> {
-                Ok(TokenAction::Replace(Token::PreEncoded(vec![7])))
-            }
-        }
-
+    #[rstest::rstest]
+    #[case::normalization(TokenPhase::Normalization)]
+    #[case::fraction_detection(TokenPhase::FractionDetection)]
+    #[case::word_shortcut(TokenPhase::WordShortcut)]
+    #[case::mode_entry(TokenPhase::ModeEntry)]
+    #[case::uppercase_passage(TokenPhase::UppercasePassage)]
+    #[case::post_word(TokenPhase::PostWord)]
+    fn a_noop_hands_the_word_to_the_next_rule_of_its_phase(#[case] phase: TokenPhase) {
         let mut engine = TokenRuleEngine::new();
-        engine.register(Box::new(WordShortcutNoop));
-        engine.register(Box::new(WordShortcutReplace));
+        engine.register(Box::new(NoopIn(phase)));
+        engine.register(Box::new(ReplaceIn(phase)));
 
         let mut tokens = vec![word_token("a")];
         let mut state = EncoderState::new(false);
         engine.apply_all(&mut tokens, &mut state).unwrap();
 
-        assert!(matches!(&tokens[0], Token::Word(w) if w.text == "a"));
+        assert!(matches!(tokens[0], Token::PreEncoded(ref b) if b == &vec![7]));
+    }
+
+    #[derive(Clone, Copy, Debug)]
+    enum Rewrite {
+        InsertBefore,
+        ReplaceMany,
+        ReplaceRange,
+        Remove,
+    }
+
+    struct RewriteB(Rewrite);
+    impl TokenRule for RewriteB {
+        fn meta(&self) -> &'static RuleMeta {
+            &TEST_META
+        }
+        fn phase(&self) -> TokenPhase {
+            TokenPhase::WordShortcut
+        }
+        fn apply<'a>(
+            &self,
+            tokens: &[Token<'a>],
+            index: usize,
+            _state: &mut EncoderState,
+        ) -> Result<TokenAction<'a>, String> {
+            let Some(Token::Word(word)) = tokens.get(index) else {
+                return Ok(TokenAction::Noop);
+            };
+            if word.text != "b" {
+                return Ok(TokenAction::Noop);
+            }
+            Ok(match self.0 {
+                Rewrite::InsertBefore => {
+                    TokenAction::InsertBefore(vec![Token::PreEncoded(vec![1])])
+                }
+                Rewrite::ReplaceMany => TokenAction::ReplaceMany(vec![
+                    Token::PreEncoded(vec![1]),
+                    Token::PreEncoded(vec![2]),
+                ]),
+                Rewrite::ReplaceRange => {
+                    TokenAction::ReplaceRange(1, vec![Token::PreEncoded(vec![3])])
+                }
+                Rewrite::Remove => TokenAction::Remove,
+            })
+        }
+    }
+
+    /// The emitter names a token's producer by looking its position up in the
+    /// origin table, so every rewrite shape must leave that table the same
+    /// length as the stream and must claim exactly the slots it created. A
+    /// shape that resized one but not the other would silently shift every
+    /// later token's attribution onto the wrong rule.
+    #[rstest::rstest]
+    #[case::insert_before(Rewrite::InsertBefore)]
+    #[case::replace_many(Rewrite::ReplaceMany)]
+    #[case::replace_range(Rewrite::ReplaceRange)]
+    #[case::remove(Rewrite::Remove)]
+    fn origin_tracking_stays_in_lockstep_with_every_rewrite_shape(#[case] rewrite: Rewrite) {
+        let mut engine = TokenRuleEngine::new();
+        engine.register(Box::new(RewriteB(rewrite)));
+
+        let mut tokens = vec![word_token("a"), word_token("b"), word_token("c")];
+        let mut state = EncoderState::new(false);
+        let mut origins = TokenOrigins::seeded(tokens.len());
+
+        engine
+            .apply_all_tracked(&mut tokens, &mut state, Some(&mut origins))
+            .expect("the rewrite rule never fails");
+
+        assert_eq!(origins.len(), tokens.len(), "{rewrite:?} resized one side");
+        for (index, token) in tokens.iter().enumerate() {
+            let expected = matches!(token, Token::PreEncoded(_)).then(|| RuleId::token(0));
+            assert_eq!(origins.get(index), expected, "{rewrite:?} slot {index}");
+        }
     }
 
     /// token_engine.rs lines 95-96 - `impl Default::default()` body.

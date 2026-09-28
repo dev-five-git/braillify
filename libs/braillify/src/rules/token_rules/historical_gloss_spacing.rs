@@ -1,9 +1,22 @@
 use crate::rules::token::Token;
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// 제54항이 묶음표 안쪽을 붙여 쓰도록 하므로 〔와 〕 안쪽 공백을 제거한다.
 pub struct HistoricalGlossSpacingRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "54",
+    subsection: None,
+    name: "historical_gloss_spacing",
+    standard_ref: "2024 Korean Braille Standard, 제54항 묶음표 붙여 쓰기",
+    description: "한자 음독 주석 주변 띄어쓰기 조정",
+};
+
 impl TokenRule for HistoricalGlossSpacingRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::Normalization
     }

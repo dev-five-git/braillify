@@ -32,20 +32,12 @@
     "jeomsarang": "⠸⠲"
   },
   {
-    "input": "◎",
-    "internal": "_00",
-    "expected": "565252",
-    "unicode": "⠸⠴⠴",
-    "world": "⠸⠴⠴",
-    "jeomsarang": "⠸⠴⠴"
-  },
-  {
-    "input": "▣",
-    "internal": "_77",
-    "expected": "565454",
-    "unicode": "⠸⠶⠶",
-    "world": "⠸⠶⠶",
-    "jeomsarang": "⠸⠶⠶"
+    "input": "2021 한글날 주요 문화행사",
+    "internal": "#bjba`j3@!c1`.m+`egjvjr7l",
+    "expected": "6032631026188469204013440172726392623547",
+    "unicode": "⠼⠃⠚⠃⠁⠀⠚⠒⠈⠮⠉⠂⠀⠨⠍⠬⠀⠑⠛⠚⠧⠚⠗⠶⠇",
+    "world": "",
+    "jeomsarang": ""
   },
   {
     "input": "□ 2021 세계한국어한마당",
@@ -70,6 +62,22 @@
     "unicode": "⠸⠴⠀⠦⠄⠨⠍⠨⠝⠠⠴⠀⠠⠦⠚⠒⠈⠍⠁⠎⠐⠆⠚⠒⠈⠮⠀⠑⠕⠐⠗⠐⠮⠀⠑⠂⠚⠊⠴⠄",
     "world": "⠸⠴ ⠦⠄⠨⠍⠨⠝⠠⠴ ⠄⠚⠒⠈⠍⠁⠎⠐⠆⠚⠒⠈⠮ ⠑⠕⠐⠗⠐⠮ ⠑⠂⠚⠊⠄",
     "jeomsarang": "⠸⠴⠀⠦⠄⠨⠍⠨⠝⠠⠴⠀⠠⠦⠚⠒⠈⠍⠁⠎⠐⠆⠚⠒⠈⠮⠀⠑⠕⠐⠗⠐⠮⠀⠑⠂⠚⠊⠴⠄"
+  },
+  {
+    "input": "◎",
+    "internal": "_00",
+    "expected": "565252",
+    "unicode": "⠸⠴⠴",
+    "world": "⠸⠴⠴",
+    "jeomsarang": "⠸⠴⠴"
+  },
+  {
+    "input": "▣",
+    "internal": "_77",
+    "expected": "565454",
+    "unicode": "⠸⠶⠶",
+    "world": "⠸⠶⠶",
+    "jeomsarang": "⠸⠶⠶"
   },
   {
     "input": "○ □ ◎ ▣",

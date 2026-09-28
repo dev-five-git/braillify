@@ -264,7 +264,19 @@ impl InitialContractionPronunciationRule {
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.7",
+    subsection: Some("pronunciation"),
+    name: "ueb_initial_contraction_pronunciation",
+    standard_ref: "UEB 2024 §10.7",
+    description: "Initial-letter contractions gated by pronunciation",
+};
+
 impl ContractionRule for InitialContractionPronunciationRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let full: String = word.iter().collect();
         let mut best: Option<(usize, [u8; 2])> = None;
@@ -286,10 +298,14 @@ impl ContractionRule for InitialContractionPronunciationRule {
             {
                 continue;
             }
+            // Appendix 1 lists compounds of a shortform word and another word
+            // (`between·time`, `herein·after`), so their components are whole words.
+            let listed_compound = super::rule_10_9_list::is_listed(&full);
             if *key == "time"
                 && pos > 0
                 && word[pos - 1] == 'n'
                 && !matches!(word.get(..pos), Some(['u', 'n']))
+                && !listed_compound
             {
                 continue;
             }
@@ -329,6 +345,7 @@ impl ContractionRule for InitialContractionPronunciationRule {
             let danger =
                 key.ends_with('e') && word.get(end).is_some_and(|c| matches!(c, 'r' | 'd'));
             let accept = if (*key == "had" && pos == 0 && !matches!(word.get(3), Some('e' | 'r')))
+                || (listed_compound && pos == 0 && matches!(*key, "here" | "there" | "where"))
                 || (*key == "day"
                     && (end == word.len()
                         || word

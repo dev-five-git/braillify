@@ -1,5 +1,29 @@
 [
   {
+    "input": "©",
+    "internal": "^c",
+    "expected": "249",
+    "unicode": "⠘⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "®",
+    "internal": "^r",
+    "expected": "2423",
+    "unicode": "⠘⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "™",
+    "internal": "^t",
+    "expected": "2430",
+    "unicode": "⠘⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Copyright © 2009",
     "internal": ",copy\"r ^c #bjji",
     "expected": "329211561162302490603262610",

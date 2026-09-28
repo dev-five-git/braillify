@@ -1,5 +1,23 @@
 [
   {
+    "input": "’",
+    "note": "아포스트로피. 묵자가 제49항 닫는 작은따옴표(’)와 같아 홀로 선 ’는 두 점형을 모두 받는다",
+    "alternatives": [
+      {
+        "internal": "'",
+        "expected": "4",
+        "unicode": "⠄"
+      },
+      {
+        "internal": "0'",
+        "expected": "524",
+        "unicode": "⠴⠄"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "’22. 9. 7.",
     "internal": "#'bb4`#i4`#g4",
     "expected": "604335006010500602750",

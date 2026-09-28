@@ -1,0 +1,12 @@
+[
+  {
+    "input": "CH₃COOH",
+    "note": "PDF 과학 제5항",
+    "context": "science",
+    "internal": ",,,ch;#c\"cooh,'",
+    "expected": "32323291948609169212119324",
+    "unicode": "⠠⠠⠠⠉⠓⠰⠼⠉⠐⠉⠕⠕⠓⠠⠄",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

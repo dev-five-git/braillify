@@ -63,10 +63,56 @@ fn ueb_inverted_punctuation_cells(c: char) -> Vec<u8> {
     ]
 }
 
+/// A symbol that is the whole text: Appendix 3 lists it with its grade 1 form.
+/// A sign with several uses takes its primary one there — the §3.11 prime, not a
+/// §15.2 stress mark; the §7.2 dash, not the long dash for omitted letters; the
+/// §13.5.1 inverted marks, not the foreign-code cells.
+fn lone_symbol_cells(c: char) -> Option<Vec<u8>> {
+    match c {
+        '′' => Some(vec![decode_unicode('⠶')]),
+        '″' => Some(vec![decode_unicode('⠶'), decode_unicode('⠶')]),
+        '—' => Some(vec![decode_unicode('⠠'), decode_unicode('⠤')]),
+        '¡' | '¿' => Some(ueb_inverted_punctuation_cells(c)),
+        _ => super::appendix_3::encode_symbol(c),
+    }
+}
+
+/// §3.22 with §11.7: a sign printed inside a circle (U+20DD after it) is the
+/// circle shape holding that sign — `⠰⠫`, the circle `⠿`, `⠪`, then the sign.
+fn circled_sign_cells(c: char) -> Option<Vec<u8>> {
+    let sign = super::rule_7::encode_punctuation(c).or_else(|| super::rule_3::encode_symbol(c))?;
+    let mut cells = vec![
+        GRADE1,
+        decode_unicode('⠫'),
+        decode_unicode('⠿'),
+        decode_unicode('⠪'),
+    ];
+    cells.extend(sign);
+    Some(cells)
+}
+
 macro_rules! encode_symbol_arm {
-    ($engine:expr, $tokens:ident, $out:ident, $prev_was_number:ident, $numeric_mode:ident, $skip_to:ident, $line_mode_active:ident, $passage:ident, $cap_term:ident, $in_passage:ident, $url_listing:ident, $regex_listing:ident, $foreign_code:ident, $spanish_foreign:ident, $foreign_passage:ident, $early_english:ident, $preserve_spatial_newlines:ident, $skip_flattened_line_indent:ident, $numeric_separator_count:ident, $i:ident, $c:ident) => {
+    ($engine:expr, $tokens:ident, $out:ident, $prev_was_number:ident, $numeric_mode:ident, $skip_to:ident, $line_mode_active:ident, $passage:ident, $cap_term:ident, $in_passage:ident, $url_listing:ident, $regex_listing:ident, $foreign_code:ident, $spanish_foreign:ident, $foreign_passage:ident, $early_english:ident, $preserve_spatial_newlines:ident, $skip_flattened_line_indent:ident, $numeric_separator_count:ident, $explicit_english:ident, $i:ident, $c:ident) => {
 			                {
 			                    $skip_flattened_line_indent = false;
+			                    if let Some(cells) = ($tokens.len() == 1)
+			                        .then(|| lone_symbol_cells(*$c))
+			                        .flatten()
+			                    {
+			                        $out.extend(cells);
+			                        $prev_was_number = false;
+			                        $numeric_mode = false;
+			                        continue;
+			                    }
+			                    if matches!($tokens.get($i + 1), Some(EnglishToken::Symbol('\u{20DD}')))
+			                        && let Some(cells) = circled_sign_cells(*$c)
+			                    {
+			                        $out.extend(cells);
+			                        $skip_to = $i + 2;
+			                        $prev_was_number = false;
+			                        $numeric_mode = false;
+			                        continue;
+			                    }
 			                    if $passage.is_none()
 			                        && let Some(active_passage) = guillemet_styled_passage(
 			                            SymbolPassageContext {
@@ -667,6 +713,14 @@ macro_rules! encode_symbol_arm {
                             .or_else(|| super::rule_7::encode_punctuation(*$c))
                             .or_else(|| super::rule_3::encode_symbol(*$c))
                             .or_else(|| super::rule_6::encode_vulgar_fraction(*$c))
+                            .or_else(|| super::rule_4::eng_schwa_cells(*$c))
+                            // Text not declared English leaves these technical signs
+                            // unread here, so it goes on to the math path instead.
+                            .or_else(|| {
+                                $explicit_english
+                                    .then(|| super::appendix_3::encode_symbol(*$c))
+                                    .flatten()
+                            })
                     }?;
 		                    $out.extend(cells);
 		                    if solidus_linebreak_space_after($tokens, $i) {

@@ -9,6 +9,7 @@ use crate::rules::english_ueb::rule_10_12::{
 use crate::rules::token::{ModeEvent, Token, WordToken};
 use crate::rules::token_rule::{TokenAction, TokenPhase, TokenRule};
 
+/// RUEB 2024 §8.4의 대문자 낱말표 규정을 적용하기 위해 연속 대문자 구간을 묶는다.
 pub struct UppercasePassageRule;
 
 /// UEB §5.7.2 + §10.9 grade-1 decision for the capitals run
@@ -83,6 +84,16 @@ struct CapitalizedGroup {
     /// First character outside the affected symbols-sequence.  A Korean gloss
     /// or closing quote attached to the final word begins here.
     end: usize,
+}
+
+/// 과학 제23항 — 대문자로 된 유전자는 3개 이상 이어져도 대문자 구절표를 쓰지 않는다.
+fn is_gene(word: &WordToken<'_>, group: CapitalizedGroup) -> bool {
+    let letters: Vec<char> = word.chars[group.start..group.end]
+        .iter()
+        .copied()
+        .filter(char::is_ascii_alphabetic)
+        .collect();
+    crate::rules::science::genotype::is_gene_symbol(&letters)
 }
 
 fn is_opening_passage_punctuation(ch: char) -> bool {
@@ -231,7 +242,19 @@ fn is_korean_math_letter_list_start(
         && second_has_attached_korean
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "8.4",
+    subsection: None,
+    name: "uppercase_passage",
+    standard_ref: "RUEB 2024 §8.4",
+    description: "연속 대문자 구간을 하나의 구절로 묶음",
+};
+
 impl TokenRule for UppercasePassageRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn phase(&self) -> TokenPhase {
         TokenPhase::UppercasePassage
     }
@@ -280,7 +303,16 @@ impl TokenRule for UppercasePassageRule {
         let upcoming_second_group = upcoming_second.and_then(capitalized_group);
         let is_korean_math_letter_list =
             is_korean_math_letter_list_start(tokens, index, word, upcoming_first, upcoming_second);
-        let can_start_passage = capitalized.is_some_and(|group| group.end == word_len)
+        let genes = state.science_context_active
+            && capitalized.is_some_and(|group| is_gene(word, group))
+            && upcoming_first
+                .zip(upcoming_first_group)
+                .is_some_and(|(next, group)| is_gene(next, group))
+            && upcoming_second
+                .zip(upcoming_second_group)
+                .is_some_and(|(next, group)| is_gene(next, group));
+        let can_start_passage = !genes
+            && capitalized.is_some_and(|group| group.end == word_len)
             && upcoming_first
                 .zip(upcoming_first_group)
                 .is_some_and(|(next, group)| group.start == 0 && group.end == next.chars.len())

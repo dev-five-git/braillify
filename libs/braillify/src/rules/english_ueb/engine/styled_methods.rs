@@ -93,6 +93,11 @@ impl EnglishUebEngine {
             && !styled_word_in_english_title(ctx.tokens, i, form)
             && !styled_word_in_lowercase_phrase_before_word(ctx.tokens, i, form, "of")
             && !domain_component_context(ctx.tokens, i)
+            // §13.2.3: a foreign place name in English text (`Ždiar, Slovakia`)
+            // is anglicised and keeps its contractions.
+            && !(chars.first().is_some_and(|c| c.is_uppercase())
+                && chars[1..].iter().all(|c| !c.is_uppercase())
+                && matches!(ctx.tokens.get(j), Some(EnglishToken::Symbol(','))))
             && styled_single_word_is_foreign(chars)
         {
             let doc_letters = document_letters(ctx.tokens);
@@ -157,7 +162,13 @@ impl EnglishUebEngine {
         // anglicised-looking sub-segment (`chai`, `de`) shares the foreign
         // context. This is a span-level context that the per-segment
         // `styled_word_is_foreign` check cannot see.
-        let span_foreign_scope = if ctx.foreign_scope.is_some() {
+        let is_url_span = ctx.tokens[start..span_end].iter().any(|t| {
+            matches!(
+                t,
+                EnglishToken::Symbol(':' | '/') | EnglishToken::Styled(':' | '/', _)
+            )
+        });
+        let span_foreign_scope = if ctx.foreign_scope.is_some() || is_url_span {
             ctx.foreign_scope
         } else {
             let mut any_foreign = false;

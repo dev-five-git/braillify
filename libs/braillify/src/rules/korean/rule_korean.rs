@@ -8,8 +8,8 @@
 //! and 13 (single-char abbreviation), serving as the general-purpose fallback
 //! for Korean syllables that weren't caught by those specialized rules.
 
-use crate::char_struct::CharType;
-use crate::korean_char::encode_korean_char;
+use crate::char_struct::{CharType, KoreanChar};
+use crate::korean_char::{JamoSpans, encode_korean_char, encode_korean_char_with_spans};
 use crate::rules::RuleMeta;
 use crate::rules::context::RuleContext;
 use crate::rules::traits::{BrailleRule, Phase, RuleResult};
@@ -50,7 +50,21 @@ impl BrailleRule for RuleKorean {
         let Some(korean) = ctx.as_korean() else {
             return Ok(RuleResult::Skip);
         };
-        let encoded = encode_korean_char(korean)?;
+        if ctx.state.jamo_spans.is_none() {
+            let encoded = encode_korean_char(korean)?;
+            ctx.emit_slice(&encoded);
+            return Ok(RuleResult::Consumed);
+        }
+        let korean = KoreanChar {
+            cho: korean.cho,
+            jung: korean.jung,
+            jong: korean.jong,
+        };
+        let mut spans = JamoSpans::default();
+        let encoded = encode_korean_char_with_spans(&korean, &mut spans)?;
+        if let Some(slot) = ctx.state.jamo_spans.as_deref_mut() {
+            *slot = spans;
+        }
         ctx.emit_slice(&encoded);
         Ok(RuleResult::Consumed)
     }

@@ -4,18 +4,33 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
 #[pyfunction]
-fn encode(text: &str) -> PyResult<Vec<u8>> {
-    braillify_core::encode(text).map_err(PyErr::new::<PyValueError, _>)
+#[pyo3(signature = (text, context=None))]
+fn encode(text: &str, context: Option<&str>) -> PyResult<Vec<u8>> {
+    match context {
+        Some(context) => braillify_core::encode_in_context(text, context),
+        None => braillify_core::encode(text),
+    }
+    .map_err(PyErr::new::<PyValueError, _>)
 }
 
 #[pyfunction]
-fn translate_to_unicode(text: &str) -> PyResult<String> {
-    braillify_core::encode_to_unicode(text).map_err(PyErr::new::<PyValueError, _>)
+#[pyo3(signature = (text, context=None))]
+fn translate_to_unicode(text: &str, context: Option<&str>) -> PyResult<String> {
+    match context {
+        Some(context) => braillify_core::encode_to_unicode_in_context(text, context),
+        None => braillify_core::encode_to_unicode(text),
+    }
+    .map_err(PyErr::new::<PyValueError, _>)
 }
 
 #[pyfunction]
-fn translate_to_braille_font(text: &str) -> PyResult<String> {
-    braillify_core::encode_to_braille_font(text).map_err(PyErr::new::<PyValueError, _>)
+#[pyo3(signature = (text, context=None))]
+fn translate_to_braille_font(text: &str, context: Option<&str>) -> PyResult<String> {
+    match context {
+        Some(context) => braillify_core::encode_to_braille_font_in_context(text, context),
+        None => braillify_core::encode_to_braille_font(text),
+    }
+    .map_err(PyErr::new::<PyValueError, _>)
 }
 
 #[pyfunction]
@@ -50,7 +65,7 @@ mod tests {
     #[test]
     fn encode_happy_path_returns_bytes() {
         Python::attach(|_py| {
-            let result = encode("안녕").expect("encode must succeed");
+            let result = encode("안녕", None).expect("encode must succeed");
             assert!(!result.is_empty());
         });
     }
@@ -60,7 +75,7 @@ mod tests {
         Python::attach(|_py| {
             // 😀 is not a supported CharType → core encode returns Err →
             // mapped to PyValueError via map_err.
-            let result = encode("😀");
+            let result = encode("😀", None);
             assert!(result.is_err());
         });
     }
@@ -68,7 +83,7 @@ mod tests {
     #[test]
     fn translate_to_unicode_happy_path() {
         Python::attach(|_py| {
-            let result = translate_to_unicode("hi").expect("must succeed");
+            let result = translate_to_unicode("hi", None).expect("must succeed");
             assert!(!result.is_empty());
             // Output must be Braille Unicode (U+2800..=U+28FF).
             for ch in result.chars() {
@@ -81,14 +96,14 @@ mod tests {
     #[test]
     fn translate_to_unicode_failure_maps_to_pyerr() {
         Python::attach(|_py| {
-            assert!(translate_to_unicode("😀").is_err());
+            assert!(translate_to_unicode("😀", None).is_err());
         });
     }
 
     #[test]
     fn translate_to_braille_font_happy_path() {
         Python::attach(|_py| {
-            let result = translate_to_braille_font("hi").expect("must succeed");
+            let result = translate_to_braille_font("hi", None).expect("must succeed");
             assert!(!result.is_empty());
         });
     }
@@ -96,7 +111,24 @@ mod tests {
     #[test]
     fn translate_to_braille_font_failure_maps_to_pyerr() {
         Python::attach(|_py| {
-            assert!(translate_to_braille_font("😀").is_err());
+            assert!(translate_to_braille_font("😀", None).is_err());
+        });
+    }
+
+    #[test]
+    fn every_function_reads_the_named_context() {
+        Python::attach(|_py| {
+            let science = Some("science");
+            assert_eq!(translate_to_unicode("pOH", science).unwrap(), "⠴⠏⠠⠕⠠⠓");
+            assert_eq!(translate_to_braille_font("pOH", science).unwrap(), "⠴⠏⠠⠕⠠⠓");
+            assert_eq!(encode("pOH", science).unwrap().len(), 6);
+        });
+    }
+
+    #[test]
+    fn an_unknown_context_maps_to_pyerr() {
+        Python::attach(|_py| {
+            assert!(translate_to_unicode("pOH", Some("chemistry")).is_err());
         });
     }
 

@@ -270,7 +270,11 @@ macro_rules! encode_word_arm {
 		                                .first()
 		                                .is_some_and(|c| c.is_ascii_lowercase() && ('a'..='j').contains(c))
 		                            {
-		                                $out.push(GRADE1);
+		                                super::push_indicator(
+		                                    &mut $out,
+		                                    super::UebMoveSource::Grade1Indicator,
+		                                    &[GRADE1],
+		                                );
 		                            }
 		                            encode_literal_word($chars, &mut $out)?;
 		                        }
@@ -588,7 +592,11 @@ macro_rules! encode_word_arm {
 		                        && (matches!(spelled_run, Some((start, _)) if start == $i)
 		                            || matches!(initialism_run, Some((start, _)) if start == $i))
 		                    {
-		                        $out.extend([GRADE1, GRADE1]);
+		                        super::push_indicator(
+		                            &mut $out,
+		                            super::UebMoveSource::Grade1Indicator,
+		                            &[GRADE1, GRADE1],
+		                        );
 		                    }
 			                    let letter_grade1 = !$cap_start_grade1
 			                        && spelled_run.is_none()
@@ -598,9 +606,20 @@ macro_rules! encode_word_arm {
 	                            || ($chars.len() == 1
 	                                && $chars[0].is_uppercase()
 	                                && super::rule_5_7::is_wordsign_letter($chars[0])
-	                                && matches!(next, Some(EnglishToken::Symbol('!')))));
+	                                && matches!(next, Some(EnglishToken::Symbol('!'))))
+	                            // §2.6.3: a closing transcriber's note indicator after the
+	                            // letter's punctuation still leaves it standing alone.
+	                            || ($chars.len() == 1
+	                                && super::rule_5_7::is_wordsign_letter($chars[0])
+	                                && closing_transcriber_note_after_transparent_suffix($tokens, $i)
+	                                && (matches!(prev, None | Some(EnglishToken::Space))
+	                                    || transcriber_note_ends_at($tokens, $i, true))));
 			                    if after_number_grade1 || letter_grade1 || apostrophe_wrapped_letter($tokens, $i, $chars) {
-		                        $out.push(GRADE1);
+		                        super::push_indicator(
+		                            &mut $out,
+		                            super::UebMoveSource::Grade1Indicator,
+		                            &[GRADE1],
+		                        );
 		                    }
 		                    if !$foreign_passage
 		                        && document_all_words($tokens).len() >= 3
@@ -633,8 +652,9 @@ macro_rules! encode_word_arm {
 		                        $numeric_mode = false;
 		                        continue;
 		                    }
-	                    let shortform_usable =
-	                        standing_alone && !matches!(next, Some(EnglishToken::Symbol('@' | '/')));
+	                    let shortform_usable = (standing_alone
+	                        || apostrophe_joined_listed_word($tokens, $i))
+	                        && !matches!(next, Some(EnglishToken::Symbol('@' | '/')));
                     // §10.5 lower wordsigns need a stricter boundary than §10.1/§10.2.
                     let mut lower_usable = standing_alone && lower_wordsign_usable(prev, next);
                     // §10.5.2: "enough's" keeps the wordsign (its interior apostrophe is

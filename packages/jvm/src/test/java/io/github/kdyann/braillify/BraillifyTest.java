@@ -81,6 +81,20 @@ class BraillifyTest {
     }
 
     @Test
+    void theNamedContextDecidesHowTextIsRead() {
+        assertEquals("⠴⠏⠠⠕⠠⠓", Braillify.translateToUnicode("pOH", "science"));
+        assertEquals("⠴⠏⠠⠠⠕⠓⠲", Braillify.translateToUnicode("pOH", "korean"));
+        assertEquals("⠴⠏⠠⠕⠠⠓", Braillify.translateToBrailleFont("pOH", "science"));
+        assertEquals(6, Braillify.encode("pOH", "science").length);
+    }
+
+    @Test
+    void rejectsAnUnknownOrNullContext() {
+        assertThrows(BraillifyException.class, () -> Braillify.translateToUnicode("pOH", "chemistry"));
+        assertThrows(NullPointerException.class, () -> Braillify.encode("pOH", null));
+    }
+
+    @Test
     void unicodeOutputContainsOnlyBrailleCodePoints() {
         assertTrue(Braillify.translateToUnicode("hello 안녕 123").codePoints()
                 .allMatch(value -> value >= 0x2800 && value <= 0x28ff));

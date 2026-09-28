@@ -276,7 +276,19 @@ fn next_is_lim_body(tokens: &[MathToken], idx: usize) -> bool {
 
 pub struct FunctionNameRule;
 
+static META_FUNCTIONNAMERULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "47",
+    subsection: None,
+    name: "math_function_name",
+    standard_ref: "2024 Korean Braille Standard, 수학 제47항",
+    description: "함수 이름",
+};
+
 impl MathTokenRule for FunctionNameRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_FUNCTIONNAMERULE
+    }
+
     fn name(&self) -> &'static str {
         "FunctionNameRule"
     }

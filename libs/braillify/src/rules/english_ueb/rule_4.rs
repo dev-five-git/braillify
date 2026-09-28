@@ -120,6 +120,22 @@ fn eszett_cells(c: char) -> Option<Vec<u8>> {
     })
 }
 
+/// §4.4 eng and schwa: `ŋ` → ⠘⠝ and `ə` → ⠸⠢, the capital forms carrying the §8
+/// capital indicator (`Ŋ` → ⠠⠘⠝, `Ə` → ⠠⠸⠢).
+pub fn eng_schwa_cells(c: char) -> Option<Vec<u8>> {
+    let (prefix, letter) = match c.to_lowercase().next()? {
+        'ŋ' => ('⠘', '⠝'),
+        'ə' => ('⠸', '⠢'),
+        _ => return None,
+    };
+    let mut cells = Vec::with_capacity(3);
+    if c.is_uppercase() {
+        cells.push(decode_unicode('⠠'));
+    }
+    cells.extend([decode_unicode(prefix), decode_unicode(letter)]);
+    Some(cells)
+}
+
 /// Whether `c` is a supported accented or ligatured letter (so the parser keeps
 /// it in a word).
 pub fn is_accented(c: char) -> bool {
@@ -211,6 +227,17 @@ mod tests {
     fn accent_cells_match_indicator_plus_base(#[case] c: char, #[case] expected: &str) {
         let want: Vec<u8> = expected.chars().map(decode_unicode).collect();
         assert_eq!(accent_cells(c), Some(want));
+    }
+
+    #[rstest::rstest]
+    #[case::eng('ŋ', Some("⠘⠝"))]
+    #[case::eng_upper('Ŋ', Some("⠠⠘⠝"))]
+    #[case::schwa('ə', Some("⠸⠢"))]
+    #[case::schwa_upper('Ə', Some("⠠⠸⠢"))]
+    #[case::plain_letter('n', None)]
+    fn eng_schwa_cells_follow_section_4_4(#[case] c: char, #[case] expected: Option<&str>) {
+        let want = expected.map(|s| s.chars().map(decode_unicode).collect::<Vec<u8>>());
+        assert_eq!(eng_schwa_cells(c), want);
     }
 
     #[test]

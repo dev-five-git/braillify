@@ -1,10 +1,8 @@
 //! General LaTeX math expression handler.
 //!
 //! Strips `$...$` wrapping from LaTeX math expressions and encodes
-//! the inner content using the math braille engine.
-//!
-//! Runs after LatexFractionRule to catch any `$...$` patterns
-//! that aren't simple fractions.
+//! the inner content using the math braille engine. The math expression
+//! token rule hands it a `$...$` word that is not a simple fraction.
 
 use crate::rules::context::EncoderState;
 use crate::rules::math;

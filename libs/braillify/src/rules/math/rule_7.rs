@@ -47,7 +47,19 @@ pub struct FractionReversalRule;
 
 pub struct GroupedFractionReversalRule;
 
+static META_GROUPEDFRACTIONREVERSALRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "7",
+    subsection: None,
+    name: "math_grouped_fraction",
+    standard_ref: "2024 Korean Braille Standard, 수학 제7항",
+    description: "묶음 분수 - 분모 먼저",
+};
+
 impl MathTokenRule for GroupedFractionReversalRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_GROUPEDFRACTIONREVERSALRULE
+    }
+
     fn name(&self) -> &'static str {
         "GroupedFractionReversalRule"
     }
@@ -152,7 +164,19 @@ fn find_simple_right_end(tokens: &[MathToken], start: usize) -> usize {
     i
 }
 
+static META_FRACTIONREVERSALRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "7",
+    subsection: None,
+    name: "math_fraction",
+    standard_ref: "2024 Korean Braille Standard, 수학 제7항",
+    description: "분수 - 분모 먼저",
+};
+
 impl MathTokenRule for FractionReversalRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_FRACTIONREVERSALRULE
+    }
+
     fn name(&self) -> &'static str {
         "FractionReversalRule"
     }
@@ -194,7 +218,19 @@ impl MathTokenRule for FractionReversalRule {
 /// `f/x` → `x/f` (분모 먼저). 안전을 위해 prev가 OpenParen 또는 comma일 때만 발동.
 pub struct VariableFractionInListRule;
 
+static META_VARIABLEFRACTIONINLISTRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "7",
+    subsection: None,
+    name: "math_variable_fraction",
+    standard_ref: "2024 Korean Braille Standard, 수학 제7항",
+    description: "나열 속 변수 분수",
+};
+
 impl MathTokenRule for VariableFractionInListRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_VARIABLEFRACTIONINLISTRULE
+    }
+
     fn name(&self) -> &'static str {
         "VariableFractionInListRule"
     }
@@ -255,7 +291,19 @@ impl MathTokenRule for VariableFractionInListRule {
 
 pub struct ConditionalProbFractionRule;
 
+static META_CONDITIONALPROBFRACTIONRULE: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "7",
+    subsection: None,
+    name: "math_conditional_fraction",
+    standard_ref: "2024 Korean Braille Standard, 수학 제7항",
+    description: "조건부 확률 분수",
+};
+
 impl MathTokenRule for ConditionalProbFractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META_CONDITIONALPROBFRACTIONRULE
+    }
+
     fn name(&self) -> &'static str {
         "ConditionalProbFractionRule"
     }

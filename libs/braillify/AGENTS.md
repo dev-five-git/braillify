@@ -37,13 +37,16 @@ src/
 ```
 Input text
   ↓ DocumentIR::parse()         (tokenize into Word/Space/Mode tokens)
-  ↓ TokenRuleEngine::apply_all() (token-level rules by phase)
-  │   ├── LatexMergeRule         (merge $...$ across spaces)
-  │   ├── LatexFractionRule      (detect $\frac{}{})$)
-  │   ├── LatexMathRule          (strip LaTeX → math notation)
-  │   ├── InlineFractionRule     (detect N/N inline fractions)
-  │   ├── MathExpressionTokenRule (detect & encode math expressions)
-  │   └── ...other token rules
+  ↓ TokenRuleEngine::apply_all() (token-level rules by phase, then priority;
+  │                               a rule returning Noop hands the word to the
+  │                               next rule of the same phase)
+  │   ├── Normalization     LatexMergeRule ($...$ across spaces), science notation,
+  │   │                     bracket gap, colon/semicolon split, leading asterisk, …
+  │   ├── FractionDetection MathExpressionTokenRule (math, LaTeX, \frac → Token::Fraction)
+  │   ├── WordShortcut      WordShortcutRule
+  │   ├── ModeEntry         DigitalNotationRule (URL, e-mail)
+  │   ├── UppercasePassage  UppercasePassageRule (capitals word/passage)
+  │   └── PostWord          middle dot, tilde, hyphen, asterisk, English-dominant wrap
   ↓ emit()                      (character-level encoding)
       ├── Token::Word → RuleEngine (BrailleRule trait, char-by-char)
       ├── Token::Space → braille space byte
@@ -233,12 +236,12 @@ cargo fmt && cargo clippy            # Format + lint
 bun test test_cases/                 # JSON integrity checks (packages/node/pkg 빌드 필요)
 ```
 
-규정 fixture 는 `test_cases/{korean,math,english}/*.json` 이고, 그와 별개로
+규정 fixture 는 `test_cases/{korean,math,english,science}/*.json` 이고, 그와 별개로
 `test_cases/{2021,2022,2023,2024,2025}_corpus/sentence_*.json` 에 국립국어원
 한국어-한국점자 병렬 말뭉치 46만 7121문장이 들어 있다. 말뭉치는 `rule_map.json` 에서
 `benchmark: true` 로 표시되어 **pass/fail 에 들어가지 않고 정확도만 보고**한다.
 
-**Current status: 규정 fixture 5141/5141 (100%), 말뭉치 455,975/467,121 (97.61%).**
+**Current status: 규정 fixture 5284/5284 (100%, `limitation` 없음), 말뭉치 456,626/467,121 (97.75%).**
 
 ⚠️ `roman_marker_bench` 는 **어절 수가 맞는 문장만** 센다. 띄어쓰기를 바꾸면
 비교 모집단 자체가 움직이므로 네 수치를 그대로 빼서 비교하면 안 된다. 실제로

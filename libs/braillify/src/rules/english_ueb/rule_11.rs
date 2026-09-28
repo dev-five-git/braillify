@@ -440,8 +440,24 @@ pub fn encode_technical(chars: &[char]) -> Option<Vec<u8>> {
         return Some(cells);
     }
     if chars.windows(5).any(|w| w == ['\\', 's', 'q', 'r', 't']) {
-        let mut out = vec![GRADE1, GRADE1];
-        encode_expr_with_options(chars, &mut out, false, true)?;
+        // §11.5.1: over a number the radical needs only the grade 1 symbol
+        // indicator before ⠩ — the numeric indicator carries grade 1 mode through
+        // ⠬ (`√9 = 3` → ⠰⠩⠼⠊⠬ ⠐⠶ ⠼⠉). A letter, or an index whose superscript
+        // indicator is a second grade 1 symbol (§11.5.2 `∛8` → ⠰⠰⠩⠔⠼⠉⠼⠓⠬),
+        // takes the grade 1 word indicator (§5.3).
+        let text: String = chars.iter().collect();
+        let mut out = Vec::new();
+        if text.contains("\\sqrt[")
+            || text
+                .replace("\\sqrt", "")
+                .chars()
+                .any(|c| c.is_ascii_alphabetic())
+        {
+            out.extend([GRADE1, GRADE1]);
+            encode_expr_with_options(chars, &mut out, false, true)?;
+        } else {
+            encode_expr_with_options(chars, &mut out, false, false)?;
+        }
         return Some(out);
     }
     if chars.contains(&' ') {

@@ -1,5 +1,14 @@
 [
   {
+    "input": "%",
+    "context": "english",
+    "internal": ".0",
+    "expected": "4052",
+    "unicode": "⠨⠴",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "5%",
     "context": "english",
     "internal": "#e.0",

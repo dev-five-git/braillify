@@ -1,5 +1,14 @@
 [
   {
+    "input": "#",
+    "context": "english",
+    "internal": "_?",
+    "expected": "5657",
+    "unicode": "⠸⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "[?]",
     "context": "english",
     "internal": ".<;8.>",

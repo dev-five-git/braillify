@@ -93,7 +93,19 @@ impl StructuralInitialContractionRule {
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.7",
+    subsection: Some("structure"),
+    name: "ueb_initial_contraction_structural",
+    standard_ref: "UEB 2024 §10.7",
+    description: "Initial-letter contractions gated by morpheme structure",
+};
+
 impl ContractionRule for StructuralInitialContractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         for (key, &cells) in STRUCT_CONTRACTIONS.entries() {
             let klen = key.chars().count();

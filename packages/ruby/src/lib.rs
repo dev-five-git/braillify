@@ -17,6 +17,31 @@ fn translate_to_braille_font(ruby: &Ruby, text: String) -> Result<String, Error>
     braillify::encode_to_braille_font(&text).map_err(|e| Error::new(ruby.exception_arg_error(), e))
 }
 
+/// `context`("science", "math" 등)로 읽은 텍스트를 점자 바이트로 인코딩합니다.
+fn encode_in_context(ruby: &Ruby, text: String, context: String) -> Result<RString, Error> {
+    braillify::encode_in_context(&text, &context)
+        .map(|bytes| ruby.str_from_slice(&bytes))
+        .map_err(|e| Error::new(ruby.exception_arg_error(), e))
+}
+
+fn translate_to_unicode_in_context(
+    ruby: &Ruby,
+    text: String,
+    context: String,
+) -> Result<String, Error> {
+    braillify::encode_to_unicode_in_context(&text, &context)
+        .map_err(|e| Error::new(ruby.exception_arg_error(), e))
+}
+
+fn translate_to_braille_font_in_context(
+    ruby: &Ruby,
+    text: String,
+    context: String,
+) -> Result<String, Error> {
+    braillify::encode_to_braille_font_in_context(&text, &context)
+        .map_err(|e| Error::new(ruby.exception_arg_error(), e))
+}
+
 #[magnus::init]
 fn init(ruby: &Ruby) -> Result<(), Error> {
     let module = ruby.define_module("Braillify")?;
@@ -25,6 +50,15 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
     module.define_module_function(
         "translate_to_braille_font",
         function!(translate_to_braille_font, 1),
+    )?;
+    module.define_module_function("encode_in_context", function!(encode_in_context, 2))?;
+    module.define_module_function(
+        "translate_to_unicode_in_context",
+        function!(translate_to_unicode_in_context, 2),
+    )?;
+    module.define_module_function(
+        "translate_to_braille_font_in_context",
+        function!(translate_to_braille_font_in_context, 2),
     )?;
     Ok(())
 }
@@ -85,6 +119,31 @@ mod tests {
         assert!(translate_to_braille_font(&ruby, "😀".to_string()).is_err());
     }
 
+    #[ruby_test]
+    fn every_function_reads_the_named_context() {
+        let ruby = Ruby::get().unwrap();
+        let unicode =
+            translate_to_unicode_in_context(&ruby, "pOH".to_string(), "science".to_string())
+                .expect("must succeed");
+        assert_eq!(unicode, "⠴⠏⠠⠕⠠⠓");
+        let font =
+            translate_to_braille_font_in_context(&ruby, "pOH".to_string(), "science".to_string())
+                .expect("must succeed");
+        assert_eq!(font, unicode);
+        let bytes = encode_in_context(&ruby, "pOH".to_string(), "science".to_string())
+            .expect("must succeed");
+        assert!(!bytes.is_empty());
+    }
+
+    #[ruby_test]
+    fn an_unknown_context_maps_to_arg_error() {
+        let ruby = Ruby::get().unwrap();
+        assert!(
+            translate_to_unicode_in_context(&ruby, "pOH".to_string(), "chemistry".to_string())
+                .is_err()
+        );
+    }
+
     /// `#[magnus::init]` 등록 본문을 실행하고, 등록된 모듈 함수가 Ruby에서
     /// 실제로 호출 가능한지 funcall로 검증한다.
     #[ruby_test]
@@ -100,5 +159,17 @@ mod tests {
         assert!(!font.is_empty());
         let bytes: RString = module.funcall("encode", ("안녕",)).unwrap();
         assert!(!bytes.is_empty());
+        let science: String = module
+            .funcall("translate_to_unicode_in_context", ("pOH", "science"))
+            .unwrap();
+        assert_eq!(science, "⠴⠏⠠⠕⠠⠓");
+        let science_font: String = module
+            .funcall("translate_to_braille_font_in_context", ("pOH", "science"))
+            .unwrap();
+        assert_eq!(science_font, science);
+        let science_bytes: RString = module
+            .funcall("encode_in_context", ("pOH", "science"))
+            .unwrap();
+        assert!(!science_bytes.is_empty());
     }
 }

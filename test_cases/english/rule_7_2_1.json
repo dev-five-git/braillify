@@ -1,5 +1,52 @@
 [
   {
+    "input": "-",
+    "context": "english",
+    "internal": "-",
+    "expected": "36",
+    "unicode": "⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "–",
+    "context": "english",
+    "internal": ",-",
+    "expected": "3236",
+    "unicode": "⠠⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "—",
+    "note": "줄표(U+2014): §7.2.1 예와 부록 3",
+    "context": "english",
+    "internal": ",-",
+    "expected": "3236",
+    "unicode": "⠠⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "―",
+    "note": "긴 줄표: 기호 표(PDF 104쪽)는 U+2014 로 조판했지만 §7.2.1 예와 부록 3 은 U+2014 를 줄표 ⠠⠤, U+2015 를 긴 줄표 ⠐⠠⠤ 로 적는다",
+    "context": "english",
+    "internal": "\",-",
+    "expected": "163236",
+    "unicode": "⠐⠠⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "_",
+    "context": "english",
+    "internal": ".-",
+    "expected": "4036",
+    "unicode": "⠨⠤",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "He sees it  —  feels it.",
     "internal": ",he sees x ,- feels x4",
     "expected": "32191701417171404503236011171771404550",

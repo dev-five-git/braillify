@@ -24,7 +24,19 @@ impl RestrictedLowerGroupsignRule {
     }
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.6",
+    subsection: Some("restricted"),
+    name: "ueb_restricted_lower_groupsign",
+    standard_ref: "UEB 2024 §10.6",
+    description: "Restricted lower groupsigns be, con, dis",
+};
+
 impl ContractionRule for RestrictedLowerGroupsignRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         // Restricted groupsigns are word-initial only (§10.6.2).
         if pos != 0 {
@@ -39,7 +51,22 @@ impl ContractionRule for RestrictedLowerGroupsignRule {
         } else {
             return None;
         };
-        match classify(word, prefix, self.provider.as_ref()) {
+        let decision = match classify(word, prefix, self.provider.as_ref()) {
+            // A derivative missing from the dictionary shares its stem's first
+            // syllable (`belittle·ment` like `belittle`).
+            Decision::Unknown => suffix_stem(word)
+                .filter(|stem| {
+                    !self
+                        .provider
+                        .pronunciations(&stem.iter().collect::<String>())
+                        .is_empty()
+                })
+                .map_or(Decision::Unknown, |stem| {
+                    classify(stem, prefix, self.provider.as_ref())
+                }),
+            decision => decision,
+        };
+        match decision {
             Decision::Use => Some(ContractionMatch {
                 cells: vec![cell],
                 consumed,
@@ -53,6 +80,13 @@ impl ContractionRule for RestrictedLowerGroupsignRule {
             Decision::SpellOut | Decision::Unknown => None,
         }
     }
+}
+
+fn suffix_stem(word: &[char]) -> Option<&[char]> {
+    ["ment", "ness", "ly"].iter().find_map(|suffix| {
+        let cut = word.len().checked_sub(suffix.len())?;
+        (cut >= 5 && word[cut..].iter().copied().eq(suffix.chars())).then(|| &word[..cut])
+    })
 }
 
 #[cfg(test)]
@@ -76,6 +110,8 @@ mod tests {
     #[case::concept("concept", Some((decode_unicode('⠒'), 3)))]
     #[case::dislike_rest_word("dislike", Some((decode_unicode('⠲'), 3)))]
     #[case::dishonest_rest_word("dishonest", Some((decode_unicode('⠲'), 3)))]
+    #[case::unknown_derivative_of_a_known_stem("belittlement", Some((decode_unicode('⠆'), 2)))]
+    #[case::unknown_name_without_a_word_stem("beagans", None)]
     #[case::beckon("beckon", None)]
     #[case::cone("cone", None)]
     #[case::dispirited("dispirited", None)]

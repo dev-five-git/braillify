@@ -1,4 +1,4 @@
-//! Math symbol encoding with Korean spacing rules.
+//! 제46항: 연산 기호와 비교 기호가 한글 사이에 나올 때에는 기호의 앞뒤를 한 칸씩 띄어 쓴다.
 //!
 //! Math symbols (＋, −, ×, ÷, etc.) need spacing around them when
 //! adjacent to Korean text, unless the Korean is a grammatical particle (josa).
@@ -11,10 +11,10 @@ use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 use crate::utils;
 
 pub static META: RuleMeta = RuleMeta {
-    section: "math",
+    section: "46",
     subsection: None,
     name: "math_symbol_encoding",
-    standard_ref: "2024 Korean Braille Standard (math symbols)",
+    standard_ref: "2024 Korean Braille Standard, 제46항",
     description: "Math symbols with Korean spacing rules",
 };
 
@@ -188,48 +188,7 @@ fn is_semantic_ascii_minus(ctx: &RuleContext) -> bool {
     if ctx.current_char() != '-' {
         return false;
     }
-
-    let next_starts_number = ctx.next_char().is_some_and(|next| {
-        next.is_ascii_digit()
-            || (next == '.'
-                && ctx
-                    .word_chars
-                    .get(ctx.index + 2)
-                    .is_some_and(char::is_ascii_digit))
-    });
-    let unary_boundary = ctx.prev_char().is_none_or(|prev| {
-        matches!(
-            prev,
-            '(' | '['
-                | '{'
-                | '〈'
-                | '《'
-                | '「'
-                | '『'
-                | '【'
-                | '〔'
-                | '〖'
-                | '〘'
-                | '〚'
-                | '‘'
-                | '“'
-                | '\''
-                | '"'
-                | ','
-                | ':'
-                | ';'
-                | '='
-                | '+'
-                | '×'
-                | '÷'
-                | '<'
-                | '>'
-                | '≤'
-                | '≥'
-                | '≠'
-        )
-    });
-    if next_starts_number && unary_boundary {
+    if starts_signed_number(ctx) {
         return true;
     }
 
@@ -275,7 +234,63 @@ fn is_semantic_ascii_minus(ctx: &RuleContext) -> bool {
             || matches!(prev, ')' | ']' | '}' | '〉' | '》' | '」' | '』' | '】')
     });
 
-    prev_ends_operand && next_starts_number && has_other_math_operator
+    prev_ends_operand && next_number(ctx) && has_other_math_operator
+}
+
+/// Print often sets a minus sign as the horizontal bar `―` (`수익률이 ―43.22%로`).
+/// At the start of a number it is the 제45항 뺄셈표, while a bar joining two
+/// parts (`3―1로`, `?”―28`) stays the 제49항 줄표.
+fn is_dash_minus(ctx: &RuleContext) -> bool {
+    ctx.current_char() == '\u{2015}' && starts_signed_number(ctx)
+}
+
+fn next_number(ctx: &RuleContext) -> bool {
+    ctx.next_char().is_some_and(|next| {
+        next.is_ascii_digit()
+            || (next == '.'
+                && ctx
+                    .word_chars
+                    .get(ctx.index + 2)
+                    .is_some_and(char::is_ascii_digit))
+    })
+}
+
+/// A sign at the start of a number: at the start of the word or after an
+/// opening mark, separator or operator.
+fn starts_signed_number(ctx: &RuleContext) -> bool {
+    let unary_boundary = ctx.prev_char().is_none_or(|prev| {
+        matches!(
+            prev,
+            '(' | '['
+                | '{'
+                | '〈'
+                | '《'
+                | '「'
+                | '『'
+                | '【'
+                | '〔'
+                | '〖'
+                | '〘'
+                | '〚'
+                | '‘'
+                | '“'
+                | '\''
+                | '"'
+                | ','
+                | ':'
+                | ';'
+                | '='
+                | '+'
+                | '×'
+                | '÷'
+                | '<'
+                | '>'
+                | '≤'
+                | '≥'
+                | '≠'
+        )
+    });
+    unary_boundary && next_number(ctx)
 }
 
 fn is_roman_grade_minus(ctx: &RuleContext) -> bool {
@@ -300,6 +315,7 @@ impl BrailleRule for RuleMath {
         matches!(ctx.char_type, CharType::MathSymbol(_))
             || (matches!(ctx.char_type, CharType::Symbol('-'))
                 && (is_semantic_ascii_minus(ctx) || is_roman_grade_minus(ctx)))
+            || (matches!(ctx.char_type, CharType::Symbol('\u{2015}')) && is_dash_minus(ctx))
     }
 
     fn apply(&self, ctx: &mut RuleContext) -> Result<RuleResult, String> {
@@ -313,6 +329,7 @@ impl BrailleRule for RuleMath {
         let c = match ctx.char_type {
             CharType::MathSymbol(c) => *c,
             CharType::Symbol('-') if is_semantic_ascii_minus(ctx) => '\u{2212}',
+            CharType::Symbol('\u{2015}') if is_dash_minus(ctx) => '\u{2212}',
             _ => return Ok(RuleResult::Skip),
         };
 
@@ -350,7 +367,14 @@ impl BrailleRule for RuleMath {
             ctx.emit(0);
         }
 
-        let encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
+        let mut encoded = math_symbol_shortcut::encode_char_math_symbol_shortcut(c)?;
+        if super::rule_68::is_superscript_digit(c)
+            && super::rule_68::continues_superscript(ctx.word_chars, ctx.index)
+        {
+            let number_continues =
+                super::rule_68::is_superscript_digit(ctx.word_chars[ctx.index - 1]);
+            encoded = &encoded[if number_continues { 2 } else { 1 }..];
+        }
         ctx.emit_slice(encoded);
 
         if pad_after {
@@ -530,6 +554,31 @@ mod tests {
     }
 
     #[rstest::rstest]
+    #[case::percentage("수익률이 ―43.22%로")]
+    #[case::after_opening_quote("‘―5도’")]
+    #[case::decimal("수익률은 ―1.20%였다")]
+    fn a_bar_opening_a_number_is_the_minus_sign(#[case] bar: &str) {
+        assert_eq!(
+            crate::encode_to_unicode(bar).expect("bar must encode"),
+            crate::encode_to_unicode(&bar.replace('―', "−")).expect("minus must encode"),
+            "input={bar}"
+        );
+    }
+
+    #[rstest::rstest]
+    #[case::score_between_numbers("3―1로")]
+    #[case::count_after_parenthesis("2(볼)―1(스트라이크)")]
+    #[case::attribution_after_quote("”―28")]
+    fn a_bar_joining_two_parts_stays_the_dash(#[case] bar: &str) {
+        assert!(
+            crate::encode_to_unicode(bar)
+                .expect("bar must encode")
+                .contains("⠤⠤"),
+            "input={bar}"
+        );
+    }
+
+    #[rstest::rstest]
     #[case::pdf_phone_number("02-799-1000")]
     #[case::identifier_suffix("A-3")]
     #[case::calendar_date("2024-09-03")]
@@ -540,6 +589,13 @@ mod tests {
             crate::encode_to_unicode(&explicit_minus).expect("minus variant must encode"),
             "input={input}"
         );
+    }
+
+    /// 제46항 "연산 기호와 비교 기호가 한글 사이에 나올 때에는 기호의 앞뒤를 한 칸씩 띄어 쓴다"
+    /// 이 규칙의 메타데이터는 제46항을 명시해야 한다.
+    #[test]
+    fn meta_section_is_article_46() {
+        assert_eq!(META.section, "46", "META.section must be article 46");
     }
 }
 
@@ -584,6 +640,13 @@ mod roman_grade_minus_coverage {
     #[case::single_letter_grade("신용등급 A- 로")]
     fn a_credit_grade_minus_encodes(#[case] input: &str) {
         assert!(crate::encode_to_unicode(input).is_ok());
+    }
+
+    /// 제34항: 등급 뒤 한글 주석이 붙어도 붙임표는 등급의 뺄셈 기호다.
+    #[test]
+    fn a_grade_before_a_korean_annotation_keeps_its_minus() {
+        let encoded = crate::encode_to_unicode("등급을 AA-(안정적)에서").unwrap();
+        assert!(encoded.contains("⠁⠁⠐⠤⠦⠄"), "{encoded}");
     }
 }
 

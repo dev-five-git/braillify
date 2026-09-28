@@ -35,6 +35,17 @@ class BraillifyTest < Minitest::Test
     assert_raises(ArgumentError) { Braillify.translate_to_braille_font("😀") }
   end
 
+  def test_context_decides_how_text_is_read
+    assert_equal "⠴⠏⠠⠕⠠⠓", Braillify.translate_to_unicode_in_context("pOH", "science")
+    assert_equal "⠴⠏⠠⠠⠕⠓⠲", Braillify.translate_to_unicode_in_context("pOH", "korean")
+    assert_equal "⠴⠏⠠⠕⠠⠓", Braillify.translate_to_braille_font_in_context("pOH", "science")
+    assert_equal 6, Braillify.encode_in_context("pOH", "science").bytesize
+  end
+
+  def test_unknown_context_raises_argument_error
+    assert_raises(ArgumentError) { Braillify.translate_to_unicode_in_context("pOH", "chemistry") }
+  end
+
   def test_version_matches_cargo_toml
     assert_match(/\A\d+\.\d+\.\d+\z/, Braillify::VERSION)
   end

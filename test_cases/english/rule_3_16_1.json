@@ -1,5 +1,23 @@
 [
   {
+    "input": "♀",
+    "context": "english",
+    "internal": "^x",
+    "expected": "2445",
+    "unicode": "⠘⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "♂",
+    "context": "english",
+    "internal": "^y",
+    "expected": "2461",
+    "unicode": "⠘⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Amy Florence SAMPSON ♀ 1881-1956",
     "internal": ",amy ,flor;e ,,sampson ^x #ahha-#aief",
     "expected": "3211361032117212348170323214113151421290244506011919136601101711",

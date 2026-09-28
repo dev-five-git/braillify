@@ -30,12 +30,17 @@ macro_rules! encode_space_arm {
                     }
                     if is_numeric_space($tokens, $i) {
                         $numeric_separator_count += 1;
+                        let numeric_space_start = $out.len();
                         $skip_to = encode_following_number_as_numeric_space(
                             $tokens,
                             $i,
                             &mut $out,
                             $numeric_separator_count == 6,
                         )?;
+                        super::record_whole_word(
+                            super::UebMoveSource::Numeric,
+                            &$out[numeric_space_start..],
+                        );
                         $prev_was_number = true;
                         $numeric_mode = true;
                         $line_mode_active = false;
@@ -77,9 +82,9 @@ macro_rules! encode_space_arm {
                     // legacy path but land here for Latin-embedded inputs like
                     // `1in는 2.54cm이다.`, where the token stream contains no
                     // multi-space runs and this branch would be a no-op anyway.
-	                    if $collapse_prose_double_space
+	                    if (($collapse_prose_double_space && styled_prose_double_space($tokens, $i))
+	                        || space_run_inside_parentheses($tokens, $i))
 	                        && matches!($tokens.get($i + 1), Some(EnglishToken::Space))
-	                        && styled_prose_double_space($tokens, $i)
 	                    {
 	                        $prev_was_number = false;
 	                        $numeric_mode = false;

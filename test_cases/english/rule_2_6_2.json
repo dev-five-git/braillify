@@ -141,6 +141,14 @@
     "jeomsarang": "⠠⠠⠕⠥⠞⠀⠠⠠⠕⠋⠀⠠⠠⠞⠕⠺⠝"
   },
   {
+    "input": "[open tn]every",
+    "internal": "@.<e",
+    "expected": "8403517",
+    "unicode": "⠈⠨⠣⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "–“[Be true.]”",
     "internal": ",-8.<,2 true4.>0",
     "expected": "323638403532603023371750402852",

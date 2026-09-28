@@ -1,5 +1,14 @@
 [
   {
+    "input": "...",
+    "context": "english",
+    "internal": "444",
+    "expected": "505050",
+    "unicode": "⠲⠲⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "I... I don't think ....\"",
     "internal": ",i 444 ,i don't ?9k 44440",
     "expected": "3210050505003210025212943005720505050505052",

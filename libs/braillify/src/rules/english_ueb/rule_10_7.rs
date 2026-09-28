@@ -88,7 +88,19 @@ pub fn is_initial_letter_contraction_word(word: &str) -> bool {
 /// §10.7 initial-letter contraction rule.
 pub struct InitialContractionRule;
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.7",
+    subsection: None,
+    name: "ueb_initial_contraction",
+    standard_ref: "UEB 2024 §10.7",
+    description: "Initial-letter contractions standing for whole words",
+};
+
 impl ContractionRule for InitialContractionRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let mut best: Option<(usize, [u8; 2])> = None;
         for (key, &cells) in INITIAL_CONTRACTIONS.entries() {

@@ -1,5 +1,45 @@
 [
   {
+    "input": "child",
+    "internal": "*",
+    "expected": "33",
+    "unicode": "⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shall",
+    "internal": "%",
+    "expected": "41",
+    "unicode": "⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "this",
+    "internal": "?",
+    "expected": "57",
+    "unicode": "⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "out",
+    "internal": "\\",
+    "expected": "51",
+    "unicode": "⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "still",
+    "internal": "/",
+    "expected": "12",
+    "unicode": "⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "I shall still find out which 𝐜𝐡𝐢𝐥𝐝 did this!",
     "internal": ",i % / f9d \\ : ^1* did ?6",
     "expected": "32100410120112025051049024233025102505722",

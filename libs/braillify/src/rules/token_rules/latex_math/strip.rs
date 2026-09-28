@@ -10,6 +10,7 @@ pub(crate) fn strip_latex_to_math(latex_inner: &str) -> String {
     let mut result = String::new();
     let mut chars = latex_inner.chars().peekable();
     let mut escaped_brace_depth = 0usize;
+    let mut left_opens_brace: Vec<bool> = Vec::new();
     // 직전에 LaTeX 명령(`\command`)이 emit한 결과인지 추적: 명령 주변 공백은 LaTeX
     // 토큰 분리용이므로 제거해야 하고, 직접 Unicode 기호 주변 공백은 보존해야 한다.
     let mut last_emit_from_latex = false;
@@ -711,17 +712,22 @@ pub(crate) fn strip_latex_to_math(latex_inner: &str) -> String {
                 "bullet" => result.push('\u{2219}'),            // ∙ (검정 동그라미)
                 // `\left` and `\right` LaTeX size modifiers: skip the keyword.
                 // 뒤따르는 괄호/구분자는 그대로 처리되도록 한다.
-                // PDF — `\right.`(one-sided, 닫는 구분자 없음)은 `⠄`(dots 3) 표지를 붙인다.
+                // `\right.` 은 묵자에 아무것도 그리지 않으므로 적지 않는다(회신 11). 다만
+                // `\left\{ … \right.` 은 제6항 1 연립식 괄호라 둘째 칸 ⠄ 를 U+2E29 로 남긴다.
                 "left" => {
                     if chars.peek() == Some(&'.') {
                         chars.next();
                     }
+                    let mut ahead = chars.clone();
+                    left_opens_brace.push(ahead.next() == Some('\\') && ahead.next() == Some('{'));
                 }
                 "right" => {
+                    let closes_brace = left_opens_brace.pop().unwrap_or(false);
                     if chars.peek() == Some(&'.') {
                         chars.next();
-                        // U+2E29 sentinel for open-ended right delimiter → ⠄
-                        result.push('\u{2E29}');
+                        if closes_brace {
+                            result.push('\u{2E29}');
+                        }
                     }
                 }
                 "overset" => {
@@ -1095,7 +1101,10 @@ mod tests {
     #[rstest::rstest]
     #[case::plain_xrightleftharpoons("\\xrightleftharpoons{f}", "f\u{21C4}\u{00A0}")]
     #[case::prefixed_xrightleftharpoons("A\\xrightleftharpoons{f}", "A\u{00A0}f\u{21C4}\u{00A0}")]
-    #[case::one_sided_right_delimiter("\\left.x\\right.", "x\u{2E29}")]
+    #[case::null_delimiters("\\left.x\\right.", "x")]
+    #[case::parenthesis_left_open("\\left(x\\right.", "(x")]
+    #[case::simultaneous_equation_brace("\\left\\{x\\right.", "{x\u{2E29}")]
+    #[case::right_without_left("x\\right.", "x")]
     #[case::overset_frown_arc("\\overset{\\frown}{AB}", "\u{2322}AB")]
     #[case::overset_plain_base("\\overset{x}{AB}", "AB")]
     #[case::single_letter_command("\\q", "q")]

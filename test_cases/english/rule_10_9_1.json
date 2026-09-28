@@ -1,5 +1,21 @@
 [
   {
+    "input": "thyself",
+    "internal": "?yf",
+    "expected": "576111",
+    "unicode": "⠹⠽⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "below",
+    "internal": "2l",
+    "expected": "67",
+    "unicode": "⠆⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "You should receive your letter tomorrow afternoon.",
     "internal": ",y %d rcv yr lr tm afn4",
     "expected": "3261041250239390612307230301301112950",

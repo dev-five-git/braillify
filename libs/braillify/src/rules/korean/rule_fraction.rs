@@ -7,10 +7,10 @@ use crate::rules::context::RuleContext;
 use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 
 pub static META: RuleMeta = RuleMeta {
-    section: "fraction",
+    section: "47",
     subsection: None,
     name: "unicode_fraction_encoding",
-    standard_ref: "2024 Korean Braille Standard (fractions)",
+    standard_ref: "2024 Korean Braille Standard, 제47항",
     description: "Unicode fraction characters (½, ⅓, ¼, etc.)",
 };
 
@@ -81,7 +81,7 @@ mod tests {
     fn rule_metadata_reports_phase() {
         let rule = RuleFraction;
 
-        assert_eq!(rule.meta().section, "fraction");
+        assert_eq!(rule.meta().section, "47");
         assert!(matches!(rule.phase(), Phase::CoreEncoding));
     }
 }

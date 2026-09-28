@@ -14,11 +14,16 @@ use crate::rules::traits::{BrailleRule, Phase, RuleResult};
 use crate::symbol_shortcut;
 use crate::utils;
 
+/// Three articles decide together here, and 국립국어원 answered on 2026-09-21
+/// that such a cell should name them all rather than pick one. 제33항 keeps a
+/// comma between Roman and Korean in the Korean shape, 제34항 drops the Roman
+/// terminator when brackets or quotes enclose the Roman text, and 제49항 gives
+/// the punctuation its cells.
 pub static META: RuleMeta = RuleMeta {
-    section: "49",
-    subsection: Some("eng"),
+    section: "33, 34, 49",
+    subsection: None,
     name: "english_symbol_context",
-    standard_ref: "2024 Korean Braille Standard, Ch.4 Sec.10 + Ch.6 Sec.13",
+    standard_ref: "2024 Korean Braille Standard, 한글 제33항·제34항·제49항",
     description: "English-context punctuation rendering with parenthesis tracking",
 };
 

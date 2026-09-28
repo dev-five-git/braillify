@@ -1,5 +1,32 @@
 [
   {
+    "input": "′",
+    "context": "english",
+    "internal": "7",
+    "expected": "54",
+    "unicode": "⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "″",
+    "context": "english",
+    "internal": "77",
+    "expected": "5454",
+    "unicode": "⠶⠶",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "°",
+    "context": "english",
+    "internal": "^j",
+    "expected": "2426",
+    "unicode": "⠘⠚",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "60 °",
     "context": "english",
     "internal": "#fj ^j",

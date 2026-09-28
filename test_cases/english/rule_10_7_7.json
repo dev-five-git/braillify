@@ -1,5 +1,13 @@
 [
   {
+    "input": "some",
+    "internal": "\"s",
+    "expected": "1614",
+    "unicode": "⠐⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "blithesome",
     "internal": "bli!\"s",
     "expected": "3710461614",

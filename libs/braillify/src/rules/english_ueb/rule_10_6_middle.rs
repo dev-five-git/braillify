@@ -134,7 +134,25 @@ impl MiddleLowerGroupsignRule {
         if !EA_BRIDGING_PREFIXES.contains(&prefix.as_str()) {
             return false;
         }
-        right.len() >= 4 && self.is_word(right)
+        right.len() >= 4 && self.is_word(right) && self.prefix_is_a_syllable(word, right)
+    }
+
+    /// A prefix is its own syllable: the word sounds one more vowel than the root
+    /// it would be split from (`re·action` 3 against `action` 2). A root that is
+    /// spelled with `ea` sounds no extra vowel (`reader` 2 against `ader` 2). An
+    /// unrecorded word keeps the prefix reading.
+    fn prefix_is_a_syllable(&self, word: &[char], right: &[char]) -> bool {
+        let fewest_vowels = |chars: &[char]| {
+            self.provider
+                .pronunciations(&collect(chars))
+                .iter()
+                .map(|pron| pron.iter().filter(|phoneme| phoneme.is_vowel()).count())
+                .min()
+        };
+        match (fewest_vowels(word), fewest_vowels(right)) {
+            (Some(whole), Some(root)) => whole > root,
+            _ => true,
+        }
     }
 
     /// Additional solid-compound seams recover obvious free-word compounds not in
@@ -291,7 +309,19 @@ fn bridges_compound_seam(word: &[char], pos: usize, consumed: usize) -> bool {
         .any(|&seam| pos < seam && seam < pos + consumed)
 }
 
+static META: crate::rules::RuleMeta = crate::rules::RuleMeta {
+    section: "10.6",
+    subsection: Some("5"),
+    name: "ueb_middle_lower_groupsign",
+    standard_ref: "UEB 2024 §10.6.5",
+    description: "Middle lower groupsigns ea bb cc ff gg, morpheme-gated",
+};
+
 impl ContractionRule for MiddleLowerGroupsignRule {
+    fn meta(&self) -> &'static crate::rules::RuleMeta {
+        &META
+    }
+
     fn try_match(&self, word: &[char], pos: usize) -> Option<ContractionMatch> {
         let m = middle_lower_groupsign(word, pos)?;
         // `middle_lower_groupsign` only matches `ea` or a doubled letter

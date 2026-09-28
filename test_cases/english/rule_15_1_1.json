@@ -1,5 +1,32 @@
 [
   {
+    "input": "|",
+    "context": "english",
+    "internal": "_\\",
+    "expected": "5651",
+    "unicode": "⠸⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "‖",
+    "context": "english",
+    "internal": "_\\_\\",
+    "expected": "56515651",
+    "unicode": "⠸⠳⠸⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "//",
+    "context": "english",
+    "internal": "_/_/",
+    "expected": "56125612",
+    "unicode": "⠸⠌⠸⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "𝑇𝑜 BE / 𝑜𝑟 NOT 𝑡𝑜 𝑏𝑒, // THAT / 𝑖𝑠 𝑡ℎ𝑒 QUEST𝑖𝑜𝑛.",
     "internal": ".1,to ,,2 _/ .1or ,,n .1to .1be1 _/_/ ,,t _/ .1is .1! ,,que/.1ion4",
     "expected": "40232302103232605612040221230323229040230210402317205612561203232300561204021014040246032323137171240210212950",

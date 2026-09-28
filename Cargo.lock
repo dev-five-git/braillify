@@ -194,7 +194,7 @@ checksum = "b588b76d00fde79687d7646a9b5bdf3cc0f655e0bbd080335a95d7e96f3587da"
 
 [[package]]
 name = "braillify"
-version = "2.1.2"
+version = "2.2.0"
 dependencies = [
  "anyhow",
  "assert_cmd",
@@ -219,14 +219,14 @@ dependencies = [
 
 [[package]]
 name = "braillify-c"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "braillify",
 ]
 
 [[package]]
 name = "braillify-go"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "braillify",
 ]
@@ -991,6 +991,9 @@ version = "0.1.0"
 dependencies = [
  "braillify",
  "console_error_panic_hook",
+ "rstest",
+ "serde",
+ "serde_json",
  "wasm-bindgen",
  "wasm-bindgen-test",
 ]

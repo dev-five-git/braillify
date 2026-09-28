@@ -1,5 +1,45 @@
 [
   {
+    "input": "upon",
+    "internal": "^u",
+    "expected": "2437",
+    "unicode": "⠘⠥",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "these",
+    "internal": "^!",
+    "expected": "2446",
+    "unicode": "⠘⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "those",
+    "internal": "^?",
+    "expected": "2457",
+    "unicode": "⠘⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whose",
+    "internal": "^:",
+    "expected": "2449",
+    "unicode": "⠘⠱",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "there",
+    "internal": "\"!",
+    "expected": "1646",
+    "unicode": "⠐⠮",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "hereupon",
     "internal": "\"h^u",
     "expected": "16192437",

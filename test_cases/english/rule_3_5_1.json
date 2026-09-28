@@ -1,5 +1,14 @@
 [
   {
+    "input": "•",
+    "context": "english",
+    "internal": "_4",
+    "expected": "5650",
+    "unicode": "⠸⠲",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "Nutritional considerations include:",
     "internal": ",nutri;nal 3sid]a;ns 9clude3",
     "expected": "3229373023104829170181410255914829140209737251718",

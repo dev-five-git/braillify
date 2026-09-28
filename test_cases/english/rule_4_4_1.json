@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "input": "ŋ",
+    "context": "english",
+    "internal": "^n",
+    "expected": "2429",
+    "unicode": "⠘⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ŋ",
+    "context": "english",
+    "internal": ",^n",
+    "expected": "322429",
+    "unicode": "⠠⠘⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ə",
+    "context": "english",
+    "internal": "_5",
+    "expected": "5634",
+    "unicode": "⠸⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "Ə",
+    "context": "english",
+    "internal": ",_5",
+    "expected": "325634",
+    "unicode": "⠠⠸⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "meningococcus (mə niŋʹ gō käkʹ əs)",
+    "limitation": "인쇄는 부강세를 가는 ʹ, 주강세를 굵은 ʹ로 갈라 점자도 ⠘⠨⠆·⠘⠨⠃로 다르지만, 입력에서는 둘 다 같은 글자 ʹ(U+02B9)라 구별할 수 없다",
+    "internal": "m5+oco3us \"<m_5 ni^n^.2 g@-o k^3ak^.b _5s\">",
+    "expected": "13344421921183714016351356340291024292440602783621052418152440305634141628",
+    "unicode": "⠍⠢⠬⠕⠉⠕⠒⠥⠎⠀⠐⠣⠍⠸⠢⠀⠝⠊⠘⠝⠘⠨⠆⠀⠛⠈⠤⠕⠀⠅⠘⠒⠁⠅⠘⠨⠃⠀⠸⠢⠎⠐⠜",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

@@ -35,16 +35,6 @@ pub fn encode_fraction(numerator: &str, denominator: &str) -> Result<Vec<u8>, St
     Ok(result)
 }
 
-pub fn encode_fraction_in_context(numerator: &str, denominator: &str) -> Result<Vec<u8>, String> {
-    let mut result = vec![60];
-    result.extend(encode_number_string(numerator, "fraction numerator")?);
-    result.push(56);
-    result.push(12);
-    result.push(60);
-    result.extend(encode_number_string(denominator, "fraction denominator")?);
-    Ok(result)
-}
-
 pub fn encode_mixed_fraction(
     whole: &str,
     numerator: &str,
@@ -285,26 +275,6 @@ mod tests {
     #[test]
     fn test_encode_fraction_invalid_denominator() {
         let result = encode_fraction("3", "b");
-        assert!(result.is_err());
-        assert!(result.unwrap_err().contains("denominator"));
-    }
-
-    #[test]
-    fn test_encode_fraction_in_context_simple() {
-        let result = encode_fraction_in_context("2", "3").unwrap();
-        assert_eq!(result, vec![60, 3, 56, 12, 60, 9]);
-    }
-
-    #[test]
-    fn test_encode_fraction_in_context_invalid_numerator() {
-        let result = encode_fraction_in_context("x", "3");
-        assert!(result.is_err());
-        assert!(result.unwrap_err().contains("numerator"));
-    }
-
-    #[test]
-    fn test_encode_fraction_in_context_invalid_denominator() {
-        let result = encode_fraction_in_context("2", "y");
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("denominator"));
     }

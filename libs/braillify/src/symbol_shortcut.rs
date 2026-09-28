@@ -16,6 +16,9 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     // 제53항 [다만] — 점 개수를 밝혀야 하는 줄임표는 묵자의 점 수만큼
     // ⠠을 적는다. U+2025 TWO DOT LEADER visibly carries two points.
     '‥' => &[decode_unicode('⠠'), decode_unicode('⠠')],
+    // 과학 제22항 — 여성 기호 ♀는 0^x4로, 남성 기호 ♂은 0^y4로 적는다.
+    '♀' => &[decode_unicode('⠴'), decode_unicode('⠘'), decode_unicode('⠭'), decode_unicode('⠲')],
+    '♂' => &[decode_unicode('⠴'), decode_unicode('⠘'), decode_unicode('⠽'), decode_unicode('⠲')],
     '!' => &[decode_unicode('⠖')],
     '.' => &[decode_unicode('⠲')],
     ',' => &[decode_unicode('⠐')],
@@ -47,6 +50,8 @@ static SHORTCUT_MAP: phf::Map<char, &'static [u8]> = phf_map! {
     '：' => &[decode_unicode('⠐'), decode_unicode('⠂')],
     '「' => &[decode_unicode('⠐'), decode_unicode('⠦')],
     '」' => &[decode_unicode('⠴'), decode_unicode('⠂')],
+    '｢' => &[decode_unicode('⠐'), decode_unicode('⠦')],
+    '｣' => &[decode_unicode('⠴'), decode_unicode('⠂')],
     '『' => &[decode_unicode('⠰'), decode_unicode('⠦')],
     '』' => &[decode_unicode('⠴'), decode_unicode('⠆')],
     '/' => &[decode_unicode('⠸'), decode_unicode('⠌')],
@@ -205,6 +210,22 @@ mod test {
         assert_eq!(
             encode_char_symbol_shortcut(ch).unwrap(),
             expected.as_slice()
+        );
+    }
+
+    /// 제49항 defines one 홑낫표. Unicode spells it twice, full width and half
+    /// width, and the standard's own text uses the half-width form, so the pair
+    /// must transcribe alike or a quoted statute stops transcribing at all.
+    #[rstest::rstest]
+    #[case::opening('｢', '「')]
+    #[case::closing('｣', '」')]
+    fn a_halfwidth_corner_bracket_reads_as_its_fullwidth_twin(
+        #[case] halfwidth: char,
+        #[case] fullwidth: char,
+    ) {
+        assert_eq!(
+            encode_char_symbol_shortcut(halfwidth).unwrap(),
+            encode_char_symbol_shortcut(fullwidth).unwrap()
         );
     }
 

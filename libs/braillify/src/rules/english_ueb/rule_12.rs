@@ -129,8 +129,11 @@ pub fn encode_uncontracted_word(chars: &[char]) -> Option<Vec<u8>> {
         out.extend(cells("⠠⠠"));
     }
     for &c in chars {
-        let is_early_capital =
-            c.is_uppercase() && early_letter(c.to_lowercase().next().unwrap_or(c)).is_some();
+        // A lone capital is the §12.2 letter itself (`Ȝ` → ⠠⠼⠽); only inside a
+        // word does the Wyclif example drop the indicator.
+        let is_early_capital = chars.len() > 1
+            && c.is_uppercase()
+            && early_letter(c.to_lowercase().next().unwrap_or(c)).is_some();
         if !word_caps && c.is_uppercase() && !is_early_capital {
             out.push(decode_unicode('⠠'));
         }
@@ -189,6 +192,7 @@ mod tests {
     #[case::breve_cyrillic_y(&['ў'], Some("⠽"))]
     #[case::all_caps_ascii_word(&['A', 'L'], Some("⠠⠠⠁⠇"))]
     #[case::early_capital_omits_cap_indicator(&['Ȝ', 'e', 'e'], Some("⠼⠽⠑⠑"))]
+    #[case::lone_early_capital_keeps_cap_indicator(&['Ȝ'], Some("⠠⠼⠽"))]
     #[case::unknown_letter(&['🙂'], None)]
     fn uncontracted_word_paths(#[case] chars: &[char], #[case] expected: Option<&str>) {
         let expected_cells = expected.map(|s| s.chars().map(decode_unicode).collect());

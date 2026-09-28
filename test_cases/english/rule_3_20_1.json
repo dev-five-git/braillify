@@ -1,5 +1,23 @@
 [
   {
+    "input": "¶",
+    "context": "english",
+    "internal": "^p",
+    "expected": "2415",
+    "unicode": "⠘⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "§",
+    "context": "english",
+    "internal": "^s",
+    "expected": "2414",
+    "unicode": "⠘⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "¶3",
     "context": "english",
     "internal": "^p#c",

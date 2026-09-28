@@ -64,6 +64,19 @@ fn is_superscript_symbol(c: char) -> bool {
     matches!(c, '⁺' | '⁻')
 }
 
+pub(crate) fn is_superscript_digit(c: char) -> bool {
+    matches!(c, '⁰' | '¹' | '²' | '³' | '⁴'..='⁹')
+}
+
+/// 위 첨자가 이어진 자리인가. 제68항은 위 첨자 기호 ⠘ 뒤에 첨자의 내용을 적으므로
+/// 이어진 첨자(`⁻¹`, `²³`)는 ⠘ 하나 뒤에 적는다 — 수학 제18항 `x⁻¹` = ⠭⠘⠔⠼⠁.
+pub(crate) fn continues_superscript(word: &[char], index: usize) -> bool {
+    index
+        .checked_sub(1)
+        .and_then(|previous| word.get(previous))
+        .is_some_and(|c| is_superscript_symbol(*c) || is_superscript_digit(*c))
+}
+
 fn is_subscript_digit(c: char) -> bool {
     matches!(c, '₀'..='₉')
 }
@@ -230,6 +243,13 @@ impl BrailleRule for Rule68 {
             return Ok(RuleResult::Skip);
         };
         let is_roman_unit = matches!(ctx.current_char(), '㎡' | '㏊');
+        // 제69항 [붙임 3] — 빗금으로 이어진 로마자 단위(`kgf/㎡`)는 한 로마자 구간이다.
+        if is_roman_unit
+            && super::rule_69::roman_unit_chain_continues_before(ctx)
+            && encoded.first() == Some(&ROMAN_INDICATOR)
+        {
+            encoded.remove(0);
+        }
         let continues = is_roman_unit
             && super::rule_69::adjust_roman_unit_boundary(ctx, ctx.index + 1, &mut encoded);
         ctx.emit_slice(&encoded);
@@ -243,8 +263,9 @@ impl BrailleRule for Rule68 {
     }
 }
 
-/// PDF — `1++등급` 같은 digit + 연속 `+` 등급 표기 패턴인지 검사.
-/// 직전이 digit이고 현재가 `+`이며 이후에 한글 등급 키워드(등급)가 나오면 true.
+/// 제68항 [붙임 2] — `1++등급` 의 `+` 는 등급을 나타내는 위 첨자다. 수 뒤에 붙은
+/// `+`·`-` 는 그 뒤에 `등급` 이 이어질 때만 첨자이고, 그 밖의 한글 앞(`50+캠퍼스`,
+/// `4.1+실업률`)에서는 덧셈표다.
 fn is_digit_grade_plus_notation(word: &[char], index: usize) -> bool {
     if index == 0 {
         return false;
@@ -261,9 +282,7 @@ fn is_digit_grade_plus_notation(word: &[char], index: usize) -> bool {
             break;
         }
     }
-    // 직후에 한글이 와야 grade context로 본다 (`1++등급` 등).
-    word.get(cursor)
-        .is_some_and(|c| crate::utils::is_korean_char(*c))
+    word[cursor..].starts_with(&['등', '급'])
 }
 
 #[cfg(test)]
@@ -292,6 +311,13 @@ mod tests {
         }
         assert!(!is_rule_68_symbol('a'));
         assert!(!is_rule_68_symbol('1'));
+    }
+
+    #[rstest::rstest]
+    #[case::negative_exponents("cm³g⁻¹sec⁻²", "⠴⠉⠍⠘⠼⠉⠛⠘⠔⠼⠁⠎⠑⠉⠘⠔⠼⠃")]
+    #[case::two_digit_exponent("cm³g⁻¹⁰", "⠴⠉⠍⠘⠼⠉⠛⠘⠔⠼⠁⠚")]
+    fn writes_a_superscript_run_after_one_sign(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
     }
 
     #[test]
@@ -410,22 +436,21 @@ mod tests {
         assert!(result.is_none());
     }
 
-    #[test]
-    fn is_digit_grade_plus_notation_paths() {
-        // "1+등급"
-        let word: Vec<char> = "1+등급".chars().collect();
-        assert!(is_digit_grade_plus_notation(&word, 1));
-        // "1++등급"
-        let word: Vec<char> = "1++등급".chars().collect();
-        assert!(is_digit_grade_plus_notation(&word, 1));
-        // Index 0 - not preceded by digit
-        assert!(!is_digit_grade_plus_notation(&word, 0));
-        // Without Korean following
-        let word: Vec<char> = "1++x".chars().collect();
-        assert!(!is_digit_grade_plus_notation(&word, 1));
-        // Not preceded by digit
-        let word: Vec<char> = "a+등급".chars().collect();
-        assert!(!is_digit_grade_plus_notation(&word, 1));
+    #[rstest::rstest]
+    #[case::one_plus_grade("1+등급", 1, true)]
+    #[case::double_plus_grade("1++등급", 1, true)]
+    #[case::at_the_start("1++등급", 0, false)]
+    #[case::before_a_letter("1++x", 1, false)]
+    #[case::after_a_letter("a+등급", 1, false)]
+    #[case::fifty_plus_campus("50+캠퍼스", 2, false)]
+    #[case::sum_of_rates("4.1+실업률", 3, false)]
+    fn a_plus_after_a_number_is_a_script_only_before_a_grade(
+        #[case] text: &str,
+        #[case] index: usize,
+        #[case] expected: bool,
+    ) {
+        let word: Vec<char> = text.chars().collect();
+        assert_eq!(is_digit_grade_plus_notation(&word, index), expected);
     }
 
     #[test]
@@ -548,28 +573,19 @@ mod tests {
         assert!(should_insert_separator_after_symbol(&ctx));
     }
 
-    /// rule_68:198 — digit-grade chain with `-` triggers the `'-' => ⠔` arm.
-    /// Input MUST have a Korean char after the +/- chain to satisfy
-    /// is_digit_grade_plus_notation (per the function source).
     #[test]
-    fn rule68_digit_grade_with_minus_in_chain() {
-        // 1+-가 — digit, then +, -, then Korean → satisfies notation predicate.
-        let _ = crate::encode("1+-가");
-        let _ = crate::encode("5-+나");
-        let _ = crate::encode("3--다");
+    fn a_grade_script_writes_plus_and_minus_in_order() {
+        assert_eq!(crate::encode_to_unicode("1+-등급").unwrap(), "⠼⠁⠘⠢⠔⠀⠊⠪⠶⠈⠪⠃");
     }
 
-    /// rule_68:108 — direct call to `encode_compact_ascii_notation` with a base
-    /// letter followed by a single ⁺/⁻ then a non-super char. The inner loop
-    /// breaks at line 108 when next char is neither ⁺ nor ⁻.
-    #[test]
-    fn rule68_superscript_block_breaks_on_non_super_direct() {
-        // "A⁺x" — uppercase A + ⁺ (consumed) + x (breaks loop)
-        let word: Vec<char> = "A\u{207A}x".chars().collect();
-        let result = encode_compact_ascii_notation(&word, 0, false).unwrap();
-        assert!(result.is_some());
-        let (_, consumed) = result.unwrap();
-        // Only A and ⁺ are consumed; x triggers the break at line 108.
+    #[rstest::rstest]
+    #[case::superscript_then_letter("A\u{207A}x")]
+    #[case::subscript_then_letter("H\u{2082}O")]
+    fn compact_notation_stops_at_the_first_non_script(#[case] text: &str) {
+        let word: Vec<char> = text.chars().collect();
+        let (_, consumed) = encode_compact_ascii_notation(&word, 0, false)
+            .unwrap()
+            .expect("a capital with a script is compact notation");
         assert_eq!(consumed, 2);
     }
 

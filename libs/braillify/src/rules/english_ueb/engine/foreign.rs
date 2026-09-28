@@ -47,6 +47,9 @@ pub(super) fn styled_word_is_foreign(chars: &[char]) -> bool {
     }) {
         return true;
     }
+    if is_capitals_abbreviation(chars) {
+        return false;
+    }
     let word: String = chars.iter().flat_map(|c| c.to_lowercase()).collect();
     // §10.12.12: typeform does not block a contraction when the styled letters
     // themselves form a normal UEB groupsign (`tou𝐜𝐡ed`, `enoug̲h̲`). These short
@@ -87,9 +90,18 @@ pub(super) fn styled_word_has_foreign_signal(chars: &[char]) -> bool {
 /// suppresses contractions inside the styled span. Short digraphs
 /// (`ch`/`gh`/`sh`/`th`/`wh`) which are themselves UEB groupsigns are
 /// exempted so a styled emphatic digraph (`tou𝐜𝐡ed`) keeps its contraction.
+/// An all-capitals ASCII run (`UEB`) is an abbreviation, not foreign vocabulary,
+/// though the pronouncing dictionary does not list it.
+fn is_capitals_abbreviation(chars: &[char]) -> bool {
+    chars.len() >= 2 && chars.iter().all(char::is_ascii_uppercase)
+}
+
 pub(super) fn styled_single_word_is_foreign(chars: &[char]) -> bool {
     if styled_word_has_foreign_signal(chars) {
         return true;
+    }
+    if is_capitals_abbreviation(chars) {
+        return false;
     }
     let word: String = chars.iter().flat_map(|c| c.to_lowercase()).collect();
     // A digraph groupsign (`ch`/`gh`/`sh`/`th`/`wh`) is 2 chars, so it is already
@@ -352,6 +364,27 @@ pub(super) fn styled_word_in_lowercase_phrase_before_word(
     }
 
     words.len() >= 2 && styled_words_are_lowercase(&words) && followed_by_word(tokens, k, expected)
+}
+
+/// A print space run inside parentheses (`DIGEST:   August`) is prose spacing,
+/// not a column, so it is one braille space (§8.5.6 example).
+pub(super) fn space_run_inside_parentheses(tokens: &[EnglishToken], i: usize) -> bool {
+    let depth = |range: &[EnglishToken]| {
+        range.iter().fold(0i32, |depth, t| match t {
+            EnglishToken::Symbol('(') => depth + 1,
+            EnglishToken::Symbol(')') => depth - 1,
+            _ => depth,
+        })
+    };
+    let line_start = tokens[..i]
+        .iter()
+        .rposition(|t| matches!(t, EnglishToken::LineBreak))
+        .map_or(0, |p| p + 1);
+    let line_end = tokens[i..]
+        .iter()
+        .position(|t| matches!(t, EnglishToken::LineBreak))
+        .map_or(tokens.len(), |p| i + p);
+    depth(&tokens[line_start..i]) > 0 && depth(&tokens[i..line_end]) < 0
 }
 
 pub(super) fn styled_prose_double_space(tokens: &[EnglishToken], i: usize) -> bool {

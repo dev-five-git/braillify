@@ -18,6 +18,12 @@ end
 #   Braillify.translate_to_unicode(text)      # => 점자 유니코드 String
 #   Braillify.translate_to_braille_font(text) # => 점자 폰트 String
 #
-# 변환할 수 없는 입력은 ArgumentError를 발생시킨다.
+# 묵자 모양만으로 규정을 정할 수 없는 글은 문맥("science", "math" 등)을 밝혀 쓴다:
+#
+#   Braillify.encode_in_context(text, context)
+#   Braillify.translate_to_unicode_in_context(text, context)
+#   Braillify.translate_to_braille_font_in_context(text, context)
+#
+# 변환할 수 없는 입력이나 알 수 없는 문맥은 ArgumentError를 발생시킨다.
 module Braillify
 end

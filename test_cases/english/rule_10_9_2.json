@@ -1,5 +1,493 @@
 [
   {
+    "input": "about",
+    "internal": "ab",
+    "expected": "13",
+    "unicode": "⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "above",
+    "internal": "abv",
+    "expected": "1339",
+    "unicode": "⠁⠃⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "according",
+    "internal": "ac",
+    "expected": "19",
+    "unicode": "⠁⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "across",
+    "internal": "acr",
+    "expected": "1923",
+    "unicode": "⠁⠉⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "after",
+    "internal": "af",
+    "expected": "111",
+    "unicode": "⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afternoon",
+    "internal": "afn",
+    "expected": "11129",
+    "unicode": "⠁⠋⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterward",
+    "internal": "afw",
+    "expected": "11158",
+    "unicode": "⠁⠋⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "again",
+    "internal": "ag",
+    "expected": "127",
+    "unicode": "⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "against",
+    "internal": "ag/",
+    "expected": "12712",
+    "unicode": "⠁⠛⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almost",
+    "internal": "alm",
+    "expected": "1713",
+    "unicode": "⠁⠇⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "already",
+    "internal": "alr",
+    "expected": "1723",
+    "unicode": "⠁⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "altogether",
+    "internal": "alt",
+    "expected": "1730",
+    "unicode": "⠁⠇⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "although",
+    "internal": "al?",
+    "expected": "1757",
+    "unicode": "⠁⠇⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "always",
+    "internal": "alw",
+    "expected": "1758",
+    "unicode": "⠁⠇⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "could",
+    "internal": "cd",
+    "expected": "925",
+    "unicode": "⠉⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declare",
+    "internal": "dcl",
+    "expected": "2597",
+    "unicode": "⠙⠉⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declaring",
+    "internal": "dclg",
+    "expected": "259727",
+    "unicode": "⠙⠉⠇⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceive",
+    "internal": "dcv",
+    "expected": "25939",
+    "unicode": "⠙⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceiving",
+    "internal": "dcvg",
+    "expected": "2593927",
+    "unicode": "⠙⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "either",
+    "internal": "ei",
+    "expected": "1710",
+    "unicode": "⠑⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "him",
+    "internal": "hm",
+    "expected": "1913",
+    "unicode": "⠓⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "himself",
+    "internal": "hmf",
+    "expected": "191311",
+    "unicode": "⠓⠍⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "herself",
+    "internal": "h]f",
+    "expected": "195911",
+    "unicode": "⠓⠻⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "immediate",
+    "internal": "imm",
+    "expected": "101313",
+    "unicode": "⠊⠍⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "myself",
+    "internal": "myf",
+    "expected": "136111",
+    "unicode": "⠍⠽⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "much",
+    "internal": "m*",
+    "expected": "1333",
+    "unicode": "⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "must",
+    "internal": "m/",
+    "expected": "1312",
+    "unicode": "⠍⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "necessary",
+    "internal": "nec",
+    "expected": "29179",
+    "unicode": "⠝⠑⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "neither",
+    "internal": "nei",
+    "expected": "291710",
+    "unicode": "⠝⠑⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "paid",
+    "internal": "pd",
+    "expected": "1525",
+    "unicode": "⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceive",
+    "internal": "p]cv",
+    "expected": "1559939",
+    "unicode": "⠏⠻⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceiving",
+    "internal": "p]cvg",
+    "expected": "155993927",
+    "unicode": "⠏⠻⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perhaps",
+    "internal": "p]h",
+    "expected": "155919",
+    "unicode": "⠏⠻⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receive",
+    "internal": "rcv",
+    "expected": "23939",
+    "unicode": "⠗⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receiving",
+    "internal": "rcvg",
+    "expected": "2393927",
+    "unicode": "⠗⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoice",
+    "internal": "rjc",
+    "expected": "23269",
+    "unicode": "⠗⠚⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicing",
+    "internal": "rjcg",
+    "expected": "2326927",
+    "unicode": "⠗⠚⠉⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "said",
+    "internal": "sd",
+    "expected": "1425",
+    "unicode": "⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "such",
+    "internal": "s*",
+    "expected": "1433",
+    "unicode": "⠎⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "together",
+    "internal": "tgr",
+    "expected": "302723",
+    "unicode": "⠞⠛⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tomorrow",
+    "internal": "tm",
+    "expected": "3013",
+    "unicode": "⠞⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tonight",
+    "internal": "tn",
+    "expected": "3029",
+    "unicode": "⠞⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "itself",
+    "internal": "xf",
+    "expected": "4511",
+    "unicode": "⠭⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "its",
+    "internal": "xs",
+    "expected": "4514",
+    "unicode": "⠭⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yourself",
+    "internal": "yrf",
+    "expected": "612311",
+    "unicode": "⠽⠗⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yourselves",
+    "internal": "yrvs",
+    "expected": "61233914",
+    "unicode": "⠽⠗⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "themselves",
+    "internal": "!mvs",
+    "expected": "46133914",
+    "unicode": "⠮⠍⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "children",
+    "internal": "*n",
+    "expected": "3329",
+    "unicode": "⠡⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "should",
+    "internal": "%d",
+    "expected": "4125",
+    "unicode": "⠩⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ourselves",
+    "internal": "\\rvs",
+    "expected": "51233914",
+    "unicode": "⠳⠗⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "would",
+    "internal": "wd",
+    "expected": "5825",
+    "unicode": "⠺⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "because",
+    "internal": "2c",
+    "expected": "69",
+    "unicode": "⠆⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "before",
+    "internal": "2f",
+    "expected": "611",
+    "unicode": "⠆⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "behind",
+    "internal": "2h",
+    "expected": "619",
+    "unicode": "⠆⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beneath",
+    "internal": "2n",
+    "expected": "629",
+    "unicode": "⠆⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beside",
+    "internal": "2s",
+    "expected": "614",
+    "unicode": "⠆⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "between",
+    "internal": "2t",
+    "expected": "630",
+    "unicode": "⠆⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beyond",
+    "internal": "2y",
+    "expected": "661",
+    "unicode": "⠆⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceive",
+    "internal": "3cv",
+    "expected": "18939",
+    "unicode": "⠒⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceiving",
+    "internal": "3cvg",
+    "expected": "1893927",
+    "unicode": "⠒⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "oneself",
+    "internal": "\"of",
+    "expected": "162111",
+    "unicode": "⠐⠕⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "aboveground",
     "internal": "abvgr.d",
     "expected": "133927234025",

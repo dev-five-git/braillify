@@ -9,9 +9,19 @@
   },
   {
     "input": "step 1\n↓\nstep 2",
-    "internal": "/ep #a ;\\% /ep #b",
-    "expected": "1217150601048514101217150603",
-    "unicode": "⠌⠑⠏⠀⠼⠁\n⠰⠳⠩\n⠌⠑⠏⠀⠼⠃",
+    "note": "줄바꿈: PDF 그대로 / 한 줄로 이은 형태",
+    "alternatives": [
+      {
+        "internal": "/ep #a\n;\\%\n/ep #b",
+        "expected": "1217150601\n485141\n1217150603",
+        "unicode": "⠌⠑⠏⠀⠼⠁\n⠰⠳⠩\n⠌⠑⠏⠀⠼⠃"
+      },
+      {
+        "internal": "/ep #a ;\\% /ep #b",
+        "expected": "1217150601048514101217150603",
+        "unicode": "⠌⠑⠏⠀⠼⠁⠀⠰⠳⠩⠀⠌⠑⠏⠀⠼⠃"
+      }
+    ],
     "world": "⠴⠌⠑⠏ ⠼⠁\n⠘⠒⠕\n⠴⠌⠑⠏ ⠼⠃",
     "jeomsarang": "⠎⠞⠑⠏⠀⠼⠁\n⠘⠒⠕\n⠎⠞⠑⠏⠀⠼⠃"
   }

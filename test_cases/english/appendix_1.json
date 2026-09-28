@@ -1,0 +1,3890 @@
+[
+  {
+    "input": "abouts",
+    "note": "10.9.5 의 세 예외 — s 를 붙이면 단축어를 쓰지 않는다",
+    "internal": "ab|ts",
+    "expected": "13513014",
+    "unicode": "⠁⠃⠳⠞⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almosts",
+    "note": "10.9.5 의 세 예외 — s 를 붙이면 단축어를 쓰지 않는다",
+    "internal": "almo/s",
+    "expected": "1713211214",
+    "unicode": "⠁⠇⠍⠕⠌⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hims",
+    "note": "10.9.5 의 세 예외 — s 를 붙이면 단축어를 쓰지 않는다",
+    "internal": "hims",
+    "expected": "19101314",
+    "unicode": "⠓⠊⠍⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "about",
+    "note": "단축어 목록의 표제어",
+    "internal": "ab",
+    "expected": "13",
+    "unicode": "⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboutface",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "abface",
+    "expected": "13111917",
+    "unicode": "⠁⠃⠋⠁⠉⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboutfaced",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "abfac$",
+    "expected": "13111943",
+    "unicode": "⠁⠃⠋⠁⠉⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboutfacer",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "abfac]",
+    "expected": "13111959",
+    "unicode": "⠁⠃⠋⠁⠉⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboutfacing",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "abfac+",
+    "expected": "13111944",
+    "unicode": "⠁⠃⠋⠁⠉⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboutturn",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "abturn",
+    "expected": "1330372329",
+    "unicode": "⠁⠃⠞⠥⠗⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboutturned",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "abturn$",
+    "expected": "133037232943",
+    "unicode": "⠁⠃⠞⠥⠗⠝⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "eastabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "ea/ab",
+    "expected": "1711213",
+    "unicode": "⠑⠁⠌⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "gadabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "gadab",
+    "expected": "2712513",
+    "unicode": "⠛⠁⠙⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "\"hab",
+    "expected": "161913",
+    "unicode": "⠐⠓⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "knockabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "knockab",
+    "expected": "529219513",
+    "unicode": "⠅⠝⠕⠉⠅⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "layabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "layab",
+    "expected": "716113",
+    "unicode": "⠇⠁⠽⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "northabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "nor?ab",
+    "expected": "2921235713",
+    "unicode": "⠝⠕⠗⠹⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rightabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "\"rab",
+    "expected": "162313",
+    "unicode": "⠐⠗⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "roundabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "r.dab",
+    "expected": "23402513",
+    "unicode": "⠗⠨⠙⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "roustabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "r\\/ab",
+    "expected": "23511213",
+    "unicode": "⠗⠳⠌⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "runabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "runab",
+    "expected": "23372913",
+    "unicode": "⠗⠥⠝⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "southabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "s\\?ab",
+    "expected": "14515713",
+    "unicode": "⠎⠳⠹⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "stirabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "/irab",
+    "expected": "12102313",
+    "unicode": "⠌⠊⠗⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thereabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "\"!ab",
+    "expected": "164613",
+    "unicode": "⠐⠮⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "turnabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "turnab",
+    "expected": "3037232913",
+    "unicode": "⠞⠥⠗⠝⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "walkabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "walkab",
+    "expected": "5817513",
+    "unicode": "⠺⠁⠇⠅⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "westabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "we/ab",
+    "expected": "58171213",
+    "unicode": "⠺⠑⠌⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whereabout",
+    "note": "단축어 목록 — 표제어 about 가 들어간 낱말",
+    "internal": "\":ab",
+    "expected": "164913",
+    "unicode": "⠐⠱⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "above",
+    "note": "단축어 목록의 표제어",
+    "internal": "abv",
+    "expected": "1339",
+    "unicode": "⠁⠃⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboveboard",
+    "note": "단축어 목록 — 표제어 above 가 들어간 낱말",
+    "internal": "abvbo>d",
+    "expected": "13393212825",
+    "unicode": "⠁⠃⠧⠃⠕⠜⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aboveground",
+    "note": "단축어 목록 — 표제어 above 가 들어간 낱말",
+    "internal": "abvgr.d",
+    "expected": "133927234025",
+    "unicode": "⠁⠃⠧⠛⠗⠨⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "abovementioned",
+    "note": "단축어 목록 — 표제어 above 가 들어간 낱말",
+    "internal": "abvm5;n$",
+    "expected": "13391334482943",
+    "unicode": "⠁⠃⠧⠍⠢⠰⠝⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereinabove",
+    "note": "단축어 목록 — 표제어 above 가 들어간 낱말",
+    "internal": "\"h9abv",
+    "expected": "1619201339",
+    "unicode": "⠐⠓⠔⠁⠃⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "according",
+    "note": "단축어 목록의 표제어",
+    "internal": "ac",
+    "expected": "19",
+    "unicode": "⠁⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "accordingly",
+    "note": "단축어 목록 — 표제어 according 가 들어간 낱말",
+    "internal": "acly",
+    "expected": "19761",
+    "unicode": "⠁⠉⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unaccording",
+    "note": "단축어 목록 — 표제어 according 가 들어간 낱말",
+    "internal": "unac",
+    "expected": "372919",
+    "unicode": "⠥⠝⠁⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unaccordingly",
+    "note": "단축어 목록 — 표제어 according 가 들어간 낱말",
+    "internal": "unacly",
+    "expected": "372919761",
+    "unicode": "⠥⠝⠁⠉⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "across",
+    "note": "단축어 목록의 표제어",
+    "internal": "acr",
+    "expected": "1923",
+    "unicode": "⠁⠉⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "readacross",
+    "note": "단축어 목록 — 표제어 across 가 들어간 낱말",
+    "internal": "r1dacr",
+    "expected": "232251923",
+    "unicode": "⠗⠂⠙⠁⠉⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "after",
+    "note": "단축어 목록의 표제어",
+    "internal": "af",
+    "expected": "111",
+    "unicode": "⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterbattle",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afbattle",
+    "expected": "111313030717",
+    "unicode": "⠁⠋⠃⠁⠞⠞⠇⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterbirth",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afbir?",
+    "expected": "1113102357",
+    "unicode": "⠁⠋⠃⠊⠗⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterbreakfast",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afbr1kfa/",
+    "expected": "1113232511112",
+    "unicode": "⠁⠋⠃⠗⠂⠅⠋⠁⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterburn",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afburn",
+    "expected": "1113372329",
+    "unicode": "⠁⠋⠃⠥⠗⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterburned",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afburn$",
+    "expected": "111337232943",
+    "unicode": "⠁⠋⠃⠥⠗⠝⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterburner",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afburn]",
+    "expected": "111337232959",
+    "unicode": "⠁⠋⠃⠥⠗⠝⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterburning",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afburn+",
+    "expected": "111337232944",
+    "unicode": "⠁⠋⠃⠥⠗⠝⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftercare",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afc>e",
+    "expected": "11192817",
+    "unicode": "⠁⠋⠉⠜⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterclap",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afclap",
+    "expected": "11197115",
+    "unicode": "⠁⠋⠉⠇⠁⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftercoffee",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afc(fee",
+    "expected": "111955111717",
+    "unicode": "⠁⠋⠉⠷⠋⠑⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterdamp",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afdamp",
+    "expected": "1112511315",
+    "unicode": "⠁⠋⠙⠁⠍⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterdark",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afd>k",
+    "expected": "11125285",
+    "unicode": "⠁⠋⠙⠜⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterdeck",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afdeck",
+    "expected": "111251795",
+    "unicode": "⠁⠋⠙⠑⠉⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterdinner",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afd9n]",
+    "expected": "11125202959",
+    "unicode": "⠁⠋⠙⠔⠝⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterflow",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "affl[",
+    "expected": "11111742",
+    "unicode": "⠁⠋⠋⠇⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftergame",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afgame",
+    "expected": "1112711317",
+    "unicode": "⠁⠋⠛⠁⠍⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterglow",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afgl[",
+    "expected": "11127742",
+    "unicode": "⠁⠋⠛⠇⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterguard",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afgu>d",
+    "expected": "11127372825",
+    "unicode": "⠁⠋⠛⠥⠜⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterhatch",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afhat*",
+    "expected": "1111913033",
+    "unicode": "⠁⠋⠓⠁⠞⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterhatches",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afhat*es",
+    "expected": "11119130331714",
+    "unicode": "⠁⠋⠓⠁⠞⠡⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterhour",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afh\\r",
+    "expected": "111195123",
+    "unicode": "⠁⠋⠓⠳⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterlife",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aflife",
+    "expected": "1117101117",
+    "unicode": "⠁⠋⠇⠊⠋⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterlight",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afli<t",
+    "expected": "1117103530",
+    "unicode": "⠁⠋⠇⠊⠣⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterlives",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aflives",
+    "expected": "111710391714",
+    "unicode": "⠁⠋⠇⠊⠧⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterlunch",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aflun*",
+    "expected": "1117372933",
+    "unicode": "⠁⠋⠇⠥⠝⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterlunches",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aflun*es",
+    "expected": "11173729331714",
+    "unicode": "⠁⠋⠇⠥⠝⠡⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermarket",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afm>ket",
+    "expected": "111132851730",
+    "unicode": "⠁⠋⠍⠜⠅⠑⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermatch",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afmat*",
+    "expected": "1111313033",
+    "unicode": "⠁⠋⠍⠁⠞⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermatches",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afmat*es",
+    "expected": "11113130331714",
+    "unicode": "⠁⠋⠍⠁⠞⠡⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermath",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afma?",
+    "expected": "11113157",
+    "unicode": "⠁⠋⠍⠁⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermeeting",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afmeet+",
+    "expected": "1111317173044",
+    "unicode": "⠁⠋⠍⠑⠑⠞⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermentioned",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afm5;n$",
+    "expected": "1111334482943",
+    "unicode": "⠁⠋⠍⠢⠰⠝⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermidday",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afmid\"d",
+    "expected": "1111310251625",
+    "unicode": "⠁⠋⠍⠊⠙⠐⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermidnight",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afmidni<t",
+    "expected": "11113102529103530",
+    "unicode": "⠁⠋⠍⠊⠙⠝⠊⠣⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftermost",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afmo/",
+    "expected": "111132112",
+    "unicode": "⠁⠋⠍⠕⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterpain",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afpa9",
+    "expected": "11115120",
+    "unicode": "⠁⠋⠏⠁⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterparties",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af\"pies",
+    "expected": "1111615101714",
+    "unicode": "⠁⠋⠐⠏⠊⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterparty",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af\"py",
+    "expected": "111161561",
+    "unicode": "⠁⠋⠐⠏⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterpiece",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afpiece",
+    "expected": "111151017917",
+    "unicode": "⠁⠋⠏⠊⠑⠉⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterplay",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afplay",
+    "expected": "111157161",
+    "unicode": "⠁⠋⠏⠇⠁⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftersale",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afsale",
+    "expected": "111141717",
+    "unicode": "⠁⠋⠎⠁⠇⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterschool",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afs*ool",
+    "expected": "111143321217",
+    "unicode": "⠁⠋⠎⠡⠕⠕⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftersensation",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afs5sa;n",
+    "expected": "11114341414829",
+    "unicode": "⠁⠋⠎⠢⠎⠁⠰⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftershave",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af%ave",
+    "expected": "1114113917",
+    "unicode": "⠁⠋⠩⠁⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftershock",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af%ock",
+    "expected": "111412195",
+    "unicode": "⠁⠋⠩⠕⠉⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftershow",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af%[",
+    "expected": "1114142",
+    "unicode": "⠁⠋⠩⠪",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftershower",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af%[]",
+    "expected": "111414259",
+    "unicode": "⠁⠋⠩⠪⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftersupper",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afsupp]",
+    "expected": "1111437151559",
+    "unicode": "⠁⠋⠎⠥⠏⠏⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertaste",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "afta/e",
+    "expected": "1113011217",
+    "unicode": "⠁⠋⠞⠁⠌⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertax",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aftax",
+    "expected": "11130145",
+    "unicode": "⠁⠋⠞⠁⠭",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertaxes",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aftaxes",
+    "expected": "111301451714",
+    "unicode": "⠁⠋⠞⠁⠭⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertea",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aftea",
+    "expected": "11130171",
+    "unicode": "⠁⠋⠞⠑⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertheater",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af!at]",
+    "expected": "1114613059",
+    "unicode": "⠁⠋⠮⠁⠞⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertheatre",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af!atre",
+    "expected": "111461302317",
+    "unicode": "⠁⠋⠮⠁⠞⠗⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterthought",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af?\"\\",
+    "expected": "111571651",
+    "unicode": "⠁⠋⠹⠐⠳",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertime",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af\"t",
+    "expected": "1111630",
+    "unicode": "⠁⠋⠐⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftertreatment",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "aftr1t;t",
+    "expected": "11130232304830",
+    "unicode": "⠁⠋⠞⠗⠂⠞⠰⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterword",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af^w",
+    "expected": "1112458",
+    "unicode": "⠁⠋⠘⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterwork",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af\"w",
+    "expected": "1111658",
+    "unicode": "⠁⠋⠐⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterworld",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "af_w",
+    "expected": "1115658",
+    "unicode": "⠁⠋⠸⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "\"haf",
+    "expected": "1619111",
+    "unicode": "⠐⠓⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereinafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "\"h9af",
+    "expected": "161920111",
+    "unicode": "⠐⠓⠔⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "morningafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "morn+af",
+    "expected": "1321232944111",
+    "unicode": "⠍⠕⠗⠝⠬⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thereafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "\"!af",
+    "expected": "1646111",
+    "unicode": "⠐⠮⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thereinafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "\"!9af",
+    "expected": "164620111",
+    "unicode": "⠐⠮⠔⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whereafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "\":af",
+    "expected": "1649111",
+    "unicode": "⠐⠱⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whereinafter",
+    "note": "단축어 목록 — 표제어 after 가 들어간 낱말",
+    "internal": "\":9af",
+    "expected": "164920111",
+    "unicode": "⠐⠱⠔⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afternoon",
+    "note": "단축어 목록의 표제어",
+    "internal": "afn",
+    "expected": "11129",
+    "unicode": "⠁⠋⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afternoontea",
+    "note": "단축어 목록 — 표제어 afternoon 가 들어간 낱말",
+    "internal": "afntea",
+    "expected": "1112930171",
+    "unicode": "⠁⠋⠝⠞⠑⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodafternoon",
+    "note": "단축어 목록 — 표제어 afternoon 가 들어간 낱말",
+    "internal": "gdafn",
+    "expected": "272511129",
+    "unicode": "⠛⠙⠁⠋⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "midafternoon",
+    "note": "단축어 목록 — 표제어 afternoon 가 들어간 낱말",
+    "internal": "midafn",
+    "expected": "13102511129",
+    "unicode": "⠍⠊⠙⠁⠋⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterward",
+    "note": "단축어 목록의 표제어",
+    "internal": "afw",
+    "expected": "11158",
+    "unicode": "⠁⠋⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "again",
+    "note": "단축어 목록의 표제어",
+    "internal": "ag",
+    "expected": "127",
+    "unicode": "⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereagain",
+    "note": "단축어 목록 — 표제어 again 가 들어간 낱말",
+    "internal": "\"hag",
+    "expected": "1619127",
+    "unicode": "⠐⠓⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereinagain",
+    "note": "단축어 목록 — 표제어 again 가 들어간 낱말",
+    "internal": "\"h9ag",
+    "expected": "161920127",
+    "unicode": "⠐⠓⠔⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thereagain",
+    "note": "단축어 목록 — 표제어 again 가 들어간 낱말",
+    "internal": "\"!ag",
+    "expected": "1646127",
+    "unicode": "⠐⠮⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thereinagain",
+    "note": "단축어 목록 — 표제어 again 가 들어간 낱말",
+    "internal": "\"!9ag",
+    "expected": "164620127",
+    "unicode": "⠐⠮⠔⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whereagain",
+    "note": "단축어 목록 — 표제어 again 가 들어간 낱말",
+    "internal": "\":ag",
+    "expected": "1649127",
+    "unicode": "⠐⠱⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whereinagain",
+    "note": "단축어 목록 — 표제어 again 가 들어간 낱말",
+    "internal": "\":9ag",
+    "expected": "164920127",
+    "unicode": "⠐⠱⠔⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "against",
+    "note": "단축어 목록의 표제어",
+    "internal": "ag/",
+    "expected": "12712",
+    "unicode": "⠁⠛⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereagainst",
+    "note": "단축어 목록 — 표제어 against 가 들어간 낱말",
+    "internal": "\"hag/",
+    "expected": "161912712",
+    "unicode": "⠐⠓⠁⠛⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thereagainst",
+    "note": "단축어 목록 — 표제어 against 가 들어간 낱말",
+    "internal": "\"!ag/",
+    "expected": "164612712",
+    "unicode": "⠐⠮⠁⠛⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "whereagainst",
+    "note": "단축어 목록 — 표제어 against 가 들어간 낱말",
+    "internal": "\":ag/",
+    "expected": "164912712",
+    "unicode": "⠐⠱⠁⠛⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almost",
+    "note": "단축어 목록의 표제어",
+    "internal": "alm",
+    "expected": "1713",
+    "unicode": "⠁⠇⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "already",
+    "note": "단축어 목록의 표제어",
+    "internal": "alr",
+    "expected": "1723",
+    "unicode": "⠁⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "also",
+    "note": "단축어 목록의 표제어",
+    "internal": "al",
+    "expected": "17",
+    "unicode": "⠁⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "although",
+    "note": "단축어 목록의 표제어",
+    "internal": "al?",
+    "expected": "1757",
+    "unicode": "⠁⠇⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "altogether",
+    "note": "단축어 목록의 표제어",
+    "internal": "alt",
+    "expected": "1730",
+    "unicode": "⠁⠇⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "always",
+    "note": "단축어 목록의 표제어",
+    "internal": "alw",
+    "expected": "1758",
+    "unicode": "⠁⠇⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "because",
+    "note": "단축어 목록의 표제어",
+    "internal": "2c",
+    "expected": "69",
+    "unicode": "⠆⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "before",
+    "note": "단축어 목록의 표제어",
+    "internal": "2f",
+    "expected": "611",
+    "unicode": "⠆⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beforehand",
+    "note": "단축어 목록 — 표제어 before 가 들어간 낱말",
+    "internal": "2fh&",
+    "expected": "6111947",
+    "unicode": "⠆⠋⠓⠯",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beforementioned",
+    "note": "단축어 목록 — 표제어 before 가 들어간 낱말",
+    "internal": "2fm5;n$",
+    "expected": "6111334482943",
+    "unicode": "⠆⠋⠍⠢⠰⠝⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "behind",
+    "note": "단축어 목록의 표제어",
+    "internal": "2h",
+    "expected": "619",
+    "unicode": "⠆⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "behindhand",
+    "note": "단축어 목록 — 표제어 behind 가 들어간 낱말",
+    "internal": "2hh&",
+    "expected": "6191947",
+    "unicode": "⠆⠓⠓⠯",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "below",
+    "note": "단축어 목록의 표제어",
+    "internal": "2l",
+    "expected": "67",
+    "unicode": "⠆⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belowdeck",
+    "note": "단축어 목록 — 표제어 below 가 들어간 낱말",
+    "internal": "2ldeck",
+    "expected": "67251795",
+    "unicode": "⠆⠇⠙⠑⠉⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belowground",
+    "note": "단축어 목록 — 표제어 below 가 들어간 낱말",
+    "internal": "2lgr.d",
+    "expected": "6727234025",
+    "unicode": "⠆⠇⠛⠗⠨⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belowmentioned",
+    "note": "단축어 목록 — 표제어 below 가 들어간 낱말",
+    "internal": "2lm5;n$",
+    "expected": "671334482943",
+    "unicode": "⠆⠇⠍⠢⠰⠝⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beneath",
+    "note": "단축어 목록의 표제어",
+    "internal": "2n",
+    "expected": "629",
+    "unicode": "⠆⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beneathdeck",
+    "note": "단축어 목록 — 표제어 beneath 가 들어간 낱말",
+    "internal": "2ndeck",
+    "expected": "629251795",
+    "unicode": "⠆⠝⠙⠑⠉⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beneathground",
+    "note": "단축어 목록 — 표제어 beneath 가 들어간 낱말",
+    "internal": "2ngr.d",
+    "expected": "62927234025",
+    "unicode": "⠆⠝⠛⠗⠨⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beside",
+    "note": "단축어 목록의 표제어",
+    "internal": "2s",
+    "expected": "614",
+    "unicode": "⠆⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "between",
+    "note": "단축어 목록의 표제어",
+    "internal": "2t",
+    "expected": "630",
+    "unicode": "⠆⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "betweendeck",
+    "note": "단축어 목록 — 표제어 between 가 들어간 낱말",
+    "internal": "2tdeck",
+    "expected": "630251795",
+    "unicode": "⠆⠞⠙⠑⠉⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "betweentime",
+    "note": "단축어 목록 — 표제어 between 가 들어간 낱말",
+    "internal": "2t\"t",
+    "expected": "6301630",
+    "unicode": "⠆⠞⠐⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "betweenwhile",
+    "note": "단축어 목록 — 표제어 between 가 들어간 낱말",
+    "internal": "2t:ile",
+    "expected": "6304910717",
+    "unicode": "⠆⠞⠱⠊⠇⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beyond",
+    "note": "단축어 목록의 표제어",
+    "internal": "2y",
+    "expected": "661",
+    "unicode": "⠆⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blind",
+    "note": "단축어 목록의 표제어",
+    "internal": "bl",
+    "expected": "37",
+    "unicode": "⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "colorblind",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "colorbl",
+    "expected": "9217212337",
+    "unicode": "⠉⠕⠇⠕⠗⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "colorblindness",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "colorbl;s",
+    "expected": "92172123374814",
+    "unicode": "⠉⠕⠇⠕⠗⠃⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "colorblindnesses",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "colorbl;ses",
+    "expected": "921721233748141714",
+    "unicode": "⠉⠕⠇⠕⠗⠃⠇⠰⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "colourblind",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "col\\rbl",
+    "expected": "9217512337",
+    "unicode": "⠉⠕⠇⠳⠗⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "colourblindness",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "col\\rbl;s",
+    "expected": "92175123374814",
+    "unicode": "⠉⠕⠇⠳⠗⠃⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "colourblindnesses",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "col\\rbl;ses",
+    "expected": "921751233748141714",
+    "unicode": "⠉⠕⠇⠳⠗⠃⠇⠰⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deafblind",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "d1fbl",
+    "expected": "2521137",
+    "unicode": "⠙⠂⠋⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "DeafBlind",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": ",d1f,bl",
+    "expected": "32252113237",
+    "unicode": "⠠⠙⠂⠋⠠⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deafblindness",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "d1fbl;s",
+    "expected": "25211374814",
+    "unicode": "⠙⠂⠋⠃⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deafblindnesses",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "d1fbl;ses",
+    "expected": "252113748141714",
+    "unicode": "⠙⠂⠋⠃⠇⠰⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "purblind",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "purbl",
+    "expected": "15372337",
+    "unicode": "⠏⠥⠗⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "purblindly",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "purblly",
+    "expected": "15372337761",
+    "unicode": "⠏⠥⠗⠃⠇⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "purblindness",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "purbl;s",
+    "expected": "153723374814",
+    "unicode": "⠏⠥⠗⠃⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "purblindnesses",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "purbl;ses",
+    "expected": "1537233748141714",
+    "unicode": "⠏⠥⠗⠃⠇⠰⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "snowblind",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "sn[bl",
+    "expected": "14294237",
+    "unicode": "⠎⠝⠪⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "snowblindness",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "sn[bl;s",
+    "expected": "142942374814",
+    "unicode": "⠎⠝⠪⠃⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "snowblindnesses",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "sn[bl;ses",
+    "expected": "1429423748141714",
+    "unicode": "⠎⠝⠪⠃⠇⠰⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unblindfold",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "unblfold",
+    "expected": "3729371121725",
+    "unicode": "⠥⠝⠃⠇⠋⠕⠇⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unblindfolded",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "unblfold$",
+    "expected": "372937112172543",
+    "unicode": "⠥⠝⠃⠇⠋⠕⠇⠙⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unblindfolding",
+    "note": "단축어 목록 — 표제어 blind 가 들어간 낱말",
+    "internal": "unblfold+",
+    "expected": "372937112172544",
+    "unicode": "⠥⠝⠃⠇⠋⠕⠇⠙⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "braille",
+    "note": "단축어 목록의 표제어",
+    "internal": "brl",
+    "expected": "3237",
+    "unicode": "⠃⠗⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "children",
+    "note": "단축어 목록의 표제어",
+    "internal": "*n",
+    "expected": "3329",
+    "unicode": "⠡⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "children'swear",
+    "note": "단축어 목록 — 표제어 children 가 들어간 낱말",
+    "internal": "*n'swe>",
+    "expected": "3329414581728",
+    "unicode": "⠡⠝⠄⠎⠺⠑⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceive",
+    "note": "단축어 목록의 표제어",
+    "internal": "3cv",
+    "expected": "18939",
+    "unicode": "⠒⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceived",
+    "note": "단축어 목록 — 표제어 conceive 가 들어간 낱말",
+    "internal": "3cvd",
+    "expected": "1893925",
+    "unicode": "⠒⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceiver",
+    "note": "단축어 목록 — 표제어 conceive 가 들어간 낱말",
+    "internal": "3cvr",
+    "expected": "1893923",
+    "unicode": "⠒⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "3cvg",
+    "expected": "1893927",
+    "unicode": "⠒⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "could",
+    "note": "단축어 목록의 표제어",
+    "internal": "cd",
+    "expected": "925",
+    "unicode": "⠉⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "coulda",
+    "note": "단축어 목록 — 표제어 could 가 들어간 낱말",
+    "internal": "cda",
+    "expected": "9251",
+    "unicode": "⠉⠙⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "couldest",
+    "note": "단축어 목록 — 표제어 could 가 들어간 낱말",
+    "internal": "cde/",
+    "expected": "9251712",
+    "unicode": "⠉⠙⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "couldn't",
+    "note": "단축어 목록 — 표제어 could 가 들어간 낱말",
+    "internal": "cdn't",
+    "expected": "92529430",
+    "unicode": "⠉⠙⠝⠄⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "couldn't've",
+    "note": "단축어 목록 — 표제어 could 가 들어간 낱말",
+    "internal": "cdn't've",
+    "expected": "9252943043917",
+    "unicode": "⠉⠙⠝⠄⠞⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "couldst",
+    "note": "단축어 목록 — 표제어 could 가 들어간 낱말",
+    "internal": "cd/",
+    "expected": "92512",
+    "unicode": "⠉⠙⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "could've",
+    "note": "단축어 목록 — 표제어 could 가 들어간 낱말",
+    "internal": "cd've",
+    "expected": "92543917",
+    "unicode": "⠉⠙⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceive",
+    "note": "단축어 목록의 표제어",
+    "internal": "dcv",
+    "expected": "25939",
+    "unicode": "⠙⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "archdeceiver",
+    "note": "단축어 목록 — 표제어 deceive 가 들어간 낱말",
+    "internal": ">*dcvr",
+    "expected": "28332593923",
+    "unicode": "⠜⠡⠙⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceived",
+    "note": "단축어 목록 — 표제어 deceive 가 들어간 낱말",
+    "internal": "dcvd",
+    "expected": "2593925",
+    "unicode": "⠙⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceiver",
+    "note": "단축어 목록 — 표제어 deceive 가 들어간 낱말",
+    "internal": "dcvr",
+    "expected": "2593923",
+    "unicode": "⠙⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "undeceive",
+    "note": "단축어 목록 — 표제어 deceive 가 들어간 낱말",
+    "internal": "undcv",
+    "expected": "372925939",
+    "unicode": "⠥⠝⠙⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "undeceived",
+    "note": "단축어 목록 — 표제어 deceive 가 들어간 낱말",
+    "internal": "undcvd",
+    "expected": "37292593925",
+    "unicode": "⠥⠝⠙⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "undeceiver",
+    "note": "단축어 목록 — 표제어 deceive 가 들어간 낱말",
+    "internal": "undcvr",
+    "expected": "37292593923",
+    "unicode": "⠥⠝⠙⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "dcvg",
+    "expected": "2593927",
+    "unicode": "⠙⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "undeceiving",
+    "note": "단축어 목록 — 표제어 deceiving 가 들어간 낱말",
+    "internal": "undcvg",
+    "expected": "37292593927",
+    "unicode": "⠥⠝⠙⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declare",
+    "note": "단축어 목록의 표제어",
+    "internal": "dcl",
+    "expected": "2597",
+    "unicode": "⠙⠉⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declared",
+    "note": "단축어 목록 — 표제어 declare 가 들어간 낱말",
+    "internal": "dcld",
+    "expected": "259725",
+    "unicode": "⠙⠉⠇⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declarer",
+    "note": "단축어 목록 — 표제어 declare 가 들어간 낱말",
+    "internal": "dclr",
+    "expected": "259723",
+    "unicode": "⠙⠉⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "undeclare",
+    "note": "단축어 목록 — 표제어 declare 가 들어간 낱말",
+    "internal": "undcl",
+    "expected": "37292597",
+    "unicode": "⠥⠝⠙⠉⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "undeclared",
+    "note": "단축어 목록 — 표제어 declare 가 들어간 낱말",
+    "internal": "undcld",
+    "expected": "3729259725",
+    "unicode": "⠥⠝⠙⠉⠇⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declaring",
+    "note": "단축어 목록의 표제어",
+    "internal": "dclg",
+    "expected": "259727",
+    "unicode": "⠙⠉⠇⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "either",
+    "note": "단축어 목록의 표제어",
+    "internal": "ei",
+    "expected": "1710",
+    "unicode": "⠑⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "first",
+    "note": "단축어 목록의 표제어",
+    "internal": "f/",
+    "expected": "1112",
+    "unicode": "⠋⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "feetfirst",
+    "note": "단축어 목록 — 표제어 first 가 들어간 낱말",
+    "internal": "feetf/",
+    "expected": "111717301112",
+    "unicode": "⠋⠑⠑⠞⠋⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "firstaid",
+    "note": "단축어 목록 — 표제어 first 가 들어간 낱말",
+    "internal": "f/aid",
+    "expected": "111211025",
+    "unicode": "⠋⠌⠁⠊⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "firstaider",
+    "note": "단축어 목록 — 표제어 first 가 들어간 낱말",
+    "internal": "f/aid]",
+    "expected": "11121102559",
+    "unicode": "⠋⠌⠁⠊⠙⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "headfirst",
+    "note": "단축어 목록 — 표제어 first 가 들어간 낱말",
+    "internal": "h1df/",
+    "expected": "192251112",
+    "unicode": "⠓⠂⠙⠋⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tailfirst",
+    "note": "단축어 목록 — 표제어 first 가 들어간 낱말",
+    "internal": "tailf/",
+    "expected": "3011071112",
+    "unicode": "⠞⠁⠊⠇⠋⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "friend",
+    "note": "단축어 목록의 표제어",
+    "internal": "fr",
+    "expected": "1123",
+    "unicode": "⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "befriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "2fr",
+    "expected": "61123",
+    "unicode": "⠆⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "boyfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "boyfr",
+    "expected": "321611123",
+    "unicode": "⠃⠕⠽⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "defriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "defr",
+    "expected": "25171123",
+    "unicode": "⠙⠑⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "galfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "galfr",
+    "expected": "27171123",
+    "unicode": "⠛⠁⠇⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "gentlemanfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "g5tlemanfr",
+    "expected": "273430717131291123",
+    "unicode": "⠛⠢⠞⠇⠑⠍⠁⠝⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "gentlemenfriends",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "g5tlem5frs",
+    "expected": "2734307171334112314",
+    "unicode": "⠛⠢⠞⠇⠑⠍⠢⠋⠗⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "girlfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "girlfr",
+    "expected": "27102371123",
+    "unicode": "⠛⠊⠗⠇⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "guyfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "guyfr",
+    "expected": "2737611123",
+    "unicode": "⠛⠥⠽⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ladyfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "ladyfr",
+    "expected": "7125611123",
+    "unicode": "⠇⠁⠙⠽⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "manfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "manfr",
+    "expected": "131291123",
+    "unicode": "⠍⠁⠝⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "menfriends",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "m5frs",
+    "expected": "1334112314",
+    "unicode": "⠍⠢⠋⠗⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "penfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "p5fr",
+    "expected": "15341123",
+    "unicode": "⠏⠢⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "schoolfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "s*oolfr",
+    "expected": "1433212171123",
+    "unicode": "⠎⠡⠕⠕⠇⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "unfr",
+    "expected": "37291123",
+    "unicode": "⠥⠝⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unfriendlier",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "unfrli]",
+    "expected": "3729112371059",
+    "unicode": "⠥⠝⠋⠗⠇⠊⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unfriendliest",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "unfrlie/",
+    "expected": "372911237101712",
+    "unicode": "⠥⠝⠋⠗⠇⠊⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unfriendliness",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "unfrli;s",
+    "expected": "372911237104814",
+    "unicode": "⠥⠝⠋⠗⠇⠊⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unfriendlinesses",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "unfrli;ses",
+    "expected": "3729112371048141714",
+    "unicode": "⠥⠝⠋⠗⠇⠊⠰⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unfriendly",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "unfrly",
+    "expected": "37291123761",
+    "unicode": "⠥⠝⠋⠗⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "womanfriend",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "womanfr",
+    "expected": "5821131291123",
+    "unicode": "⠺⠕⠍⠁⠝⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "womenfriends",
+    "note": "단축어 목록 — 표제어 friend 가 들어간 낱말",
+    "internal": "wom5frs",
+    "expected": "58211334112314",
+    "unicode": "⠺⠕⠍⠢⠋⠗⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "good",
+    "note": "단축어 목록의 표제어",
+    "internal": "gd",
+    "expected": "2725",
+    "unicode": "⠛⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "feelgood",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "feelgd",
+    "expected": "11171772725",
+    "unicode": "⠋⠑⠑⠇⠛⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodafternoon",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdafn",
+    "expected": "272511129",
+    "unicode": "⠛⠙⠁⠋⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "gooder",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gd]",
+    "expected": "272559",
+    "unicode": "⠛⠙⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodest",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gde/",
+    "expected": "27251712",
+    "unicode": "⠛⠙⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodevening",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdev5+",
+    "expected": "272517393444",
+    "unicode": "⠛⠙⠑⠧⠢⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodie",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdie",
+    "expected": "27251017",
+    "unicode": "⠛⠙⠊⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodish",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdi%",
+    "expected": "27251041",
+    "unicode": "⠛⠙⠊⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodun",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdun",
+    "expected": "27253729",
+    "unicode": "⠛⠙⠥⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goody",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdy",
+    "expected": "272561",
+    "unicode": "⠛⠙⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "goodyear",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "gdye>",
+    "expected": "2725611728",
+    "unicode": "⠛⠙⠽⠑⠜",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "scattergood",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "scatt]gd",
+    "expected": "14913030592725",
+    "unicode": "⠎⠉⠁⠞⠞⠻⠛⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "supergood",
+    "note": "단축어 목록 — 표제어 good 가 들어간 낱말",
+    "internal": "sup]gd",
+    "expected": "143715592725",
+    "unicode": "⠎⠥⠏⠻⠛⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "great",
+    "note": "단축어 목록의 표제어",
+    "internal": "grt",
+    "expected": "272330",
+    "unicode": "⠛⠗⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "herself",
+    "note": "단축어 목록의 표제어",
+    "internal": "h}f",
+    "expected": "195911",
+    "unicode": "⠓⠻⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "him",
+    "note": "단축어 목록의 표제어",
+    "internal": "hm",
+    "expected": "1913",
+    "unicode": "⠓⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "himbo",
+    "note": "단축어 목록 — 표제어 him 가 들어간 낱말",
+    "internal": "hmbo",
+    "expected": "1913321",
+    "unicode": "⠓⠍⠃⠕",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "himboes",
+    "note": "단축어 목록 — 표제어 him 가 들어간 낱말",
+    "internal": "hmboes",
+    "expected": "19133211714",
+    "unicode": "⠓⠍⠃⠕⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "himself",
+    "note": "단축어 목록의 표제어",
+    "internal": "hmf",
+    "expected": "191311",
+    "unicode": "⠓⠍⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "immediate",
+    "note": "단축어 목록의 표제어",
+    "internal": "imm",
+    "expected": "101313",
+    "unicode": "⠊⠍⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "immediately",
+    "note": "단축어 목록 — 표제어 immediate 가 들어간 낱말",
+    "internal": "immly",
+    "expected": "101313761",
+    "unicode": "⠊⠍⠍⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "immediateness",
+    "note": "단축어 목록 — 표제어 immediate 가 들어간 낱말",
+    "internal": "imm;s",
+    "expected": "1013134814",
+    "unicode": "⠊⠍⠍⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "its",
+    "note": "단축어 목록의 표제어",
+    "internal": "xs",
+    "expected": "4514",
+    "unicode": "⠭⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "itself",
+    "note": "단축어 목록의 표제어",
+    "internal": "xf",
+    "expected": "4511",
+    "unicode": "⠭⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "letter",
+    "note": "단축어 목록의 표제어",
+    "internal": "lr",
+    "expected": "723",
+    "unicode": "⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "bloodletter",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "bloodlr",
+    "expected": "37212125723",
+    "unicode": "⠃⠇⠕⠕⠙⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "chainletter",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "*a9lr",
+    "expected": "33120723",
+    "unicode": "⠡⠁⠔⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hateletter",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "hatelr",
+    "expected": "1913017723",
+    "unicode": "⠓⠁⠞⠑⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "lettered",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "lr$",
+    "expected": "72343",
+    "unicode": "⠇⠗⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "letterer",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "lr]",
+    "expected": "72359",
+    "unicode": "⠇⠗⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "lettering",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "lr+",
+    "expected": "72344",
+    "unicode": "⠇⠗⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "letteropener",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "lrop5]",
+    "expected": "72321153459",
+    "unicode": "⠇⠗⠕⠏⠢⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "loveletter",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "lovelr",
+    "expected": "7213917723",
+    "unicode": "⠇⠕⠧⠑⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "newsletter",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "newslr",
+    "expected": "29175814723",
+    "unicode": "⠝⠑⠺⠎⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "reletter",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "relr",
+    "expected": "2317723",
+    "unicode": "⠗⠑⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "relettered",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "relr$",
+    "expected": "231772343",
+    "unicode": "⠗⠑⠇⠗⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "relettering",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "relr+",
+    "expected": "231772344",
+    "unicode": "⠗⠑⠇⠗⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unlettered",
+    "note": "단축어 목록 — 표제어 letter 가 들어간 낱말",
+    "internal": "unlr$",
+    "expected": "372972343",
+    "unicode": "⠥⠝⠇⠗⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "little",
+    "note": "단축어 목록의 표제어",
+    "internal": "ll",
+    "expected": "77",
+    "unicode": "⠇⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belittle",
+    "note": "단축어 목록 — 표제어 little 가 들어간 낱말",
+    "internal": "2ll",
+    "expected": "677",
+    "unicode": "⠆⠇⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belittled",
+    "note": "단축어 목록 — 표제어 little 가 들어간 낱말",
+    "internal": "2lld",
+    "expected": "67725",
+    "unicode": "⠆⠇⠇⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belittlement",
+    "note": "단축어 목록 — 표제어 little 가 들어간 낱말",
+    "internal": "2ll;t",
+    "expected": "6774830",
+    "unicode": "⠆⠇⠇⠰⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "belittler",
+    "note": "단축어 목록 — 표제어 little 가 들어간 낱말",
+    "internal": "2llr",
+    "expected": "67723",
+    "unicode": "⠆⠇⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "much",
+    "note": "단축어 목록의 표제어",
+    "internal": "m*",
+    "expected": "1333",
+    "unicode": "⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "forasmuch",
+    "note": "단축어 목록 — 표제어 much 가 들어간 낱말",
+    "internal": "=asm*",
+    "expected": "631141333",
+    "unicode": "⠿⠁⠎⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "inasmuch",
+    "note": "단축어 목록 — 표제어 much 가 들어간 낱말",
+    "internal": "9asm*",
+    "expected": "201141333",
+    "unicode": "⠔⠁⠎⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "insomuch",
+    "note": "단축어 목록 — 표제어 much 가 들어간 낱말",
+    "internal": "9som*",
+    "expected": "2014211333",
+    "unicode": "⠔⠎⠕⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "muchly",
+    "note": "단축어 목록 — 표제어 much 가 들어간 낱말",
+    "internal": "m*ly",
+    "expected": "1333761",
+    "unicode": "⠍⠡⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "muchness",
+    "note": "단축어 목록 — 표제어 much 가 들어간 낱말",
+    "internal": "m*;s",
+    "expected": "13334814",
+    "unicode": "⠍⠡⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "overmuch",
+    "note": "단축어 목록 — 표제어 much 가 들어간 낱말",
+    "internal": "ov]m*",
+    "expected": "2139591333",
+    "unicode": "⠕⠧⠻⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "must",
+    "note": "단축어 목록의 표제어",
+    "internal": "m/",
+    "expected": "1312",
+    "unicode": "⠍⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "musta",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/a",
+    "expected": "13121",
+    "unicode": "⠍⠌⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustard",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/>d",
+    "expected": "13122825",
+    "unicode": "⠍⠌⠜⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustardy",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/>dy",
+    "expected": "1312282561",
+    "unicode": "⠍⠌⠜⠙⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustier",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/i]",
+    "expected": "13121059",
+    "unicode": "⠍⠌⠊⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustiest",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/ie/",
+    "expected": "1312101712",
+    "unicode": "⠍⠌⠊⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustily",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/ily",
+    "expected": "131210761",
+    "unicode": "⠍⠌⠊⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustiness",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/i;s",
+    "expected": "1312104814",
+    "unicode": "⠍⠌⠊⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustn't",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/n't",
+    "expected": "131229430",
+    "unicode": "⠍⠌⠝⠄⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustn't've",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/n't've",
+    "expected": "13122943043917",
+    "unicode": "⠍⠌⠝⠄⠞⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "must've",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/'ve",
+    "expected": "131243917",
+    "unicode": "⠍⠌⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "musty",
+    "note": "단축어 목록 — 표제어 must 가 들어간 낱말",
+    "internal": "m/y",
+    "expected": "131261",
+    "unicode": "⠍⠌⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "myself",
+    "note": "단축어 목록의 표제어",
+    "internal": "myf",
+    "expected": "136111",
+    "unicode": "⠍⠽⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "necessary",
+    "note": "단축어 목록의 표제어",
+    "internal": "nec",
+    "expected": "29179",
+    "unicode": "⠝⠑⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unnecessary",
+    "note": "단축어 목록 — 표제어 necessary 가 들어간 낱말",
+    "internal": "unnec",
+    "expected": "372929179",
+    "unicode": "⠥⠝⠝⠑⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "neither",
+    "note": "단축어 목록의 표제어",
+    "internal": "nei",
+    "expected": "291710",
+    "unicode": "⠝⠑⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "oneself",
+    "note": "단축어 목록의 표제어",
+    "internal": "\"of",
+    "expected": "162111",
+    "unicode": "⠐⠕⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ourselves",
+    "note": "단축어 목록의 표제어",
+    "internal": "|rvs",
+    "expected": "51233914",
+    "unicode": "⠳⠗⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "paid",
+    "note": "단축어 목록의 표제어",
+    "internal": "pd",
+    "expected": "1525",
+    "unicode": "⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "highlypaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "hi<lypd",
+    "expected": "1910357611525",
+    "unicode": "⠓⠊⠣⠇⠽⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "illpaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "illpd",
+    "expected": "10771525",
+    "unicode": "⠊⠇⠇⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "lowlypaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "l[lypd",
+    "expected": "7427611525",
+    "unicode": "⠇⠪⠇⠽⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "overpaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "ov]pd",
+    "expected": "2139591525",
+    "unicode": "⠕⠧⠻⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "poorlypaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "poorlypd",
+    "expected": "152121237611525",
+    "unicode": "⠏⠕⠕⠗⠇⠽⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "postpaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "po/pd",
+    "expected": "1521121525",
+    "unicode": "⠏⠕⠌⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "prepaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "prepd",
+    "expected": "1523171525",
+    "unicode": "⠏⠗⠑⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "repaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "repd",
+    "expected": "23171525",
+    "unicode": "⠗⠑⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "underpaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "\"upd",
+    "expected": "16371525",
+    "unicode": "⠐⠥⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unpaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "unpd",
+    "expected": "37291525",
+    "unicode": "⠥⠝⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrepaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "unrepd",
+    "expected": "372923171525",
+    "unicode": "⠥⠝⠗⠑⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "wellpaid",
+    "note": "단축어 목록 — 표제어 paid 가 들어간 낱말",
+    "internal": "wellpd",
+    "expected": "5817771525",
+    "unicode": "⠺⠑⠇⠇⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceive",
+    "note": "단축어 목록의 표제어",
+    "internal": "p}cv",
+    "expected": "1559939",
+    "unicode": "⠏⠻⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "apperceive",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "app]cv",
+    "expected": "1151559939",
+    "unicode": "⠁⠏⠏⠻⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "apperceived",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "app]cvd",
+    "expected": "115155993925",
+    "unicode": "⠁⠏⠏⠻⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "apperceiver",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "app]cvr",
+    "expected": "115155993923",
+    "unicode": "⠁⠏⠏⠻⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "misperceive",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "misp]cv",
+    "expected": "1310141559939",
+    "unicode": "⠍⠊⠎⠏⠻⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "misperceived",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "misp]cvd",
+    "expected": "131014155993925",
+    "unicode": "⠍⠊⠎⠏⠻⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "misperceiver",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "misp]cvr",
+    "expected": "131014155993923",
+    "unicode": "⠍⠊⠎⠏⠻⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceived",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "p]cvd",
+    "expected": "155993925",
+    "unicode": "⠏⠻⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceiver",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "p]cvr",
+    "expected": "155993923",
+    "unicode": "⠏⠻⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unperceive",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "unp]cv",
+    "expected": "37291559939",
+    "unicode": "⠥⠝⠏⠻⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unperceived",
+    "note": "단축어 목록 — 표제어 perceive 가 들어간 낱말",
+    "internal": "unp]cvd",
+    "expected": "3729155993925",
+    "unicode": "⠥⠝⠏⠻⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "p}cvg",
+    "expected": "155993927",
+    "unicode": "⠏⠻⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "apperceiving",
+    "note": "단축어 목록 — 표제어 perceiving 가 들어간 낱말",
+    "internal": "app]cvg",
+    "expected": "115155993927",
+    "unicode": "⠁⠏⠏⠻⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "misperceiving",
+    "note": "단축어 목록 — 표제어 perceiving 가 들어간 낱말",
+    "internal": "misp]cvg",
+    "expected": "131014155993927",
+    "unicode": "⠍⠊⠎⠏⠻⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unperceiving",
+    "note": "단축어 목록 — 표제어 perceiving 가 들어간 낱말",
+    "internal": "unp]cvg",
+    "expected": "3729155993927",
+    "unicode": "⠥⠝⠏⠻⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perhaps",
+    "note": "단축어 목록의 표제어",
+    "internal": "p}h",
+    "expected": "155919",
+    "unicode": "⠏⠻⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perhapses",
+    "note": "단축어 목록 — 표제어 perhaps 가 들어간 낱말",
+    "internal": "p]hes",
+    "expected": "1559191714",
+    "unicode": "⠏⠻⠓⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quick",
+    "note": "단축어 목록의 표제어",
+    "internal": "qk",
+    "expected": "315",
+    "unicode": "⠟⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "doublequick",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "d\\bleqk",
+    "expected": "25513717315",
+    "unicode": "⠙⠳⠃⠇⠑⠟⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quicken",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qk5",
+    "expected": "31534",
+    "unicode": "⠟⠅⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickened",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qk5$",
+    "expected": "3153443",
+    "unicode": "⠟⠅⠢⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickener",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qk5]",
+    "expected": "3153459",
+    "unicode": "⠟⠅⠢⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickening",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qk5+",
+    "expected": "3153444",
+    "unicode": "⠟⠅⠢⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quicker",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qk]",
+    "expected": "31559",
+    "unicode": "⠟⠅⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickest",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qke/",
+    "expected": "3151712",
+    "unicode": "⠟⠅⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickie",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qkie",
+    "expected": "3151017",
+    "unicode": "⠟⠅⠊⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickish",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qki%",
+    "expected": "3151041",
+    "unicode": "⠟⠅⠊⠩",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quickishly",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qki%ly",
+    "expected": "3151041761",
+    "unicode": "⠟⠅⠊⠩⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quicky",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "qky",
+    "expected": "31561",
+    "unicode": "⠟⠅⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "superquick",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "sup]qk",
+    "expected": "14371559315",
+    "unicode": "⠎⠥⠏⠻⠟⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unquick",
+    "note": "단축어 목록 — 표제어 quick 가 들어간 낱말",
+    "internal": "unqk",
+    "expected": "3729315",
+    "unicode": "⠥⠝⠟⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receive",
+    "note": "단축어 목록의 표제어",
+    "internal": "rcv",
+    "expected": "23939",
+    "unicode": "⠗⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "preceive",
+    "note": "단축어 목록 — 표제어 receive 가 들어간 낱말",
+    "internal": "prcv",
+    "expected": "1523939",
+    "unicode": "⠏⠗⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "preceiver",
+    "note": "단축어 목록 — 표제어 receive 가 들어간 낱말",
+    "internal": "prcvr",
+    "expected": "152393923",
+    "unicode": "⠏⠗⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "received",
+    "note": "단축어 목록 — 표제어 receive 가 들어간 낱말",
+    "internal": "rcvd",
+    "expected": "2393925",
+    "unicode": "⠗⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receiver",
+    "note": "단축어 목록 — 표제어 receive 가 들어간 낱말",
+    "internal": "rcvr",
+    "expected": "2393923",
+    "unicode": "⠗⠉⠧⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receivership",
+    "note": "단축어 목록 — 표제어 receive 가 들어간 낱말",
+    "internal": "rcvr%ip",
+    "expected": "2393923411015",
+    "unicode": "⠗⠉⠧⠗⠩⠊⠏",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unreceived",
+    "note": "단축어 목록 — 표제어 receive 가 들어간 낱말",
+    "internal": "unrcvd",
+    "expected": "37292393925",
+    "unicode": "⠥⠝⠗⠉⠧⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "rcvg",
+    "expected": "2393927",
+    "unicode": "⠗⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "preceiving",
+    "note": "단축어 목록 — 표제어 receiving 가 들어간 낱말",
+    "internal": "prcvg",
+    "expected": "152393927",
+    "unicode": "⠏⠗⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoice",
+    "note": "단축어 목록의 표제어",
+    "internal": "rjc",
+    "expected": "23269",
+    "unicode": "⠗⠚⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoiced",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "rjcd",
+    "expected": "2326925",
+    "unicode": "⠗⠚⠉⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoiceful",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "rjc;l",
+    "expected": "23269487",
+    "unicode": "⠗⠚⠉⠰⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicefully",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "rjc;lly",
+    "expected": "23269487761",
+    "unicode": "⠗⠚⠉⠰⠇⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicefulness",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "rjc;l;s",
+    "expected": "232694874814",
+    "unicode": "⠗⠚⠉⠰⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicer",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "rjcr",
+    "expected": "2326923",
+    "unicode": "⠗⠚⠉⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoice",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "unrjc",
+    "expected": "372923269",
+    "unicode": "⠥⠝⠗⠚⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoiced",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "unrjcd",
+    "expected": "37292326925",
+    "unicode": "⠥⠝⠗⠚⠉⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoiceful",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "unrjc;l",
+    "expected": "372923269487",
+    "unicode": "⠥⠝⠗⠚⠉⠰⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoicefully",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "unrjc;lly",
+    "expected": "372923269487761",
+    "unicode": "⠥⠝⠗⠚⠉⠰⠇⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoicefulness",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "unrjc;l;s",
+    "expected": "3729232694874814",
+    "unicode": "⠥⠝⠗⠚⠉⠰⠇⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoicer",
+    "note": "단축어 목록 — 표제어 rejoice 가 들어간 낱말",
+    "internal": "unrjcr",
+    "expected": "37292326923",
+    "unicode": "⠥⠝⠗⠚⠉⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicing",
+    "note": "단축어 목록의 표제어",
+    "internal": "rjcg",
+    "expected": "2326927",
+    "unicode": "⠗⠚⠉⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicingly",
+    "note": "단축어 목록 — 표제어 rejoicing 가 들어간 낱말",
+    "internal": "rjcgly",
+    "expected": "2326927761",
+    "unicode": "⠗⠚⠉⠛⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoicing",
+    "note": "단축어 목록 — 표제어 rejoicing 가 들어간 낱말",
+    "internal": "unrjcg",
+    "expected": "37292326927",
+    "unicode": "⠥⠝⠗⠚⠉⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unrejoicingly",
+    "note": "단축어 목록 — 표제어 rejoicing 가 들어간 낱말",
+    "internal": "unrjcgly",
+    "expected": "37292326927761",
+    "unicode": "⠥⠝⠗⠚⠉⠛⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "said",
+    "note": "단축어 목록의 표제어",
+    "internal": "sd",
+    "expected": "1425",
+    "unicode": "⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aforesaid",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "a=esd",
+    "expected": "163171425",
+    "unicode": "⠁⠿⠑⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "foresaid",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "=esd",
+    "expected": "63171425",
+    "unicode": "⠿⠑⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "gainsaid",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "ga9sd",
+    "expected": "271201425",
+    "unicode": "⠛⠁⠔⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "missaid",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "missd",
+    "expected": "1310141425",
+    "unicode": "⠍⠊⠎⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "saidest",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "sde/",
+    "expected": "14251712",
+    "unicode": "⠎⠙⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "saidst",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "sd/",
+    "expected": "142512",
+    "unicode": "⠎⠙⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "unsaid",
+    "note": "단축어 목록 — 표제어 said 가 들어간 낱말",
+    "internal": "unsd",
+    "expected": "37291425",
+    "unicode": "⠥⠝⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "should",
+    "note": "단축어 목록의 표제어",
+    "internal": "%d",
+    "expected": "4125",
+    "unicode": "⠩⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shoulda",
+    "note": "단축어 목록 — 표제어 should 가 들어간 낱말",
+    "internal": "%da",
+    "expected": "41251",
+    "unicode": "⠩⠙⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shouldest",
+    "note": "단축어 목록 — 표제어 should 가 들어간 낱말",
+    "internal": "%de/",
+    "expected": "41251712",
+    "unicode": "⠩⠙⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shouldn't",
+    "note": "단축어 목록 — 표제어 should 가 들어간 낱말",
+    "internal": "%dn't",
+    "expected": "412529430",
+    "unicode": "⠩⠙⠝⠄⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shouldn't've",
+    "note": "단축어 목록 — 표제어 should 가 들어간 낱말",
+    "internal": "%dn't've",
+    "expected": "41252943043917",
+    "unicode": "⠩⠙⠝⠄⠞⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shouldst",
+    "note": "단축어 목록 — 표제어 should 가 들어간 낱말",
+    "internal": "%d/",
+    "expected": "412512",
+    "unicode": "⠩⠙⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "should've",
+    "note": "단축어 목록 — 표제어 should 가 들어간 낱말",
+    "internal": "%d've",
+    "expected": "412543917",
+    "unicode": "⠩⠙⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "such",
+    "note": "단축어 목록의 표제어",
+    "internal": "s*",
+    "expected": "1433",
+    "unicode": "⠎⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "nonesuch",
+    "note": "단축어 목록 — 표제어 such 가 들어간 낱말",
+    "internal": "n\"os*",
+    "expected": "2916211433",
+    "unicode": "⠝⠐⠕⠎⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "nonsuch",
+    "note": "단축어 목록 — 표제어 such 가 들어간 낱말",
+    "internal": "nons*",
+    "expected": "2921291433",
+    "unicode": "⠝⠕⠝⠎⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "somesuch",
+    "note": "단축어 목록 — 표제어 such 가 들어간 낱말",
+    "internal": "\"ss*",
+    "expected": "16141433",
+    "unicode": "⠐⠎⠎⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "suchlike",
+    "note": "단축어 목록 — 표제어 such 가 들어간 낱말",
+    "internal": "s*like",
+    "expected": "1433710517",
+    "unicode": "⠎⠡⠇⠊⠅⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "themselves",
+    "note": "단축어 목록의 표제어",
+    "internal": "!mvs",
+    "expected": "46133914",
+    "unicode": "⠮⠍⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thyself",
+    "note": "단축어 목록의 표제어",
+    "internal": "?yf",
+    "expected": "576111",
+    "unicode": "⠹⠽⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "today",
+    "note": "단축어 목록의 표제어",
+    "internal": "td",
+    "expected": "3025",
+    "unicode": "⠞⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "together",
+    "note": "단축어 목록의 표제어",
+    "internal": "tgr",
+    "expected": "302723",
+    "unicode": "⠞⠛⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "togetherness",
+    "note": "단축어 목록 — 표제어 together 가 들어간 낱말",
+    "internal": "tgr;s",
+    "expected": "3027234814",
+    "unicode": "⠞⠛⠗⠰⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tomorrow",
+    "note": "단축어 목록의 표제어",
+    "internal": "tm",
+    "expected": "3013",
+    "unicode": "⠞⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tonight",
+    "note": "단축어 목록의 표제어",
+    "internal": "tn",
+    "expected": "3029",
+    "unicode": "⠞⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "would",
+    "note": "단축어 목록의 표제어",
+    "internal": "wd",
+    "expected": "5825",
+    "unicode": "⠺⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "'twould",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "'twd",
+    "expected": "4305825",
+    "unicode": "⠄⠞⠺⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "'twoulda",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "'twda",
+    "expected": "43058251",
+    "unicode": "⠄⠞⠺⠙⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "'twouldn't",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "'twdn't",
+    "expected": "430582529430",
+    "unicode": "⠄⠞⠺⠙⠝⠄⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "'twouldn't've",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "'twdn't've",
+    "expected": "43058252943043917",
+    "unicode": "⠄⠞⠺⠙⠝⠄⠞⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "'twould've",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "'twd've",
+    "expected": "430582543917",
+    "unicode": "⠄⠞⠺⠙⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "woulda",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "wda",
+    "expected": "58251",
+    "unicode": "⠺⠙⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "wouldest",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "wde/",
+    "expected": "58251712",
+    "unicode": "⠺⠙⠑⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "wouldn't",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "wdn't",
+    "expected": "582529430",
+    "unicode": "⠺⠙⠝⠄⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "wouldn't've",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "wdn't've",
+    "expected": "58252943043917",
+    "unicode": "⠺⠙⠝⠄⠞⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "wouldst",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "wd/",
+    "expected": "582512",
+    "unicode": "⠺⠙⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "would've",
+    "note": "단축어 목록 — 표제어 would 가 들어간 낱말",
+    "internal": "wd've",
+    "expected": "582543917",
+    "unicode": "⠺⠙⠄⠧⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "your",
+    "note": "단축어 목록의 표제어",
+    "internal": "yr",
+    "expected": "6123",
+    "unicode": "⠽⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yourself",
+    "note": "단축어 목록의 표제어",
+    "internal": "yrf",
+    "expected": "612311",
+    "unicode": "⠽⠗⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "do-it-yourselfer",
+    "note": "단축어 목록 — 표제어 yourself 가 들어간 낱말",
+    "internal": "d-x-yrf]",
+    "expected": "2536453661231159",
+    "unicode": "⠙⠤⠭⠤⠽⠗⠋⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yourselves",
+    "note": "단축어 목록의 표제어",
+    "internal": "yrvs",
+    "expected": "61233914",
+    "unicode": "⠽⠗⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ahimsa",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "ahimsa",
+    "expected": "1191013141",
+    "unicode": "⠁⠓⠊⠍⠎⠁",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "braillist",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "brailli/",
+    "expected": "323110771012",
+    "unicode": "⠃⠗⠁⠊⠇⠇⠊⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declaration",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "decl>a;n",
+    "expected": "2517972814829",
+    "unicode": "⠙⠑⠉⠇⠜⠁⠰⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "drafter",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "draft]",
+    "expected": "25231113059",
+    "unicode": "⠙⠗⠁⠋⠞⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "lacrosse",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "lacrosse",
+    "expected": "7192321141417",
+    "unicode": "⠇⠁⠉⠗⠕⠎⠎⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "marabout",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "m>ab\\t",
+    "expected": "1328135130",
+    "unicode": "⠍⠜⠁⠃⠳⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustache",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "mu/a*e",
+    "expected": "13371213317",
+    "unicode": "⠍⠥⠌⠁⠡⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "mustang",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "mu/ang",
+    "expected": "13371212927",
+    "unicode": "⠍⠥⠌⠁⠝⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "muster",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "mu/]",
+    "expected": "13371259",
+    "unicode": "⠍⠥⠌⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "necessarily",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "necess>ily",
+    "expected": "291791714142810761",
+    "unicode": "⠝⠑⠉⠑⠎⠎⠜⠊⠇⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rafter",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "raft]",
+    "expected": "231113059",
+    "unicode": "⠗⠁⠋⠞⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "shoulder",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
+    "internal": "%\\ld]",
+    "expected": "415172559",
+    "unicode": "⠩⠳⠇⠙⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "abouts",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠃⠎ [abdominal muscles])",
+    "internal": "ab|ts",
+    "expected": "13513014",
+    "unicode": "⠁⠃⠳⠞⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "acrosses",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠉⠗⠑⠎)",
+    "internal": "acrosses",
+    "expected": "19232114141714",
+    "unicode": "⠁⠉⠗⠕⠎⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "againe",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠛⠑)",
+    "internal": "aga9e",
+    "expected": "12712017",
+    "unicode": "⠁⠛⠁⠔⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almosts",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠇⠍⠎)",
+    "internal": "almo/s",
+    "expected": "1713211214",
+    "unicode": "⠁⠇⠍⠕⠌⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hims",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠓⠍⠎ [as in HMS Pinafore])",
+    "internal": "hims",
+    "expected": "19101314",
+    "unicode": "⠓⠊⠍⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftereffect",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "aft}e6ect",
+    "expected": "1113059172217930",
+    "unicode": "⠁⠋⠞⠻⠑⠖⠑⠉⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterimage",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "aft}image",
+    "expected": "1113059101312717",
+    "unicode": "⠁⠋⠞⠻⠊⠍⠁⠛⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blinded",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "bl9d$",
+    "expected": "37202543",
+    "unicode": "⠃⠇⠔⠙⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blinding",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "bl9d+",
+    "expected": "37202544",
+    "unicode": "⠃⠇⠔⠙⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "befriended",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "2fri5d$",
+    "expected": "6112310342543",
+    "unicode": "⠆⠋⠗⠊⠢⠙⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereinbefore",
+    "note": "규칙 5 — be·con 으로 시작하는 단축어가 긴 낱말 안에 있고 그 글자로 낱말이 시작하지 않으면 넣지 않는다",
+    "internal": "\"h9be=e",
+    "expected": "1619203176317",
+    "unicode": "⠐⠓⠔⠃⠑⠿⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "inbetween",
+    "note": "규칙 5 — be·con 으로 시작하는 단축어가 긴 낱말 안에 있고 그 글자로 낱말이 시작하지 않으면 넣지 않는다",
+    "internal": "9betwe5",
+    "expected": "2031730581734",
+    "unicode": "⠔⠃⠑⠞⠺⠑⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "misconceived",
+    "note": "규칙 5 — be·con 으로 시작하는 단축어가 긴 낱말 안에 있고 그 글자로 낱말이 시작하지 않으면 넣지 않는다",
+    "internal": "misconceiv$",
+    "expected": "13101492129917103943",
+    "unicode": "⠍⠊⠎⠉⠕⠝⠉⠑⠊⠧⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "DeafBlind",
+    "note": "규칙 6 — 안쪽 표지가 있어도 뜻이 특별해 목록에 넣는 예",
+    "internal": ",d1f,bl",
+    "expected": "32252113237",
+    "unicode": "⠠⠙⠂⠋⠠⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  }
+]

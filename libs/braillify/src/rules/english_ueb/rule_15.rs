@@ -23,6 +23,10 @@ pub fn encode_symbol(c: char) -> Option<Vec<u8>> {
         'ˌ' => cells("⠘⠨⠆"),
         '″' => cells("⠘⠨⠃"),
         'ə' => cells("⠸⠢"),
+        // §15.3 level tones: the high, mid and low tone letters.
+        '˦' => cells("⠘⠨⠉"),
+        '˧' => cells("⠘⠨⠒"),
+        '˨' => cells("⠘⠨⠤"),
         '➘' => cells("⠘⠨⠴"),
         // §15.3.2 example uses `↗` for low rising in prose (⠘⠨⠔). `ˊ` (modifier
         // acute) is the high-rising tone letter (⠘⠨⠊) — the two arrows share the
@@ -50,6 +54,9 @@ mod tests {
     #[case::line('|', "⠸⠳")]
     #[case::double_line('‖', "⠸⠳⠸⠳")]
     #[case::scansion_solidus('/', "⠸⠌")]
+    #[case::tone_high('˦', "⠘⠨⠉")]
+    #[case::tone_mid('˧', "⠘⠨⠒")]
+    #[case::tone_low('˨', "⠘⠨⠤")]
     #[case::tone_down('↓', "⠘⠨⠮")]
     #[case::tone_fall('➘', "⠘⠨⠴")]
     #[case::tone_low_rising('↗', "⠘⠨⠔")]

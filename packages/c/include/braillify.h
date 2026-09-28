@@ -30,6 +30,17 @@ BRAILLIFY_API char *braillify_encode_unicode(const char *text);
 BRAILLIFY_API char *braillify_encode_braille_font(const char *text);
 BRAILLIFY_API char *braillify_last_error(void);
 
+/*
+ * The same conversions with the text read in a named context ("science",
+ * "math", "korean", ...) for input whose print shape alone does not decide
+ * the rule. An unknown context is an error.
+ */
+BRAILLIFY_API uint8_t *braillify_encode_in_context(const char *text, const char *context,
+                                                   size_t *out_len);
+BRAILLIFY_API char *braillify_encode_unicode_in_context(const char *text, const char *context);
+BRAILLIFY_API char *braillify_encode_braille_font_in_context(const char *text,
+                                                             const char *context);
+
 BRAILLIFY_API void braillify_bytes_free(uint8_t *bytes, size_t len);
 BRAILLIFY_API void braillify_string_free(char *value);
 

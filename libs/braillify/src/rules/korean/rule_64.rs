@@ -37,6 +37,7 @@ pub static META_SQUARE: RuleMeta = RuleMeta {
 
 const CIRCLE: u8 = 54; // ⠶
 const LETTER_MARKER: u8 = 52; // ⠴
+const CAPITAL_MARKER: u8 = 32; // ⠠
 const NUMBER_MARKER: u8 = 60; // ⠼
 
 /// Open marker for square enclosing: ⠸⠦ (cells 56, 38)
@@ -81,7 +82,7 @@ const CIRCLED_JAMO: &[(char, char)] = &[
 ];
 
 pub fn is_enclosed_symbol(c: char) -> bool {
-    matches!(c, '①'..='⑳' | 'ⓐ'..='ⓩ')
+    matches!(c, '①'..='⑳' | 'ⓐ'..='ⓩ' | 'Ⓐ'..='Ⓩ')
         || CIRCLED_SYLLABLES.iter().any(|(enclosed, _)| *enclosed == c)
         || CIRCLED_JAMO.iter().any(|(enclosed, _)| *enclosed == c)
 }
@@ -170,6 +171,16 @@ pub fn encode_enclosed_symbol(c: char) -> Result<Vec<u8>, String> {
             .ok_or_else(|| "Invalid enclosed latin letter".to_string())?;
         return Ok(wrap_circle(vec![
             LETTER_MARKER,
+            english::encode_english(letter)?,
+        ]));
+    }
+
+    if ('Ⓐ'..='Ⓩ').contains(&c) {
+        let letter = char::from_u32((c as u32) - ('Ⓐ' as u32) + ('a' as u32))
+            .ok_or_else(|| "Invalid enclosed latin letter".to_string())?;
+        return Ok(wrap_circle(vec![
+            LETTER_MARKER,
+            CAPITAL_MARKER,
             english::encode_english(letter)?,
         ]));
     }
@@ -292,6 +303,21 @@ mod tests {
     #[test]
     fn encodes_circled_latin() {
         assert_eq!(to_unicode(&encode_enclosed_symbol('ⓐ').unwrap()), "⠶⠴⠁⠶");
+    }
+
+    /// 제64항 shows only the lowercase ⓐ as 70a7, leaving the order of the two
+    /// indicators for a capital undetermined. 국립국어원 settled it on
+    /// 2026-09-21: the roman sign comes first, then the capital sign, then the
+    /// letter — 7 0 , a 7.
+    #[rstest::rstest]
+    #[case::first('Ⓐ', "⠶⠴⠠⠁⠶")]
+    #[case::last('Ⓩ', "⠶⠴⠠⠵⠶")]
+    fn encodes_circled_capital(#[case] symbol: char, #[case] expected: &str) {
+        assert!(is_enclosed_symbol(symbol));
+        assert_eq!(
+            to_unicode(&encode_enclosed_symbol(symbol).unwrap()),
+            expected
+        );
     }
 
     #[test]

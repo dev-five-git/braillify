@@ -1,5 +1,13 @@
 [
   {
+    "input": "in",
+    "internal": "9",
+    "expected": "20",
+    "unicode": "⠔",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "not in here",
     "internal": "n 9 \"h",
     "expected": "2902001619",

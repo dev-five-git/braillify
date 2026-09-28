@@ -29,12 +29,14 @@ pub mod token;
 pub mod token_engine;
 pub mod token_rule;
 pub mod token_rules;
+pub mod trace;
 pub mod traits;
 
 // ── Rule domains ────────────────────────────────────────
 pub mod english_ueb; // 통일영어점자 규정 (Unified English Braille)
 pub mod korean; // 한글 점자 규정 (Korean Braille rules)
 pub mod math; // 수학 점자 규정 (Math Braille rules)
+pub mod science; // 과학 점자 규정 (Science Braille rules)
 
 /// Metadata identifying a braille rule and its source in the standard.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

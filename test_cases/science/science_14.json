@@ -1,0 +1,51 @@
+[
+  {
+    "input": " ⬡\n⬡ ⬡",
+    "note": "PDF 과학 제14항 2 — 위쪽 사선 결합선에 붙는 핵은 ⠬, 아래쪽 사선 결합선에 붙는 핵은 ⠩. 사선 결합선을 나눈 두 핵은 한 칸·한 줄 떨어뜨려 놓는다",
+    "context": "science",
+    "internal": "&{oy+&{oy%&{oy",
+    "expected": "4742216144474221614147422161",
+    "unicode": "⠯⠪⠕⠽⠬⠯⠪⠕⠽⠩⠯⠪⠕⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": " ⎔\n⎔ ⎔",
+    "note": "PDF 과학 제14항 2 — 가로 방향 육각 환핵",
+    "context": "science",
+    "internal": "&o{y+&o{y%&o{y",
+    "expected": "4721426144472142614147214261",
+    "unicode": "⠯⠕⠪⠽⠬⠯⠕⠪⠽⠩⠯⠕⠪⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "   ⬡ ⬡\n⬡ ⬡",
+    "note": "PDF 과학 제14항 2",
+    "context": "science",
+    "internal": "&{oy&{oy+&{oy&{oy",
+    "expected": "4742216147422161444742216147422161",
+    "unicode": "⠯⠪⠕⠽⠯⠪⠕⠽⠬⠯⠪⠕⠽⠯⠪⠕⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": " ⬡\n⬡\n ⬡",
+    "note": "PDF 과학 제14항 3 — 세 번째 핵이 첫 번째 핵과 결합하면 ⠤ 을 적는다. PDF 는 같은 모양을 결합 순서가 중심-위-아래인 경우와 중심-아래-위인 경우로 나누어 적었다. 순서는 그림에 드러나지 않으므로 둘 다 받는다",
+    "context": "science",
+    "alternatives": [
+      {
+        "internal": "&{oy+&{oy-%&{oy",
+        "expected": "474221614447422161364147422161",
+        "unicode": "⠯⠪⠕⠽⠬⠯⠪⠕⠽⠤⠩⠯⠪⠕⠽"
+      },
+      {
+        "internal": "&{oy%&{oy-+&{oy",
+        "expected": "474221614147422161364447422161",
+        "unicode": "⠯⠪⠕⠽⠩⠯⠪⠕⠽⠤⠬⠯⠪⠕⠽"
+      }
+    ],
+    "world": "",
+    "jeomsarang": ""
+  }
+]

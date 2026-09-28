@@ -57,11 +57,12 @@
     "jeomsarang": "⠼⠁⠊⠉⠊⠤⠼⠁⠊⠙⠑"
   },
   {
-    "input": "on the paper was written 𝟻𝟻𝟻 𝟷𝟿𝟾𝟸",
-    "note": "PDF typeform on digits represented with Unicode mathematical monospace digits",
-    "internal": "on ! pap] 0 writt5 @#1#eee\"aihb",
-    "expected": "2129046015115590520582310303034086026017171716110193",
-    "unicode": "⠕⠝⠀⠮⠀⠏⠁⠏⠻⠀⠴⠀⠺⠗⠊⠞⠞⠢⠀⠈⠼⠂⠼⠑⠑⠑⠐⠁⠊⠓⠃",
+    "input": "on the paper was written 555 1982",
+    "note": "PDF 점자는 필기체 단어 표지 ⠈⠂ 를 적는다",
+    "limitation": "필기체 숫자는 유니코드 수학 글자에 없어 입력으로 나타낼 수 없다",
+    "internal": "on ! pap} 0 writt5 @1#eee\"aihb",
+    "expected": "21290460151155905205823103030340826017171716110193",
+    "unicode": "⠕⠝⠀⠮⠀⠏⠁⠏⠻⠀⠴⠀⠺⠗⠊⠞⠞⠢⠀⠈⠂⠼⠑⠑⠑⠐⠁⠊⠓⠃",
     "world": "⠴⠕⠝ ⠮ ⠏⠁⠏⠻ ⠴ ⠺⠗⠊⠞⠞⠢",
     "jeomsarang": ""
   },

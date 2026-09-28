@@ -144,10 +144,11 @@
     "jeomsarang": "⠏⠄⠎⠀⠁⠝⠙⠀⠟⠄⠎⠲"
   },
   {
-    "input": "letter d",
-    "internal": "lr ;d",
-    "expected": "72304825",
-    "unicode": "⠇⠗⠀⠰⠙",
+    "input": "letter 𝑑",
+    "note": "PDF 점자는 d 앞에 이탤릭 기호 표지 ⠨⠆ 를 적는다(본문 글꼴은 이탤릭이 아니지만 점자를 따랐다)",
+    "internal": "lr .2;d",
+    "expected": "72304064825",
+    "unicode": "⠇⠗⠀⠨⠆⠰⠙",
     "world": "⠴⠇⠗ ⠙⠲",
     "jeomsarang": "⠇⠑⠞⠞⠑⠗⠀⠙"
   },

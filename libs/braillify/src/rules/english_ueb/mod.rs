@@ -12,6 +12,7 @@
 //!
 //! Source of truth: `docs/Rules-of-Unified-English-Braille-2024.pdf`.
 
+pub mod appendix_3;
 pub mod compound;
 pub mod contraction;
 pub mod engine;

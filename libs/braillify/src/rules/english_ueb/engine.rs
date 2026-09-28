@@ -345,7 +345,7 @@ impl EnglishUebEngine {
         let mut numeric_mode = false;
         let mut quote_open = false;
         let mut internal_double_quote_open = false;
-        let caret_note = contains_caret(tokens);
+        let caret_note = contains_caret(tokens) && tokens.len() > 1;
         let transcriber_note = contains_transcriber_note(tokens);
         // §9: index past a styled run already emitted as a word indicator, so its
         // member tokens are not re-emitted individually.
@@ -940,7 +940,7 @@ impl EnglishUebEngine {
                     numeric_mode = true;
                 }
                 EnglishToken::Symbol(c) => {
-                    encode_symbol_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, passage, cap_term, in_passage, url_listing, regex_listing, foreign_code, spanish_foreign, foreign_passage, early_english, preserve_spatial_newlines, skip_flattened_line_indent, numeric_separator_count, i, c);
+                    encode_symbol_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, line_mode_active, passage, cap_term, in_passage, url_listing, regex_listing, foreign_code, spanish_foreign, foreign_passage, early_english, preserve_spatial_newlines, skip_flattened_line_indent, numeric_separator_count, explicit_english, i, c);
                 }
                 EnglishToken::Styled(_, form) => {
                     encode_styled_arm!(self, tokens, out, prev_was_number, numeric_mode, skip_to, passage, in_passage, foreign_code, spanish_foreign, foreign_passage, drop_styled_typeform_for_code_switch, skip_flattened_line_indent, nested_inner_passage, i, form)

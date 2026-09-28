@@ -29,6 +29,8 @@ pub fn encode_symbol(c: char) -> Option<Vec<u8>> {
         '\u{2212}' => vec![decode_unicode('⠐'), decode_unicode('⠤')], // − minus sign
         '<' => vec![decode_unicode('⠈'), decode_unicode('⠣')],
         '>' => vec![decode_unicode('⠈'), decode_unicode('⠜')],
+        '\u{2236}' => vec![decode_unicode('⠒')], // ∶ ratio
+        '\u{2237}' => vec![decode_unicode('⠒'), decode_unicode('⠒')], // ∷ proportion
         '⟨' | '〈' => vec![decode_unicode('⠈'), decode_unicode('⠣')], // §3.17 angle bracket less-than shape
         '⟩' | '〉' => vec![decode_unicode('⠈'), decode_unicode('⠜')], // §3.17 angle bracket greater-than shape
         '\u{00F7}' => vec![decode_unicode('⠐'), decode_unicode('⠌')], // ÷ division
@@ -176,6 +178,8 @@ mod tests {
     #[case::minus('\u{2212}', vec![decode_unicode('⠐'), decode_unicode('⠤')])]
     #[case::less_than('<', vec![decode_unicode('⠈'), decode_unicode('⠣')])]
     #[case::greater_than('>', vec![decode_unicode('⠈'), decode_unicode('⠜')])]
+    #[case::ratio('\u{2236}', vec![decode_unicode('⠒')])]
+    #[case::proportion('\u{2237}', vec![decode_unicode('⠒'), decode_unicode('⠒')])]
     #[case::division('\u{00F7}', vec![decode_unicode('⠐'), decode_unicode('⠌')])]
     #[case::multiplication('\u{00D7}', vec![decode_unicode('⠐'), decode_unicode('⠦')])]
     #[case::tilde('~', vec![decode_unicode('⠈'), decode_unicode('⠔')])]

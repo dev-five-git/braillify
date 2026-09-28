@@ -214,8 +214,10 @@ macro_rules! encode_styled_arm {
                         }
 	                    } else if chars.len() == 1 && !chars[0].is_ascii_alphabetic() {
                         // §9: a single styled punctuation/symbol mark (`.̲` → `⠸⠆⠲`,
-                        // `%̲` → `⠸⠆⠨⠴`).
-                        $out.extend(super::rule_9::symbol_indicator(*$form));
+                        // `%̲` → `⠸⠆⠨⠴`). An open passage already covers it (§9.8.1).
+                        if $passage.is_none() {
+                            $out.extend(super::rule_9::symbol_indicator(*$form));
+                        }
                         encode_styled_nonword_symbol(chars[0], &mut $out)?;
                     } else {
 	                        // Styled letters: passage / word / symbol level. The word

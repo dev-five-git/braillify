@@ -1206,6 +1206,7 @@ fn encode_with_options_traced(
     if options.default_mode == Some(EncodingMode::Science)
         && let Some(cells) = crate::rules::science::ring::encode(text)
             .or_else(|| crate::rules::science::weather::encode(text))
+            .or_else(|| crate::rules::science::circuit::encode(text))
     {
         mark_trace_path(&mut trace, TracePath::KoreanRules);
         return Ok(cells);

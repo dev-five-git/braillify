@@ -1,6 +1,709 @@
 [
   {
+    "input": "abouts",
+    "note": "10.9.5 의 세 예외 — s 를 붙이면 단축어를 쓰지 않는다",
+    "internal": "ab|ts",
+    "expected": "13513014",
+    "unicode": "⠁⠃⠳⠞⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almosts",
+    "note": "10.9.5 의 세 예외 — s 를 붙이면 단축어를 쓰지 않는다",
+    "internal": "almo/s",
+    "expected": "1713211214",
+    "unicode": "⠁⠇⠍⠕⠌⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hims",
+    "note": "10.9.5 의 세 예외 — s 를 붙이면 단축어를 쓰지 않는다",
+    "internal": "hims",
+    "expected": "19101314",
+    "unicode": "⠓⠊⠍⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "about",
+    "note": "단축어 목록의 표제어",
+    "internal": "ab",
+    "expected": "13",
+    "unicode": "⠁⠃",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "above",
+    "note": "단축어 목록의 표제어",
+    "internal": "abv",
+    "expected": "1339",
+    "unicode": "⠁⠃⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "according",
+    "note": "단축어 목록의 표제어",
+    "internal": "ac",
+    "expected": "19",
+    "unicode": "⠁⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "across",
+    "note": "단축어 목록의 표제어",
+    "internal": "acr",
+    "expected": "1923",
+    "unicode": "⠁⠉⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "after",
+    "note": "단축어 목록의 표제어",
+    "internal": "af",
+    "expected": "111",
+    "unicode": "⠁⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afternoon",
+    "note": "단축어 목록의 표제어",
+    "internal": "afn",
+    "expected": "11129",
+    "unicode": "⠁⠋⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterward",
+    "note": "단축어 목록의 표제어",
+    "internal": "afw",
+    "expected": "11158",
+    "unicode": "⠁⠋⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "again",
+    "note": "단축어 목록의 표제어",
+    "internal": "ag",
+    "expected": "127",
+    "unicode": "⠁⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "against",
+    "note": "단축어 목록의 표제어",
+    "internal": "ag/",
+    "expected": "12712",
+    "unicode": "⠁⠛⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almost",
+    "note": "단축어 목록의 표제어",
+    "internal": "alm",
+    "expected": "1713",
+    "unicode": "⠁⠇⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "already",
+    "note": "단축어 목록의 표제어",
+    "internal": "alr",
+    "expected": "1723",
+    "unicode": "⠁⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "also",
+    "note": "단축어 목록의 표제어",
+    "internal": "al",
+    "expected": "17",
+    "unicode": "⠁⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "although",
+    "note": "단축어 목록의 표제어",
+    "internal": "al?",
+    "expected": "1757",
+    "unicode": "⠁⠇⠹",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "altogether",
+    "note": "단축어 목록의 표제어",
+    "internal": "alt",
+    "expected": "1730",
+    "unicode": "⠁⠇⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "always",
+    "note": "단축어 목록의 표제어",
+    "internal": "alw",
+    "expected": "1758",
+    "unicode": "⠁⠇⠺",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "because",
+    "note": "단축어 목록의 표제어",
+    "internal": "2c",
+    "expected": "69",
+    "unicode": "⠆⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "before",
+    "note": "단축어 목록의 표제어",
+    "internal": "2f",
+    "expected": "611",
+    "unicode": "⠆⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "behind",
+    "note": "단축어 목록의 표제어",
+    "internal": "2h",
+    "expected": "619",
+    "unicode": "⠆⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "below",
+    "note": "단축어 목록의 표제어",
+    "internal": "2l",
+    "expected": "67",
+    "unicode": "⠆⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beneath",
+    "note": "단축어 목록의 표제어",
+    "internal": "2n",
+    "expected": "629",
+    "unicode": "⠆⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beside",
+    "note": "단축어 목록의 표제어",
+    "internal": "2s",
+    "expected": "614",
+    "unicode": "⠆⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "between",
+    "note": "단축어 목록의 표제어",
+    "internal": "2t",
+    "expected": "630",
+    "unicode": "⠆⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "beyond",
+    "note": "단축어 목록의 표제어",
+    "internal": "2y",
+    "expected": "661",
+    "unicode": "⠆⠽",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blind",
+    "note": "단축어 목록의 표제어",
+    "internal": "bl",
+    "expected": "37",
+    "unicode": "⠃⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "braille",
+    "note": "단축어 목록의 표제어",
+    "internal": "brl",
+    "expected": "3237",
+    "unicode": "⠃⠗⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "children",
+    "note": "단축어 목록의 표제어",
+    "internal": "*n",
+    "expected": "3329",
+    "unicode": "⠡⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceive",
+    "note": "단축어 목록의 표제어",
+    "internal": "3cv",
+    "expected": "18939",
+    "unicode": "⠒⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "conceiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "3cvg",
+    "expected": "1893927",
+    "unicode": "⠒⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "could",
+    "note": "단축어 목록의 표제어",
+    "internal": "cd",
+    "expected": "925",
+    "unicode": "⠉⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceive",
+    "note": "단축어 목록의 표제어",
+    "internal": "dcv",
+    "expected": "25939",
+    "unicode": "⠙⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "deceiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "dcvg",
+    "expected": "2593927",
+    "unicode": "⠙⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declare",
+    "note": "단축어 목록의 표제어",
+    "internal": "dcl",
+    "expected": "2597",
+    "unicode": "⠙⠉⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "declaring",
+    "note": "단축어 목록의 표제어",
+    "internal": "dclg",
+    "expected": "259727",
+    "unicode": "⠙⠉⠇⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "either",
+    "note": "단축어 목록의 표제어",
+    "internal": "ei",
+    "expected": "1710",
+    "unicode": "⠑⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "first",
+    "note": "단축어 목록의 표제어",
+    "internal": "f/",
+    "expected": "1112",
+    "unicode": "⠋⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "friend",
+    "note": "단축어 목록의 표제어",
+    "internal": "fr",
+    "expected": "1123",
+    "unicode": "⠋⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "good",
+    "note": "단축어 목록의 표제어",
+    "internal": "gd",
+    "expected": "2725",
+    "unicode": "⠛⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "great",
+    "note": "단축어 목록의 표제어",
+    "internal": "grt",
+    "expected": "272330",
+    "unicode": "⠛⠗⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "herself",
+    "note": "단축어 목록의 표제어",
+    "internal": "h}f",
+    "expected": "195911",
+    "unicode": "⠓⠻⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "him",
+    "note": "단축어 목록의 표제어",
+    "internal": "hm",
+    "expected": "1913",
+    "unicode": "⠓⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "himself",
+    "note": "단축어 목록의 표제어",
+    "internal": "hmf",
+    "expected": "191311",
+    "unicode": "⠓⠍⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "immediate",
+    "note": "단축어 목록의 표제어",
+    "internal": "imm",
+    "expected": "101313",
+    "unicode": "⠊⠍⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "its",
+    "note": "단축어 목록의 표제어",
+    "internal": "xs",
+    "expected": "4514",
+    "unicode": "⠭⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "itself",
+    "note": "단축어 목록의 표제어",
+    "internal": "xf",
+    "expected": "4511",
+    "unicode": "⠭⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "letter",
+    "note": "단축어 목록의 표제어",
+    "internal": "lr",
+    "expected": "723",
+    "unicode": "⠇⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "little",
+    "note": "단축어 목록의 표제어",
+    "internal": "ll",
+    "expected": "77",
+    "unicode": "⠇⠇",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "much",
+    "note": "단축어 목록의 표제어",
+    "internal": "m*",
+    "expected": "1333",
+    "unicode": "⠍⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "must",
+    "note": "단축어 목록의 표제어",
+    "internal": "m/",
+    "expected": "1312",
+    "unicode": "⠍⠌",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "myself",
+    "note": "단축어 목록의 표제어",
+    "internal": "myf",
+    "expected": "136111",
+    "unicode": "⠍⠽⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "necessary",
+    "note": "단축어 목록의 표제어",
+    "internal": "nec",
+    "expected": "29179",
+    "unicode": "⠝⠑⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "neither",
+    "note": "단축어 목록의 표제어",
+    "internal": "nei",
+    "expected": "291710",
+    "unicode": "⠝⠑⠊",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "oneself",
+    "note": "단축어 목록의 표제어",
+    "internal": "\"of",
+    "expected": "162111",
+    "unicode": "⠐⠕⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "ourselves",
+    "note": "단축어 목록의 표제어",
+    "internal": "|rvs",
+    "expected": "51233914",
+    "unicode": "⠳⠗⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "paid",
+    "note": "단축어 목록의 표제어",
+    "internal": "pd",
+    "expected": "1525",
+    "unicode": "⠏⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceive",
+    "note": "단축어 목록의 표제어",
+    "internal": "p}cv",
+    "expected": "1559939",
+    "unicode": "⠏⠻⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perceiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "p}cvg",
+    "expected": "155993927",
+    "unicode": "⠏⠻⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "perhaps",
+    "note": "단축어 목록의 표제어",
+    "internal": "p}h",
+    "expected": "155919",
+    "unicode": "⠏⠻⠓",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "quick",
+    "note": "단축어 목록의 표제어",
+    "internal": "qk",
+    "expected": "315",
+    "unicode": "⠟⠅",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receive",
+    "note": "단축어 목록의 표제어",
+    "internal": "rcv",
+    "expected": "23939",
+    "unicode": "⠗⠉⠧",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "receiving",
+    "note": "단축어 목록의 표제어",
+    "internal": "rcvg",
+    "expected": "2393927",
+    "unicode": "⠗⠉⠧⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoice",
+    "note": "단축어 목록의 표제어",
+    "internal": "rjc",
+    "expected": "23269",
+    "unicode": "⠗⠚⠉",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "rejoicing",
+    "note": "단축어 목록의 표제어",
+    "internal": "rjcg",
+    "expected": "2326927",
+    "unicode": "⠗⠚⠉⠛",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "said",
+    "note": "단축어 목록의 표제어",
+    "internal": "sd",
+    "expected": "1425",
+    "unicode": "⠎⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "should",
+    "note": "단축어 목록의 표제어",
+    "internal": "%d",
+    "expected": "4125",
+    "unicode": "⠩⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "such",
+    "note": "단축어 목록의 표제어",
+    "internal": "s*",
+    "expected": "1433",
+    "unicode": "⠎⠡",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "themselves",
+    "note": "단축어 목록의 표제어",
+    "internal": "!mvs",
+    "expected": "46133914",
+    "unicode": "⠮⠍⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "thyself",
+    "note": "단축어 목록의 표제어",
+    "internal": "?yf",
+    "expected": "576111",
+    "unicode": "⠹⠽⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "today",
+    "note": "단축어 목록의 표제어",
+    "internal": "td",
+    "expected": "3025",
+    "unicode": "⠞⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "together",
+    "note": "단축어 목록의 표제어",
+    "internal": "tgr",
+    "expected": "302723",
+    "unicode": "⠞⠛⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tomorrow",
+    "note": "단축어 목록의 표제어",
+    "internal": "tm",
+    "expected": "3013",
+    "unicode": "⠞⠍",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "tonight",
+    "note": "단축어 목록의 표제어",
+    "internal": "tn",
+    "expected": "3029",
+    "unicode": "⠞⠝",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "would",
+    "note": "단축어 목록의 표제어",
+    "internal": "wd",
+    "expected": "5825",
+    "unicode": "⠺⠙",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "your",
+    "note": "단축어 목록의 표제어",
+    "internal": "yr",
+    "expected": "6123",
+    "unicode": "⠽⠗",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yourself",
+    "note": "단축어 목록의 표제어",
+    "internal": "yrf",
+    "expected": "612311",
+    "unicode": "⠽⠗⠋",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "yourselves",
+    "note": "단축어 목록의 표제어",
+    "internal": "yrvs",
+    "expected": "61233914",
+    "unicode": "⠽⠗⠧⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
     "input": "ahimsa",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "ahimsa",
     "expected": "1191013141",
     "unicode": "⠁⠓⠊⠍⠎⠁",
@@ -9,6 +712,7 @@
   },
   {
     "input": "braillist",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "brailli/",
     "expected": "323110771012",
     "unicode": "⠃⠗⠁⠊⠇⠇⠊⠌",
@@ -17,6 +721,7 @@
   },
   {
     "input": "declaration",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "decl>a;n",
     "expected": "2517972814829",
     "unicode": "⠙⠑⠉⠇⠜⠁⠰⠝",
@@ -25,6 +730,7 @@
   },
   {
     "input": "drafter",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "draft]",
     "expected": "25231113059",
     "unicode": "⠙⠗⠁⠋⠞⠻",
@@ -33,6 +739,7 @@
   },
   {
     "input": "lacrosse",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "lacrosse",
     "expected": "7192321141417",
     "unicode": "⠇⠁⠉⠗⠕⠎⠎⠑",
@@ -41,6 +748,7 @@
   },
   {
     "input": "marabout",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "m>ab\\t",
     "expected": "1328135130",
     "unicode": "⠍⠜⠁⠃⠳⠞",
@@ -49,6 +757,7 @@
   },
   {
     "input": "mustache",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "mu/a*e",
     "expected": "13371213317",
     "unicode": "⠍⠥⠌⠁⠡⠑",
@@ -57,6 +766,7 @@
   },
   {
     "input": "mustang",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "mu/ang",
     "expected": "13371212927",
     "unicode": "⠍⠥⠌⠁⠝⠛",
@@ -65,6 +775,7 @@
   },
   {
     "input": "muster",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "mu/]",
     "expected": "13371259",
     "unicode": "⠍⠥⠌⠻",
@@ -73,6 +784,7 @@
   },
   {
     "input": "necessarily",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "necess>ily",
     "expected": "291791714142810761",
     "unicode": "⠝⠑⠉⠑⠎⠎⠜⠊⠇⠽",
@@ -81,6 +793,7 @@
   },
   {
     "input": "rafter",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "raft]",
     "expected": "231113059",
     "unicode": "⠗⠁⠋⠞⠻",
@@ -89,9 +802,136 @@
   },
   {
     "input": "shoulder",
+    "note": "규칙 2 — 긴 낱말 안의 단축어는 원래 뜻과 철자를 지키면 목록에 넣는다",
     "internal": "%\\ld]",
     "expected": "415172559",
     "unicode": "⠩⠳⠇⠙⠻",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "abouts",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠃⠎ [abdominal muscles])",
+    "internal": "ab|ts",
+    "expected": "13513014",
+    "unicode": "⠁⠃⠳⠞⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "acrosses",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠉⠗⠑⠎)",
+    "internal": "acrosses",
+    "expected": "19232114141714",
+    "unicode": "⠁⠉⠗⠕⠎⠎⠑⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "againe",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠛⠑)",
+    "internal": "aga9e",
+    "expected": "12712017",
+    "unicode": "⠁⠛⠁⠔⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "almosts",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠁⠇⠍⠎)",
+    "internal": "almo/s",
+    "expected": "1713211214",
+    "unicode": "⠁⠇⠍⠕⠌⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hims",
+    "note": "규칙 3 — 단축어를 쓰면 다른 낱말이 되므로 목록에 넣지 않는다([not] ⠓⠍⠎ [as in HMS Pinafore])",
+    "internal": "hims",
+    "expected": "19101314",
+    "unicode": "⠓⠊⠍⠎",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "aftereffect",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "aft}e6ect",
+    "expected": "1113059172217930",
+    "unicode": "⠁⠋⠞⠻⠑⠖⠑⠉⠞",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "afterimage",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "aft}image",
+    "expected": "1113059101312717",
+    "unicode": "⠁⠋⠞⠻⠊⠍⠁⠛⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blinded",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "bl9d$",
+    "expected": "37202543",
+    "unicode": "⠃⠇⠔⠙⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "blinding",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "bl9d+",
+    "expected": "37202544",
+    "unicode": "⠃⠇⠔⠙⠬",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "befriended",
+    "note": "규칙 4 — after·blind·friend 뒤에 모음이나 y 가 오면 목록에 넣지 않는다",
+    "internal": "2fri5d$",
+    "expected": "6112310342543",
+    "unicode": "⠆⠋⠗⠊⠢⠙⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "hereinbefore",
+    "note": "규칙 5 — be·con 으로 시작하는 단축어가 긴 낱말 안에 있고 그 글자로 낱말이 시작하지 않으면 넣지 않는다",
+    "internal": "\"h9be=e",
+    "expected": "1619203176317",
+    "unicode": "⠐⠓⠔⠃⠑⠿⠑",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "inbetween",
+    "note": "규칙 5 — be·con 으로 시작하는 단축어가 긴 낱말 안에 있고 그 글자로 낱말이 시작하지 않으면 넣지 않는다",
+    "internal": "9betwe5",
+    "expected": "2031730581734",
+    "unicode": "⠔⠃⠑⠞⠺⠑⠢",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "misconceived",
+    "note": "규칙 5 — be·con 으로 시작하는 단축어가 긴 낱말 안에 있고 그 글자로 낱말이 시작하지 않으면 넣지 않는다",
+    "internal": "misconceiv$",
+    "expected": "13101492129917103943",
+    "unicode": "⠍⠊⠎⠉⠕⠝⠉⠑⠊⠧⠫",
+    "world": "",
+    "jeomsarang": ""
+  },
+  {
+    "input": "DeafBlind",
+    "note": "규칙 6 — 안쪽 표지가 있어도 뜻이 특별해 목록에 넣는 예",
+    "internal": ",d1f,bl",
+    "expected": "32252113237",
+    "unicode": "⠠⠙⠂⠋⠠⠃⠇",
     "world": "",
     "jeomsarang": ""
   }

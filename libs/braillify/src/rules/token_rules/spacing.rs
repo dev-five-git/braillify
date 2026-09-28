@@ -52,6 +52,14 @@ impl TokenRule for AsteriskSpacingRule {
         if !is_last_word_index(tokens, index) {
             return Ok(TokenAction::Noop);
         }
+        // An asterisk that is the whole text is the symbol itself (⠐⠔); the blanks
+        // of 제60항 separate it from the words around it, and there are none.
+        let only_word = !tokens[..index]
+            .iter()
+            .any(|token| matches!(token, Token::Word(_)));
+        if only_word && current.text == "*" {
+            return Ok(TokenAction::Noop);
+        }
 
         let mut trailing_spaces = 0usize;
 
@@ -131,6 +139,14 @@ mod leading_asterisk {
     fn a_note_heading_asterisk_takes_a_blank(#[case] input: &str, #[case] cells: &str) {
         let encoded = crate::encode_to_unicode(input).unwrap();
         assert!(encoded.contains(cells), "{encoded}");
+    }
+
+    /// 제60항: 홀로 적힌 별표는 기호 자체라 띄울 이웃 낱말이 없다.
+    #[rstest::rstest]
+    #[case::alone("*", "⠐⠔")]
+    #[case::after_words("가나 *", "⠫⠉⠀⠐⠔⠀")]
+    fn an_asterisk_alone_takes_no_blank(#[case] input: &str, #[case] expected: &str) {
+        assert_eq!(crate::encode_to_unicode(input).unwrap(), expected);
     }
 }
 

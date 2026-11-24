@@ -55,8 +55,15 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Cargo tarpaulin and fmt
         run: |
-          cargo install cargo-tarpaulin
           rustup component add rustfmt clippy
+      - name: Install Linux coverage toolchain
+        if: runner.os == 'Linux'
+        run: |
+          rustup toolchain install 1.98.1 --profile minimal
+          cargo install cargo-tarpaulin --version 0.37.3
+      - name: Install coverage tool
+        if: runner.os != 'Linux'
+        run: cargo install cargo-tarpaulin
       - name: Install dependencies
         run: bun install
       - name: Build
@@ -78,6 +85,8 @@ jobs:
       - name: Test (Rust coverage)
         timeout-minutes: 20
         run: bun run test:rust
+        env:
+          RUSTUP_TOOLCHAIN: ${{ runner.os == 'Linux' && '1.98.1' || 'stable' }}
       - name: Test (Node)
         timeout-minutes: 10
         # Windows에서 중첩된 `bun run`이 테스트 완료 후 간헐적으로 멈추므로 직접 실행한다.

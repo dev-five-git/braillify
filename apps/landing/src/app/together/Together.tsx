@@ -236,12 +236,14 @@ export default function Together() {
               <Text as="h2" color="$title" typography="featureTitle">
                 우리 이름으로 미리 보기
               </Text>
-              <Text color="$text">
+              <Text color="$text" typography="body">
                 승인되면 이 인증 이미지를 GitHub 답글로 보내 드려요.
               </Text>
             </VStack>
             <Box as="fieldset" border="none">
-              <legend>구분</legend>
+              <Text as="legend" color="$title" mb="8px" typography="bodyBold">
+                구분
+              </Text>
               <Flex flexWrap="wrap" gap="8px">
                 {kinds.map((value) => (
                   <Choice

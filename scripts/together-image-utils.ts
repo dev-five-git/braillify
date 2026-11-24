@@ -1,8 +1,13 @@
-import { readdir, realpath, unlink } from 'node:fs/promises'
+import { mkdtemp, readdir, realpath, rm, unlink } from 'node:fs/promises'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
 
 import type { Partner } from './together-data'
+
+export async function withChromeProfile<T>(work: string, run: (profile: string) => T | Promise<T>): Promise<T> {
+  const profile = await mkdtemp(join(work, 'profile-'))
+  try { return await run(profile) } finally { await rm(profile, { recursive: true, force: true }) }
+}
 
 export const escapeHtml = (value: string) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;')
 

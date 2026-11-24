@@ -4,11 +4,31 @@ import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { brailleSvg, escapeHtml, pruneTogetherImages, translateName } from './together-image-utils'
+import { brailleSvg, escapeHtml, pruneTogetherImages, translateName, withChromeProfile } from './together-image-utils'
 
 const cli = join(import.meta.dir, '..', 'target', 'release', process.platform === 'win32' ? 'braillify.exe' : 'braillify')
 const chrome = process.env.CHROME_PATH || Bun.which('google-chrome') || Bun.which('chromium') || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '')
 const canRender = existsSync(cli) && !!chrome && (!!Bun.which(chrome) || existsSync(chrome))
+
+test('Chrome 프로필은 성공과 실패 직후 정리한다', async () => {
+  const work = await mkdtemp(join(tmpdir(), 'braillify-profiles-'))
+  let first = ''
+  expect(await withChromeProfile(work, async (profile) => {
+    first = profile
+    await writeFile(join(profile, 'data'), 'temporary')
+    return 'done'
+  })).toBe('done')
+  expect(existsSync(first)).toBe(false)
+  let second = ''
+  await expect(withChromeProfile(work, async (profile) => {
+    second = profile
+    await writeFile(join(profile, 'data'), 'temporary')
+    throw new Error('render failed')
+  })).rejects.toThrow('render failed')
+  expect(second).not.toBe(first)
+  expect(existsSync(second)).toBe(false)
+  expect(existsSync(work)).toBe(true)
+})
 
 test.skipIf(!canRender && !process.env.CI)('승인된 곳의 인증 이미지와 배지의 크기를 생성한다', async () => {
   const { generateTogetherImages } = await import('./together-images')

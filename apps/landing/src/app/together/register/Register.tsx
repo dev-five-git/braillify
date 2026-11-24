@@ -381,10 +381,39 @@ export default function Register() {
                 게시를 멈추고 싶으면 contact@devfive.kr로 알려 주세요.
               </Text>
             </Box>
-            <Text color="$text" typography="body">
-              신청 내용과 로고는 GitHub 이슈로 공개돼요. 이메일·전화번호 같은
-              개인 정보는 쓰지 마세요.
-            </Text>
+            <Flex
+              bg="$menuHover"
+              borderRadius="12px"
+              gap="10px"
+              px={['16px', null, null, '20px']}
+              py={['14px', null, null, '16px']}
+            >
+              <Box
+                aria-hidden="true"
+                bg="$text"
+                flexShrink="0"
+                h={['25.2px', null, null, '28.8px']}
+                maskImage={[
+                  'url(/images/together/notice-mobile.svg)',
+                  null,
+                  null,
+                  'url(/images/together/notice-desktop.svg)',
+                ]}
+                maskPosition="center"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+                w="20px"
+              />
+              <Text
+                color="$text"
+                flex="1"
+                typography="body"
+                wordBreak="keep-all"
+              >
+                신청 내용과 로고는 GitHub 이슈로 공개돼요. 이메일·전화번호 같은
+                개인 정보는 쓰지 마세요.
+              </Text>
+            </Flex>
             <Flex justifyContent="space-between">
               <Link className={secondaryAction} href="/together">
                 이전으로
@@ -445,6 +474,7 @@ export default function Register() {
               </Flex>
             ))}
           </VStack>
+          <Box aria-hidden="true" bg="$border" h="1px" />
           <Text color="$text" typography="docsCaption" wordBreak="keep-all">
             GitHub 계정이 없으면 신청 내용과 로고를 contact@devfive.kr로 보내
             주세요.

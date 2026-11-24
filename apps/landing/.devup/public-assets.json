@@ -68,6 +68,28 @@
       ]
     },
     {
+      "path": "/images/together/notice-desktop.svg",
+      "identity": "image/svg+xml:311c2f05d34929d913f2018f5bf452a53197bbc31b599556253c6ff559bd98d9:",
+      "sha256": "121b258044dfebbc9125c78c0ffaa06cc2b4bee893e8615d6ad2a1787c8446a4",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "1594ba2c01a5568d5792ff18c7ade2df052e24d17a0bf779910f3092744d2af2",
+      "sources": [
+        "402:8831:node"
+      ]
+    },
+    {
+      "path": "/images/together/notice-mobile.svg",
+      "identity": "image/svg+xml:37e369d3a52496351714e0e1c7704f76634c876b9ec9542cea18beaaeff147d1:",
+      "sha256": "719fcecb89be624974a10f01ce521ec12f61ecf48752a53dc4e63066e1022634",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "78495887788f85cad68c9b7df3390fd692aa36ba5b09b8c61f1a785e5e38c9a9",
+      "sources": [
+        "402:8833:node"
+      ]
+    },
+    {
       "path": "/images/together/selected-mobile.svg",
       "identity": "image/svg+xml:f701a7341c3c3b6d13fc1f993101a273f6412a04f7d4ba4f129bac6cc3be0d29:",
       "sha256": "3a1315f721d179dc7ea9e315d3a8566fbb905e84069a50b4b3b7f1fb429853bf",

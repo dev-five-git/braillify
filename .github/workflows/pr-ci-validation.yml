@@ -1,0 +1,118 @@
+name: PR CI validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go archive validation - ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: windows-latest, target: x86_64-pc-windows-gnu, platform: windows-amd64 }
+          - { runner: ubuntu-latest, target: x86_64-unknown-linux-gnu, platform: linux-amd64 }
+          - { runner: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu, platform: linux-arm64 }
+          - { runner: macos-14, target: aarch64-apple-darwin, platform: darwin-arm64 }
+          - { runner: macos-15-intel, target: x86_64-apple-darwin, platform: darwin-amd64 }
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          cache: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - name: Build native library
+        run: cargo build --release --target ${{ matrix.target }} -p braillify-go
+      - name: Remove passive LLVM bitcode
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+      - name: Probe Apple bitcode removal without changing the archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          work=$(mktemp -d)
+          trap 'rm -rf "$work"' EXIT
+          if xcrun bitcode_strip "$archive" -r -o "$work/candidate.a"; then
+            ar -t "$archive" > "$work/before-members"
+            ar -t "$work/candidate.a" > "$work/after-members"
+            nm -gUj "$archive" | LC_ALL=C sort > "$work/before-symbols"
+            nm -gUj "$work/candidate.a" | LC_ALL=C sort > "$work/after-symbols"
+            if cmp -s "$work/before-members" "$work/after-members" && cmp -s "$work/before-symbols" "$work/after-symbols"; then
+              echo 'Apple bitcode_strip retained archive members and exported symbols; candidate not installed.'
+            else
+              echo 'Apple bitcode_strip changed archive members or exported symbols; candidate not installed.'
+            fi
+          else
+            echo 'Apple bitcode_strip rejected this static archive; original retained.'
+          fi
+      - name: Copy native library
+        shell: bash
+        run: |
+          mkdir -p packages/go/libs/${{ matrix.platform }}
+          cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+      - name: Test
+        working-directory: packages/go
+        run: go test -v ./...
+
+  rust-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: 1.98.1
+          cache: false
+      - run: cargo install cargo-tarpaulin --version 0.37.3
+      - run: bun run test:rust
+
+  node-coverage:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - uses: astral-sh/setup-uv@v10.0.1
+      - run: uv pip install maturin --system
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: false
+      - run: bun install
+      - run: bun run build
+      - run: bun test

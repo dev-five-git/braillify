@@ -112,7 +112,9 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: stable
+          components: clippy, rustfmt
           cache: false
       - run: bun install
       - run: bun run build
+      - run: bun run lint
       - run: bun test

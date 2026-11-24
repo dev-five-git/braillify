@@ -46,31 +46,28 @@ jobs:
           if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
           "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
           mv "$archive.cleaned" "$archive"
-      - name: Probe Apple bitcode removal without changing the archive
+      - name: Prepare and verify macOS test archive
         if: runner.os == 'macOS'
         shell: bash
         run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          tools="$sysroot/lib/rustlib/$host/bin"
           archive=target/${{ matrix.target }}/release/libbraillify_go.a
-          work=$(mktemp -d)
-          trap 'rm -rf "$work"' EXIT
-          if xcrun bitcode_strip "$archive" -r -o "$work/candidate.a"; then
-            ar -t "$archive" > "$work/before-members"
-            ar -t "$work/candidate.a" > "$work/after-members"
-            nm -gUj "$archive" | LC_ALL=C sort > "$work/before-symbols"
-            nm -gUj "$work/candidate.a" | LC_ALL=C sort > "$work/after-symbols"
-            if cmp -s "$work/before-members" "$work/after-members" && cmp -s "$work/before-symbols" "$work/after-symbols"; then
-              echo 'Apple bitcode_strip retained archive members and exported symbols; candidate not installed.'
-            else
-              echo 'Apple bitcode_strip changed archive members or exported symbols; candidate not installed.'
-            fi
-          else
-            echo 'Apple bitcode_strip rejected this static archive; original retained.'
-          fi
+          candidate="$RUNNER_TEMP/go-macos-candidate.a"
+          "$tools/llvm-objcopy" '--remove-section=__LLVM,__bitcode' '--remove-section=__LLVM,__cmdline' "$archive" "$candidate"
+          python3 scripts/verify-macos-go-archive.py "$archive" "$candidate" "$tools"
       - name: Copy native library
         shell: bash
         run: |
           mkdir -p packages/go/libs/${{ matrix.platform }}
-          cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+          if [ "$RUNNER_OS" = macOS ]; then
+            cp "$RUNNER_TEMP/go-macos-candidate.a" packages/go/libs/${{ matrix.platform }}/libbraillify_go.a
+            rm "$RUNNER_TEMP/go-macos-candidate.a"
+          else
+            cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+          fi
       - name: Test
         working-directory: packages/go
         run: go test -v ./...

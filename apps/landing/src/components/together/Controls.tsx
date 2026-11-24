@@ -83,7 +83,7 @@ export const field = css({
       fontSize: '16px',
       lineHeight: ['normal', null, null, '1.8'],
     },
-    '&[data-registration-field]::placeholder': {
+    '&::placeholder': {
       color: '$togetherPlaceholder',
       opacity: 1,
     },

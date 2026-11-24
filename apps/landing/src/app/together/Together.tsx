@@ -315,7 +315,7 @@ export default function Together() {
           </VStack>
         </Flex>
       </VStack>
-      <Box bg="$border" h="1px" />
+      <Box aria-hidden="true" bg="$primary" h="1px" />
       <VStack gap="20px">
         <Text as="h2" color="$title" typography="featureTitle">
           함께하는 곳

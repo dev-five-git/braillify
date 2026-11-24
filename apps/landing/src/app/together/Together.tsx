@@ -198,6 +198,7 @@ export default function Together() {
                 color={name ? '$caption' : '#B5B3AE'}
                 fontSize={['13px', null, null, '16px']}
                 lineHeight={['13px', null, null, '16px']}
+                minH={['13px', null, null, '16px']}
                 textAlign="center"
                 wordBreak="break-all"
               >

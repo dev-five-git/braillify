@@ -1269,6 +1269,17 @@ jobs:
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
 
+      - name: Remove passive LLVM bitcode (Windows)
+        if: matrix.platform == 'windows-amd64'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          "$sysroot/lib/rustlib/$host/bin/llvm-objcopy.exe" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+
       - name: Copy native library
         run: |
           mkdir -p packages/go/libs/${{ matrix.platform }}
@@ -1332,6 +1343,17 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Remove passive LLVM bitcode (Windows)
+        if: matrix.platform == 'windows-amd64'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          "$sysroot/lib/rustlib/$host/bin/llvm-objcopy.exe" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

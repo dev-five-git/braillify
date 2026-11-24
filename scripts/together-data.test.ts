@@ -52,6 +52,12 @@ test('확인된 로고와 공개 기록으로 목록을 만든다', async () => 
   expect(JSON.parse(await readFile(join(publicDir, 'together.json'), 'utf8'))).toEqual([approved])
 })
 
+test('로고 폴더가 없어도 빈 목록을 게시할 수 있다', async () => {
+  const publicDir = await mkdtemp(join(tmpdir(), 'braillify-together-'))
+  await publishPartners([], publicDir)
+  expect(JSON.parse(await readFile(join(publicDir, 'together.json'), 'utf8'))).toEqual([])
+})
+
 test('게시 중단된 로고는 공유하지 않을 때 제거해야 한다', async () => {
   const publicDir = await mkdtemp(join(tmpdir(), 'braillify-together-'))
   const logos = join(publicDir, 'images', 'together')

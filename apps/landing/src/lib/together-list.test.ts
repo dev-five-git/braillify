@@ -86,3 +86,9 @@ test('화면을 떠나면 진행 중인 요청을 취소한다', async () => {
   await expect(pending).rejects.toThrow()
   expect(requestSignal?.aborted).toBe(true)
 })
+
+test('이미 취소된 요청은 데이터를 반환하지 않는다', async () => {
+  const controller = new AbortController()
+  controller.abort()
+  await expect(loadTogetherList(controller.signal, async () => Response.json([]), 50)).rejects.toThrow()
+})

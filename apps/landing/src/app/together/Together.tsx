@@ -474,9 +474,12 @@ export default function Together() {
           </button>
         )}
       </VStack>
-      <Text color="$text" typography="body" wordBreak="keep-all">
-        게시를 멈추고 싶으면 contact@devfive.kr로 알려 주세요.
-      </Text>
+      <VStack gap="24px" w="100%">
+        <Box aria-hidden="true" bg="$primary" h="1px" />
+        <Text color="$text" typography="body" wordBreak="keep-all">
+          게시를 멈추고 싶으면 contact@devfive.kr로 알려 주세요.
+        </Text>
+      </VStack>
     </VStack>
   )
 }

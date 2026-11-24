@@ -1,6 +1,20 @@
-import { expect, test } from 'bun:test'
+import { expect, spyOn, test } from 'bun:test'
 
 import { loadTogetherList } from './together-list'
+
+test('기본 요청으로 공개 목록을 가져온다', async () => {
+  const request = spyOn(globalThis, 'fetch').mockResolvedValue(
+    Response.json([]),
+  )
+  try {
+    expect(await loadTogetherList(new AbortController().signal)).toEqual([])
+    expect(request).toHaveBeenCalledWith('/together.json', {
+      signal: expect.any(AbortSignal),
+    })
+  } finally {
+    request.mockRestore()
+  }
+})
 
 test('빈 목록과 승인된 목록을 반환한다', async () => {
   expect(

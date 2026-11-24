@@ -13,6 +13,17 @@
       ]
     },
     {
+      "path": "/images/together/alert.svg",
+      "identity": "image/svg+xml:16a0bfbf1717231aed694fead6bc1445bc7b1a9ca4aca2dd910049b599a27b54:",
+      "sha256": "ab8c961202e4ea1bb0e152eb328e24951dd2fe090f1aa96fa99331b6ff4f06fc",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "40e5ca286a8543f54d8225c488d3bb6133c1403b1469c3377854731802b3efea",
+      "sources": [
+        "456:11966:node"
+      ]
+    },
+    {
       "path": "/images/together/cross.svg",
       "identity": "image/svg+xml:e005ba5f49c7f17dbf3ad6c530d4f484665ad51acd3d427027825cebcd85de70:",
       "sha256": "b3025fa8e23b1a9c4d751d63a6078456e22176b976b8ac0243d15e72ef8bc8c9",
@@ -21,6 +32,17 @@
       "geometry": "fbe30455db54627e742b996183628088b55a5ea7b8d46207a388e80e79442c14",
       "sources": [
         "450:5865:node"
+      ]
+    },
+    {
+      "path": "/images/together/field-alert.svg",
+      "identity": "image/svg+xml:c3aed7104c36ce5341f1b8086cdd3d40c2b72d29a82b9abed383ea1cebc836bb:",
+      "sha256": "7341dc2e7bff1bea159ce84589bafafdb6fc82dd28e37e452221902897992ee9",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "432ee018027bd4105989bb77872b08c2cf076b13e8d397b0b56b439bb76427db",
+      "sources": [
+        "402:7921:node"
       ]
     },
     {

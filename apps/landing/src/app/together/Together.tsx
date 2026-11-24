@@ -9,11 +9,12 @@ import {
   field,
   fieldLabel,
   primaryAction,
+  retryAction,
   secondaryAction,
 } from '@/components/together/Controls'
+import { loadTogetherList, type Partner } from '@/lib/together-list'
 import { previewDescription } from '@/lib/together-preview'
 
-type Partner = { issue: number; kind: string; name: string; logo: string }
 const kinds = ['기업', '기관', '학교', '단체']
 
 export default function Together() {
@@ -22,6 +23,7 @@ export default function Together() {
   const [braille, setBraille] = useState('')
   const [partners, setPartners] = useState<Partner[] | null>(null)
   const [failed, setFailed] = useState(false)
+  const [attempt, setAttempt] = useState(0)
   const [visible, setVisible] = useState(60)
   const [announcement, setAnnouncement] = useState('')
   const focusId = useRef<number | null>(null)
@@ -48,12 +50,11 @@ export default function Together() {
   }, [name])
 
   useEffect(() => {
-    fetch('/together.json')
-      .then((response) => {
-        if (!response.ok) throw new Error('Failed to load')
-        return response.json()
-      })
+    const controller = new AbortController()
+    let active = true
+    loadTogetherList(controller.signal)
       .then((data: Partner[]) => {
+        if (!active) return
         setPartners(data)
         const id = /^#org-(\d+)$/.exec(window.location.hash)?.[1]
         const index = data.findIndex((item) => String(item.issue) === id)
@@ -62,8 +63,14 @@ export default function Together() {
           setVisible(Math.ceil((index + 1) / 60) * 60)
         }
       })
-      .catch(() => setFailed(true))
-  }, [])
+      .catch(() => {
+        if (active) setFailed(true)
+      })
+    return () => {
+      active = false
+      controller.abort()
+    }
+  }, [attempt])
 
   useEffect(() => {
     if (focusId.current === null) return
@@ -284,11 +291,50 @@ export default function Together() {
           <Text color="$text">지금 {partners.length}곳이 함께하고 있어요</Text>
         )}
         {failed ? (
-          <Text color="$text">
-            목록을 불러오지 못했어요. 새로고침해 주세요.
-          </Text>
+          <Center
+            bg="$menuHover"
+            borderRadius="16px"
+            flexDir="column"
+            gap="5px"
+            minH={['135px', null, null, '155px']}
+            px="16px"
+            py="12px"
+            role="status"
+          >
+            <Box
+              aria-hidden="true"
+              bg="$text"
+              boxSize="22px"
+              maskImage="url(/images/together/alert.svg)"
+              maskPosition="center"
+              maskRepeat="no-repeat"
+              maskSize="contain"
+            />
+            <Text color="$text" textAlign="center" typography="bodyLg">
+              목록을 불러오지 못했어요.
+              <Box as="br" display={['block', null, null, 'none']} /> 잠시 뒤
+              다시 확인해 주세요.
+            </Text>
+            <button
+              className={retryAction}
+              onClick={() => {
+                setFailed(false)
+                setPartners(null)
+                setAttempt((value) => value + 1)
+              }}
+              type="button"
+            >
+              다시 시도
+            </button>
+          </Center>
         ) : !partners ? (
-          <Text color="$text">목록을 불러오는 중이에요.</Text>
+          <Center
+            aria-label="목록을 불러오는 중"
+            bg="$menuHover"
+            borderRadius="16px"
+            minH={['135px', null, null, '155px']}
+            role="status"
+          />
         ) : partners.length === 0 ? (
           <Center
             bg="$menuHover"

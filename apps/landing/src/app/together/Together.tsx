@@ -324,30 +324,33 @@ export default function Together() {
           <Text color="$text">지금 {partners.length}곳이 함께하고 있어요</Text>
         )}
         {failed ? (
-          <Center
-            bg="$menuHover"
-            borderRadius="16px"
-            flexDir="column"
-            gap="5px"
-            minH={['135px', null, null, '155px']}
-            px="16px"
-            py="12px"
-            role="status"
-          >
-            <Box
-              aria-hidden="true"
-              bg="$text"
-              boxSize="22px"
-              maskImage="url(/images/together/alert.svg)"
-              maskPosition="center"
-              maskRepeat="no-repeat"
-              maskSize="contain"
-            />
-            <Text color="$text" textAlign="center" typography="bodyLg">
-              목록을 불러오지 못했어요.
-              <Box as="br" display={['block', null, null, 'none']} /> 잠시 뒤
-              다시 확인해 주세요.
-            </Text>
+          <VStack alignItems="center" gap="8px">
+            <Center
+              bg="$menuHover"
+              borderRadius="16px"
+              flexDir="column"
+              gap={['10px', null, null, '14px']}
+              minH={['135px', null, null, '155px']}
+              px={['16px', null, null, '24px']}
+              py={['24px', null, null, '32px']}
+              role="status"
+              w="100%"
+            >
+              <Box
+                aria-hidden="true"
+                bg="$text"
+                boxSize={['22px', null, null, '24px']}
+                maskImage="url(/images/together/alert.svg)"
+                maskPosition="center"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+              />
+              <Text color="$text" textAlign="center" typography="bodyLg">
+                목록을 불러오지 못했어요.
+                <Box as="br" display={['block', null, null, 'none']} /> 잠시 뒤
+                다시 확인해 주세요.
+              </Text>
+            </Center>
             <button
               className={retryAction}
               onClick={() => {
@@ -359,7 +362,7 @@ export default function Together() {
             >
               다시 시도
             </button>
-          </Center>
+          </VStack>
         ) : !partners ? (
           <Center
             aria-label="목록을 불러오는 중"

@@ -367,7 +367,7 @@ export default function Register() {
                   required
                   type="checkbox"
                 />
-                <Text as="span" color="$text">
+                <Text as="span" color="$text" typography="body">
                   이름과 로고를 braillify.kr ‘함께하는 곳’에 게시하는 데
                   동의합니다.
                 </Text>
@@ -377,9 +377,11 @@ export default function Register() {
                   {errors.consent}
                 </span>
               )}
-              <p>게시를 멈추고 싶으면 contact@devfive.kr로 알려 주세요.</p>
+              <Text color="$text" typography="docsCaption">
+                게시를 멈추고 싶으면 contact@devfive.kr로 알려 주세요.
+              </Text>
             </Box>
-            <Text color="$text">
+            <Text color="$text" typography="body">
               신청 내용과 로고는 GitHub 이슈로 공개돼요. 이메일·전화번호 같은
               개인 정보는 쓰지 마세요.
             </Text>
@@ -397,17 +399,28 @@ export default function Register() {
           alignSelf="flex-start"
           bg="$containerBackground"
           borderRadius="20px"
-          gap="20px"
+          gap={['16px', null, null, '20px']}
           order={[-1, null, null, 0]}
-          p="32px"
+          p={['20px', null, null, '32px']}
           position={['static', null, null, 'sticky']}
           top={['auto', null, null, '120px']}
           w={['100%', null, null, '440px']}
         >
-          <Text color="$title" typography="featureTitle">
+          <Text
+            color="$title"
+            display={['block', null, null, 'none']}
+            typography="featureTitle"
+          >
             신청은 이렇게 진행돼요
           </Text>
-          <VStack as="ol" gap="14px" listStyle="none">
+          <Text
+            color="$title"
+            display={['none', null, null, 'block']}
+            typography="featureCount"
+          >
+            신청은 이렇게 진행돼요
+          </Text>
+          <VStack as="ol" gap={['12px', null, null, '14px']} listStyle="none">
             {[
               '이 페이지에서 신청 내용을 써요',
               'GitHub 이슈에 로고를 올려 제출해요',
@@ -426,11 +439,13 @@ export default function Register() {
                     {index + 1}
                   </Text>
                 </Center>
-                <Text color="$text">{step}</Text>
+                <Text color="$text" typography="body" wordBreak="keep-all">
+                  {step}
+                </Text>
               </Flex>
             ))}
           </VStack>
-          <Text color="$text">
+          <Text color="$text" typography="docsCaption" wordBreak="keep-all">
             GitHub 계정이 없으면 신청 내용과 로고를 contact@devfive.kr로 보내
             주세요.
           </Text>

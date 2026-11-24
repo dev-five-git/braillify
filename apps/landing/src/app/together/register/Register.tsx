@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Flex, Text, VStack } from '@devup-ui/react'
+import { Box, css, Flex, Text, VStack } from '@devup-ui/react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
@@ -225,6 +225,19 @@ export default function Register() {
       <dialog
         ref={dialog}
         aria-labelledby="dialog-title"
+        className={css({
+          position: 'fixed',
+          inset: '0',
+          margin: 'auto',
+          width: 'min(90vw, 520px)',
+          maxHeight: '90vh',
+          overflow: 'auto',
+          background: '$containerBackground',
+          color: '$text',
+          border: '1px solid $border',
+          borderRadius: '16px',
+          padding: '32px',
+        })}
         onClose={() => setIssue(null)}
       >
         <h2 id="dialog-title">GitHub에서 신청하기</h2>

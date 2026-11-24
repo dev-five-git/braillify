@@ -3,7 +3,7 @@ import { join, sep } from 'node:path'
 
 import type { Partner } from './together-data'
 
-export async function publishPartners(partners: Partner[], root: string) {
+export async function validatePartnerLogos(partners: Partner[], root: string) {
   const publicDir = await realpath(root)
   for (const partner of partners) {
     const filename = await realpath(join(publicDir, partner.logo.slice(1)))
@@ -15,5 +15,9 @@ export async function publishPartners(partners: Partner[], root: string) {
     const jpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff
     if (partner.logo.endsWith('.png') ? !png : !jpeg) throw new Error(`Invalid logo format: ${partner.logo}`)
   }
-  await writeFile(join(publicDir, 'together.json'), `${JSON.stringify(partners)}\n`)
+}
+
+export async function publishPartners(partners: Partner[], root: string) {
+  await validatePartnerLogos(partners, root)
+  await writeFile(join(root, 'together.json'), `${JSON.stringify(partners)}\n`)
 }

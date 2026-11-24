@@ -1269,15 +1269,17 @@ jobs:
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
 
-      - name: Remove passive LLVM bitcode (Windows)
-        if: matrix.platform == 'windows-amd64'
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
         shell: bash
         run: |
           rustup component add llvm-tools
           sysroot=$(rustc --print sysroot)
           host=$(rustc -vV | sed -n 's/^host: //p')
           archive=target/${{ matrix.target }}/release/libbraillify_go.a
-          "$sysroot/lib/rustlib/$host/bin/llvm-objcopy.exe" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
           mv "$archive.cleaned" "$archive"
 
       - name: Copy native library
@@ -1344,15 +1346,17 @@ jobs:
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
-      - name: Remove passive LLVM bitcode (Windows)
-        if: matrix.platform == 'windows-amd64'
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
         shell: bash
         run: |
           rustup component add llvm-tools
           sysroot=$(rustc --print sysroot)
           host=$(rustc -vV | sed -n 's/^host: //p')
           archive=target/${{ matrix.target }}/release/libbraillify_go.a
-          "$sysroot/lib/rustlib/$host/bin/llvm-objcopy.exe" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
           mv "$archive.cleaned" "$archive"
 
       - name: Upload artifact

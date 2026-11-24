@@ -52,6 +52,7 @@ export default function Register() {
   const [name, setName] = useState('')
   const [since, setSince] = useState('')
   const [dateFocused, setDateFocused] = useState(false)
+  const [supportsPicker, setSupportsPicker] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
   const [issue, setIssue] = useState<ReturnType<
     typeof applicationIssue
@@ -59,7 +60,14 @@ export default function Register() {
   const [copied, setCopied] = useState(false)
   const [errors, setErrors] = useState<ApplicationErrors>({})
   const dialog = useRef<HTMLDialogElement>(null)
+  const dateInput = useRef<HTMLInputElement>(null)
+  const datePicker = useRef<HTMLInputElement>(null)
   const pendingFocus = useRef<ApplicationField | null>(null)
+  useEffect(() => {
+    setSupportsPicker(
+      typeof HTMLInputElement.prototype.showPicker === 'function',
+    )
+  }, [])
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const initialKind = params.get('kind')
@@ -489,6 +497,7 @@ export default function Register() {
                     as="span"
                     color="$text"
                     display="block"
+                    id="since-format"
                     typography="docsCaption"
                   >
                     연도-월-일
@@ -496,6 +505,9 @@ export default function Register() {
                 </span>
                 <Box position="relative">
                   <input
+                    ref={dateInput}
+                    aria-describedby="since-format"
+                    aria-label="사용 시작 시기 (선택)"
                     className={field}
                     data-registration-field
                     name="since"
@@ -508,6 +520,61 @@ export default function Register() {
                     type="date"
                     value={since}
                   />
+                  {supportsPicker && (
+                    <>
+                      <input
+                        ref={datePicker}
+                        aria-hidden="true"
+                        onChange={(event) => setSince(event.target.value)}
+                        style={{
+                          position: 'absolute',
+                          right: 0,
+                          top: 0,
+                          width: '32px',
+                          height: '100%',
+                          opacity: 0,
+                          pointerEvents: 'none',
+                        }}
+                        tabIndex={-1}
+                        type="date"
+                        value={since}
+                      />
+                      <Box
+                        _focusVisible={{
+                          outline: '2px solid $link',
+                          outlineOffset: '2px',
+                        }}
+                        aria-label="달력에서 사용 시작 시기 선택"
+                        as="button"
+                        bg="transparent"
+                        border="none"
+                        cursor="pointer"
+                        h="100%"
+                        onClick={() => {
+                          try {
+                            const picker = window.matchMedia(
+                              '(max-width: 767px)',
+                            ).matches
+                              ? dateInput.current
+                              : datePicker.current
+                            if (picker?.showPicker) picker.showPicker()
+                            else {
+                              setSupportsPicker(false)
+                              dateInput.current?.focus()
+                            }
+                          } catch {
+                            setSupportsPicker(false)
+                            dateInput.current?.focus()
+                          }
+                        }}
+                        position="absolute"
+                        right="0"
+                        top="0"
+                        type="button"
+                        w="32px"
+                      />
+                    </>
+                  )}
                   {!since && !dateFocused && (
                     <Text
                       aria-hidden="true"

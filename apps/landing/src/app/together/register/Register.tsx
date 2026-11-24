@@ -578,6 +578,7 @@ export default function Register() {
                       display="block"
                       mt="4px"
                       typography="docsCaption"
+                      wordBreak="keep-all"
                     >
                       게시를 멈추고 싶으면 contact@devfive.kr로 알려 주세요.
                     </Text>

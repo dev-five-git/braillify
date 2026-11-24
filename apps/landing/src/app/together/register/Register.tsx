@@ -429,6 +429,17 @@ export default function Register() {
                   <Text color="$text" display="block" typography="docsCaption">
                     여러 개 고를 수 있어요
                   </Text>
+                  <Box
+                    as="span"
+                    clip="rect(0, 0, 0, 0)"
+                    height="1px"
+                    overflow="hidden"
+                    position="absolute"
+                    whiteSpace="nowrap"
+                    width="1px"
+                  >
+                    필수 항목, 하나 이상 선택해 주세요
+                  </Box>
                 </Box>
                 <Flex
                   aria-describedby={

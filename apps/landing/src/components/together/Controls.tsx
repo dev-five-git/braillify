@@ -40,7 +40,7 @@ const choice = css({
       maskSize: 'contain',
     },
     '&:has(input:checked)': { bg: '$primary', color: '$base' },
-    '&:has(input[aria-invalid="true"])': { border: '2px solid #C8124B' },
+    '&:has(input[aria-invalid="true"])': { border: '2px solid $togetherError' },
     '&:has(input:focus-visible)': {
       boxShadow: '0 0 0 5px $primary, 0 0 0 2px $base',
     },
@@ -79,7 +79,7 @@ export const field = css({
   typography: 'body',
   _focusVisible: { outline: '2px solid $link', outlineOffset: '2px' },
   selectors: {
-    '&[aria-invalid="true"]': { border: '2px solid #C8124B' },
+    '&[aria-invalid="true"]': { border: '2px solid $togetherError' },
     '&[data-multiline]': {
       height: ['120px', null, null, '140px'],
       resize: 'vertical',
@@ -129,7 +129,7 @@ export const consentControl = css({
   _checked: { bg: '$primary', color: '$base' },
   _focusVisible: { outline: '2px solid $link', outlineOffset: '2px' },
   selectors: {
-    '&[aria-invalid="true"]': { border: '2px solid #C8124B' },
+    '&[aria-invalid="true"]': { border: '2px solid $togetherError' },
     '&:checked::after': {
       content: '"✓"',
       display: 'block',

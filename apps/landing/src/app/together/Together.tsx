@@ -187,6 +187,7 @@ export default function Together() {
                 color={name ? '$title' : '$caption'}
                 fontSize={['18px', null, null, '32px']}
                 fontWeight="700"
+                letterSpacing="-0.06em"
                 lineHeight={['24px', null, null, '40px']}
                 textAlign="center"
                 wordBreak="keep-all"

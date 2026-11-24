@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "bun ../../scripts/generate-together.ts && next build",
     "start": "next start"
   },
   "dependencies": {

@@ -1,8 +1,17 @@
 'use client'
 
-import { Box, Flex, Text, VStack } from '@devup-ui/react'
+import { Box, Center, Flex, Text, VStack } from '@devup-ui/react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+
+import {
+  Controls as Choice,
+  field,
+  fieldLabel,
+  primaryAction,
+  secondaryAction,
+} from '@/components/together/Controls'
+import { previewDescription } from '@/lib/together-preview'
 
 type Partner = { issue: number; kind: string; name: string; logo: string }
 const kinds = ['기업', '기관', '학교', '단체']
@@ -83,67 +92,186 @@ export default function Together() {
     >
       <VStack gap="20px">
         <Text as="h1" color="$title" m="0" typography="docsTitle">
-          함께하는 곳
+          Braillify와 함께하는 곳
         </Text>
         <Text color="$text" typography="body">
-          신청하면 실제 사용을 확인한 뒤 이곳에 함께 소개해 드려요.
+          Braillify를 쓰고 있는 기업·기관·학교·단체를 소개합니다. 신청하면 실제
+          사용을 확인한 뒤 이곳에 함께 소개해 드려요.
         </Text>
       </VStack>
       <VStack gap="20px">
-        <Text as="h2" color="$title" typography="featureTitle">
-          인증 이미지 미리 보기
-        </Text>
-        <Text color="$text">
-          승인되면 이 인증 이미지를 GitHub 답글로 보내 드려요.
-        </Text>
-        <Flex flexWrap="wrap" gap="32px">
+        <Flex
+          alignItems={['stretch', null, null, 'center']}
+          flexDir={['column', null, null, 'row']}
+          gap={['24px', null, null, '64px']}
+        >
           <VStack
+            alignItems="center"
             aria-hidden="true"
             bg="$containerBackground"
             border="2px solid $primary"
-            borderRadius="16px"
-            gap="32px"
+            borderRadius={['12px', null, null, '16px']}
+            gap={['16px', null, null, '32px']}
             maxW="680px"
-            p={['20px', null, null, '40px']}
+            pb={['20px', null, null, '40px']}
+            position="relative"
+            pt={['8px', null, null, '40px']}
+            px={['8px', null, null, '48px']}
             w="100%"
           >
-            <Text color="$caption">미리 보기</Text>
-            <Text color="$title" typography="featureTitle">
-              braillify × 로고
-            </Text>
-            <Text color="$title" typography="featureTitle">
-              {name || '이름을 입력하면 여기에 표시돼요'}
-            </Text>
-            <Text color="$caption">{braille}</Text>
-            <Box bg="$border" h="1px" />
-            <Text color="$text">
-              위 {kind}
-              {kind === '기업' || kind === '기관' ? '은' : '는'} Braillify와
-              함께하는 {kind}입니다.
-            </Text>
-            <Text color="$caption">braillify.kr/together</Text>
-          </VStack>
-          <VStack gap="16px">
-            <label htmlFor="preview-kind">구분</label>
-            <select
-              id="preview-kind"
-              onChange={(e) => setKind(e.target.value)}
-              value={kind}
+            <Flex
+              alignSelf="flex-start"
+              bg="$primary"
+              borderRadius="999px"
+              left={['auto', null, null, '18px']}
+              position={['static', null, null, 'absolute']}
+              px={['10px', null, null, '12px']}
+              py={['4px', null, null, '5px']}
+              top={['auto', null, null, '18px']}
             >
-              {kinds.map((value) => (
-                <option key={value}>{value}</option>
-              ))}
-            </select>
-            <label htmlFor="preview-name">
+              <Text color="$base" typography="tinyBtn">
+                미리 보기
+              </Text>
+            </Flex>
+            <Flex
+              alignItems="center"
+              gap={['12px', null, null, '20px']}
+              pb={['4px', null, null, '8px']}
+              w="100%"
+            >
+              <Flex flex="1" justifyContent="flex-end">
+                <Box
+                  aspectRatio="838/363"
+                  bg="$text"
+                  h={['32px', null, null, '52px']}
+                  maskImage="url(/images/home/hero.svg)"
+                  maskPosition="center"
+                  maskRepeat="no-repeat"
+                  maskSize="contain"
+                />
+              </Flex>
+              <Box
+                bg="$caption"
+                boxSize={['12px', null, null, '16px']}
+                maskImage="url(/images/together/cross.svg)"
+                maskPosition="center"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+              />
+              <Flex flex="1">
+                <Center
+                  bg="$background"
+                  borderRadius="8px"
+                  h={['28px', null, null, '48px']}
+                  w={['72px', null, null, '120px']}
+                >
+                  <Text color="$caption" typography="docsCaption">
+                    로고
+                  </Text>
+                </Center>
+              </Flex>
+            </Flex>
+            <VStack
+              alignItems="center"
+              gap={['8px', null, null, '12px']}
+              w="100%"
+            >
+              <Text
+                color={name ? '$title' : '$caption'}
+                fontSize={['18px', null, null, '32px']}
+                fontWeight="700"
+                lineHeight={['24px', null, null, '40px']}
+                textAlign="center"
+                wordBreak="keep-all"
+              >
+                {name || '이름을 입력하면 여기에 표시돼요'}
+              </Text>
+              <Text
+                color={name ? '$caption' : '#B5B3AE'}
+                fontSize={['13px', null, null, '16px']}
+                lineHeight={['13px', null, null, '16px']}
+                textAlign="center"
+                wordBreak="break-all"
+              >
+                {braille}
+              </Text>
+            </VStack>
+            <Box bg="$primary" h="2px" w={['32px', null, null, '40px']} />
+            <VStack alignItems="center" gap={['8px', null, null, '12px']}>
+              <Text color="$text" textAlign="center">
+                위 {kind}
+                {kind === '기업' || kind === '기관' ? '은' : '는'} Braillify와
+                함께하는 {kind}입니다.
+              </Text>
+              <Text color="$caption" textAlign="center">
+                braillify.kr/together · 승인 연월
+              </Text>
+            </VStack>
+          </VStack>
+          <Box
+            aria-live="polite"
+            border="0"
+            clip="rect(0, 0, 0, 0)"
+            height="1px"
+            margin="-1px"
+            overflow="hidden"
+            padding="0"
+            position="absolute"
+            role="status"
+            whiteSpace="nowrap"
+            width="1px"
+          >
+            {previewDescription(name, kind, braille)}
+          </Box>
+          <VStack flex="1" gap="24px">
+            <VStack gap="2px">
+              <Text as="h2" color="$title" typography="featureTitle">
+                우리 이름으로 미리 보기
+              </Text>
+              <Text color="$text">
+                승인되면 이 인증 이미지를 GitHub 답글로 보내 드려요.
+              </Text>
+            </VStack>
+            <Box as="fieldset" border="none">
+              <legend>구분</legend>
+              <Flex flexWrap="wrap" gap="8px">
+                {kinds.map((value) => (
+                  <Choice
+                    key={value}
+                    checked={kind === value}
+                    name="preview-kind"
+                    onChange={() => setKind(value)}
+                    type="radio"
+                  >
+                    {value}
+                  </Choice>
+                ))}
+              </Flex>
+            </Box>
+            <label className={fieldLabel} htmlFor="preview-name">
               이름 · 로고는 신청할 때 GitHub에서 올려요.
+              <input
+                className={field}
+                id="preview-name"
+                maxLength={20}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="예: 점자 교육 연구회"
+                value={name}
+              />
             </label>
-            <input
-              id="preview-name"
-              maxLength={20}
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-            />
-            <Link href={register}>이 이름으로 신청하기</Link>
+            <Link className={primaryAction} href={register}>
+              이 이름으로 신청하기
+              <Box
+                aria-hidden="true"
+                bg="$base"
+                boxSize="20px"
+                maskImage="url(/images/together/action-dot.svg)"
+                maskPosition="center"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+                ml="12px"
+              />
+            </Link>
           </VStack>
         </Flex>
       </VStack>
@@ -162,32 +290,89 @@ export default function Together() {
         ) : !partners ? (
           <Text color="$text">목록을 불러오는 중이에요.</Text>
         ) : partners.length === 0 ? (
-          <Text color="$text">첫 번째로 함께해 주세요.</Text>
+          <Center
+            bg="$menuHover"
+            borderRadius="16px"
+            flexDir="column"
+            gap="12px"
+            minH={['135px', null, null, '155px']}
+          >
+            <Text aria-hidden="true" color="$caption">
+              ⠿
+            </Text>
+            <Text
+              color="$title"
+              fontSize={['14px', null, null, '18px']}
+              fontWeight="700"
+            >
+              첫 번째로 함께해 주세요
+            </Text>
+          </Center>
         ) : (
-          <Flex flexWrap="wrap" gap="20px" justifyContent="center">
+          <Flex
+            flexWrap="wrap"
+            gap={['12px', null, null, '20px']}
+            justifyContent="center"
+          >
             {partners.slice(0, visible).map((item) => (
               <VStack
                 key={item.issue}
                 _target={{ borderWidth: '2px' }}
+                alignItems="center"
+                alignSelf="stretch"
                 aria-label={item.name}
                 bg="$containerBackground"
                 border="1px solid $primary"
                 borderRadius="16px"
-                gap="12px"
+                gap={['8px', null, null, '12px']}
                 id={`org-${item.issue}`}
-                p="20px"
+                pb={['16px', null, null, '20px']}
+                position="relative"
+                pt={['28px', null, null, '20px']}
+                px={['12px', null, null, '16px']}
                 tabIndex={-1}
                 w={['158px', null, null, '216px']}
               >
-                <Text color="$text">{item.kind}</Text>
-                <img
-                  alt=""
-                  height="60"
-                  src={item.logo}
-                  style={{ objectFit: 'contain' }}
-                  width="100"
-                />
-                <Text color="$title">{item.name}</Text>
+                <Flex
+                  bg="$menuHover"
+                  borderRadius="6px"
+                  left={['7px', null, null, '11px']}
+                  position="absolute"
+                  px={['6px', null, null, '8px']}
+                  py={['2px', null, null, '3px']}
+                  top={['7px', null, null, '11px']}
+                >
+                  <Text color="$text" typography="tinyBtn">
+                    {item.kind}
+                  </Text>
+                </Flex>
+                <Center h={['56px', null, null, '72px']} w="100%">
+                  <img
+                    alt=""
+                    height="60"
+                    src={item.logo}
+                    style={{
+                      objectFit: 'contain',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                    }}
+                    width="100"
+                  />
+                </Center>
+                <Text
+                  color="$title"
+                  display="-webkit-box"
+                  overflow="hidden"
+                  textAlign="center"
+                  textOverflow="ellipsis"
+                  typography="bodyBold"
+                  w="100%"
+                  WebkitBoxOrient="vertical"
+                  WebkitLineClamp="2"
+                  wordBreak="keep-all"
+                >
+                  {item.name}
+                </Text>
               </VStack>
             ))}
           </Flex>
@@ -195,6 +380,7 @@ export default function Together() {
         <span aria-live="polite">{announcement}</span>
         {partners && visible < partners.length && (
           <button
+            className={secondaryAction}
             onClick={() => {
               const count = Math.min(60, partners.length - visible)
               focusId.current = partners[visible].issue

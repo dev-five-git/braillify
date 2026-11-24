@@ -51,3 +51,13 @@ test('확인된 로고와 공개 기록으로 목록을 만든다', async () => 
   await publishPartners([approved], publicDir)
   expect(JSON.parse(await readFile(join(publicDir, 'together.json'), 'utf8'))).toEqual([approved])
 })
+
+test('게시 중단된 로고는 공유하지 않을 때 제거해야 한다', async () => {
+  const publicDir = await mkdtemp(join(tmpdir(), 'braillify-together-'))
+  const logos = join(publicDir, 'images', 'together')
+  await mkdir(logos, { recursive: true })
+  await writeFile(join(logos, 'asset-123.png'), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
+  await expect(publishPartners([], publicDir)).rejects.toThrow('Unreferenced')
+  await publishPartners([approved, { ...approved, issue: 124 }], publicDir)
+  expect(JSON.parse(await readFile(join(publicDir, 'together.json'), 'utf8'))).toHaveLength(2)
+})

@@ -8,6 +8,12 @@ import type { Partner } from './together-data'
 
 export const escapeHtml = (value: string) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;')
 
+export function translateName(executable: string, name: string) {
+  const result = spawnSync(executable, ['--', name], { encoding: 'utf8' })
+  if (result.status !== 0) throw new Error(`Braille generation failed: ${result.stderr || result.error}`)
+  return result.stdout
+}
+
 export function brailleSvg(text: string) {
   const cells = Array.from(text)
   const scale = Math.min(1, 960 / (cells.length * 22 || 1))
@@ -78,9 +84,7 @@ export async function generateTogetherImages(partners: Partner[], publicDir: str
       if (png.length < 24 || png.readUInt32BE(16) !== width * scale || png.readUInt32BE(20) !== height * scale) throw new Error('Unexpected generated image dimensions')
     }
     for (const partner of partners) {
-      const result = spawnSync(executable, [], { input: partner.name, encoding: 'utf8' })
-      if (result.status !== 0) throw new Error(`Braille generation failed: ${result.stderr || result.error}`)
-      const braille = brailleSvg(result.stdout)
+      const braille = brailleSvg(translateName(executable, partner.name))
       const image = await readFile(join(publicDir, partner.logo.slice(1)))
       const mime = partner.logo.endsWith('.png') ? 'image/png' : 'image/jpeg'
       const userLogo = `data:${mime};base64,${image.toString('base64')}`

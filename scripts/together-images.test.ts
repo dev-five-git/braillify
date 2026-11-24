@@ -1,9 +1,16 @@
 import { expect, test } from 'bun:test'
+import { existsSync } from 'node:fs'
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { brailleSvg, escapeHtml, pruneTogetherImages } from './together-images'
+import { brailleSvg, escapeHtml, pruneTogetherImages, translateName } from './together-images'
+
+const cli = join(import.meta.dir, '..', 'target', 'release', process.platform === 'win32' ? 'braillify.exe' : 'braillify')
+
+test.skipIf(!existsSync(cli))('하이픈으로 시작하는 이름도 점역한다', () => {
+  expect(translateName(cli, '-학교')).toMatch(/^[\u2800-\u28ff]+$/u)
+})
 
 test('점역 셀의 볼록한 점만 그린다', () => {
   const svg = brailleSvg('⠁⠀⠿')

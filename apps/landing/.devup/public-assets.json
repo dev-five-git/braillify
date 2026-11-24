@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "path": "/images/together/action-dot.svg",
+      "identity": "image/svg+xml:888051ea02f8686a39bb6cfed715c2388edeaeed20cd7050e2227fabdcb992d9:",
+      "sha256": "dd06c5c7030e97feab500b06fd6dce153cb34abf71c2b93785e251a2d8043e6b",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "9602ccae1cc309d25f8b0be62228e41c6e385214d6f4b43e630091b7ff763997",
+      "sources": [
+        "I445:4786;397:5704:node"
+      ]
+    },
+    {
+      "path": "/images/together/cross.svg",
+      "identity": "image/svg+xml:e005ba5f49c7f17dbf3ad6c530d4f484665ad51acd3d427027825cebcd85de70:",
+      "sha256": "b3025fa8e23b1a9c4d751d63a6078456e22176b976b8ac0243d15e72ef8bc8c9",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "fbe30455db54627e742b996183628088b55a5ea7b8d46207a388e80e79442c14",
+      "sources": [
+        "450:5865:node"
+      ]
+    },
+    {
+      "path": "/images/together/selected-mobile.svg",
+      "identity": "image/svg+xml:f701a7341c3c3b6d13fc1f993101a273f6412a04f7d4ba4f129bac6cc3be0d29:",
+      "sha256": "3a1315f721d179dc7ea9e315d3a8566fbb905e84069a50b4b3b7f1fb429853bf",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "cf7c5ea57763d1653fd962bf9293db01404885fd9c899887b22bcd0725a45147",
+      "sources": [
+        "397:5809:node"
+      ]
+    },
+    {
+      "path": "/images/together/selected-pc.svg",
+      "identity": "image/svg+xml:0408161ff7053244456d9d13d57bef439f97af77be4c42392cdc38aaeac297f8:",
+      "sha256": "7081bc21af6b0fb8fec4a707fea3b9ee9474496fa4acb8ef57101cfbcb5a18c1",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "ca701f936f80cf2cdfe6319eec0888a37869d511b0a8b1197ce3712536a5dc63",
+      "sources": [
+        "397:5800:node"
+      ]
+    }
+  ]
+}

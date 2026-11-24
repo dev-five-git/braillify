@@ -1269,6 +1269,27 @@ jobs:
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
 
+      - name: Probe Apple bitcode removal without changing the archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          work=$(mktemp -d)
+          trap 'rm -rf "$work"' EXIT
+          if xcrun bitcode_strip "$archive" -r -o "$work/candidate.a"; then
+            ar -t "$archive" > "$work/before-members"
+            ar -t "$work/candidate.a" > "$work/after-members"
+            nm -gUj "$archive" | LC_ALL=C sort > "$work/before-symbols"
+            nm -gUj "$work/candidate.a" | LC_ALL=C sort > "$work/after-symbols"
+            if cmp -s "$work/before-members" "$work/after-members" && cmp -s "$work/before-symbols" "$work/after-symbols"; then
+              echo 'Apple bitcode_strip retained archive members and exported symbols; candidate not installed.'
+            else
+              echo 'Apple bitcode_strip changed archive members or exported symbols; candidate not installed.'
+            fi
+          else
+            echo 'Apple bitcode_strip rejected this static archive; original retained.'
+          fi
+
       - name: Remove passive LLVM bitcode (Linux and Windows)
         if: runner.os != 'macOS'
         shell: bash

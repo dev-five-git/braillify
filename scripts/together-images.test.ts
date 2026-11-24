@@ -4,11 +4,14 @@ import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { brailleSvg, escapeHtml, generateTogetherImages, pruneTogetherImages, translateName } from './together-images'
+import { brailleSvg, escapeHtml, pruneTogetherImages, translateName } from './together-image-utils'
 
 const cli = join(import.meta.dir, '..', 'target', 'release', process.platform === 'win32' ? 'braillify.exe' : 'braillify')
+const chrome = process.env.CHROME_PATH || Bun.which('google-chrome') || Bun.which('chromium') || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '')
+const canRender = existsSync(cli) && !!chrome && (!!Bun.which(chrome) || existsSync(chrome))
 
-test('승인된 곳의 인증 이미지와 배지의 크기를 생성한다', async () => {
+test.skipIf(!canRender && !process.env.CI)('승인된 곳의 인증 이미지와 배지의 크기를 생성한다', async () => {
+  const { generateTogetherImages } = await import('./together-images')
   const root = await mkdtemp(join(tmpdir(), 'braillify-render-'))
   const logos = join(root, 'images', 'together')
   await mkdir(logos, { recursive: true })
@@ -27,6 +30,10 @@ test('승인된 곳의 인증 이미지와 배지의 크기를 생성한다', as
 
 test.skipIf(!existsSync(cli))('하이픈으로 시작하는 이름도 점역한다', () => {
   expect(translateName(cli, '-학교')).toMatch(/^[\u2800-\u28ff]+$/u)
+})
+
+test('점역 실행 파일이 없으면 오류를 반환한다', () => {
+  expect(() => translateName(join(tmpdir(), 'missing-braillify-executable'), '학교')).toThrow('Braille generation failed')
 })
 
 test('점역 셀의 볼록한 점만 그린다', () => {

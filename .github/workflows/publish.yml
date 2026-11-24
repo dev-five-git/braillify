@@ -68,6 +68,10 @@ jobs:
         run: bun install
       - name: Build
         run: bun run build
+      - name: Verify image test prerequisites
+        shell: bash
+        run: |
+          bun -e 'const { existsSync } = require("node:fs"); const exe = process.platform === "win32" ? "target/release/braillify.exe" : "target/release/braillify"; const chrome = process.env.CHROME_PATH || Bun.which("google-chrome") || Bun.which("chromium") || (process.platform === "win32" ? "C:/Program Files/Google/Chrome/Application/chrome.exe" : process.platform === "darwin" ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : ""); if (!existsSync(exe) || !chrome || !(Bun.which(chrome) || existsSync(chrome))) throw new Error("Image integration tests require the release CLI and Chrome");'
       - name: Lint
         run: bun run lint
       - name: reformat

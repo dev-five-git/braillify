@@ -57,6 +57,7 @@ jobs:
           archive=target/${{ matrix.target }}/release/libbraillify_go.a
           candidate="$RUNNER_TEMP/go-macos-candidate.a"
           "$tools/llvm-objcopy" '--remove-section=__LLVM,__bitcode' '--remove-section=__LLVM,__cmdline' "$archive" "$candidate"
+          python3 scripts/test_verify_macos_go_archive.py
           python3 scripts/verify-macos-go-archive.py "$archive" "$candidate" "$tools"
       - name: Copy native library
         shell: bash

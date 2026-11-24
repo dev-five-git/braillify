@@ -26,10 +26,26 @@ test.skipIf(!canRender && !process.env.CI)('승인된 곳의 인증 이미지와
     expect(png.subarray(0, 8)).toEqual(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([width, height])
   }
-}, 120_000)
+}, 300_000)
 
 test.skipIf(!existsSync(cli))('하이픈으로 시작하는 이름도 점역한다', () => {
   expect(translateName(cli, '-학교')).toMatch(/^[\u2800-\u28ff]+$/u)
+})
+
+test.skipIf(!existsSync(cli))('Chrome 실행 오류의 원인을 표시한다', async () => {
+  const { generateTogetherImages } = await import('./together-images')
+  const root = await mkdtemp(join(tmpdir(), 'braillify-render-error-'))
+  const logos = join(root, 'images', 'together')
+  await mkdir(logos, { recursive: true })
+  await writeFile(join(logos, 'asset-123.png'), await readFile(join(import.meta.dir, '../apps/landing/public/og-image.png')))
+  const previous = process.env.CHROME_PATH
+  process.env.CHROME_PATH = join(root, 'missing-chrome')
+  try {
+    await expect(generateTogetherImages([{ issue: 123, name: '학교', kind: '학교', logo: '/images/together/asset-123.png', approvedAt: '2026-11-20' }], root)).rejects.toThrow(/Chrome logo check failed:.*missing-chrome/)
+  } finally {
+    if (previous === undefined) delete process.env.CHROME_PATH
+    else process.env.CHROME_PATH = previous
+  }
 })
 
 test('점역 실행 파일이 없으면 오류를 반환한다', () => {

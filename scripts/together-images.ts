@@ -34,13 +34,14 @@ export async function generateTogetherImages(partners: Partner[], publicDir: str
       const parent = await realpath(dirname(output))
       if (!parent.startsWith(`${safeRoot}${process.platform === 'win32' ? '\\' : '/'}`)) throw new Error('Image output is outside public directory')
       try { if ((await lstat(output)).isSymbolicLink()) throw new Error('Image output cannot be a symlink') } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
-      const args = ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', `--user-data-dir=${join(work, 'profile')}`, `--window-size=${width},${height}`, `--force-device-scale-factor=${scale}`, '--virtual-time-budget=3000']
+      const args = async () => ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', `--user-data-dir=${await mkdtemp(join(work, 'profile-'))}`, `--window-size=${width},${height}`, `--force-device-scale-factor=${scale}`, '--virtual-time-budget=3000']
       if (checkLogo) {
-        const check = spawnSync(chrome, [...args, '--dump-dom', pathToFileURL(page).href], { encoding: 'utf8', timeout: 30000, maxBuffer: 8 * 1024 * 1024 })
-        if (check.status !== 0 || !check.stdout.includes('data-logo-status="ok"')) throw new Error('Partner logo cannot be decoded or is too large')
+        const check = spawnSync(chrome, [...await args(), '--dump-dom', pathToFileURL(page).href], { encoding: 'utf8', timeout: 60000, maxBuffer: 8 * 1024 * 1024 })
+        if (check.error || check.status !== 0) throw new Error(`Chrome logo check failed: ${check.error || check.stderr || `exit ${check.status}`}`)
+        if (!check.stdout.includes('data-logo-status="ok"')) throw new Error('Partner logo cannot be decoded or is too large')
       }
-      const result = spawnSync(chrome, [...args, `--screenshot=${output}`, pathToFileURL(page).href], { encoding: 'utf8', timeout: 30000 })
-      if (result.status !== 0) throw new Error(`Chrome image generation failed: ${result.stderr || result.error}`)
+      const result = spawnSync(chrome, [...await args(), `--screenshot=${output}`, pathToFileURL(page).href], { encoding: 'utf8', timeout: 60000 })
+      if (result.error || result.status !== 0) throw new Error(`Chrome image generation failed: ${result.error || result.stderr || `exit ${result.status}`}`)
       const png = await readFile(output)
       if (png.length < 24 || png.readUInt32BE(16) !== width * scale || png.readUInt32BE(20) !== height * scale) throw new Error('Unexpected generated image dimensions')
     }

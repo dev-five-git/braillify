@@ -51,6 +51,7 @@ export default function Register() {
   const [kind, setKind] = useState('기업')
   const [name, setName] = useState('')
   const [since, setSince] = useState('')
+  const [dateAnnouncement, setDateAnnouncement] = useState('')
   const [dateFocused, setDateFocused] = useState(false)
   const [supportsPicker, setSupportsPicker] = useState(false)
   const [selected, setSelected] = useState<string[]>([])
@@ -90,6 +91,13 @@ export default function Register() {
       delete next[fieldName]
       return next
     })
+  }
+
+  function updateSince(value: string) {
+    setSince(value)
+    setDateAnnouncement(
+      value ? `사용 시작 시기 ${value} 선택됨` : '사용 시작 시기가 지워졌어요',
+    )
   }
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -487,8 +495,8 @@ export default function Register() {
                   </span>
                 )}
               </VStack>
-              <label className={formField}>
-                <span>
+              <Box className={formField}>
+                <label htmlFor="application-since">
                   사용 시작 시기{' '}
                   <Text as="span" color="$text" typography="body">
                     (선택)
@@ -502,7 +510,7 @@ export default function Register() {
                   >
                     연도-월-일
                   </Text>
-                </span>
+                </label>
                 <Box position="relative">
                   <input
                     ref={dateInput}
@@ -510,9 +518,10 @@ export default function Register() {
                     aria-label="사용 시작 시기 (선택)"
                     className={field}
                     data-registration-field
+                    id="application-since"
                     name="since"
                     onBlur={() => setDateFocused(false)}
-                    onChange={(event) => setSince(event.target.value)}
+                    onChange={(event) => updateSince(event.target.value)}
                     onFocus={() => setDateFocused(true)}
                     style={{
                       color: !since && !dateFocused ? 'transparent' : undefined,
@@ -525,7 +534,7 @@ export default function Register() {
                       <input
                         ref={datePicker}
                         aria-hidden="true"
-                        onChange={(event) => setSince(event.target.value)}
+                        onChange={(event) => updateSince(event.target.value)}
                         style={{
                           position: 'absolute',
                           right: 0,
@@ -589,7 +598,20 @@ export default function Register() {
                     </Text>
                   )}
                 </Box>
-              </label>
+                <Box
+                  aria-atomic="true"
+                  aria-live="polite"
+                  clip="rect(0, 0, 0, 0)"
+                  h="1px"
+                  overflow="hidden"
+                  position="absolute"
+                  role="status"
+                  w="1px"
+                  whiteSpace="nowrap"
+                >
+                  {dateAnnouncement}
+                </Box>
+              </Box>
             </Box>
             <Box
               as="fieldset"

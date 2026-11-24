@@ -206,12 +206,42 @@ export default function Together() {
             </VStack>
             <Box bg="$primary" h="2px" w={['32px', null, null, '40px']} />
             <VStack alignItems="center" gap={['8px', null, null, '12px']}>
-              <Text color="$text" textAlign="center">
+              <Text
+                color="$text"
+                display={['none', null, null, 'block']}
+                textAlign="center"
+                typography="body"
+              >
                 위 {kind}
                 {kind === '기업' || kind === '기관' ? '은' : '는'} Braillify와
                 함께하는 {kind}입니다.
               </Text>
-              <Text color="$caption" textAlign="center">
+              <Text
+                color="$text"
+                display={['block', null, null, 'none']}
+                textAlign="center"
+                typography="docsCaption"
+              >
+                위 {kind}
+                {kind === '기업' || kind === '기관' ? '은' : '는'} Braillify와
+                함께하는 {kind}입니다.
+              </Text>
+              <Text
+                _themeDark={{ color: '$caption' }}
+                color="#666"
+                display={['none', null, null, 'block']}
+                textAlign="center"
+                typography="docsSmall"
+              >
+                braillify.kr/together · 승인 연월
+              </Text>
+              <Text
+                _themeDark={{ color: '$caption' }}
+                color="#666"
+                display={['block', null, null, 'none']}
+                textAlign="center"
+                typography="footer"
+              >
                 braillify.kr/together · 승인 연월
               </Text>
             </VStack>

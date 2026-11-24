@@ -443,36 +443,76 @@ export default function Register() {
           position: 'fixed',
           inset: '0',
           margin: 'auto',
-          width: 'min(90vw, 520px)',
+          width: [
+            'calc(100% - 32px)',
+            null,
+            null,
+            'min(640px, calc(100% - 32px))',
+          ],
+          maxWidth: 'none',
           maxHeight: '90vh',
           overflow: 'auto',
           background: '$containerBackground',
           color: '$text',
-          border: '1px solid $border',
+          border: 'none',
           borderRadius: '24px',
           boxShadow: '0 12px 40px 0 #0000003D',
-          padding: ['24px', null, null, '32px'],
+          padding: ['24px', null, null, '40px'],
+          selectors: { '&::backdrop': { background: '#00000080' } },
         })}
         onClose={() => setIssue(null)}
+        onPointerDown={(event) => {
+          if (event.target !== event.currentTarget) return
+          const rect = event.currentTarget.getBoundingClientRect()
+          if (
+            event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom
+          )
+            event.currentTarget.close()
+        }}
       >
-        <VStack gap="16px">
-          <Text
-            as="h2"
-            color="$title"
-            id="dialog-title"
-            typography="featureTitle"
-          >
-            GitHub에서 신청을 마쳐 주세요
-          </Text>
-          <p>
+        <VStack gap={['16px', null, null, '28px']}>
+          <Flex gap="16px">
+            <Text
+              as="h2"
+              color="$title"
+              flex="1"
+              id="dialog-title"
+              m="0"
+              typography="featureTitle"
+            >
+              GitHub에서 신청을 마쳐 주세요
+            </Text>
+            <Box
+              _focusVisible={{ outline: '2px solid $link' }}
+              aria-label="닫기"
+              as="button"
+              autoFocus
+              bg="transparent"
+              border="none"
+              borderRadius="100px"
+              cursor="pointer"
+              onClick={() => dialog.current?.close()}
+              p="8px"
+              type="button"
+            >
+              <Box
+                bg="$text"
+                boxSize="24px"
+                maskImage="url(/images/together/dialog-close.svg)"
+                maskPosition="center"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+              />
+            </Box>
+          </Flex>
+          <Text color="$text" typography="body" wordBreak="keep-all">
             {issue?.copyRequired
               ? '쓰신 내용이 길어서 이슈 본문을 미리 채우지 못했어요. 내용을 복사한 뒤 GitHub에 붙여 넣어 주세요.'
               : '신청은 Braillify GitHub 저장소의 이슈로 받아요. 쓰신 내용은 이슈 본문에 미리 채워 둘게요.'}
-          </p>
-          <p>
-            GitHub 계정이 없으면 신청 내용과 로고를 contact@devfive.kr로 보내
-            주세요.
-          </p>
+          </Text>
           {issue?.copyRequired && (
             <>
               <textarea
@@ -499,28 +539,83 @@ export default function Register() {
               </button>
             </>
           )}
-          <p>
-            1. GitHub에서 로그인해요.
-            <br />
-            2. 로고 파일(PNG·JPG, 2MB 이하)을 첨부해요.
-            <br />
-            3. Create를 누르면 신청이 끝나요.
-          </p>
-          <a
-            className={primaryAction}
-            href={issue?.url}
-            rel="noopener noreferrer"
-            target="_blank"
+          <VStack
+            as="ol"
+            gap={['12px', null, null, '14px']}
+            listStyle="none"
+            m="0"
+            p="0"
           >
-            GitHub 열기 (새 창)
-          </a>
-          <button
-            className={secondaryAction}
-            onClick={() => dialog.current?.close()}
-            type="button"
-          >
-            닫기
-          </button>
+            {[
+              '[GitHub 열기]를 눌러 로그인해요.',
+              '미리 채워진 본문 아래에 로고 파일(PNG·JPG, 2MB 이하)을 끌어다 놓아요.',
+              '[Create]를 누르면 신청이 끝나요. 결과는 이슈에 남겨 드려요.',
+            ].map((step, index) => (
+              <Flex key={step} as="li" gap="12px">
+                <Center
+                  bg="$primary"
+                  borderRadius="12px"
+                  boxSize="24px"
+                  flexShrink="0"
+                >
+                  <Text color="$base" typography="tinyBtn">
+                    {index + 1}
+                  </Text>
+                </Center>
+                <Text
+                  color="$text"
+                  flex="1"
+                  typography="body"
+                  wordBreak="keep-all"
+                >
+                  {step}
+                </Text>
+              </Flex>
+            ))}
+          </VStack>
+          <Flex justifyContent={['stretch', null, null, 'flex-end']}>
+            <Flex
+              _focusVisible={{ outline: '2px solid $link' }}
+              alignItems="center"
+              aria-label="GitHub 열기 (새 창)"
+              as="a"
+              bg="$primary"
+              borderRadius="1000px"
+              color="$base"
+              gap={['10px', null, null, '12px']}
+              href={issue?.url}
+              justifyContent="center"
+              pl={['24px', null, null, '32px']}
+              pr={['20px', null, null, '28px']}
+              py={['13px', null, null, '17px']}
+              rel="noopener noreferrer"
+              target="_blank"
+              textDecoration="none"
+              w={['100%', null, null, 'auto']}
+            >
+              <Text
+                display={['block', null, null, 'none']}
+                typography="buttonLg"
+              >
+                GitHub 열기
+              </Text>
+              <Text display={['none', null, null, 'block']} typography="button">
+                GitHub 열기
+              </Text>
+              <Box
+                bg="$base"
+                boxSize="20px"
+                maskImage="url(/images/together/dialog-external.svg)"
+                maskPosition="center"
+                maskRepeat="no-repeat"
+                maskSize="contain"
+              />
+            </Flex>
+          </Flex>
+          <Text color="$text" typography="docsCaption" wordBreak="keep-all">
+            GitHub 계정이 없으면 신청 내용과 로고를 contact@devfive.kr로 보내
+            주세요.
+          </Text>
         </VStack>
       </dialog>
     </VStack>

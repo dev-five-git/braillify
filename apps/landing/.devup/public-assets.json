@@ -35,6 +35,28 @@
       ]
     },
     {
+      "path": "/images/together/dialog-close.svg",
+      "identity": "image/svg+xml:5e8f45e7e2cf47fcfbdd74e4deb87c9b921f8e695fd17081524b8ca9333a3359:",
+      "sha256": "1be5f957b7ff357beb94d149c9dcd45809aed405bf9db48bf1e152790336ca02",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "7296b087f2722b74901341623ad63ddf10f82283c4484e17c6844980f28cfecf",
+      "sources": [
+        "I402:8270;397:5872;304:1512:node"
+      ]
+    },
+    {
+      "path": "/images/together/dialog-external.svg",
+      "identity": "image/svg+xml:4a8aabbdf9ae3851ecef0dc0ffb7fac07f630809f679b94a0e716628852ecd17:",
+      "sha256": "cce0e2d78776038ebdaf3ef168477e31b3bd6c3b698b2115cf6cd2e481591c80",
+      "mimeType": "image/svg+xml",
+      "mask": false,
+      "geometry": "55926549a7fd9151dfbb8b57c9c767f13bbda929e44761b97b80effaa7c6deed",
+      "sources": [
+        "I402:8270;397:5906;397:5704:node"
+      ]
+    },
+    {
       "path": "/images/together/field-alert.svg",
       "identity": "image/svg+xml:c3aed7104c36ce5341f1b8086cdd3d40c2b72d29a82b9abed383ea1cebc836bb:",
       "sha256": "7341dc2e7bff1bea159ce84589bafafdb6fc82dd28e37e452221902897992ee9",

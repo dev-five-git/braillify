@@ -21,6 +21,12 @@ import {
 
 const kinds = ['기업', '기관', '학교', '단체']
 const requiredMark = css({ color: '$togetherError', marginLeft: '4px' })
+const dateHint = css({
+  color: '$togetherPlaceholder',
+  typography: 'body',
+  fontSize: '16px',
+  lineHeight: ['normal', null, null, '1.8'],
+})
 const formField = css({
   display: 'flex',
   flexDirection: 'column',
@@ -207,6 +213,7 @@ export default function Register() {
                   aria-describedby={errors.name ? 'error-name' : undefined}
                   aria-invalid={errors.name ? true : undefined}
                   className={field}
+                  data-registration-field
                   id="application-name"
                   maxLength={20}
                   onChange={(e) => {
@@ -332,6 +339,7 @@ export default function Register() {
                   }
                   aria-invalid={errors.product ? true : undefined}
                   className={field}
+                  data-registration-field
                   id="application-product"
                   name="product"
                   onChange={(e) => {
@@ -365,6 +373,7 @@ export default function Register() {
                   aria-describedby={errors.url ? 'error-url' : undefined}
                   aria-invalid={errors.url ? true : undefined}
                   className={field}
+                  data-registration-field
                   id="application-url"
                   name="url"
                   onChange={(e) => {
@@ -393,6 +402,7 @@ export default function Register() {
                   aria-invalid={errors.purpose ? true : undefined}
                   className={field}
                   data-multiline
+                  data-registration-field
                   id="application-purpose"
                   name="purpose"
                   onChange={(e) => {
@@ -476,6 +486,7 @@ export default function Register() {
                 <Box position="relative">
                   <input
                     className={field}
+                    data-registration-field
                     name="since"
                     onBlur={() => setDateFocused(false)}
                     onChange={(event) => setSince(event.target.value)}
@@ -489,13 +500,12 @@ export default function Register() {
                   {!since && !dateFocused && (
                     <Text
                       aria-hidden="true"
-                      color="$caption"
+                      className={dateHint}
                       left={['12px', null, null, '16px']}
                       pointerEvents="none"
                       position="absolute"
                       top="50%"
                       transform="translateY(-50%)"
-                      typography="body"
                     >
                       예: 2026-09-01
                     </Text>

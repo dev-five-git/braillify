@@ -79,6 +79,14 @@ export const field = css({
   typography: 'body',
   _focusVisible: { outline: '2px solid $link', outlineOffset: '2px' },
   selectors: {
+    '&[data-registration-field]': {
+      fontSize: '16px',
+      lineHeight: ['normal', null, null, '1.8'],
+    },
+    '&[data-registration-field]::placeholder': {
+      color: '$togetherPlaceholder',
+      opacity: 1,
+    },
     '&[aria-invalid="true"]': { border: '2px solid $togetherError' },
     '&[data-multiline]': {
       height: ['120px', null, null, '140px'],

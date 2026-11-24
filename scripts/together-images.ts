@@ -54,7 +54,7 @@ export async function pruneTogetherImages(partners: Partner[], publicDir: string
 export async function generateTogetherImages(partners: Partner[], publicDir: string) {
   if (!partners.length) return
   const safeRoot = await realpath(publicDir)
-  const chrome = process.env.CHROME_PATH || Bun.which('google-chrome') || Bun.which('chromium') || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : '')
+  const chrome = process.env.CHROME_PATH || Bun.which('google-chrome') || Bun.which('chromium') || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '')
   if (!chrome) throw new Error('Chrome is required to generate together images')
   const executable = join(root, 'target', 'release', process.platform === 'win32' ? 'braillify.exe' : 'braillify')
   const bold = (await readFile(join(landing, 'assets/together/SpoqaHanSansNeo-Bold.woff2'))).toString('base64')

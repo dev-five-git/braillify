@@ -7,7 +7,7 @@ import type { Partner } from './together-data'
 export function chromeFailure(result: SpawnSyncReturns<string>, label: string, elapsed: number, outputExists: boolean) {
   const diagnostics = [...(result.stderr || '').matchAll(/\b(?:ERROR|WARNING):[a-zA-Z0-9_.-]+\(\d+\)/g)].map((match) => match[0])
   const code = (result.error as NodeJS.ErrnoException | undefined)?.code || 'none'
-  return `Chrome image generation failed: ${label} elapsed=${Math.round(elapsed)}ms status=${result.status} error=${code} outputExists=${outputExists} stderr=${diagnostics.join(',') || '(no recognized diagnostics)'}`
+  return `Chrome image generation failed: ${label} elapsed=${Math.round(elapsed)}ms status=${result.status} error=${code} outputExistsAfter=${outputExists} (may predate invocation) stderr=${diagnostics.join(',') || '(no recognized diagnostics)'}`
 }
 
 export async function withChromeProfile<T>(work: string, run: (profile: string) => T | Promise<T>): Promise<T> {

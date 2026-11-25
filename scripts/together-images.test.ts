@@ -17,7 +17,7 @@ test('Chrome 실패 진단은 프로세스 상태와 비공개 정보가 제거�
   expect(message).toContain('badge.png')
   expect(message).toContain('123ms')
   expect(message).toContain('status=7')
-  expect(message).toContain('outputExists=true')
+  expect(message).toContain('outputExistsAfter=true (may predate invocation)')
   expect(message).toContain('ERROR:renderer.cc(42)')
   expect(message).not.toContain('secret')
   expect(message).not.toContain('/private/path')
@@ -25,7 +25,7 @@ test('Chrome 실패 진단은 프로세스 상태와 비공개 정보가 제거�
   const timeoutMessage = chromeFailure(timedOut, 'cert.png', 100, false)
   expect(timeoutMessage).toContain('status=null')
   expect(timeoutMessage).toContain('error=ETIMEDOUT')
-  expect(timeoutMessage).toContain('outputExists=false')
+  expect(timeoutMessage).toContain('outputExistsAfter=false (may predate invocation)')
   expect(timeoutMessage).toContain('stderr=(no recognized diagnostics)')
 })
 

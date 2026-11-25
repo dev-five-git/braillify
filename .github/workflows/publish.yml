@@ -126,12 +126,12 @@ jobs:
             rid: linux-x64
             lib_name: libbraillify_native.so
           # macOS arm64 (native)
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
-          # macOS x64 (x64 SDK on macos-14)
-          - runner: macos-14
+          # macOS x64 (x64 SDK on macos-15)
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: osx-x64
             lib_name: libbraillify_native.dylib
@@ -498,10 +498,10 @@ jobs:
             python-target: x86
 
           # macOS
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64
             os: macos
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64
             os: macos
     steps:
@@ -689,11 +689,11 @@ jobs:
             os: windows
             target: x86_64-pc-windows-msvc
             binary_name: braillify-windows-x86_64.exe
-          - platform: macos-14
+          - platform: macos-15
             os: macos
             target: x86_64-apple-darwin
             binary_name: braillify-darwin-x86_64
-          - platform: macos-14
+          - platform: macos-15
             os: macos
             target: aarch64-apple-darwin
             binary_name: braillify-darwin-arm64
@@ -821,11 +821,11 @@ jobs:
             rid: linux-arm64
             lib_name: libbraillify_native.so
           # macOS
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: osx-x64
             lib_name: libbraillify_native.dylib
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
@@ -950,11 +950,11 @@ jobs:
             target: aarch64-unknown-linux-gnu
             rid: linux-arm64
             archive: braillify-c-linux-arm64.tar.gz
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: macos-x64
             archive: braillify-c-macos-x64.tar.gz
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: macos-arm64
             archive: braillify-c-macos-arm64.tar.gz
@@ -1188,7 +1188,7 @@ jobs:
             target: aarch64-unknown-linux-gnu
             platform: linux-arm64
           # macOS ARM64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
@@ -1280,7 +1280,7 @@ jobs:
             target: aarch64-unknown-linux-gnu
             platform: linux-arm64
           # macOS ARM64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64

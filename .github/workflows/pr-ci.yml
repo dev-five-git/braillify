@@ -130,12 +130,12 @@ jobs:
             rid: linux-x64
             lib_name: libbraillify_native.so
           # macOS arm64 (native)
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
-          # macOS x64 (x64 SDK on macos-14)
-          - runner: macos-14
+          # macOS x64 (x64 SDK on macos-15)
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: osx-x64
             lib_name: libbraillify_native.dylib
@@ -307,7 +307,7 @@ jobs:
             target: aarch64-unknown-linux-gnu
             platform: linux-arm64
           # macOS ARM64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64

@@ -1,0 +1,375 @@
+name: PR CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+        platform:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.0.1
+      - name: Install maturin
+        run: uv pip install maturin --system
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Install
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Cargo tarpaulin and fmt
+        run: |
+          rustup component add rustfmt clippy
+      - name: Install coverage tool
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            rustup toolchain install 1.98.1 --profile minimal
+            cargo install cargo-tarpaulin --version 0.37.3
+          else
+            cargo install cargo-tarpaulin
+          fi
+      - name: Install dependencies
+        run: bun install
+      - name: Build
+        run: bun run build
+      - name: Lint
+        run: bun run lint
+      - name: reformat
+        shell: bash
+        run: |
+          echo 'max_width = 100000' > .rustfmt.toml
+          echo 'tab_spaces = 4' >> .rustfmt.toml
+          echo 'newline_style = "Unix"' >> .rustfmt.toml
+          echo 'fn_call_width = 100000' >> .rustfmt.toml
+          echo 'fn_params_layout = "Compressed"' >> .rustfmt.toml
+          echo 'chain_width = 100000' >> .rustfmt.toml
+          echo 'merge_derives = true' >> .rustfmt.toml
+          echo 'use_small_heuristics = "Default"' >> .rustfmt.toml
+          cargo fmt
+      - name: Test (Rust coverage)
+        timeout-minutes: 20
+        run: bun run test:rust
+        env:
+          RUSTUP_TOOLCHAIN: ${{ runner.os == 'Linux' && '1.98.1' || 'stable' }}
+      - name: Test (Node)
+        timeout-minutes: 10
+        # Windows에서 중첩된 `bun run`이 테스트 완료 후 간헐적으로 멈추므로 직접 실행한다.
+        run: bun test
+      - name: Test (Python)
+        timeout-minutes: 10
+        run: bun run test:python
+      - name: Set up MSVC for C/C++ tests
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Test (C and C++)
+        timeout-minutes: 5
+        run: bun run test:c
+      - name: Format Rollback
+        shell: bash
+        run: |
+          rm -rf .rustfmt.toml
+          cargo fmt
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+        if: github.ref == 'refs/heads/main'
+
+  dotnet-test:
+    name: .NET Test - ${{ matrix.rid }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x64
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            rid: win-x64
+            lib_name: braillify_native.dll
+          # Windows x86 (32-bit)
+          - runner: windows-latest
+            target: i686-pc-windows-msvc
+            rid: win-x86
+            lib_name: braillify_native.dll
+            dotnet_arch: x86
+          # Linux x64
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            rid: linux-x64
+            lib_name: libbraillify_native.so
+          # macOS arm64 (native)
+          - runner: macos-15
+            target: aarch64-apple-darwin
+            rid: osx-arm64
+            lib_name: libbraillify_native.dylib
+          # macOS x64 (x64 SDK on macos-15)
+          - runner: macos-15
+            target: x86_64-apple-darwin
+            rid: osx-x64
+            lib_name: libbraillify_native.dylib
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - name: Build native library
+        run: cargo build --release --target ${{ matrix.target }} -p dotnet
+
+      - name: Setup .NET
+        if: matrix.dotnet_arch != 'x86' && matrix.rid != 'osx-x64'
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            9.0.x
+            8.0.x
+
+      - name: Setup .NET x86
+        if: matrix.dotnet_arch == 'x86'
+        shell: pwsh
+        run: |
+          $installDir = "$env:RUNNER_TEMP\dotnet-x86"
+          Invoke-WebRequest -Uri https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
+          ./dotnet-install.ps1 -Channel 8.0 -Architecture x86 -InstallDir $installDir
+          ./dotnet-install.ps1 -Channel 9.0 -Architecture x86 -InstallDir $installDir
+          ./dotnet-install.ps1 -Channel 10.0 -Architecture x86 -InstallDir $installDir -Quality preview
+          # Add to PATH and set DOTNET_ROOT
+          echo "$installDir" | Out-File -FilePath $env:GITHUB_PATH -Append
+          echo "DOTNET_ROOT=$installDir" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Setup .NET x64 (macOS)
+        if: matrix.rid == 'osx-x64'
+        run: |
+          export DOTNET_INSTALL_DIR="$RUNNER_TEMP/dotnet-x64"
+          curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 8.0 --architecture x64 --install-dir "$DOTNET_INSTALL_DIR"
+          curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 9.0 --architecture x64 --install-dir "$DOTNET_INSTALL_DIR"
+          curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 10.0 --architecture x64 --install-dir "$DOTNET_INSTALL_DIR" --quality preview
+          echo "$DOTNET_INSTALL_DIR" >> $GITHUB_PATH
+          echo "DOTNET_ROOT=$DOTNET_INSTALL_DIR" >> $GITHUB_ENV
+
+      - name: Copy native library
+        run: |
+          mkdir -p packages/dotnet/BraillifyNet/runtimes/${{ matrix.rid }}/native
+          cp target/${{ matrix.target }}/release/${{ matrix.lib_name }} packages/dotnet/BraillifyNet/runtimes/${{ matrix.rid }}/native/
+        shell: bash
+
+      - name: Restore dependencies
+        run: dotnet restore Braillify.Tests/Braillify.Tests.csproj
+        working-directory: packages/dotnet
+
+      - name: Build
+        run: dotnet build --no-restore -c Release Braillify.Tests/Braillify.Tests.csproj
+        working-directory: packages/dotnet
+
+      - name: Test (.NET 8.0)
+        run: dotnet test --no-build -c Release --verbosity normal --framework net8.0 Braillify.Tests/Braillify.Tests.csproj
+        working-directory: packages/dotnet
+
+      - name: Test (.NET 9.0)
+        run: dotnet test --no-build -c Release --verbosity normal --framework net9.0 Braillify.Tests/Braillify.Tests.csproj
+        working-directory: packages/dotnet
+
+  ruby-test:
+    name: Ruby Test - ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # Ruby 플랫폼(Windows ucrt 등)에 맞는 Rust 타겟/bindgen 환경까지 구성하는
+      # rb-sys 공식 셋업 액션.
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+          cargo-cache: true
+          working-directory: packages/ruby
+
+      # 실배포 gem 플랫폼(stable Ruby, Windows는 ucrt+GNU)에서의 lint.
+      # 루트 워크스페이스에서 실행해 [patch.crates-io]로 로컬 libs/braillify를 사용한다.
+      - name: Lint
+        run: cargo clippy -p braillify_rb --all-targets -- -D warnings
+
+      - name: Compile
+        run: bundle exec rake compile
+        working-directory: packages/ruby
+
+      - name: Test
+        run: bundle exec rake test
+        working-directory: packages/ruby
+
+  jvm-test:
+    name: JVM Test - ${{ matrix.native-target }}
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            native-target: linux-x86_64
+          - runner: ubuntu-24.04-arm
+            native-target: linux-aarch64
+          - runner: macos-15-intel
+            native-target: macos-x86_64
+          - runner: macos-15
+            native-target: macos-aarch64
+          - runner: windows-2022
+            native-target: windows-x86_64
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - name: Test JVM binding
+        run: ./gradlew test --no-daemon
+        working-directory: packages/jvm
+
+  go-test:
+    name: Go Test - ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows x64
+          - runner: windows-latest
+            target: x86_64-pc-windows-gnu
+            platform: windows-amd64
+          # Linux x64
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            platform: linux-amd64
+          # Linux ARM64
+          # go test 는 네이티브로 돌기 때문에 러너 아키텍처가 target 과 같아야 한다.
+          # amd64 러너에서 크로스 빌드하면 cgo 가 libs/linux-amd64 를 찾다가 링크에 실패한다.
+          - runner: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            platform: linux-arm64
+          # macOS ARM64
+          - runner: macos-15
+            target: aarch64-apple-darwin
+            platform: darwin-arm64
+          # macOS x64
+          - runner: macos-15-intel
+            target: x86_64-apple-darwin
+            platform: darwin-amd64
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Build native library
+        run: cargo build --release --target ${{ matrix.target }} -p braillify-go
+
+      - name: Prepare and verify macOS test archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          tools="$sysroot/lib/rustlib/$host/bin"
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          candidate="$RUNNER_TEMP/go-macos-candidate.a"
+          "$tools/llvm-objcopy" '--remove-section=__LLVM,__bitcode' '--remove-section=__LLVM,__cmdline' "$archive" "$candidate"
+          python3 scripts/test_verify_macos_go_archive.py
+          python3 scripts/verify-macos-go-archive.py "$archive" "$candidate" "$tools"
+
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+
+      - name: Copy native library
+        run: |
+          mkdir -p packages/go/libs/${{ matrix.platform }}
+          if [ "$RUNNER_OS" = macOS ]; then
+            cp "$RUNNER_TEMP/go-macos-candidate.a" packages/go/libs/${{ matrix.platform }}/libbraillify_go.a
+            rm "$RUNNER_TEMP/go-macos-candidate.a"
+          else
+            cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+          fi
+        shell: bash
+
+      - name: Test
+        run: go test -v ./...
+        working-directory: packages/go

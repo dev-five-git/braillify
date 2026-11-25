@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request_target:
-    branches:
-      - main
 permissions: write-all
 
 jobs:
@@ -27,15 +24,7 @@ jobs:
           - windows-latest
           - macos-latest
     steps:
-      # pull_request_target는 보안상 기본적으로 base branch(main)를 체크아웃한다.
-      # PR 코드의 커버리지를 측정하려면 PR head를 명시적으로 지정해야 한다.
       - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
-          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
-          # 지우면 CI 가 다시 깨진다. https://gh.io/securely-using-pull_request_target
-          allow-unsafe-pr-checkout: true
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -55,8 +44,16 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Cargo tarpaulin and fmt
         run: |
-          cargo install cargo-tarpaulin
           rustup component add rustfmt clippy
+      - name: Install coverage tool
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            rustup toolchain install 1.98.1 --profile minimal
+            cargo install cargo-tarpaulin --version 0.37.3
+          else
+            cargo install cargo-tarpaulin
+          fi
       - name: Install dependencies
         run: bun install
       - name: Build
@@ -78,6 +75,8 @@ jobs:
       - name: Test (Rust coverage)
         timeout-minutes: 20
         run: bun run test:rust
+        env:
+          RUSTUP_TOOLCHAIN: ${{ runner.os == 'Linux' && '1.98.1' || 'stable' }}
       - name: Test (Node)
         timeout-minutes: 10
         # Windows에서 중첩된 `bun run`이 테스트 완료 후 간헐적으로 멈추므로 직접 실행한다.
@@ -127,24 +126,17 @@ jobs:
             rid: linux-x64
             lib_name: libbraillify_native.so
           # macOS arm64 (native)
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
-          # macOS x64 (x64 SDK on macos-14)
-          - runner: macos-14
+          # macOS x64 (x64 SDK on macos-15)
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: osx-x64
             lib_name: libbraillify_native.dylib
     steps:
-      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
       - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
-          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
-          # 지우면 CI 가 다시 깨진다. https://gh.io/securely-using-pull_request_target
-          allow-unsafe-pr-checkout: true
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -219,14 +211,7 @@ jobs:
           - windows-latest
           - macos-latest
     steps:
-      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
       - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
-          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
-          # 지우면 CI 가 다시 깨진다. https://gh.io/securely-using-pull_request_target
-          allow-unsafe-pr-checkout: true
 
       # Ruby 플랫폼(Windows ucrt 등)에 맞는 Rust 타겟/bindgen 환경까지 구성하는
       # rb-sys 공식 셋업 액션.
@@ -270,11 +255,7 @@ jobs:
           - runner: windows-2022
             native-target: windows-x86_64
     steps:
-      # pull_request_target에서도 PR 코드를 체크아웃해 실제 JVM 바인딩을 테스트한다.
       - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          allow-unsafe-pr-checkout: true
       - name: Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v4
       - name: Set up JDK 17
@@ -289,7 +270,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          cache-read-only: ${{ github.event_name == 'pull_request_target' }}
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
       - name: Test JVM binding
         run: ./gradlew test --no-daemon
         working-directory: packages/jvm
@@ -356,13 +337,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           # changepacks 는 base branch 와 견주어 바뀐 manifest 를 찾으므로 전체
           # 이력이 필요하다. 기본 shallow checkout 이면 그 비교가 실패한다.
           fetch-depth: 0
-          # actions/checkout v7 은 pull_request_target 에서 fork PR 코드 체크아웃을
-          # 기본 차단한다. 이 opt-in 이 없으면 fork PR 의 모든 job 이 checkout 에서 실패한다.
-          allow-unsafe-pr-checkout: true
       # changepacks 는 base branch 를 refs/heads/<name> 에서 찾는데, checkout 은 SHA 를
       # 주면 detached HEAD 로 두고 refs/remotes/origin/* 만 만든다. 그 로컬 ref 를 세운다.
       - name: Materialize the base branch as a local ref
@@ -521,10 +498,10 @@ jobs:
             python-target: x86
 
           # macOS
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64
             os: macos
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64
             os: macos
     steps:
@@ -712,11 +689,11 @@ jobs:
             os: windows
             target: x86_64-pc-windows-msvc
             binary_name: braillify-windows-x86_64.exe
-          - platform: macos-14
+          - platform: macos-15
             os: macos
             target: x86_64-apple-darwin
             binary_name: braillify-darwin-x86_64
-          - platform: macos-14
+          - platform: macos-15
             os: macos
             target: aarch64-apple-darwin
             binary_name: braillify-darwin-arm64
@@ -844,11 +821,11 @@ jobs:
             rid: linux-arm64
             lib_name: libbraillify_native.so
           # macOS
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: osx-x64
             lib_name: libbraillify_native.dylib
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: osx-arm64
             lib_name: libbraillify_native.dylib
@@ -973,11 +950,11 @@ jobs:
             target: aarch64-unknown-linux-gnu
             rid: linux-arm64
             archive: braillify-c-linux-arm64.tar.gz
-          - runner: macos-14
+          - runner: macos-15
             target: x86_64-apple-darwin
             rid: macos-x64
             archive: braillify-c-macos-x64.tar.gz
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             rid: macos-arm64
             archive: braillify-c-macos-arm64.tar.gz
@@ -1211,7 +1188,7 @@ jobs:
             target: aarch64-unknown-linux-gnu
             platform: linux-arm64
           # macOS ARM64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
@@ -1219,11 +1196,7 @@ jobs:
             target: x86_64-apple-darwin
             platform: darwin-amd64
     steps:
-      # pull_request_target에서도 PR 코드를 체크아웃해 테스트한다.
       - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          allow-unsafe-pr-checkout: true
 
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -1238,10 +1211,42 @@ jobs:
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
 
+      - name: Prepare and verify macOS test archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          tools="$sysroot/lib/rustlib/$host/bin"
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          candidate="$RUNNER_TEMP/go-macos-candidate.a"
+          "$tools/llvm-objcopy" '--remove-section=__LLVM,__bitcode' '--remove-section=__LLVM,__cmdline' "$archive" "$candidate"
+          python3 scripts/test_verify_macos_go_archive.py
+          python3 scripts/verify-macos-go-archive.py "$archive" "$candidate" "$tools"
+
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+
       - name: Copy native library
         run: |
           mkdir -p packages/go/libs/${{ matrix.platform }}
-          cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+          if [ "$RUNNER_OS" = macOS ]; then
+            cp "$RUNNER_TEMP/go-macos-candidate.a" packages/go/libs/${{ matrix.platform }}/libbraillify_go.a
+            rm "$RUNNER_TEMP/go-macos-candidate.a"
+          else
+            cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+          fi
         shell: bash
 
       - name: Test
@@ -1275,7 +1280,7 @@ jobs:
             target: aarch64-unknown-linux-gnu
             platform: linux-arm64
           # macOS ARM64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64-apple-darwin
             platform: darwin-arm64
           # macOS x64
@@ -1301,6 +1306,38 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Prepare and verify macOS test archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          tools="$sysroot/lib/rustlib/$host/bin"
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          candidate="$RUNNER_TEMP/go-macos-candidate.a"
+          "$tools/llvm-objcopy" '--remove-section=__LLVM,__bitcode' '--remove-section=__LLVM,__cmdline' "$archive" "$candidate"
+          python3 scripts/test_verify_macos_go_archive.py
+          python3 scripts/verify-macos-go-archive.py "$archive" "$candidate" "$tools"
+
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+
+      - name: Use verified macOS archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: mv "$RUNNER_TEMP/go-macos-candidate.a" target/${{ matrix.target }}/release/libbraillify_go.a
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

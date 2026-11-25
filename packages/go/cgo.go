@@ -5,7 +5,7 @@ package braillify
 #cgo darwin,arm64 LDFLAGS: -L${SRCDIR}/libs/darwin-arm64 -lbraillify_go -lm -lpthread
 #cgo linux,amd64 LDFLAGS: -L${SRCDIR}/libs/linux-amd64 -lbraillify_go -lm -lpthread -ldl
 #cgo linux,arm64 LDFLAGS: -L${SRCDIR}/libs/linux-arm64 -lbraillify_go -lm -lpthread -ldl
-#cgo windows,amd64 LDFLAGS: -L${SRCDIR}/libs/windows-amd64 -lbraillify_go -lntdll -lws2_32 -lbcrypt -ladvapi32 -luserenv
+#cgo windows,amd64 LDFLAGS: -L${SRCDIR}/libs/windows-amd64 -lbraillify_go -lntdll -lws2_32 -lbcrypt -ladvapi32 -luserenv -lsynchronization
 
 #include <stdlib.h>
 #include <stdint.h>

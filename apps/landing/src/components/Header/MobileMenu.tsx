@@ -176,6 +176,16 @@ export default function MobileMenu() {
             <Text typography="button">테스트 케이스</Text>
           </Box>
           <Box
+            as="a"
+            borderBottom="1px solid $border"
+            display="block"
+            href="/together"
+            px="16px"
+            py="20px"
+          >
+            <Text typography="button">함께하는 곳</Text>
+          </Box>
+          <Box
             borderBottom="1px solid $border"
             cursor="pointer"
             onClick={() => router.push(`/team`)}

@@ -1,0 +1,176 @@
+name: PR CI validation
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go archive validation - ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: windows-latest, target: x86_64-pc-windows-gnu, platform: windows-amd64 }
+          - { runner: ubuntu-latest, target: x86_64-unknown-linux-gnu, platform: linux-amd64 }
+          - { runner: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu, platform: linux-arm64 }
+          - { runner: macos-14, target: aarch64-apple-darwin, platform: darwin-arm64 }
+          - { runner: macos-15-intel, target: x86_64-apple-darwin, platform: darwin-amd64 }
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          cache: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - name: Build native library
+        run: cargo build --release --target ${{ matrix.target }} -p braillify-go
+      - name: Remove passive LLVM bitcode
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+      - name: Prepare and verify macOS test archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          tools="$sysroot/lib/rustlib/$host/bin"
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          candidate="$RUNNER_TEMP/go-macos-candidate.a"
+          "$tools/llvm-objcopy" '--remove-section=__LLVM,__bitcode' '--remove-section=__LLVM,__cmdline' "$archive" "$candidate"
+          python3 scripts/test_verify_macos_go_archive.py
+          python3 scripts/verify-macos-go-archive.py "$archive" "$candidate" "$tools"
+      - name: Copy native library
+        shell: bash
+        run: |
+          mkdir -p packages/go/libs/${{ matrix.platform }}
+          if [ "$RUNNER_OS" = macOS ]; then
+            cp "$RUNNER_TEMP/go-macos-candidate.a" packages/go/libs/${{ matrix.platform }}/libbraillify_go.a
+            rm "$RUNNER_TEMP/go-macos-candidate.a"
+          else
+            cp target/${{ matrix.target }}/release/libbraillify_go.a packages/go/libs/${{ matrix.platform }}/
+          fi
+      - name: Test
+        working-directory: packages/go
+        run: go test -v ./...
+
+  go-release-cross-build:
+    name: Go release cross-build - linux-arm64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: aarch64-unknown-linux-gnu
+          cache: false
+      - name: Install cross-compilation tools (Linux ARM64)
+        run: |
+          test "$(uname -m)" = x86_64
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: Build native library
+        run: cargo build --release --target aarch64-unknown-linux-gnu -p braillify-go
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+      - name: Remove passive LLVM bitcode and verify archive
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/aarch64-unknown-linux-gnu/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          ar t "$archive" > "$RUNNER_TEMP/members-before"
+          aarch64-linux-gnu-nm -g --defined-only --just-symbols "$archive" 2>/dev/null | LC_ALL=C sort > "$RUNNER_TEMP/symbols-before"
+          test -s "$RUNNER_TEMP/symbols-before"
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+          test -s "$archive"
+          ar t "$archive" > "$RUNNER_TEMP/members-after"
+          aarch64-linux-gnu-nm -g --defined-only --just-symbols "$archive" 2>/dev/null | LC_ALL=C sort > "$RUNNER_TEMP/symbols-after"
+          cmp "$RUNNER_TEMP/members-before" "$RUNNER_TEMP/members-after"
+          cmp "$RUNNER_TEMP/symbols-before" "$RUNNER_TEMP/symbols-after"
+          aarch64-linux-gnu-objdump -f "$archive" > "$RUNNER_TEMP/archive-format"
+          grep -q 'architecture: aarch64' "$RUNNER_TEMP/archive-format"
+          "$sysroot/lib/rustlib/$host/bin/llvm-objdump" -h "$archive" > "$RUNNER_TEMP/archive-sections"
+          if grep -Eq '\.llvmbc|\.llvmcmd' "$RUNNER_TEMP/archive-sections"; then exit 1; fi
+
+  rust-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: 1.98.1
+          components: rustfmt
+          cache: false
+      - run: cargo install cargo-tarpaulin --version 0.37.3
+      - name: Format like publish coverage
+        shell: bash
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt
+          echo 'max_width = 100000' > .rustfmt.toml
+          echo 'tab_spaces = 4' >> .rustfmt.toml
+          echo 'newline_style = "Unix"' >> .rustfmt.toml
+          echo 'fn_call_width = 100000' >> .rustfmt.toml
+          echo 'fn_params_layout = "Compressed"' >> .rustfmt.toml
+          echo 'chain_width = 100000' >> .rustfmt.toml
+          echo 'merge_derives = true' >> .rustfmt.toml
+          echo 'use_small_heuristics = "Default"' >> .rustfmt.toml
+          cargo +stable fmt
+      - run: bun run test:rust
+
+  node-coverage:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - uses: astral-sh/setup-uv@v10.0.1
+      - run: uv pip install maturin --system
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+          cache: false
+      - run: bun install
+      - run: bun run build
+      - run: bun run lint
+      - run: bun test

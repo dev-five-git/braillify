@@ -55,12 +55,23 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Cargo tarpaulin and fmt
         run: |
-          cargo install cargo-tarpaulin
           rustup component add rustfmt clippy
+      - name: Install Linux coverage toolchain
+        if: runner.os == 'Linux'
+        run: |
+          rustup toolchain install 1.98.1 --profile minimal
+          cargo install cargo-tarpaulin --version 0.37.3
+      - name: Install coverage tool
+        if: runner.os != 'Linux'
+        run: cargo install cargo-tarpaulin
       - name: Install dependencies
         run: bun install
       - name: Build
         run: bun run build
+      - name: Verify image test prerequisites
+        shell: bash
+        run: |
+          bun -e 'const { existsSync } = require("node:fs"); const exe = process.platform === "win32" ? "target/release/braillify.exe" : "target/release/braillify"; const chrome = process.env.CHROME_PATH || Bun.which("google-chrome") || Bun.which("chromium") || (process.platform === "win32" ? "C:/Program Files/Google/Chrome/Application/chrome.exe" : process.platform === "darwin" ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : ""); if (!existsSync(exe) || !chrome || !(Bun.which(chrome) || existsSync(chrome))) throw new Error("Image integration tests require the release CLI and Chrome");'
       - name: Lint
         run: bun run lint
       - name: reformat
@@ -78,6 +89,8 @@ jobs:
       - name: Test (Rust coverage)
         timeout-minutes: 20
         run: bun run test:rust
+        env:
+          RUSTUP_TOOLCHAIN: ${{ runner.os == 'Linux' && '1.98.1' || 'stable' }}
       - name: Test (Node)
         timeout-minutes: 10
         # Windows에서 중첩된 `bun run`이 테스트 완료 후 간헐적으로 멈추므로 직접 실행한다.
@@ -335,6 +348,28 @@ jobs:
           path: ./apps/landing/out
           retention-days: 1
       - uses: actions/deploy-pages@v5
+
+  together-approval-replies:
+    name: Notify approved partners
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: deploy-landing
+    runs-on: ubuntu-latest
+    concurrency:
+      group: together-approval-replies
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun scripts/send-together-replies.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # publish
   changepacks:
@@ -1238,6 +1273,40 @@ jobs:
       - name: Build native library
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
 
+      - name: Probe Apple bitcode removal without changing the archive
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          work=$(mktemp -d)
+          trap 'rm -rf "$work"' EXIT
+          if xcrun bitcode_strip "$archive" -r -o "$work/candidate.a"; then
+            ar -t "$archive" > "$work/before-members"
+            ar -t "$work/candidate.a" > "$work/after-members"
+            nm -gUj "$archive" | LC_ALL=C sort > "$work/before-symbols"
+            nm -gUj "$work/candidate.a" | LC_ALL=C sort > "$work/after-symbols"
+            if cmp -s "$work/before-members" "$work/after-members" && cmp -s "$work/before-symbols" "$work/after-symbols"; then
+              echo 'Apple bitcode_strip retained archive members and exported symbols; candidate not installed.'
+            else
+              echo 'Apple bitcode_strip changed archive members or exported symbols; candidate not installed.'
+            fi
+          else
+            echo 'Apple bitcode_strip rejected this static archive; original retained.'
+          fi
+
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
+
       - name: Copy native library
         run: |
           mkdir -p packages/go/libs/${{ matrix.platform }}
@@ -1301,6 +1370,19 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }} -p braillify-go
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+
+      - name: Remove passive LLVM bitcode (Linux and Windows)
+        if: runner.os != 'macOS'
+        shell: bash
+        run: |
+          rustup component add llvm-tools
+          sysroot=$(rustc --print sysroot)
+          host=$(rustc -vV | sed -n 's/^host: //p')
+          archive=target/${{ matrix.target }}/release/libbraillify_go.a
+          objcopy="$sysroot/lib/rustlib/$host/bin/llvm-objcopy"
+          if [ "$RUNNER_OS" = Windows ]; then objcopy="$objcopy.exe"; fi
+          "$objcopy" --remove-section=.llvmbc --remove-section=.llvmcmd "$archive" "$archive.cleaned"
+          mv "$archive.cleaned" "$archive"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

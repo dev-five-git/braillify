@@ -97,6 +97,30 @@ export default function Pages({ isIntersecting }: { isIntersecting: boolean }) {
           </Flex>
         </Link>
         <Link
+          aria-current={pathname.startsWith('/together') ? 'page' : undefined}
+          className={css({ color: '$text' })}
+          href="/together"
+        >
+          <Flex alignItems="center" p="40px">
+            <Center gap="10px">
+              <Box
+                aspectRatio="1"
+                bg={pathname.startsWith('/together') ? '$text' : 'transparent'}
+                border="1px solid $text"
+                borderRadius="50%"
+                h="12px"
+              />
+              <Text
+                typography={
+                  pathname.startsWith('/together') ? 'gnbMenuBold' : 'gnbMenu'
+                }
+              >
+                함께하는 곳
+              </Text>
+            </Center>
+          </Flex>
+        </Link>
+        <Link
           aria-label="Team page link"
           className={css({
             color: '$text',

@@ -1,12 +1,13 @@
 import { lstat, mkdtemp, mkdir, readFile, realpath, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { spawnSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import type { Partner } from './together-data'
 
-import { brailleSvg, escapeHtml, translateName, withChromeProfile } from './together-image-utils'
+import { brailleSvg, chromeFailure, escapeHtml, translateName, withChromeProfile } from './together-image-utils'
 export { brailleSvg, escapeHtml, pruneTogetherImages, translateName } from './together-image-utils'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -40,8 +41,9 @@ export async function generateTogetherImages(partners: Partner[], publicDir: str
         if (check.error || check.status !== 0) throw new Error(`Chrome logo check failed: ${check.error || check.stderr || `exit ${check.status}`}`)
         if (!check.stdout.includes('data-logo-status="ok"')) throw new Error('Partner logo cannot be decoded or is too large')
       }
+      const started = performance.now()
       const result = await withChromeProfile(work, (profile) => spawnSync(chrome, [...args(profile), `--screenshot=${output}`, pathToFileURL(page).href], { encoding: 'utf8', timeout: 60000 }))
-      if (result.error || result.status !== 0) throw new Error(`Chrome image generation failed: ${result.error || result.stderr || `exit ${result.status}`}`)
+      if (result.error || result.status !== 0) throw new Error(chromeFailure(result, basename(output), performance.now() - started, existsSync(output)))
       const png = await readFile(output)
       if (png.length < 24 || png.readUInt32BE(16) !== width * scale || png.readUInt32BE(20) !== height * scale) throw new Error('Unexpected generated image dimensions')
     }

@@ -3,12 +3,31 @@ import { existsSync } from 'node:fs'
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { spawnSync } from 'node:child_process'
 
-import { brailleSvg, escapeHtml, pruneTogetherImages, translateName, withChromeProfile } from './together-image-utils'
+import { brailleSvg, chromeFailure, escapeHtml, pruneTogetherImages, translateName, withChromeProfile } from './together-image-utils'
 
 const cli = join(import.meta.dir, '..', 'target', 'release', process.platform === 'win32' ? 'braillify.exe' : 'braillify')
 const chrome = process.env.CHROME_PATH || Bun.which('google-chrome') || Bun.which('chromium') || (process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '')
 const canRender = existsSync(cli) && !!chrome && (!!Bun.which(chrome) || existsSync(chrome))
+
+test('Chrome 실패 진단은 프로세스 상태와 비공개 정보가 제거된 stderr를 포함한다', () => {
+  const result = spawnSync(process.execPath, ['-e', 'process.stderr.write("[ERROR:renderer.cc(42)] secret /private/path\\n"); process.exit(7)'], { encoding: 'utf8' })
+  const message = chromeFailure(result, 'badge.png', 123, true)
+  expect(message).toContain('badge.png')
+  expect(message).toContain('123ms')
+  expect(message).toContain('status=7')
+  expect(message).toContain('outputExists=true')
+  expect(message).toContain('ERROR:renderer.cc(42)')
+  expect(message).not.toContain('secret')
+  expect(message).not.toContain('/private/path')
+  const timedOut = spawnSync(process.execPath, ['-e', 'setTimeout(() => {}, 2000)'], { encoding: 'utf8', timeout: 100 })
+  const timeoutMessage = chromeFailure(timedOut, 'cert.png', 100, false)
+  expect(timeoutMessage).toContain('status=null')
+  expect(timeoutMessage).toContain('error=ETIMEDOUT')
+  expect(timeoutMessage).toContain('outputExists=false')
+  expect(timeoutMessage).toContain('stderr=(no recognized diagnostics)')
+})
 
 test('Chrome 프로필은 성공과 실패 직후 정리한다', async () => {
   const work = await mkdtemp(join(tmpdir(), 'braillify-profiles-'))

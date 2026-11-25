@@ -1,8 +1,14 @@
 import { mkdtemp, readdir, realpath, rm, unlink } from 'node:fs/promises'
 import { join } from 'node:path'
-import { spawnSync } from 'node:child_process'
+import { spawnSync, type SpawnSyncReturns } from 'node:child_process'
 
 import type { Partner } from './together-data'
+
+export function chromeFailure(result: SpawnSyncReturns<string>, label: string, elapsed: number, outputExists: boolean) {
+  const diagnostics = [...(result.stderr || '').matchAll(/\b(?:ERROR|WARNING):[a-zA-Z0-9_.-]+\(\d+\)/g)].map((match) => match[0])
+  const code = (result.error as NodeJS.ErrnoException | undefined)?.code || 'none'
+  return `Chrome image generation failed: ${label} elapsed=${Math.round(elapsed)}ms status=${result.status} error=${code} outputExists=${outputExists} stderr=${diagnostics.join(',') || '(no recognized diagnostics)'}`
+}
 
 export async function withChromeProfile<T>(work: string, run: (profile: string) => T | Promise<T>): Promise<T> {
   const profile = await mkdtemp(join(work, 'profile-'))
